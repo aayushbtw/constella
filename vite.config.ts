@@ -17,6 +17,7 @@ export default defineConfig({
     ignorePatterns: [
       ...(ultraciteFmt.ignorePatterns ?? []),
       "src/routeTree.gen.ts",
+      ".agents/skills/**",
     ],
   },
   lint: {
