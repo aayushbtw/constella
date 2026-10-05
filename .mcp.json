@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "vp",
+      "args": ["exec", "shadcn", "mcp"]
+    }
+  }
+}

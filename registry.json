@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "aayush",
+  "homepage": "https://ui.aayush.cv",
+  "items": [
+    {
+      "name": "tokens",
+      "type": "registry:lib",
+      "title": "Tokens",
+      "description": "StyleX design tokens every component builds on.",
+      "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
+      "files": [
+        {
+          "path": "src/lib/tokens.stylex.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "docs": "Needs the StyleX compiler with an `@/*` alias, and the Radix gray, gray-alpha and black-alpha CSS imported once. Setup: https://ui.aayush.cv"
+    }
+  ]
+}
