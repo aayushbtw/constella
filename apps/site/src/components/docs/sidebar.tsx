@@ -34,6 +34,9 @@ const styles = stylex.create({
     paddingBlockEnd: space.xs,
   },
   list: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxxs,
     listStyle: "none",
   },
   link: {
