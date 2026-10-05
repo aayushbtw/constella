@@ -1,50 +1,5 @@
 # Design
 
-## Stack
-
-- **Base UI underneath.** Behavior, focus and accessibility come from the primitive. A component adds styling and composition, never its own version of what Base UI already handles.
-- **StyleX only.** Most shadcn registries ship Tailwind, so another one adds nothing.
-- **Motion is StyleX and CSS.** No animation library: transitions, keyframes and Base UI's data attributes (`data-starting-style`, `data-ending-style`) cover it, and consumers install nothing extra.
-
-## Registry
-
-A workspace: `packages/ui` is the registry and holds only what ships; `apps/site` is the docs site and never ships. The library imports with `@/` because the shadcn CLI only rewrites `@/lib/*` and `@/components/ui/*` to the consumer's aliases. The site maps `@/` to the library, as a consumer would, and uses `~/` for its own code. `shadcn build` writes the registry into the site's `public/r`.
-
-`base` is the floor every component depends on: the tokens, plus `base.css` with the Radix scales, theme and focus ring, imported by `tokens.stylex.ts` so it arrives with the first token. Shared foundations stay in `base` even if a component skips some of them; colors are small. A component gets its own item only for something specific to it and heavy.
-
-`registryDependencies` reference this registry by URL. A bare name like `base` means shadcn's official registry.
-
-## Composition
-
-Components compose like shadcn: one file per component, made of small parts the consumer assembles.
-
-```
-Alert
-├── Icon
-├── AlertTitle
-├── AlertDescription
-└── AlertAction
-```
-
-- **One part, one element.** Each part wraps a single element or Base UI part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part.
-- **Every part has a `data-slot`.** Even unstyled Base UI wrappers, so a parent can style around a child (`:has(> [data-slot="alert-action"])`) without a prop. Variants and sizes are mirrored as `data-variant`, `data-size`.
-- **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.
-- **`sx` overrides, not `className`.** Parts omit `className` and `style` and take `sx?: StyleXStyles`, applied last in `stylex.props(...)` so the caller wins. The type is declared in each file, so every component installs alone.
-- **Variants are style keys.** `variant` and `size` index a `satisfies Record<Variant, StyleXStyles>` map. No cva, no class strings.
-- **State comes from Base UI's data attributes** (`[data-open]`, `[data-disabled]`, `[data-starting-style]`), never mirrored into React state.
-
-## Docs pages
-
-Pages are Markdown in `apps/site/content/components`, parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
-
-Each component page is the same short sections, in order: preview, installation, usage, composition tree, examples (one idea each), API (only what's added on top of Base UI; link to Base UI for the rest).
-
-## Tokens
-
-Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `packages/ui/src/lib/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
-
-Tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`.
-
 ## Personality
 
 Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
@@ -61,9 +16,7 @@ Status is never a saturated solid. A destructive action is red text on a red tin
 
 ## Theme
 
-Light and dark, switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.
-
-Components never branch on the theme. Every color is a token valued by a Radix step, so the `.dark` class flips it. Not `light-dark()`: Lightning CSS lowers it to fallbacks that ignore the class, and the color comes out invalid.
+Light and dark get the same care. Every color is a role token, so a component looks right in both without knowing which one it's in.
 
 ## Surfaces
 
@@ -73,20 +26,22 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 Floating surfaces (toasts, popovers) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
+A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
+
 Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
 
 ## Details
 
-- **Crisp text.** `base.css` sets grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
+- **Crisp text.** Grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
 - **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
 - **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
-- **Optical alignment.** Align what the eye sees, not the box: an icon's side of a button sits one step tighter, an icon centers on the first line of text, not the block.
+- **Optical alignment.** Align what the eye sees, not the box: an icon marked `data-icon="inline-start"` or `"inline-end"` tightens its side's padding; Button's sizes take shadcn's numbers exactly (padding, icon side, gap, icon size per size). An icon centers on the first line of text, not the block.
 - **Icon stroke follows text weight.** `strokes.icon` is tuned for medium text; one icon set (Hugeicons) everywhere.
 - **Hit areas.** Anything smaller than `sizes.hitArea` grows its target with an invisible `::before` to that size. Neighbouring targets never overlap.
 
 ## Focus
 
-One keyboard-only ring, set once in `base.css`. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves.
+One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves.
 
 ## Motion
 
@@ -133,7 +88,7 @@ When content changes, the layout takes its new size at once and only the surface
 
 ### Press and hover
 
-Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give.
+Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give. Two exceptions: a trigger (`[aria-haspopup]`) doesn't give, since pressing it opens something rather than acting, and keeps its hover look while its popup is open (`[data-popup-open]`); a text link answers with an underline, not a press.
 
 A pressable that also changes color on hover transitions both, each on its own clock: color on `ease` + `hover`, transform on `out` + `press`. Hover styles sit behind `media.hover` so touch doesn't stick.
 

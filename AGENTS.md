@@ -12,6 +12,14 @@ Before editing files for a substantial task:
 
 <!-- intent-skills:end -->
 
+## Where decisions live
+
+Read the one that fits before changing things, and record new decisions in it, not in another:
+
+- **`DESIGN.md`:** how it looks and moves. Color, surfaces, spacing, details, focus, motion.
+- **`ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
+- **`DOCS.md`:** how to write the docs pages in `apps/site/content`.
+
 ## Motion skills
 
 Load these from `.agents/skills/` at these points, every time:
@@ -23,4 +31,4 @@ Load these from `.agents/skills/` at these points, every time:
 
 ## Comments
 
-`DESIGN.md` holds the _why_. A comment that repeats it, or needs a paragraph, is a `DESIGN.md` edit instead.
+The files above hold the _why_. A comment that repeats one, or needs a paragraph, is an edit to that file instead.
