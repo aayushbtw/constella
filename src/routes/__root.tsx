@@ -13,9 +13,10 @@ import {
 import { useEffect } from "react";
 
 import { Toaster } from "@/components/ui/toast";
-import { config } from "@/lib/config";
-import { themeScript } from "@/lib/theme";
-import { colors, fonts, fontSizes, lineHeights } from "@/lib/tokens.stylex";
+import { colors } from "@/lib/tokens.stylex";
+import { config } from "@/site/config";
+import { themeScript } from "@/site/theme";
+import { fonts, fontSizes, lineHeights } from "@/site/tokens.stylex";
 
 import appCss from "@/styles/styles.css?url";
 

@@ -10,7 +10,11 @@
 
 Source imports use `@/` because the shadcn CLI only rewrites `@/lib/*` and `@/components/ui/*` to the consumer's aliases. Components live in `src/components/ui` and tokens in `src/lib`, so the site and the registry share one copy.
 
-`registryDependencies` reference this registry by URL. A bare name like `tokens` means shadcn's official registry.
+`src/lib` and `src/components/ui` hold only what ships. Anything only the docs site uses (its tokens, config, reset, fonts) lives in `src/site` and `src/styles`.
+
+An install costs only what it uses. `base` is the floor every component depends on: core tokens, plus `base.css` with the gray scale, theme and focus ring, imported by `tokens.stylex.ts` so it arrives with the first token. Each status hue is its own item whose tokens file imports its Radix scale, so a component pulls in only the hues it names: Button pays for red, not the toast's green, amber and blue.
+
+`registryDependencies` reference this registry by URL. A bare name like `base` means shadcn's official registry.
 
 ## Composition
 
@@ -39,7 +43,7 @@ Each component page is the same short sections, in order: preview, installation,
 
 ## Tokens
 
-Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `src/lib/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
+Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `src/lib/tokens.stylex.ts` or a status hue's file; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
 
 Tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`.
 
@@ -53,7 +57,7 @@ Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued b
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, and `Edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `FillSubtle` but drops just under on `Fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each is its own file (`danger.stylex.ts`) with `text` for icons and short labels, `fillSubtle` and `fill` as tints that mirror the neutral fills, and `edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `fillSubtle` but drops just under on `fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
 
 Status is never a saturated solid. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway.
 
@@ -69,7 +73,7 @@ Edges are box-shadows, never `border`: borders render unevenly across pixel dens
 
 ## Focus
 
-One keyboard-only ring, set once in the reset. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves.
+One keyboard-only ring, set once in `base.css`. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves.
 
 ## Motion
 

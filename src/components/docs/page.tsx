@@ -1,7 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { colors, fontSizes, layout, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { layout } from "@/site/tokens.stylex";
 
 const styles = stylex.create({
   page: {

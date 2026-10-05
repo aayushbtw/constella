@@ -1,3 +1,4 @@
+import "./base.css";
 import * as stylex from "@stylexjs/stylex";
 
 export const colors = stylex.defineVars({
@@ -12,50 +13,18 @@ export const colors = stylex.defineVars({
   textMuted: "var(--gray-10)",
   textPrimary: "var(--gray-12)",
   textSecondary: "var(--gray-11)",
-
-  // Status: the base is the foreground step, for icons and short labels; the
-  // fills mirror the neutral ones as tints, `Edge` is a tinted edge.
-  danger: "var(--red-11)",
-  dangerEdge: "var(--red-a6)",
-  dangerFill: "var(--red-a3)",
-  dangerFillSubtle: "var(--red-a2)",
-  info: "var(--blue-11)",
-  infoEdge: "var(--blue-a6)",
-  infoFill: "var(--blue-a3)",
-  infoFillSubtle: "var(--blue-a2)",
-  success: "var(--green-11)",
-  successEdge: "var(--green-a6)",
-  successFill: "var(--green-a3)",
-  successFillSubtle: "var(--green-a2)",
-  warning: "var(--amber-11)",
-  warningEdge: "var(--amber-a6)",
-  warningFill: "var(--amber-a3)",
-  warningFillSubtle: "var(--amber-a2)",
 });
 
 export const shadows = stylex.defineConsts({
-  card: "0 0 0 1px var(--gray-a2)",
-  divider: "inset 0 -1px 0 var(--gray-a2)",
   popover: "0 0 0 1px var(--gray-a4), 0 4px 16px var(--black-a6)",
-  ring: "0 0 0 1px var(--gray-a4)",
-  rule: "inset 0 -1px 0 var(--gray-a3)",
-});
-
-export const fonts = stylex.defineConsts({
-  mono: 'ui-monospace, "SF Mono", Menlo, monospace',
-  sans: '"Inter Variable", -apple-system, BlinkMacSystemFont, sans-serif',
 });
 
 export const fontSizes = stylex.defineConsts({
-  base: "15px",
-  display: "96px",
   sm: "14px",
   xs: "13px",
 });
 
 export const lineHeights = stylex.defineConsts({
-  code: "20px",
-  prose: "24px",
   row: "18px",
 });
 
@@ -88,6 +57,7 @@ export const sizes = stylex.defineConsts({
   controlXs: "20px",
   icon: "16px",
   iconSm: "14px",
+  toast: "356px",
 });
 
 export const strokes = stylex.defineConsts({
@@ -107,19 +77,8 @@ export const opacities = stylex.defineConsts({
 
 export const media = stylex.defineConsts({
   hover: "@media (hover: hover)",
-  lg: "@media (min-width: 1280px)",
   reducedMotion: "@media (prefers-reduced-motion: reduce)",
   sm: "@media (min-width: 640px)",
-});
-
-export const layout = stylex.defineConsts({
-  columnGap: "48px",
-  content: "644px",
-  gutter: "16px",
-  pageBottom: "96px",
-  pageTop: "96px",
-  sectionGap: "48px",
-  toast: "356px",
 });
 
 export const presses = stylex.defineConsts({
@@ -144,8 +103,6 @@ export const durations = stylex.defineConsts({
   layout: "300ms",
   spin: "1s",
   crossfade: "300ms",
-  // How long a confirmation (copied, saved) holds before it reverts.
-  confirm: "1500ms",
 });
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,

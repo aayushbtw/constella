@@ -4,18 +4,74 @@
   "homepage": "https://ui.aayush.cv",
   "items": [
     {
-      "name": "tokens",
+      "name": "base",
       "type": "registry:lib",
-      "title": "Tokens",
-      "description": "StyleX design tokens every component builds on.",
+      "title": "Base",
+      "description": "Tokens, gray scale, theme and focus ring every component builds on.",
       "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
       "files": [
         {
           "path": "src/lib/tokens.stylex.ts",
           "type": "registry:lib"
+        },
+        {
+          "path": "src/lib/base.css",
+          "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias, `color-scheme: dark` on `.dark`, and these Radix scales imported once, each with its -alpha, -dark and -dark-alpha files: gray, amber, blue, green, red; plus black-alpha. Setup: https://ui.aayush.cv"
+      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://ui.aayush.cv"
+    },
+    {
+      "name": "danger",
+      "type": "registry:lib",
+      "title": "Danger",
+      "description": "Red status tokens.",
+      "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
+      "files": [
+        {
+          "path": "src/lib/danger.stylex.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "success",
+      "type": "registry:lib",
+      "title": "Success",
+      "description": "Green status tokens.",
+      "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
+      "files": [
+        {
+          "path": "src/lib/success.stylex.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "warning",
+      "type": "registry:lib",
+      "title": "Warning",
+      "description": "Amber status tokens.",
+      "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
+      "files": [
+        {
+          "path": "src/lib/warning.stylex.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "info",
+      "type": "registry:lib",
+      "title": "Info",
+      "description": "Blue status tokens.",
+      "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
+      "files": [
+        {
+          "path": "src/lib/info.stylex.ts",
+          "type": "registry:lib"
+        }
+      ]
     },
     {
       "name": "button",
@@ -23,7 +79,10 @@
       "title": "Button",
       "description": "Five variants for every level of emphasis, in three sizes.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
-      "registryDependencies": ["https://ui.aayush.cv/r/tokens.json"],
+      "registryDependencies": [
+        "https://ui.aayush.cv/r/base.json",
+        "https://ui.aayush.cv/r/danger.json"
+      ],
       "files": [
         {
           "path": "src/components/ui/button.tsx",
@@ -43,8 +102,12 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "https://ui.aayush.cv/r/tokens.json",
-        "https://ui.aayush.cv/r/button.json"
+        "https://ui.aayush.cv/r/base.json",
+        "https://ui.aayush.cv/r/button.json",
+        "https://ui.aayush.cv/r/danger.json",
+        "https://ui.aayush.cv/r/info.json",
+        "https://ui.aayush.cv/r/success.json",
+        "https://ui.aayush.cv/r/warning.json"
       ],
       "files": [
         {

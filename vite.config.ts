@@ -64,10 +64,14 @@ export default defineConfig({
     // Before the React plugin, or Fast Refresh breaks.
     stylex({
       aliases: { "@/*": [path.join(import.meta.dirname, "src/*")] },
+      // Its default pick differs between the client and server builds, so the
+      // chunk the prerendered HTML links would 404.
+      cssInjectionTarget: (file) => path.basename(file).startsWith("styles-"),
       // The router transforms client and server code differently, so the line
       // numbers in `data-style-src` disagree and fail hydration.
       enableDebugDataProp: false,
-      useCSSLayers: true,
+      // Declared ahead of StyleX's own, so any component style wins over them.
+      useCSSLayers: { before: ["reset", "base"] },
     }),
     lazyPlugins(() => [
       tomekit(),

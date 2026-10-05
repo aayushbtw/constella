@@ -8,18 +8,21 @@ import type { ComponentPropsWithoutRef } from "react";
 
 import { demos, isDemo } from "@/components/demos";
 import { Install } from "@/components/docs/install";
-import { config } from "@/lib/config";
-import { highlightCode } from "@/lib/highlight";
 import {
   colors,
-  fonts,
   fontSizes,
   lineHeights,
   media,
   radii,
-  shadows,
   space,
 } from "@/lib/tokens.stylex";
+import { config } from "@/site/config";
+import { highlightCode } from "@/site/highlight";
+import {
+  fonts,
+  lineHeights as siteLineHeights,
+  shadows,
+} from "@/site/tokens.stylex";
 
 const flow = {
   marginBlockEnd: { default: space.md, ":last-child": 0 },
@@ -74,7 +77,7 @@ const styles = stylex.create({
     boxShadow: shadows.card,
     color: colors.textPrimary,
     fontSize: fontSizes.xs,
-    lineHeight: lineHeights.code,
+    lineHeight: siteLineHeights.code,
     overflowX: "auto",
     paddingBlock: space.sm,
     paddingInline: space.md,

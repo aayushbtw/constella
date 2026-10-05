@@ -3,6 +3,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
+import { danger } from "@/lib/danger.stylex";
 import {
   colors,
   durations,
@@ -37,18 +38,24 @@ const styles = stylex.create({
   base: {
     alignItems: "center",
     borderRadius: radii.sm,
+    borderStyle: "none",
+    cursor: "pointer",
     display: "inline-flex",
     flexShrink: 0,
+    fontFamily: "inherit",
     fontWeight: fontWeights.medium,
     gap: space.xs,
     justifyContent: "center",
+    margin: 0,
     opacity: { default: 1, ":disabled": opacities.disabled },
     pointerEvents: { default: null, ":disabled": "none" },
     transform: { default: null, ":active": presses.link },
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}, ${durations.hover}`,
     transitionProperty: "transform, background-color, box-shadow, opacity",
+    touchAction: "manipulation",
     transitionTimingFunction: `${easings.out}, ease, ease, ease`,
     userSelect: "none",
+    WebkitTapHighlightColor: "transparent",
     whiteSpace: "nowrap",
   },
   // An icon carries its own whitespace, so its side sits one step tighter.
@@ -120,13 +127,13 @@ const styles = stylex.create({
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
     backgroundColor: {
-      default: colors.dangerFillSubtle,
+      default: danger.fillSubtle,
       [media.hover]: {
-        default: colors.dangerFillSubtle,
-        ":hover:not(:disabled)": colors.dangerFill,
+        default: danger.fillSubtle,
+        ":hover:not(:disabled)": danger.fill,
       },
     },
-    color: colors.danger,
+    color: danger.text,
   },
 });
 

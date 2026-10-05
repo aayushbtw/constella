@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { DocsPage } from "@/components/docs/page";
 import { Prose } from "@/components/docs/prose";
-import { config } from "@/lib/config";
 import { getComponent } from "@/server/components";
+import { config } from "@/site/config";
 
 export const Route = createFileRoute("/components/$slug")({
   loader: async ({ params }) => await getComponent({ data: params.slug }),

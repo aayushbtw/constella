@@ -3,23 +3,26 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 
-import { shellTokens } from "@/lib/highlight";
 import {
   colors,
   durations,
   easings,
-  fonts,
   fontSizes,
-  lineHeights,
   media,
   motion,
   presses,
   radii,
-  shadows,
   sizes,
   space,
   strokes,
 } from "@/lib/tokens.stylex";
+import { shellTokens } from "@/site/highlight";
+import {
+  durations as siteDurations,
+  fonts,
+  lineHeights,
+  shadows,
+} from "@/site/tokens.stylex";
 
 const styles = stylex.create({
   frame: {
@@ -93,7 +96,7 @@ const styles = stylex.create({
   },
 });
 
-const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
+const confirmFor = Number(siteDurations.confirm.slice(0, -"ms".length));
 
 // Keyed by offset, not index: two identical words would collide.
 function keyedTokens(command: string) {
