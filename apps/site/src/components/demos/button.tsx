@@ -13,7 +13,7 @@ import { Button, buttonStyles, buttonVariants } from "@/components/ui/button";
 import type { ButtonSize, ButtonVariant } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { sizes, strokes } from "@/lib/tokens.stylex";
-import { DemoRow } from "~/components/demos/trigger";
+import { DemoRow } from "~/components/demos/frame";
 
 const labels = {
   danger: "Danger",

@@ -49,13 +49,8 @@ const styles = stylex.create({
       [media.hover]: { default: "transparent", ":hover": colors.fillSubtle },
     },
     borderRadius: radii.sm,
-    color: {
-      default: colors.textSecondary,
-      [media.hover]: {
-        default: colors.textSecondary,
-        ":hover": colors.textPrimary,
-      },
-    },
+    // Every row reads at full strength; the fill alone marks hover and the current page.
+    color: colors.textPrimary,
     display: "flex",
     fontSize: fontSizes.sm,
     height: sizes.controlMd,
@@ -63,13 +58,12 @@ const styles = stylex.create({
     marginInlineStart: `calc(-1 * ${space.xs})`,
     paddingInline: space.xs,
     transform: { default: null, ":active": presses.row },
-    transitionDuration: `${durations.hover}, ${durations.hover}, ${durations.press}`,
-    transitionProperty: "background-color, color, transform",
-    transitionTimingFunction: `ease, ease, ${easings.out}`,
+    transitionDuration: `${durations.hover}, ${durations.press}`,
+    transitionProperty: "background-color, transform",
+    transitionTimingFunction: `ease, ${easings.out}`,
   },
   active: {
     backgroundColor: colors.fill,
-    color: colors.textPrimary,
     fontWeight: fontWeights.medium,
   },
 });

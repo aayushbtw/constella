@@ -10,7 +10,12 @@ import {
   ButtonSizesDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
+import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
+import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
+import { MotionEasingDemo } from "~/components/demos/motion";
+import { SliderDemo } from "~/components/demos/slider";
 import { SpinnerDemo } from "~/components/demos/spinner";
+import { TabsDemo } from "~/components/demos/tabs";
 import {
   ToastActionDemo,
   ToastDemo,
@@ -18,6 +23,7 @@ import {
   ToastPromiseDemo,
   ToastTypesDemo,
 } from "~/components/demos/toast";
+import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
   button: ButtonDemo,
@@ -28,12 +34,20 @@ const demos = {
   "button-pill": ButtonPillDemo,
   "button-sizes": ButtonSizesDemo,
   "button-variants": ButtonVariantsDemo,
+  "color-roles": ColorRolesDemo,
+  "color-scales": ColorScalesDemo,
+  "layout-radii": LayoutRadiiDemo,
+  "layout-sizes": LayoutSizesDemo,
+  "motion-easing": MotionEasingDemo,
+  slider: SliderDemo,
   spinner: SpinnerDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,
   "toast-dismiss": ToastDismissDemo,
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
+  tabs: TabsDemo,
+  typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
 
 function isDemo(name: string): name is keyof typeof demos {

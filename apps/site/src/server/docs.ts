@@ -8,9 +8,10 @@ const getDocs = createServerFn({ method: "GET" }).handler(() =>
     .map(({ metadata, slug }) => ({
       slug,
       draft: metadata.draft,
+      order: metadata.order,
       title: metadata.title,
     }))
-    .toSorted((a, b) => a.title.localeCompare(b.title))
+    .toSorted((a, b) => a.order - b.order || a.title.localeCompare(b.title))
 );
 
 const getDoc = createServerFn({ method: "GET" })

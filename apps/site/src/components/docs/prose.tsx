@@ -26,7 +26,6 @@ import {
   layout,
   lineHeights as siteLineHeights,
   shadows,
-  surfaces,
 } from "~/site/tokens.stylex";
 
 const flow = {
@@ -44,7 +43,10 @@ const styles = stylex.create({
     color: colors.textPrimary,
     lineHeight: lineHeights.row,
     marginBlockEnd: space.sm,
-    marginBlockStart: { default: space.xl, ":first-child": 0 },
+    marginBlockStart: {
+      default: `calc(${space.xl} + ${space.md})`,
+      ":first-child": 0,
+    },
     scrollMarginTop: layout.pageTop,
   },
   h3: {
@@ -52,7 +54,8 @@ const styles = stylex.create({
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.row,
     marginBlockEnd: space.xs,
-    marginBlockStart: space.lg,
+    // Room enough that a subsection reads as a break after a table.
+    marginBlockStart: `calc(${space.lg} + ${space.sm})`,
     scrollMarginTop: layout.pageTop,
   },
   a: {
@@ -126,23 +129,12 @@ const styles = stylex.create({
   strong: {
     fontWeight: fontWeights.semibold,
   },
-  // A thin frame on the page, holding the preview.
+  // A thin frame on the page, holding the preview and any controls under it.
   demo: {
     ...flow,
     borderRadius: radii.md,
     boxShadow: shadows.inset,
     padding: space.xxs,
-  },
-  stage: {
-    alignItems: "center",
-    backgroundColor: surfaces.stage,
-    borderRadius: radii.sm,
-    boxShadow: shadows.inset,
-    display: "flex",
-    justifyContent: "center",
-    minHeight: 280,
-    paddingBlock: space.xl,
-    paddingInline: space.md,
   },
 });
 
@@ -164,9 +156,7 @@ function Demo({ name }: { name?: string }) {
 
   return (
     <div data-slot="demo" {...stylex.props(styles.demo)}>
-      <div {...stylex.props(styles.stage)}>
-        <Component />
-      </div>
+      <Component />
     </div>
   );
 }

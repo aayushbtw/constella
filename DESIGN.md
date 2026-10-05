@@ -6,7 +6,7 @@ Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: 
 
 ## Color
 
-Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file.
+Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. `textMuted` is the one role that differs by theme: `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. It goes through `--text-muted` in `base.css`.
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
@@ -26,7 +26,7 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 Floating surfaces (toasts, popovers) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
-On the site, the demo stage is the stage color: in dark, `#050505`, a step below the page, so the preview sits in a well instead of washing into the page.
+On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
@@ -50,7 +50,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves.
+One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
 
 ## Motion
 

@@ -20,6 +20,8 @@ function pages(path: string) {
       description: z.string(),
       // Until a page has had its full pass. Built in dev only.
       draft: z.boolean().default(false),
+      // Sidebar position within a section; ties sort by title.
+      order: z.number().default(0),
       title: z.string(),
     }),
     transform: ({ body, metadata }, { dev, skip }) => {

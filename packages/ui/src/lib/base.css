@@ -32,6 +32,16 @@
     color-scheme: dark;
   }
 
+  /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text. */
+  :root,
+  .light {
+    --text-muted: var(--gray-10);
+  }
+
+  .dark {
+    --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
+  }
+
   :where(:focus-visible) {
     outline: 1.5px solid var(--gray-a8);
     outline-offset: 2px;
