@@ -3,10 +3,12 @@ import * as stylex from "@stylexjs/stylex";
 export const colors = stylex.defineVars({
   accent: "var(--gray-12)",
   background: "var(--gray-1)",
+  danger: "var(--red-11)",
   edgeStrong: "var(--gray-a6)",
   fill: "var(--gray-a3)",
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
+  success: "var(--green-11)",
   textMuted: "var(--gray-10)",
   textPrimary: "var(--gray-12)",
   textSecondary: "var(--gray-11)",

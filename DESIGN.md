@@ -53,6 +53,8 @@ Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued b
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
+Hue is reserved for status, and only the statuses something renders get a ramp: `success` (Radix green) and `danger` (Radix red). Both use step 11, the foreground step, which clears text contrast on `background` in both themes. Status color marks the small thing that carries the meaning, an icon or a word, never a whole surface, and never alone: the shape or the text says it too. A new status (warning) earns its ramp when a component first needs it.
+
 ## Theme
 
 Light and dark, switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.

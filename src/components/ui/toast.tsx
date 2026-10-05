@@ -192,6 +192,9 @@ const styles = stylex.create({
     opacity: 1,
     transform: "scale(1)",
   },
+  // Hue only on the icon: the shape and title still say it without color.
+  danger: { color: colors.danger },
+  success: { color: colors.success },
   // A thin arc on a faint track, unhurried: it says "working", not "urgent".
   spinner: {
     animationDuration: durations.spin,
@@ -345,7 +348,12 @@ function ToastIcon({
       {Object.entries(icons).map(([name, icon]) => (
         <span
           key={name}
-          {...stylex.props(styles.layer, name === type && styles.shown)}
+          {...stylex.props(
+            styles.layer,
+            name === "error" && styles.danger,
+            name === "success" && styles.success,
+            name === type && styles.shown
+          )}
         >
           <HugeiconsIcon
             icon={icon}
