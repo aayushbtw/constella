@@ -70,11 +70,6 @@ const styles = stylex.create({
     color: colors.textMuted,
     fontSize: fontSizes.xs,
   },
-  hero: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.lg,
-  },
 });
 
 function Home() {
@@ -82,32 +77,7 @@ function Home() {
 
   return (
     <main {...stylex.props(styles.main)}>
-      <div {...stylex.props(styles.hero)}>
-        <h1 {...stylex.props(styles.title)}>{config.description}</h1>
-        <ul {...stylex.props(styles.inline)}>
-          <li>
-            <Link to="/docs" {...stylex.props(styles.link)}>
-              Docs
-            </Link>
-          </li>
-          <li>
-            <a
-              href={`https://github.com/${config.socials.github}`}
-              {...stylex.props(styles.link)}
-            >
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a
-              href={`https://x.com/${config.socials.twitter}`}
-              {...stylex.props(styles.link)}
-            >
-              X
-            </a>
-          </li>
-        </ul>
-      </div>
+      <h1 {...stylex.props(styles.title)}>{config.description}</h1>
 
       <section {...stylex.props(styles.section)}>
         <h2 {...stylex.props(styles.label)}>Components</h2>
@@ -126,6 +96,30 @@ function Home() {
           ))}
         </ul>
       </section>
+
+      <ul {...stylex.props(styles.inline)}>
+        <li>
+          <Link to="/docs" {...stylex.props(styles.link)}>
+            Docs
+          </Link>
+        </li>
+        <li>
+          <a
+            href={`https://github.com/${config.socials.github}`}
+            {...stylex.props(styles.link)}
+          >
+            GitHub
+          </a>
+        </li>
+        <li>
+          <a
+            href={`https://x.com/${config.socials.twitter}`}
+            {...stylex.props(styles.link)}
+          >
+            X
+          </a>
+        </li>
+      </ul>
     </main>
   );
 }
