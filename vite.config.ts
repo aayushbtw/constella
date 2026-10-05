@@ -4,6 +4,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import stylex from "@stylexjs/unplugin/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { tomekit } from "tomekit/vite";
 import ultraciteFmt from "ultracite/oxfmt";
 import antiSlop from "ultracite/oxlint/anti-slop";
 import core from "ultracite/oxlint/core";
@@ -69,6 +70,7 @@ export default defineConfig({
       useCSSLayers: true,
     }),
     lazyPlugins(() => [
+      tomekit(),
       tanstackStart({
         prerender: {
           crawlLinks: true,

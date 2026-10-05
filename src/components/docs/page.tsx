@@ -1,16 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import {
-  colors,
-  fonts,
-  fontSizes,
-  layout,
-  lineHeights,
-  radii,
-  shadows,
-  space,
-} from "@/lib/tokens.stylex";
+import { colors, layout, space } from "@/lib/tokens.stylex";
 
 const styles = stylex.create({
   page: {
@@ -30,35 +21,6 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-  },
-  section: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.sm,
-  },
-  heading: {
-    color: colors.textMuted,
-    fontSize: fontSizes.sm,
-  },
-  preview: {
-    alignItems: "center",
-    borderRadius: radii.md,
-    boxShadow: shadows.card,
-    display: "flex",
-    flexWrap: "wrap",
-    gap: space.xs,
-    justifyContent: "center",
-    minHeight: 200,
-    padding: space.lg,
-  },
-  code: {
-    backgroundColor: colors.fillSubtle,
-    borderRadius: radii.md,
-    fontFamily: fonts.mono,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.code,
-    overflowX: "auto",
-    padding: space.md,
   },
 });
 
@@ -82,31 +44,4 @@ function DocsPage({
   );
 }
 
-function DocsSection({
-  children,
-  title,
-}: {
-  children: ReactNode;
-  title: string;
-}) {
-  return (
-    <section {...stylex.props(styles.section)}>
-      <h2 {...stylex.props(styles.heading)}>{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function DocsPreview({ children }: { children: ReactNode }) {
-  return <div {...stylex.props(styles.preview)}>{children}</div>;
-}
-
-function DocsCode({ children }: { children: string }) {
-  return (
-    <pre {...stylex.props(styles.code)}>
-      <code>{children.trim()}</code>
-    </pre>
-  );
-}
-
-export { DocsCode, DocsPage, DocsPreview, DocsSection };
+export { DocsPage };

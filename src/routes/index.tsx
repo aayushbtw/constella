@@ -3,8 +3,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { config } from "@/lib/config";
 import { colors, layout, space } from "@/lib/tokens.stylex";
+import { getComponents } from "@/server/components";
 
 export const Route = createFileRoute("/")({
+  loader: async () => await getComponents(),
   component: Home,
 });
 
@@ -41,11 +43,17 @@ function Home() {
       <h1>{config.name}</h1>
       <p {...stylex.props(styles.description)}>{config.description}</p>
       <ul {...stylex.props(styles.list)}>
-        <li>
-          <Link to="/components/toast" {...stylex.props(styles.link)}>
-            Toast
-          </Link>
-        </li>
+        {Route.useLoaderData().map(({ slug, title }) => (
+          <li key={slug}>
+            <Link
+              params={{ slug }}
+              to="/components/$slug"
+              {...stylex.props(styles.link)}
+            >
+              {title}
+            </Link>
+          </li>
+        ))}
       </ul>
     </main>
   );

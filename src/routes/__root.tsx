@@ -1,5 +1,8 @@
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import * as stylex from "@stylexjs/stylex";
+import { createThemeCss } from "@tanstack/highlight/theme";
+import { githubDarkTheme } from "@tanstack/highlight/themes/github-dark";
+import { githubLightTheme } from "@tanstack/highlight/themes/github-light";
 import {
   createRootRoute,
   HeadContent,
@@ -16,8 +19,17 @@ import { colors, fonts, fontSizes, lineHeights } from "@/lib/tokens.stylex";
 
 import appCss from "@/styles/styles.css?url";
 
+// Prose replaces the highlighter's `pre` class but keeps `data-lang`.
+const highlightCss = createThemeCss({
+  dark: githubDarkTheme,
+  darkSelector: ".dark",
+  light: githubLightTheme,
+  lineNumbersSelector: "pre[data-lang]",
+});
+
 export const Route = createRootRoute({
   head: () => ({
+    styles: [{ children: highlightCss }],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

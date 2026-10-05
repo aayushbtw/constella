@@ -18,3 +18,4 @@ routeTree.gen.ts
 
 # Built by `shadcn build`
 public/r
+.tomekit

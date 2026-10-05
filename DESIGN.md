@@ -33,6 +33,8 @@ Alert
 
 ## Docs pages
 
+Pages are Markdown in `content/components`, parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
+
 Each component page is the same short sections, in order: preview, installation, usage, composition tree, examples (one idea each), API (only what's added on top of Base UI; link to Base UI for the rest).
 
 ## Personality
