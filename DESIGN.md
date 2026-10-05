@@ -87,6 +87,8 @@ Never `ease-in`: it delays the moment the eye is watching.
 
 Interface motion stays under 300ms. A spinner is the exception: unhurried, so waiting reads as working, not urgent.
 
+The home page is the one exception, seen rarely and there to sell: on the first document load the logo spins in and the page staggers in inside that spin, landing as it settles. It never replays on client navigation.
+
 Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no bounce, no blur-ins, no timers drawing on screen.
 
 ### Crossfades

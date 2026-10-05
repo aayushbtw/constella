@@ -1,14 +1,16 @@
 import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Fragment } from "react";
 
-import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { colors, easings, fontSizes, media, space } from "@/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 import { config } from "~/site/config";
+import { timeline } from "~/site/entrance";
 import {
   fontSizes as siteFontSizes,
   layout,
   lineHeights,
-  media,
+  media as siteMedia,
 } from "~/site/tokens.stylex";
 
 export const Route = createFileRoute("/")({
@@ -16,7 +18,46 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+const focusIn = stylex.keyframes({
+  from: { filter: "blur(8px)", opacity: 0, transform: "translateY(0.3em)" },
+});
+const rise = stylex.keyframes({
+  from: { opacity: 0, transform: `translateY(${space.xs})` },
+});
+const fade = stylex.keyframes({ from: { opacity: 0 } });
+
 const styles = stylex.create({
+  word: {
+    display: "inline-block",
+  },
+  wordIn: (delay: number, duration: number) => ({
+    animationDelay: `${delay}ms`,
+    animationDuration: `${duration}ms`,
+    animationFillMode: "both",
+    animationName: {
+      default: focusIn,
+      ":is([data-navigated] *)": "none",
+      [media.reducedMotion]: {
+        default: fade,
+        ":is([data-navigated] *)": "none",
+      },
+    },
+    animationTimingFunction: easings.out,
+  }),
+  item: (delay: number, duration: number) => ({
+    animationDelay: `${delay}ms`,
+    animationDuration: `${duration}ms`,
+    animationFillMode: "both",
+    animationName: {
+      default: rise,
+      ":is([data-navigated] *)": "none",
+      [media.reducedMotion]: {
+        default: fade,
+        ":is([data-navigated] *)": "none",
+      },
+    },
+    animationTimingFunction: easings.out,
+  }),
   main: {
     display: "flex",
     flexDirection: "column",
@@ -24,12 +65,12 @@ const styles = stylex.create({
     marginInline: "auto",
     maxWidth: {
       default: `calc(${layout.content} + 2 * ${layout.gutter})`,
-      [media.sidebar]: layout.shell,
+      [siteMedia.sidebar]: layout.shell,
     },
     paddingBottom: layout.pageBottom,
     paddingInline: {
       default: layout.gutter,
-      [media.sidebar]: layout.gutterWide,
+      [siteMedia.sidebar]: layout.gutterWide,
     },
     paddingTop: layout.pageTop,
   },
@@ -42,10 +83,10 @@ const styles = stylex.create({
   },
   section: {
     display: "grid",
-    gap: { default: space.sm, [media.sidebar]: space.lg },
+    gap: { default: space.sm, [siteMedia.sidebar]: space.lg },
     gridTemplateColumns: {
       default: "1fr",
-      [media.sidebar]: `${layout.sidebar} minmax(0, ${layout.content})`,
+      [siteMedia.sidebar]: `${layout.sidebar} minmax(0, ${layout.content})`,
     },
   },
   label: {
@@ -74,16 +115,41 @@ const styles = stylex.create({
 
 function Home() {
   const components = Route.useLoaderData();
+  // The label, each component, then the links row, spaced so the last lands as the logo settles.
+  const last = components.length + 1;
+  const itemStep =
+    (timeline.spinFor - timeline.items - timeline.itemFor) / last;
+
+  function itemIn(order: number) {
+    return styles.item(timeline.items + order * itemStep, timeline.itemFor);
+  }
 
   return (
     <main {...stylex.props(styles.main)}>
-      <h1 {...stylex.props(styles.title)}>{config.description}</h1>
+      <h1 {...stylex.props(styles.title)}>
+        {config.description.split(" ").map((word, index) => (
+          <Fragment key={`${word}${index}`}>
+            {index > 0 && " "}
+            <span
+              {...stylex.props(
+                styles.word,
+                styles.wordIn(
+                  timeline.words + index * timeline.wordStep,
+                  timeline.wordFor
+                )
+              )}
+            >
+              {word}
+            </span>
+          </Fragment>
+        ))}
+      </h1>
 
       <section {...stylex.props(styles.section)}>
-        <h2 {...stylex.props(styles.label)}>Components</h2>
+        <h2 {...stylex.props(styles.label, itemIn(0))}>Components</h2>
         <ul {...stylex.props(styles.list)}>
-          {components.map(({ draft, slug, title }) => (
-            <li key={slug}>
+          {components.map(({ draft, slug, title }, index) => (
+            <li key={slug} {...stylex.props(itemIn(index + 1))}>
               <Link
                 params={{ slug }}
                 to="/docs/components/$slug"
@@ -97,7 +163,7 @@ function Home() {
         </ul>
       </section>
 
-      <ul {...stylex.props(styles.inline)}>
+      <ul {...stylex.props(styles.inline, itemIn(components.length + 1))}>
         <li>
           <Link to="/docs" {...stylex.props(styles.link)}>
             Docs
