@@ -14,6 +14,7 @@ import { useEffect } from "react";
 
 import { Toaster } from "@/components/ui/toast";
 import { colors } from "@/lib/tokens.stylex";
+import { Header } from "~/components/header";
 import { config } from "~/site/config";
 import { themeScript } from "~/site/theme";
 import { fonts, fontSizes, lineHeights } from "~/site/tokens.stylex";
@@ -100,7 +101,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <DevStyleX />
       </head>
       <body {...stylex.props(styles.body)}>
-        <Toaster>{children}</Toaster>
+        <Toaster>
+          <Header />
+          {children}
+        </Toaster>
         <Scripts />
       </body>
     </html>

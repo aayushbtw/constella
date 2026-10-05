@@ -1,5 +1,6 @@
 import type { ComponentNode } from "@tanstack/markdown";
 import { commentComponentsExtension } from "@tanstack/markdown/extensions/comment-components";
+import { collectMarkdownHeadings } from "@tanstack/markdown/extensions/headings";
 import { parseMarkdown } from "@tanstack/markdown/parser";
 import { defineConfig, directory } from "tomekit";
 import { z } from "zod";
@@ -18,13 +19,27 @@ export default defineConfig({
       loader: directory("content/components"),
       schema: z.strictObject({
         description: z.string(),
-        // `polished` once a component has had its full design pass.
-        status: z.enum(["draft", "polished"]).default("draft"),
+        // Until a component has had its full design pass. Built in dev only.
+        draft: z.boolean().default(false),
         title: z.string(),
       }),
-      transform: ({ body }) => ({
-        body: parseMarkdown(body, { extensions, headingIds: true }),
-      }),
+      transform: ({ body, metadata }, { dev, skip }) => {
+        if (metadata.draft && !dev) {
+          return skip("draft");
+        }
+
+        const document = parseMarkdown(body, { extensions, headingIds: true });
+
+        return {
+          body: document,
+          metadata: {
+            ...metadata,
+            headings: collectMarkdownHeadings(document)
+              .filter(({ level }) => level <= 3)
+              .map(({ id, level, text }) => ({ id, level, text })),
+          },
+        };
+      },
     },
   },
 });

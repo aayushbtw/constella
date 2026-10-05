@@ -6,23 +6,17 @@ import { shellTokens } from "~/site/highlight";
 import { fonts, lineHeights, shadows } from "~/site/tokens.stylex";
 
 const styles = stylex.create({
-  frame: {
-    backgroundColor: colors.fill,
-    borderRadius: radii.md,
-    boxShadow: shadows.card,
-    padding: space.xxs,
-  },
   command: {
     alignItems: "center",
-    backgroundColor: colors.background,
-    borderRadius: radii.sm,
-    boxShadow: shadows.inset,
+    backgroundColor: colors.fillSubtle,
+    borderRadius: radii.md,
+    boxShadow: shadows.card,
     display: "flex",
     fontFamily: fonts.mono,
     fontSize: fontSizes.xs,
     gap: space.md,
     lineHeight: lineHeights.code,
-    paddingBlock: space.xs,
+    paddingBlock: space.sm,
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.md,
   },
@@ -55,21 +49,19 @@ function Install({ name, url }: { name?: string; url: string }) {
   const command = `npx shadcn@latest add ${url}/r/${name}.json`;
 
   return (
-    <div {...stylex.props(styles.frame)}>
-      <div {...stylex.props(styles.command)}>
-        <code translate="no" {...stylex.props(styles.code)}>
-          <span {...stylex.props(styles.prompt)}>$ </span>
-          {keyedTokens(command).map((token) => (
-            <span
-              className={token.className && `th-token th-${token.className}`}
-              key={token.key}
-            >
-              {token.value}
-            </span>
-          ))}
-        </code>
-        <CopyButton label="Copy command" text={() => command} />
-      </div>
+    <div {...stylex.props(styles.command)}>
+      <code translate="no" {...stylex.props(styles.code)}>
+        <span {...stylex.props(styles.prompt)}>$ </span>
+        {keyedTokens(command).map((token) => (
+          <span
+            className={token.className && `th-token th-${token.className}`}
+            key={token.key}
+          >
+            {token.value}
+          </span>
+        ))}
+      </code>
+      <CopyButton label="Copy command" text={() => command} />
     </div>
   );
 }

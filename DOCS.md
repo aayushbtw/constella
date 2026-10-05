@@ -2,6 +2,8 @@
 
 Pages are Markdown in `apps/site/content/components`, parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
 
+A page marked `draft: true` in its frontmatter is built in dev only, labelled "Draft", until the component has had its full design pass.
+
 ## Writing a page
 
 Pages read like shadcn's, written for someone using the component, not for us:

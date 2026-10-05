@@ -22,7 +22,8 @@ function ComponentPage() {
   return (
     <DocsPage
       description={metadata.description}
-      status={metadata.status}
+      headings={metadata.headings}
+      draft={metadata.draft}
       title={metadata.title}
     >
       <Prose body={body} />

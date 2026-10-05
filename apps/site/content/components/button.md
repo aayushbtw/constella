@@ -1,7 +1,7 @@
 ---
 title: Button
 description: Displays a button or a link that looks like a button.
-status: draft
+draft: true
 ---
 
 <!-- ::demo name="button" -->

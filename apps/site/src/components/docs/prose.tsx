@@ -23,8 +23,10 @@ import { config } from "~/site/config";
 import { highlightCode } from "~/site/highlight";
 import {
   fonts,
+  layout,
   lineHeights as siteLineHeights,
   shadows,
+  surfaces,
 } from "~/site/tokens.stylex";
 
 const flow = {
@@ -43,6 +45,7 @@ const styles = stylex.create({
     lineHeight: lineHeights.row,
     marginBlockEnd: space.sm,
     marginBlockStart: { default: space.xl, ":first-child": 0 },
+    scrollMarginTop: layout.pageTop,
   },
   h3: {
     color: colors.textPrimary,
@@ -50,6 +53,7 @@ const styles = stylex.create({
     lineHeight: lineHeights.row,
     marginBlockEnd: space.xs,
     marginBlockStart: space.lg,
+    scrollMarginTop: layout.pageTop,
   },
   a: {
     color: colors.textPrimary,
@@ -87,7 +91,8 @@ const styles = stylex.create({
     overflowX: "auto",
     paddingBlock: space.sm,
     paddingInlineEnd: `calc(${space.xs} + ${sizes.controlXs} + ${space.xs})`,
-    paddingInlineStart: space.md,
+    // Numbered lines carry this padding themselves (code.css).
+    paddingInlineStart: { default: space.md, ":has(.th-line)": 0 },
     scrollbarWidth: "none",
     tabSize: 2,
   },
@@ -127,7 +132,7 @@ const styles = stylex.create({
   },
   stage: {
     alignItems: "center",
-    backgroundColor: colors.background,
+    backgroundColor: surfaces.stage,
     borderRadius: radii.sm,
     boxShadow: shadows.inset,
     display: "flex",

@@ -1,3 +1,15 @@
+function toggleTheme() {
+  const dark = document.documentElement.classList.toggle("dark");
+
+  try {
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  } catch {
+    // Storage can be blocked; the theme still flips for this visit.
+  }
+}
+
+export { toggleTheme };
+
 // Runs before first paint, so the page never flashes the wrong theme.
 export const themeScript = `(() => {
   const root = document.documentElement;

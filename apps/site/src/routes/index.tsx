@@ -2,10 +2,9 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { colors, fontSizes, space } from "@/lib/tokens.stylex";
-import { statusLabels } from "~/components/docs/page";
 import { getComponents } from "~/server/components";
 import { config } from "~/site/config";
-import { layout } from "~/site/tokens.stylex";
+import { layout, media } from "~/site/tokens.stylex";
 
 export const Route = createFileRoute("/")({
   loader: async () => await getComponents(),
@@ -18,9 +17,15 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.xs,
     marginInline: "auto",
-    maxWidth: layout.content,
+    maxWidth: {
+      default: `calc(${layout.content} + 2 * ${layout.gutter})`,
+      [media.sidebar]: layout.shell,
+    },
     paddingBottom: layout.pageBottom,
-    paddingInline: layout.gutter,
+    paddingInline: {
+      default: layout.gutter,
+      [media.sidebar]: layout.gutterWide,
+    },
     paddingTop: layout.pageTop,
   },
   description: {
@@ -49,7 +54,7 @@ function Home() {
       <h1>{config.name}</h1>
       <p {...stylex.props(styles.description)}>{config.description}</p>
       <ul {...stylex.props(styles.list)}>
-        {Route.useLoaderData().map(({ slug, status, title }) => (
+        {Route.useLoaderData().map(({ draft, slug, title }) => (
           <li key={slug}>
             <Link
               params={{ slug }}
@@ -58,7 +63,7 @@ function Home() {
             >
               {title}
             </Link>{" "}
-            <span {...stylex.props(styles.status)}>{statusLabels[status]}</span>
+            {draft && <span {...stylex.props(styles.status)}>Draft</span>}
           </li>
         ))}
       </ul>

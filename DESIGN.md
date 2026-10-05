@@ -26,6 +26,8 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 Floating surfaces (toasts, popovers) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
+On the site, the demo stage is the stage color: in dark, `#050505`, a step below the page, so the preview sits in a well instead of washing into the page.
+
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
 Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
@@ -38,6 +40,10 @@ Nested corners are concentric: outer radius = inner radius + the padding between
 - **Optical alignment.** Align what the eye sees, not the box: an icon marked `data-icon="inline-start"` or `"inline-end"` tightens its side's padding; Button's sizes take shadcn's numbers exactly (padding, icon side, gap, icon size per size). An icon centers on the first line of text, not the block.
 - **Icon stroke follows text weight.** `strokes.icon` is tuned for medium text; one icon set (Hugeicons) everywhere.
 - **Hit areas.** Anything smaller than `sizes.hitArea` grows its target with an invisible `::before` to that size. Neighbouring targets never overlap.
+
+## Docs site
+
+Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a components sidebar, and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Line numbers stay pinned while long lines scroll.
 
 ## Focus
 

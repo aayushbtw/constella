@@ -1,7 +1,6 @@
 ---
 title: Toast
 description: Shows a brief message that stacks, follows a promise and swipes away.
-status: polished
 ---
 
 <!-- ::demo name="toast" -->
