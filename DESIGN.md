@@ -36,6 +36,7 @@ Nested corners are concentric: outer radius = inner radius + the padding between
 
 - **Crisp text.** Grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
 - **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
+- **Weights stop at 600.** `fontWeights.semibold` is the heaviest, for bold in prose; nothing is 700. Heavier type shouts in a quiet interface.
 - **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
 - **Optical alignment.** Align what the eye sees, not the box: an icon marked `data-icon="inline-start"` or `"inline-end"` tightens its side's padding; Button's sizes take shadcn's numbers exactly (padding, icon side, gap, icon size per size). An icon centers on the first line of text, not the block.
 - **Icon stroke follows text weight.** `strokes.icon` is tuned for medium text; one icon set (Hugeicons) everywhere.
@@ -43,7 +44,7 @@ Nested corners are concentric: outer radius = inner radius + the padding between
 
 ## Docs site
 
-Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a components sidebar, and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Line numbers stay pinned while long lines scroll. Sidebar rows sit `space.xxxs` apart, so a hovered row's fill never merges into the active one.
+Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a sidebar grouped by section (Getting started, Components), and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Content starts right under the header, so a linked section lands at its edge with nothing showing above it. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Line numbers stay pinned while long lines scroll. Sidebar rows sit `space.xxxs` apart, so a hovered row's fill never merges into the active one.
 
 The home page is the tagline set large with Docs, GitHub and X links under it, then labeled sections: a muted label in a sidebar-width column, its content beside it (stacked below `media.sidebar`). No prose beyond the tagline.
 

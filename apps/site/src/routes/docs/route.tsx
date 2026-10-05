@@ -3,10 +3,18 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import { Sidebar } from "~/components/docs/sidebar";
 import { getComponents } from "~/server/components";
+import { getDocs } from "~/server/docs";
 import { layout, media } from "~/site/tokens.stylex";
 
-export const Route = createFileRoute("/components")({
-  loader: async () => await getComponents(),
+export const Route = createFileRoute("/docs")({
+  loader: async () => {
+    const [docs, components] = await Promise.all([
+      getDocs(),
+      getComponents(),
+    ]);
+
+    return { components, docs };
+  },
   component: DocsLayout,
 });
 
@@ -33,9 +41,20 @@ const styles = stylex.create({
 });
 
 function DocsLayout() {
+  const { components, docs } = Route.useLoaderData();
+
   return (
     <div {...stylex.props(styles.layout)}>
-      <Sidebar items={Route.useLoaderData()} />
+      <Sidebar
+        groups={[
+          { items: docs, label: "Getting started", to: "/docs/$slug" },
+          {
+            items: components,
+            label: "Components",
+            to: "/docs/components/$slug",
+          },
+        ]}
+      />
       <Outlet />
     </div>
   );

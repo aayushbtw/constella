@@ -143,7 +143,7 @@ function ButtonLinkDemo() {
   return (
     <DemoRow>
       <a
-        href="/components/toast"
+        href="/docs/components/toast"
         {...stylex.props(buttonStyles({ variant: "outline" }))}
       >
         Read the toast docs

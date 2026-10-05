@@ -10,3 +10,8 @@ pre[data-lang] code .th-line::before {
   position: sticky;
   width: calc(2.5em + 16px);
 }
+
+/* Prose to copy, like an agent prompt, wraps instead of scrolling. */
+pre[data-lang="text"] {
+  white-space: pre-wrap;
+}

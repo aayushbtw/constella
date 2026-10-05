@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 
 import {
   colors,
@@ -27,6 +27,9 @@ const styles = stylex.create({
     paddingBlock: layout.pageTop,
     paddingInline: space.xs,
     position: "sticky",
+  },
+  group: {
+    marginBlockEnd: { default: space.lg, ":last-child": 0 },
   },
   label: {
     color: colors.textMuted,
@@ -71,30 +74,39 @@ const styles = stylex.create({
   },
 });
 
-interface SidebarItem {
-  slug: string;
-  title: string;
+interface SidebarGroup {
+  items: { slug: string; title: string }[];
+  label: string;
+  to: "/docs/$slug" | "/docs/components/$slug";
 }
 
-function Sidebar({ items }: { items: SidebarItem[] }) {
-  const { slug: current } = useParams({ strict: false });
+function Sidebar({ groups }: { groups: SidebarGroup[] }) {
+  const matchRoute = useMatchRoute();
 
   return (
-    <nav aria-label="Components" {...stylex.props(styles.sidebar)}>
-      <p {...stylex.props(styles.label)}>Components</p>
-      <ul {...stylex.props(styles.list)}>
-        {items.map(({ slug, title }) => (
-          <li key={slug}>
-            <Link
-              params={{ slug }}
-              to="/components/$slug"
-              {...stylex.props(styles.link, slug === current && styles.active)}
-            >
-              {title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <nav aria-label="Docs" {...stylex.props(styles.sidebar)}>
+      {groups.map(({ items, label, to }) => (
+        <section key={label} {...stylex.props(styles.group)}>
+          <h2 {...stylex.props(styles.label)}>{label}</h2>
+          <ul {...stylex.props(styles.list)}>
+            {items.map(({ slug, title }) => (
+              <li key={slug}>
+                <Link
+                  params={{ slug }}
+                  to={to}
+                  {...stylex.props(
+                    styles.link,
+                    Boolean(matchRoute({ params: { slug }, to })) &&
+                      styles.active
+                  )}
+                >
+                  {title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </nav>
   );
 }

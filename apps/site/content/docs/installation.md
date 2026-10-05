@@ -1,0 +1,95 @@
+---
+title: Installation
+description: Add components with the shadcn CLI, then let Vite compile StyleX.
+---
+
+## With an agent
+
+Paste this into your coding agent. It adapts the steps below to your project.
+
+```text
+Set up the components from https://ui.aayush.cv in this project. They install from a shadcn registry and are styled with StyleX, not Tailwind.
+
+1. If there's no components.json, write one by hand with "style": "base-nova", "tsx": true, "rsc": false, empty "tailwind" fields ("config": "", "css": "", "baseColor": "neutral") and aliases for components, ui, lib, utils and hooks under "@/". Don't run shadcn init: it sets up Tailwind. If components.json exists, keep it.
+2. Run: npx shadcn@latest add https://ui.aayush.cv/r/button.json
+3. Add StyleX's compiler to the bundler, before the React plugin: @stylexjs/unplugin/vite for Vite, or see https://github.com/facebook/stylex/tree/main/packages/%40stylexjs/unplugin. Pass the project's "@/*" alias as `aliases`, matching tsconfig.json paths.
+4. In dev, load /virtual:stylex.css and import("virtual:stylex:runtime") from the HTML shell.
+5. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle if it has one.
+
+Then render a Button and check it's styled in dev and in a production build.
+```
+
+## Manual
+
+### Add components.json
+
+The shadcn CLI needs this file. Skip this step if your project already has one.
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-nova",
+  "tsx": true,
+  "rsc": false,
+  "tailwind": { "config": "", "css": "", "baseColor": "neutral" },
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "utils": "@/lib/utils",
+    "hooks": "@/hooks"
+  }
+}
+```
+
+**Write it by hand.** `shadcn init` sets up Tailwind, which these components don't use.
+
+### Add a component
+
+The first one also brings the tokens, colors and StyleX.
+
+<!-- ::install name="button" -->
+
+### Configure Vite
+
+Add StyleX's plugin before React's, and point `@/*` at your source. For other bundlers, see [StyleX's unplugin](https://github.com/facebook/stylex/tree/main/packages/%40stylexjs/unplugin).
+
+```ts
+import path from "node:path";
+
+import stylex from "@stylexjs/unplugin/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [
+    stylex({
+      aliases: { "@/*": [path.join(import.meta.dirname, "src/*")] },
+    }),
+    react(),
+  ],
+});
+```
+
+**Set the same alias in `tsconfig.json`.** StyleX and TypeScript resolve imports separately, so both need it.
+
+```json
+{
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] }
+  }
+}
+```
+
+In dev, StyleX serves its CSS separately. Load it in `index.html`:
+
+```html
+<link rel="stylesheet" href="/virtual:stylex.css" />
+<script type="module">
+  import("virtual:stylex:runtime");
+</script>
+```
+
+### Dark mode
+
+Add a `dark` class to `<html>`. next-themes and shadcn's theme setup already do this.

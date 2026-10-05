@@ -2,21 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { DocsPage } from "~/components/docs/page";
 import { Prose } from "~/components/docs/prose";
-import { getComponent } from "~/server/components";
+import { getDoc } from "~/server/docs";
 import { config } from "~/site/config";
 
-export const Route = createFileRoute("/docs/components/$slug")({
-  loader: async ({ params }) => await getComponent({ data: params.slug }),
+export const Route = createFileRoute("/docs/$slug")({
+  loader: async ({ params }) => await getDoc({ data: params.slug }),
   head: ({ loaderData }) => ({
     meta: [
       { title: `${loaderData?.metadata.title} · ${config.name}` },
       { content: loaderData?.metadata.description, name: "description" },
     ],
   }),
-  component: ComponentPage,
+  component: DocPage,
 });
 
-function ComponentPage() {
+function DocPage() {
   const { body, metadata } = Route.useLoaderData();
 
   return (

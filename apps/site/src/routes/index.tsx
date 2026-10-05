@@ -79,24 +79,17 @@ const styles = stylex.create({
 
 function Home() {
   const components = Route.useLoaderData();
-  const [first] = components;
 
   return (
     <main {...stylex.props(styles.main)}>
       <div {...stylex.props(styles.hero)}>
         <h1 {...stylex.props(styles.title)}>{config.description}</h1>
         <ul {...stylex.props(styles.inline)}>
-          {first && (
-            <li>
-              <Link
-                params={{ slug: first.slug }}
-                to="/components/$slug"
-                {...stylex.props(styles.link)}
-              >
-                Docs
-              </Link>
-            </li>
-          )}
+          <li>
+            <Link to="/docs" {...stylex.props(styles.link)}>
+              Docs
+            </Link>
+          </li>
           <li>
             <a
               href={`https://github.com/${config.socials.github}`}
@@ -123,7 +116,7 @@ function Home() {
             <li key={slug}>
               <Link
                 params={{ slug }}
-                to="/components/$slug"
+                to="/docs/components/$slug"
                 {...stylex.props(styles.link)}
               >
                 {title}

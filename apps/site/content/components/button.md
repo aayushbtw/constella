@@ -90,7 +90,7 @@ Use `corners="pill"` to round the ends.
 
 ## Spinner
 
-Render a [Spinner](/components/spinner) inside the button to show it's loading. Add `data-icon="inline-start"` to the spinner, and `disabled` so it can't be pressed twice.
+Render a [Spinner](/docs/components/spinner) inside the button to show it's loading. Add `data-icon="inline-start"` to the spinner, and `disabled` so it can't be pressed twice.
 
 <!-- ::demo name="button-loading" -->
 

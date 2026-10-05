@@ -22,7 +22,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 ## Button
 
-Render it inside a [Button](/components/button) with `data-icon="inline-start"`.
+Render it inside a [Button](/docs/components/button) with `data-icon="inline-start"`.
 
 ```tsx
 <Button disabled>
