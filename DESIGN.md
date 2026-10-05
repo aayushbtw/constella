@@ -69,14 +69,18 @@ Ask how often it's seen. Something used dozens of times a day gets little or no 
 
 ### Easing
 
-| Token       | For                                                          |
-| ----------- | ------------------------------------------------------------ |
-| `out`       | Entrances and presses: moves at once, so it feels responsive |
-| `inOut`     | Things traveling across the screen: leave and arrive gently  |
-| `overshoot` | Small elements that should feel alive                        |
-| `ease`      | Color and hover changes (the CSS keyword, no token)          |
+| Token | For |
+| --- | --- |
+| `out` | Entrances and presses: moves at once, so it feels responsive |
+| `inOut` | Things traveling across the screen: leave and arrive gently |
+| `overshoot` | Small elements that should feel alive |
+| `ease` | Color and hover changes (the CSS keyword, no token) |
+| `spring`, `springBounce` | Surfaces that change shape or settle into place; bounce only where it should feel alive |
+| `swap` | One state replacing another in place: icons, text |
 
 Never `ease-in`: it delays the moment the eye is watching.
+
+Springs are sampled into CSS `linear()`, so they need no library. Each has a duration token of the same name: the curve is shaped for that length.
 
 ### Duration
 
@@ -86,8 +90,13 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `press`   | Scale on `:active`                      |
 | `popover` | Small surfaces that open from a trigger |
 | `move`    | Indicators and thumbs that travel       |
+| `swap`    | Cross-fades between states              |
 
-Interface motion stays under 300ms.
+Interface motion stays under 300ms. Springs run longer on paper, but most of their travel is done by then; the rest is the settle.
+
+### Swaps
+
+When one state replaces another in place, both stay mounted and cross-fade: the incoming one from `scale(0.25)`, `blur(4px)` and transparent, on `swap`. Transitions, not keyframes, so a quick change back reverses smoothly.
 
 ### Press and hover
 

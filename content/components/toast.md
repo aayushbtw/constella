@@ -1,6 +1,6 @@
 ---
 title: Toast
-description: Stacked notifications that expand on hover and swipe to dismiss.
+description: An island that morphs between states, stacks on hover and swipes away.
 ---
 
 <!-- ::demo name="toast" -->
@@ -20,7 +20,7 @@ import { Toaster, toast } from "@/components/ui/toast";
   <App />
 </Toaster>;
 
-toast.add({ title: "Saved", description: "Your changes are live." });
+toast.add({ title: "Saved", type: "success" });
 ```
 
 ## Composition
@@ -29,16 +29,27 @@ toast.add({ title: "Saved", description: "Your changes are live." });
 Toaster
 └── Toast
     └── ToastContent
+        ├── ToastIcon
         ├── ToastBody
         │   ├── ToastTitle
         │   └── ToastDescription
         ├── ToastAction
-        └── ToastClose
+        └── ToastProgress
 ```
 
-`Toaster` renders this for every toast. To change the layout, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`.
+`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`. `ToastClose` is there for layouts that need a close button; the default leans on swipe and the timer.
 
 ## Examples
+
+### Types
+
+`type` picks the icon: `success`, `error`, `info` or `loading`. Changing it on a live toast cross-fades the icon.
+
+```tsx
+const id = toast.add({ title: "Saving…", type: "loading", timeout: 0 });
+
+toast.update(id, { title: "Saved", type: "success" });
+```
 
 ### Action
 
@@ -51,12 +62,12 @@ toast.add({
 
 ### Promise
 
-The toast follows the promise from loading to success or error.
+The toast follows the promise: the icon cross-fades, the text blurs in, and the island resizes to fit.
 
 ```tsx
 toast.promise(upload(files), {
   loading: { title: "Uploading…" },
-  success: { title: "Done" },
+  success: { title: "Done", description: "3 files uploaded." },
   error: { title: "Upload failed" },
 });
 ```

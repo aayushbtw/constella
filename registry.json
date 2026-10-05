@@ -21,10 +21,11 @@
       "name": "toast",
       "type": "registry:ui",
       "title": "Toast",
-      "description": "Stacked notifications that expand on hover and swipe to dismiss.",
+      "description": "An island that morphs between states, stacks on hover and swipes away.",
       "dependencies": [
         "@base-ui/react",
-        "@phosphor-icons/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": ["https://ui.aayush.cv/r/tokens.json"],

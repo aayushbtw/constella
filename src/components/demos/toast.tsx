@@ -40,14 +40,10 @@ const styles = stylex.create({
   },
 });
 
-let count = 0;
+let uploads = 0;
 
 function showDefault() {
-  count += 1;
-  toast.add({
-    description: "Your changes are live.",
-    title: `Saved (${count})`,
-  });
+  toast.add({ title: "Saved", type: "success" });
 }
 
 function showAction() {
@@ -63,18 +59,33 @@ function showAction() {
   });
 }
 
+// Every other upload fails, so both endings are on show.
+async function upload() {
+  uploads += 1;
+  const fails = uploads % 2 === 0;
+
+  try {
+    await toast.promise(
+      // oxlint-disable-next-line promise/avoid-new -- the demo fakes a slow upload
+      new Promise((resolve, reject) => {
+        setTimeout(fails ? reject : resolve, 1500);
+      }),
+      {
+        error: {
+          description: "The connection dropped.",
+          title: "Upload failed",
+        },
+        loading: { title: "Uploading…" },
+        success: { description: "3 files uploaded.", title: "Done" },
+      }
+    );
+  } catch {
+    // The toast already shows the failure.
+  }
+}
+
 function showPromise() {
-  void toast.promise(
-    // oxlint-disable-next-line promise/avoid-new -- the demo fakes a slow upload
-    new Promise((resolve) => {
-      setTimeout(resolve, 1500);
-    }),
-    {
-      error: { title: "Upload failed" },
-      loading: { title: "Uploading…" },
-      success: { description: "3 files uploaded.", title: "Done" },
-    }
-  );
+  void upload();
 }
 
 function ToastDemo() {
