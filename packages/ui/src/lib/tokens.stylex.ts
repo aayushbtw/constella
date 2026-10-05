@@ -35,6 +35,7 @@ export const colors = stylex.defineVars({
 });
 
 export const shadows = stylex.defineConsts({
+  control: "0 1px 2px var(--black-a2)",
   popover: "0 0 0 1px var(--gray-a4), 0 4px 16px var(--black-a6)",
 });
 
@@ -74,12 +75,14 @@ export const sizes = stylex.defineConsts({
   controlMd: "32px",
   controlSm: "24px",
   controlXs: "20px",
+  hitArea: "40px",
   icon: "16px",
   iconSm: "14px",
   toast: "356px",
 });
 
 export const strokes = stylex.defineConsts({
+  border: "1px",
   // Hugeicons' weight beside medium text; read in JS, so a bare number.
   icon: "1.75",
   spinner: "1.5px",

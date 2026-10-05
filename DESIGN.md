@@ -67,7 +67,22 @@ Components never branch on the theme. Every color is a token valued by a Radix s
 
 ## Surfaces
 
-Edges are box-shadows, never `border`: borders render unevenly across pixel densities, a shadow stays crisp and takes no layout. Every edge comes from `shadows`. An edge that needs a hover color composes `colors.edgeStrong` into an inset shadow in place.
+Controls (buttons, inputs) have a real border and a light `shadows.control`. The edge takes space, so what the user sees is what's laid out. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill paints under the translucent edge and muddies it, and bleeds through anti-aliased corners.
+
+Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up.
+
+Floating surfaces (toasts, popovers) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
+
+Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
+
+## Details
+
+- **Crisp text.** `base.css` sets grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
+- **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
+- **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
+- **Optical alignment.** Align what the eye sees, not the box: an icon's side of a button sits one step tighter, an icon centers on the first line of text, not the block.
+- **Icon stroke follows text weight.** `strokes.icon` is tuned for medium text; one icon set (Hugeicons) everywhere.
+- **Hit areas.** Anything smaller than `sizes.hitArea` grows its target with an invisible `::before` to that size. Neighbouring targets never overlap.
 
 ## Focus
 

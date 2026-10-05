@@ -241,6 +241,7 @@ const styles = stylex.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.row,
+    textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
@@ -253,13 +254,14 @@ const styles = stylex.create({
   },
   close: {
     alignItems: "center",
-    // Overhangs the title's line instead of growing it, so the row stays centered on the text.
-    marginBlock: `calc((${lineHeights.row} - ${sizes.controlXs}) / 2)`,
+    // Pulled past the content padding into the corner, `space.xxs` from both edges.
+    marginBlockStart: `calc(${space.xxs} - ${space.sm})`,
+    marginInlineEnd: `calc(${space.xxs} - ${space.sm})`,
     backgroundColor: {
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fill },
     },
-    borderRadius: radii.xs,
+    borderRadius: radii.sm,
     borderStyle: "none",
     color: {
       default: colors.textMuted,
@@ -274,6 +276,7 @@ const styles = stylex.create({
     height: sizes.controlXs,
     justifyContent: "center",
     padding: 0,
+    position: "relative",
     touchAction: "manipulation",
     transform: { default: null, ":active": presses.icon },
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}`,
@@ -281,6 +284,11 @@ const styles = stylex.create({
     transitionTimingFunction: `${easings.out}, ease, ease`,
     WebkitTapHighlightColor: "transparent",
     width: sizes.controlXs,
+    "::before": {
+      content: "''",
+      inset: `calc((${sizes.controlXs} - ${sizes.hitArea}) / 2)`,
+      position: "absolute",
+    },
   },
 });
 

@@ -23,6 +23,8 @@
 @layer base {
   :root {
     color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Native controls and scrollbars follow the theme too. */

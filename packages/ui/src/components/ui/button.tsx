@@ -13,8 +13,10 @@ import {
   opacities,
   presses,
   radii,
+  shadows,
   sizes,
   space,
+  strokes,
 } from "@/lib/tokens.stylex";
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "danger";
@@ -36,8 +38,11 @@ const thinOnHover = {
 const styles = stylex.create({
   base: {
     alignItems: "center",
+    // Every variant reserves the border, so a fill and an outline are the same size.
+    borderColor: "transparent",
     borderRadius: radii.sm,
-    borderStyle: "none",
+    borderStyle: "solid",
+    borderWidth: strokes.border,
     cursor: "pointer",
     display: "inline-flex",
     flexShrink: 0,
@@ -110,7 +115,9 @@ const styles = stylex.create({
         ":hover:not(:disabled)": colors.fillSubtle,
       },
     },
-    boxShadow: `inset 0 0 0 1px ${colors.edge}`,
+    backgroundClip: "padding-box",
+    borderColor: colors.edge,
+    boxShadow: shadows.control,
     color: colors.textPrimary,
   },
   ghost: {

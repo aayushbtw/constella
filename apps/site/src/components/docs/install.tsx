@@ -69,11 +69,17 @@ const styles = stylex.create({
     display: "flex",
     height: sizes.controlSm,
     justifyContent: "center",
+    position: "relative",
     transform: { default: null, ":active": presses.icon },
     transitionDuration: `${durations.hover}, ${durations.press}`,
     transitionProperty: "color, transform",
     transitionTimingFunction: `ease, ${easings.out}`,
     width: sizes.controlSm,
+    "::before": {
+      content: "''",
+      inset: `calc((${sizes.controlSm} - ${sizes.hitArea}) / 2)`,
+      position: "absolute",
+    },
   },
   // Both icons share one cell, so the swap is a crossfade in place.
   icons: {
