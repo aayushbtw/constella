@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { colors, layout, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, layout, space } from "@/lib/tokens.stylex";
 
 const styles = stylex.create({
   page: {
@@ -22,20 +22,29 @@ const styles = stylex.create({
   description: {
     color: colors.textSecondary,
   },
+  status: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+  },
 });
+
+const statusLabels = { draft: "Draft", polished: "Polished" } as const;
 
 function DocsPage({
   children,
   description,
+  status,
   title,
 }: {
   children: ReactNode;
   description: string;
+  status: keyof typeof statusLabels;
   title: string;
 }) {
   return (
     <main {...stylex.props(styles.page)}>
       <header {...stylex.props(styles.header)}>
+        <p {...stylex.props(styles.status)}>{statusLabels[status]}</p>
         <h1>{title}</h1>
         <p {...stylex.props(styles.description)}>{description}</p>
       </header>
@@ -44,4 +53,4 @@ function DocsPage({
   );
 }
 
-export { DocsPage };
+export { DocsPage, statusLabels };

@@ -1,6 +1,7 @@
 ---
 title: Toast
 description: Quiet notifications that stack, follow a promise and swipe away.
+status: polished
 ---
 
 <!-- ::demo name="toast" -->
@@ -43,7 +44,7 @@ Toaster
 
 ### Types
 
-`type` picks the icon. Without one, the toast is text only.
+`type` picks the icon and its color. Without one, the toast is text only.
 
 <!-- ::demo name="toast-types" -->
 
@@ -51,6 +52,7 @@ Toaster
 toast.add({ title: "Event created" });
 toast.add({ title: "Saved", type: "success" });
 toast.add({ title: "Couldn’t save", type: "error" });
+toast.add({ title: "Running low on space", type: "warning" });
 toast.add({ title: "A new version is available", type: "info" });
 toast.add({ title: "Syncing…", type: "loading" });
 ```
@@ -111,11 +113,11 @@ Every part takes `sx` to override its styles. The rest is [Base UI's Toast](http
 
 ### Options
 
-| Option        | Type                                           | Default |
-| ------------- | ---------------------------------------------- | ------- |
-| `title`       | `ReactNode`                                    |         |
-| `description` | `ReactNode`                                    |         |
-| `type`        | `"success" \| "error" \| "info" \| "loading"`  |         |
-| `timeout`     | `number`, ms; `0` stays until dismissed        | `5000`  |
-| `actionProps` | Button props for the action                    |         |
-| `priority`    | `"low" \| "high"`, how urgently it's announced | `"low"` |
+| Option | Type | Default |
+| --- | --- | --- |
+| `title` | `ReactNode` |  |
+| `description` | `ReactNode` |  |
+| `type` | `"success" \| "error" \| "warning" \| "info" \| "loading"` |  |
+| `timeout` | `number`, ms; `0` stays until dismissed | `5000` |
+| `actionProps` | Button props for the action |  |
+| `priority` | `"low" \| "high"`, how urgently it's announced | `"low"` |

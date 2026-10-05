@@ -15,7 +15,21 @@
           "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias, the Radix gray, gray-alpha, gray-dark, gray-dark-alpha, black-alpha, green, green-dark, red and red-dark CSS imported once, and `color-scheme: dark` on `.dark`. Setup: https://ui.aayush.cv"
+      "docs": "Needs the StyleX compiler with an `@/*` alias, `color-scheme: dark` on `.dark`, and these Radix scales imported once, each with its -alpha, -dark and -dark-alpha files: gray, amber, blue, green, red; plus black-alpha. Setup: https://ui.aayush.cv"
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Five variants for every level of emphasis, in three sizes.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://ui.aayush.cv/r/tokens.json"],
+      "files": [
+        {
+          "path": "src/components/ui/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "toast",
@@ -28,7 +42,10 @@
         "@hugeicons/react",
         "@stylexjs/stylex"
       ],
-      "registryDependencies": ["https://ui.aayush.cv/r/tokens.json"],
+      "registryDependencies": [
+        "https://ui.aayush.cv/r/tokens.json",
+        "https://ui.aayush.cv/r/button.json"
+      ],
       "files": [
         {
           "path": "src/components/ui/toast.tsx",

@@ -3,6 +3,7 @@
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import {
   Alert02Icon,
+  AlertCircleIcon,
   Cancel01Icon,
   CheckmarkCircle02Icon,
   InformationCircleIcon,
@@ -13,6 +14,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   colors,
   durations,
@@ -24,7 +26,6 @@ import {
   lineHeights,
   media,
   motion,
-  opacities,
   presses,
   radii,
   shadows,
@@ -63,9 +64,10 @@ const layoutAnimation = {
 };
 
 const icons = {
-  error: Alert02Icon,
+  error: AlertCircleIcon,
   info: InformationCircleIcon,
   success: CheckmarkCircle02Icon,
+  warning: Alert02Icon,
 } satisfies Record<string, IconSvgElement>;
 
 type ToastType = keyof typeof icons | "loading";
@@ -175,6 +177,8 @@ const styles = stylex.create({
   },
   // Every icon stays mounted, so a type change cross-fades instead of swapping.
   layer: {
+    // Flex, so the SVG doesn't sit on a text baseline a pixel low.
+    display: "flex",
     filter: `blur(${motion.crossfadeBlur})`,
     inset: 0,
     opacity: 0,
@@ -192,9 +196,10 @@ const styles = stylex.create({
     opacity: 1,
     transform: "scale(1)",
   },
-  // Hue only on the icon: the shape and title still say it without color.
-  danger: { color: colors.danger },
+  error: { color: colors.danger },
+  info: { color: colors.info },
   success: { color: colors.success },
+  warning: { color: colors.warning },
   // A thin arc on a faint track, unhurried: it says "working", not "urgent".
   spinner: {
     animationDuration: durations.spin,
@@ -246,25 +251,11 @@ const styles = stylex.create({
   },
   action: {
     alignSelf: "center",
-    backgroundColor: colors.accent,
-    borderRadius: radii.xs,
-    color: colors.background,
-    flexShrink: 0,
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium,
-    height: sizes.controlSm,
-    opacity: {
-      default: 1,
-      [media.hover]: { default: 1, ":hover": opacities.hover },
-    },
-    paddingInline: space.xs,
-    transform: { default: null, ":active": presses.link },
-    transitionDuration: `${durations.press}, ${durations.hover}`,
-    transitionProperty: "transform, opacity",
-    transitionTimingFunction: `${easings.out}, ease`,
   },
   close: {
     alignItems: "center",
+    // Overhangs the title's line instead of growing it, so the row stays centered on the text.
+    marginBlock: `calc((${lineHeights.row} - ${sizes.controlXs}) / 2)`,
     backgroundColor: {
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fill },
@@ -330,6 +321,16 @@ function ToastContent({ sx, ...props }: Styled<ToastPrimitive.Content.Props>) {
   );
 }
 
+const statuses = ["error", "info", "success", "warning"] as const;
+
+// Hue only on the icon: the shape and title still say it without color.
+const tones = {
+  error: styles.error,
+  info: styles.info,
+  success: styles.success,
+  warning: styles.warning,
+} satisfies Record<(typeof statuses)[number], stylex.StyleXStyles>;
+
 function ToastIcon({
   sx,
   type,
@@ -345,18 +346,17 @@ function ToastIcon({
       <span {...stylex.props(styles.layer, type === "loading" && styles.shown)}>
         <span {...stylex.props(styles.spinner)} />
       </span>
-      {Object.entries(icons).map(([name, icon]) => (
+      {statuses.map((name) => (
         <span
           key={name}
           {...stylex.props(
             styles.layer,
-            name === "error" && styles.danger,
-            name === "success" && styles.success,
+            tones[name],
             name === type && styles.shown
           )}
         >
           <HugeiconsIcon
-            icon={icon}
+            icon={icons[name]}
             size={sizes.icon}
             strokeWidth={Number(strokes.icon)}
           />
@@ -395,12 +395,13 @@ function ToastDescription({
   );
 }
 
+// The styles ride on the Button: it applies its own last, over anything Base UI merges in.
 function ToastAction({ sx, ...props }: Styled<ToastPrimitive.Action.Props>) {
   return (
     <ToastPrimitive.Action
       data-slot="toast-action"
+      render={<Button size="sm" sx={[styles.action, sx]} variant="primary" />}
       {...props}
-      {...stylex.props(styles.action, sx)}
     />
   );
 }

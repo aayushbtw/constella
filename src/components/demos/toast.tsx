@@ -1,4 +1,5 @@
-import { DemoButton, DemoRow } from "@/components/demos/trigger";
+import { DemoRow } from "@/components/demos/trigger";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 
 async function wait(fails: boolean) {
@@ -23,7 +24,8 @@ async function upload(fails: boolean) {
 function ToastDemo() {
   return (
     <DemoRow>
-      <DemoButton
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({
             description: "Your changes are live.",
@@ -33,14 +35,15 @@ function ToastDemo() {
         }}
       >
         Show toast
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           void upload(false);
         }}
       >
         Promise
-      </DemoButton>
+      </Button>
     </DemoRow>
   );
 }
@@ -48,21 +51,24 @@ function ToastDemo() {
 function ToastTypesDemo() {
   return (
     <DemoRow>
-      <DemoButton
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({ title: "Event created" });
         }}
       >
         Default
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({ title: "Saved", type: "success" });
         }}
       >
         Success
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({
             description: "Check your connection and try again.",
@@ -72,21 +78,35 @@ function ToastTypesDemo() {
         }}
       >
         Error
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        onClick={() => {
+          toast.add({
+            description: "You’ve used 90% of your storage.",
+            title: "Running low on space",
+            type: "warning",
+          });
+        }}
+        variant="outline"
+      >
+        Warning
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({ title: "A new version is available", type: "info" });
         }}
       >
         Info
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({ title: "Syncing…", type: "loading" });
         }}
       >
         Loading
-      </DemoButton>
+      </Button>
     </DemoRow>
   );
 }
@@ -94,7 +114,8 @@ function ToastTypesDemo() {
 function ToastActionDemo() {
   return (
     <DemoRow>
-      <DemoButton
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({
             actionProps: {
@@ -109,7 +130,7 @@ function ToastActionDemo() {
         }}
       >
         Delete file
-      </DemoButton>
+      </Button>
     </DemoRow>
   );
 }
@@ -117,20 +138,22 @@ function ToastActionDemo() {
 function ToastPromiseDemo() {
   return (
     <DemoRow>
-      <DemoButton
+      <Button
+        variant="outline"
         onClick={() => {
           void upload(false);
         }}
       >
         Succeeds
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           void upload(true);
         }}
       >
         Fails
-      </DemoButton>
+      </Button>
     </DemoRow>
   );
 }
@@ -138,7 +161,8 @@ function ToastPromiseDemo() {
 function ToastDismissDemo() {
   return (
     <DemoRow>
-      <DemoButton
+      <Button
+        variant="outline"
         onClick={() => {
           toast.add({
             description: "It stays until you close it or swipe it away.",
@@ -148,14 +172,15 @@ function ToastDismissDemo() {
         }}
       >
         Show persistent
-      </DemoButton>
-      <DemoButton
+      </Button>
+      <Button
+        variant="outline"
         onClick={() => {
           toast.close();
         }}
       >
         Dismiss all
-      </DemoButton>
+      </Button>
     </DemoRow>
   );
 }

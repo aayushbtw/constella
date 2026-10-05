@@ -53,7 +53,9 @@ Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued b
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status, and only the statuses something renders get a ramp: `success` (Radix green) and `danger` (Radix red). Both use step 11, the foreground step, which clears text contrast on `background` in both themes. Status color marks the small thing that carries the meaning, an icon or a word, never a whole surface, and never alone: the shape or the text says it too. A new status (warning) earns its ramp when a component first needs it.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has three roles: the base for icons and titles, `Subtle` for a tinted background, `Edge` for its edge. Status color marks the small thing that carries the meaning and never the body text: step 11 holds up on the page but drops just under text contrast on its own tinted background, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
+
+`dangerSolid` exists because a destructive button needs a fill. White on it is 3.9:1, short of text contrast, which Radix accepts for solid buttons; no single red step passes in both themes.
 
 ## Theme
 

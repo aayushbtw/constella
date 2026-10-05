@@ -1,8 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { statusLabels } from "@/components/docs/page";
 import { config } from "@/lib/config";
-import { colors, layout, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, layout, space } from "@/lib/tokens.stylex";
 import { getComponents } from "@/server/components";
 
 export const Route = createFileRoute("/")({
@@ -35,6 +36,10 @@ const styles = stylex.create({
     textDecoration: "underline",
     textUnderlineOffset: 3,
   },
+  status: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xs,
+  },
 });
 
 function Home() {
@@ -43,7 +48,7 @@ function Home() {
       <h1>{config.name}</h1>
       <p {...stylex.props(styles.description)}>{config.description}</p>
       <ul {...stylex.props(styles.list)}>
-        {Route.useLoaderData().map(({ slug, title }) => (
+        {Route.useLoaderData().map(({ slug, status, title }) => (
           <li key={slug}>
             <Link
               params={{ slug }}
@@ -51,7 +56,8 @@ function Home() {
               {...stylex.props(styles.link)}
             >
               {title}
-            </Link>
+            </Link>{" "}
+            <span {...stylex.props(styles.status)}>{statusLabels[status]}</span>
           </li>
         ))}
       </ul>

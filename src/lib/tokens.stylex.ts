@@ -3,15 +3,32 @@ import * as stylex from "@stylexjs/stylex";
 export const colors = stylex.defineVars({
   accent: "var(--gray-12)",
   background: "var(--gray-1)",
-  danger: "var(--red-11)",
+  edge: "var(--gray-a4)",
   edgeStrong: "var(--gray-a6)",
   fill: "var(--gray-a3)",
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
-  success: "var(--green-11)",
+  onAccent: "var(--gray-1)",
   textMuted: "var(--gray-10)",
   textPrimary: "var(--gray-12)",
   textSecondary: "var(--gray-11)",
+
+  // Status: the base is the foreground step, for icons and titles; `Subtle` is
+  // a tinted background, `Edge` its edge. Body text stays neutral.
+  danger: "var(--red-11)",
+  dangerEdge: "var(--red-a6)",
+  dangerSolid: "var(--red-9)",
+  dangerSubtle: "var(--red-a3)",
+  info: "var(--blue-11)",
+  infoEdge: "var(--blue-a6)",
+  infoSubtle: "var(--blue-a3)",
+  onDanger: "white",
+  success: "var(--green-11)",
+  successEdge: "var(--green-a6)",
+  successSubtle: "var(--green-a3)",
+  warning: "var(--amber-11)",
+  warningEdge: "var(--amber-a6)",
+  warningSubtle: "var(--amber-a3)",
 });
 
 export const shadows = stylex.defineConsts({
@@ -63,6 +80,7 @@ export const radii = stylex.defineConsts({
 });
 
 export const sizes = stylex.defineConsts({
+  controlLg: "40px",
   controlMd: "32px",
   controlSm: "24px",
   controlXs: "20px",
@@ -81,6 +99,7 @@ export const layers = stylex.defineConsts({
 });
 
 export const opacities = stylex.defineConsts({
+  disabled: "0.5",
   hover: "0.88",
 });
 

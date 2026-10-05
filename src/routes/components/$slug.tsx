@@ -20,7 +20,11 @@ function ComponentPage() {
   const { body, metadata } = Route.useLoaderData();
 
   return (
-    <DocsPage description={metadata.description} title={metadata.title}>
+    <DocsPage
+      description={metadata.description}
+      status={metadata.status}
+      title={metadata.title}
+    >
       <Prose body={body} />
     </DocsPage>
   );

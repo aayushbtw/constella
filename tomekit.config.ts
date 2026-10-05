@@ -18,6 +18,8 @@ export default defineConfig({
       loader: directory("content/components"),
       schema: z.strictObject({
         description: z.string(),
+        // `polished` once a component has had its full design pass.
+        status: z.enum(["draft", "polished"]).default("draft"),
         title: z.string(),
       }),
       transform: ({ body }) => ({

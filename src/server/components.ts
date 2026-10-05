@@ -5,7 +5,11 @@ import { components } from "tomekit/content";
 const getComponents = createServerFn({ method: "GET" }).handler(() =>
   components
     .documents()
-    .map(({ metadata, slug }) => ({ slug, title: metadata.title }))
+    .map(({ metadata, slug }) => ({
+      slug,
+      status: metadata.status,
+      title: metadata.title,
+    }))
     .toSorted((a, b) => a.title.localeCompare(b.title))
 );
 
