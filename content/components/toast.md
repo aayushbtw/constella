@@ -33,10 +33,11 @@ Toaster
         ├── ToastBody
         │   ├── ToastTitle
         │   └── ToastDescription
-        └── ToastAction
+        ├── ToastAction
+        └── ToastClose
 ```
 
-`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`. `ToastClose` is there for layouts that need a close button; the default leans on swipe.
+`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`.
 
 ## Examples
 

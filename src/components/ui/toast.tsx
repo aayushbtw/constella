@@ -6,24 +6,31 @@ import {
   Cancel01Icon,
   CheckmarkCircle02Icon,
   InformationCircleIcon,
-  Loading03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import {
   colors,
   durations,
   easings,
   fontSizes,
+  fontWeights,
+  layers,
+  layout,
   lineHeights,
   media,
+  motion,
+  opacities,
   presses,
   radii,
   shadows,
+  sizes,
   space,
+  strokes,
 } from "@/lib/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -36,25 +43,37 @@ const toast = ToastPrimitive.createToastManager();
 const gap = space.sm;
 const peek = space.sm;
 const height = "var(--toast-frontmost-height, var(--toast-height))";
-const scale = "max(0, 1 - var(--toast-index) * 0.05)";
+const scale = `max(0, 1 - var(--toast-index) * ${motion.stackScale})`;
 const offsetY = `calc(var(--toast-offset-y) * -1 - var(--toast-index) * ${gap} + var(--toast-swipe-movement-y))`;
 const swipeX = "var(--toast-swipe-movement-x)";
 const swipeY = "var(--toast-swipe-movement-y)";
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
-const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
+const textIn = stylex.keyframes({
+  from: { filter: `blur(${motion.crossfadeTextBlur})`, opacity: 0 },
+});
+const textOut = stylex.keyframes({
+  to: { filter: `blur(${motion.crossfadeTextBlur})`, opacity: 0 },
+});
 
-const types = {
+const layoutAnimation = {
+  // The Web Animations API takes bare milliseconds; the token carries `ms`.
+  duration: Number(durations.layout.slice(0, -"ms".length)),
+  easing: easings.layout,
+};
+
+const icons = {
   error: Alert02Icon,
   info: InformationCircleIcon,
-  loading: Loading03Icon,
   success: CheckmarkCircle02Icon,
 } satisfies Record<string, IconSvgElement>;
 
-type ToastType = keyof typeof types;
+type ToastType = keyof typeof icons | "loading";
 
 function isToastType(type: string | undefined): type is ToastType {
-  return type !== undefined && Object.hasOwn(types, type);
+  return (
+    type !== undefined && (type === "loading" || Object.hasOwn(icons, type))
+  );
 }
 
 const styles = stylex.create({
@@ -62,13 +81,14 @@ const styles = stylex.create({
     bottom: space.md,
     insetInlineEnd: space.md,
     position: "fixed",
-    width: { default: `calc(100vw - 2 * ${space.md})`, [media.sm]: 356 },
-    zIndex: 50,
+    width: {
+      default: `calc(100vw - 2 * ${space.md})`,
+      [media.sm]: layout.toast,
+    },
+    zIndex: layers.toast,
   },
   toast: {
-    backgroundColor: colors.background,
     borderRadius: radii.md,
-    boxShadow: shadows.popover,
     color: colors.textPrimary,
     cursor: "default",
     height: {
@@ -88,7 +108,7 @@ const styles = stylex.create({
       // Two attributes, so these outrank the expanded position above.
       ":is([data-starting-style]):not([data-swipe-direction])":
         "translateY(100%)",
-      ":is([data-ending-style]):not([data-swipe-direction])": "translateY(8px)",
+      ":is([data-ending-style]):not([data-swipe-direction])": `translateY(${motion.exitOffset})`,
       ":is([data-ending-style][data-swipe-direction='down'])": `translateY(calc(${swipeY} + 150%))`,
       ":is([data-ending-style][data-swipe-direction='right'])": `translateX(calc(${swipeX} + 150%)) translateY(${offsetY})`,
     },
@@ -107,6 +127,17 @@ const styles = stylex.create({
     userSelect: "none",
     width: "100%",
     zIndex: "calc(1000 - var(--toast-index))",
+    // The surface is its own layer, so a content change can grow it without
+    // resizing the toast, which Base UI is measuring.
+    "::before": {
+      backgroundColor: colors.background,
+      borderRadius: radii.md,
+      boxShadow: shadows.popover,
+      content: "''",
+      inset: 0,
+      position: "absolute",
+      zIndex: -1,
+    },
     // Bridges the gap between toasts, so moving across it keeps the stack expanded.
     "::after": {
       content: "''",
@@ -120,12 +151,10 @@ const styles = stylex.create({
     alignItems: "flex-start",
     display: "flex",
     gap: space.sm,
-    height: "100%",
     opacity: {
       default: 1,
       ":is([data-behind]):not([data-expanded])": 0,
     },
-    overflow: "hidden",
     padding: space.sm,
     paddingInlineStart: {
       default: space.md,
@@ -138,52 +167,72 @@ const styles = stylex.create({
   icon: {
     color: colors.textSecondary,
     flexShrink: 0,
-    height: 16,
+    height: sizes.icon,
     // Centers the icon on the title's first line.
-    marginBlockStart: 1,
+    marginBlockStart: `calc((${lineHeights.row} - ${sizes.icon}) / 2)`,
     position: "relative",
-    width: 16,
+    width: sizes.icon,
   },
   // Every icon stays mounted, so a type change cross-fades instead of swapping.
   layer: {
-    filter: "blur(4px)",
+    filter: `blur(${motion.crossfadeBlur})`,
     inset: 0,
     opacity: 0,
     position: "absolute",
-    transform: "scale(0.25)",
-    transitionDuration: durations.swap,
+    transform: `scale(${motion.crossfadeScale})`,
+    transitionDuration: durations.crossfade,
     transitionProperty: {
       default: "opacity, transform, filter",
       [media.reducedMotion]: "opacity",
     },
-    transitionTimingFunction: easings.swap,
+    transitionTimingFunction: easings.crossfade,
   },
   shown: {
     filter: "blur(0)",
     opacity: 1,
     transform: "scale(1)",
   },
+  // A thin arc on a faint track, unhurried: it says "working", not "urgent".
   spinner: {
-    animationDuration: "800ms",
+    animationDuration: durations.spin,
     animationIterationCount: "infinite",
     animationName: spin,
     animationTimingFunction: "linear",
+    borderColor: colors.fillStrong,
+    borderRadius: radii.full,
+    borderStyle: "solid",
+    borderTopColor: "currentColor",
+    borderWidth: strokes.spinner,
+    inset: `calc((${sizes.icon} - ${sizes.iconSm}) / 2)`,
+    position: "absolute",
   },
   body: {
     display: "flex",
     flex: 1,
     flexDirection: "column",
-    gap: 2,
+    gap: space.xxxs,
     minWidth: 0,
+    position: "relative",
   },
-  updated: {
-    animationDuration: durations.swap,
-    animationName: fadeIn,
+  // Blur bridges the two texts, so they read as one changing instead of two overlapping.
+  entering: {
+    animationDuration: durations.crossfade,
+    animationName: textIn,
     animationTimingFunction: easings.out,
+  },
+  leaving: {
+    animationDuration: durations.popover,
+    animationFillMode: "forwards",
+    animationName: textOut,
+    animationTimingFunction: easings.out,
+    insetBlockStart: 0,
+    insetInline: 0,
+    pointerEvents: "none",
+    position: "absolute",
   },
   title: {
     fontSize: fontSizes.sm,
-    fontWeight: 500,
+    fontWeight: fontWeights.medium,
     lineHeight: lineHeights.row,
   },
   description: {
@@ -199,11 +248,11 @@ const styles = stylex.create({
     color: colors.background,
     flexShrink: 0,
     fontSize: fontSizes.xs,
-    fontWeight: 500,
-    height: 24,
+    fontWeight: fontWeights.medium,
+    height: sizes.controlSm,
     opacity: {
       default: 1,
-      [media.hover]: { default: 1, ":hover": 0.88 },
+      [media.hover]: { default: 1, ":hover": opacities.hover },
     },
     paddingInline: space.xs,
     transform: { default: null, ":active": presses.link },
@@ -227,13 +276,13 @@ const styles = stylex.create({
     },
     display: "flex",
     flexShrink: 0,
-    height: 20,
+    height: sizes.controlXs,
     justifyContent: "center",
     transform: { default: null, ":active": presses.icon },
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}`,
     transitionProperty: "transform, background-color, color",
     transitionTimingFunction: `${easings.out}, ease, ease`,
-    width: 20,
+    width: sizes.controlXs,
   },
 });
 
@@ -290,16 +339,18 @@ function ToastIcon({
       {...props}
       {...stylex.props(styles.icon, sx)}
     >
-      {Object.entries(types).map(([name, icon]) => (
+      <span {...stylex.props(styles.layer, type === "loading" && styles.shown)}>
+        <span {...stylex.props(styles.spinner)} />
+      </span>
+      {Object.entries(icons).map(([name, icon]) => (
         <span
           key={name}
           {...stylex.props(styles.layer, name === type && styles.shown)}
         >
           <HugeiconsIcon
             icon={icon}
-            size={16}
-            strokeWidth={1.75}
-            {...stylex.props(name === "loading" && styles.spinner)}
+            size={sizes.icon}
+            strokeWidth={Number(strokes.icon)}
           />
         </span>
       ))}
@@ -307,17 +358,9 @@ function ToastIcon({
   );
 }
 
-function ToastBody({
-  sx,
-  updated = false,
-  ...props
-}: Styled<ComponentProps<"div">> & { updated?: boolean }) {
+function ToastBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div
-      data-slot="toast-body"
-      {...props}
-      {...stylex.props(styles.body, updated && styles.updated, sx)}
-    />
+    <div data-slot="toast-body" {...props} {...stylex.props(styles.body, sx)} />
   );
 }
 
@@ -370,33 +413,126 @@ function ToastClose({
         <HugeiconsIcon
           aria-hidden
           icon={Cancel01Icon}
-          size={14}
-          strokeWidth={1.75}
+          size={sizes.iconSm}
+          strokeWidth={Number(strokes.icon)}
         />
       )}
     </ToastPrimitive.Close>
   );
 }
 
+interface Snapshot {
+  description: ReactNode;
+  key: number;
+  title: ReactNode;
+}
+
+function snapshot(item: ToastPrimitive.Root.ToastObject): Snapshot {
+  return {
+    description: item.description,
+    key: item.updateKey ?? 0,
+    title: item.title,
+  };
+}
+
+// Base UI re-measures the toast whenever its content resizes, reading any
+// height animation mid-flight. So the toast takes its new height at once, and
+// only the surface and content, which it never measures, travel from the old one.
+function useHeightMorph(natural: number | undefined) {
+  const root = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement>(null);
+  const measured = useRef(natural);
+
+  useLayoutEffect(() => {
+    const from = measured.current;
+    measured.current = natural;
+
+    if (
+      !root.current ||
+      !content.current ||
+      from === undefined ||
+      natural === undefined ||
+      from === natural ||
+      // Collapsed toasts behind take the front one's height; only one showing its own animates.
+      root.current.offsetHeight !== natural ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    // Bottom-anchored, so the old top edge sits `grown` px lower.
+    const grown = natural - from;
+
+    root.current.animate([{ top: `${grown}px` }, { top: "0px" }], {
+      ...layoutAnimation,
+      pseudoElement: "::before",
+    });
+    content.current.animate(
+      [
+        {
+          clipPath: `inset(0 0 ${Math.max(grown, 0)}px 0)`,
+          transform: `translateY(${grown}px)`,
+        },
+        { clipPath: "inset(0 0 0 0)", transform: "none" },
+      ],
+      layoutAnimation
+    );
+  }, [natural]);
+
+  return [root, content] as const;
+}
+
+function ToastItem({ item }: { item: ToastPrimitive.Root.ToastObject }) {
+  const [rootRef, contentRef] = useHeightMorph(item.height);
+
+  // The old text stays on screen, fading out, under the new text fading in.
+  const [seen, setSeen] = useState(() => snapshot(item));
+  const [previous, setPrevious] = useState<Snapshot | null>(null);
+
+  if ((item.updateKey ?? 0) !== seen.key) {
+    setPrevious(seen);
+    setSeen(snapshot(item));
+  }
+
+  return (
+    <Toast ref={rootRef} toast={item}>
+      <ToastContent ref={contentRef}>
+        {isToastType(item.type) && <ToastIcon type={item.type} />}
+        <ToastBody>
+          {previous && (
+            <span
+              aria-hidden
+              key={previous.key}
+              onAnimationEnd={() => {
+                setPrevious(null);
+              }}
+              {...stylex.props(styles.body, styles.leaving)}
+            >
+              <span {...stylex.props(styles.title)}>{previous.title}</span>
+              {previous.description === undefined ? null : (
+                <span {...stylex.props(styles.description)}>
+                  {previous.description}
+                </span>
+              )}
+            </span>
+          )}
+          <ToastTitle key={seen.key} sx={previous && styles.entering} />
+          <ToastDescription
+            key={`d${seen.key}`}
+            sx={previous && styles.entering}
+          />
+        </ToastBody>
+        <ToastAction />
+        <ToastClose />
+      </ToastContent>
+    </Toast>
+  );
+}
+
 function ToastList() {
   const { toasts } = ToastPrimitive.useToastManager();
 
-  return toasts.map((item) => (
-    <Toast key={item.id} toast={item}>
-      <ToastContent>
-        {isToastType(item.type) && <ToastIcon type={item.type} />}
-        {/* Remounts on update, so new text fades in instead of snapping. */}
-        <ToastBody
-          key={item.updateKey ?? 0}
-          updated={(item.updateKey ?? 0) > 0}
-        >
-          <ToastTitle />
-          <ToastDescription />
-        </ToastBody>
-        <ToastAction />
-      </ToastContent>
-    </Toast>
-  ));
+  return toasts.map((item) => <ToastItem item={item} key={item.id} />);
 }
 
 function Toaster({

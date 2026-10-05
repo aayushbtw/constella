@@ -37,6 +37,12 @@ Pages are Markdown in `content/components`, parsed once at build time by tomekit
 
 Each component page is the same short sections, in order: preview, installation, usage, composition tree, examples (one idea each), API (only what's added on top of Base UI; link to Base UI for the rest).
 
+## Tokens
+
+Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `src/lib/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
+
+Tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`.
+
 ## Personality
 
 Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
@@ -75,27 +81,34 @@ Ask how often it's seen. Something used dozens of times a day gets little or no 
 | `inOut`     | Things traveling across the screen: leave and arrive gently  |
 | `overshoot` | Small elements that should feel alive                        |
 | `ease`      | Color and hover changes (the CSS keyword, no token)          |
-| `swap`      | One state replacing another in place: icons, text            |
+| `crossfade` | One state replacing another in place: icons, text            |
+| `layout`    | A surface changing size: leaves at once, settles gently      |
 
 Never `ease-in`: it delays the moment the eye is watching.
 
 ### Duration
 
-| Token     | For                                     |
-| --------- | --------------------------------------- |
-| `hover`   | Color changes on hover                  |
-| `press`   | Scale on `:active`                      |
-| `popover` | Small surfaces that open from a trigger |
-| `move`    | Indicators and thumbs that travel       |
-| `swap`    | Cross-fades between states              |
+| Token       | For                                     |
+| ----------- | --------------------------------------- |
+| `hover`     | Color changes on hover                  |
+| `press`     | Scale on `:active`                      |
+| `popover`   | Small surfaces that open from a trigger |
+| `move`      | Indicators and thumbs that travel       |
+| `crossfade` | Cross-fades between states              |
+| `layout`    | A surface growing or shrinking to fit   |
+| `spin`      | One turn of a spinner                   |
 
-Interface motion stays under 300ms.
+Interface motion stays under 300ms. A spinner is the exception: unhurried, so waiting reads as working, not urgent.
 
 Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no bounce, no blur-ins, no timers drawing on screen.
 
-### Swaps
+### Crossfades
 
-When one state replaces another in place, both stay mounted and cross-fade: the incoming one from `scale(0.25)`, `blur(4px)` and transparent, on `swap`. Transitions, not keyframes, so a quick change back reverses smoothly.
+When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing.
+
+### Layout animation
+
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement.
 
 ### Press and hover
 

@@ -10,6 +10,7 @@ import {
   presses,
   radii,
   shadows,
+  sizes,
   space,
 } from "@/lib/tokens.stylex";
 
@@ -31,7 +32,7 @@ const styles = stylex.create({
     borderRadius: radii.sm,
     boxShadow: shadows.ring,
     fontSize: fontSizes.sm,
-    height: 32,
+    height: sizes.controlMd,
     paddingInline: space.sm,
     transform: { default: null, ":active": presses.link },
     transitionDuration: `${durations.press}, ${durations.hover}`,

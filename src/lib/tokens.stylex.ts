@@ -38,7 +38,13 @@ export const lineHeights = stylex.defineConsts({
   row: "18px",
 });
 
+export const fontWeights = stylex.defineConsts({
+  medium: "500",
+  regular: "400",
+});
+
 export const space = stylex.defineConsts({
+  xxxs: "2px",
   xxs: "4px",
   xs: "8px",
   sm: "12px",
@@ -52,6 +58,28 @@ export const radii = stylex.defineConsts({
   md: "12px",
   sm: "8px",
   xs: "4px",
+});
+
+export const sizes = stylex.defineConsts({
+  controlMd: "32px",
+  controlSm: "24px",
+  controlXs: "20px",
+  icon: "16px",
+  iconSm: "14px",
+});
+
+export const strokes = stylex.defineConsts({
+  // Hugeicons' weight beside medium text; read in JS, so a bare number.
+  icon: "1.75",
+  spinner: "1.5px",
+});
+
+export const layers = stylex.defineConsts({
+  toast: "50",
+});
+
+export const opacities = stylex.defineConsts({
+  hover: "0.88",
 });
 
 export const media = stylex.defineConsts({
@@ -68,6 +96,7 @@ export const layout = stylex.defineConsts({
   pageBottom: "96px",
   pageTop: "96px",
   sectionGap: "48px",
+  toast: "356px",
 });
 
 export const presses = stylex.defineConsts({
@@ -80,7 +109,8 @@ export const easings = stylex.defineConsts({
   inOut: "cubic-bezier(0.77, 0, 0.175, 1)",
   out: "cubic-bezier(0.23, 1, 0.32, 1)",
   overshoot: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-  swap: "cubic-bezier(0.2, 0, 0, 1)",
+  layout: "cubic-bezier(0.32, 0.72, 0, 1)",
+  crossfade: "cubic-bezier(0.2, 0, 0, 1)",
 });
 
 export const durations = stylex.defineConsts({
@@ -88,5 +118,17 @@ export const durations = stylex.defineConsts({
   move: "300ms",
   popover: "180ms",
   press: "160ms",
-  swap: "300ms",
+  layout: "300ms",
+  spin: "1s",
+  crossfade: "300ms",
+});
+
+// The shapes motion moves between: where a crossfade starts, how far an exit drops,
+// how much each surface behind a stack shrinks.
+export const motion = stylex.defineConsts({
+  exitOffset: "8px",
+  stackScale: "0.05",
+  crossfadeBlur: "4px",
+  crossfadeScale: "0.25",
+  crossfadeTextBlur: "2px",
 });
