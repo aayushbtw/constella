@@ -26,7 +26,7 @@ type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> & {
   variant?: ButtonVariant;
 };
 
-// Solid fills lift on hover by thinning, so one rule works for any fill color.
+// The solid fill lifts on hover by thinning, so it needs no hover color of its own.
 const thinOnHover = {
   default: 1,
   [media.hover]: { default: 1, ":hover:not(:disabled)": opacities.hover },
@@ -51,22 +51,35 @@ const styles = stylex.create({
     userSelect: "none",
     whiteSpace: "nowrap",
   },
+  // An icon carries its own whitespace, so its side sits one step tighter.
   sm: {
     borderRadius: radii.xs,
     fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlSm,
-    paddingInline: space.xs,
+    paddingInlineEnd: space.xs,
+    paddingInlineStart: {
+      default: space.xs,
+      ":has(> svg:first-child)": `calc(${space.xs} - ${space.xxs})`,
+    },
   },
   md: {
     fontSize: fontSizes.sm,
     height: sizes.controlMd,
-    paddingInline: space.sm,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: {
+      default: space.sm,
+      ":has(> svg:first-child)": `calc(${space.sm} - ${space.xxs})`,
+    },
   },
   lg: {
     fontSize: fontSizes.sm,
     height: sizes.controlLg,
-    paddingInline: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: {
+      default: space.md,
+      ":has(> svg:first-child)": `calc(${space.md} - ${space.xxs})`,
+    },
   },
   primary: {
     backgroundColor: colors.accent,
@@ -104,10 +117,16 @@ const styles = stylex.create({
     },
     color: colors.textPrimary,
   },
+  // A tint, not a solid: destruction is marked, never shouted.
   danger: {
-    backgroundColor: colors.dangerSolid,
-    color: colors.onDanger,
-    opacity: thinOnHover,
+    backgroundColor: {
+      default: colors.dangerFillSubtle,
+      [media.hover]: {
+        default: colors.dangerFillSubtle,
+        ":hover:not(:disabled)": colors.dangerFill,
+      },
+    },
+    color: colors.danger,
   },
 });
 

@@ -53,9 +53,9 @@ Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued b
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has three roles: the base for icons and titles, `Subtle` for a tinted background, `Edge` for its edge. Status color marks the small thing that carries the meaning and never the body text: step 11 holds up on the page but drops just under text contrast on its own tinted background, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, and `Edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `FillSubtle` but drops just under on `Fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
 
-`dangerSolid` exists because a destructive button needs a fill. White on it is 3.9:1, short of text contrast, which Radix accepts for solid buttons; no single red step passes in both themes.
+Status is never a saturated solid. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway.
 
 ## Theme
 
