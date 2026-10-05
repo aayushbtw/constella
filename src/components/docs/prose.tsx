@@ -7,6 +7,7 @@ import type {
 import type { ComponentPropsWithoutRef } from "react";
 
 import { demos, isDemo } from "@/components/demos";
+import { Install } from "@/components/docs/install";
 import { config } from "@/lib/config";
 import { highlightCode } from "@/lib/highlight";
 import {
@@ -146,13 +147,11 @@ function Demo({ name }: { name?: string }) {
   );
 }
 
-function Install({ name }: { name?: string }) {
+function MarkdownInstall({ name }: { name?: string }) {
   return (
-    <pre {...stylex.props(styles.pre)}>
-      <code {...stylex.props(styles.preCode)}>
-        npx shadcn@latest add {config.siteUrl}/r/{name}.json
-      </code>
-    </pre>
+    <div {...stylex.props(styles.p)}>
+      <Install name={name} url={config.siteUrl} />
+    </div>
   );
 }
 
@@ -174,7 +173,7 @@ const components = {
     </h3>
   ),
   "md-demo": Demo,
-  "md-install": Install,
+  "md-install": MarkdownInstall,
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
   // Replacing the class keeps `data-lang`, which the highlight theme keys on.
   pre: (props) => <pre {...props} {...stylex.props(styles.pre)} />,

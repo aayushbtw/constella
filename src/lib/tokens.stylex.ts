@@ -123,6 +123,8 @@ export const durations = stylex.defineConsts({
   layout: "300ms",
   spin: "1s",
   crossfade: "300ms",
+  // How long a confirmation (copied, saved) holds before it reverts.
+  confirm: "1500ms",
 });
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,
