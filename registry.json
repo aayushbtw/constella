@@ -15,7 +15,7 @@
           "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias, and the Radix gray, gray-alpha and black-alpha CSS imported once. Setup: https://ui.aayush.cv"
+      "docs": "Needs the StyleX compiler with an `@/*` alias, the Radix gray, gray-alpha, gray-dark, gray-dark-alpha and black-alpha CSS imported once, and `color-scheme: dark` on `.dark`. Setup: https://ui.aayush.cv"
     }
   ]
 }

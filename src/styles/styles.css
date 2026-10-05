@@ -3,4 +3,6 @@
 @import "@radix-ui/colors/black-alpha.css";
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-alpha.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/gray-dark-alpha.css";
 @import "./reset.css";

@@ -3,12 +3,14 @@ import * as stylex from "@stylexjs/stylex";
 import {
   createRootRoute,
   HeadContent,
+  ScriptOnce,
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { config } from "@/lib/config";
+import { themeScript } from "@/lib/theme";
 import { colors, fonts, fontSizes, lineHeights } from "@/lib/tokens.stylex";
 
 import appCss from "@/styles/styles.css?url";
@@ -19,7 +21,16 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "robots", content: "index, follow" },
-      { name: "theme-color", content: "#ffffff" },
+      {
+        name: "theme-color",
+        media: "(prefers-color-scheme: light)",
+        content: "#fcfcfc",
+      },
+      {
+        name: "theme-color",
+        media: "(prefers-color-scheme: dark)",
+        content: "#111111",
+      },
       { title: config.name },
       { name: "description", content: config.description },
       { property: "og:locale", content: "en_US" },
@@ -65,8 +76,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const pageUrl = `${config.siteUrl}${pathname}`;
 
   return (
-    <html lang="en">
+    // The theme script sets the class before React hydrates.
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <ScriptOnce>{themeScript}</ScriptOnce>
         <link href={pageUrl} rel="canonical" />
         <meta content={pageUrl} property="og:url" />
         <HeadContent />

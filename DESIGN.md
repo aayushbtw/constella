@@ -43,7 +43,13 @@ Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: 
 
 Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file.
 
-The accent is near-black, not a hue, so color stays out of the way and type, spacing and motion carry the design.
+The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
+
+## Theme
+
+Light and dark, switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.
+
+Components never branch on the theme. Every color is a token; a value outside Radix uses `light-dark()`, which follows the `color-scheme` the class sets.
 
 ## Surfaces
 

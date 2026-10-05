@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
 export const colors = stylex.defineVars({
-  accent: "#111111",
+  accent: "light-dark(#111111, #eeeeee)",
   background: "var(--gray-1)",
   edgeStrong: "var(--gray-a6)",
   fill: "var(--gray-a3)",
