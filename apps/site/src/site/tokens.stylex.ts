@@ -18,10 +18,12 @@ export const fonts = stylex.defineConsts({
 
 export const fontSizes = stylex.defineConsts({
   base: "15px",
+  display: "32px",
 });
 
 export const lineHeights = stylex.defineConsts({
   code: "20px",
+  display: "38px",
   prose: "24px",
 });
 

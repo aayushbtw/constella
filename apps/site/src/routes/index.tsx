@@ -4,7 +4,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { colors, fontSizes, space } from "@/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 import { config } from "~/site/config";
-import { layout, media } from "~/site/tokens.stylex";
+import {
+  fontSizes as siteFontSizes,
+  layout,
+  lineHeights,
+  media,
+} from "~/site/tokens.stylex";
 
 export const Route = createFileRoute("/")({
   loader: async () => await getComponents(),
@@ -15,7 +20,7 @@ const styles = stylex.create({
   main: {
     display: "flex",
     flexDirection: "column",
-    gap: space.xs,
+    gap: layout.sectionGap,
     marginInline: "auto",
     maxWidth: {
       default: `calc(${layout.content} + 2 * ${layout.gutter})`,
@@ -28,15 +33,34 @@ const styles = stylex.create({
     },
     paddingTop: layout.pageTop,
   },
-  description: {
-    color: colors.textSecondary,
+  title: {
+    fontSize: siteFontSizes.display,
+    letterSpacing: "-0.02em",
+    lineHeight: lineHeights.display,
+    maxWidth: "16ch",
+    textWrap: "balance",
+  },
+  section: {
+    display: "grid",
+    gap: { default: space.sm, [media.sidebar]: space.lg },
+    gridTemplateColumns: {
+      default: "1fr",
+      [media.sidebar]: `${layout.sidebar} minmax(0, ${layout.content})`,
+    },
+  },
+  label: {
+    color: colors.textMuted,
   },
   list: {
     display: "flex",
     flexDirection: "column",
-    gap: space.xs,
+    gap: space.sm,
     listStyle: "none",
-    paddingTop: space.lg,
+  },
+  inline: {
+    display: "flex",
+    gap: space.md,
+    listStyle: "none",
   },
   link: {
     textDecoration: "underline",
@@ -46,27 +70,69 @@ const styles = stylex.create({
     color: colors.textMuted,
     fontSize: fontSizes.xs,
   },
+  hero: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.lg,
+  },
 });
 
 function Home() {
+  const components = Route.useLoaderData();
+  const [first] = components;
+
   return (
     <main {...stylex.props(styles.main)}>
-      <h1>{config.name}</h1>
-      <p {...stylex.props(styles.description)}>{config.description}</p>
-      <ul {...stylex.props(styles.list)}>
-        {Route.useLoaderData().map(({ draft, slug, title }) => (
-          <li key={slug}>
-            <Link
-              params={{ slug }}
-              to="/components/$slug"
+      <div {...stylex.props(styles.hero)}>
+        <h1 {...stylex.props(styles.title)}>{config.description}</h1>
+        <ul {...stylex.props(styles.inline)}>
+          {first && (
+            <li>
+              <Link
+                params={{ slug: first.slug }}
+                to="/components/$slug"
+                {...stylex.props(styles.link)}
+              >
+                Docs
+              </Link>
+            </li>
+          )}
+          <li>
+            <a
+              href={`https://github.com/${config.socials.github}`}
               {...stylex.props(styles.link)}
             >
-              {title}
-            </Link>{" "}
-            {draft && <span {...stylex.props(styles.status)}>Draft</span>}
+              GitHub
+            </a>
           </li>
-        ))}
-      </ul>
+          <li>
+            <a
+              href={`https://x.com/${config.socials.twitter}`}
+              {...stylex.props(styles.link)}
+            >
+              X
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <section {...stylex.props(styles.section)}>
+        <h2 {...stylex.props(styles.label)}>Components</h2>
+        <ul {...stylex.props(styles.list)}>
+          {components.map(({ draft, slug, title }) => (
+            <li key={slug}>
+              <Link
+                params={{ slug }}
+                to="/components/$slug"
+                {...stylex.props(styles.link)}
+              >
+                {title}
+              </Link>{" "}
+              {draft && <span {...stylex.props(styles.status)}>Draft</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
     </main>
   );
 }

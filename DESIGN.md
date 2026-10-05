@@ -43,7 +43,9 @@ Nested corners are concentric: outer radius = inner radius + the padding between
 
 ## Docs site
 
-Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a components sidebar, and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Line numbers stay pinned while long lines scroll.
+Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a components sidebar, and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Line numbers stay pinned while long lines scroll. Sidebar rows sit `space.xxxs` apart, so a hovered row's fill never merges into the active one.
+
+The home page is the tagline set large with Docs, GitHub and X links under it, then labeled sections: a muted label in a sidebar-width column, its content beside it (stacked below `media.sidebar`). No prose beyond the tagline.
 
 ## Focus
 
