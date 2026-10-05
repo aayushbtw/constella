@@ -11,7 +11,7 @@
     -webkit-text-size-adjust: 100%;
   }
 
-  /* Drives native controls, scrollbars and every `light-dark()` token. */
+  /* Native controls and scrollbars follow the theme too. */
   .dark {
     color-scheme: dark;
   }

@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
 export const colors = stylex.defineVars({
-  accent: "light-dark(#111111, #eeeeee)",
+  accent: "var(--gray-12)",
   background: "var(--gray-1)",
   edgeStrong: "var(--gray-a6)",
   fill: "var(--gray-a3)",
@@ -80,11 +80,6 @@ export const easings = stylex.defineConsts({
   inOut: "cubic-bezier(0.77, 0, 0.175, 1)",
   out: "cubic-bezier(0.23, 1, 0.32, 1)",
   overshoot: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-  // Springs sampled into CSS: bounce 0 and 0.3. Pair each with its own duration.
-  spring:
-    "linear(0, 0.019, 0.068, 0.134, 0.208, 0.286, 0.363, 0.436, 0.505, 0.568, 0.625, 0.676, 0.721, 0.761, 0.795, 0.826, 0.852, 0.874, 0.893, 0.91, 0.924, 0.936, 0.946, 0.955, 0.962, 0.968, 0.974, 0.978, 0.982, 0.985, 0.987, 0.989, 0.991, 0.993, 0.994, 0.995, 0.996, 0.996, 0.997, 0.998, 1)",
-  springBounce:
-    "linear(0, 0.024, 0.084, 0.169, 0.268, 0.372, 0.476, 0.575, 0.665, 0.746, 0.816, 0.875, 0.923, 0.962, 0.992, 1.013, 1.029, 1.039, 1.044, 1.046, 1.045, 1.043, 1.039, 1.035, 1.03, 1.025, 1.02, 1.016, 1.012, 1.009, 1.006, 1.004, 1.002, 1.001, 1, 0.999, 0.998, 0.998, 0.998, 0.998, 1)",
   swap: "cubic-bezier(0.2, 0, 0, 1)",
 });
 
@@ -93,7 +88,5 @@ export const durations = stylex.defineConsts({
   move: "300ms",
   popover: "180ms",
   press: "160ms",
-  spring: "540ms",
-  springBounce: "660ms",
   swap: "300ms",
 });

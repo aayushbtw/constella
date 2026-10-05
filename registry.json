@@ -21,7 +21,7 @@
       "name": "toast",
       "type": "registry:ui",
       "title": "Toast",
-      "description": "An island that morphs between states, stacks on hover and swipes away.",
+      "description": "Quiet notifications that stack, follow a promise and swipe away.",
       "dependencies": [
         "@base-ui/react",
         "@hugeicons/core-free-icons",

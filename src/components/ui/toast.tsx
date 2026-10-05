@@ -21,6 +21,7 @@ import {
   lineHeights,
   media,
   presses,
+  radii,
   shadows,
   space,
 } from "@/lib/tokens.stylex";
@@ -31,36 +32,16 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const toast = ToastPrimitive.createToastManager();
 
-// Centered at the bottom, so it leaves down or to either side.
-const swipeDirections: ToastPrimitive.Root.Props["swipeDirection"] = [
-  "down",
-  "left",
-  "right",
-];
-
 // Base UI measures the stack and swipe; these turn its variables into motion.
 const gap = space.sm;
-const peek = space.xs;
+const peek = space.sm;
 const height = "var(--toast-frontmost-height, var(--toast-height))";
-const scale = "max(0, 1 - var(--toast-index) * 0.08)";
+const scale = "max(0, 1 - var(--toast-index) * 0.05)";
 const offsetY = `calc(var(--toast-offset-y) * -1 - var(--toast-index) * ${gap} + var(--toast-swipe-movement-y))`;
 const swipeX = "var(--toast-swipe-movement-x)";
 const swipeY = "var(--toast-swipe-movement-y)";
 
-// Concentric: the action's radius plus the inset around it.
-const actionHeight = 28;
-const inset = space.xs;
-const radius = `calc(${actionHeight / 2}px + ${inset})`;
-
-// Inverted surface: the page's background color is the toast's ink.
-const ink = colors.background;
-const inkMuted = `color-mix(in oklab, ${colors.background} 62%, transparent)`;
-
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
-const drain = stylex.keyframes({ to: { transform: "scaleX(0)" } });
-const swapIn = stylex.keyframes({
-  from: { filter: "blur(4px)", opacity: 0, transform: "translateY(4px)" },
-});
 const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
 
 const types = {
@@ -79,33 +60,23 @@ function isToastType(type: string | undefined): type is ToastType {
 const styles = stylex.create({
   viewport: {
     bottom: space.md,
-    insetInline: 0,
-    marginInline: "auto",
+    insetInlineEnd: space.md,
     position: "fixed",
-    width: `min(420px, calc(100vw - 2 * ${space.md}))`,
+    width: { default: `calc(100vw - 2 * ${space.md})`, [media.sm]: 356 },
     zIndex: 50,
   },
   toast: {
-    backgroundColor: colors.accent,
-    borderRadius: radius,
+    backgroundColor: colors.background,
+    borderRadius: radii.md,
     boxShadow: shadows.popover,
-    color: ink,
+    color: colors.textPrimary,
     cursor: "default",
-    filter: {
-      default: "blur(0)",
-      ":is([data-starting-style])": "blur(8px)",
-      ":is([data-ending-style]):not([data-swipe-direction])": "blur(4px)",
-    },
     height: {
       default: height,
       ":is([data-expanded])": "var(--toast-height)",
     },
     insetBlockEnd: 0,
-    insetInline: 0,
-    // Lets `width: fit-content` animate, so the pill morphs as its content changes.
-    interpolateSize: "allow-keywords",
-    marginInline: "auto",
-    maxWidth: "100%",
+    insetInlineEnd: 0,
     opacity: {
       default: 1,
       ":is([data-limited], [data-starting-style], [data-ending-style])": 0,
@@ -116,31 +87,25 @@ const styles = stylex.create({
       ":is([data-expanded])": `translateX(${swipeX}) translateY(${offsetY})`,
       // Two attributes, so these outrank the expanded position above.
       ":is([data-starting-style]):not([data-swipe-direction])":
-        "translateY(50%) scale(0.6)",
-      ":is([data-ending-style]):not([data-swipe-direction])":
-        "translateY(12px) scale(0.95)",
+        "translateY(100%)",
+      ":is([data-ending-style]):not([data-swipe-direction])": "translateY(8px)",
       ":is([data-ending-style][data-swipe-direction='down'])": `translateY(calc(${swipeY} + 150%))`,
-      ":is([data-ending-style][data-swipe-direction='left'])": `translateX(calc(${swipeX} - 150%)) translateY(${offsetY})`,
       ":is([data-ending-style][data-swipe-direction='right'])": `translateX(calc(${swipeX} + 150%)) translateY(${offsetY})`,
     },
     transformOrigin: "bottom center",
-    // `transform` goes last, so dropping it while swiping keeps the lists aligned.
     transitionDuration: {
-      default: `${durations.popover}, ${durations.swap}, ${durations.springBounce}, ${durations.springBounce}, ${durations.springBounce}`,
+      default: durations.move,
       ":is([data-ending-style])": durations.popover,
     },
     transitionProperty: {
-      default: "opacity, filter, width, height, transform",
+      default: "opacity, height, transform",
       // The toast follows the finger with no lag.
-      ":is([data-swiping])": "opacity, filter, width, height",
+      ":is([data-swiping])": "opacity, height",
       [media.reducedMotion]: "opacity",
     },
-    transitionTimingFunction: {
-      default: `${easings.out}, ${easings.out}, ${easings.springBounce}, ${easings.springBounce}, ${easings.springBounce}`,
-      ":is([data-ending-style])": easings.out,
-    },
+    transitionTimingFunction: easings.out,
     userSelect: "none",
-    width: "fit-content",
+    width: "100%",
     zIndex: "calc(1000 - var(--toast-index))",
     // Bridges the gap between toasts, so moving across it keeps the stack expanded.
     "::after": {
@@ -152,35 +117,32 @@ const styles = stylex.create({
     },
   },
   content: {
-    alignItems: "center",
+    alignItems: "flex-start",
     display: "flex",
-    gap: space.xs,
+    gap: space.sm,
     height: "100%",
-    minHeight: `calc(${actionHeight}px + 2 * ${inset})`,
     opacity: {
       default: 1,
       ":is([data-behind]):not([data-expanded])": 0,
     },
     overflow: "hidden",
-    paddingBlock: inset,
-    paddingInlineEnd: {
-      default: space.md,
-      ":has(> [data-slot='toast-action'])": inset,
-    },
+    padding: space.sm,
     paddingInlineStart: {
       default: space.md,
       ":has(> [data-slot='toast-icon'])": space.sm,
     },
-    position: "relative",
-    transitionDuration: durations.swap,
+    transitionDuration: durations.move,
     transitionProperty: "opacity",
     transitionTimingFunction: easings.out,
   },
   icon: {
+    color: colors.textSecondary,
     flexShrink: 0,
-    height: 18,
+    height: 16,
+    // Centers the icon on the title's first line.
+    marginBlockStart: 1,
     position: "relative",
-    width: 18,
+    width: 16,
   },
   // Every icon stays mounted, so a type change cross-fades instead of swapping.
   layer: {
@@ -209,86 +171,70 @@ const styles = stylex.create({
   },
   body: {
     display: "flex",
+    flex: 1,
     flexDirection: "column",
+    gap: 2,
     minWidth: 0,
-    paddingInlineEnd: space.xxs,
   },
   updated: {
     animationDuration: durations.swap,
-    animationName: { default: swapIn, [media.reducedMotion]: fadeIn },
-    animationTimingFunction: easings.swap,
+    animationName: fadeIn,
+    animationTimingFunction: easings.out,
   },
   title: {
     fontSize: fontSizes.sm,
     fontWeight: 500,
     lineHeight: lineHeights.row,
-    textWrap: "balance",
   },
   description: {
-    color: inkMuted,
+    color: colors.textSecondary,
     fontSize: fontSizes.xs,
     lineHeight: lineHeights.row,
     textWrap: "pretty",
   },
   action: {
-    backgroundColor: ink,
-    borderRadius: actionHeight / 2,
-    color: colors.accent,
+    alignSelf: "center",
+    backgroundColor: colors.accent,
+    borderRadius: radii.xs,
+    color: colors.background,
     flexShrink: 0,
     fontSize: fontSizes.xs,
     fontWeight: 500,
-    height: actionHeight,
+    height: 24,
     opacity: {
       default: 1,
       [media.hover]: { default: 1, ":hover": 0.88 },
     },
-    paddingInline: space.sm,
-    position: "relative",
+    paddingInline: space.xs,
     transform: { default: null, ":active": presses.link },
     transitionDuration: `${durations.press}, ${durations.hover}`,
     transitionProperty: "transform, opacity",
     transitionTimingFunction: `${easings.out}, ease`,
-    // Reaches a 40px hit area without growing the pill.
-    "::before": {
-      content: "''",
-      inset: -6,
-      position: "absolute",
-    },
   },
   close: {
     alignItems: "center",
-    borderRadius: actionHeight / 2,
+    backgroundColor: {
+      default: "transparent",
+      [media.hover]: { default: "transparent", ":hover": colors.fill },
+    },
+    borderRadius: radii.xs,
     color: {
-      default: inkMuted,
-      [media.hover]: { default: inkMuted, ":hover": ink },
+      default: colors.textMuted,
+      [media.hover]: {
+        default: colors.textMuted,
+        ":hover": colors.textPrimary,
+      },
     },
     display: "flex",
     flexShrink: 0,
-    height: actionHeight,
+    height: 20,
     justifyContent: "center",
     transform: { default: null, ":active": presses.icon },
-    transitionDuration: `${durations.press}, ${durations.hover}`,
-    transitionProperty: "transform, color",
-    transitionTimingFunction: `${easings.out}, ease`,
-    width: actionHeight,
+    transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}`,
+    transitionProperty: "transform, background-color, color",
+    transitionTimingFunction: `${easings.out}, ease, ease`,
+    width: 20,
   },
-  progress: {
-    animationName: drain,
-    animationPlayState: {
-      default: "running",
-      [stylex.when.ancestor(":is([data-expanded])")]: "paused",
-    },
-    animationTimingFunction: "linear",
-    backgroundColor: ink,
-    borderRadius: 1,
-    height: 2,
-    insetBlockEnd: 3,
-    insetInline: radius,
-    opacity: 0.2,
-    position: "absolute",
-    transformOrigin: "left",
-  },
-  duration: (ms: number) => ({ animationDuration: `${ms}ms` }),
 });
 
 function ToastProvider(props: ToastPrimitive.Provider.Props) {
@@ -312,17 +258,12 @@ function ToastViewport({
   );
 }
 
-function Toast({
-  swipeDirection = swipeDirections,
-  sx,
-  ...props
-}: Styled<ToastPrimitive.Root.Props>) {
+function Toast({ sx, ...props }: Styled<ToastPrimitive.Root.Props>) {
   return (
     <ToastPrimitive.Root
       data-slot="toast"
-      swipeDirection={swipeDirection}
       {...props}
-      {...stylex.props(stylex.defaultMarker(), styles.toast, sx)}
+      {...stylex.props(styles.toast, sx)}
     />
   );
 }
@@ -356,7 +297,7 @@ function ToastIcon({
         >
           <HugeiconsIcon
             icon={icon}
-            size={18}
+            size={16}
             strokeWidth={1.75}
             {...stylex.props(name === "loading" && styles.spinner)}
           />
@@ -429,7 +370,7 @@ function ToastClose({
         <HugeiconsIcon
           aria-hidden
           icon={Cancel01Icon}
-          size={16}
+          size={14}
           strokeWidth={1.75}
         />
       )}
@@ -437,65 +378,38 @@ function ToastClose({
   );
 }
 
-// Drains over the toast's timeout and pauses with it while the stack is hovered.
-function ToastProgress({
-  sx,
-  timeout,
-  ...props
-}: Styled<ComponentProps<"span">> & { timeout: number }) {
-  return (
-    <span
-      aria-hidden
-      data-slot="toast-progress"
-      {...props}
-      {...stylex.props(styles.progress, styles.duration(timeout), sx)}
-    />
-  );
-}
-
-function ToastList({ timeout }: { timeout: number }) {
+function ToastList() {
   const { toasts } = ToastPrimitive.useToastManager();
 
-  return toasts.map((item) => {
-    const duration = item.timeout ?? timeout;
-
-    return (
-      <Toast key={item.id} toast={item}>
-        <ToastContent>
-          {isToastType(item.type) && <ToastIcon type={item.type} />}
-          {/* Remounts on update, so new text arrives instead of snapping in. */}
-          <ToastBody
-            key={item.updateKey ?? 0}
-            updated={(item.updateKey ?? 0) > 0}
-          >
-            <ToastTitle />
-            <ToastDescription />
-          </ToastBody>
-          <ToastAction />
-          {duration > 0 && (
-            <ToastProgress
-              key={`progress-${item.updateKey ?? 0}`}
-              timeout={duration}
-            />
-          )}
-        </ToastContent>
-      </Toast>
-    );
-  });
+  return toasts.map((item) => (
+    <Toast key={item.id} toast={item}>
+      <ToastContent>
+        {isToastType(item.type) && <ToastIcon type={item.type} />}
+        {/* Remounts on update, so new text fades in instead of snapping. */}
+        <ToastBody
+          key={item.updateKey ?? 0}
+          updated={(item.updateKey ?? 0) > 0}
+        >
+          <ToastTitle />
+          <ToastDescription />
+        </ToastBody>
+        <ToastAction />
+      </ToastContent>
+    </Toast>
+  ));
 }
 
 function Toaster({
   children,
-  timeout = 5000,
   toastManager = toast,
   ...props
 }: ToastPrimitive.Provider.Props) {
   return (
-    <ToastProvider timeout={timeout} toastManager={toastManager} {...props}>
+    <ToastProvider toastManager={toastManager} {...props}>
       {children}
       <ToastPortal>
         <ToastViewport>
-          <ToastList timeout={timeout} />
+          <ToastList />
         </ToastViewport>
       </ToastPortal>
     </ToastProvider>
@@ -514,7 +428,6 @@ export {
   Toaster,
   ToastIcon,
   ToastPortal,
-  ToastProgress,
   ToastProvider,
   ToastTitle,
   ToastViewport,

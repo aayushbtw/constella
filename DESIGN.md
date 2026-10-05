@@ -51,7 +51,7 @@ The accent is near-black (near-white in dark), not a hue, so color stays out of 
 
 Light and dark, switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.
 
-Components never branch on the theme. Every color is a token; a value outside Radix uses `light-dark()`, which follows the `color-scheme` the class sets.
+Components never branch on the theme. Every color is a token valued by a Radix step, so the `.dark` class flips it. Not `light-dark()`: Lightning CSS lowers it to fallbacks that ignore the class, and the color comes out invalid.
 
 ## Surfaces
 
@@ -69,18 +69,15 @@ Ask how often it's seen. Something used dozens of times a day gets little or no 
 
 ### Easing
 
-| Token | For |
-| --- | --- |
-| `out` | Entrances and presses: moves at once, so it feels responsive |
-| `inOut` | Things traveling across the screen: leave and arrive gently |
-| `overshoot` | Small elements that should feel alive |
-| `ease` | Color and hover changes (the CSS keyword, no token) |
-| `spring`, `springBounce` | Surfaces that change shape or settle into place; bounce only where it should feel alive |
-| `swap` | One state replacing another in place: icons, text |
+| Token       | For                                                          |
+| ----------- | ------------------------------------------------------------ |
+| `out`       | Entrances and presses: moves at once, so it feels responsive |
+| `inOut`     | Things traveling across the screen: leave and arrive gently  |
+| `overshoot` | Small elements that should feel alive                        |
+| `ease`      | Color and hover changes (the CSS keyword, no token)          |
+| `swap`      | One state replacing another in place: icons, text            |
 
 Never `ease-in`: it delays the moment the eye is watching.
-
-Springs are sampled into CSS `linear()`, so they need no library. Each has a duration token of the same name: the curve is shaped for that length.
 
 ### Duration
 
@@ -92,7 +89,9 @@ Springs are sampled into CSS `linear()`, so they need no library. Each has a dur
 | `move`    | Indicators and thumbs that travel       |
 | `swap`    | Cross-fades between states              |
 
-Interface motion stays under 300ms. Springs run longer on paper, but most of their travel is done by then; the rest is the settle.
+Interface motion stays under 300ms.
+
+Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no bounce, no blur-ins, no timers drawing on screen.
 
 ### Swaps
 

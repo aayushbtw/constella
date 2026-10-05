@@ -1,6 +1,6 @@
 ---
 title: Toast
-description: An island that morphs between states, stacks on hover and swipes away.
+description: Quiet notifications that stack, follow a promise and swipe away.
 ---
 
 <!-- ::demo name="toast" -->
@@ -33,11 +33,10 @@ Toaster
         ├── ToastBody
         │   ├── ToastTitle
         │   └── ToastDescription
-        ├── ToastAction
-        └── ToastProgress
+        └── ToastAction
 ```
 
-`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`. `ToastClose` is there for layouts that need a close button; the default leans on swipe and the timer.
+`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`. `ToastClose` is there for layouts that need a close button; the default leans on swipe.
 
 ## Examples
 
@@ -62,7 +61,7 @@ toast.add({
 
 ### Promise
 
-The toast follows the promise: the icon cross-fades, the text blurs in, and the island resizes to fit.
+The toast follows the promise: the icon cross-fades, the text fades in, and the height eases to fit.
 
 ```tsx
 toast.promise(upload(files), {
