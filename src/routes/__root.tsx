@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { Toaster } from "@/components/ui/toast";
 import { config } from "@/lib/config";
 import { themeScript } from "@/lib/theme";
 import { colors, fonts, fontSizes, lineHeights } from "@/lib/tokens.stylex";
@@ -86,7 +87,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <DevStyleX />
       </head>
       <body {...stylex.props(styles.body)}>
-        {children}
+        <Toaster>{children}</Toaster>
         <Scripts />
       </body>
     </html>

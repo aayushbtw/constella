@@ -16,6 +16,25 @@
         }
       ],
       "docs": "Needs the StyleX compiler with an `@/*` alias, the Radix gray, gray-alpha, gray-dark, gray-dark-alpha and black-alpha CSS imported once, and `color-scheme: dark` on `.dark`. Setup: https://ui.aayush.cv"
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Stacked notifications that expand on hover and swipe to dismiss.",
+      "dependencies": [
+        "@base-ui/react",
+        "@phosphor-icons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": ["https://ui.aayush.cv/r/tokens.json"],
+      "files": [
+        {
+          "path": "src/components/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Render <Toaster /> once near the root, then call toast.add({ title }) from anywhere."
     }
   ]
 }
