@@ -23,7 +23,7 @@
     "strict": true,
     "target": "ES2022",
     "tsBuildInfoFile": ".tsbuildinfo",
-    "types": ["vite/client"],
+    "types": ["vite/client", "@tanstack/react-start"],
     "verbatimModuleSyntax": true
   },
   "exclude": ["node_modules"],

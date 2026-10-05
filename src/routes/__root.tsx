@@ -80,13 +80,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Outside the component: React Compiler can't lower `import()`.
+function loadStyleXRuntime() {
+  if (import.meta.env.DEV) {
+    void import("virtual:stylex:runtime");
+  }
+}
+
 // Builds append StyleX to appCss. Dev serves it separately.
 function DevStyleX() {
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      void import("virtual:stylex:runtime");
-    }
-  }, []);
+  useEffect(loadStyleXRuntime, []);
 
   return import.meta.env.DEV ? (
     <link href="/virtual:stylex.css" rel="stylesheet" />
