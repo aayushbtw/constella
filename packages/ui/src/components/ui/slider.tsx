@@ -79,6 +79,8 @@ function Slider<Value extends number | readonly number[]>({
   return (
     <SliderPrimitive.Root
       data-slot="slider"
+      // The thumb stays inside the track, so at either end it lines up with the label.
+      thumbAlignment="edge"
       {...props}
       {...stylex.props(styles.slider, sx)}
     />

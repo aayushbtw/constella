@@ -11,6 +11,7 @@ import { DemoRow } from "~/components/demos/frame";
 const styles = stylex.create({
   slider: {
     maxWidth: 280,
+    width: "100%",
   },
 });
 
