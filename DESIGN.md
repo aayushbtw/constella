@@ -12,6 +12,29 @@ Source imports use `@/` because the shadcn CLI only rewrites `@/lib/*` and `@/co
 
 `registryDependencies` reference this registry by URL. A bare name like `tokens` means shadcn's official registry.
 
+## Composition
+
+Components compose like shadcn: one file per component, made of small parts the consumer assembles.
+
+```
+Alert
+├── Icon
+├── AlertTitle
+├── AlertDescription
+└── AlertAction
+```
+
+- **One part, one element.** Each part wraps a single element or Base UI part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part.
+- **Every part has a `data-slot`.** Even unstyled Base UI wrappers, so a parent can style around a child (`:has(> [data-slot="alert-action"])`) without a prop. Variants and sizes are mirrored as `data-variant`, `data-size`.
+- **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.
+- **`sx` overrides, not `className`.** Parts omit `className` and `style` and take `sx?: StyleXStyles`, applied last in `stylex.props(...)` so the caller wins. The type is declared in each file, so every component installs alone.
+- **Variants are style keys.** `variant` and `size` index a `satisfies Record<Variant, StyleXStyles>` map. No cva, no class strings.
+- **State comes from Base UI's data attributes** (`[data-open]`, `[data-disabled]`, `[data-starting-style]`), never mirrored into React state.
+
+## Docs pages
+
+Each component page is the same short sections, in order: preview, installation, usage, composition tree, examples (one idea each), API (only what's added on top of Base UI; link to Base UI for the rest).
+
 ## Personality
 
 Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
