@@ -18,6 +18,8 @@ Status is never a saturated solid. A destructive action is red text on a red tin
 
 Light and dark get the same care. Every color is a role token, so a component looks right in both without knowing which one it's in.
 
+A theme switch cross-fades the whole page as one (a view transition, on the `crossfade` curve). Transitions pause for the flip, so no control fades into the new theme on its own clock after the page.
+
 ## Surfaces
 
 Controls (buttons, inputs) have a real border and a light `shadows.control`. The edge takes space, so what the user sees is what's laid out. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill paints under the translucent edge and muddies it, and bleeds through anti-aliased corners.
@@ -98,6 +100,8 @@ When content changes, the layout takes its new size at once and only the surface
 ### Press and hover
 
 Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give. Two exceptions: a trigger (`[aria-haspopup]`) doesn't give, since pressing it opens something rather than acting, and keeps its hover look while its popup is open (`[data-popup-open]`); a text link answers with an underline, not a press.
+
+A slider thumb gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which Base UI sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
 
 A pressable that also changes color on hover transitions both, each on its own clock: color on `ease` + `hover`, transform on `out` + `press`. Hover styles sit behind `media.hover` so touch doesn't stick.
 

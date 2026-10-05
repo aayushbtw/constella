@@ -5,7 +5,10 @@ import * as stylex from "@stylexjs/stylex";
 
 import {
   colors,
+  durations,
+  easings,
   fontSizes,
+  presses,
   radii,
   shadows,
   sizes,
@@ -16,6 +19,8 @@ import {
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
+
+const halfThumbOut = `calc(${sizes.thumb} / -2)`;
 
 const styles = stylex.create({
   // Label and value share the first row; the control spans the second.
@@ -43,26 +48,48 @@ const styles = stylex.create({
     display: "flex",
     gridColumn: "1 / -1",
     height: sizes.controlXs,
+    // Centered thumbs need no measuring, so they render before hydration; Base UI maps the
+    // pointer inside this padding, so the thumb stays within the bar and still tracks the pointer.
+    paddingInline: `calc(${sizes.thumb} / 2)`,
     touchAction: "none",
     userSelect: "none",
   },
+  // The bar reaches past the track into the control's padding, under the thumb at either end.
   track: {
-    backgroundColor: colors.fill,
-    borderRadius: radii.full,
     height: strokes.track,
     position: "relative",
     width: "100%",
+    "::before": {
+      backgroundColor: colors.fill,
+      borderRadius: radii.full,
+      content: "''",
+      insetBlock: 0,
+      insetInline: halfThumbOut,
+      position: "absolute",
+    },
   },
   indicator: {
-    backgroundColor: colors.accent,
-    borderRadius: radii.full,
     height: "100%",
+    "::before": {
+      backgroundColor: colors.accent,
+      borderRadius: radii.full,
+      content: "''",
+      insetBlock: 0,
+      insetInlineEnd: 0,
+      insetInlineStart: halfThumbOut,
+      position: "absolute",
+    },
   },
   thumb: {
     backgroundColor: colors.accent,
     borderRadius: radii.full,
     boxShadow: shadows.control,
     height: sizes.thumb,
+    // Base UI positions the thumb with `translate`, so `transform` is free for the press.
+    transform: { default: null, ":is([data-dragging])": presses.icon },
+    transitionDuration: durations.press,
+    transitionProperty: "transform",
+    transitionTimingFunction: easings.out,
     width: sizes.thumb,
     "::before": {
       content: "''",
@@ -79,8 +106,6 @@ function Slider<Value extends number | readonly number[]>({
   return (
     <SliderPrimitive.Root
       data-slot="slider"
-      // The thumb stays inside the track, so at either end it lines up with the label.
-      thumbAlignment="edge"
       {...props}
       {...stylex.props(styles.slider, sx)}
     />
