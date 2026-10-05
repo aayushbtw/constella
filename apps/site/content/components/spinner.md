@@ -1,7 +1,6 @@
 ---
 title: Spinner
 description: Shows that something is loading.
-draft: true
 ---
 
 <!-- ::demo name="spinner" -->
