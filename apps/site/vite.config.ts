@@ -33,7 +33,7 @@ export default defineConfig({
         },
         sitemap: {
           enabled: true,
-          host: "https://ui.aayush.cv",
+          host: "https://constella.aayush.cv",
         },
       }),
       viteReact(),

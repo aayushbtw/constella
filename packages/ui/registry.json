@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "aayush",
-  "homepage": "https://ui.aayush.cv",
+  "name": "constella",
+  "homepage": "https://constella.aayush.cv",
   "items": [
     {
       "name": "base",
@@ -20,7 +20,7 @@
           "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://ui.aayush.cv/docs/installation"
+      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://constella.aayush.cv/docs/installation"
     },
     {
       "name": "button",
@@ -28,7 +28,7 @@
       "title": "Button",
       "description": "Six variants for every level of emphasis, in four sizes, each with an icon-only square.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
-      "registryDependencies": ["https://ui.aayush.cv/r/base.json"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
           "path": "src/components/ui/button.tsx",
@@ -42,7 +42,7 @@
       "title": "Spinner",
       "description": "A thin, unhurried arc that says something is working.",
       "dependencies": ["@stylexjs/stylex"],
-      "registryDependencies": ["https://ui.aayush.cv/r/base.json"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
           "path": "src/components/ui/spinner.tsx",
@@ -62,9 +62,9 @@
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
-        "https://ui.aayush.cv/r/base.json",
-        "https://ui.aayush.cv/r/button.json",
-        "https://ui.aayush.cv/r/spinner.json"
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/spinner.json"
       ],
       "files": [
         {

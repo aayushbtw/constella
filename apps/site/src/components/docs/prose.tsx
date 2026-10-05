@@ -20,7 +20,6 @@ import {
 import { demos, isDemo } from "~/components/demos";
 import { CopyButton } from "~/components/docs/copy-button";
 import { Install } from "~/components/docs/install";
-import { config } from "~/site/config";
 import { highlightCode } from "~/site/highlight";
 import {
   fonts,
@@ -192,7 +191,7 @@ function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
 function MarkdownInstall({ name }: { name?: string }) {
   return (
     <div {...stylex.props(styles.p)}>
-      <Install name={name} url={config.siteUrl} />
+      <Install name={name} />
     </div>
   );
 }

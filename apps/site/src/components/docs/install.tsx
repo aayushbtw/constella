@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 
 import { colors, fontSizes, radii, space } from "@/lib/tokens.stylex";
 import { CopyButton } from "~/components/docs/copy-button";
+import { config } from "~/site/config";
 import { shellTokens } from "~/site/highlight";
 import { fonts, lineHeights, shadows } from "~/site/tokens.stylex";
 
@@ -45,8 +46,8 @@ function keyedTokens(command: string) {
   });
 }
 
-function Install({ name, url }: { name?: string; url: string }) {
-  const command = `npx shadcn@latest add ${url}/r/${name}.json`;
+function Install({ name }: { name?: string }) {
+  const command = `npx shadcn@latest add ${config.registry}/${name}`;
 
   return (
     <div {...stylex.props(styles.command)}>

@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Add components with the shadcn CLI, then let Vite compile StyleX.
+description: Add components with the shadcn CLI, then let your bundler compile StyleX.
 ---
 
 ## With an agent
@@ -8,10 +8,10 @@ description: Add components with the shadcn CLI, then let Vite compile StyleX.
 Paste this into your coding agent. It adapts the steps below to your project.
 
 ```text
-Set up the components from https://ui.aayush.cv in this project. They install from a shadcn registry and are styled with StyleX, not Tailwind.
+Set up the components from https://constella.aayush.cv in this project. They install with the shadcn CLI and are styled with StyleX, not Tailwind.
 
-1. If there's no components.json, write one by hand with "style": "base-nova", "tsx": true, "rsc": false, empty "tailwind" fields ("config": "", "css": "", "baseColor": "neutral") and aliases for components, ui, lib, utils and hooks under "@/". Don't run shadcn init: it sets up Tailwind. If components.json exists, keep it.
-2. Run: npx shadcn@latest add https://ui.aayush.cv/r/button.json
+1. In components.json, add "registries": { "@constella": "https://constella.aayush.cv/r/{name}.json" }. If there's no components.json, write one by hand with "style": "base-nova", "tsx": true, "rsc": false, empty "tailwind" fields ("config": "", "css": "", "baseColor": "neutral") and aliases for components, ui, lib, utils and hooks under "@/". Don't run shadcn init: it sets up Tailwind.
+2. Run: npx shadcn@latest add @constella/button
 3. Add StyleX's compiler to the bundler, before the React plugin: @stylexjs/unplugin/vite for Vite, or see https://github.com/facebook/stylex/tree/main/packages/%40stylexjs/unplugin. Pass the project's "@/*" alias as `aliases`, matching tsconfig.json paths.
 4. In dev, load /virtual:stylex.css and import("virtual:stylex:runtime") from the HTML shell.
 5. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle if it has one.
@@ -21,9 +21,9 @@ Then render a Button and check it's styled in dev and in a production build.
 
 ## Manual
 
-### Add components.json
+### Add the registry
 
-The shadcn CLI needs this file. Skip this step if your project already has one.
+Add `registries` to your `components.json`. If you don't have one, create it:
 
 ```json
 {
@@ -38,13 +38,16 @@ The shadcn CLI needs this file. Skip this step if your project already has one.
     "lib": "@/lib",
     "utils": "@/lib/utils",
     "hooks": "@/hooks"
+  },
+  "registries": {
+    "@constella": "https://constella.aayush.cv/r/{name}.json"
   }
 }
 ```
 
-**Write it by hand.** `shadcn init` sets up Tailwind, which these components don't use.
+**Don't run `shadcn init`.** It sets up Tailwind, which these components don't use.
 
-### Add a component
+### Add components
 
 The first one also brings the tokens, colors and StyleX.
 
@@ -88,6 +91,16 @@ In dev, StyleX serves its CSS separately. Load it in `index.html`:
 <script type="module">
   import("virtual:stylex:runtime");
 </script>
+```
+
+### Import components
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+export function App() {
+  return <Button>Get started</Button>;
+}
 ```
 
 ### Dark mode

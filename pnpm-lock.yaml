@@ -199,7 +199,7 @@ importers:
 
   apps/site:
     dependencies:
-      '@aayush/ui':
+      '@constella/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@hugeicons/core-free-icons':

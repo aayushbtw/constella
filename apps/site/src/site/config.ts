@@ -1,9 +1,11 @@
 export const config = {
-  description: "Generic UI elements, built with care.",
-  name: "UI",
+  description: "Components, crafted with care.",
+  name: "Constella",
+  // The namespace components.json maps to this site's registry.
+  registry: "@constella",
   siteUrl:
     process.env.NODE_ENV === "production"
-      ? "https://ui.aayush.cv"
+      ? "https://constella.aayush.cv"
       : "http://localhost:3001",
   socials: {
     github: "aayushbtw",
