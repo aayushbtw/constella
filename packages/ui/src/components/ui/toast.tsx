@@ -15,6 +15,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   colors,
   durations,
@@ -48,7 +49,6 @@ const offsetY = `calc(var(--toast-offset-y) * -1 - var(--toast-index) * ${gap} +
 const swipeX = "var(--toast-swipe-movement-x)";
 const swipeY = "var(--toast-swipe-movement-y)";
 
-const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 const textIn = stylex.keyframes({
   from: { filter: `blur(${motion.crossfadeTextBlur})`, opacity: 0 },
 });
@@ -199,20 +199,6 @@ const styles = stylex.create({
   info: { color: colors.info },
   success: { color: colors.success },
   warning: { color: colors.warning },
-  // A thin arc on a faint track, unhurried: it says "working", not "urgent".
-  spinner: {
-    animationDuration: durations.spin,
-    animationIterationCount: "infinite",
-    animationName: spin,
-    animationTimingFunction: "linear",
-    borderColor: colors.fillStrong,
-    borderRadius: radii.full,
-    borderStyle: "solid",
-    borderTopColor: "currentColor",
-    borderWidth: strokes.spinner,
-    inset: `calc((${sizes.icon} - ${sizes.iconSm}) / 2)`,
-    position: "absolute",
-  },
   body: {
     display: "flex",
     flex: 1,
@@ -273,7 +259,7 @@ const styles = stylex.create({
     cursor: "pointer",
     display: "flex",
     flexShrink: 0,
-    height: sizes.controlXs,
+    height: sizes.controlXxs,
     justifyContent: "center",
     padding: 0,
     position: "relative",
@@ -283,10 +269,10 @@ const styles = stylex.create({
     transitionProperty: "transform, background-color, color",
     transitionTimingFunction: `${easings.out}, ease, ease`,
     WebkitTapHighlightColor: "transparent",
-    width: sizes.controlXs,
+    width: sizes.controlXxs,
     "::before": {
       content: "''",
-      inset: `calc((${sizes.controlXs} - ${sizes.hitArea}) / 2)`,
+      inset: `calc((${sizes.controlXxs} - ${sizes.hitArea}) / 2)`,
       position: "absolute",
     },
   },
@@ -356,7 +342,7 @@ function ToastIcon({
       {...stylex.props(styles.icon, sx)}
     >
       <span {...stylex.props(styles.layer, type === "loading" && styles.shown)}>
-        <span {...stylex.props(styles.spinner)} />
+        <Spinner />
       </span>
       {statuses.map((name) => (
         <span
@@ -412,7 +398,7 @@ function ToastAction({ sx, ...props }: Styled<ToastPrimitive.Action.Props>) {
   return (
     <ToastPrimitive.Action
       data-slot="toast-action"
-      render={<Button size="sm" sx={[styles.action, sx]} variant="primary" />}
+      render={<Button size="xs" sx={[styles.action, sx]} variant="primary" />}
       {...props}
     />
   );

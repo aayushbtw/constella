@@ -19,21 +19,73 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "danger";
-type ButtonSize = "sm" | "md" | "lg";
+const buttonVariants = [
+  "primary",
+  "secondary",
+  "outline",
+  "ghost",
+  "danger",
+  "link",
+] as const;
+const buttonSizes = [
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "icon-xs",
+  "icon-sm",
+  "icon-md",
+  "icon-lg",
+] as const;
+const buttonCorners = ["rounded", "pill"] as const;
+
+type ButtonVariant = (typeof buttonVariants)[number];
+type ButtonSize = (typeof buttonSizes)[number];
+type ButtonCorners = (typeof buttonCorners)[number];
 
 type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> & {
+  corners?: ButtonCorners;
   size?: ButtonSize;
   sx?: stylex.StyleXStyles;
   variant?: ButtonVariant;
 };
 
-// The solid fill lifts on hover by thinning, so it needs no hover color of its own.
-const thinOnHover = {
-  default: 1,
-  [media.hover]: { default: 1, ":hover:not(:disabled)": opacities.hover },
-  ":disabled": opacities.disabled,
-} as const;
+// A trigger opens something on press, so it doesn't give.
+const press = ":active:not([aria-haspopup])";
+
+/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
+
+// At rest, and while hovered or while its popup is open (Base UI marks the trigger).
+const interactive = <T,>(rest: T, active: T) => ({
+  default: rest,
+  ":is([data-popup-open])": active,
+  [media.hover]: { default: rest, ":hover:not(:disabled)": active },
+});
+
+// A glyph carries its own whitespace, so the side holding a `data-icon` sits tighter.
+const inset = (padding: string, tight: string) => ({
+  paddingInlineEnd: {
+    default: padding,
+    ":has(> [data-icon='inline-end'])": tight,
+  },
+  paddingInlineStart: {
+    default: padding,
+    ":has(> [data-icon='inline-start'])": tight,
+  },
+});
+
+const square = (size: string) => ({
+  height: size,
+  paddingInline: 0,
+  transform: { default: null, [press]: presses.icon },
+  width: size,
+});
+
+/* eslint-enable func-style */
+
+// shadcn's spacing, which sits off our 4px grid at 6px and 10px.
+const px6 = `calc(${space.xs} - ${space.xxxs})`;
+const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
 const styles = stylex.create({
   base: {
@@ -47,13 +99,15 @@ const styles = stylex.create({
     display: "inline-flex",
     flexShrink: 0,
     fontFamily: "inherit",
+    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    gap: space.xs,
+    gap: px6,
     justifyContent: "center",
     margin: 0,
     opacity: { default: 1, ":disabled": opacities.disabled },
     pointerEvents: { default: null, ":disabled": "none" },
-    transform: { default: null, ":active": presses.link },
+    textDecorationLine: "none",
+    transform: { default: null, [press]: presses.link },
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}, ${durations.hover}`,
     transitionProperty: "transform, background-color, box-shadow, opacity",
     touchAction: "manipulation",
@@ -62,102 +116,109 @@ const styles = stylex.create({
     WebkitTapHighlightColor: "transparent",
     whiteSpace: "nowrap",
   },
-  // An icon carries its own whitespace, so its side sits one step tighter.
+  // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from md.
+  xs: {
+    ...inset(space.xs, px6),
+    fontSize: fontSizes.xxs,
+    gap: space.xxs,
+    height: sizes.controlXs,
+  },
   sm: {
-    borderRadius: radii.xs,
+    ...inset(px10, px6),
     fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlSm,
-    paddingInlineEnd: space.xs,
-    paddingInlineStart: {
-      default: space.xs,
-      ":has(> svg:first-child)": `calc(${space.xs} - ${space.xxs})`,
-    },
   },
-  md: {
-    fontSize: fontSizes.sm,
-    height: sizes.controlMd,
-    paddingInlineEnd: space.sm,
-    paddingInlineStart: {
-      default: space.sm,
-      ":has(> svg:first-child)": `calc(${space.sm} - ${space.xxs})`,
-    },
-  },
-  lg: {
-    fontSize: fontSizes.sm,
-    height: sizes.controlLg,
-    paddingInlineEnd: space.md,
-    paddingInlineStart: {
-      default: space.md,
-      ":has(> svg:first-child)": `calc(${space.md} - ${space.xxs})`,
-    },
-  },
+  md: { ...inset(px10, space.xs), height: sizes.controlMd },
+  lg: { ...inset(px10, space.xs), height: sizes.controlLg },
+  iconXs: square(sizes.controlXs),
+  iconSm: square(sizes.controlSm),
+  iconMd: square(sizes.controlMd),
+  iconLg: square(sizes.controlLg),
+  // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
     backgroundColor: colors.accent,
     color: colors.onAccent,
-    opacity: thinOnHover,
+    opacity: {
+      ...interactive<number | string>(1, opacities.hover),
+      ":disabled": opacities.disabled,
+    },
   },
   secondary: {
-    backgroundColor: {
-      default: colors.fill,
-      [media.hover]: {
-        default: colors.fill,
-        ":hover:not(:disabled)": colors.fillStrong,
-      },
-    },
+    backgroundColor: interactive(colors.fill, colors.fillStrong),
     color: colors.textPrimary,
   },
   outline: {
-    backgroundColor: {
-      default: colors.background,
-      [media.hover]: {
-        default: colors.background,
-        ":hover:not(:disabled)": colors.fillSubtle,
-      },
-    },
     backgroundClip: "padding-box",
+    backgroundColor: interactive(colors.background, colors.fillSubtle),
     borderColor: colors.edge,
     boxShadow: shadows.control,
     color: colors.textPrimary,
   },
   ghost: {
-    backgroundColor: {
-      default: "transparent",
-      [media.hover]: {
-        default: "transparent",
-        ":hover:not(:disabled)": colors.fillSubtle,
-      },
-    },
+    backgroundColor: interactive("transparent", colors.fillSubtle),
     color: colors.textPrimary,
   },
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
-    backgroundColor: {
-      default: colors.dangerFillSubtle,
-      [media.hover]: {
-        default: colors.dangerFillSubtle,
-        ":hover:not(:disabled)": colors.dangerFill,
-      },
-    },
+    backgroundColor: interactive(colors.dangerFillSubtle, colors.dangerFill),
     color: colors.danger,
   },
+  // Reads as text, so it answers with an underline instead of a fill or a press.
+  link: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    textDecorationLine: interactive("none", "underline"),
+    textUnderlineOffset: space.xxs,
+    transform: null,
+  },
+  rounded: {},
+  pill: { borderRadius: radii.full },
 });
 
-const variants = {
+const variantStyles = {
   danger: styles.danger,
   ghost: styles.ghost,
+  link: styles.link,
   outline: styles.outline,
   primary: styles.primary,
   secondary: styles.secondary,
 } satisfies Record<ButtonVariant, stylex.StyleXStyles>;
 
 const sizeStyles = {
+  "icon-lg": styles.iconLg,
+  "icon-md": styles.iconMd,
+  "icon-sm": styles.iconSm,
+  "icon-xs": styles.iconXs,
   lg: styles.lg,
   md: styles.md,
   sm: styles.sm,
+  xs: styles.xs,
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
 
+const cornerStyles = {
+  pill: styles.pill,
+  rounded: styles.rounded,
+} satisfies Record<ButtonCorners, stylex.StyleXStyles>;
+
+type ButtonStyleOptions = Pick<ButtonProps, "corners" | "size" | "variant">;
+
+/** A button's styles for another element, like a plain `<a>` that must keep its link role. */
+function buttonStyles({
+  corners = "rounded",
+  size = "md",
+  variant = "secondary",
+}: ButtonStyleOptions = {}) {
+  return [
+    styles.base,
+    sizeStyles[size],
+    variantStyles[variant],
+    cornerStyles[corners],
+  ];
+}
+
 function Button({
+  corners = "rounded",
   size = "md",
   sx,
   variant = "secondary",
@@ -165,14 +226,21 @@ function Button({
 }: ButtonProps) {
   return (
     <ButtonPrimitive
+      data-corners={corners}
       data-size={size}
       data-slot="button"
       data-variant={variant}
       {...props}
-      {...stylex.props(styles.base, sizeStyles[size], variants[variant], sx)}
+      {...stylex.props(buttonStyles({ corners, size, variant }), sx)}
     />
   );
 }
 
-export { Button };
-export type { ButtonProps, ButtonSize, ButtonVariant };
+export { Button, buttonCorners, buttonSizes, buttonStyles, buttonVariants };
+export type {
+  ButtonCorners,
+  ButtonProps,
+  ButtonSize,
+  ButtonStyleOptions,
+  ButtonVariant,
+};

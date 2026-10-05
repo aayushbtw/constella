@@ -42,6 +42,7 @@ export const shadows = stylex.defineConsts({
 export const fontSizes = stylex.defineConsts({
   sm: "14px",
   xs: "13px",
+  xxs: "12px",
 });
 
 export const lineHeights = stylex.defineConsts({
@@ -71,13 +72,15 @@ export const radii = stylex.defineConsts({
 });
 
 export const sizes = stylex.defineConsts({
-  controlLg: "40px",
+  controlLg: "36px",
   controlMd: "32px",
-  controlSm: "24px",
-  controlXs: "20px",
+  controlSm: "28px",
+  controlXs: "24px",
+  controlXxs: "20px",
   hitArea: "40px",
   icon: "16px",
   iconSm: "14px",
+  iconXs: "12px",
   toast: "356px",
 });
 
