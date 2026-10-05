@@ -10,6 +10,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import {
   colors,
   fontSizes,
+  fontWeights,
   lineHeights,
   media,
   radii,
@@ -121,7 +122,10 @@ const styles = stylex.create({
   },
   th: {
     color: colors.textPrimary,
-    fontWeight: 500,
+    fontWeight: fontWeights.medium,
+  },
+  strong: {
+    fontWeight: fontWeights.semibold,
   },
   // A thin frame on the page, holding the preview.
   demo: {
@@ -214,6 +218,7 @@ const components = {
   "md-install": MarkdownInstall,
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
   pre: CodeBlock,
+  strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
   table: (props) => <table {...props} {...stylex.props(styles.table)} />,
   td: (props) => <td {...props} {...stylex.props(styles.cell)} />,
   th: (props) => <th {...props} {...stylex.props(styles.cell, styles.th)} />,

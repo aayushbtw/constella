@@ -52,6 +52,7 @@ export const lineHeights = stylex.defineConsts({
 export const fontWeights = stylex.defineConsts({
   medium: "500",
   regular: "400",
+  semibold: "600",
 });
 
 export const space = stylex.defineConsts({
