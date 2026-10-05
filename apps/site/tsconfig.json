@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["../../packages/ui/src/*"],
+      "~/*": ["./src/*"],
+      "tomekit/content*": ["./.tomekit/content*"]
+    },
+    "types": ["vite/client", "@tanstack/react-start"]
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx", ".cloudflare/types/index.d.ts"]
+}

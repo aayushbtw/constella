@@ -14,11 +14,11 @@ import { useEffect } from "react";
 
 import { Toaster } from "@/components/ui/toast";
 import { colors } from "@/lib/tokens.stylex";
-import { config } from "@/site/config";
-import { themeScript } from "@/site/theme";
-import { fonts, fontSizes, lineHeights } from "@/site/tokens.stylex";
+import { config } from "~/site/config";
+import { themeScript } from "~/site/theme";
+import { fonts, fontSizes, lineHeights } from "~/site/tokens.stylex";
 
-import appCss from "@/styles/styles.css?url";
+import appCss from "~/styles/styles.css?url";
 
 // Prose replaces the highlighter's `pre` class but keeps `data-lang`.
 const highlightCss = createThemeCss({

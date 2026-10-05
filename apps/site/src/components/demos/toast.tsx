@@ -1,6 +1,6 @@
-import { DemoRow } from "@/components/demos/trigger";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
+import { DemoRow } from "~/components/demos/trigger";
 
 async function wait(fails: boolean) {
   // oxlint-disable-next-line promise/avoid-new -- the demo fakes a slow upload

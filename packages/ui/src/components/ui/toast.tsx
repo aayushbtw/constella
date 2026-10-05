@@ -15,9 +15,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { danger } from "@/lib/danger.stylex";
-import { info } from "@/lib/info.stylex";
-import { success } from "@/lib/success.stylex";
 import {
   colors,
   durations,
@@ -35,7 +32,6 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
-import { warning } from "@/lib/warning.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
@@ -199,10 +195,10 @@ const styles = stylex.create({
     opacity: 1,
     transform: "scale(1)",
   },
-  error: { color: danger.text },
-  info: { color: info.text },
-  success: { color: success.text },
-  warning: { color: warning.text },
+  error: { color: colors.danger },
+  info: { color: colors.info },
+  success: { color: colors.success },
+  warning: { color: colors.warning },
   // A thin arc on a faint track, unhurried: it says "working", not "urgent".
   spinner: {
     animationDuration: durations.spin,

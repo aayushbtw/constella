@@ -16,13 +16,13 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
-import { shellTokens } from "@/site/highlight";
+import { shellTokens } from "~/site/highlight";
 import {
   durations as siteDurations,
   fonts,
   lineHeights,
   shadows,
-} from "@/site/tokens.stylex";
+} from "~/site/tokens.stylex";
 
 const styles = stylex.create({
   frame: {

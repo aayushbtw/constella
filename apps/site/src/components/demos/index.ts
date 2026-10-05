@@ -5,14 +5,14 @@ import {
   ButtonDisabledDemo,
   ButtonIconDemo,
   ButtonSizesDemo,
-} from "@/components/demos/button";
+} from "~/components/demos/button";
 import {
   ToastActionDemo,
   ToastDemo,
   ToastDismissDemo,
   ToastPromiseDemo,
   ToastTypesDemo,
-} from "@/components/demos/toast";
+} from "~/components/demos/toast";
 
 const demos = {
   button: ButtonDemo,

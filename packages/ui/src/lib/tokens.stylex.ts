@@ -13,6 +13,25 @@ export const colors = stylex.defineVars({
   textMuted: "var(--gray-10)",
   textPrimary: "var(--gray-12)",
   textSecondary: "var(--gray-11)",
+
+  // Status: the base is the foreground step, for icons and short labels; the
+  // fills mirror the neutral ones as tints, `Edge` is a tinted edge.
+  danger: "var(--red-11)",
+  dangerEdge: "var(--red-a6)",
+  dangerFill: "var(--red-a3)",
+  dangerFillSubtle: "var(--red-a2)",
+  info: "var(--blue-11)",
+  infoEdge: "var(--blue-a6)",
+  infoFill: "var(--blue-a3)",
+  infoFillSubtle: "var(--blue-a2)",
+  success: "var(--green-11)",
+  successEdge: "var(--green-a6)",
+  successFill: "var(--green-a3)",
+  successFillSubtle: "var(--green-a2)",
+  warning: "var(--amber-11)",
+  warningEdge: "var(--amber-a6)",
+  warningFill: "var(--amber-a3)",
+  warningFillSubtle: "var(--amber-a2)",
 });
 
 export const shadows = stylex.defineConsts({

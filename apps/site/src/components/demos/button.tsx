@@ -1,9 +1,9 @@
 import { Add01Icon, Delete02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { DemoRow } from "@/components/demos/trigger";
 import { Button } from "@/components/ui/button";
 import { sizes, strokes } from "@/lib/tokens.stylex";
+import { DemoRow } from "~/components/demos/trigger";
 
 function ButtonDemo() {
   return (

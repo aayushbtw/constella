@@ -3,7 +3,6 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
-import { danger } from "@/lib/danger.stylex";
 import {
   colors,
   durations,
@@ -127,13 +126,13 @@ const styles = stylex.create({
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
     backgroundColor: {
-      default: danger.fillSubtle,
+      default: colors.dangerFillSubtle,
       [media.hover]: {
-        default: danger.fillSubtle,
-        ":hover:not(:disabled)": danger.fill,
+        default: colors.dangerFillSubtle,
+        ":hover:not(:disabled)": colors.dangerFill,
       },
     },
-    color: danger.text,
+    color: colors.danger,
   },
 });
 

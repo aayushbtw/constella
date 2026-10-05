@@ -1,32 +1,4 @@
 {
-  "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "paths": {
-      "@/*": ["./src/*"],
-      "tomekit/content*": ["./.tomekit/content*"]
-    },
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "ES2022",
-    "tsBuildInfoFile": ".tsbuildinfo",
-    "types": ["vite/client", "@tanstack/react-start"],
-    "verbatimModuleSyntax": true
-  },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", ".cloudflare/types/index.d.ts"]
+  "extends": "./tsconfig.base.json",
+  "include": ["vite.config.ts"]
 }

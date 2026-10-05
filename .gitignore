@@ -17,5 +17,5 @@ routeTree.gen.ts
 .dev.vars
 
 # Built by `shadcn build`
-public/r
+apps/site/public/r
 .tomekit

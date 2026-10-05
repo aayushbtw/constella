@@ -1,11 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { statusLabels } from "@/components/docs/page";
 import { colors, fontSizes, space } from "@/lib/tokens.stylex";
-import { getComponents } from "@/server/components";
-import { config } from "@/site/config";
-import { layout } from "@/site/tokens.stylex";
+import { statusLabels } from "~/components/docs/page";
+import { getComponents } from "~/server/components";
+import { config } from "~/site/config";
+import { layout } from "~/site/tokens.stylex";
 
 export const Route = createFileRoute("/")({
   loader: async () => await getComponents(),
