@@ -1,6 +1,6 @@
 ---
 title: Toast
-description: Quiet notifications that stack, follow a promise and swipe away.
+description: Shows a brief message that stacks, follows a promise and swipes away.
 status: polished
 ---
 
@@ -12,39 +12,27 @@ status: polished
 
 ## Usage
 
-Wrap the app in `Toaster` once, then add toasts from anywhere, even outside React.
+Render `Toaster` once, around your app.
 
 ```tsx
-import { Toaster, toast } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toast";
 
 <Toaster>
   <App />
 </Toaster>;
+```
+
+Then call `toast.add` from anywhere, even outside React.
+
+```tsx
+import { toast } from "@/components/ui/toast";
 
 toast.add({ title: "Saved", type: "success" });
 ```
 
-## Composition
+## Types
 
-```txt
-Toaster
-└── Toast
-    └── ToastContent
-        ├── ToastIcon
-        ├── ToastBody
-        │   ├── ToastTitle
-        │   └── ToastDescription
-        ├── ToastAction
-        └── ToastClose
-```
-
-`Toaster` renders this for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`.
-
-## Examples
-
-### Types
-
-`type` picks the icon and its color. Without one, the toast is text only.
+Use `type` to add an icon. Leave it out for text only.
 
 <!-- ::demo name="toast-types" -->
 
@@ -57,9 +45,9 @@ toast.add({ title: "A new version is available", type: "info" });
 toast.add({ title: "Syncing…", type: "loading" });
 ```
 
-### Action
+## Action
 
-One action, for the thing someone is most likely to want next.
+Use `actionProps` to add a button. Keep it to one action.
 
 <!-- ::demo name="toast-action" -->
 
@@ -71,9 +59,9 @@ toast.add({
 });
 ```
 
-### Promise
+## Promise
 
-The toast follows the promise: the icon cross-fades, the text fades across, and the toast grows to fit.
+Use `toast.promise` to show a loading toast that turns into success or error.
 
 <!-- ::demo name="toast-promise" -->
 
@@ -85,9 +73,9 @@ toast.promise(upload(files), {
 });
 ```
 
-### Dismiss
+## Dismiss
 
-Every toast closes from its button, a swipe down or right, or its timer. `timeout: 0` keeps it until then; `toast.close()` dismisses from code, one by id or all at once.
+Use `timeout: 0` to keep a toast until it's closed. Use `toast.close` to close one by id, or all of them.
 
 <!-- ::demo name="toast-dismiss" -->
 
@@ -98,18 +86,33 @@ toast.close(id);
 toast.close();
 ```
 
-## API
+## Custom Layout
+
+`Toaster` renders this tree for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`.
+
+```txt
+Toast
+└── ToastContent
+    ├── ToastIcon
+    ├── ToastBody
+    │   ├── ToastTitle
+    │   └── ToastDescription
+    ├── ToastAction
+    └── ToastClose
+```
+
+## API Reference
 
 Every part takes `sx` to override its styles. The rest is [Base UI's Toast](https://base-ui.com/react/components/toast).
 
-### Methods
+### toast
 
-| Method                           | Does                                      |
-| -------------------------------- | ----------------------------------------- |
-| `toast.add(options)`             | Shows a toast, returns its id             |
-| `toast.update(id, options)`      | Changes a toast in place                  |
-| `toast.close(id?)`               | Dismisses one toast, or all without an id |
-| `toast.promise(promise, states)` | Tracks a promise through its states       |
+| Method                           | Does                                   |
+| -------------------------------- | -------------------------------------- |
+| `toast.add(options)`             | Shows a toast, returns its id          |
+| `toast.update(id, options)`      | Changes a toast in place               |
+| `toast.close(id?)`               | Closes one toast, or all without an id |
+| `toast.promise(promise, states)` | Follows a promise through its states   |
 
 ### Options
 
@@ -118,6 +121,6 @@ Every part takes `sx` to override its styles. The rest is [Base UI's Toast](http
 | `title` | `ReactNode` |  |
 | `description` | `ReactNode` |  |
 | `type` | `"success" \| "error" \| "warning" \| "info" \| "loading"` |  |
-| `timeout` | `number`, ms; `0` stays until dismissed | `5000` |
+| `timeout` | `number`, in ms; `0` stays until closed | `5000` |
 | `actionProps` | Button props for the action |  |
 | `priority` | `"low" \| "high"`, how urgently it's announced | `"low"` |

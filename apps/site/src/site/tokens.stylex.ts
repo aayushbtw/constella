@@ -2,6 +2,8 @@ import * as stylex from "@stylexjs/stylex";
 
 export const shadows = stylex.defineConsts({
   card: "0 0 0 1px var(--gray-a2)",
+  // Drawn inside the box, so it never stacks on the surface around it.
+  inset: "inset 0 0 0 1px var(--gray-a3)",
   rule: "inset 0 -1px 0 var(--gray-a3)",
 });
 

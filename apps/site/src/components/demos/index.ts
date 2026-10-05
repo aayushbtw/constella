@@ -2,10 +2,15 @@ import type { ComponentType } from "react";
 
 import {
   ButtonDemo,
-  ButtonDisabledDemo,
   ButtonIconDemo,
+  ButtonIconOnlyDemo,
+  ButtonLinkDemo,
+  ButtonLoadingDemo,
+  ButtonPillDemo,
   ButtonSizesDemo,
+  ButtonVariantsDemo,
 } from "~/components/demos/button";
+import { SpinnerDemo } from "~/components/demos/spinner";
 import {
   ToastActionDemo,
   ToastDemo,
@@ -16,9 +21,14 @@ import {
 
 const demos = {
   button: ButtonDemo,
-  "button-disabled": ButtonDisabledDemo,
   "button-icon": ButtonIconDemo,
+  "button-icon-only": ButtonIconOnlyDemo,
+  "button-link": ButtonLinkDemo,
+  "button-loading": ButtonLoadingDemo,
+  "button-pill": ButtonPillDemo,
   "button-sizes": ButtonSizesDemo,
+  "button-variants": ButtonVariantsDemo,
+  spinner: SpinnerDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,
   "toast-dismiss": ToastDismissDemo,

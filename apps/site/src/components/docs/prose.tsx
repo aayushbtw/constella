@@ -4,6 +4,7 @@ import type {
   MarkdownComponents,
   MarkdownProps,
 } from "@tanstack/markdown/react";
+import { useRef } from "react";
 import type { ComponentPropsWithoutRef } from "react";
 
 import {
@@ -12,9 +13,11 @@ import {
   lineHeights,
   media,
   radii,
+  sizes,
   space,
 } from "@/lib/tokens.stylex";
 import { demos, isDemo } from "~/components/demos";
+import { CopyButton } from "~/components/docs/copy-button";
 import { Install } from "~/components/docs/install";
 import { config } from "~/site/config";
 import { highlightCode } from "~/site/highlight";
@@ -70,19 +73,29 @@ const styles = stylex.create({
     paddingBlock: 1,
     paddingInline: 3,
   },
-  pre: {
+  codeBlock: {
     ...flow,
     backgroundColor: colors.fillSubtle,
     borderRadius: radii.md,
     boxShadow: shadows.card,
+    position: "relative",
+  },
+  pre: {
     color: colors.textPrimary,
     fontSize: fontSizes.xs,
     lineHeight: siteLineHeights.code,
     overflowX: "auto",
     paddingBlock: space.sm,
-    paddingInline: space.md,
+    paddingInlineEnd: `calc(${space.xs} + ${sizes.controlXs} + ${space.xs})`,
+    paddingInlineStart: space.md,
     scrollbarWidth: "none",
     tabSize: 2,
+  },
+  // Centered on the first line.
+  copy: {
+    insetBlockStart: `calc(${space.sm} + (${siteLineHeights.code} - ${sizes.controlXs}) / 2)`,
+    insetInlineEnd: space.xs,
+    position: "absolute",
   },
   preCode: {
     display: "inline-block",
@@ -105,18 +118,18 @@ const styles = stylex.create({
     color: colors.textPrimary,
     fontWeight: 500,
   },
+  // A thin frame on the page, holding the preview.
   demo: {
     ...flow,
-    backgroundColor: colors.fill,
     borderRadius: radii.md,
-    boxShadow: shadows.card,
+    boxShadow: shadows.inset,
     padding: space.xxs,
   },
   stage: {
     alignItems: "center",
     backgroundColor: colors.background,
     borderRadius: radii.sm,
-    boxShadow: shadows.card,
+    boxShadow: shadows.inset,
     display: "flex",
     justifyContent: "center",
     minHeight: 280,
@@ -142,10 +155,27 @@ function Demo({ name }: { name?: string }) {
   const Component = demos[name];
 
   return (
-    <div {...stylex.props(styles.demo)}>
+    <div data-slot="demo" {...stylex.props(styles.demo)}>
       <div {...stylex.props(styles.stage)}>
         <Component />
       </div>
+    </div>
+  );
+}
+
+function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
+  const pre = useRef<HTMLPreElement>(null);
+
+  return (
+    <div data-slot="code-block" {...stylex.props(styles.codeBlock)}>
+      {/* Replacing the class keeps `data-lang`, which the highlight theme keys on. */}
+      <pre ref={pre} {...props} {...stylex.props(styles.pre)} />
+      <CopyButton
+        label="Copy code"
+        sx={styles.copy}
+        // Line numbers are pseudo-elements, so the text holds only the code.
+        text={() => pre.current?.textContent?.trimEnd() ?? ""}
+      />
     </div>
   );
 }
@@ -178,8 +208,7 @@ const components = {
   "md-demo": Demo,
   "md-install": MarkdownInstall,
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
-  // Replacing the class keeps `data-lang`, which the highlight theme keys on.
-  pre: (props) => <pre {...props} {...stylex.props(styles.pre)} />,
+  pre: CodeBlock,
   table: (props) => <table {...props} {...stylex.props(styles.table)} />,
   td: (props) => <td {...props} {...stylex.props(styles.cell)} />,
   th: (props) => <th {...props} {...stylex.props(styles.cell, styles.th)} />,
