@@ -14,6 +14,7 @@ const styles = stylex.create({
     boxShadow: shadows.card,
     display: "flex",
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xs,
     gap: space.md,
     lineHeight: lineHeights.code,

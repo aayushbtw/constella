@@ -86,6 +86,7 @@ const styles = stylex.create({
     color: colors.textMuted,
     display: "flex",
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     gap: space.md,

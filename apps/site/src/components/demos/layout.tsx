@@ -35,6 +35,7 @@ const styles = stylex.create({
   value: {
     color: colors.textMuted,
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     textAlign: "end",
@@ -57,6 +58,7 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xxs,
   },
   labelName: {

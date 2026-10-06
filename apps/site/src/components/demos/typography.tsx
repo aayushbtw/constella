@@ -97,6 +97,7 @@ const styles = stylex.create({
   label: {
     color: colors.textMuted,
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     // The tabs set the sample's weight, not the labels'.

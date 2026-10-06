@@ -12,7 +12,7 @@ export const surfaces = stylex.defineConsts({
 });
 
 export const fonts = stylex.defineConsts({
-  mono: 'ui-monospace, "SF Mono", Menlo, monospace',
+  mono: '"JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace',
   sans: '"Inter Variable", -apple-system, BlinkMacSystemFont, sans-serif',
 });
 

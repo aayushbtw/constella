@@ -76,6 +76,7 @@ const styles = stylex.create({
     boxShadow: shadows.card,
     color: colors.textPrimary,
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     fontSize: fontSizes.xs,
     paddingBlock: 1,
     paddingInline: 3,
@@ -108,6 +109,7 @@ const styles = stylex.create({
   preCode: {
     display: "inline-block",
     fontFamily: fonts.mono,
+    fontVariantLigatures: "none",
     minWidth: "100%",
   },
   table: {

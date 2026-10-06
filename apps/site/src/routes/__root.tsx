@@ -1,4 +1,5 @@
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import monoLatin from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
 import * as stylex from "@stylexjs/stylex";
 import { createThemeCss } from "@tanstack/highlight/theme";
 import { githubDarkTheme } from "@tanstack/highlight/themes/github-dark";
@@ -54,6 +55,13 @@ export const Route = createRootRoute({
       {
         rel: "preload",
         href: interLatin,
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: monoLatin,
         as: "font",
         type: "font/woff2",
         crossOrigin: "anonymous",
