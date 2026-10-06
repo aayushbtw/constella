@@ -39,6 +39,7 @@ export const colors = stylex.defineVars({
 export const shadows = stylex.defineConsts({
   control: "0 1px 2px var(--black-a1)",
   dialog: "0 0 0 1px var(--gray-a4), 0 16px 40px var(--black-a6)",
+  invalid: "0 0 0 2px var(--red-a4)",
   popover: "0 0 0 1px var(--gray-a4), 0 4px 16px var(--black-a6)",
   thumb: "0 0 0 1px var(--gray-a6), 0 1px 3px var(--black-a5)",
 });

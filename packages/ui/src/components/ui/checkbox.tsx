@@ -40,7 +40,7 @@ const styles = stylex.create({
     borderRadius: radii.xs,
     borderStyle: "solid",
     borderWidth: strokes.border,
-    boxShadow: shadows.control,
+    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     color: colors.onAccent,
     cursor: { default: "pointer", ":is([data-disabled])": "default" },

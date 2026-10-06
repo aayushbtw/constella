@@ -60,7 +60,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Invalid is a different shape, not just a different hue: a red edge alone, no halo, so a detached ring around the edge always means focus, even to a color-blind eye. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
+One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
 
 ## Motion
 
