@@ -42,7 +42,7 @@ Use the `side` prop on `TooltipContent` to place the tooltip. Wrap neighbors in 
 
 ```tsx
 <TooltipProvider>
-  {["top", "right", "bottom", "left"].map((side) => (
+  {["left", "top", "bottom", "right"].map((side) => (
     <Tooltip key={side}>
       <TooltipTrigger render={<Button variant="outline" />}>
         {side}

@@ -12,7 +12,7 @@ import {
 import { sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
-const sides = ["top", "right", "bottom", "left"] as const;
+const sides = ["left", "top", "bottom", "right"] as const;
 
 function TooltipDemo() {
   return (
