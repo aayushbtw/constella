@@ -20,6 +20,10 @@ Read the one that fits before changing things, and record new decisions in it, n
 - **`ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
 - **`DOCS.md`:** how to write the docs pages in `apps/site/content`.
 
+## Dependencies first
+
+Before building a component, list every component it and its docs examples use (read shadcn's page for it: Slider needs Label and Tooltip, Tooltip needs Kbd, Label needs Checkbox, Checkbox needs Field). If any is missing, stop and build those first, bottom-up. Never fake a missing one in a demo with a native element or hand-rolled styles.
+
 ## Motion skills
 
 Load these from `.agents/skills/` at these points, every time:

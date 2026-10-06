@@ -10,6 +10,8 @@ Pages read like shadcn's, written for someone using the component, not for us:
 
 - **Order:** preview (one plain example), installation, usage (the import, then the smallest snippet), one section per task, API Reference.
 - **Headings name a task or option** ("Size", "With Icon", "As Link"), not a design idea.
+- **Drafts track their gaps** in a `## Pending` section at the end: each line names the missing component and what it unblocks. A page leaves draft only once that section is gone.
+- **Use the native term** (React, Base UI, CSS, shadcn) over a plain-English stand-in: "Controlled", not "Open from Code".
 - **One or two plain sentences per section**, starting with what to do: "Use the `size` prop to…", "Add `data-icon` to…". No design reasoning; that lives in `DESIGN.md`.
 - **Show a variant matrix once.** All variants in Variants, all sizes in Size; every other example shows one representative.
 - **Previews:** place one with `<!-- ::demo name="…" -->`, and its code block right below it. Every code block gets a copy button; blocks of more than one line get line numbers.
