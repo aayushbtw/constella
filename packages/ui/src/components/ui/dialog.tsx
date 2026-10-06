@@ -30,6 +30,10 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 
+// The close button's padding around its icon, so the icon can sit on the content edge.
+const buttonPadding = `((${sizes.controlSm} - ${sizes.icon}) / 2)`;
+const closeInset = `calc(${space.md} - ${buttonPadding})`;
+
 const styles = stylex.create({
   backdrop: {
     backgroundColor: colors.overlay,
@@ -117,10 +121,9 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
-  // At the popup's padding, pulled out by the button's own, so the icon sits on the content edge.
   closeButton: {
-    insetBlockStart: `calc(${space.md} - (${sizes.controlSm} - ${sizes.icon}) / 2)`,
-    insetInlineEnd: `calc(${space.md} - (${sizes.controlSm} - ${sizes.icon}) / 2)`,
+    insetBlockStart: closeInset,
+    insetInlineEnd: closeInset,
     position: "absolute",
   },
 });
