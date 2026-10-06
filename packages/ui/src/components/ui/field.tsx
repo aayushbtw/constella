@@ -112,9 +112,9 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.xs,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.row,
     margin: 0,
     textWrap: "pretty",
   },
