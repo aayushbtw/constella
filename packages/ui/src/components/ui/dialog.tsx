@@ -116,13 +116,13 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
-  // Pulled out by its padding, so the icon sits on the content edge and the title's line.
+  // The cross is 8px in a 24px button, so pulling out `space.xs` puts it on the content edge.
   closeButton: {
     alignSelf: "center",
     gridColumn: 2,
     gridRow: 1,
-    marginBlock: `-${space.xxs}`,
-    marginInlineEnd: `-${space.xxs}`,
+    marginBlock: `-${space.xs}`,
+    marginInlineEnd: `-${space.xs}`,
   },
 });
 
