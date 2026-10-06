@@ -220,7 +220,7 @@ function VolumeSlider() {
 
 ## With Input
 
-Control the slider with `value` and `onValueChange`, and keep a number input in sync. The input holds a draft while typing and snaps back to the slider's value on blur.
+Control the slider with `value` and `onValueChange`, and keep a number [Input Group](/docs/components/input-group) in sync. The input holds a draft while typing and snaps back to the slider's value on blur.
 
 <!-- ::demo name="slider-input" -->
 
@@ -236,21 +236,26 @@ const [draft, setDraft] = useState("100");
   value={value}
 >
   <SliderLabel>Opacity</SliderLabel>
-  <Input
-    aria-label="Opacity"
-    max={100}
-    min={0}
-    onBlur={() => setDraft(String(value))}
-    onChange={(event) => {
-      setDraft(event.target.value);
-      const next = event.target.valueAsNumber;
-      if (Number.isFinite(next)) {
-        setValue(Math.min(100, Math.max(0, Math.round(next))));
-      }
-    }}
-    type="number"
-    value={draft}
-  />
+  <InputGroup size="sm">
+    <InputGroupInput
+      aria-label="Opacity"
+      max={100}
+      min={0}
+      onBlur={() => setDraft(String(value))}
+      onChange={(event) => {
+        setDraft(event.target.value);
+        const next = event.target.valueAsNumber;
+        if (Number.isFinite(next)) {
+          setValue(Math.min(100, Math.max(0, Math.round(next))));
+        }
+      }}
+      type="number"
+      value={draft}
+    />
+    <InputGroupAddon align="inline-end">
+      <InputGroupText>%</InputGroupText>
+    </InputGroupAddon>
+  </InputGroup>
   <SliderControl />
 </Slider>;
 ```
@@ -272,3 +277,9 @@ Use the `disabled` prop to disable the slider.
 ## API Reference
 
 `SliderControl` renders the track, indicator and one thumb when it has no children. Every part takes `sx`, applied last. For the rest, see [Base UI Slider](https://base-ui.com/react/components/slider).
+
+## Pending
+
+Blocked on draft components. Remove this section before the page leaves draft.
+
+- Tooltip and Input Group: leaves draft with them, which the With Tooltip and With Input examples link.

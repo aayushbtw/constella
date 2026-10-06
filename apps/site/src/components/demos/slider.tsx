@@ -1,7 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 import {
   Slider,
   SliderControl,
@@ -80,21 +85,13 @@ const styles = stylex.create({
     fontSize: "inherit",
   },
   field: {
-    alignItems: "center",
-    color: colors.textMuted,
-    display: "flex",
-    fontSize: fontSizes.sm,
-    gap: space.xxs,
-    gridColumn: 2,
+    gridColumn: "2",
+    width: `calc(${space.lg} * 3)`,
   },
   input: {
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
-    height: sizes.controlXs,
     MozAppearance: "textfield",
-    paddingInline: space.xs,
     textAlign: "end",
-    width: `calc(${space.lg} * 2)`,
     "::-webkit-inner-spin-button": { appearance: "none" },
     "::-webkit-outer-spin-button": { appearance: "none" },
   },
@@ -279,8 +276,8 @@ function SliderInputDemo() {
         value={value}
       >
         <SliderLabel>Opacity</SliderLabel>
-        <label {...stylex.props(styles.field)}>
-          <Input
+        <InputGroup size="sm" sx={styles.field}>
+          <InputGroupInput
             aria-label="Opacity"
             inputMode="numeric"
             max={100}
@@ -299,8 +296,10 @@ function SliderInputDemo() {
             value={draft}
             sx={styles.input}
           />
-          %
-        </label>
+          <InputGroupAddon align="inline-end">
+            <InputGroupText>%</InputGroupText>
+          </InputGroupAddon>
+        </InputGroup>
         <SliderControl />
       </Slider>
     </DemoRow>
