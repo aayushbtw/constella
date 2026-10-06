@@ -81,7 +81,17 @@ const styles = stylex.create({
   header: {
     display: "flex",
     flexDirection: "column",
+    flexShrink: 0,
     gap: space.xs,
+  },
+  // Bleeds to the popup's edges so the scrollbar sits there, not beside the text.
+  body: {
+    flexGrow: 1,
+    flexShrink: 1,
+    marginInline: `calc(-1 * ${space.md})`,
+    minHeight: 0,
+    overflowY: "auto",
+    paddingInline: space.md,
   },
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
@@ -91,6 +101,7 @@ const styles = stylex.create({
     borderTopWidth: strokes.border,
     display: "flex",
     flexDirection: { default: "column-reverse", [media.sm]: "row" },
+    flexShrink: 0,
     gap: space.xs,
     justifyContent: "flex-end",
     marginBlockEnd: `calc(-1 * ${space.md})`,
@@ -187,6 +198,16 @@ function DialogHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
+function DialogBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="dialog-body"
+      {...props}
+      {...stylex.props(styles.body, sx)}
+    />
+  );
+}
+
 function DialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -254,6 +275,7 @@ function DialogCloseButton({
 export {
   Dialog,
   DialogBackdrop,
+  DialogBody,
   DialogClose,
   DialogCloseButton,
   DialogContent,

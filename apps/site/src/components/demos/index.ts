@@ -21,7 +21,7 @@ import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import {
   DialogControlledDemo,
   DialogDemo,
-  DialogNestedDemo,
+  DialogScrollableDemo,
 } from "~/components/demos/dialog";
 import {
   FieldCardDemo,
@@ -119,7 +119,7 @@ const demos = {
   "color-scales": ColorScalesDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
-  "dialog-nested": DialogNestedDemo,
+  "dialog-scrollable": DialogScrollableDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,
   "field-disabled": FieldDisabledDemo,

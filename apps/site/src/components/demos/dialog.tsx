@@ -1,8 +1,10 @@
+import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogCloseButton,
   DialogContent,
@@ -12,30 +14,56 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { DemoRow } from "~/components/demos/frame";
+
+const styles = stylex.create({
+  short: { maxHeight: 400 },
+  paragraph: { margin: 0, marginBlockEnd: "1em" },
+});
+
+const terms = [
+  "These terms cover your use of the workspace, the files you upload to it and the pages you publish from it. By creating an account you agree to them, and to any changes we post here with at least thirty days’ notice.",
+  "You own what you make. We store it, back it up and show it to the people you share it with, and we don’t use it for anything else. If you delete a file, it leaves our servers within thirty days, including backups.",
+  "Don’t use the workspace to send spam, host malware or break the law where you or your readers live. We may suspend a page that does, and we’ll tell you why unless the law says we can’t.",
+  "Paid plans renew each month or year until you cancel. Cancelling stops the next charge; it doesn’t refund the current period. If we raise prices, the new price starts at your next renewal, never mid-term.",
+  "We aim for the service to be up all the time but can’t promise it. If an outage on our side lasts more than a day, ask support for a credit on that month’s bill.",
+  "Either of us can end this agreement at any time. When you leave, you can export everything for ninety days. After that, we delete your account and its contents for good.",
+];
 
 function DialogDemo() {
   return (
     <DemoRow>
       <Dialog>
         <DialogTrigger render={<Button variant="outline" />}>
-          Publish
+          Edit profile
         </DialogTrigger>
         <DialogContent>
           <DialogCloseButton />
           <DialogHeader>
-            <DialogTitle>Publish changes?</DialogTitle>
+            <DialogTitle>Edit profile</DialogTitle>
             <DialogDescription>
-              Everyone with the link will see the new version right away.
+              Make changes to your profile here. Save when you’re done.
             </DialogDescription>
           </DialogHeader>
+          <FieldGroup>
+            <Field>
+              <FieldLabel>Name</FieldLabel>
+              <Input defaultValue="Pedro Duarte" name="name" />
+            </Field>
+            <Field>
+              <FieldLabel>Username</FieldLabel>
+              <Input defaultValue="@peduarte" name="username" />
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>
               Cancel
             </DialogClose>
             <DialogClose render={<Button variant="primary" />}>
-              Publish
+              Save changes
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -85,45 +113,34 @@ function DialogControlledDemo() {
   );
 }
 
-function DialogNestedDemo() {
+function DialogScrollableDemo() {
   return (
     <DemoRow>
       <Dialog>
         <DialogTrigger render={<Button variant="outline" />}>
-          Share
+          Review terms
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent sx={styles.short}>
           <DialogCloseButton />
           <DialogHeader>
-            <DialogTitle>Share</DialogTitle>
+            <DialogTitle>Terms of service</DialogTitle>
             <DialogDescription>
-              Anyone with the link can view this page.
+              Read these before you accept. They took effect on June 1.
             </DialogDescription>
           </DialogHeader>
+          <DialogBody>
+            {terms.map((text) => (
+              <p key={text} {...stylex.props(styles.paragraph)}>
+                {text}
+              </p>
+            ))}
+          </DialogBody>
           <DialogFooter>
-            <Dialog>
-              <DialogTrigger render={<Button variant="danger" />}>
-                Reset link
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Reset the link?</DialogTitle>
-                  <DialogDescription>
-                    The old link stops working for everyone it was sent to.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose render={<Button variant="outline" />}>
-                    Cancel
-                  </DialogClose>
-                  <DialogClose render={<Button variant="danger" />}>
-                    Reset
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <DialogClose render={<Button variant="outline" />}>
+              Decline
+            </DialogClose>
             <DialogClose render={<Button variant="primary" />}>
-              Done
+              Accept
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -132,4 +149,4 @@ function DialogNestedDemo() {
   );
 }
 
-export { DialogControlledDemo, DialogDemo, DialogNestedDemo };
+export { DialogControlledDemo, DialogDemo, DialogScrollableDemo };
