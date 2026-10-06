@@ -10,6 +10,13 @@ import {
   ButtonSizesDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
+import {
+  CheckboxControlledDemo,
+  CheckboxDemo,
+  CheckboxDisabledDemo,
+  CheckboxIndeterminateDemo,
+  CheckboxInvalidDemo,
+} from "~/components/demos/checkbox";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import {
   DialogControlledDemo,
@@ -17,10 +24,18 @@ import {
   DialogNestedDemo,
 } from "~/components/demos/dialog";
 import {
+  FieldCardDemo,
+  FieldDemo,
+  FieldDisabledDemo,
+  FieldErrorDemo,
+  FieldSetDemo,
+} from "~/components/demos/field";
+import {
   KbdButtonDemo,
   KbdDemo,
   KbdGroupDemo,
 } from "~/components/demos/kbd";
+import { LabelDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
@@ -54,14 +69,25 @@ const demos = {
   "button-pill": ButtonPillDemo,
   "button-sizes": ButtonSizesDemo,
   "button-variants": ButtonVariantsDemo,
+  checkbox: CheckboxDemo,
+  "checkbox-controlled": CheckboxControlledDemo,
+  "checkbox-disabled": CheckboxDisabledDemo,
+  "checkbox-indeterminate": CheckboxIndeterminateDemo,
+  "checkbox-invalid": CheckboxInvalidDemo,
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-nested": DialogNestedDemo,
+  field: FieldDemo,
+  "field-card": FieldCardDemo,
+  "field-disabled": FieldDisabledDemo,
+  "field-error": FieldErrorDemo,
+  "field-set": FieldSetDemo,
   kbd: KbdDemo,
   "kbd-button": KbdButtonDemo,
   "kbd-group": KbdGroupDemo,
+  label: LabelDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
