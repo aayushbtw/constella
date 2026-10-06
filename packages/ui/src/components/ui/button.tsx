@@ -30,11 +30,11 @@ const buttonVariants = [
 const buttonSizes = [
   "xs",
   "sm",
-  "md",
+  "default",
   "lg",
   "icon-xs",
   "icon-sm",
-  "icon-md",
+  "icon",
   "icon-lg",
 ] as const;
 const buttonCorners = ["rounded", "pill"] as const;
@@ -127,7 +127,7 @@ const styles = stylex.create({
     WebkitTapHighlightColor: "transparent",
     whiteSpace: "nowrap",
   },
-  // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from md.
+  // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
     ...inset(space.xs, px6),
     fontSize: fontSizes.xxs,
@@ -140,11 +140,11 @@ const styles = stylex.create({
     gap: space.xxs,
     height: sizes.controlSm,
   },
-  md: { ...inset(px10, space.xs), height: sizes.controlMd },
+  default: { ...inset(px10, space.xs), height: sizes.controlMd },
   lg: { ...inset(px10, space.xs), height: sizes.controlLg },
   iconXs: square(sizes.controlXs),
   iconSm: square(sizes.controlSm),
-  iconMd: square(sizes.controlMd),
+  icon: square(sizes.controlMd),
   iconLg: square(sizes.controlLg),
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
@@ -199,11 +199,11 @@ const variantStyles = {
 
 const sizeStyles = {
   "icon-lg": styles.iconLg,
-  "icon-md": styles.iconMd,
+  default: styles.default,
+  icon: styles.icon,
   "icon-sm": styles.iconSm,
   "icon-xs": styles.iconXs,
   lg: styles.lg,
-  md: styles.md,
   sm: styles.sm,
   xs: styles.xs,
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
@@ -218,7 +218,7 @@ type ButtonStyleOptions = Pick<ButtonProps, "corners" | "size" | "variant">;
 /** A button's styles for another element, like a plain `<a>` that must keep its link role. */
 function buttonStyles({
   corners = "rounded",
-  size = "md",
+  size = "default",
   variant = "secondary",
 }: ButtonStyleOptions = {}) {
   return [
@@ -231,7 +231,7 @@ function buttonStyles({
 
 function Button({
   corners = "rounded",
-  size = "md",
+  size = "default",
   sx,
   variant = "secondary",
   ...props

@@ -33,6 +33,7 @@ Alert
 - **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.
 - **`sx` overrides, not `className`.** Parts omit `className` and `style` and take `sx?: StyleXStyles`, applied last in `stylex.props(...)` so the caller wins. The type is declared in each file, so every component installs alone.
 - **Variants are style keys.** `variant` and `size` index a `satisfies Record<Variant, StyleXStyles>` map, and the allowed values are one exported `as const` list (`buttonVariants`) the type derives from. No cva, no class strings.
+- **Every control has the size scale.** `xs`, `sm`, `default`, `lg` (and `icon-xs`, `icon-sm`, `icon`, `icon-lg` where it has icon-only sizes), shadcn's names. Text fields skip `xs`: 24px is too short for typed text. The default is a real value, so `size="default"` can be passed, not only implied.
 - **Styles for other elements are a function.** When an element must keep its own semantics (a link styled as a button), the component exports a style getter (`buttonStyles`) instead of rendering through `render`.
 - **State comes from Base UI's data attributes** (`[data-open]`, `[data-disabled]`, `[data-starting-style]`), never mirrored into React state.
 - **Repeated style shapes are helpers.** StyleX evaluates arrow functions inside `stylex.create`, not function declarations, so those helpers are arrows with `func-style` disabled around them.

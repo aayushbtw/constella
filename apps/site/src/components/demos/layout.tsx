@@ -23,7 +23,7 @@ const radiusScale = [
 const controls = [
   { name: "controlXs", size: "xs", value: sizes.controlXs },
   { name: "controlSm", size: "sm", value: sizes.controlSm },
-  { name: "controlMd", size: "md", value: sizes.controlMd },
+  { name: "controlMd", size: "default", value: sizes.controlMd },
   { name: "controlLg", size: "lg", value: sizes.controlLg },
 ] as const satisfies readonly {
   name: string;

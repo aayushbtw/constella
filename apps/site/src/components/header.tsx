@@ -57,7 +57,7 @@ function Header() {
         <Button
           aria-label="Toggle theme"
           onClick={toggleTheme}
-          size="icon-md"
+          size="icon"
           variant="ghost"
         >
           <HugeiconsIcon

@@ -28,7 +28,7 @@ const labels = {
 const scale = [
   { glyph: sizes.iconXs, icon: "icon-xs", label: "Extra small", size: "xs" },
   { glyph: sizes.icon, icon: "icon-sm", label: "Small", size: "sm" },
-  { glyph: sizes.icon, icon: "icon-md", label: "Medium", size: "md" },
+  { glyph: sizes.icon, icon: "icon", label: "Default", size: "default" },
   { glyph: sizes.icon, icon: "icon-lg", label: "Large", size: "lg" },
 ] as const satisfies readonly {
   glyph: string;
@@ -121,7 +121,7 @@ function ButtonPillDemo() {
       <Button corners="pill" variant="outline">
         Get started
       </Button>
-      <Button aria-label="Add" corners="pill" size="icon-md" variant="outline">
+      <Button aria-label="Add" corners="pill" size="icon" variant="outline">
         <Glyph icon={Add01Icon} />
       </Button>
     </DemoRow>

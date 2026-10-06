@@ -43,7 +43,7 @@ Use the `size` prop to change the size of the button.
 ```tsx
 <Button size="xs">Extra small</Button>
 <Button size="sm">Small</Button>
-<Button size="md">Medium</Button>
+<Button>Default</Button>
 <Button size="lg">Large</Button>
 ```
 
@@ -54,7 +54,7 @@ Use an `icon-*` size for a button with only an icon. Add an `aria-label`.
 <!-- ::demo name="button-icon-only" -->
 
 ```tsx
-<Button size="icon-md" aria-label="Search">
+<Button size="icon" aria-label="Search">
   <HugeiconsIcon icon={Search01Icon} size={sizes.icon} aria-hidden />
 </Button>
 ```
@@ -136,7 +136,7 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 | Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "danger" \| "link"` | `"secondary"` |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon-md" \| "icon-lg"` | `"md"` |
+| `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
 | `corners` | `"rounded" \| "pill"` | `"rounded"` |
 | `sx` | `StyleXStyles`, applied last |  |
 
