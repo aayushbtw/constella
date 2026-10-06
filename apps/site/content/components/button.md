@@ -87,16 +87,26 @@ Use `corners="pill"` to round the ends.
 <Button corners="pill">Get started</Button>
 ```
 
-## Spinner
+## States
 
-Render a [Spinner](/docs/components/spinner) inside the button to show it's loading. Add `data-icon="inline-start"` to the spinner, and `disabled` so it can't be pressed twice.
+Use `disabled` when the action isn't available. It fades the button and shows a not-allowed cursor.
 
-<!-- ::demo name="button-loading" -->
+Add `aria-busy` while something runs. It shows a busy cursor, so working reads differently from unavailable. What goes inside is up to you.
+
+- With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
+- Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
+
+<!-- ::demo name="button-states" -->
 
 ```tsx
-<Button disabled>
+<Button disabled>Disabled</Button>
+<Button aria-busy disabled>
   <Spinner data-icon="inline-start" />
   Saving
+</Button>
+<Button aria-busy={generating} onClick={() => setGenerating(!generating)}>
+  {generating && <Spinner data-icon="inline-start" />}
+  {generating ? "Stop generating" : "Generate"}
 </Button>
 ```
 

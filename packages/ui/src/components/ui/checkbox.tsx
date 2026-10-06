@@ -43,7 +43,7 @@ const styles = stylex.create({
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     color: colors.onAccent,
-    cursor: { default: "pointer", ":is([data-disabled])": "default" },
+    cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
     height: sizes.icon,

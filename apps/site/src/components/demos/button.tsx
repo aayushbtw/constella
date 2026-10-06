@@ -7,7 +7,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { Button, buttonStyles, buttonVariants } from "@/components/ui/button";
 import type { ButtonSize, ButtonVariant } from "@/components/ui/button";
@@ -128,14 +128,46 @@ function ButtonPillDemo() {
   );
 }
 
-function ButtonLoadingDemo() {
+function ButtonStatesDemo() {
   return (
     <DemoRow>
       <Button disabled variant="outline">
+        Disabled
+      </Button>
+      <Button aria-busy disabled variant="outline">
         <Spinner data-icon="inline-start" />
         Saving
       </Button>
+      <GenerateButton />
     </DemoRow>
+  );
+}
+
+function GenerateButton() {
+  const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    const done = generating
+      ? setTimeout(() => {
+          setGenerating(false);
+        }, 4000)
+      : undefined;
+    return () => {
+      clearTimeout(done);
+    };
+  }, [generating]);
+
+  return (
+    <Button
+      aria-busy={generating}
+      onClick={() => {
+        setGenerating(!generating);
+      }}
+      variant="outline"
+    >
+      {generating && <Spinner data-icon="inline-start" />}
+      {generating ? "Stop generating" : "Generate"}
+    </Button>
   );
 }
 
@@ -157,8 +189,8 @@ export {
   ButtonIconDemo,
   ButtonIconOnlyDemo,
   ButtonLinkDemo,
-  ButtonLoadingDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
+  ButtonStatesDemo,
   ButtonVariantsDemo,
 };

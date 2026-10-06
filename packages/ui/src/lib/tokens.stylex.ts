@@ -109,7 +109,8 @@ export const layers = stylex.defineConsts({
 });
 
 export const opacities = stylex.defineConsts({
-  disabled: "0.5",
+  busy: "0.8",
+  disabled: "0.6",
   hover: "0.88",
 });
 

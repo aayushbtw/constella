@@ -42,6 +42,7 @@ const styles = stylex.create({
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     color: colors.textPrimary,
+    cursor: { default: null, [disabled]: "not-allowed" },
     fontFamily: "inherit",
     // Under 16px, iOS Safari zooms the page on focus.
     fontSize: { default: fontSizes.md, [media.sm]: fontSizes.sm },
@@ -51,7 +52,6 @@ const styles = stylex.create({
     opacity: { default: 1, [disabled]: opacities.disabled },
     paddingBlock: 0,
     paddingInline: px10,
-    pointerEvents: { default: null, [disabled]: "none" },
     transitionDuration: durations.hover,
     transitionProperty: "border-color, box-shadow",
     transitionTimingFunction: "ease",
@@ -60,12 +60,15 @@ const styles = stylex.create({
     "::file-selector-button": {
       backgroundColor: {
         default: colors.fill,
-        [media.hover]: { default: colors.fill, ":hover": colors.fillStrong },
+        [media.hover]: {
+          default: colors.fill,
+          ":hover:not(:disabled)": colors.fillStrong,
+        },
       },
       borderRadius: radii.xs,
       borderWidth: 0,
       color: colors.textPrimary,
-      cursor: "pointer",
+      cursor: "inherit",
       fontFamily: "inherit",
       fontSize: fontSizes.sm,
       fontWeight: fontWeights.medium,
@@ -82,7 +85,7 @@ const styles = stylex.create({
   // The chip sits in the box with an even inset on three sides, its corner concentric with the box's.
   file: {
     color: colors.textSecondary,
-    cursor: "pointer",
+    cursor: { default: "pointer", [disabled]: "not-allowed" },
     paddingBlock: chipInset,
     paddingInlineStart: chipInset,
   },

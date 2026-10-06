@@ -28,6 +28,8 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads. A textarea is the same surface, two control heights tall, growing with its content and resizing only vertically.
 
+Every control shows disabled the same way: one shared fade (`opacities.disabled`) and a not-allowed cursor, never a per-control look; a sunken fill read as fillable, not off. A button at work (`aria-busy`) is not a disabled one: it takes a busy cursor, and fades only to `opacities.busy` when it also can't be pressed. Busy and still pressable (Generate turning into Stop generating) stays at full strength.
+
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.

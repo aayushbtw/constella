@@ -5,9 +5,9 @@ import {
   ButtonIconDemo,
   ButtonIconOnlyDemo,
   ButtonLinkDemo,
-  ButtonLoadingDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
+  ButtonStatesDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import {
@@ -84,9 +84,9 @@ const demos = {
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
   "button-link": ButtonLinkDemo,
-  "button-loading": ButtonLoadingDemo,
   "button-pill": ButtonPillDemo,
   "button-sizes": ButtonSizesDemo,
+  "button-states": ButtonStatesDemo,
   "button-variants": ButtonVariantsDemo,
   checkbox: CheckboxDemo,
   "checkbox-controlled": CheckboxControlledDemo,

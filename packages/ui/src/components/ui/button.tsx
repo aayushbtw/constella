@@ -51,7 +51,11 @@ type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> & {
 };
 
 // A trigger opens something on press, so it doesn't give.
-const press = ":active:not([aria-haspopup])";
+const press = ":active:not([aria-haspopup], :disabled)";
+
+// Working, not unavailable: a busy cursor, and when it can't be pressed, a lighter fade than disabled.
+const busy = "[aria-busy='true']";
+const loading = "[aria-busy='true']:disabled";
 
 /* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 
@@ -95,7 +99,11 @@ const styles = stylex.create({
     borderRadius: radii.sm,
     borderStyle: "solid",
     borderWidth: strokes.border,
-    cursor: "pointer",
+    cursor: {
+      default: "pointer",
+      ":disabled": "not-allowed",
+      [busy]: "progress",
+    },
     display: "inline-flex",
     flexShrink: 0,
     fontFamily: "inherit",
@@ -104,8 +112,11 @@ const styles = stylex.create({
     gap: px6,
     justifyContent: "center",
     margin: 0,
-    opacity: { default: 1, ":disabled": opacities.disabled },
-    pointerEvents: { default: null, ":disabled": "none" },
+    opacity: {
+      default: 1,
+      ":disabled": opacities.disabled,
+      [loading]: opacities.busy,
+    },
     textDecorationLine: "none",
     transform: { default: null, [press]: presses.link },
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}, ${durations.hover}`,
@@ -142,6 +153,7 @@ const styles = stylex.create({
     opacity: {
       ...interactive<number | string>(1, opacities.hover),
       ":disabled": opacities.disabled,
+      [loading]: opacities.busy,
     },
   },
   secondary: {

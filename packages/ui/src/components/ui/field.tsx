@@ -99,7 +99,10 @@ const styles = stylex.create({
     borderRadius: { default: null, [card]: radii.md },
     borderStyle: { default: null, [card]: "solid" },
     borderWidth: { default: null, [card]: strokes.border },
-    cursor: { default: null, [card]: "pointer" },
+    cursor: {
+      default: null,
+      [card]: { default: "pointer", ":is([data-disabled])": "not-allowed" },
+    },
     gap: { default: space.xs, [card]: space.sm },
     padding: { default: null, [card]: space.sm },
     transitionDuration: durations.hover,

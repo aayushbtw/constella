@@ -47,7 +47,7 @@ const styles = stylex.create({
   },
   control: {
     alignItems: "center",
-    cursor: { default: "pointer", ":is([data-disabled])": "default" },
+    cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "flex",
     flexDirection: { default: "row", [vertical]: "column" },
     gridColumn: "1 / -1",
