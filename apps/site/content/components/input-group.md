@@ -176,6 +176,30 @@ Use `align="block-end"` to place the addon below the input.
 </FieldGroup>
 ```
 
+## Size
+
+Use the `size` prop to match the group to the buttons beside it, and size icons to match.
+
+| Size      | Height | Icon           |
+| --------- | ------ | -------------- |
+| `sm`      | 28px   | `sizes.iconSm` |
+| `default` | 32px   | `sizes.icon`   |
+| `lg`      | 36px   | `sizes.icon`   |
+
+<!-- ::demo name="input-group-size" -->
+
+```tsx
+<InputGroup size="sm">
+  <InputGroupInput aria-label="Small" placeholder="Small" />
+  <InputGroupAddon>
+    <HugeiconsIcon icon={Search01Icon} size={sizes.iconSm} />
+  </InputGroupAddon>
+  <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+</InputGroup>
+<InputGroup>…</InputGroup>
+<InputGroup size="lg">…</InputGroup>
+```
+
 ## Icon
 
 Put an icon in an `InputGroupAddon`. An addon can hold more than one.
@@ -196,7 +220,7 @@ Put an icon in an `InputGroupAddon`. An addon can hold more than one.
 
 ## Text
 
-Use `InputGroupText` for a prefix, a suffix or a hint. A text prefix sits close to the value, so `https://` and `example.com` read as one.
+Use `InputGroupText` for a prefix, a suffix or a hint. A text prefix or suffix sits close to the value, so `https://` and `example.com` read as one.
 
 <!-- ::demo name="input-group-text" -->
 
@@ -332,7 +356,7 @@ import TextareaAutosize from "react-textarea-autosize";
 
 ## API Reference
 
-`InputGroup` is a `<div role="group">`. It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
+`InputGroup` is a `<div role="group">` that takes `size`: `"sm"`, `"default"` or `"lg"`. It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
 
 `InputGroupAddon` takes `align`: `"inline-start"` (default), `"inline-end"`, `"block-start"` or `"block-end"`. Use the inline ones with an input and the block ones with a textarea. In a block addon, buttons sit at the end, after any text; `separated` draws an edge between it and the control. Clicking an addon focuses the control, unless the click lands on a button.
 

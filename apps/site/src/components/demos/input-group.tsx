@@ -107,6 +107,30 @@ function InputGroupDemo() {
   );
 }
 
+const sizeRows = [
+  { icon: sizes.iconSm, label: "Small", size: "sm" },
+  { icon: sizes.icon, label: "Default", size: "default" },
+  { icon: sizes.icon, label: "Large", size: "lg" },
+] as const;
+
+function InputGroupSizeDemo() {
+  return (
+    <DemoRow sx={styles.narrow}>
+      <div {...stylex.props(styles.stack)}>
+        {sizeRows.map((row) => (
+          <InputGroup key={row.size} size={row.size}>
+            <InputGroupInput aria-label={row.label} placeholder={row.label} />
+            <InputGroupAddon>
+              <Glyph icon={Search01Icon} size={row.icon} />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+          </InputGroup>
+        ))}
+      </div>
+    </DemoRow>
+  );
+}
+
 function InputGroupInlineStartDemo() {
   return (
     <DemoRow sx={styles.narrow}>
@@ -510,6 +534,7 @@ export {
   InputGroupInlineEndDemo,
   InputGroupInlineStartDemo,
   InputGroupKbdDemo,
+  InputGroupSizeDemo,
   InputGroupSpinnerDemo,
   InputGroupTextareaDemo,
   InputGroupTextDemo,

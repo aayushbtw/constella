@@ -1,12 +1,13 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
+import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { Input, inputStyles } from "@/components/ui/input";
-import type { InputProps } from "@/components/ui/input";
+import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
 import {
@@ -30,12 +31,18 @@ const inputGroupAddonAligns = [
   "block-end",
 ] as const;
 const inputGroupButtonSizes = ["xs", "sm", "icon-xs", "icon-sm"] as const;
+const inputGroupSizes = ["sm", "default", "lg"] as const;
 
 type InputGroupAddonAlign = (typeof inputGroupAddonAligns)[number];
 type InputGroupButtonSize = (typeof inputGroupButtonSizes)[number];
+type InputGroupSize = (typeof inputGroupSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
+};
+
+type InputGroupProps = Styled<ComponentProps<"div">> & {
+  size?: InputGroupSize;
 };
 
 type InputGroupAddonProps = Styled<ComponentProps<"div">> & {
@@ -54,9 +61,11 @@ const disabled = `:has(> ${control}:is(:disabled, [data-disabled]))`;
 // The first button in a run, inside a block addon.
 const leadingBlockButton =
   ":where([data-slot='input-group-addon'][data-align^='block'] > :not([data-slot='button'] + *))";
-// A text prefix like `https://` or `$` reads as part of the value. `:is`, not `:where`, so it outranks the inline-start padding.
+// A text prefix like `https://` or `$`, or a suffix like `%`, reads as part of the value. `:is`, not `:where`, so it outranks the inline padding.
 const afterPrefix =
   ":is([data-slot='input-group']:has(> [data-align='inline-start'] > [data-slot='input-group-text']:only-child) *)";
+const beforeSuffix =
+  ":is([data-slot='input-group']:has(> [data-align='inline-end'] > [data-slot='input-group-text']:only-child) *)";
 // A trailing button sits as far from the side as from the edge it rests on.
 const trailingButton = ":has(> [data-slot='button']:last-child)";
 const stacked = ":has(> [data-align^='block'], > textarea)";
@@ -66,6 +75,18 @@ const stacked = ":has(> [data-align^='block'], > textarea)";
 // Conditions on the control, read from the group around it.
 const inGroupWith = (align: InputGroupAddonAlign) =>
   `:where([data-slot='input-group']:has(> [data-align='${align}']) *)`;
+const inGroupSized = (size: InputGroupSize) =>
+  `:where([data-slot='input-group'][data-size='${size}'] *)`;
+
+// Per group height: the size's value, `default` unless set.
+const bySize = (values: Record<InputGroupSize, string>) => ({
+  default: values.default,
+  [inGroupSized("sm")]: values.sm,
+  [inGroupSized("lg")]: values.lg,
+});
+
+const insetMargin = (group: string, item: string) =>
+  `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
 
 /* eslint-enable func-style */
 
@@ -73,15 +94,26 @@ const inGroupWith = (align: InputGroupAddonAlign) =>
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
-// An xs button or a keycap sits in the box with an even inset on three sides.
-const buttonInset = `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2 - ${strokes.border})`;
 const stackedInput = `calc(${lineHeights.text} + ${space.xs} + ${space.xxs})`;
-const kbdInset = `calc((${sizes.controlMd} - ${sizes.kbd}) / 2 - ${strokes.border})`;
+// An xs button or a keycap sits in the box with an even inset on three sides.
 const insetEdge = {
   default: null,
-  ":has(> [data-slot='button'])": `calc(${buttonInset} - ${space.xs})`,
-  ":has(> [data-slot='kbd'])": `calc(${kbdInset} - ${space.xs})`,
+  ":has(> [data-slot='button'])": bySize({
+    lg: insetMargin(sizes.controlLg, sizes.controlXs),
+    default: insetMargin(sizes.controlMd, sizes.controlXs),
+    sm: insetMargin(sizes.controlSm, sizes.controlXs),
+  }),
+  ":has(> [data-slot='kbd'])": bySize({
+    lg: insetMargin(sizes.controlLg, sizes.kbd),
+    default: insetMargin(sizes.controlMd, sizes.kbd),
+    sm: insetMargin(sizes.controlSm, sizes.kbd),
+  }),
 };
+const textSize = bySize({
+  lg: fontSizes.sm,
+  default: fontSizes.sm,
+  sm: fontSizes.xs,
+});
 
 const styles = stylex.create({
   group: {
@@ -97,7 +129,12 @@ const styles = stylex.create({
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "flex",
     flexDirection: { default: "row", [stacked]: "column" },
-    height: { default: sizes.controlMd, [stacked]: "auto" },
+    height: {
+      default: sizes.controlMd,
+      ":is([data-size='sm'])": sizes.controlSm,
+      ":is([data-size='lg'])": sizes.controlLg,
+      [stacked]: "auto",
+    },
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     position: "relative",
@@ -112,7 +149,7 @@ const styles = stylex.create({
     cursor: "text",
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
+    fontSize: textSize,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     justifyContent: "center",
@@ -163,7 +200,7 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textMuted,
     display: "flex",
-    fontSize: fontSizes.sm,
+    fontSize: textSize,
     gap: space.xs,
   },
   // The group draws the surface, edge, ring and fade, so the control drops its own.
@@ -177,7 +214,7 @@ const styles = stylex.create({
   },
   input: {
     height: {
-      default: `calc(${sizes.controlMd} - 2 * ${strokes.border})`,
+      default: "100%",
       // One line, the outer edge's gap, and a step to the addon so the two lines space evenly.
       [inGroupWith("block-start")]: stackedInput,
       [inGroupWith("block-end")]: stackedInput,
@@ -192,7 +229,11 @@ const styles = stylex.create({
       [inGroupWith("block-start")]: space.xxs,
       [inGroupWith("block-end")]: space.xs,
     },
-    paddingInlineEnd: { default: px10, [inGroupWith("inline-end")]: px6 },
+    paddingInlineEnd: {
+      default: px10,
+      [inGroupWith("inline-end")]: px6,
+      [beforeSuffix]: space.xxxs,
+    },
     paddingInlineStart: {
       default: px10,
       [inGroupWith("inline-start")]: px6,
@@ -212,7 +253,7 @@ const styles = stylex.create({
   // Concentric with the group's corner at the even inset.
   buttonXs: {
     borderRadius: radii.xs,
-    fontSize: fontSizes.sm,
+    fontSize: textSize,
     gap: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
@@ -244,15 +285,20 @@ const buttonSizeStyles = {
   xs: styles.buttonXs,
 } satisfies Record<InputGroupButtonSize, stylex.StyleXStyles | null>;
 
-function InputGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
+const InputGroupSizeContext = createContext<InputGroupSize>("default");
+
+function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
   return (
-    <div
-      data-slot="input-group"
-      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
-      role="group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
-    />
+    <InputGroupSizeContext value={size}>
+      <div
+        data-size={size}
+        data-slot="input-group"
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
+        role="group"
+        {...props}
+        {...stylex.props(styles.group, sx)}
+      />
+    </InputGroupSizeContext>
   );
 }
 
@@ -318,8 +364,10 @@ function InputGroupText({ sx, ...props }: Styled<ComponentProps<"span">>) {
 }
 
 /** The control's styles for your own input; pair them with `data-slot="input-group-control"`. */
-function inputGroupInputStyles() {
-  return [...inputStyles(), styles.control, styles.input];
+function inputGroupInputStyles({
+  size = "default",
+}: { size?: InputSize } = {}) {
+  return [...inputStyles({ size }), styles.control, styles.input];
 }
 
 /** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */
@@ -328,9 +376,11 @@ function inputGroupTextareaStyles() {
 }
 
 function InputGroupInput({ sx, ...props }: InputProps) {
+  const size = use(InputGroupSizeContext);
   return (
     <Input
       data-slot="input-group-control"
+      size={size}
       {...props}
       sx={[styles.control, styles.input, sx]}
     />
@@ -355,6 +405,7 @@ export {
   inputGroupButtonSizes,
   InputGroupInput,
   inputGroupInputStyles,
+  inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,
   inputGroupTextareaStyles,
@@ -364,4 +415,6 @@ export type {
   InputGroupAddonProps,
   InputGroupButtonProps,
   InputGroupButtonSize,
+  InputGroupProps,
+  InputGroupSize,
 };

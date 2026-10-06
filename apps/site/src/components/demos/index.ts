@@ -31,7 +31,6 @@ import {
   FieldSetDemo,
 } from "~/components/demos/field";
 import {
-  InputBasicDemo,
   InputDemo,
   InputDisabledDemo,
   InputFieldDemo,
@@ -42,6 +41,7 @@ import {
   InputInputGroupDemo,
   InputInvalidDemo,
   InputRequiredDemo,
+  InputSizeDemo,
 } from "~/components/demos/input";
 import {
   InputGroupBlockEndDemo,
@@ -53,6 +53,7 @@ import {
   InputGroupInlineEndDemo,
   InputGroupInlineStartDemo,
   InputGroupKbdDemo,
+  InputGroupSizeDemo,
   InputGroupSpinnerDemo,
   InputGroupTextareaDemo,
   InputGroupTextDemo,
@@ -126,7 +127,6 @@ const demos = {
   "field-error": FieldErrorDemo,
   "field-set": FieldSetDemo,
   input: InputDemo,
-  "input-basic": InputBasicDemo,
   "input-disabled": InputDisabledDemo,
   "input-field": InputFieldDemo,
   "input-field-group": InputFieldGroupDemo,
@@ -141,6 +141,7 @@ const demos = {
   "input-group-inline-end": InputGroupInlineEndDemo,
   "input-group-inline-start": InputGroupInlineStartDemo,
   "input-group-kbd": InputGroupKbdDemo,
+  "input-group-size": InputGroupSizeDemo,
   "input-group-spinner": InputGroupSpinnerDemo,
   "input-group-text": InputGroupTextDemo,
   "input-group-textarea": InputGroupTextareaDemo,
@@ -148,6 +149,7 @@ const demos = {
   "input-input-group": InputInputGroupDemo,
   "input-invalid": InputInvalidDemo,
   "input-required": InputRequiredDemo,
+  "input-size": InputSizeDemo,
   kbd: KbdDemo,
   "kbd-button": KbdButtonDemo,
   "kbd-group": KbdGroupDemo,

@@ -16,11 +16,12 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
-import { colors, sizes, strokes } from "@/lib/tokens.stylex";
+import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   narrow: { maxWidth: 320, width: "100%" },
+  stack: { display: "flex", flexDirection: "column", gap: space.sm },
   grid: { display: "grid", gridTemplateColumns: "1fr 1fr" },
   required: { color: colors.danger },
 });
@@ -39,10 +40,12 @@ function InputDemo() {
   );
 }
 
-function InputBasicDemo() {
+function InputSizeDemo() {
   return (
-    <DemoRow sx={styles.narrow}>
-      <Input aria-label="Text" placeholder="Enter text" />
+    <DemoRow sx={[styles.narrow, styles.stack]}>
+      <Input aria-label="Small" placeholder="Small" size="sm" />
+      <Input aria-label="Default" placeholder="Default" />
+      <Input aria-label="Large" placeholder="Large" size="lg" />
     </DemoRow>
   );
 }
@@ -196,7 +199,6 @@ function InputRequiredDemo() {
 }
 
 export {
-  InputBasicDemo,
   InputDemo,
   InputDisabledDemo,
   InputFieldDemo,
@@ -207,4 +209,5 @@ export {
   InputInputGroupDemo,
   InputInvalidDemo,
   InputRequiredDemo,
+  InputSizeDemo,
 };

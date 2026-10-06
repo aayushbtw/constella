@@ -19,7 +19,13 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
-type InputProps = Omit<InputPrimitive.Props, "className" | "style"> & {
+const inputSizes = ["sm", "default", "lg"] as const;
+
+type InputSize = (typeof inputSizes)[number];
+
+// Native `size` counts characters; width comes from layout here.
+type InputProps = Omit<InputPrimitive.Props, "className" | "size" | "style"> & {
+  size?: InputSize;
   sx?: stylex.StyleXStyles;
 };
 
@@ -82,6 +88,15 @@ const styles = stylex.create({
       transitionTimingFunction: `ease, ${easings.out}`,
     },
   },
+  // Text steps down with the height like Button's, but stays 16px under `sm` so iOS doesn't zoom.
+  sm: {
+    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.xs },
+    height: sizes.controlSm,
+    "::file-selector-button": { fontSize: fontSizes.xs },
+  },
+  lg: {
+    height: sizes.controlLg,
+  },
   // The chip sits in the box with an even inset on three sides, its corner concentric with the box's.
   file: {
     color: colors.textSecondary,
@@ -91,21 +106,32 @@ const styles = stylex.create({
   },
 });
 
+const sizeStyles = {
+  default: null,
+  lg: styles.lg,
+  sm: styles.sm,
+} satisfies Record<InputSize, stylex.StyleXStyles | null>;
+
 /** An input's styles for another element, like a third-party masked input. */
-function inputStyles() {
-  return [styles.input];
+function inputStyles({ size = "default" }: Pick<InputProps, "size"> = {}) {
+  return [styles.input, sizeStyles[size]];
 }
 
-function Input({ sx, type, ...props }: InputProps) {
+function Input({ size = "default", sx, type, ...props }: InputProps) {
   return (
     <InputPrimitive
+      data-size={size}
       data-slot="input"
       type={type}
       {...props}
-      {...stylex.props(inputStyles(), type === "file" && styles.file, sx)}
+      {...stylex.props(
+        inputStyles({ size }),
+        type === "file" && styles.file,
+        sx
+      )}
     />
   );
 }
 
-export { Input, inputStyles };
-export type { InputProps };
+export { Input, inputSizes, inputStyles };
+export type { InputProps, InputSize };
