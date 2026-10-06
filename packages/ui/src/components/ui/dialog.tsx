@@ -117,9 +117,10 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
+  // At the popup's padding, pulled out by the button's own, so the icon sits on the content edge.
   closeButton: {
-    insetBlockStart: space.xs,
-    insetInlineEnd: space.xs,
+    insetBlockStart: `calc(${space.md} - (${sizes.controlSm} - ${sizes.icon}) / 2)`,
+    insetInlineEnd: `calc(${space.md} - (${sizes.controlSm} - ${sizes.icon}) / 2)`,
     position: "absolute",
   },
 });
