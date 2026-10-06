@@ -1,4 +1,5 @@
 @import "@radix-ui/colors/black-alpha.css";
+@import "@radix-ui/colors/white-alpha.css";
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-alpha.css";
 @import "@radix-ui/colors/gray-dark.css";
@@ -38,12 +39,14 @@
     --text-muted: var(--gray-10);
     --danger-fill-subtle: var(--red-a3);
     --danger-fill: var(--red-a4);
+    --on-accent-fill: var(--white-a4);
   }
 
   .dark {
     --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
     --danger-fill-subtle: var(--red-a5);
     --danger-fill: var(--red-a6);
+    --on-accent-fill: var(--black-a2);
   }
 
   :where(:focus-visible) {

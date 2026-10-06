@@ -16,6 +16,11 @@ import {
   DialogDemo,
   DialogNestedDemo,
 } from "~/components/demos/dialog";
+import {
+  KbdButtonDemo,
+  KbdDemo,
+  KbdGroupDemo,
+} from "~/components/demos/kbd";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
@@ -54,6 +59,9 @@ const demos = {
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-nested": DialogNestedDemo,
+  kbd: KbdDemo,
+  "kbd-button": KbdButtonDemo,
+  "kbd-group": KbdGroupDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,

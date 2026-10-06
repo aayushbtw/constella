@@ -6,7 +6,7 @@ Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: 
 
 ## Color
 
-Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. Two roles differ by theme, through variables in `base.css`. `textMuted` is `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. The danger fills are red `a3`/`a4` in light and `a5`/`a6` in dark: low red steps vanish on a dark page, and the dark steps turn pink on a light one.
+Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. Three roles differ by theme, through variables in `base.css`. `textMuted` is `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. The danger fills are red `a3`/`a4` in light and `a5`/`a6` in dark: low red steps vanish on a dark page, and the dark steps turn pink on a light one. `onAccentFill`, a fill on the accent surface, is white `a4` in light and black `a2` in dark, since the accent flips from near-black to near-white.
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
@@ -29,6 +29,8 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.
+
+A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`.
 
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 

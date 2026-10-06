@@ -10,6 +10,7 @@ export const colors = stylex.defineVars({
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
   onAccent: "var(--gray-1)",
+  onAccentFill: "var(--on-accent-fill)",
   overlay: "var(--black-a5)",
   textMuted: "var(--text-muted)",
   textPrimary: "var(--gray-12)",
@@ -88,6 +89,7 @@ export const sizes = stylex.defineConsts({
   icon: "16px",
   iconSm: "14px",
   iconXs: "12px",
+  kbd: "20px",
   thumb: "12px",
   toast: "356px",
 });
