@@ -26,7 +26,7 @@ Controls (buttons, inputs) have a real border and a light `shadows.control`. The
 
 Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up.
 
-An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads.
+An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads. A textarea is the same surface, two control heights tall, growing with its content and resizing only vertically.
 
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 

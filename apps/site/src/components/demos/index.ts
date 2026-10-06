@@ -70,6 +70,13 @@ import {
   ToastPromiseDemo,
   ToastTypesDemo,
 } from "~/components/demos/toast";
+import {
+  TextareaButtonDemo,
+  TextareaDemo,
+  TextareaDisabledDemo,
+  TextareaFieldDemo,
+  TextareaInvalidDemo,
+} from "~/components/demos/textarea";
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
@@ -129,6 +136,11 @@ const demos = {
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
   tabs: TabsDemo,
+  textarea: TextareaDemo,
+  "textarea-button": TextareaButtonDemo,
+  "textarea-disabled": TextareaDisabledDemo,
+  "textarea-field": TextareaFieldDemo,
+  "textarea-invalid": TextareaInvalidDemo,
   typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
 

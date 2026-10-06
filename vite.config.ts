@@ -25,7 +25,10 @@ export default defineConfig({
       // Base UI's checkbox is a span with a hidden input, so the label wraps it rather than pointing at it.
       "jsx-a11y/label-has-associated-control": [
         "error",
-        { controlComponents: ["Checkbox", "Input", "Switch"], depth: 3 },
+        {
+          controlComponents: ["Checkbox", "Input", "Switch", "Textarea"],
+          depth: 3,
+        },
       ],
       "no-use-before-define": ["error", { functions: false }],
       "react/function-component-definition": [
