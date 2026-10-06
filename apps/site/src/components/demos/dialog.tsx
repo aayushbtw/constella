@@ -23,9 +23,9 @@ function DialogDemo() {
           Publish
         </DialogTrigger>
         <DialogContent>
-          <DialogCloseButton />
           <DialogHeader>
             <DialogTitle>Publish changes?</DialogTitle>
+            <DialogCloseButton />
             <DialogDescription>
               Everyone with the link will see the new version right away.
             </DialogDescription>
@@ -93,9 +93,9 @@ function DialogNestedDemo() {
           Share
         </DialogTrigger>
         <DialogContent>
-          <DialogCloseButton />
           <DialogHeader>
             <DialogTitle>Share</DialogTitle>
+            <DialogCloseButton />
             <DialogDescription>
               Anyone with the link can view this page.
             </DialogDescription>

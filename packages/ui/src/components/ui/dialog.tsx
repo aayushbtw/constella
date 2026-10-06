@@ -30,10 +30,6 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 
-// The close button's padding around its icon, so the icon can sit on the content edge.
-const buttonPadding = `((${sizes.controlSm} - ${sizes.icon}) / 2)`;
-const closeInset = `calc(${space.md} - ${buttonPadding})`;
-
 const styles = stylex.create({
   backdrop: {
     backgroundColor: colors.overlay,
@@ -68,7 +64,6 @@ const styles = stylex.create({
     outline: "none",
     overflowY: "auto",
     padding: space.md,
-    position: "relative",
     // A parent steps back while a dialog opened from it sits on top.
     transform: {
       default: `translateY(calc(var(--nested-dialogs, 0) * -1 * ${space.sm})) scale(calc(1 - var(--nested-dialogs, 0) * ${motion.stackScale}))`,
@@ -83,15 +78,13 @@ const styles = stylex.create({
     width: `min(100%, ${sizes.dialog})`,
   },
   header: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.xs,
-    // Keeps a long title clear of the close button in the corner.
-    paddingInlineEnd: {
-      default: null,
-      ":is([data-slot='dialog-popup']:has(> [data-slot='dialog-close-button']) > *)":
-        sizes.controlSm,
+    columnGap: space.md,
+    display: "grid",
+    gridTemplateColumns: {
+      default: "1fr",
+      ":has(> [data-slot='dialog-close-button'])": "1fr auto",
     },
+    rowGap: space.xs,
   },
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
@@ -111,6 +104,7 @@ const styles = stylex.create({
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.row,
+    gridColumn: 1,
     margin: 0,
     textWrap: "balance",
   },
@@ -118,13 +112,17 @@ const styles = stylex.create({
     color: colors.textSecondary,
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.text,
+    gridColumn: 1,
     margin: 0,
     textWrap: "pretty",
   },
+  // Pulled out by its padding, so the icon sits on the content edge and the title's line.
   closeButton: {
-    insetBlockStart: closeInset,
-    insetInlineEnd: closeInset,
-    position: "absolute",
+    alignSelf: "center",
+    gridColumn: 2,
+    gridRow: 1,
+    marginBlock: `-${space.xxs}`,
+    marginInlineEnd: `-${space.xxs}`,
   },
 });
 
@@ -245,7 +243,7 @@ function DialogCloseButton({
       aria-label="Close"
       data-slot="dialog-close-button"
       render={
-        <Button size="icon-sm" sx={[styles.closeButton, sx]} variant="ghost" />
+        <Button size="icon-xs" sx={[styles.closeButton, sx]} variant="ghost" />
       }
       {...props}
     >
