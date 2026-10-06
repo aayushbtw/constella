@@ -182,6 +182,27 @@ const styles = stylex.create({
 </Field>;
 ```
 
+## Input Group
+
+Use [Input Group](/docs/components/input-group) to put icons, text or buttons inside the input.
+
+<!-- ::demo name="input-input-group" -->
+
+```tsx
+<Field>
+  <FieldLabel>Website URL</FieldLabel>
+  <InputGroup>
+    <InputGroupInput placeholder="example.com" />
+    <InputGroupAddon>
+      <InputGroupText>https://</InputGroupText>
+    </InputGroupAddon>
+    <InputGroupAddon align="inline-end">
+      <HugeiconsIcon icon={InformationCircleIcon} />
+    </InputGroupAddon>
+  </InputGroup>
+</Field>
+```
+
 ## API Reference
 
 `Input` renders Base UI's input, so inside a `Field` it takes the field's name, state and validation. It takes `sx`, applied last. For the rest, see [Base UI Input](https://base-ui.com/react/components/input).
@@ -191,6 +212,5 @@ const styles = stylex.create({
 Blocked on missing components. Remove this section before the page leaves draft.
 
 - Badge: add shadcn's Badge example.
-- InputGroup: add the Input Group example.
 - ButtonGroup: add the Button Group example.
 - Select and Textarea: add the Form example.

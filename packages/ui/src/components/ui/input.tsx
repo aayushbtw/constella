@@ -91,16 +91,21 @@ const styles = stylex.create({
   },
 });
 
+/** An input's styles for another element, like a third-party masked input. */
+function inputStyles() {
+  return [styles.input];
+}
+
 function Input({ sx, type, ...props }: InputProps) {
   return (
     <InputPrimitive
       data-slot="input"
       type={type}
       {...props}
-      {...stylex.props(styles.input, type === "file" && styles.file, sx)}
+      {...stylex.props(inputStyles(), type === "file" && styles.file, sx)}
     />
   );
 }
 
-export { Input };
+export { Input, inputStyles };
 export type { InputProps };

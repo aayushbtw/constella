@@ -28,6 +28,8 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads. A textarea is the same surface, two control heights tall, growing with its content and resizing only vertically.
 
+An input group is that surface drawn once around a borderless control and its addons, so the group carries the edge, invalid halo, ring and disabled fade. Whatever sits inside keeps an even inset on every side it touches: an xs button 3px in from the edge (the file chip's inset and corner), a keycap 5px, and a header or footer's trailing button as far from the side as from the edge it rests on. Buttons in a header or footer gather at its end. A text prefix (`https://`, `$`) sits 2px from the value, so the two read as one string. An input stacked with a header or footer takes the addon's line height and a 4px step between them, so the two lines space as evenly as their outer edges.
+
 Every control shows disabled the same way: one shared fade (`opacities.disabled`) and a not-allowed cursor, never a per-control look; a sunken fill read as fillable, not off. A button at work (`aria-busy`) is not a disabled one: it takes a busy cursor, and fades only to `opacities.busy` when it also can't be pressed. Busy and still pressable (Generate turning into Stop generating) stays at full strength.
 
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
@@ -62,7 +64,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
+One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
 
 ## Motion
 

@@ -1,3 +1,5 @@
+import { InformationCircleIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +10,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { colors } from "@/lib/tokens.stylex";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import { colors, sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -130,6 +138,30 @@ function InputInlineDemo() {
   );
 }
 
+function InputInputGroupDemo() {
+  return (
+    <DemoRow sx={styles.narrow}>
+      <Field>
+        <FieldLabel>Website URL</FieldLabel>
+        <InputGroup>
+          <InputGroupInput placeholder="example.com" />
+          <InputGroupAddon>
+            <InputGroupText>https://</InputGroupText>
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <HugeiconsIcon
+              aria-hidden
+              icon={InformationCircleIcon}
+              size={sizes.icon}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </InputGroupAddon>
+        </InputGroup>
+      </Field>
+    </DemoRow>
+  );
+}
+
 function InputGridDemo() {
   return (
     <DemoRow sx={styles.narrow}>
@@ -172,6 +204,7 @@ export {
   InputFileDemo,
   InputGridDemo,
   InputInlineDemo,
+  InputInputGroupDemo,
   InputInvalidDemo,
   InputRequiredDemo,
 };

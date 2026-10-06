@@ -49,8 +49,18 @@
     --on-accent-fill: var(--black-a2);
   }
 
-  :where(:focus-visible) {
+  :where(
+    :focus-visible,
+    [data-slot="input-group"]:has(
+      > [data-slot="input-group-control"]:focus-visible
+    )
+  ) {
     outline: 1.5px solid var(--gray-a8);
     outline-offset: 2px;
+  }
+
+  /* An input group rings its whole box, so the borderless control inside draws none. */
+  :where([data-slot="input-group-control"]:focus-visible) {
+    outline: none;
   }
 }

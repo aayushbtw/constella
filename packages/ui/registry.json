@@ -189,6 +189,25 @@
       ]
     },
     {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Icons, text, keys and buttons set inside an input or textarea's box.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/input.json",
+        "https://constella.aayush.cv/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",

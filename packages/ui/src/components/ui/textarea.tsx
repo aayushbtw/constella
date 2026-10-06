@@ -62,6 +62,11 @@ const styles = stylex.create({
   },
 });
 
+/** A textarea's styles for another element, like a third-party autosizing textarea. */
+function textareaStyles() {
+  return [styles.textarea];
+}
+
 function Textarea({ sx, ...props }: TextareaProps) {
   return (
     <FieldPrimitive.Control
@@ -69,12 +74,12 @@ function Textarea({ sx, ...props }: TextareaProps) {
         <textarea
           data-slot="textarea"
           {...mergeProps<"textarea">(controlProps, props)}
-          {...stylex.props(styles.textarea, sx)}
+          {...stylex.props(textareaStyles(), sx)}
         />
       )}
     />
   );
 }
 
-export { Textarea };
+export { Textarea, textareaStyles };
 export type { TextareaProps };
