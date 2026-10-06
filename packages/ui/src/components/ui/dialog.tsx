@@ -64,6 +64,7 @@ const styles = stylex.create({
     outline: "none",
     overflowY: "auto",
     padding: space.md,
+    position: "relative",
     // A parent steps back while a dialog opened from it sits on top.
     transform: {
       default: `translateY(calc(var(--nested-dialogs, 0) * -1 * ${space.sm})) scale(calc(1 - var(--nested-dialogs, 0) * ${motion.stackScale}))`,
@@ -78,13 +79,9 @@ const styles = stylex.create({
     width: `min(100%, ${sizes.dialog})`,
   },
   header: {
-    columnGap: space.md,
-    display: "grid",
-    gridTemplateColumns: {
-      default: "1fr",
-      ":has(> [data-slot='dialog-close-button'])": "1fr auto",
-    },
-    rowGap: space.sm,
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xs,
   },
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
@@ -103,28 +100,21 @@ const styles = stylex.create({
   title: {
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.row,
-    gridColumn: 1,
+    lineHeight: 1,
     margin: 0,
-    // Starts at the capitals, so the popup's padding is what the eye sees above it.
-    textBox: "trim-both cap alphabetic",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.text,
-    gridColumn: 1,
     margin: 0,
     textWrap: "pretty",
   },
-  // The cross is 8px in a 24px button, so pulling out `space.xs` puts it in the content corner.
   closeButton: {
-    alignSelf: "start",
-    gridColumn: 2,
-    gridRow: 1,
-    marginBlock: `-${space.xs}`,
-    marginInlineEnd: `-${space.xs}`,
+    insetBlockStart: space.xs,
+    insetInlineEnd: space.xs,
+    position: "absolute",
   },
 });
 
@@ -245,7 +235,7 @@ function DialogCloseButton({
       aria-label="Close"
       data-slot="dialog-close-button"
       render={
-        <Button size="icon-xs" sx={[styles.closeButton, sx]} variant="ghost" />
+        <Button size="icon-sm" sx={[styles.closeButton, sx]} variant="ghost" />
       }
       {...props}
     >

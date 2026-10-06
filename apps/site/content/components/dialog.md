@@ -30,9 +30,9 @@ import {
 <Dialog>
   <DialogTrigger render={<Button />}>Publish</DialogTrigger>
   <DialogContent>
+    <DialogCloseButton />
     <DialogHeader>
       <DialogTitle>Publish changes?</DialogTitle>
-      <DialogCloseButton />
       <DialogDescription>Everyone with the link will see it.</DialogDescription>
     </DialogHeader>
     <DialogFooter>
@@ -74,4 +74,4 @@ Put a `Dialog` inside another's content to open one on top.
 
 ## API Reference
 
-`DialogCloseButton` is the close button beside the title; put it in `DialogHeader`. Every part takes `sx`. For the rest, see [Base UI's Dialog](https://base-ui.com/react/components/dialog).
+`DialogCloseButton` is the close button in the corner; put it in `DialogContent`. Every part takes `sx`. For the rest, see [Base UI's Dialog](https://base-ui.com/react/components/dialog).

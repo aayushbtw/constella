@@ -42,7 +42,7 @@ Nested corners are concentric: outer radius = inner radius + the padding between
 - **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
 - **Weights stop at 600.** `fontWeights.semibold` is the heaviest, for bold in prose; nothing is 700. Heavier type shouts in a quiet interface.
 - **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
-- **Optical alignment.** Align what the eye sees, not the box: an icon marked `data-icon="inline-start"` or `"inline-end"` tightens its side's padding; Button's sizes take shadcn's numbers exactly (padding, icon side, gap, icon size per size). An icon centers on the first line of text, not the block. A heading that opens a padded surface (a dialog title) trims its line box to the capitals (`text-box: trim-both cap alphabetic`), so the padding above it is what the eye sees and a corner control sits flush with both the caps and the outer edge.
+- **Optical alignment.** Align what the eye sees, not the box: an icon marked `data-icon="inline-start"` or `"inline-end"` tightens its side's padding; Button's sizes take shadcn's numbers exactly (padding, icon side, gap, icon size per size). An icon centers on the first line of text, not the block.
 - **Icon stroke follows text weight.** `strokes.icon` is tuned for medium text; one icon set (Hugeicons) everywhere.
 - **Hit areas.** Anything smaller than `sizes.hitArea` grows its target with an invisible `::before` to that size. Neighbouring targets never overlap.
 
