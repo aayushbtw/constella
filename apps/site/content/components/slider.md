@@ -176,48 +176,46 @@ const styles = stylex.create({
 
 ## With Tooltip
 
-Put a `SliderValue` inside the thumb and mark the thumb, so the bubble shows while the thumb is hovered, focused or dragged.
+Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content. Keep it open while dragging, since the pointer can leave the thumb.
 
 <!-- ::demo name="slider-tooltip" -->
 
 ```tsx
 const styles = stylex.create({
-  bubble: {
-    backgroundColor: colors.accent,
-    borderRadius: radii.xs,
-    color: colors.onAccent,
-    fontSize: fontSizes.xxs,
-    insetBlockEnd: `calc(100% + ${space.xs})`,
-    insetInlineStart: "50%",
-    opacity: {
-      default: 0,
-      [stylex.when.ancestor(":hover")]: { default: 0, [media.hover]: 1 },
-      [stylex.when.ancestor(":has(:focus-visible)")]: 1,
-      [stylex.when.ancestor(":is([data-dragging])")]: 1,
-    },
-    paddingBlock: space.xxxs,
-    paddingInline: space.xxs,
-    pointerEvents: "none",
-    position: "absolute",
-    transitionDuration: durations.popover,
-    transitionProperty: "opacity",
-    translate: "-50% 0",
-  },
+  value: { color: "inherit", fontSize: "inherit" },
 });
 
-<Slider defaultValue={40}>
-  <SliderLabel>Volume</SliderLabel>
-  <SliderControl>
-    <SliderTrack>
-      <SliderIndicator />
-      <SliderThumb sx={stylex.defaultMarker()}>
-        <SliderValue sx={styles.bubble}>
-          {(formatted) => `${formatted[0] ?? ""}%`}
-        </SliderValue>
-      </SliderThumb>
-    </SliderTrack>
-  </SliderControl>
-</Slider>;
+function VolumeSlider() {
+  const [hovered, setHovered] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  return (
+    <Slider
+      defaultValue={40}
+      onValueChange={(_, details) => {
+        if (details.reason === "drag" || details.reason === "track-press") {
+          setDragging(true);
+        }
+      }}
+      onValueCommitted={() => setDragging(false)}
+    >
+      <SliderLabel>Volume</SliderLabel>
+      <SliderControl>
+        <SliderTrack>
+          <SliderIndicator />
+          <Tooltip onOpenChange={setHovered} open={hovered || dragging}>
+            <TooltipTrigger delay={0} render={<SliderThumb />} />
+            <TooltipContent>
+              <SliderValue sx={styles.value}>
+                {(formatted) => `${formatted[0] ?? ""}%`}
+              </SliderValue>
+            </TooltipContent>
+          </Tooltip>
+        </SliderTrack>
+      </SliderControl>
+    </Slider>
+  );
+}
 ```
 
 ## With Input
@@ -238,7 +236,7 @@ const [draft, setDraft] = useState("100");
   value={value}
 >
   <SliderLabel>Opacity</SliderLabel>
-  <input
+  <Input
     aria-label="Opacity"
     max={100}
     min={0}

@@ -3,6 +3,7 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
 
+import { labelStyles } from "@/components/ui/label";
 import {
   colors,
   durations,
@@ -34,10 +35,6 @@ const styles = stylex.create({
     gridTemplateColumns: "minmax(0, 1fr) auto",
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
     width: { default: "100%", [vertical]: "auto" },
-  },
-  label: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.sm,
   },
   value: {
     color: colors.textMuted,
@@ -126,7 +123,7 @@ function SliderLabel({ sx, ...props }: Styled<SliderPrimitive.Label.Props>) {
     <SliderPrimitive.Label
       data-slot="slider-label"
       {...props}
-      {...stylex.props(styles.label, sx)}
+      {...stylex.props(labelStyles(), sx)}
     />
   );
 }

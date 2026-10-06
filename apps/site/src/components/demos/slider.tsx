@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
+import { Input } from "@/components/ui/input";
 import {
   Slider,
   SliderControl,
@@ -11,17 +12,11 @@ import {
   SliderValue,
 } from "@/components/ui/slider";
 import {
-  colors,
-  durations,
-  easings,
-  fontSizes,
-  fontWeights,
-  media,
-  radii,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/tokens.stylex";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const months = Array.from({ length: 13 }, (_, month) => month);
@@ -79,39 +74,10 @@ const styles = stylex.create({
   referenceEnd: {
     justifySelf: "end",
   },
+  // The value takes the tooltip's text, not its own muted label style.
   bubble: {
-    backgroundColor: colors.accent,
-    borderRadius: radii.xs,
-    color: colors.onAccent,
-    fontSize: fontSizes.xxs,
-    fontWeight: fontWeights.medium,
-    insetBlockEnd: `calc(100% + ${space.xs})`,
-    insetInlineStart: "50%",
-    opacity: {
-      default: 0,
-      [stylex.when.ancestor(":hover")]: { default: 0, [media.hover]: 1 },
-      [stylex.when.ancestor(":has(:focus-visible)")]: 1,
-      [stylex.when.ancestor(":is([data-dragging])")]: 1,
-    },
-    paddingBlock: space.xxxs,
-    paddingInline: space.xxs,
-    pointerEvents: "none",
-    position: "absolute",
-    transform: {
-      default: "scale(0.96)",
-      [stylex.when.ancestor(":hover")]: {
-        default: "scale(0.96)",
-        [media.hover]: "none",
-      },
-      [stylex.when.ancestor(":has(:focus-visible)")]: "none",
-      [stylex.when.ancestor(":is([data-dragging])")]: "none",
-    },
-    transformOrigin: "bottom center",
-    transitionDuration: durations.popover,
-    transitionProperty: "opacity, transform",
-    transitionTimingFunction: easings.out,
-    translate: "-50% 0",
-    whiteSpace: "nowrap",
+    color: "inherit",
+    fontSize: "inherit",
   },
   field: {
     alignItems: "center",
@@ -122,12 +88,6 @@ const styles = stylex.create({
     gridColumn: 2,
   },
   input: {
-    backgroundColor: colors.fillSubtle,
-    borderColor: colors.edge,
-    borderRadius: radii.xs,
-    borderStyle: "solid",
-    borderWidth: strokes.border,
-    color: colors.textPrimary,
     fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
     height: sizes.controlXs,
@@ -270,18 +230,34 @@ function SliderReferencesDemo() {
 }
 
 function SliderTooltipDemo() {
+  const [hovered, setHovered] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={40}>
+      <Slider
+        defaultValue={40}
+        onValueChange={(_, details) => {
+          if (details.reason === "drag" || details.reason === "track-press") {
+            setDragging(true);
+          }
+        }}
+        onValueCommitted={() => {
+          setDragging(false);
+        }}
+      >
         <SliderLabel>Volume</SliderLabel>
         <SliderControl>
           <SliderTrack>
             <SliderIndicator />
-            <SliderThumb sx={stylex.defaultMarker()}>
-              <SliderValue sx={styles.bubble}>
-                {(formatted) => `${formatted[0] ?? ""}%`}
-              </SliderValue>
-            </SliderThumb>
+            <Tooltip onOpenChange={setHovered} open={hovered || dragging}>
+              <TooltipTrigger delay={0} render={<SliderThumb />} />
+              <TooltipContent>
+                <SliderValue sx={styles.bubble}>
+                  {(formatted) => `${formatted[0] ?? ""}%`}
+                </SliderValue>
+              </TooltipContent>
+            </Tooltip>
           </SliderTrack>
         </SliderControl>
       </Slider>
@@ -304,7 +280,7 @@ function SliderInputDemo() {
       >
         <SliderLabel>Opacity</SliderLabel>
         <label {...stylex.props(styles.field)}>
-          <input
+          <Input
             aria-label="Opacity"
             inputMode="numeric"
             max={100}
@@ -321,7 +297,7 @@ function SliderInputDemo() {
             }}
             type="number"
             value={draft}
-            {...stylex.props(styles.input)}
+            sx={styles.input}
           />
           %
         </label>
