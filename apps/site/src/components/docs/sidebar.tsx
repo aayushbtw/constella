@@ -79,28 +79,30 @@ function Sidebar({ groups }: { groups: SidebarGroup[] }) {
 
   return (
     <nav aria-label="Docs" {...stylex.props(styles.sidebar)}>
-      {groups.map(({ items, label, to }) => (
-        <section key={label} {...stylex.props(styles.group)}>
-          <h2 {...stylex.props(styles.label)}>{label}</h2>
-          <ul {...stylex.props(styles.list)}>
-            {items.map(({ slug, title }) => (
-              <li key={slug}>
-                <Link
-                  params={{ slug }}
-                  to={to}
-                  {...stylex.props(
-                    styles.link,
-                    Boolean(matchRoute({ params: { slug }, to })) &&
-                      styles.active
-                  )}
-                >
-                  {title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      {groups
+        .filter(({ items }) => items.length > 0)
+        .map(({ items, label, to }) => (
+          <section key={label} {...stylex.props(styles.group)}>
+            <h2 {...stylex.props(styles.label)}>{label}</h2>
+            <ul {...stylex.props(styles.list)}>
+              {items.map(({ slug, title }) => (
+                <li key={slug}>
+                  <Link
+                    params={{ slug }}
+                    to={to}
+                    {...stylex.props(
+                      styles.link,
+                      Boolean(matchRoute({ params: { slug }, to })) &&
+                        styles.active
+                    )}
+                  >
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
     </nav>
   );
 }

@@ -23,7 +23,6 @@ function DocPage() {
     <DocsPage
       description={metadata.description}
       headings={metadata.headings}
-      draft={metadata.draft}
       title={metadata.title}
     >
       <Prose body={body} />

@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
-import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { colors, space } from "@/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 import { config } from "~/site/config";
 import { entrance } from "~/site/entrance";
@@ -68,14 +68,11 @@ const styles = stylex.create({
     textDecoration: "underline",
     textUnderlineOffset: 3,
   },
-  status: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-  },
 });
 
 function Home() {
-  const components = Route.useLoaderData();
+  // Drafts only exist in dev; hidden here so the page reads as it ships.
+  const components = Route.useLoaderData().filter(({ draft }) => !draft);
   // The label, each component, then the links row.
   const items = components.length + 2;
 
@@ -95,7 +92,7 @@ function Home() {
           Components
         </h2>
         <ul {...stylex.props(styles.list)}>
-          {components.map(({ draft, slug, title }, index) => (
+          {components.map(({ slug, title }, index) => (
             <li key={slug} {...stylex.props(entrance.item(index + 1, items))}>
               <Link
                 params={{ slug }}
@@ -103,8 +100,7 @@ function Home() {
                 {...stylex.props(styles.link)}
               >
                 {title}
-              </Link>{" "}
-              {draft && <span {...stylex.props(styles.status)}>Draft</span>}
+              </Link>
             </li>
           ))}
         </ul>

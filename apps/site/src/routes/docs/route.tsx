@@ -49,8 +49,13 @@ function DocsLayout() {
         groups={[
           { items: docs, label: "Getting started", to: "/docs/$slug" },
           {
-            items: components,
+            items: components.filter(({ draft }) => !draft),
             label: "Components",
+            to: "/docs/components/$slug",
+          },
+          {
+            items: components.filter(({ draft }) => draft),
+            label: "Drafts",
             to: "/docs/components/$slug",
           },
         ]}

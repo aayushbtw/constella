@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { colors, space } from "@/lib/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
 import type { Heading } from "~/components/docs/outline";
 import { layout } from "~/site/tokens.stylex";
@@ -27,23 +27,17 @@ const styles = stylex.create({
   description: {
     color: colors.textSecondary,
   },
-  status: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xs,
-  },
 });
 
 // Two siblings, so each takes its own column of the docs layout's grid.
 function DocsPage({
   children,
   description,
-  draft,
   headings,
   title,
 }: {
   children: ReactNode;
   description: string;
-  draft: boolean;
   headings: Heading[];
   title: string;
 }) {
@@ -51,7 +45,6 @@ function DocsPage({
     <>
       <main {...stylex.props(styles.page)}>
         <header {...stylex.props(styles.header)}>
-          {draft && <p {...stylex.props(styles.status)}>Draft</p>}
           <h1>{title}</h1>
           <p {...stylex.props(styles.description)}>{description}</p>
         </header>
