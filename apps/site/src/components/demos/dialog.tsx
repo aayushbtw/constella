@@ -23,6 +23,7 @@ function DialogDemo() {
           Publish
         </DialogTrigger>
         <DialogContent>
+          <DialogCloseButton />
           <DialogHeader>
             <DialogTitle>Publish changes?</DialogTitle>
             <DialogDescription>

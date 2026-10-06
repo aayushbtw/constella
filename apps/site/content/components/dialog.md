@@ -16,6 +16,7 @@ draft: true
 import {
   Dialog,
   DialogClose,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -29,6 +30,7 @@ import {
 <Dialog>
   <DialogTrigger render={<Button />}>Publish</DialogTrigger>
   <DialogContent>
+    <DialogCloseButton />
     <DialogHeader>
       <DialogTitle>Publish changes?</DialogTitle>
       <DialogDescription>Everyone with the link will see it.</DialogDescription>
@@ -39,17 +41,6 @@ import {
     </DialogFooter>
   </DialogContent>
 </Dialog>
-```
-
-## Close Button
-
-Add `DialogCloseButton` as the first child of `DialogContent` to put a close button in the corner. Leave it out when the footer already has Cancel.
-
-```tsx
-<DialogContent>
-  <DialogCloseButton />
-  <DialogHeader>…</DialogHeader>
-</DialogContent>
 ```
 
 ## Open from Code
@@ -68,13 +59,12 @@ const [open, setOpen] = useState(false);
 
 ## Nested
 
-Put a `Dialog` inside another's content to open one on top. The one behind steps back until it closes.
+Put a `Dialog` inside another's content to open one on top.
 
 <!-- ::demo name="dialog-nested" -->
 
 ```tsx
 <DialogContent>
-  …
   <Dialog>
     <DialogTrigger render={<Button />}>Reset link</DialogTrigger>
     <DialogContent>…</DialogContent>
@@ -82,17 +72,6 @@ Put a `Dialog` inside another's content to open one on top. The one behind steps
 </DialogContent>
 ```
 
-## Custom Layout
-
-`DialogContent` renders this tree. To change it, assemble the parts yourself.
-
-```txt
-DialogPortal
-├── DialogBackdrop
-└── DialogViewport
-    └── DialogPopup
-```
-
 ## API Reference
 
-Every part takes `sx` to override its styles. The rest is [Base UI's Dialog](https://base-ui.com/react/components/dialog).
+`DialogCloseButton` is the close button in the corner; put it first in `DialogContent`. Every part takes `sx`. For the rest, see [Base UI's Dialog](https://base-ui.com/react/components/dialog).
