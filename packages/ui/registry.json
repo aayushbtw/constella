@@ -161,6 +161,20 @@
       ]
     },
     {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A single-line text box that links to its Field.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",

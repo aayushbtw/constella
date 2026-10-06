@@ -26,6 +26,8 @@ Controls (buttons, inputs) have a real border and a light `shadows.control`. The
 
 Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up.
 
+An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads.
+
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.
@@ -58,7 +60,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
+One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. Invalid is a different shape, not just a different hue: a red edge alone, no halo, so a detached ring around the edge always means focus, even to a color-blind eye. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
 
 ## Motion
 
