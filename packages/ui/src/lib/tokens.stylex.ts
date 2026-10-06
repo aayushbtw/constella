@@ -19,8 +19,8 @@ export const colors = stylex.defineVars({
   // fills mirror the neutral ones as tints, `Edge` is a tinted edge.
   danger: "var(--red-11)",
   dangerEdge: "var(--red-a6)",
-  dangerFill: "var(--red-a3)",
-  dangerFillSubtle: "var(--red-a2)",
+  dangerFill: "var(--danger-fill)",
+  dangerFillSubtle: "var(--danger-fill-subtle)",
   info: "var(--blue-11)",
   infoEdge: "var(--blue-a6)",
   infoFill: "var(--blue-a3)",

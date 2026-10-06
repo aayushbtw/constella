@@ -36,10 +36,14 @@
   :root,
   .light {
     --text-muted: var(--gray-10);
+    --danger-fill-subtle: var(--red-a3);
+    --danger-fill: var(--red-a4);
   }
 
   .dark {
     --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
+    --danger-fill-subtle: var(--red-a5);
+    --danger-fill: var(--red-a6);
   }
 
   :where(:focus-visible) {

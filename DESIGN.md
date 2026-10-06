@@ -6,11 +6,11 @@ Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: 
 
 ## Color
 
-Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. `textMuted` is the one role that differs by theme: `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. It goes through `--text-muted` in `base.css`.
+Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. Two roles differ by theme, through variables in `base.css`. `textMuted` is `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. The danger fills are red `a3`/`a4` in light and `a5`/`a6` in dark: low red steps vanish on a dark page, and the dark steps turn pink on a light one.
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, and `Edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `FillSubtle` but drops just under on `Fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills (danger's sit higher, see above), and `Edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `FillSubtle` but drops just under on `Fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
 
 Status is never a saturated solid. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway.
 
