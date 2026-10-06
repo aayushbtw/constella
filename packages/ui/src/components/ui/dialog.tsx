@@ -29,7 +29,9 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
-const closeInset = `calc(${space.md} + (${lineHeights.row} - ${sizes.controlSm}) / 2)`;
+const closeTop = `calc(${space.md} + (${lineHeights.row} - ${sizes.controlSm}) / 2)`;
+// Cancel01 draws its cross in the middle 14/24 of the icon box.
+const closeEnd = `calc(${space.md} - (${sizes.controlSm} - ${sizes.icon}) / 2 - ${sizes.icon} * 5 / 24)`;
 
 const styles = stylex.create({
   backdrop: {
@@ -118,10 +120,10 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
-  // Centered on the title's first line, as far from the side as from the top.
+  // Centered on the title's first line, the cross flush with the content edge.
   closeButton: {
-    insetBlockStart: closeInset,
-    insetInlineEnd: closeInset,
+    insetBlockStart: closeTop,
+    insetInlineEnd: closeEnd,
     position: "absolute",
   },
 });
