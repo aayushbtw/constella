@@ -38,6 +38,8 @@ A slider thumb rides above its track, so it does the same: `shadows.thumb` is a 
 
 A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
 
+A separator is a 1px `edge` line, the same faint edge as a divider anywhere else, not `edgeStrong`: it groups content, it doesn't bound a control. A vertical one stretches to its row, so it matches whatever sits beside it.
+
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).

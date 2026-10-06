@@ -68,6 +68,12 @@ import { LabelDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
+  SeparatorDemo,
+  SeparatorListDemo,
+  SeparatorMenuDemo,
+  SeparatorVerticalDemo,
+} from "~/components/demos/separator";
+import {
   SliderDemo,
   SliderDisabledDemo,
   SliderInputDemo,
@@ -158,6 +164,10 @@ const demos = {
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
+  separator: SeparatorDemo,
+  "separator-list": SeparatorListDemo,
+  "separator-menu": SeparatorMenuDemo,
+  "separator-vertical": SeparatorVerticalDemo,
   slider: SliderDemo,
   "slider-disabled": SliderDisabledDemo,
   "slider-input": SliderInputDemo,
