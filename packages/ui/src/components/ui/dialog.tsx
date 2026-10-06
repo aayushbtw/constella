@@ -1,9 +1,12 @@
 "use client";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   colors,
   durations,
@@ -18,6 +21,7 @@ import {
   shadows,
   sizes,
   space,
+  strokes,
 } from "@/lib/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -25,6 +29,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
+const closeInset = `calc(${space.md} + (${lineHeights.row} - ${sizes.controlSm}) / 2)`;
 
 const styles = stylex.create({
   backdrop: {
@@ -59,7 +64,8 @@ const styles = stylex.create({
     opacity: { default: 1, [offstage]: 0 },
     outline: "none",
     overflowY: "auto",
-    padding: space.lg,
+    padding: space.md,
+    position: "relative",
     // A parent steps back while a dialog opened from it sits on top.
     transform: {
       default: `translateY(calc(var(--nested-dialogs, 0) * -1 * ${space.sm})) scale(calc(1 - var(--nested-dialogs, 0) * ${motion.stackScale}))`,
@@ -76,16 +82,30 @@ const styles = stylex.create({
   header: {
     display: "flex",
     flexDirection: "column",
-    gap: space.xxs,
+    gap: space.xs,
+    // Keeps a long title clear of the close button in the corner.
+    paddingInlineEnd: {
+      default: null,
+      ":is([data-slot='dialog-popup']:has(> [data-slot='dialog-close-button']) > *)":
+        sizes.controlSm,
+    },
   },
+  // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
+    backgroundColor: colors.fillSubtle,
+    borderTopColor: colors.edge,
+    borderTopStyle: "solid",
+    borderTopWidth: strokes.border,
     display: "flex",
     flexDirection: { default: "column-reverse", [media.sm]: "row" },
     gap: space.xs,
     justifyContent: "flex-end",
+    marginBlockEnd: `calc(-1 * ${space.md})`,
+    marginInline: `calc(-1 * ${space.md})`,
+    padding: space.md,
   },
   title: {
-    fontSize: fontSizes.sm,
+    fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.row,
     margin: 0,
@@ -93,10 +113,16 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
+    fontSize: fontSizes.sm,
+    lineHeight: lineHeights.text,
     margin: 0,
     textWrap: "pretty",
+  },
+  // Centered on the title's first line, as far from the side as from the top.
+  closeButton: {
+    insetBlockStart: closeInset,
+    insetInlineEnd: closeInset,
+    position: "absolute",
   },
 });
 
@@ -206,10 +232,38 @@ function DialogClose(props: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
+// The styles ride on the Button: it applies its own last, over anything Base UI merges in.
+function DialogCloseButton({
+  children,
+  sx,
+  ...props
+}: Styled<DialogPrimitive.Close.Props>) {
+  return (
+    <DialogPrimitive.Close
+      aria-label="Close"
+      data-slot="dialog-close-button"
+      render={
+        <Button size="icon-sm" sx={[styles.closeButton, sx]} variant="ghost" />
+      }
+      {...props}
+    >
+      {children ?? (
+        <HugeiconsIcon
+          aria-hidden
+          icon={Cancel01Icon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      )}
+    </DialogPrimitive.Close>
+  );
+}
+
 export {
   Dialog,
   DialogBackdrop,
   DialogClose,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogFooter,

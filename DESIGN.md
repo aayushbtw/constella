@@ -28,6 +28,8 @@ Controls have fixed heights from `sizes.control*`, so a button and an input in o
 
 Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
+A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.

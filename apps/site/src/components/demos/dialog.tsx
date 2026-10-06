@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -91,6 +92,7 @@ function DialogNestedDemo() {
           Share
         </DialogTrigger>
         <DialogContent>
+          <DialogCloseButton />
           <DialogHeader>
             <DialogTitle>Share</DialogTitle>
             <DialogDescription>

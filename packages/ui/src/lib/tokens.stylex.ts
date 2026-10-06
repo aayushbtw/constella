@@ -42,6 +42,7 @@ export const shadows = stylex.defineConsts({
 });
 
 export const fontSizes = stylex.defineConsts({
+  md: "16px",
   sm: "14px",
   xs: "13px",
   xxs: "12px",
@@ -49,6 +50,7 @@ export const fontSizes = stylex.defineConsts({
 
 export const lineHeights = stylex.defineConsts({
   row: "18px",
+  text: "20px",
 });
 
 export const fontWeights = stylex.defineConsts({
@@ -80,7 +82,7 @@ export const sizes = stylex.defineConsts({
   controlSm: "28px",
   controlXs: "24px",
   controlXxs: "20px",
-  dialog: "440px",
+  dialog: "384px",
   hitArea: "40px",
   icon: "16px",
   iconSm: "14px",

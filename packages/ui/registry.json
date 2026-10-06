@@ -41,8 +41,16 @@
       "type": "registry:ui",
       "title": "Dialog",
       "description": "A centered surface over a dimmed page, for a decision that needs full attention.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json"
+      ],
       "files": [
         {
           "path": "src/components/ui/dialog.tsx",

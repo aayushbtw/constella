@@ -41,6 +41,17 @@ import {
 </Dialog>
 ```
 
+## Close Button
+
+Add `DialogCloseButton` as the first child of `DialogContent` to put a close button in the corner. Leave it out when the footer already has Cancel.
+
+```tsx
+<DialogContent>
+  <DialogCloseButton />
+  <DialogHeader>…</DialogHeader>
+</DialogContent>
+```
+
 ## Open from Code
 
 Use `open` and `onOpenChange` to open the dialog without a trigger, or to close it after an action finishes.
