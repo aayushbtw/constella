@@ -33,7 +33,7 @@ const styles = stylex.create({
     borderRadius: radii.sm,
     color: colors.onAccent,
     display: "flex",
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     lineHeight: lineHeights.row,
