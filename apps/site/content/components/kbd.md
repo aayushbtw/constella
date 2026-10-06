@@ -1,6 +1,7 @@
 ---
 title: Kbd
 description: Shows a key or a shortcut.
+draft: true
 ---
 
 <!-- ::demo name="kbd" -->
@@ -62,6 +63,33 @@ Put a `Kbd` inside a [Button](/docs/components/button) with `data-icon="inline-e
 </Button>
 ```
 
+## Tooltip
+
+Inside a [Tooltip](/docs/components/tooltip), the key inverts with the popup.
+
+<!-- ::demo name="kbd-tooltip" -->
+
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<Button size="sm" variant="outline" />}>
+    Print
+  </TooltipTrigger>
+  <TooltipContent>
+    Print Document{" "}
+    <KbdGroup>
+      <Kbd>Ctrl</Kbd>
+      <Kbd>P</Kbd>
+    </KbdGroup>
+  </TooltipContent>
+</Tooltip>
+```
+
 ## API Reference
 
 `Kbd` and `KbdGroup` take every prop of `<kbd>`, plus `sx`, applied last.
+
+## Pending
+
+Blocked on a draft component. Remove this section before the page leaves draft.
+
+- Tooltip: leaves draft with Tooltip, which the Tooltip example uses.

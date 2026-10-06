@@ -59,20 +59,6 @@
       ]
     },
     {
-      "name": "kbd",
-      "type": "registry:ui",
-      "title": "Kbd",
-      "description": "A small keycap for a shortcut, in text, buttons and tooltips.",
-      "dependencies": ["@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
-      "files": [
-        {
-          "path": "src/components/ui/kbd.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
@@ -130,6 +116,20 @@
       ]
     },
     {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A small inverted label that names what's under the pointer.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "field",
       "type": "registry:ui",
       "title": "Field",
@@ -142,6 +142,20 @@
       "files": [
         {
           "path": "src/components/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A small keycap for a shortcut, in text, buttons and tooltips.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/kbd.tsx",
           "type": "registry:ui"
         }
       ]

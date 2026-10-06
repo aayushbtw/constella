@@ -61,6 +61,7 @@ import {
   KbdButtonDemo,
   KbdDemo,
   KbdGroupDemo,
+  KbdTooltipDemo,
 } from "~/components/demos/kbd";
 import { LabelDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
@@ -79,6 +80,13 @@ import {
 import { SpinnerDemo } from "~/components/demos/spinner";
 import { TabsDemo } from "~/components/demos/tabs";
 import {
+  TextareaButtonDemo,
+  TextareaDemo,
+  TextareaDisabledDemo,
+  TextareaFieldDemo,
+  TextareaInvalidDemo,
+} from "~/components/demos/textarea";
+import {
   ToastActionDemo,
   ToastDemo,
   ToastDismissDemo,
@@ -86,12 +94,11 @@ import {
   ToastTypesDemo,
 } from "~/components/demos/toast";
 import {
-  TextareaButtonDemo,
-  TextareaDemo,
-  TextareaDisabledDemo,
-  TextareaFieldDemo,
-  TextareaInvalidDemo,
-} from "~/components/demos/textarea";
+  TooltipDemo,
+  TooltipDisabledDemo,
+  TooltipKbdDemo,
+  TooltipSideDemo,
+} from "~/components/demos/tooltip";
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
@@ -144,6 +151,7 @@ const demos = {
   kbd: KbdDemo,
   "kbd-button": KbdButtonDemo,
   "kbd-group": KbdGroupDemo,
+  "kbd-tooltip": KbdTooltipDemo,
   label: LabelDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
@@ -169,6 +177,10 @@ const demos = {
   "textarea-disabled": TextareaDisabledDemo,
   "textarea-field": TextareaFieldDemo,
   "textarea-invalid": TextareaInvalidDemo,
+  tooltip: TooltipDemo,
+  "tooltip-disabled": TooltipDisabledDemo,
+  "tooltip-kbd": TooltipKbdDemo,
+  "tooltip-side": TooltipSideDemo,
   typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
 

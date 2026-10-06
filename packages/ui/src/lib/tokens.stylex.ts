@@ -93,6 +93,7 @@ export const sizes = stylex.defineConsts({
   kbd: "20px",
   thumb: "12px",
   toast: "356px",
+  tooltip: "320px",
 });
 
 export const strokes = stylex.defineConsts({
@@ -106,6 +107,7 @@ export const strokes = stylex.defineConsts({
 export const layers = stylex.defineConsts({
   dialog: "40",
   toast: "50",
+  tooltip: "60",
 });
 
 export const opacities = stylex.defineConsts({
@@ -143,6 +145,7 @@ export const durations = stylex.defineConsts({
   spin: "1s",
   crossfade: "300ms",
   dialog: "200ms",
+  tooltipDelay: "300ms",
 });
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,

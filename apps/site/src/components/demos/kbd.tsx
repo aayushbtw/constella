@@ -2,6 +2,11 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Button } from "@/components/ui/button";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { colors, fontSizes, lineHeights, space } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -64,4 +69,31 @@ function KbdButtonDemo() {
   );
 }
 
-export { KbdButtonDemo, KbdDemo, KbdGroupDemo };
+function KbdTooltipDemo() {
+  return (
+    <DemoRow>
+      <Tooltip>
+        <TooltipTrigger render={<Button size="sm" variant="outline" />}>
+          Save
+        </TooltipTrigger>
+        <TooltipContent>
+          Save Changes <Kbd>S</Kbd>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger render={<Button size="sm" variant="outline" />}>
+          Print
+        </TooltipTrigger>
+        <TooltipContent>
+          Print Document{" "}
+          <KbdGroup>
+            <Kbd>Ctrl</Kbd>
+            <Kbd>P</Kbd>
+          </KbdGroup>
+        </TooltipContent>
+      </Tooltip>
+    </DemoRow>
+  );
+}
+
+export { KbdButtonDemo, KbdDemo, KbdGroupDemo, KbdTooltipDemo };

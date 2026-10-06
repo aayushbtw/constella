@@ -36,7 +36,7 @@ Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. Th
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.
 
-A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`.
+A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
 
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 
