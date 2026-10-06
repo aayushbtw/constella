@@ -39,6 +39,7 @@ export const shadows = stylex.defineConsts({
   control: "0 1px 2px var(--black-a1)",
   dialog: "0 0 0 1px var(--gray-a4), 0 16px 40px var(--black-a6)",
   popover: "0 0 0 1px var(--gray-a4), 0 4px 16px var(--black-a6)",
+  thumb: "0 0 0 1px var(--gray-a6), 0 1px 3px var(--black-a5)",
 });
 
 export const fontSizes = stylex.defineConsts({
@@ -87,7 +88,7 @@ export const sizes = stylex.defineConsts({
   icon: "16px",
   iconSm: "14px",
   iconXs: "12px",
-  thumb: "16px",
+  thumb: "12px",
   toast: "356px",
 });
 

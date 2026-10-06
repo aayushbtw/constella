@@ -8,6 +8,7 @@ import {
   durations,
   easings,
   fontSizes,
+  opacities,
   presses,
   radii,
   shadows,
@@ -20,7 +21,9 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
+const halfThumb = `calc(${sizes.thumb} / 2)`;
 const halfThumbOut = `calc(${sizes.thumb} / -2)`;
+const vertical = ":is([data-orientation='vertical'])";
 
 const styles = stylex.create({
   // Label and value share the first row; the control spans the second.
@@ -29,8 +32,8 @@ const styles = stylex.create({
     columnGap: space.sm,
     display: "grid",
     gridTemplateColumns: "minmax(0, 1fr) auto",
-    rowGap: space.xxs,
-    width: "100%",
+    opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
+    width: { default: "100%", [vertical]: "auto" },
   },
   label: {
     color: colors.textSecondary,
@@ -46,44 +49,50 @@ const styles = stylex.create({
     alignItems: "center",
     cursor: { default: "pointer", ":is([data-disabled])": "default" },
     display: "flex",
+    flexDirection: { default: "row", [vertical]: "column" },
     gridColumn: "1 / -1",
-    height: sizes.controlXs,
+    height: { default: sizes.controlXxs, [vertical]: "100%" },
     // Centered thumbs need no measuring, so they render before hydration; Base UI maps the
     // pointer inside this padding, so the thumb stays within the bar and still tracks the pointer.
-    paddingInline: `calc(${sizes.thumb} / 2)`,
+    paddingBlock: { default: 0, [vertical]: halfThumb },
+    paddingInline: { default: halfThumb, [vertical]: 0 },
     touchAction: "none",
     userSelect: "none",
+    width: { default: null, [vertical]: sizes.controlXxs },
   },
   // The bar reaches past the track into the control's padding, under the thumb at either end.
   track: {
-    height: strokes.track,
+    height: { default: strokes.track, [vertical]: "100%" },
     position: "relative",
-    width: "100%",
+    width: { default: "100%", [vertical]: strokes.track },
     "::before": {
       backgroundColor: colors.fill,
       borderRadius: radii.full,
       content: "''",
-      insetBlock: 0,
-      insetInline: halfThumbOut,
+      insetBlock: { default: 0, [vertical]: halfThumbOut },
+      insetInline: { default: halfThumbOut, [vertical]: 0 },
       position: "absolute",
     },
   },
+  // Base UI sizes the indicator along the track; the bar reaches back under the start thumb.
   indicator: {
-    height: "100%",
+    height: { default: "100%", [vertical]: null },
+    width: { default: null, [vertical]: "100%" },
     "::before": {
       backgroundColor: colors.accent,
       borderRadius: radii.full,
       content: "''",
-      insetBlock: 0,
+      insetBlockEnd: { default: 0, [vertical]: halfThumbOut },
+      insetBlockStart: 0,
       insetInlineEnd: 0,
-      insetInlineStart: halfThumbOut,
+      insetInlineStart: { default: halfThumbOut, [vertical]: 0 },
       position: "absolute",
     },
   },
   thumb: {
     backgroundColor: colors.accent,
     borderRadius: radii.full,
-    boxShadow: shadows.control,
+    boxShadow: shadows.thumb,
     height: sizes.thumb,
     // Base UI positions the thumb with `translate`, so `transform` is free for the press.
     transform: { default: null, ":is([data-dragging])": presses.icon },

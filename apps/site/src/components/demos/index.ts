@@ -18,7 +18,17 @@ import {
 } from "~/components/demos/dialog";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
-import { SliderDemo } from "~/components/demos/slider";
+import {
+  SliderDemo,
+  SliderDisabledDemo,
+  SliderInputDemo,
+  SliderMultipleDemo,
+  SliderRangeDemo,
+  SliderReferencesDemo,
+  SliderStepsDemo,
+  SliderTooltipDemo,
+  SliderVerticalDemo,
+} from "~/components/demos/slider";
 import { SpinnerDemo } from "~/components/demos/spinner";
 import { TabsDemo } from "~/components/demos/tabs";
 import {
@@ -48,6 +58,14 @@ const demos = {
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
   slider: SliderDemo,
+  "slider-disabled": SliderDisabledDemo,
+  "slider-input": SliderInputDemo,
+  "slider-multiple": SliderMultipleDemo,
+  "slider-range": SliderRangeDemo,
+  "slider-references": SliderReferencesDemo,
+  "slider-steps": SliderStepsDemo,
+  "slider-tooltip": SliderTooltipDemo,
+  "slider-vertical": SliderVerticalDemo,
   spinner: SpinnerDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,

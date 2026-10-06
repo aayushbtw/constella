@@ -33,8 +33,12 @@ import {
 
 Pass an array to `defaultValue` and compose the track with a thumb per value.
 
+<!-- ::demo name="slider-range" -->
+
 ```tsx
 <Slider defaultValue={[20, 80]}>
+  <SliderLabel>Price</SliderLabel>
+  <SliderValue />
   <SliderControl>
     <SliderTrack>
       <SliderIndicator />
@@ -42,6 +46,228 @@ Pass an array to `defaultValue` and compose the track with a thumb per value.
       <SliderThumb index={1} />
     </SliderTrack>
   </SliderControl>
+</Slider>
+```
+
+## Multiple Thumbs
+
+Add a value and a `SliderThumb` for each thumb.
+
+<!-- ::demo name="slider-multiple" -->
+
+```tsx
+<Slider aria-label="Stops" defaultValue={[10, 40, 70]} step={10}>
+  <SliderControl>
+    <SliderTrack>
+      <SliderIndicator />
+      <SliderThumb index={0} />
+      <SliderThumb index={1} />
+      <SliderThumb index={2} />
+    </SliderTrack>
+  </SliderControl>
+</Slider>
+```
+
+## Vertical
+
+Use `orientation="vertical"` and give the slider a height.
+
+<!-- ::demo name="slider-vertical" -->
+
+```tsx
+const styles = stylex.create({
+  slider: { height: 160 },
+});
+
+<Slider
+  aria-label="Bass"
+  defaultValue={60}
+  orientation="vertical"
+  sx={styles.slider}
+>
+  <SliderControl />
+</Slider>;
+```
+
+## Steps
+
+Set `max` and `step`, then place a mark under each step. The marks sit in a row inset by half a thumb, so each percentage lands under the thumb.
+
+<!-- ::demo name="slider-steps" -->
+
+```tsx
+const months = Array.from({ length: 13 }, (_, month) => month);
+
+const styles = stylex.create({
+  scale: {
+    gridColumn: "1 / -1",
+    height: space.lg,
+    marginInline: `calc(${sizes.thumb} / 2)`,
+    position: "relative",
+  },
+  mark: (position: string) => ({
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxs,
+    insetInlineStart: position,
+    position: "absolute",
+    translate: "-50% 0",
+  }),
+  tick: {
+    backgroundColor: colors.edgeStrong,
+    height: space.xxs,
+    width: strokes.border,
+  },
+  tickMajor: { backgroundColor: colors.textMuted },
+  label: { color: colors.textMuted, fontSize: fontSizes.xs },
+});
+
+<Slider defaultValue={3} max={12}>
+  <SliderLabel>Duration (months)</SliderLabel>
+  <SliderValue />
+  <SliderControl />
+  <div aria-hidden {...stylex.props(styles.scale)}>
+    {months.map((month) => {
+      const major = month % 2 === 0;
+      return (
+        <span
+          key={month}
+          {...stylex.props(styles.mark(`${(month / 12) * 100}%`))}
+        >
+          <span {...stylex.props(styles.tick, major && styles.tickMajor)} />
+          {major && <span {...stylex.props(styles.label)}>{month}</span>}
+        </span>
+      );
+    })}
+  </div>
+</Slider>;
+```
+
+## Reference Labels
+
+Add a row of labels under the control. A `1fr auto 1fr` grid keeps the middle one centered.
+
+<!-- ::demo name="slider-references" -->
+
+```tsx
+const styles = stylex.create({
+  references: {
+    color: colors.textMuted,
+    display: "grid",
+    fontSize: fontSizes.xs,
+    gridColumn: "1 / -1",
+    gridTemplateColumns: "1fr auto 1fr",
+  },
+  end: { justifySelf: "end" },
+});
+
+<Slider defaultValue={20} max={35} min={5}>
+  <SliderLabel>Storage</SliderLabel>
+  <SliderValue>{(formatted) => `${formatted[0] ?? ""} GB`}</SliderValue>
+  <SliderControl />
+  <div aria-hidden {...stylex.props(styles.references)}>
+    <span>5 GB</span>
+    <span>20 GB</span>
+    <span {...stylex.props(styles.end)}>35 GB</span>
+  </div>
+</Slider>;
+```
+
+## With Tooltip
+
+Put a `SliderValue` inside the thumb and mark the thumb, so the bubble shows while the thumb is hovered, focused or dragged.
+
+<!-- ::demo name="slider-tooltip" -->
+
+```tsx
+const styles = stylex.create({
+  bubble: {
+    backgroundColor: colors.accent,
+    borderRadius: radii.xs,
+    color: colors.onAccent,
+    fontSize: fontSizes.xxs,
+    insetBlockEnd: `calc(100% + ${space.xs})`,
+    insetInlineStart: "50%",
+    opacity: {
+      default: 0,
+      [stylex.when.ancestor(":hover")]: { default: 0, [media.hover]: 1 },
+      [stylex.when.ancestor(":has(:focus-visible)")]: 1,
+      [stylex.when.ancestor(":is([data-dragging])")]: 1,
+    },
+    paddingBlock: space.xxxs,
+    paddingInline: space.xxs,
+    pointerEvents: "none",
+    position: "absolute",
+    transitionDuration: durations.popover,
+    transitionProperty: "opacity",
+    translate: "-50% 0",
+  },
+});
+
+<Slider defaultValue={40}>
+  <SliderLabel>Volume</SliderLabel>
+  <SliderControl>
+    <SliderTrack>
+      <SliderIndicator />
+      <SliderThumb sx={stylex.defaultMarker()}>
+        <SliderValue sx={styles.bubble}>
+          {(formatted) => `${formatted[0] ?? ""}%`}
+        </SliderValue>
+      </SliderThumb>
+    </SliderTrack>
+  </SliderControl>
+</Slider>;
+```
+
+## With Input
+
+Control the slider with `value` and `onValueChange`, and keep a number input in sync. The input holds a draft while typing and snaps back to the slider's value on blur.
+
+<!-- ::demo name="slider-input" -->
+
+```tsx
+const [value, setValue] = useState(100);
+const [draft, setDraft] = useState("100");
+
+<Slider
+  onValueChange={(next) => {
+    setValue(next);
+    setDraft(String(next));
+  }}
+  value={value}
+>
+  <SliderLabel>Opacity</SliderLabel>
+  <input
+    aria-label="Opacity"
+    max={100}
+    min={0}
+    onBlur={() => setDraft(String(value))}
+    onChange={(event) => {
+      setDraft(event.target.value);
+      const next = event.target.valueAsNumber;
+      if (Number.isFinite(next)) {
+        setValue(Math.min(100, Math.max(0, Math.round(next))));
+      }
+    }}
+    type="number"
+    value={draft}
+  />
+  <SliderControl />
+</Slider>;
+```
+
+## Disabled
+
+Use the `disabled` prop to disable the slider.
+
+<!-- ::demo name="slider-disabled" -->
+
+```tsx
+<Slider defaultValue={40} disabled>
+  <SliderLabel>Volume</SliderLabel>
+  <SliderValue />
+  <SliderControl />
 </Slider>
 ```
 
