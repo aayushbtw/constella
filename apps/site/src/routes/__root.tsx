@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/toast";
 import { colors } from "@/lib/tokens.stylex";
 import { Header } from "~/components/header";
 import { config } from "~/site/config";
+import { seo, siteMeta } from "~/site/seo";
 import { themeScript } from "~/site/theme";
 import { fonts, fontSizes, lineHeights } from "~/site/tokens.stylex";
 
@@ -35,7 +36,6 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "robots", content: "index, follow" },
       {
         name: "theme-color",
         media: "(prefers-color-scheme: light)",
@@ -46,12 +46,8 @@ export const Route = createRootRoute({
         media: "(prefers-color-scheme: dark)",
         content: "#111111",
       },
-      { title: config.name },
-      { name: "description", content: config.description },
-      { property: "og:locale", content: "en_US" },
-      { property: "og:site_name", content: config.name },
-      { name: "twitter:site", content: config.socials.twitter },
-      { name: "twitter:creator", content: config.socials.twitter },
+      ...siteMeta,
+      ...seo({}),
     ],
     links: [
       // Without it, the font is found only after the CSS is parsed.
