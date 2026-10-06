@@ -10,6 +10,7 @@ export const colors = stylex.defineVars({
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
   onAccent: "var(--gray-1)",
+  overlay: "var(--black-a5)",
   textMuted: "var(--text-muted)",
   textPrimary: "var(--gray-12)",
   textSecondary: "var(--gray-11)",
@@ -36,6 +37,7 @@ export const colors = stylex.defineVars({
 
 export const shadows = stylex.defineConsts({
   control: "0 1px 2px var(--black-a1)",
+  dialog: "0 0 0 1px var(--gray-a4), 0 16px 40px var(--black-a6)",
   popover: "0 0 0 1px var(--gray-a4), 0 4px 16px var(--black-a6)",
 });
 
@@ -78,6 +80,7 @@ export const sizes = stylex.defineConsts({
   controlSm: "28px",
   controlXs: "24px",
   controlXxs: "20px",
+  dialog: "440px",
   hitArea: "40px",
   icon: "16px",
   iconSm: "14px",
@@ -95,6 +98,7 @@ export const strokes = stylex.defineConsts({
 });
 
 export const layers = stylex.defineConsts({
+  dialog: "40",
   toast: "50",
 });
 
@@ -131,11 +135,13 @@ export const durations = stylex.defineConsts({
   layout: "300ms",
   spin: "1s",
   crossfade: "300ms",
+  dialog: "200ms",
 });
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,
 // how much each surface behind a stack shrinks.
 export const motion = stylex.defineConsts({
+  dialogScale: "0.96",
   exitOffset: "8px",
   stackScale: "0.05",
   crossfadeBlur: "4px",

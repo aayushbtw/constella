@@ -11,6 +11,11 @@ import {
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
+import {
+  DialogControlledDemo,
+  DialogDemo,
+  DialogNestedDemo,
+} from "~/components/demos/dialog";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import { SliderDemo } from "~/components/demos/slider";
@@ -36,6 +41,9 @@ const demos = {
   "button-variants": ButtonVariantsDemo,
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
+  dialog: DialogDemo,
+  "dialog-controlled": DialogControlledDemo,
+  "dialog-nested": DialogNestedDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,

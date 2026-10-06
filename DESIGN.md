@@ -26,7 +26,7 @@ Controls (buttons, inputs) have a real border and a light `shadows.control`. The
 
 Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up.
 
-Floating surfaces (toasts, popovers) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
+Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
 
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
@@ -80,6 +80,7 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `hover`     | Color changes on hover                  |
 | `press`     | Scale on `:active`                      |
 | `popover`   | Small surfaces that open from a trigger |
+| `dialog`    | A dialog and its backdrop               |
 | `move`      | Indicators and thumbs that travel       |
 | `crossfade` | Cross-fades between states              |
 | `layout`    | A surface growing or shrinking to fit   |
@@ -109,7 +110,7 @@ A pressable that also changes color on hover transitions both, each on its own c
 
 ### Entrances
 
-Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via Base UI's `--transform-origin`.
+Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via Base UI's `--transform-origin`. A dialog belongs to no trigger, so it scales from its own center (`motion.dialogScale`). A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
 
 ### Reduced motion
 
