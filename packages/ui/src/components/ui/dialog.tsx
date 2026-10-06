@@ -84,7 +84,7 @@ const styles = stylex.create({
       default: "1fr",
       ":has(> [data-slot='dialog-close-button'])": "1fr auto",
     },
-    rowGap: space.xs,
+    rowGap: space.sm,
   },
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
@@ -106,6 +106,8 @@ const styles = stylex.create({
     lineHeight: lineHeights.row,
     gridColumn: 1,
     margin: 0,
+    // Starts at the capitals, so the popup's padding is what the eye sees above it.
+    textBox: "trim-both cap alphabetic",
     textWrap: "balance",
   },
   description: {
@@ -116,9 +118,9 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
-  // The cross is 8px in a 24px button, so pulling out `space.xs` puts it on the content edge.
+  // The cross is 8px in a 24px button, so pulling out `space.xs` puts it in the content corner.
   closeButton: {
-    alignSelf: "center",
+    alignSelf: "start",
     gridColumn: 2,
     gridRow: 1,
     marginBlock: `-${space.xs}`,
