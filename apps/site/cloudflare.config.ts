@@ -2,7 +2,7 @@ import { defineConfig } from "cf/config";
 
 export default defineConfig({
   worker: {
-    compatibilityDate: "2026-04-16",
+    compatibilityDate: "2026-09-16",
     compatibilityFlags: ["nodejs_compat"],
     domains: ["constella.aayush.cv"],
     entrypoint: "@tanstack/react-start/server-entry",
