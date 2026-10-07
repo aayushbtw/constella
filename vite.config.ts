@@ -18,8 +18,14 @@ export default defineConfig({
   lint: {
     extends: [core, react, tanstack, antiSlop],
     ignorePatterns: [...(core.ignorePatterns ?? [])],
-    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
+    jsPlugins: [
+      { name: "vite-plus", specifier: "vite-plus/oxlint-plugin" },
+      { name: "constella", specifier: "@constella/lint" },
+    ],
     rules: {
+      "constella/box-edge": "error",
+      "constella/no-focus-style": "error",
+      "constella/no-raw-colors": "error",
       // Hoisting lets a route's `component:` sit above the component it names.
       "func-style": ["error", "declaration", { allowArrowFunctions: false }],
       // Base UI's checkbox is a span with a hidden input, so the label wraps it rather than pointing at it.

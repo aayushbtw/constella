@@ -8,7 +8,7 @@
 
 ## Workspace
 
-`packages/ui` is the registry and holds only what ships; `apps/site` is the docs site and never ships. The library imports with `@/` because the shadcn CLI only rewrites `@/lib/*` and `@/components/ui/*` to the consumer's aliases. The site maps `@/` to the library, as a consumer would, and uses `~/` for its own code. `shadcn build` writes the registry into the site's `public/r`.
+`packages/ui` is the registry and holds only what ships; `apps/site` is the docs site and never ships. The library imports with `@/` because the shadcn CLI only rewrites `@/lib/*` and `@/components/ui/*` to the consumer's aliases. The site maps `@/` to the library, as a consumer would, and uses `~/` for its own code. `shadcn build` writes the registry into the site's `public/r`. `packages/lint` is `@constella/lint`, an oxlint plugin for the rules below that a type check can't catch; the root config loads it like a consumer would.
 
 ## Registry
 
@@ -36,6 +36,7 @@ Alert
 - **Every control has the size scale.** `xs`, `sm`, `default`, `lg` (and `icon-xs`, `icon-sm`, `icon`, `icon-lg` where it has icon-only sizes), shadcn's names. Text fields skip `xs`: 24px is too short for typed text. The default is a real value, so `size="default"` can be passed, not only implied.
 - **Styles for other elements are a function.** When an element must keep its own semantics (a link styled as a button), the component exports a style getter (`buttonStyles`) instead of rendering through `render`.
 - **State comes from Base UI's data attributes** (`[data-open]`, `[data-disabled]`, `[data-starting-style]`), never mirrored into React state.
+- **Groups talk to their children through variables.** A `ButtonGroup` sets the `joins` vars (`inline`, `block`, `either`) to `0`; a joinable child multiplies its corners and start edge by them, by its own `:first-child`/`:last-child`. Outside a group they stay `1`, so nothing changes. A part that must stay whole inside a group (an input group's addon) resets them to `1`.
 - **Repeated style shapes are helpers.** StyleX evaluates arrow functions inside `stylex.create`, not function declarations, so those helpers are arrows with `func-style` disabled around them.
 
 ## Tokens
@@ -49,3 +50,15 @@ Tokens are constants, so JS reads the same values the styles do: a Web Animation
 Switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.
 
 Components never branch on the theme. Every color is a token valued by a Radix step, so the `.dark` class flips it. Not `light-dark()`: Lightning CSS lowers it to fallbacks that ignore the class, and the color comes out invalid.
+
+## Lint
+
+`@constella/lint` turns the rules here and in `DESIGN.md` that drift into errors, so a person or an agent building on the system hears about it at once. It follows `@shadcn/lint`: one file per rule in `src/rules`, `plugin.ts` maps them, no preset; the consumer lists the rules.
+
+| Rule | Catches |
+| --- | --- |
+| `constella/box-edge` | `edgeSubtle` on a `borderColor` |
+| `constella/no-focus-style` | Any `outline*` in a component's styles |
+| `constella/no-raw-colors` | A Radix step or hex in styles, not a `colors` token |
+
+A rule earns its place when a correction comes up twice. Add one there before writing the same note again.

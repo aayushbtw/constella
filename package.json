@@ -10,6 +10,7 @@
     "fix": "vp check --fix"
   },
   "devDependencies": {
+    "@constella/lint": "workspace:*",
     "@tanstack/intent": "^0.5.3",
     "shadcn": "^4.21.1",
     "typescript": "^7.0.2",
