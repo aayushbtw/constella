@@ -87,6 +87,15 @@ import { LabelDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
+  SelectAlignItemDemo,
+  SelectDemo,
+  SelectDisabledDemo,
+  SelectGroupsDemo,
+  SelectInvalidDemo,
+  SelectScrollableDemo,
+  SelectSizesDemo,
+} from "~/components/demos/select";
+import {
   SeparatorDemo,
   SeparatorListDemo,
   SeparatorMenuDemo,
@@ -207,6 +216,13 @@ const demos = {
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
+  select: SelectDemo,
+  "select-align-item": SelectAlignItemDemo,
+  "select-disabled": SelectDisabledDemo,
+  "select-groups": SelectGroupsDemo,
+  "select-invalid": SelectInvalidDemo,
+  "select-scrollable": SelectScrollableDemo,
+  "select-sizes": SelectSizesDemo,
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,
   "separator-vertical": SeparatorVerticalDemo,

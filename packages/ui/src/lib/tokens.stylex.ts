@@ -100,6 +100,7 @@ export const sizes = stylex.defineConsts({
   iconSm: "14px",
   iconXs: "12px",
   kbd: "20px",
+  menu: "144px",
   thumb: "12px",
   toast: "356px",
   tooltip: "320px",
@@ -115,6 +116,8 @@ export const strokes = stylex.defineConsts({
 
 export const layers = stylex.defineConsts({
   dialog: "40",
+  // Above a dialog, so a select or menu opened from one sits on top of it.
+  popover: "45",
   toast: "50",
   tooltip: "60",
 });
