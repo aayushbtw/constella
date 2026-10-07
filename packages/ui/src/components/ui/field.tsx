@@ -6,6 +6,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import { labelStyles } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   colors,
   durations,
@@ -118,6 +119,18 @@ const styles = stylex.create({
     margin: 0,
     textWrap: "pretty",
   },
+  // A line, or a line broken by its text, so it needs no fill to sit on any surface.
+  separator: {
+    alignItems: "center",
+    color: colors.textMuted,
+    display: "flex",
+    fontSize: fontSizes.sm,
+    gap: space.xs,
+    lineHeight: lineHeights.text,
+    marginBlock: `calc(-1 * ${space.xs})`,
+    minHeight: lineHeights.text,
+  },
+  separatorLine: { flex: 1 },
   // The only red in an invalid field besides the control's edge, a step under the label.
   error: {
     color: colors.danger,
@@ -251,6 +264,29 @@ function FieldError({ sx, ...props }: Styled<FieldPrimitive.Error.Props>) {
   );
 }
 
+function FieldSeparator({
+  children,
+  sx,
+  ...props
+}: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-content={children !== undefined}
+      data-slot="field-separator"
+      {...props}
+      {...stylex.props(styles.separator, sx)}
+    >
+      <Separator sx={styles.separatorLine} />
+      {children !== undefined && (
+        <>
+          <span data-slot="field-separator-content">{children}</span>
+          <Separator sx={styles.separatorLine} />
+        </>
+      )}
+    </div>
+  );
+}
+
 export {
   Field,
   FieldContent,
@@ -259,6 +295,7 @@ export {
   FieldGroup,
   FieldLabel,
   FieldLegend,
+  FieldSeparator,
   FieldSet,
   FieldSetDescription,
   FieldTitle,
