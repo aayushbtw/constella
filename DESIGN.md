@@ -26,7 +26,7 @@ Controls (buttons, inputs) have a real border and a light `shadows.control`. The
 
 Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up. Text steps down with the height like a button's (13px at `sm`, 14px from `default`), but an input keeps 16px below 640px so iOS doesn't zoom on focus. Text fields stop at `sm`: at 24px a typed line has no room above and below.
 
-An input's edge is `edgeStrong`, not `edge`. Its fill sits inside the edge, so with the faint one it reads 30px tall beside a 32px button on the dark page. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads. A textarea is the same surface, two control heights tall, growing with its content and resizing only vertically.
+Every control and box draws its border in `edge`: a button, an input, a tabs list and a choice card match, so a row of them reads as one family. `edgeSubtle` is too faint for that: an input's fill sits inside its edge, and with the faint one it reads 30px tall beside a 32px button on the dark page. A choice card's edge turns `accent` when checked. A file input's button is a `fill` chip set into the box with an even inset on three sides, its corner concentric with the box's; the file name beside it is `textSecondary`, so the chip leads. A textarea is the same surface, two control heights tall, growing with its content and resizing only vertically.
 
 An input group is that surface drawn once around a borderless control and its addons, so the group carries the edge, invalid halo, ring and disabled fade. Whatever sits inside keeps an even inset on every side it touches: an xs button 3px in from the edge at the default height (the file chip's inset and corner), a keycap 5px, both recomputed for each group size, and a header or footer's trailing button as far from the side as from the edge it rests on. Buttons in a header or footer gather at its end. A text prefix (`https://`, `$`) or suffix (`%`) sits 2px from the value, so the two read as one string. An input stacked with a header or footer takes the addon's line height and a 4px step between them, so the two lines space as evenly as their outer edges.
 
@@ -38,7 +38,9 @@ A slider thumb rides above its track, so it does the same: `shadows.thumb` is a 
 
 A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
 
-A separator is a 1px `edge` line, the same faint edge as a divider anywhere else, not `edgeStrong`: it groups content, it doesn't bound a control. A vertical one stretches to its row, so it matches whatever sits beside it.
+A separator is a 1px `edgeSubtle` line, the same faint edge as a divider anywhere else, not `edge`: it groups content, it doesn't bound a control. A vertical one stretches to its row, so it matches whatever sits beside it.
+
+A button group joins its items into one control: the corners where two meet go square, and the item before draws the shared edge, so the seam is one line, not two. A separator between filled buttons draws that line instead, full height, and the buttons on both sides keep their own padding. Nested groups sit `space.xs` apart and don't join.
 
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 
@@ -66,7 +68,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One keyboard-only ring, set once for everything. A strong gray, offset so it never fights a hover fill. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. Components don't style focus themselves, with one exception: an item packed inside a bordered container (a tab in its list) draws the ring flush, offset `0`, since the global offset would push it into the container's edge.
+One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` line flush outside the edge. Flush, not offset: an offset ring read as a second box around a text field, and it broke at a button group's squared seams. Outside, not over the edge: over it, the line vanished on a filled button. An invalid control's ring is red, so the error survives focus. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. A popup (a dialog) takes focus to hold it, not as a control, so it draws none. Components never style focus themselves; `constella/no-focus-style` enforces it.
 
 ## Motion
 

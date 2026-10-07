@@ -49,14 +49,36 @@
     --on-accent-fill: var(--black-a2);
   }
 
+  /* Flush outside the edge, so it shows on any fill. */
   :where(
     :focus-visible,
     [data-slot="input-group"]:has(
       > [data-slot="input-group-control"]:focus-visible
     )
   ) {
-    outline: 1.5px solid var(--gray-a8);
-    outline-offset: 2px;
+    outline: 1px solid var(--gray-a8);
+    outline-offset: 0;
+  }
+
+  :where(
+    [aria-invalid="true"],
+    [data-invalid],
+    [data-slot="input-group"]:has(
+      > [data-slot="input-group-control"]:is(
+        [aria-invalid="true"],
+        [data-invalid]
+      )
+    )
+  ):where(
+    :focus-visible,
+    :has(> [data-slot="input-group-control"]:focus-visible)
+  ) {
+    outline-color: var(--red-11);
+  }
+
+  /* A popup takes focus to hold it, not as a control. */
+  :where([role="dialog"], [role="alertdialog"]):focus-visible {
+    outline: none;
   }
 
   /* An input group rings its whole box, so the borderless control inside draws none. */

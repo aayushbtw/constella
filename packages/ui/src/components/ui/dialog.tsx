@@ -61,7 +61,6 @@ const styles = stylex.create({
     gap: space.md,
     maxHeight: "100%",
     opacity: { default: 1, [offstage]: 0 },
-    outline: "none",
     overflowY: "auto",
     padding: space.md,
     position: "relative",
@@ -96,7 +95,7 @@ const styles = stylex.create({
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
     backgroundColor: colors.fillSubtle,
-    borderTopColor: colors.edge,
+    borderTopColor: colors.edgeSubtle,
     borderTopStyle: "solid",
     borderTopWidth: strokes.border,
     display: "flex",
