@@ -9,6 +9,7 @@ import {
   easings,
   fontSizes,
   fontWeights,
+  joins,
   media,
   opacities,
   presses,
@@ -78,6 +79,34 @@ const inset = (padding: string, tight: string) => ({
   },
 });
 
+// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
+const joinedCorners = (radius: string) => ({
+  borderEndEndRadius: {
+    default: radius,
+    ":not(:last-child)": `calc(${radius} * ${joins.either})`,
+  },
+  borderEndStartRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.inline})`,
+    ":not(:last-child)": {
+      default: `calc(${radius} * ${joins.block})`,
+      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+    },
+  },
+  borderStartEndRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.block})`,
+    ":not(:last-child)": {
+      default: `calc(${radius} * ${joins.inline})`,
+      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+    },
+  },
+  borderStartStartRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+  },
+});
+
 const square = (size: string) => ({
   height: size,
   paddingInline: 0,
@@ -86,6 +115,20 @@ const square = (size: string) => ({
 });
 
 /* eslint-enable func-style */
+
+// In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
+const joined = ":not(:first-child, [data-slot='button-group-separator'] + *)";
+
+const joinedEdges = {
+  borderBlockStartWidth: {
+    default: strokes.border,
+    [joined]: `calc(${strokes.border} * ${joins.block})`,
+  },
+  borderInlineStartWidth: {
+    default: strokes.border,
+    [joined]: `calc(${strokes.border} * ${joins.inline})`,
+  },
+};
 
 // shadcn's spacing, which sits off our 4px grid at 6px and 10px.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -96,9 +139,10 @@ const styles = stylex.create({
     alignItems: "center",
     // Every variant reserves the border, so a fill and an outline are the same size.
     borderColor: "transparent",
-    borderRadius: radii.sm,
+    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
+    ...joinedEdges,
     cursor: {
       default: "pointer",
       ":disabled": "not-allowed",
@@ -126,6 +170,8 @@ const styles = stylex.create({
     userSelect: "none",
     WebkitTapHighlightColor: "transparent",
     whiteSpace: "nowrap",
+    // In a ButtonGroup, the focused item's ring stays above its neighbors.
+    zIndex: { default: null, ":focus-visible": 1 },
   },
   // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
@@ -185,7 +231,7 @@ const styles = stylex.create({
     transform: null,
   },
   rounded: {},
-  pill: { borderRadius: radii.full },
+  pill: joinedCorners(radii.full),
 });
 
 const variantStyles = {

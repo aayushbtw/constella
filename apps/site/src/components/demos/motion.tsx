@@ -72,11 +72,11 @@ const styles = stylex.create({
     position: "absolute",
   },
   axis: {
-    stroke: colors.edgeStrong,
+    stroke: colors.edge,
   },
   // Linear, for reference: how far each curve bends away from it.
   linear: {
-    stroke: colors.edge,
+    stroke: colors.edgeSubtle,
     strokeDasharray: "4 4",
   },
   curve: {

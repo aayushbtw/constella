@@ -11,7 +11,7 @@ type SeparatorProps = Omit<SeparatorPrimitive.Props, "className" | "style"> & {
 
 const styles = stylex.create({
   separator: {
-    backgroundColor: colors.edge,
+    backgroundColor: colors.edgeSubtle,
     flexShrink: 0,
   },
   horizontal: {

@@ -15,6 +15,7 @@ import {
   durations,
   fontSizes,
   fontWeights,
+  joins,
   lineHeights,
   opacities,
   radii,
@@ -88,7 +89,49 @@ const bySize = (values: Record<InputGroupSize, string>) => ({
 const insetMargin = (group: string, item: string) =>
   `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
 
+// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
+const joinedCorners = (radius: string) => ({
+  borderEndEndRadius: {
+    default: radius,
+    ":not(:last-child)": `calc(${radius} * ${joins.either})`,
+  },
+  borderEndStartRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.inline})`,
+    ":not(:last-child)": {
+      default: `calc(${radius} * ${joins.block})`,
+      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+    },
+  },
+  borderStartEndRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.block})`,
+    ":not(:last-child)": {
+      default: `calc(${radius} * ${joins.inline})`,
+      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+    },
+  },
+  borderStartStartRadius: {
+    default: radius,
+    ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+  },
+});
+
 /* eslint-enable func-style */
+
+// In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
+const joined = ":not(:first-child, [data-slot='button-group-separator'] + *)";
+
+const joinedEdges = {
+  borderBlockStartWidth: {
+    default: strokes.border,
+    [joined]: `calc(${strokes.border} * ${joins.block})`,
+  },
+  borderInlineStartWidth: {
+    default: strokes.border,
+    [joined]: `calc(${strokes.border} * ${joins.inline})`,
+  },
+};
 
 // shadcn's spacing, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -120,10 +163,11 @@ const styles = stylex.create({
     alignItems: { default: "center", [stacked]: "stretch" },
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderColor: { default: colors.edgeStrong, [invalid]: colors.danger },
-    borderRadius: radii.sm,
+    borderColor: { default: colors.edge, [invalid]: colors.danger },
+    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
+    ...joinedEdges,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     cursor: { default: null, [disabled]: "not-allowed" },
@@ -142,8 +186,14 @@ const styles = stylex.create({
     transitionProperty: "border-color, box-shadow",
     transitionTimingFunction: "ease",
     width: "100%",
+    // In a ButtonGroup, the focused group's ring stays above its neighbors.
+    zIndex: { default: null, ":focus-within": 1 },
   },
   addon: {
+    // A ButtonGroup's joins stop at the group, so the buttons inside stay whole.
+    [joins.block]: "1",
+    [joins.either]: "1",
+    [joins.inline]: "1",
     alignItems: "center",
     color: colors.textMuted,
     cursor: "text",
@@ -185,13 +235,13 @@ const styles = stylex.create({
     paddingInlineStart: px10,
   },
   separatedStart: {
-    borderBlockEndColor: colors.edge,
+    borderBlockEndColor: colors.edgeSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     paddingBlockEnd: space.xs,
   },
   separatedEnd: {
-    borderBlockStartColor: colors.edge,
+    borderBlockStartColor: colors.edgeSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     paddingBlockStart: space.xs,
@@ -206,8 +256,13 @@ const styles = stylex.create({
   // The group draws the surface, edge, ring and fade, so the control drops its own.
   control: {
     backgroundColor: "transparent",
-    borderRadius: 0,
+    borderEndEndRadius: 0,
+    borderEndStartRadius: 0,
+    borderStartEndRadius: 0,
+    borderStartStartRadius: 0,
     borderWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineStartWidth: 0,
     boxShadow: "none",
     flexGrow: 1,
     opacity: 1,
@@ -243,24 +298,20 @@ const styles = stylex.create({
   textarea: {
     resize: "none",
   },
-  // Packed inside the group's edge, so the ring sits flush instead of crossing it.
   button: {
     boxShadow: "none",
     // In a header or footer the actions gather at the end, after any text.
     marginInlineStart: { default: null, [leadingBlockButton]: "auto" },
-    outlineOffset: 0,
   },
   // Concentric with the group's corner at the even inset.
   buttonXs: {
-    borderRadius: radii.xs,
+    ...joinedCorners(radii.xs),
     fontSize: textSize,
     gap: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
   },
-  buttonIconXs: {
-    borderRadius: radii.xs,
-  },
+  buttonIconXs: joinedCorners(radii.xs),
 });
 
 const alignStyles = {

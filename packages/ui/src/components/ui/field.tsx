@@ -93,7 +93,7 @@ const styles = stylex.create({
       default: null,
       [card]: {
         default: colors.edge,
-        ":has([data-checked])": colors.edgeStrong,
+        ":has([data-checked])": colors.accent,
       },
     },
     borderRadius: { default: null, [card]: radii.md },

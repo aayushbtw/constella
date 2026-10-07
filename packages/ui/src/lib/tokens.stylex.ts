@@ -4,8 +4,8 @@ import * as stylex from "@stylexjs/stylex";
 export const colors = stylex.defineVars({
   accent: "var(--gray-12)",
   background: "var(--gray-1)",
-  edge: "var(--gray-a4)",
-  edgeStrong: "var(--gray-a6)",
+  edge: "var(--gray-a6)",
+  edgeSubtle: "var(--gray-a4)",
   fill: "var(--gray-a3)",
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
@@ -34,6 +34,15 @@ export const colors = stylex.defineVars({
   warningEdge: "var(--amber-a6)",
   warningFill: "var(--amber-a3)",
   warningFillSubtle: "var(--amber-a2)",
+});
+
+// Multipliers for the corners and edge where an item meets its neighbor: 1 keeps them,
+// 0 joins them. ButtonGroup sets them, along its row (`inline`), its column (`block`) or
+// either; outside a group they stay 1, so nothing changes.
+export const joins = stylex.defineVars({
+  block: "1",
+  either: "1",
+  inline: "1",
 });
 
 export const shadows = stylex.defineConsts({

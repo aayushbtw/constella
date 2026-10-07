@@ -85,7 +85,7 @@ const styles = stylex.create({
   },
   row: {
     alignItems: "baseline",
-    borderBlockStartColor: colors.edge,
+    borderBlockStartColor: colors.edgeSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     display: "grid",

@@ -60,8 +60,6 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     height: sizes.controlSm,
     justifyContent: "center",
-    // The list leaves too little padding for the global offset; flush keeps the ring inside it.
-    outlineOffset: 0,
     paddingInline: space.sm,
     position: "relative",
     transitionDuration: durations.hover,

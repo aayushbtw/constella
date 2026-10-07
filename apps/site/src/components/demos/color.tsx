@@ -1,3 +1,4 @@
+// oxlint-disable constella/no-raw-colors -- each panel sets its own theme, and a `colors` token resolves at the root.
 import * as stylex from "@stylexjs/stylex";
 import { useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
@@ -29,8 +30,8 @@ const neutrals = [
   { kind: "fill", name: "fillSubtle", step: "gray-a2" },
   { kind: "fill", name: "fill", step: "gray-a3" },
   { kind: "fill", name: "fillStrong", step: "gray-a4" },
-  { kind: "edge", name: "edge", step: "gray-a4" },
-  { kind: "edge", name: "edgeStrong", step: "gray-a6" },
+  { kind: "edge", name: "edgeSubtle", step: "gray-a4" },
+  { kind: "edge", name: "edge", step: "gray-a6" },
   { kind: "fill", name: "accent", step: "gray-12" },
 ] as const satisfies readonly { kind: Kind; name: string; step: string }[];
 

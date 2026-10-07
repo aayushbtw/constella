@@ -33,7 +33,7 @@ const styles = stylex.create({
   textarea: {
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderColor: { default: colors.edgeStrong, [invalid]: colors.danger },
+    borderColor: { default: colors.edge, [invalid]: colors.danger },
     borderRadius: radii.sm,
     borderStyle: "solid",
     borderWidth: strokes.border,

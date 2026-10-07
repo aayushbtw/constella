@@ -61,9 +61,9 @@ const styles = stylex.create({
   a: {
     color: colors.textPrimary,
     textDecorationColor: {
-      default: colors.edgeStrong,
+      default: colors.edge,
       [media.hover]: {
-        default: colors.edgeStrong,
+        default: colors.edge,
         ":hover": colors.textPrimary,
       },
     },

@@ -33,7 +33,7 @@ const styles = stylex.create({
     backgroundClip: { default: "padding-box", [on]: "border-box" },
     backgroundColor: { default: colors.fillSubtle, [on]: colors.accent },
     borderColor: {
-      default: colors.edgeStrong,
+      default: colors.edge,
       [invalid]: colors.danger,
       [on]: colors.accent,
     },

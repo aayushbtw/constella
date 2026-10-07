@@ -26,8 +26,8 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 | `fillSubtle`    | Hover                                    |
 | `fill`          | Selected                                 |
 | `fillStrong`    | Pressed                                  |
-| `edge`          | Borders and dividers                     |
-| `edgeStrong`    | Edges that have to hold their own        |
+| `edgeSubtle`    | Dividers                                 |
+| `edge`          | Control and box borders                  |
 | `accent`        | The one solid fill, with `onAccent` text |
 | `background`    | The page                                 |
 | `danger`        | Errors and destructive actions           |

@@ -66,7 +66,7 @@ const styles = stylex.create({
   },
   // A quarter of a large square, so the curve of each radius reads at its true size.
   corner: (borderRadius: string) => ({
-    borderColor: colors.edgeStrong,
+    borderColor: colors.edge,
     borderStartStartRadius: borderRadius,
     borderStyle: "solid",
     borderWidth: `${strokes.border} 0 0 ${strokes.border}`,

@@ -11,6 +11,17 @@ import {
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import {
+  ButtonGroupDemo,
+  ButtonGroupInputDemo,
+  ButtonGroupInputGroupDemo,
+  ButtonGroupNestedDemo,
+  ButtonGroupOrientationDemo,
+  ButtonGroupSeparatorDemo,
+  ButtonGroupSizeDemo,
+  ButtonGroupSplitDemo,
+  ButtonGroupTextDemo,
+} from "~/components/demos/button-group";
+import {
   CheckboxControlledDemo,
   CheckboxDemo,
   CheckboxDisabledDemo,
@@ -117,6 +128,15 @@ const demos = {
   "button-sizes": ButtonSizesDemo,
   "button-states": ButtonStatesDemo,
   "button-variants": ButtonVariantsDemo,
+  "button-group": ButtonGroupDemo,
+  "button-group-input": ButtonGroupInputDemo,
+  "button-group-input-group": ButtonGroupInputGroupDemo,
+  "button-group-nested": ButtonGroupNestedDemo,
+  "button-group-orientation": ButtonGroupOrientationDemo,
+  "button-group-separator": ButtonGroupSeparatorDemo,
+  "button-group-size": ButtonGroupSizeDemo,
+  "button-group-split": ButtonGroupSplitDemo,
+  "button-group-text": ButtonGroupTextDemo,
   checkbox: CheckboxDemo,
   "checkbox-controlled": CheckboxControlledDemo,
   "checkbox-disabled": CheckboxDisabledDemo,
