@@ -20,13 +20,13 @@ import {
 import { demos, isDemo } from "~/components/demos";
 import { CopyButton } from "~/components/docs/copy-button";
 import { Install } from "~/components/docs/install";
-import { highlightCode } from "~/site/highlight";
+import { highlightCode } from "~/lib/highlight";
 import {
   fonts,
   layout,
   lineHeights as siteLineHeights,
   shadows,
-} from "~/site/tokens.stylex";
+} from "~/lib/tokens.stylex";
 
 const flow = {
   marginBlockEnd: { default: space.md, ":last-child": 0 },

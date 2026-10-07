@@ -1,6 +1,6 @@
 import { createRouter } from "@tanstack/react-router";
 
-import { markNavigations } from "~/site/entrance";
+import { markNavigations } from "~/lib/entrance";
 
 import { routeTree } from "./routeTree.gen";
 

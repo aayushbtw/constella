@@ -14,7 +14,7 @@ import {
   sizes,
   strokes,
 } from "@/lib/tokens.stylex";
-import { durations as siteDurations } from "~/site/tokens.stylex";
+import { durations as siteDurations } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   copy: {

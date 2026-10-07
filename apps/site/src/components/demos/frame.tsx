@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
 import { colors, media, radii, space } from "@/lib/tokens.stylex";
-import { shadows, surfaces } from "~/site/tokens.stylex";
+import { shadows, surfaces } from "~/lib/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

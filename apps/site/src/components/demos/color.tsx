@@ -13,7 +13,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 import { DemoControls, Stage, Well } from "~/components/demos/frame";
-import { fonts } from "~/site/tokens.stylex";
+import { fonts } from "~/lib/tokens.stylex";
 
 const steps = Array.from({ length: 12 }, (_, index) => index + 1);
 const hues = ["gray", "red", "amber", "green", "blue"] as const;

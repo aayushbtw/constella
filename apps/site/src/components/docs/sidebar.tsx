@@ -13,7 +13,7 @@ import {
   sizes,
   space,
 } from "@/lib/tokens.stylex";
-import { layout, media as siteMedia } from "~/site/tokens.stylex";
+import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   sidebar: {

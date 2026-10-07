@@ -11,7 +11,7 @@ import {
   media,
   space,
 } from "@/lib/tokens.stylex";
-import { layout, media as siteMedia } from "~/site/tokens.stylex";
+import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
 const reducedMotion = media.reducedMotion.slice("@media ".length);
 

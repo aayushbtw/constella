@@ -2,16 +2,13 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import { Sidebar } from "~/components/docs/sidebar";
+import { layout, media } from "~/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 import { getDocs } from "~/server/docs";
-import { layout, media } from "~/site/tokens.stylex";
 
 export const Route = createFileRoute("/docs")({
   loader: async () => {
-    const [docs, components] = await Promise.all([
-      getDocs(),
-      getComponents(),
-    ]);
+    const [docs, components] = await Promise.all([getDocs(), getComponents()]);
 
     return { components, docs };
   },

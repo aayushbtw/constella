@@ -16,7 +16,7 @@ import {
   fontSizes as siteFontSizes,
   fonts,
   lineHeights as siteLineHeights,
-} from "~/site/tokens.stylex";
+} from "~/lib/tokens.stylex";
 
 const sample = "Quiet, crisp, and finished.";
 

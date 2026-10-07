@@ -3,15 +3,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
 import { colors, space } from "@/lib/tokens.stylex";
-import { getComponents } from "~/server/components";
-import { config } from "~/site/config";
-import { entrance } from "~/site/entrance";
+import { config } from "~/lib/config";
+import { entrance } from "~/lib/entrance";
 import {
   fontSizes as siteFontSizes,
   layout,
   lineHeights,
   media,
-} from "~/site/tokens.stylex";
+} from "~/lib/tokens.stylex";
+import { getComponents } from "~/server/components";
 
 export const Route = createFileRoute("/")({
   loader: async () => await getComponents(),

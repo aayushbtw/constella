@@ -11,7 +11,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 import { Stage, Well } from "~/components/demos/frame";
-import { fonts } from "~/site/tokens.stylex";
+import { fonts } from "~/lib/tokens.stylex";
 
 const radiusScale = [
   { name: "xs", value: radii.xs },

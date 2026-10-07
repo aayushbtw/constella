@@ -79,7 +79,7 @@ import {
 } from "@/components/ui/tooltip";
 import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
-import { fonts } from "~/site/tokens.stylex";
+import { fonts } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   stack: {

@@ -1,4 +1,4 @@
-import { config } from "~/site/config";
+import { config } from "~/lib/config";
 
 export const siteMeta = [
   { name: "robots", content: "index, follow" },

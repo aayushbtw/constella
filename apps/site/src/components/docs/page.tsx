@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { colors, space } from "@/lib/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
 import type { Heading } from "~/components/docs/outline";
-import { layout } from "~/site/tokens.stylex";
+import { layout } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   page: {

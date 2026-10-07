@@ -1,4 +1,4 @@
-import { layout } from "~/site/tokens.stylex";
+import { layout } from "~/lib/tokens.stylex";
 
 function Logo() {
   return (

@@ -8,7 +8,9 @@ import { createTanStackMarkdownHighlighter } from "@tanstack/highlight/markdown"
 import type { TanStackMarkdownHighlighterOptions } from "@tanstack/highlight/markdown";
 
 // Server and client must share one registry, or hydrated code blocks tokenize differently from the SSR markup.
-const highlighter = createHighlighter({ languages: [html, json, shell, ts, tsx] });
+const highlighter = createHighlighter({
+  languages: [html, json, shell, ts, tsx],
+});
 
 const highlightMarkdown = createTanStackMarkdownHighlighter(highlighter);
 

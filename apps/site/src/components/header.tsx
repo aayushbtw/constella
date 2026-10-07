@@ -6,10 +6,10 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { colors, sizes, strokes } from "@/lib/tokens.stylex";
 import { Logo } from "~/components/logo";
-import { config } from "~/site/config";
-import { entrance } from "~/site/entrance";
-import { toggleTheme } from "~/site/theme";
-import { layers, layout, media } from "~/site/tokens.stylex";
+import { config } from "~/lib/config";
+import { entrance } from "~/lib/entrance";
+import { toggleTheme } from "~/lib/theme";
+import { layers, layout, media } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   header: {

@@ -16,10 +16,10 @@ import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toast";
 import { colors } from "@/lib/tokens.stylex";
 import { Header } from "~/components/header";
-import { config } from "~/site/config";
-import { seo, siteMeta } from "~/site/seo";
-import { themeScript } from "~/site/theme";
-import { fonts, fontSizes, lineHeights } from "~/site/tokens.stylex";
+import { config } from "~/lib/config";
+import { seo, siteMeta } from "~/lib/seo";
+import { themeScript } from "~/lib/theme";
+import { fonts, fontSizes, lineHeights } from "~/lib/tokens.stylex";
 
 import appCss from "~/styles/styles.css?url";
 
