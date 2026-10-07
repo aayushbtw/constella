@@ -178,12 +178,25 @@ Put the checkbox and its content inside a `FieldLabel` to make the whole card to
 </Field>
 ```
 
+## Table
+
+Put a checkbox in the first cell of each row, and one in the header to select them all. Mark a picked row with `data-state="selected"`.
+
+<!-- ::demo name="checkbox-table" -->
+
+```tsx
+<TableRow data-state={selected.has(row.id) ? "selected" : undefined}>
+  <TableCell>
+    <Checkbox
+      aria-label={`Select ${row.name}`}
+      checked={selected.has(row.id)}
+      onCheckedChange={(checked) => toggle(row.id, checked)}
+    />
+  </TableCell>
+  <TableCell>{row.name}</TableCell>
+</TableRow>
+```
+
 ## API Reference
 
 `Checkbox` renders the box and its tick, which turns into a dash when `indeterminate`. It takes `sx`, applied last. For the rest, see [Base UI Checkbox](https://base-ui.com/react/components/checkbox).
-
-## Pending
-
-Blocked on missing components. Remove this section before the page leaves draft.
-
-- Table: add shadcn's Table example.

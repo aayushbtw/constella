@@ -377,6 +377,20 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Rows of data with a header, footer and caption, divided by faint edges.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/table.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

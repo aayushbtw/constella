@@ -38,6 +38,7 @@ import {
   CheckboxDisabledDemo,
   CheckboxIndeterminateDemo,
   CheckboxInvalidDemo,
+  CheckboxTableDemo,
 } from "~/components/demos/checkbox";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import {
@@ -158,6 +159,11 @@ import {
   SwitchInvalidDemo,
   SwitchSizesDemo,
 } from "~/components/demos/switch";
+import {
+  TableActionsDemo,
+  TableDemo,
+  TableFooterDemo,
+} from "~/components/demos/table";
 import { TabsDemo } from "~/components/demos/tabs";
 import {
   TextareaButtonDemo,
@@ -213,6 +219,7 @@ const demos = {
   "checkbox-disabled": CheckboxDisabledDemo,
   "checkbox-indeterminate": CheckboxIndeterminateDemo,
   "checkbox-invalid": CheckboxInvalidDemo,
+  "checkbox-table": CheckboxTableDemo,
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
   dialog: DialogDemo,
@@ -315,6 +322,9 @@ const demos = {
   "switch-disabled": SwitchDisabledDemo,
   "switch-invalid": SwitchInvalidDemo,
   "switch-sizes": SwitchSizesDemo,
+  table: TableDemo,
+  "table-actions": TableActionsDemo,
+  "table-footer": TableFooterDemo,
   tabs: TabsDemo,
   textarea: TextareaDemo,
   "textarea-button": TextareaButtonDemo,

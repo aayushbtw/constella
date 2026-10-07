@@ -62,6 +62,7 @@ const styles = stylex.create({
     transitionDuration: `${durations.hover}, ${durations.hover}, ${durations.press}`,
     transitionProperty: "background-color, border-color, transform",
     transitionTimingFunction: `ease, ease, ${easings.out}`,
+    verticalAlign: "middle",
     width: sizes.icon,
     "::before": {
       content: "''",
