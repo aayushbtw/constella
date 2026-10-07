@@ -194,6 +194,22 @@ const styles = stylex.create({
 </Field>;
 ```
 
+## Badge
+
+Put a [Badge](/docs/components/badge) in the `FieldLabel` to mark the field.
+
+<!-- ::demo name="input-badge" -->
+
+```tsx
+<Field>
+  <FieldLabel>
+    Webhook URL
+    <Badge>Beta</Badge>
+  </FieldLabel>
+  <Input placeholder="https://api.example.com/webhook" type="url" />
+</Field>
+```
+
 ## Input Group
 
 Use [Input Group](/docs/components/input-group) to put icons, text or buttons inside the input.
@@ -215,14 +231,58 @@ Use [Input Group](/docs/components/input-group) to put icons, text or buttons in
 </Field>
 ```
 
+## Button Group
+
+Use [Button Group](/docs/components/button-group) to join a button to the input.
+
+<!-- ::demo name="input-button-group" -->
+
+```tsx
+<Field>
+  <FieldLabel>Search</FieldLabel>
+  <ButtonGroup>
+    <Input placeholder="Type to search..." />
+    <Button variant="outline">Search</Button>
+  </ButtonGroup>
+</Field>
+```
+
+## Form
+
+Inputs with a [Select](/docs/components/select) in a `FieldGroup`, for a whole form.
+
+<!-- ::demo name="input-form" -->
+
+```tsx
+<form>
+  <FieldGroup>
+    <Field>
+      <FieldLabel>Name</FieldLabel>
+      <Input placeholder="Evil Rabbit" required />
+    </Field>
+    <Field>
+      <FieldLabel>Country</FieldLabel>
+      <Select defaultValue="us" items={countries}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="us">United States</SelectItem>
+        </SelectContent>
+      </Select>
+    </Field>
+    <Field orientation="horizontal">
+      <Button type="button" variant="outline">
+        Cancel
+      </Button>
+      <Button type="submit" variant="primary">
+        Submit
+      </Button>
+    </Field>
+  </FieldGroup>
+</form>
+```
+
 ## API Reference
 
 `Input` renders Base UI's input, so inside a `Field` it takes the field's name, state and validation. It takes `size` (`sm`, `default`, `lg`) in place of the native `size` attribute, and `sx`, applied last. For the rest, see [Base UI Input](https://base-ui.com/react/components/input).
-
-## Pending
-
-Blocked on missing components. Remove this section before the page leaves draft.
-
-- Badge: add shadcn's Badge example.
-- ButtonGroup: add the Button Group example.
-- Select and Textarea: add the Form example.

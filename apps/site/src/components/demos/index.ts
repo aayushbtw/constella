@@ -50,6 +50,9 @@ import {
   FieldSetDemo,
 } from "~/components/demos/field";
 import {
+  InputBadgeDemo,
+  InputButtonGroupDemo,
+  InputFormDemo,
   InputDemo,
   InputDisabledDemo,
   InputFieldDemo,
@@ -184,6 +187,9 @@ const demos = {
   "field-error": FieldErrorDemo,
   "field-set": FieldSetDemo,
   input: InputDemo,
+  "input-badge": InputBadgeDemo,
+  "input-button-group": InputButtonGroupDemo,
+  "input-form": InputFormDemo,
   "input-disabled": InputDisabledDemo,
   "input-field": InputFieldDemo,
   "input-field-group": InputFieldGroupDemo,

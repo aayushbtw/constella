@@ -2,7 +2,9 @@ import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Field,
   FieldDescription,
@@ -16,6 +18,14 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -24,7 +34,16 @@ const styles = stylex.create({
   stack: { display: "flex", flexDirection: "column", gap: space.sm },
   grid: { display: "grid", gridTemplateColumns: "1fr 1fr" },
   required: { color: colors.danger },
+  form: { maxWidth: 384, width: "100%" },
+  gridGap: { display: "grid", gap: space.md, gridTemplateColumns: "1fr 1fr" },
+  full: { width: "100%" },
 });
+
+const countries = [
+  { label: "United States", value: "us" },
+  { label: "United Kingdom", value: "uk" },
+  { label: "Canada", value: "ca" },
+];
 
 function InputDemo() {
   return (
@@ -198,7 +217,95 @@ function InputRequiredDemo() {
   );
 }
 
+function InputBadgeDemo() {
+  return (
+    <DemoRow sx={styles.narrow}>
+      <Field>
+        <FieldLabel>
+          Webhook URL
+          <Badge>Beta</Badge>
+        </FieldLabel>
+        <Input placeholder="https://api.example.com/webhook" type="url" />
+      </Field>
+    </DemoRow>
+  );
+}
+
+function InputButtonGroupDemo() {
+  return (
+    <DemoRow sx={styles.narrow}>
+      <Field>
+        <FieldLabel>Search</FieldLabel>
+        <ButtonGroup sx={styles.full}>
+          <Input placeholder="Type to search..." />
+          <Button variant="outline">Search</Button>
+        </ButtonGroup>
+      </Field>
+    </DemoRow>
+  );
+}
+
+function InputFormDemo() {
+  return (
+    <DemoRow sx={styles.form}>
+      <form {...stylex.props(styles.full)}>
+        <FieldGroup>
+          <Field>
+            <FieldLabel>Name</FieldLabel>
+            <Input placeholder="Evil Rabbit" required />
+          </Field>
+          <Field>
+            <FieldLabel>Email</FieldLabel>
+            <Input placeholder="john@example.com" type="email" />
+            <FieldDescription>
+              We&apos;ll never share your email with anyone.
+            </FieldDescription>
+          </Field>
+          <div {...stylex.props(styles.gridGap)}>
+            <Field>
+              <FieldLabel>Phone</FieldLabel>
+              <Input placeholder="+1 (555) 123-4567" type="tel" />
+            </Field>
+            <Field>
+              <FieldLabel>Country</FieldLabel>
+              <Select defaultValue="us" items={countries}>
+                <SelectTrigger sx={styles.full}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {countries.map((country) => (
+                      <SelectItem key={country.value} value={country.value}>
+                        {country.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
+          <Field>
+            <FieldLabel>Address</FieldLabel>
+            <Input placeholder="123 Main St" />
+          </Field>
+          <Field orientation="horizontal">
+            <Button type="button" variant="outline">
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary">
+              Submit
+            </Button>
+          </Field>
+        </FieldGroup>
+      </form>
+    </DemoRow>
+  );
+}
+
 export {
+  InputBadgeDemo,
+  InputButtonGroupDemo,
+  InputFormDemo,
   InputDemo,
   InputDisabledDemo,
   InputFieldDemo,
