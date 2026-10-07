@@ -91,6 +91,12 @@ import { LabelDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
+  PopoverAlignDemo,
+  PopoverBasicDemo,
+  PopoverDemo,
+  PopoverFormDemo,
+} from "~/components/demos/popover";
+import {
   SelectAlignItemDemo,
   SelectDemo,
   SelectDisabledDemo,
@@ -224,6 +230,10 @@ const demos = {
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
+  popover: PopoverDemo,
+  "popover-align": PopoverAlignDemo,
+  "popover-basic": PopoverBasicDemo,
+  "popover-form": PopoverFormDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,
   "select-disabled": SelectDisabledDemo,

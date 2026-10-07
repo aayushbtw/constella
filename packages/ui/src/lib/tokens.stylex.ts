@@ -101,6 +101,7 @@ export const sizes = stylex.defineConsts({
   iconXs: "12px",
   kbd: "20px",
   menu: "144px",
+  popover: "288px",
   thumb: "12px",
   toast: "356px",
   tooltip: "320px",
