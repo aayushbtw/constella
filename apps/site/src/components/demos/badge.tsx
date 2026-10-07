@@ -100,10 +100,6 @@ function BadgeIconDemo() {
         Generating
         <Spinner data-icon="inline-end" />
       </Badge>
-      <Badge variant="outline">
-        <BadgeDot />
-        Draft
-      </Badge>
     </DemoRow>
   );
 }

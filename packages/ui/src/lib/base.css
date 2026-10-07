@@ -119,6 +119,22 @@
     outline: none;
   }
 
+  /* StyleX can't style a child it didn't render, so an outline badge's icon takes its status here. */
+  :where([data-slot="badge"][data-variant="outline"]) {
+    &[data-status="success"] > [data-icon] {
+      color: var(--success);
+    }
+    &[data-status="info"] > [data-icon] {
+      color: var(--info);
+    }
+    &[data-status="warning"] > [data-icon] {
+      color: var(--warning);
+    }
+    &[data-status="danger"] > [data-icon] {
+      color: var(--danger);
+    }
+  }
+
   /* An input group rings its whole box, so the borderless control inside draws none. */
   :where([data-slot="input-group-control"]:focus-visible) {
     outline: none;

@@ -48,7 +48,7 @@ Use the `variant` prop to change the badge's emphasis. The variants match [Butto
 
 ## Size
 
-Use the `size` prop. Dots and spinners scale on their own; pass icons at the size below.
+Use the `size` prop. Pass icons at the size below.
 
 <!-- ::demo name="badge-size" -->
 
@@ -71,16 +71,16 @@ Use the `size` prop. Dots and spinners scale on their own; pass icons at the siz
 
 ## Status
 
-Use the `status` prop to color a badge. What it colors depends on the variant.
+Use the `status` prop to color a badge. What it colors depends on the variant. Add `BadgeDot` for a status dot.
 
 <!-- ::demo name="badge-status" -->
 
-| Variant             | Colors              |
-| ------------------- | ------------------- |
-| `secondary`         | Background and text |
-| `ghost`, `link`     | Text                |
-| `outline`           | Dot or spinner      |
-| `primary`, `danger` | Nothing             |
+| Variant             | Colors                 |
+| ------------------- | ---------------------- |
+| `secondary`         | Background and text    |
+| `ghost`, `link`     | Text                   |
+| `outline`           | Dot, spinner and icons |
+| `primary`, `danger` | Nothing                |
 
 ```tsx
 <Badge status="success">Paid</Badge>
@@ -92,7 +92,7 @@ Use the `status` prop to color a badge. What it colors depends on the variant.
 
 ## With Icon
 
-Add `data-icon="inline-start"` or `"inline-end"` to an icon or a [Spinner](/docs/components/spinner), so the badge tightens that side. `BadgeDot` adds a status dot.
+Add `data-icon="inline-start"` or `"inline-end"` to an icon or a [Spinner](/docs/components/spinner), so the badge tightens that side.
 
 <!-- ::demo name="badge-icon" -->
 
@@ -108,10 +108,6 @@ Add `data-icon="inline-start"` or `"inline-end"` to an icon or a [Spinner](/docs
 <Badge>
   Generating
   <Spinner data-icon="inline-end" />
-</Badge>
-<Badge variant="outline">
-  <BadgeDot />
-  Draft
 </Badge>
 ```
 
