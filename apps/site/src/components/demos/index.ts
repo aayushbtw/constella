@@ -1,6 +1,14 @@
 import type { ComponentType } from "react";
 
 import {
+  BadgeColorsDemo,
+  BadgeDemo,
+  BadgeIconDemo,
+  BadgeLinkDemo,
+  BadgeSpinnerDemo,
+  BadgeVariantsDemo,
+} from "~/components/demos/badge";
+import {
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -120,6 +128,12 @@ import {
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
+  badge: BadgeDemo,
+  "badge-colors": BadgeColorsDemo,
+  "badge-icon": BadgeIconDemo,
+  "badge-link": BadgeLinkDemo,
+  "badge-spinner": BadgeSpinnerDemo,
+  "badge-variants": BadgeVariantsDemo,
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
