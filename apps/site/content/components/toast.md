@@ -29,6 +29,22 @@ import { toast } from "@/components/ui/toast";
 toast.add({ title: "Saved", type: "success" });
 ```
 
+## Composition
+
+```
+ToastProvider
+└── ToastPortal
+    └── ToastViewport
+        └── Toast
+            └── ToastContent
+                ├── ToastIcon
+                ├── ToastBody
+                │   ├── ToastTitle
+                │   └── ToastDescription
+                ├── ToastAction
+                └── ToastClose
+```
+
 ## Types
 
 Use `type` to add an icon. Leave it out for text only.
@@ -87,18 +103,7 @@ toast.close();
 
 ## Custom Layout
 
-`Toaster` renders this tree for every toast. To change it, render your own list inside `ToastProvider`, `ToastPortal` and `ToastViewport` with `useToastManager()`.
-
-```txt
-Toast
-└── ToastContent
-    ├── ToastIcon
-    ├── ToastBody
-    │   ├── ToastTitle
-    │   └── ToastDescription
-    ├── ToastAction
-    └── ToastClose
-```
+`Toaster` renders the Composition tree for every toast. To change it, render your own list inside `ToastViewport` with `useToastManager()`.
 
 ## API Reference
 

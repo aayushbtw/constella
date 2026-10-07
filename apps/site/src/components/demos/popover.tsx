@@ -71,26 +71,6 @@ function PopoverDemo() {
   );
 }
 
-function PopoverBasicDemo() {
-  return (
-    <DemoRow>
-      <Popover>
-        <PopoverTrigger render={<Button variant="outline" />}>
-          Open Popover
-        </PopoverTrigger>
-        <PopoverContent align="start">
-          <PopoverHeader>
-            <PopoverTitle>Dimensions</PopoverTitle>
-            <PopoverDescription>
-              Set the dimensions for the layer.
-            </PopoverDescription>
-          </PopoverHeader>
-        </PopoverContent>
-      </Popover>
-    </DemoRow>
-  );
-}
-
 function PopoverAlignDemo() {
   return (
     <DemoRow sx={styles.gap}>
@@ -138,4 +118,4 @@ function PopoverFormDemo() {
   );
 }
 
-export { PopoverAlignDemo, PopoverBasicDemo, PopoverDemo, PopoverFormDemo };
+export { PopoverAlignDemo, PopoverDemo, PopoverFormDemo };

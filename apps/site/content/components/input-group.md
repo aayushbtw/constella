@@ -200,7 +200,7 @@ Use the `size` prop to match the group to the buttons beside it, and size icons 
 <InputGroup size="lg">…</InputGroup>
 ```
 
-## Icon
+## With Icon
 
 Put an icon in an `InputGroupAddon`. An addon can hold more than one.
 
@@ -283,7 +283,64 @@ Render a button as a [Popover](/docs/components/popover) trigger to explain the 
 </InputGroupAddon>
 ```
 
-## Dropdown
+## Textarea
+
+Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header and a footer. Add `separated` to a block addon to draw an edge between it and the textarea.
+
+<!-- ::demo name="input-group-textarea" -->
+
+```tsx
+<InputGroup>
+  <InputGroupTextarea
+    aria-label="Code"
+    placeholder="console.log('Hello, world!');"
+  />
+  <InputGroupAddon align="block-end" separated>
+    <InputGroupText>Line 1, Column 1</InputGroupText>
+    <InputGroupButton size="sm" variant="primary">
+      Run <HugeiconsIcon data-icon="inline-end" icon={ArrowTurnBackwardIcon} />
+    </InputGroupButton>
+  </InputGroupAddon>
+  <InputGroupAddon align="block-start" separated>
+    <InputGroupText>
+      <HugeiconsIcon icon={JavaScriptIcon} />
+      script.js
+    </InputGroupText>
+    <InputGroupButton aria-label="Refresh" size="icon-xs">
+      <HugeiconsIcon icon={Refresh01Icon} />
+    </InputGroupButton>
+    <InputGroupButton aria-label="Copy" size="icon-xs">
+      <HugeiconsIcon icon={Copy01Icon} />
+    </InputGroupButton>
+  </InputGroupAddon>
+</InputGroup>
+```
+
+## Custom Input
+
+Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` (or `inputGroupInputStyles()`) on it for the control's look. Here, a textarea from `react-textarea-autosize`:
+
+<!-- ::demo name="input-group-custom" -->
+
+```tsx
+import TextareaAutosize from "react-textarea-autosize";
+
+<InputGroup>
+  <TextareaAutosize
+    aria-label="Message"
+    data-slot="input-group-control"
+    placeholder="Autoresize textarea..."
+    {...stylex.props(inputGroupTextareaStyles())}
+  />
+  <InputGroupAddon align="block-end">
+    <InputGroupButton size="sm" variant="primary">
+      Submit
+    </InputGroupButton>
+  </InputGroupAddon>
+</InputGroup>;
+```
+
+## Dropdown Menu
 
 Render a button as a [Dropdown Menu](/docs/components/dropdown-menu) trigger for more actions.
 
@@ -340,63 +397,6 @@ Put a [Spinner](/docs/components/spinner) in an addon while something loads.
     <Spinner />
   </InputGroupAddon>
 </InputGroup>
-```
-
-## Textarea
-
-Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header and a footer. Add `separated` to a block addon to draw an edge between it and the textarea.
-
-<!-- ::demo name="input-group-textarea" -->
-
-```tsx
-<InputGroup>
-  <InputGroupTextarea
-    aria-label="Code"
-    placeholder="console.log('Hello, world!');"
-  />
-  <InputGroupAddon align="block-end" separated>
-    <InputGroupText>Line 1, Column 1</InputGroupText>
-    <InputGroupButton size="sm" variant="primary">
-      Run <HugeiconsIcon data-icon="inline-end" icon={ArrowTurnBackwardIcon} />
-    </InputGroupButton>
-  </InputGroupAddon>
-  <InputGroupAddon align="block-start" separated>
-    <InputGroupText>
-      <HugeiconsIcon icon={JavaScriptIcon} />
-      script.js
-    </InputGroupText>
-    <InputGroupButton aria-label="Refresh" size="icon-xs">
-      <HugeiconsIcon icon={Refresh01Icon} />
-    </InputGroupButton>
-    <InputGroupButton aria-label="Copy" size="icon-xs">
-      <HugeiconsIcon icon={Copy01Icon} />
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>
-```
-
-## Custom Input
-
-Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` (or `inputGroupInputStyles()`) on it for the control's look. Here, a textarea from `react-textarea-autosize`:
-
-<!-- ::demo name="input-group-custom" -->
-
-```tsx
-import TextareaAutosize from "react-textarea-autosize";
-
-<InputGroup>
-  <TextareaAutosize
-    aria-label="Message"
-    data-slot="input-group-control"
-    placeholder="Autoresize textarea..."
-    {...stylex.props(inputGroupTextareaStyles())}
-  />
-  <InputGroupAddon align="block-end">
-    <InputGroupButton size="sm" variant="primary">
-      Submit
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>;
 ```
 
 ## API Reference

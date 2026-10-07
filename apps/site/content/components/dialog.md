@@ -54,18 +54,19 @@ import {
 </Dialog>
 ```
 
-## Controlled
+## Composition
 
-Use `open` and `onOpenChange` to open the dialog without a trigger, or to close it after an action finishes.
-
-<!-- ::demo name="dialog-controlled" -->
-
-```tsx
-const [open, setOpen] = useState(false);
-
-<Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent>…</DialogContent>
-</Dialog>;
+```
+Dialog
+├── DialogTrigger
+└── DialogContent
+    ├── DialogCloseButton
+    ├── DialogHeader
+    │   ├── DialogTitle
+    │   └── DialogDescription
+    ├── DialogBody
+    └── DialogFooter
+        └── DialogClose
 ```
 
 ## Scrollable Content
@@ -80,6 +81,20 @@ Give `DialogContent` a `maxHeight` and put the content in `DialogBody`. The body
   <DialogBody>…</DialogBody>
   <DialogFooter>…</DialogFooter>
 </DialogContent>
+```
+
+## Controlled
+
+Use `open` and `onOpenChange` to open the dialog without a trigger, or to close it after an action finishes.
+
+<!-- ::demo name="dialog-controlled" -->
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>…</DialogContent>
+</Dialog>;
 ```
 
 ## API Reference

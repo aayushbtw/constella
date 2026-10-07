@@ -50,78 +50,6 @@ Under 640px every size uses 16px text, so iOS doesn't zoom on focus.
 <Input aria-label="Large" placeholder="Large" size="lg" />
 ```
 
-## Field
-
-Use `Field`, `FieldLabel` and `FieldDescription` to give the input a label and helper text. They link to the input on their own, so no `id` or `htmlFor` is needed.
-
-<!-- ::demo name="input-field" -->
-
-```tsx
-<Field>
-  <FieldLabel>Username</FieldLabel>
-  <Input placeholder="Enter your username" />
-  <FieldDescription>
-    Choose a unique username for your account.
-  </FieldDescription>
-</Field>
-```
-
-## Field Group
-
-Use `FieldGroup` to stack several fields into a form.
-
-<!-- ::demo name="input-field-group" -->
-
-```tsx
-<FieldGroup>
-  <Field>
-    <FieldLabel>Name</FieldLabel>
-    <Input placeholder="Jordan Lee" />
-  </Field>
-  <Field>
-    <FieldLabel>Email</FieldLabel>
-    <Input placeholder="name@example.com" type="email" />
-    <FieldDescription>We’ll send updates to this address.</FieldDescription>
-  </Field>
-  <Field orientation="horizontal">
-    <Button type="reset" variant="outline">
-      Reset
-    </Button>
-    <Button type="submit" variant="primary">
-      Submit
-    </Button>
-  </Field>
-</FieldGroup>
-```
-
-## Disabled
-
-Use the `disabled` prop on `Field` to disable the input and dim its label. On a bare input, use `disabled` on the input.
-
-<!-- ::demo name="input-disabled" -->
-
-```tsx
-<Field disabled>
-  <FieldLabel>Email</FieldLabel>
-  <Input placeholder="Email" type="email" />
-  <FieldDescription>This field is currently disabled.</FieldDescription>
-</Field>
-```
-
-## Invalid
-
-Use the `invalid` prop on `Field` to mark the input. On a bare input, add `aria-invalid`.
-
-<!-- ::demo name="input-invalid" -->
-
-```tsx
-<Field invalid>
-  <FieldLabel>Invalid Input</FieldLabel>
-  <Input placeholder="Error" />
-  <FieldDescription>This field contains validation errors.</FieldDescription>
-</Field>
-```
-
 ## File
 
 Use `type="file"` for a file input.
@@ -172,6 +100,70 @@ const styles = stylex.create({
 </FieldGroup>;
 ```
 
+## Form
+
+Inputs with a [Select](/docs/components/select) in a `FieldGroup`, for a whole form.
+
+<!-- ::demo name="input-form" -->
+
+```tsx
+<form>
+  <FieldGroup>
+    <Field>
+      <FieldLabel>Name</FieldLabel>
+      <Input placeholder="Evil Rabbit" required />
+    </Field>
+    <Field>
+      <FieldLabel>Country</FieldLabel>
+      <Select defaultValue="us" items={countries}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="us">United States</SelectItem>
+        </SelectContent>
+      </Select>
+    </Field>
+    <Field orientation="horizontal">
+      <Button type="button" variant="outline">
+        Cancel
+      </Button>
+      <Button type="submit" variant="primary">
+        Submit
+      </Button>
+    </Field>
+  </FieldGroup>
+</form>
+```
+
+## Disabled
+
+Use the `disabled` prop on `Field` to disable the input and dim its label. On a bare input, use `disabled` on the input.
+
+<!-- ::demo name="input-disabled" -->
+
+```tsx
+<Field disabled>
+  <FieldLabel>Email</FieldLabel>
+  <Input placeholder="Email" type="email" />
+  <FieldDescription>This field is currently disabled.</FieldDescription>
+</Field>
+```
+
+## Invalid
+
+Use the `invalid` prop on `Field` to mark the input. On a bare input, add `aria-invalid`.
+
+<!-- ::demo name="input-invalid" -->
+
+```tsx
+<Field invalid>
+  <FieldLabel>Invalid Input</FieldLabel>
+  <Input placeholder="Error" />
+  <FieldDescription>This field contains validation errors.</FieldDescription>
+</Field>
+```
+
 ## Required
 
 Use the `required` prop, and mark the label so the requirement is visible.
@@ -210,6 +202,66 @@ Put a [Badge](/docs/components/badge) in the `FieldLabel` to mark the field.
 </Field>
 ```
 
+## Button Group
+
+Use [Button Group](/docs/components/button-group) to join a button to the input.
+
+<!-- ::demo name="input-button-group" -->
+
+```tsx
+<Field>
+  <FieldLabel>Search</FieldLabel>
+  <ButtonGroup>
+    <Input placeholder="Type to search..." />
+    <Button variant="outline">Search</Button>
+  </ButtonGroup>
+</Field>
+```
+
+## Field
+
+Use `Field`, `FieldLabel` and `FieldDescription` to give the input a label and helper text. They link to the input on their own, so no `id` or `htmlFor` is needed.
+
+<!-- ::demo name="input-field" -->
+
+```tsx
+<Field>
+  <FieldLabel>Username</FieldLabel>
+  <Input placeholder="Enter your username" />
+  <FieldDescription>
+    Choose a unique username for your account.
+  </FieldDescription>
+</Field>
+```
+
+### Group
+
+Use `FieldGroup` to stack several fields into a form.
+
+<!-- ::demo name="input-field-group" -->
+
+```tsx
+<FieldGroup>
+  <Field>
+    <FieldLabel>Name</FieldLabel>
+    <Input placeholder="Jordan Lee" />
+  </Field>
+  <Field>
+    <FieldLabel>Email</FieldLabel>
+    <Input placeholder="name@example.com" type="email" />
+    <FieldDescription>We’ll send updates to this address.</FieldDescription>
+  </Field>
+  <Field orientation="horizontal">
+    <Button type="reset" variant="outline">
+      Reset
+    </Button>
+    <Button type="submit" variant="primary">
+      Submit
+    </Button>
+  </Field>
+</FieldGroup>
+```
+
 ## Input Group
 
 Use [Input Group](/docs/components/input-group) to put icons, text or buttons inside the input.
@@ -229,58 +281,6 @@ Use [Input Group](/docs/components/input-group) to put icons, text or buttons in
     </InputGroupAddon>
   </InputGroup>
 </Field>
-```
-
-## Button Group
-
-Use [Button Group](/docs/components/button-group) to join a button to the input.
-
-<!-- ::demo name="input-button-group" -->
-
-```tsx
-<Field>
-  <FieldLabel>Search</FieldLabel>
-  <ButtonGroup>
-    <Input placeholder="Type to search..." />
-    <Button variant="outline">Search</Button>
-  </ButtonGroup>
-</Field>
-```
-
-## Form
-
-Inputs with a [Select](/docs/components/select) in a `FieldGroup`, for a whole form.
-
-<!-- ::demo name="input-form" -->
-
-```tsx
-<form>
-  <FieldGroup>
-    <Field>
-      <FieldLabel>Name</FieldLabel>
-      <Input placeholder="Evil Rabbit" required />
-    </Field>
-    <Field>
-      <FieldLabel>Country</FieldLabel>
-      <Select defaultValue="us" items={countries}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="us">United States</SelectItem>
-        </SelectContent>
-      </Select>
-    </Field>
-    <Field orientation="horizontal">
-      <Button type="button" variant="outline">
-        Cancel
-      </Button>
-      <Button type="submit" variant="primary">
-        Submit
-      </Button>
-    </Field>
-  </FieldGroup>
-</form>
 ```
 
 ## API Reference

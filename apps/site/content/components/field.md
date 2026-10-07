@@ -78,6 +78,140 @@ import {
 
 The label, description and error link to the control inside the `Field` on their own, so no `id` or `htmlFor` is needed.
 
+## Composition
+
+```
+FieldSet
+├── FieldLegend
+├── FieldSetDescription
+└── FieldGroup
+    ├── Field
+    │   ├── FieldLabel
+    │   ├── FieldContent
+    │   │   ├── FieldTitle
+    │   │   └── FieldDescription
+    │   └── FieldError
+    └── FieldSeparator
+```
+
+## Orientation
+
+Use `orientation="horizontal"` to put the control beside its label, as for a checkbox. Wrap the label and description in `FieldContent` to stack them.
+
+<!-- ::demo name="field" -->
+
+```tsx
+<Field orientation="horizontal">
+  <Checkbox />
+  <FieldContent>
+    <FieldLabel>Accept terms and conditions</FieldLabel>
+    <FieldDescription>
+      By clicking this checkbox, you agree to the terms.
+    </FieldDescription>
+  </FieldContent>
+</Field>
+```
+
+## Fieldset
+
+Group related fields in a `FieldSet` with a `FieldLegend`. Use `variant="label"` for a legend the size of a label, and `FieldSetDescription` for its helper text.
+
+<!-- ::demo name="field-set" -->
+
+```tsx
+<FieldSet>
+  <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
+  <FieldSetDescription>
+    Select the items you want to show on the desktop.
+  </FieldSetDescription>
+  <FieldGroup>
+    <Field orientation="horizontal">
+      <Checkbox defaultChecked />
+      <FieldLabel>Hard disks</FieldLabel>
+    </Field>
+    <Field orientation="horizontal">
+      <Checkbox />
+      <FieldLabel>Connected servers</FieldLabel>
+    </Field>
+  </FieldGroup>
+</FieldSet>
+```
+
+## Field Group
+
+Stack fieldsets in a `FieldGroup`, with a `FieldSeparator` between them. Pass it text to label the break.
+
+<!-- ::demo name="field-group" -->
+
+```tsx
+<FieldGroup>
+  <FieldSet>
+    <FieldLegend variant="label">Responses</FieldLegend>
+    <Field orientation="horizontal">
+      <Checkbox defaultChecked disabled />
+      <FieldLabel>Push notifications</FieldLabel>
+    </Field>
+  </FieldSet>
+  <FieldSeparator />
+  <FieldSet>
+    <FieldLegend variant="label">Tasks</FieldLegend>
+    <Field orientation="horizontal">
+      <Checkbox />
+      <FieldLabel>Email notifications</FieldLabel>
+    </Field>
+  </FieldSet>
+</FieldGroup>
+```
+
+## Choice Card
+
+Put the control and a `FieldContent` inside the `FieldLabel` to turn the whole label into a card that toggles it. Use `FieldTitle` for its heading.
+
+<!-- ::demo name="field-card" -->
+
+```tsx
+<Field>
+  <FieldLabel>
+    <Checkbox defaultChecked />
+    <FieldContent>
+      <FieldTitle>Enable notifications</FieldTitle>
+      <FieldDescription>
+        You can enable or disable notifications at any time.
+      </FieldDescription>
+    </FieldContent>
+  </FieldLabel>
+</Field>
+```
+
+## Error
+
+Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails.
+
+<!-- ::demo name="field-error" -->
+
+```tsx
+<Field invalid orientation="horizontal">
+  <Checkbox />
+  <FieldContent>
+    <FieldLabel>Accept terms and conditions</FieldLabel>
+    <FieldError match>You must accept the terms to continue.</FieldError>
+  </FieldContent>
+</Field>
+```
+
+## Disabled
+
+Use the `disabled` prop on `Field` to disable its control and dim its label.
+
+<!-- ::demo name="field-disabled" -->
+
+```tsx
+<Field disabled orientation="horizontal">
+  <Checkbox />
+  <FieldLabel>Enable notifications</FieldLabel>
+</Field>
+```
+
 ## Input
 
 <!-- ::demo name="field-input" -->
@@ -144,7 +278,7 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 </Field>
 ```
 
-## Radio
+## Radio Group
 
 <!-- ::demo name="field-radio" -->
 
@@ -168,124 +302,6 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 <Field orientation="horizontal">
   <FieldLabel>Multi-factor authentication</FieldLabel>
   <Switch />
-</Field>
-```
-
-## Orientation
-
-Use `orientation="horizontal"` to put the control beside its label, as for a checkbox. Wrap the label and description in `FieldContent` to stack them.
-
-<!-- ::demo name="field" -->
-
-```tsx
-<Field orientation="horizontal">
-  <Checkbox />
-  <FieldContent>
-    <FieldLabel>Accept terms and conditions</FieldLabel>
-    <FieldDescription>
-      By clicking this checkbox, you agree to the terms.
-    </FieldDescription>
-  </FieldContent>
-</Field>
-```
-
-## Fieldset
-
-Group related fields in a `FieldSet` with a `FieldLegend`. Use `variant="label"` for a legend the size of a label, and `FieldSetDescription` for its helper text.
-
-<!-- ::demo name="field-set" -->
-
-```tsx
-<FieldSet>
-  <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
-  <FieldSetDescription>
-    Select the items you want to show on the desktop.
-  </FieldSetDescription>
-  <FieldGroup>
-    <Field orientation="horizontal">
-      <Checkbox defaultChecked />
-      <FieldLabel>Hard disks</FieldLabel>
-    </Field>
-    <Field orientation="horizontal">
-      <Checkbox />
-      <FieldLabel>Connected servers</FieldLabel>
-    </Field>
-  </FieldGroup>
-</FieldSet>
-```
-
-## Choice Card
-
-Put the control and a `FieldContent` inside the `FieldLabel` to turn the whole label into a card that toggles it. Use `FieldTitle` for its heading.
-
-<!-- ::demo name="field-card" -->
-
-```tsx
-<Field>
-  <FieldLabel>
-    <Checkbox defaultChecked />
-    <FieldContent>
-      <FieldTitle>Enable notifications</FieldTitle>
-      <FieldDescription>
-        You can enable or disable notifications at any time.
-      </FieldDescription>
-    </FieldContent>
-  </FieldLabel>
-</Field>
-```
-
-## Field Group
-
-Stack fieldsets in a `FieldGroup`, with a `FieldSeparator` between them. Pass it text to label the break.
-
-<!-- ::demo name="field-group" -->
-
-```tsx
-<FieldGroup>
-  <FieldSet>
-    <FieldLegend variant="label">Responses</FieldLegend>
-    <Field orientation="horizontal">
-      <Checkbox defaultChecked disabled />
-      <FieldLabel>Push notifications</FieldLabel>
-    </Field>
-  </FieldSet>
-  <FieldSeparator />
-  <FieldSet>
-    <FieldLegend variant="label">Tasks</FieldLegend>
-    <Field orientation="horizontal">
-      <Checkbox />
-      <FieldLabel>Email notifications</FieldLabel>
-    </Field>
-  </FieldSet>
-</FieldGroup>
-```
-
-## Disabled
-
-Use the `disabled` prop on `Field` to disable its control and dim its label.
-
-<!-- ::demo name="field-disabled" -->
-
-```tsx
-<Field disabled orientation="horizontal">
-  <Checkbox />
-  <FieldLabel>Enable notifications</FieldLabel>
-</Field>
-```
-
-## Error
-
-Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails.
-
-<!-- ::demo name="field-error" -->
-
-```tsx
-<Field invalid orientation="horizontal">
-  <Checkbox />
-  <FieldContent>
-    <FieldLabel>Accept terms and conditions</FieldLabel>
-    <FieldError match>You must accept the terms to continue.</FieldError>
-  </FieldContent>
 </Field>
 ```
 

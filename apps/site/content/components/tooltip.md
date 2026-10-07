@@ -34,6 +34,15 @@ import {
 </Tooltip>
 ```
 
+## Composition
+
+```
+TooltipProvider
+└── Tooltip
+    ├── TooltipTrigger
+    └── TooltipContent
+```
+
 ## Side
 
 Use the `side` prop on `TooltipContent` to place the tooltip. Wrap neighbors in a `TooltipProvider`, so once one is open the next opens at once.
@@ -53,7 +62,24 @@ Use the `side` prop on `TooltipContent` to place the tooltip. Wrap neighbors in 
 </TooltipProvider>
 ```
 
-## With Keyboard Shortcut
+## Disabled Button
+
+A disabled button takes no pointer events, so put the trigger on a wrapper around it.
+
+<!-- ::demo name="tooltip-disabled" -->
+
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<span />}>
+    <Button disabled variant="outline">
+      Disabled
+    </Button>
+  </TooltipTrigger>
+  <TooltipContent>This feature is currently unavailable</TooltipContent>
+</Tooltip>
+```
+
+## Kbd
 
 Put a [Kbd](/docs/components/kbd) last in the content; the popup tightens its end around it.
 
@@ -70,23 +96,6 @@ Put a [Kbd](/docs/components/kbd) last in the content; the popup tightens its en
   <TooltipContent>
     Save Changes <Kbd>S</Kbd>
   </TooltipContent>
-</Tooltip>
-```
-
-## Disabled Button
-
-A disabled button takes no pointer events, so put the trigger on a wrapper around it.
-
-<!-- ::demo name="tooltip-disabled" -->
-
-```tsx
-<Tooltip>
-  <TooltipTrigger render={<span />}>
-    <Button disabled variant="outline">
-      Disabled
-    </Button>
-  </TooltipTrigger>
-  <TooltipContent>This feature is currently unavailable</TooltipContent>
 </Tooltip>
 ```
 

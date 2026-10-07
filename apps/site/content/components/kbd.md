@@ -34,6 +34,13 @@ import { Kbd, KbdGroup } from "@/components/ui/kbd";
 <Kbd>Ctrl</Kbd>
 ```
 
+## Composition
+
+```
+KbdGroup
+└── Kbd
+```
+
 ## Group
 
 Use `KbdGroup` to keep keys together.

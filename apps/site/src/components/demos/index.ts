@@ -2,18 +2,21 @@ import type { ComponentType } from "react";
 
 import {
   AvatarBadgeDemo,
+  AvatarBadgeIconDemo,
   AvatarDemo,
   AvatarDropdownDemo,
   AvatarFallbackDemo,
+  AvatarGroupIconDemo,
+  AvatarGroupCountDemo,
   AvatarGroupDemo,
   AvatarSizeDemo,
 } from "~/components/demos/avatar";
 import {
-  BadgeColorsDemo,
   BadgeDemo,
   BadgeIconDemo,
   BadgeLinkDemo,
-  BadgeSpinnerDemo,
+  BadgeSizeDemo,
+  BadgeStatusDemo,
   BadgeVariantsDemo,
 } from "~/components/demos/badge";
 import {
@@ -23,7 +26,8 @@ import {
   ButtonLinkDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
-  ButtonStatesDemo,
+  ButtonBusyDemo,
+  ButtonDisabledDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import {
@@ -120,7 +124,6 @@ import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
   PopoverAlignDemo,
-  PopoverBasicDemo,
   PopoverDemo,
   PopoverFormDemo,
 } from "~/components/demos/popover";
@@ -198,15 +201,18 @@ import { TypographyDemo } from "~/components/demos/typography";
 const demos = {
   avatar: AvatarDemo,
   "avatar-badge": AvatarBadgeDemo,
+  "avatar-badge-icon": AvatarBadgeIconDemo,
   "avatar-dropdown": AvatarDropdownDemo,
   "avatar-fallback": AvatarFallbackDemo,
   "avatar-group": AvatarGroupDemo,
+  "avatar-group-count": AvatarGroupCountDemo,
+  "avatar-group-icon": AvatarGroupIconDemo,
   "avatar-size": AvatarSizeDemo,
   badge: BadgeDemo,
-  "badge-colors": BadgeColorsDemo,
   "badge-icon": BadgeIconDemo,
   "badge-link": BadgeLinkDemo,
-  "badge-spinner": BadgeSpinnerDemo,
+  "badge-size": BadgeSizeDemo,
+  "badge-status": BadgeStatusDemo,
   "badge-variants": BadgeVariantsDemo,
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
@@ -214,7 +220,8 @@ const demos = {
   "button-link": ButtonLinkDemo,
   "button-pill": ButtonPillDemo,
   "button-sizes": ButtonSizesDemo,
-  "button-states": ButtonStatesDemo,
+  "button-busy": ButtonBusyDemo,
+  "button-disabled": ButtonDisabledDemo,
   "button-variants": ButtonVariantsDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
@@ -297,7 +304,6 @@ const demos = {
   separator: SeparatorDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
-  "popover-basic": PopoverBasicDemo,
   "popover-form": PopoverFormDemo,
   "radio-group": RadioGroupDemo,
   "radio-group-card": RadioGroupCardDemo,

@@ -42,6 +42,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 </RadioGroup>
 ```
 
+## Composition
+
+```
+RadioGroup
+└── RadioGroupItem
+```
+
 ## Description
 
 Put each item in a horizontal `Field`, with the label and description in a `FieldContent`.

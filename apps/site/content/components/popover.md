@@ -56,21 +56,6 @@ Popover
         └── PopoverDescription
 ```
 
-## Basic
-
-A header with a title and a description.
-
-<!-- ::demo name="popover-basic" -->
-
-```tsx
-<PopoverContent align="start">
-  <PopoverHeader>
-    <PopoverTitle>Dimensions</PopoverTitle>
-    <PopoverDescription>Set the dimensions for the layer.</PopoverDescription>
-  </PopoverHeader>
-</PopoverContent>
-```
-
 ## Align
 
 Use the `align` prop on `PopoverContent` to line it up with the trigger's start, center or end.
@@ -81,9 +66,9 @@ Use the `align` prop on `PopoverContent` to line it up with the trigger's start,
 <PopoverContent align="start">Aligned to start</PopoverContent>
 ```
 
-## With Form
+## Field
 
-Put a `FieldGroup` under the header for a small form.
+Put a [Field](/docs/components/field) group under the header for a small form.
 
 <!-- ::demo name="popover-form" -->
 

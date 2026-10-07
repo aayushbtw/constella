@@ -24,20 +24,6 @@ import { Textarea } from "@/components/ui/textarea";
 <Textarea />
 ```
 
-## Field
-
-Use `Field`, `FieldLabel` and `FieldDescription` to give the textarea a label and helper text. They link to it on their own, so no `id` or `htmlFor` is needed.
-
-<!-- ::demo name="textarea-field" -->
-
-```tsx
-<Field>
-  <FieldLabel>Message</FieldLabel>
-  <FieldDescription>Enter your message below.</FieldDescription>
-  <Textarea placeholder="Type your message here." />
-</Field>
-```
-
 ## Disabled
 
 Use the `disabled` prop on `Field` to disable the textarea and dim its label. On a bare textarea, use `disabled` on the textarea.
@@ -80,6 +66,20 @@ const styles = stylex.create({
   <Textarea aria-label="Message" placeholder="Type your message here." />
   <Button variant="primary">Send message</Button>
 </div>;
+```
+
+## Field
+
+Use `Field`, `FieldLabel` and `FieldDescription` to give the textarea a label and helper text. They link to it on their own, so no `id` or `htmlFor` is needed.
+
+<!-- ::demo name="textarea-field" -->
+
+```tsx
+<Field>
+  <FieldLabel>Message</FieldLabel>
+  <FieldDescription>Enter your message below.</FieldDescription>
+  <Textarea placeholder="Type your message here." />
+</Field>
 ```
 
 ## API Reference

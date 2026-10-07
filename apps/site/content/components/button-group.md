@@ -57,6 +57,16 @@ import {
 </ButtonGroup>
 ```
 
+## Composition
+
+```
+ButtonGroup
+├── Button
+├── ButtonGroupSeparator
+├── ButtonGroupText
+└── ButtonGroup
+```
+
 ## Accessibility
 
 `ButtonGroup` has `role="group"`. Label it with `aria-label` or `aria-labelledby`; <kbd>Tab</kbd> moves between its buttons.
@@ -154,6 +164,25 @@ Pair an action with an icon button, split by a separator.
   <Button aria-label="Add" size="icon">
     <PlusIcon />
   </Button>
+</ButtonGroup>
+```
+
+## Text
+
+Use `ButtonGroupText` for a fixed prefix or suffix. Pass `render` to make it a label.
+
+<!-- ::demo name="button-group-text" -->
+
+```tsx
+<ButtonGroup>
+  <ButtonGroupText render={<label htmlFor="url" />}>https://</ButtonGroupText>
+  <InputGroup>
+    <InputGroupInput id="url" />
+    <InputGroupAddon align="inline-end">
+      <LinkIcon />
+    </InputGroupAddon>
+  </InputGroup>
+  <ButtonGroupText>.com</ButtonGroupText>
 </ButtonGroup>
 ```
 
@@ -284,25 +313,6 @@ Render the last button as a [Popover](/docs/components/popover) trigger for opti
       <Textarea placeholder="I need to..." />
     </PopoverContent>
   </Popover>
-</ButtonGroup>
-```
-
-## Text
-
-Use `ButtonGroupText` for a fixed prefix or suffix. Pass `render` to make it a label.
-
-<!-- ::demo name="button-group-text" -->
-
-```tsx
-<ButtonGroup>
-  <ButtonGroupText render={<label htmlFor="url" />}>https://</ButtonGroupText>
-  <InputGroup>
-    <InputGroupInput id="url" />
-    <InputGroupAddon align="inline-end">
-      <LinkIcon />
-    </InputGroupAddon>
-  </InputGroup>
-  <ButtonGroupText>.com</ButtonGroupText>
 </ButtonGroup>
 ```
 

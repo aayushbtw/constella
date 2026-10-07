@@ -2,22 +2,45 @@ import {
   ArrowUpRight01Icon,
   Bookmark01Icon,
   CheckmarkBadge01Icon,
+  Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
-import { Badge, badgeVariants } from "@/components/ui/badge";
-import type { BadgeVariant } from "@/components/ui/badge";
+import {
+  Badge,
+  BadgeDot,
+  badgeSizes,
+  badgeStatuses,
+  badgeVariants,
+} from "@/components/ui/badge";
+import type {
+  BadgeSize,
+  BadgeStatus,
+  BadgeVariant,
+} from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { colors, sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
-  success: { backgroundColor: colors.successFillSubtle, color: colors.success },
-  info: { backgroundColor: colors.infoFillSubtle, color: colors.info },
-  warning: { backgroundColor: colors.warningFillSubtle, color: colors.warning },
+  rows: { flexDirection: "column" },
+  row: { alignItems: "center", display: "flex", gap: space.xs },
 });
+
+const sizeLabels = {
+  default: "Default",
+  lg: "Large",
+  sm: "Small",
+} satisfies Record<BadgeSize, string>;
+
+const statusLabels = {
+  danger: "Failed",
+  info: "Syncing",
+  success: "Paid",
+  warning: "Pending",
+} satisfies Record<BadgeStatus, string>;
 
 const labels = {
   danger: "Danger",
@@ -28,11 +51,14 @@ const labels = {
   secondary: "Secondary",
 } satisfies Record<BadgeVariant, string>;
 
-function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
+function Glyph({
+  size = sizes.iconXs,
+  ...props
+}: Omit<HugeiconsIconProps, "strokeWidth">) {
   return (
     <HugeiconsIcon
       aria-hidden
-      size={sizes.iconXs}
+      size={size}
       strokeWidth={Number(strokes.icon)}
       {...props}
     />
@@ -70,20 +96,13 @@ function BadgeIconDemo() {
         Bookmark
         <Glyph data-icon="inline-end" icon={Bookmark01Icon} />
       </Badge>
-    </DemoRow>
-  );
-}
-
-function BadgeSpinnerDemo() {
-  return (
-    <DemoRow>
-      <Badge variant="danger">
-        <Spinner data-icon="inline-start" />
-        Deleting
-      </Badge>
       <Badge>
         Generating
         <Spinner data-icon="inline-end" />
+      </Badge>
+      <Badge variant="outline">
+        <BadgeDot />
+        Draft
       </Badge>
     </DemoRow>
   );
@@ -104,21 +123,47 @@ function BadgeLinkDemo() {
   );
 }
 
-function BadgeColorsDemo() {
+const statusVariants = ["secondary", "outline"] as const;
+
+function BadgeStatusDemo() {
+  return (
+    <DemoRow sx={styles.rows}>
+      {statusVariants.map((variant) => (
+        <div key={variant} {...stylex.props(styles.row)}>
+          {badgeStatuses.map((status) => (
+            <Badge key={status} status={status} variant={variant}>
+              {variant === "outline" && <BadgeDot />}
+              {statusLabels[status]}
+            </Badge>
+          ))}
+        </div>
+      ))}
+    </DemoRow>
+  );
+}
+
+function BadgeSizeDemo() {
   return (
     <DemoRow>
-      <Badge sx={styles.success}>Success</Badge>
-      <Badge sx={styles.info}>Info</Badge>
-      <Badge sx={styles.warning}>Warning</Badge>
+      {badgeSizes.map((size) => (
+        <Badge key={size} size={size}>
+          <Glyph
+            data-icon="inline-start"
+            icon={Tick02Icon}
+            size={size === "lg" ? sizes.iconSm : sizes.iconXs}
+          />
+          {sizeLabels[size]}
+        </Badge>
+      ))}
     </DemoRow>
   );
 }
 
 export {
-  BadgeColorsDemo,
   BadgeDemo,
   BadgeIconDemo,
   BadgeLinkDemo,
-  BadgeSpinnerDemo,
+  BadgeSizeDemo,
+  BadgeStatusDemo,
   BadgeVariantsDemo,
 };

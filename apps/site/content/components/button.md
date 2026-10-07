@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 <Button variant="outline">Button</Button>
 ```
 
-## Variants
+## Variant
 
 Use the `variant` prop to set how much the button stands out. Use one `primary` per view.
 
@@ -47,7 +47,7 @@ Use the `size` prop to change the size of the button.
 <Button size="lg">Large</Button>
 ```
 
-## Icon
+## Icon Only
 
 Use an `icon-*` size for a button with only an icon. Add an `aria-label`.
 
@@ -87,29 +87,6 @@ Use `corners="pill"` to round the ends.
 <Button corners="pill">Get started</Button>
 ```
 
-## States
-
-Use `disabled` when the action isn't available. It fades the button and shows a not-allowed cursor.
-
-Add `aria-busy` while something runs. It shows a busy cursor, so working reads differently from unavailable. What goes inside is up to you.
-
-- With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
-- Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
-
-<!-- ::demo name="button-states" -->
-
-```tsx
-<Button disabled>Disabled</Button>
-<Button aria-busy disabled>
-  <Spinner data-icon="inline-start" />
-  Saving
-</Button>
-<Button aria-busy={generating} onClick={() => setGenerating(!generating)}>
-  {generating && <Spinner data-icon="inline-start" />}
-  {generating ? "Stop generating" : "Generate"}
-</Button>
-```
-
 ## As Link
 
 Use `buttonStyles` to make a link look like a button.
@@ -125,6 +102,36 @@ import { buttonStyles } from "@/components/ui/button";
 <a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
   Settings
 </a>;
+```
+
+## Disabled
+
+Use `disabled` when the action isn't available. It fades the button and shows a not-allowed cursor.
+
+<!-- ::demo name="button-disabled" -->
+
+```tsx
+<Button disabled>Disabled</Button>
+```
+
+## Busy
+
+Add `aria-busy` while something runs. It shows a busy cursor, so working reads differently from unavailable. What goes inside is up to you.
+
+- With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
+- Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
+
+<!-- ::demo name="button-busy" -->
+
+```tsx
+<Button aria-busy disabled>
+  <Spinner data-icon="inline-start" />
+  Saving
+</Button>
+<Button aria-busy={generating} onClick={() => setGenerating(!generating)}>
+  {generating && <Spinner data-icon="inline-start" />}
+  {generating ? "Stop generating" : "Generate"}
+</Button>
 ```
 
 ## API Reference

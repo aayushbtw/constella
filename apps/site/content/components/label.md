@@ -56,4 +56,3 @@ For form fields, use [Field](/docs/components/field). Its `FieldLabel` comes wit
 ## API Reference
 
 Takes every prop of `<label>`, plus `sx`, applied last. A field's own label part, like `SliderLabel`, shares its style through `labelStyles()`.
-

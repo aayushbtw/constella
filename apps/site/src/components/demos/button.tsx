@@ -128,12 +128,19 @@ function ButtonPillDemo() {
   );
 }
 
-function ButtonStatesDemo() {
+function ButtonDisabledDemo() {
   return (
     <DemoRow>
       <Button disabled variant="outline">
         Disabled
       </Button>
+    </DemoRow>
+  );
+}
+
+function ButtonBusyDemo() {
+  return (
+    <DemoRow>
       <Button aria-busy disabled variant="outline">
         <Spinner data-icon="inline-start" />
         Saving
@@ -185,12 +192,13 @@ function ButtonLinkDemo() {
 }
 
 export {
+  ButtonBusyDemo,
+  ButtonDisabledDemo,
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
   ButtonLinkDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
-  ButtonStatesDemo,
   ButtonVariantsDemo,
 };

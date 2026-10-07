@@ -88,7 +88,7 @@ Use `DropdownMenuSub` to nest secondary actions. The submenu opens beside its tr
 </DropdownMenuSub>
 ```
 
-## Icons
+## With Icon
 
 Put an icon before the label for quick scanning. Add `inset` to a row without one to line its text up.
 

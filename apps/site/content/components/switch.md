@@ -27,6 +27,21 @@ import { Switch } from "@/components/ui/switch";
 <Switch />
 ```
 
+## Size
+
+Use the `size` prop to change the size of the switch.
+
+<!-- ::demo name="switch-sizes" -->
+
+| Size      | Track   | Thumb |
+| --------- | ------- | ----- |
+| `sm`      | 24 × 14 | 12    |
+| `default` | 32 × 18 | 16    |
+
+```tsx
+<Switch size="sm" />
+```
+
 ## Description
 
 Put the label and description in a `FieldContent`, and the switch after it in a horizontal `Field`.
@@ -94,21 +109,6 @@ Add `invalid` to the `Field`, so the switch takes the red edge.
   </FieldContent>
   <Switch />
 </Field>
-```
-
-## Size
-
-Use the `size` prop to change the size of the switch.
-
-<!-- ::demo name="switch-sizes" -->
-
-| Size      | Track   | Thumb |
-| --------- | ------- | ----- |
-| `sm`      | 24 × 14 | 12    |
-| `default` | 32 × 18 | 16    |
-
-```tsx
-<Switch size="sm" />
 ```
 
 ## API Reference

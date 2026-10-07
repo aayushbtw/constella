@@ -5,6 +5,8 @@ import { parseMarkdown } from "@tanstack/markdown/parser";
 import { defineCollection, defineConfig, directory } from "tomekit";
 import { z } from "zod";
 
+import { checkComponentPage, checkGuidePage } from "./src/lib/lint/index.ts";
+
 // Without a `tagName`, every comment component renders as the same element and
 // the components map can't tell `demo` from `install`.
 function transformComponent(node: ComponentNode): ComponentNode {
@@ -13,7 +15,7 @@ function transformComponent(node: ComponentNode): ComponentNode {
 
 const extensions = [commentComponentsExtension({ transformComponent })];
 
-function pages(path: string) {
+function pages(path: string, check?: typeof checkComponentPage) {
   return defineCollection({
     loader: directory(path),
     schema: z.strictObject({
@@ -25,6 +27,8 @@ function pages(path: string) {
       title: z.string(),
     }),
     transform: ({ body, metadata }, { dev, skip }) => {
+      check?.(body, metadata.title);
+
       if (metadata.draft && !dev) {
         return skip("draft");
       }
@@ -46,7 +50,7 @@ function pages(path: string) {
 
 export default defineConfig({
   collections: {
-    components: pages("content/components"),
-    docs: pages("content/docs"),
+    components: pages("content/components", checkComponentPage),
+    docs: pages("content/docs", checkGuidePage),
   },
 });

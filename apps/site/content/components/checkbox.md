@@ -31,6 +31,69 @@ import { Label } from "@/components/ui/label";
 </Label>
 ```
 
+## Description
+
+Use a horizontal [Field](/docs/components/field) with `FieldContent` and `FieldDescription` for helper text.
+
+<!-- ::demo name="field" -->
+
+```tsx
+<Field orientation="horizontal">
+  <Checkbox defaultChecked />
+  <FieldContent>
+    <FieldLabel>Accept terms and conditions</FieldLabel>
+    <FieldDescription>
+      By clicking this checkbox, you agree to the terms.
+    </FieldDescription>
+  </FieldContent>
+</Field>
+```
+
+## Group
+
+Use a `FieldSet` of fields for a checkbox list.
+
+<!-- ::demo name="field-set" -->
+
+```tsx
+<FieldSet>
+  <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
+  <FieldSetDescription>
+    Select the items you want to show on the desktop.
+  </FieldSetDescription>
+  <FieldGroup>
+    <Field orientation="horizontal">
+      <Checkbox defaultChecked />
+      <FieldLabel>Hard disks</FieldLabel>
+    </Field>
+    <Field orientation="horizontal">
+      <Checkbox />
+      <FieldLabel>Connected servers</FieldLabel>
+    </Field>
+  </FieldGroup>
+</FieldSet>
+```
+
+## Choice Card
+
+Put the checkbox and its content inside a `FieldLabel` to make the whole card toggle it.
+
+<!-- ::demo name="field-card" -->
+
+```tsx
+<Field>
+  <FieldLabel>
+    <Checkbox defaultChecked />
+    <FieldContent>
+      <FieldTitle>Enable notifications</FieldTitle>
+      <FieldDescription>
+        You can enable or disable notifications at any time.
+      </FieldDescription>
+    </FieldContent>
+  </FieldLabel>
+</Field>
+```
+
 ## Controlled
 
 Use `checked` and `onCheckedChange` to control the checkbox.
@@ -89,19 +152,6 @@ function FruitPicker() {
 }
 ```
 
-## Invalid
-
-Add `aria-invalid` to mark the checkbox as needing attention.
-
-<!-- ::demo name="checkbox-invalid" -->
-
-```tsx
-<Label>
-  <Checkbox aria-invalid />
-  Accept terms and conditions
-</Label>
-```
-
 ## Disabled
 
 Use the `disabled` prop to disable the checkbox. A `Label` around it dims too.
@@ -115,67 +165,17 @@ Use the `disabled` prop to disable the checkbox. A `Label` around it dims too.
 </Label>
 ```
 
-## Description
+## Invalid
 
-Use a horizontal [Field](/docs/components/field) with `FieldContent` and `FieldDescription` for helper text.
+Add `aria-invalid` to mark the checkbox as needing attention.
 
-<!-- ::demo name="field" -->
-
-```tsx
-<Field orientation="horizontal">
-  <Checkbox defaultChecked />
-  <FieldContent>
-    <FieldLabel>Accept terms and conditions</FieldLabel>
-    <FieldDescription>
-      By clicking this checkbox, you agree to the terms.
-    </FieldDescription>
-  </FieldContent>
-</Field>
-```
-
-## Group
-
-Use a `FieldSet` of fields for a checkbox list.
-
-<!-- ::demo name="field-set" -->
+<!-- ::demo name="checkbox-invalid" -->
 
 ```tsx
-<FieldSet>
-  <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
-  <FieldSetDescription>
-    Select the items you want to show on the desktop.
-  </FieldSetDescription>
-  <FieldGroup>
-    <Field orientation="horizontal">
-      <Checkbox defaultChecked />
-      <FieldLabel>Hard disks</FieldLabel>
-    </Field>
-    <Field orientation="horizontal">
-      <Checkbox />
-      <FieldLabel>Connected servers</FieldLabel>
-    </Field>
-  </FieldGroup>
-</FieldSet>
-```
-
-## Card
-
-Put the checkbox and its content inside a `FieldLabel` to make the whole card toggle it.
-
-<!-- ::demo name="field-card" -->
-
-```tsx
-<Field>
-  <FieldLabel>
-    <Checkbox defaultChecked />
-    <FieldContent>
-      <FieldTitle>Enable notifications</FieldTitle>
-      <FieldDescription>
-        You can enable or disable notifications at any time.
-      </FieldDescription>
-    </FieldContent>
-  </FieldLabel>
-</Field>
+<Label>
+  <Checkbox aria-invalid />
+  Accept terms and conditions
+</Label>
 ```
 
 ## Table

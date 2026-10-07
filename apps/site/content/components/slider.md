@@ -29,6 +29,18 @@ import {
 </Slider>
 ```
 
+## Composition
+
+```
+Slider
+├── SliderLabel
+├── SliderValue
+└── SliderControl
+    └── SliderTrack
+        ├── SliderIndicator
+        └── SliderThumb
+```
+
 ## Range
 
 Pass an array to `defaultValue` and compose the track with a thumb per value.
@@ -174,7 +186,21 @@ const styles = stylex.create({
 </Slider>;
 ```
 
-## With Tooltip
+## Disabled
+
+Use the `disabled` prop to disable the slider.
+
+<!-- ::demo name="slider-disabled" -->
+
+```tsx
+<Slider defaultValue={40} disabled>
+  <SliderLabel>Volume</SliderLabel>
+  <SliderValue />
+  <SliderControl />
+</Slider>
+```
+
+## Tooltip
 
 Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content. Keep it open while dragging, since the pointer can leave the thumb.
 
@@ -218,7 +244,7 @@ function VolumeSlider() {
 }
 ```
 
-## With Input
+## Input Group
 
 Control the slider with `value` and `onValueChange`, and keep a number [Input Group](/docs/components/input-group) in sync. The input holds a draft while typing and snaps back to the slider's value on blur.
 
@@ -258,20 +284,6 @@ const [draft, setDraft] = useState("100");
   </InputGroup>
   <SliderControl />
 </Slider>;
-```
-
-## Disabled
-
-Use the `disabled` prop to disable the slider.
-
-<!-- ::demo name="slider-disabled" -->
-
-```tsx
-<Slider defaultValue={40} disabled>
-  <SliderLabel>Volume</SliderLabel>
-  <SliderValue />
-  <SliderControl />
-</Slider>
 ```
 
 ## API Reference
