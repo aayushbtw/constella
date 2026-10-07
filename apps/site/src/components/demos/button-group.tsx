@@ -27,12 +27,20 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
+import { fonts } from "~/site/tokens.stylex";
 
 const styles = stylex.create({
   stack: {
@@ -42,6 +50,8 @@ const styles = stylex.create({
   },
   narrow: { maxWidth: 384, width: "100%" },
   fill: { flexGrow: 1 },
+  mono: { fontFamily: fonts.mono },
+  muted: { color: colors.textMuted },
 });
 
 function Glyph({
@@ -239,6 +249,53 @@ function ButtonGroupInputGroupDemo() {
   );
 }
 
+const currencies = [
+  { label: "US Dollar", value: "$" },
+  { label: "Euro", value: "€" },
+  { label: "British Pound", value: "£" },
+];
+
+function ButtonGroupSelectDemo() {
+  const [currency, setCurrency] = useState("$");
+  return (
+    <DemoRow>
+      <ButtonGroup>
+        <ButtonGroup>
+          <Select
+            items={currencies}
+            onValueChange={(value) => {
+              if (value !== null) {
+                setCurrency(value);
+              }
+            }}
+            value={currency}
+          >
+            <SelectTrigger aria-label="Currency" sx={styles.mono}>
+              {currency}
+            </SelectTrigger>
+            <SelectContent align="start" alignItemWithTrigger={false}>
+              <SelectGroup>
+                {currencies.map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.value}
+                    <span {...stylex.props(styles.muted)}>{item.label}</span>
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Input aria-label="Amount" pattern="[0-9]*" placeholder="10.00" />
+        </ButtonGroup>
+        <ButtonGroup>
+          <Button aria-label="Send" size="icon" variant="outline">
+            <Glyph icon={ArrowRight01Icon} />
+          </Button>
+        </ButtonGroup>
+      </ButtonGroup>
+    </DemoRow>
+  );
+}
+
 function ButtonGroupTextDemo() {
   return (
     <DemoRow sx={styles.narrow}>
@@ -265,6 +322,7 @@ export {
   ButtonGroupInputGroupDemo,
   ButtonGroupNestedDemo,
   ButtonGroupOrientationDemo,
+  ButtonGroupSelectDemo,
   ButtonGroupSeparatorDemo,
   ButtonGroupSizeDemo,
   ButtonGroupSplitDemo,

@@ -197,6 +197,28 @@ Put an `InputGroup` in the group for an input with its own addons.
 </ButtonGroup>
 ```
 
+## Select
+
+Put a [Select](/docs/components/select) beside an input, like a currency before an amount.
+
+<!-- ::demo name="button-group-select" -->
+
+```tsx
+<ButtonGroup>
+  <Select items={currencies} onValueChange={setCurrency} value={currency}>
+    <SelectTrigger>{currency}</SelectTrigger>
+    <SelectContent align="start" alignItemWithTrigger={false}>
+      {currencies.map((item) => (
+        <SelectItem key={item.value} value={item.value}>
+          {item.value} {item.label}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+  <Input placeholder="10.00" />
+</ButtonGroup>
+```
+
 ## Text
 
 Use `ButtonGroupText` for a fixed prefix or suffix. Pass `render` to make it a label.
@@ -245,5 +267,4 @@ Takes every `div` prop, plus `sx`, applied last.
 ## Pending
 
 - **DropdownMenu:** the main preview's "More" menu and the Dropdown Menu example.
-- **Select:** the Select example (currency picker beside an amount).
 - **Popover:** the Popover example.
