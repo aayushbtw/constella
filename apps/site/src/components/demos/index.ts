@@ -104,6 +104,14 @@ import {
   SliderVerticalDemo,
 } from "~/components/demos/slider";
 import { SpinnerDemo } from "~/components/demos/spinner";
+import {
+  SwitchCardDemo,
+  SwitchDemo,
+  SwitchDescriptionDemo,
+  SwitchDisabledDemo,
+  SwitchInvalidDemo,
+  SwitchSizesDemo,
+} from "~/components/demos/switch";
 import { TabsDemo } from "~/components/demos/tabs";
 import {
   TextareaButtonDemo,
@@ -217,6 +225,12 @@ const demos = {
   "toast-dismiss": ToastDismissDemo,
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
+  switch: SwitchDemo,
+  "switch-card": SwitchCardDemo,
+  "switch-description": SwitchDescriptionDemo,
+  "switch-disabled": SwitchDisabledDemo,
+  "switch-invalid": SwitchInvalidDemo,
+  "switch-sizes": SwitchSizesDemo,
   tabs: TabsDemo,
   textarea: TextareaDemo,
   "textarea-button": TextareaButtonDemo,
