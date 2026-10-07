@@ -16,9 +16,17 @@ type SpinnerProps = Omit<ComponentProps<"output">, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-// A badge sets its icons at `iconXs`, so its spinner steps down with them.
-const inBadge = ":where([data-slot='badge'] *)";
+// A badge sets its icons at `iconXs` (`iconSm` at lg), so its spinner steps down with them.
+const inBadge = ":where([data-slot='badge']:not([data-size='lg']) *)";
+const inLgBadge = ":where([data-slot='badge'][data-size='lg'] *)";
 const badgeSpinner = `calc(${sizes.iconXs} - ${space.xxxs})`;
+const lgBadgeSpinner = `calc(${sizes.iconSm} - ${space.xxxs})`;
+
+// An outline badge keeps its text neutral, so its spinner carries the status.
+/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
+const inStatus = (status: string) =>
+  `:where([data-slot='badge'][data-variant='outline'][data-status='${status}'] *)`;
+/* eslint-enable func-style */
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 
@@ -35,14 +43,30 @@ const styles = stylex.create({
     borderTopColor: "currentColor",
     borderWidth: strokes.spinner,
     boxSizing: "border-box",
+    color: {
+      default: null,
+      [inStatus("success")]: colors.success,
+      [inStatus("info")]: colors.info,
+      [inStatus("warning")]: colors.warning,
+      [inStatus("danger")]: colors.danger,
+    },
     display: "inline-block",
     flexShrink: 0,
-    height: { default: sizes.iconSm, [inBadge]: badgeSpinner },
+    height: {
+      default: sizes.iconSm,
+      [inBadge]: badgeSpinner,
+      [inLgBadge]: lgBadgeSpinner,
+    },
     margin: {
       default: `calc((${sizes.icon} - ${sizes.iconSm}) / 2)`,
       [inBadge]: `calc((${sizes.iconXs} - ${badgeSpinner}) / 2)`,
+      [inLgBadge]: `calc((${sizes.iconSm} - ${lgBadgeSpinner}) / 2)`,
     },
-    width: { default: sizes.iconSm, [inBadge]: badgeSpinner },
+    width: {
+      default: sizes.iconSm,
+      [inBadge]: badgeSpinner,
+      [inLgBadge]: lgBadgeSpinner,
+    },
   },
 });
 

@@ -16,11 +16,28 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const inTooltip = ":where([data-slot='tooltip-popup'] *)";
 
+/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
+const inButton = (size: string) =>
+  `:where([data-slot='button'][data-size='${size}'] > *)`;
+const inInputGroup = (size: string) =>
+  `:where([data-slot='input-group'][data-size='${size}'] *)`;
+// Concentric with the box's corner; at `lg` the inset reaches the radius, so it keeps its own.
+const nested = (height: string) =>
+  `calc(${radii.sm} - (${height} - ${sizes.kbd}) / 2)`;
+/* eslint-enable func-style */
+
 const styles = stylex.create({
   kbd: {
     alignItems: "center",
     backgroundColor: { default: colors.fill, [inTooltip]: colors.onAccentFill },
-    borderRadius: radii.xs,
+    borderRadius: {
+      default: radii.chip,
+      [inButton("sm")]: nested(sizes.controlSm),
+      [inInputGroup("sm")]: nested(sizes.controlSm),
+      [inButton("default")]: nested(sizes.controlMd),
+      [inInputGroup("default")]: nested(sizes.controlMd),
+      [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
+    },
     color: { default: colors.textSecondary, [inTooltip]: colors.onAccent },
     display: "inline-flex",
     // `<kbd>` is monospace by default.

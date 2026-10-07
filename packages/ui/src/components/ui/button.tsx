@@ -67,15 +67,21 @@ const interactive = <T,>(rest: T, active: T) => ({
   [media.hover]: { default: rest, ":hover:not(:disabled)": active },
 });
 
+const kbdInset = (height: string) =>
+  `calc((${height} - ${sizes.kbd}) / 2 - ${strokes.border})`;
+
 // A glyph carries its own whitespace, so the side holding a `data-icon` sits tighter.
-const inset = (padding: string, tight: string) => ({
+// A Kbd is a box, so it sits as far from the side as from the top and bottom.
+const inset = (padding: string, tight: string, height: string) => ({
   paddingInlineEnd: {
     default: padding,
-    ":has(> [data-icon='inline-end'])": tight,
+    ":has(> [data-icon='inline-end']:not([data-slot='kbd']))": tight,
+    ":has(> [data-slot='kbd'][data-icon='inline-end'])": kbdInset(height),
   },
   paddingInlineStart: {
     default: padding,
-    ":has(> [data-icon='inline-start'])": tight,
+    ":has(> [data-icon='inline-start']:not([data-slot='kbd']))": tight,
+    ":has(> [data-slot='kbd'][data-icon='inline-start'])": kbdInset(height),
   },
 });
 
@@ -175,19 +181,22 @@ const styles = stylex.create({
   },
   // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
-    ...inset(space.xs, px6),
+    ...inset(space.xs, px6, sizes.controlXs),
     fontSize: fontSizes.xxs,
     gap: space.xxs,
     height: sizes.controlXs,
   },
   sm: {
-    ...inset(px10, px6),
+    ...inset(px10, px6, sizes.controlSm),
     fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlSm,
   },
-  default: { ...inset(px10, space.xs), height: sizes.controlMd },
-  lg: { ...inset(px10, space.xs), height: sizes.controlLg },
+  default: {
+    ...inset(px10, space.xs, sizes.controlMd),
+    height: sizes.controlMd,
+  },
+  lg: { ...inset(px10, space.xs, sizes.controlLg), height: sizes.controlLg },
   iconXs: square(sizes.controlXs),
   iconSm: square(sizes.controlSm),
   icon: square(sizes.controlMd),

@@ -6,6 +6,8 @@ import type { ComponentProps } from "react";
 
 import {
   colors,
+  durations,
+  easings,
   fontSizes,
   fontWeights,
   radii,
@@ -24,6 +26,14 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 type AvatarProps = Styled<AvatarPrimitive.Root.Props> & { size?: AvatarSize };
 
+const avatarStatuses = ["online", "away", "busy", "offline"] as const;
+
+type AvatarStatus = (typeof avatarStatuses)[number];
+
+type AvatarBadgeProps = Styled<ComponentProps<"span">> & {
+  status?: AvatarStatus;
+};
+
 const inGroup = ":is([data-slot='avatar-group'] > *)";
 /* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 const groupOf = (size: AvatarSize) =>
@@ -34,6 +44,8 @@ const cutout = `0 0 0 calc(2 * ${strokes.border}) ${colors.background}`;
 
 const styles = stylex.create({
   avatar: {
+    // The fallback leaves as the photo arrives, so the photo fades in over its fill.
+    backgroundColor: colors.fillOpaque,
     borderRadius: radii.full,
     boxShadow: { default: null, [inGroup]: cutout },
     display: "flex",
@@ -64,11 +76,15 @@ const styles = stylex.create({
     borderRadius: radii.full,
     height: "100%",
     objectFit: "cover",
+    opacity: { default: 1, ":is([data-starting-style])": 0 },
+    transitionDuration: durations.crossfade,
+    transitionProperty: "opacity",
+    transitionTimingFunction: easings.crossfade,
     width: "100%",
   },
   fallback: {
     alignItems: "center",
-    backgroundColor: colors.fill,
+    backgroundColor: colors.fillOpaque,
     borderRadius: radii.full,
     color: colors.textSecondary,
     display: "flex",
@@ -97,6 +113,9 @@ const styles = stylex.create({
     insetInlineEnd: 0,
     justifyContent: "center",
     position: "absolute",
+    transitionDuration: durations.hover,
+    transitionProperty: "background-color",
+    transitionTimingFunction: "ease",
     width: {
       default: `calc(${space.xs} + ${space.xxxs})`,
       ":is([data-size='sm'] *)": space.xs,
@@ -104,12 +123,16 @@ const styles = stylex.create({
     },
     zIndex: 1,
   },
+  online: { backgroundColor: colors.successSolid },
+  away: { backgroundColor: colors.warningSolid },
+  busy: { backgroundColor: colors.dangerSolid },
+  offline: { backgroundColor: colors.textMuted },
   group: {
     display: "flex",
   },
   count: {
     alignItems: "center",
-    backgroundColor: colors.fill,
+    backgroundColor: colors.fillOpaque,
     borderRadius: radii.full,
     boxShadow: cutout,
     color: colors.textSecondary,
@@ -124,6 +147,7 @@ const styles = stylex.create({
     },
     justifyContent: "center",
     marginInlineStart: `calc(-1 * ${space.xs})`,
+    position: "relative",
     width: {
       default: sizes.controlMd,
       [groupOf("sm")]: sizes.controlXs,
@@ -172,12 +196,29 @@ function AvatarFallback({
   );
 }
 
-function AvatarBadge({ sx, ...props }: Styled<ComponentProps<"span">>) {
+const statusStyles = {
+  away: styles.away,
+  busy: styles.busy,
+  offline: styles.offline,
+  online: styles.online,
+} satisfies Record<AvatarStatus, stylex.StyleXStyles>;
+
+const statusLabels = {
+  away: "Away",
+  busy: "Busy",
+  offline: "Offline",
+  online: "Online",
+} satisfies Record<AvatarStatus, string>;
+
+function AvatarBadge({ status, sx, ...props }: AvatarBadgeProps) {
   return (
     <span
+      aria-label={status && statusLabels[status]}
       data-slot="avatar-badge"
+      data-status={status}
+      role={status && "img"}
       {...props}
-      {...stylex.props(styles.badge, sx)}
+      {...stylex.props(styles.badge, status && statusStyles[status], sx)}
     />
   );
 }
@@ -210,5 +251,6 @@ export {
   AvatarGroupCount,
   AvatarImage,
   avatarSizes,
+  avatarStatuses,
 };
-export type { AvatarProps, AvatarSize };
+export type { AvatarBadgeProps, AvatarProps, AvatarSize, AvatarStatus };

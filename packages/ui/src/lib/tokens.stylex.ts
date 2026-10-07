@@ -7,6 +7,7 @@ export const colors = stylex.defineVars({
   edge: "var(--gray-a6)",
   edgeSubtle: "var(--gray-a4)",
   fill: "var(--gray-a3)",
+  fillOpaque: "var(--gray-3)",
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
   onAccent: "var(--gray-1)",
@@ -17,23 +18,28 @@ export const colors = stylex.defineVars({
   textSecondary: "var(--gray-11)",
 
   // Status: the base is the foreground step, for icons and short labels; the
-  // fills mirror the neutral ones as tints, `Edge` is a tinted edge.
-  danger: "var(--red-11)",
+  // fills mirror the neutral ones as tints, `Edge` is a tinted edge, `Solid`
+  // fills a shape that carries the status alone, like a dot.
+  danger: "var(--danger)",
   dangerEdge: "var(--red-a6)",
   dangerFill: "var(--danger-fill)",
   dangerFillSubtle: "var(--danger-fill-subtle)",
-  info: "var(--blue-11)",
+  dangerSolid: "var(--red-9)",
+  info: "var(--info)",
   infoEdge: "var(--blue-a6)",
-  infoFill: "var(--blue-a3)",
-  infoFillSubtle: "var(--blue-a2)",
-  success: "var(--green-11)",
+  infoFill: "var(--info-fill)",
+  infoFillSubtle: "var(--info-fill-subtle)",
+  infoSolid: "var(--blue-9)",
+  success: "var(--success)",
   successEdge: "var(--green-a6)",
-  successFill: "var(--green-a3)",
-  successFillSubtle: "var(--green-a2)",
-  warning: "var(--amber-11)",
+  successFill: "var(--success-fill)",
+  successFillSubtle: "var(--success-fill-subtle)",
+  successSolid: "var(--green-9)",
+  warning: "var(--warning)",
   warningEdge: "var(--amber-a6)",
-  warningFill: "var(--amber-a3)",
-  warningFillSubtle: "var(--amber-a2)",
+  warningFill: "var(--warning-fill)",
+  warningFillSubtle: "var(--warning-fill-subtle)",
+  warningSolid: "var(--warning-solid)",
 });
 
 // Multipliers for the corners and edge where an item meets its neighbor: 1 keeps them,
@@ -82,6 +88,8 @@ export const space = stylex.defineConsts({
 });
 
 export const radii = stylex.defineConsts({
+  // The 20px pieces, Badge and Kbd; off the 4px grid, as 4 reads square and 8 a pill.
+  chip: "6px",
   full: "9999px",
   md: "12px",
   sm: "8px",
@@ -99,6 +107,7 @@ export const sizes = stylex.defineConsts({
   icon: "16px",
   iconSm: "14px",
   iconXs: "12px",
+  iconXxs: "8px",
   kbd: "20px",
   menu: "144px",
   popover: "288px",

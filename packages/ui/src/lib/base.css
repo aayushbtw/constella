@@ -33,20 +33,43 @@
     color-scheme: dark;
   }
 
-  /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text. */
+  /* Status tints are the vivid step 9 at low opacity: Radix's dark alpha steps go muddy.
+     Listed on each theme class, so the mix resolves where the theme's step 9 does. */
+  :root,
+  .light,
+  .dark {
+    --danger-fill-subtle: color-mix(in oklab, var(--red-9) 14%, transparent);
+    --danger-fill: color-mix(in oklab, var(--red-9) 22%, transparent);
+    --info-fill-subtle: color-mix(in oklab, var(--blue-9) 14%, transparent);
+    --info-fill: color-mix(in oklab, var(--blue-9) 22%, transparent);
+    --success-fill-subtle: color-mix(in oklab, var(--green-9) 14%, transparent);
+    --success-fill: color-mix(in oklab, var(--green-9) 22%, transparent);
+    --warning-fill-subtle: color-mix(in oklab, var(--amber-9) 14%, transparent);
+    --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
+  }
+
+  /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.
+     Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12;
+     amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
   :root,
   .light {
     --text-muted: var(--gray-10);
-    --danger-fill-subtle: var(--red-a3);
-    --danger-fill: var(--red-a4);
     --on-accent-fill: var(--white-a4);
+    --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
+    --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
+    --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
+    --warning: color-mix(in oklab, var(--amber-11), var(--amber-12) 30%);
+    --warning-solid: var(--amber-11);
   }
 
   .dark {
     --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
-    --danger-fill-subtle: var(--red-a5);
-    --danger-fill: var(--red-a6);
     --on-accent-fill: var(--black-a2);
+    --danger: var(--red-11);
+    --info: var(--blue-11);
+    --success: var(--green-11);
+    --warning: var(--amber-11);
+    --warning-solid: var(--amber-9);
   }
 
   /* Flush outside the edge, so it shows on any fill. */

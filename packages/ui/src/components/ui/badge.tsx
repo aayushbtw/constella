@@ -3,6 +3,7 @@
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import type { ComponentProps } from "react";
 
 import {
   colors,
@@ -28,10 +29,20 @@ const badgeVariants = [
 
 type BadgeVariant = (typeof badgeVariants)[number];
 
+const badgeStatuses = ["success", "info", "warning", "danger"] as const;
+
+type BadgeStatus = (typeof badgeStatuses)[number];
+
+const badgeSizes = ["sm", "default", "lg"] as const;
+
+type BadgeSize = (typeof badgeSizes)[number];
+
 type BadgeProps = Omit<
   useRender.ComponentProps<"span">,
   "className" | "style"
 > & {
+  size?: BadgeSize;
+  status?: BadgeStatus;
   sx?: stylex.StyleXStyles;
   variant?: BadgeVariant;
 };
@@ -46,42 +57,69 @@ const linkHover = <T,>(rest: T, active: T) => ({
   [media.hover]: { default: rest, [`${link}:hover`]: active },
 });
 
+// A dot takes its badge's status, but on primary and danger it follows the text, which
+// already carries their color.
+const dotIn = (status: BadgeStatus) =>
+  `:is([data-status='${status}']:not([data-variant='primary'], [data-variant='danger']) > *)`;
+
+// A glyph carries its own whitespace, so the side holding a `data-icon` sits tighter.
+const inset = (padding: string, tight: string) => ({
+  paddingInlineEnd: {
+    default: padding,
+    ":has(> [data-icon='inline-end'])": tight,
+  },
+  paddingInlineStart: {
+    default: padding,
+    ":has(> [data-icon='inline-start'])": tight,
+  },
+});
+
 /* eslint-enable func-style */
 
-// shadcn's 6px, off our 4px grid.
+// shadcn's 6px and 10px, and an 18px small, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
+const px10 = `calc(${space.sm} - ${space.xxxs})`;
+const px18 = `calc(${sizes.controlXxs} - ${space.xxxs})`;
 
 const styles = stylex.create({
   base: {
     alignItems: "center",
     // Every variant reserves the border, so a fill and an outline are the same size.
     borderColor: "transparent",
-    borderRadius: radii.full,
+    borderRadius: radii.chip,
     borderStyle: "solid",
     borderWidth: strokes.border,
     boxSizing: "border-box",
     display: "inline-flex",
     flexShrink: 0,
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
-    gap: space.xxs,
-    height: sizes.controlXxs,
     justifyContent: "center",
     overflow: "hidden",
-    paddingInlineEnd: {
-      default: space.xs,
-      ":has(> [data-icon='inline-end'])": px6,
-    },
-    paddingInlineStart: {
-      default: space.xs,
-      ":has(> [data-icon='inline-start'])": px6,
-    },
     textDecorationLine: "none",
     transitionDuration: durations.hover,
-    transitionProperty: "background-color, opacity",
+    transitionProperty: "background-color, border-color, color, opacity",
     transitionTimingFunction: "ease",
     whiteSpace: "nowrap",
     width: "fit-content",
+  },
+  // Icons are `sizes.iconXs` up to default and `iconSm` at lg.
+  sm: {
+    ...inset(px6, space.xxs),
+    fontSize: fontSizes.xxs,
+    gap: space.xxs,
+    height: px18,
+  },
+  default: {
+    ...inset(space.xs, px6),
+    fontSize: fontSizes.xxs,
+    gap: space.xxs,
+    height: sizes.controlXxs,
+  },
+  lg: {
+    ...inset(px10, space.xs),
+    fontSize: fontSizes.xs,
+    gap: px6,
+    height: sizes.controlXs,
   },
   primary: {
     backgroundColor: colors.accent,
@@ -106,12 +144,85 @@ const styles = stylex.create({
     backgroundColor: linkHover(colors.dangerFillSubtle, colors.dangerFill),
     color: colors.danger,
   },
+  dot: {
+    backgroundColor: {
+      default: colors.textMuted,
+      ":is([data-variant='primary'] > *, [data-variant='danger'] > *)":
+        "currentColor",
+      [dotIn("success")]: colors.successSolid,
+      [dotIn("info")]: colors.infoSolid,
+      [dotIn("warning")]: colors.warningSolid,
+      [dotIn("danger")]: colors.dangerSolid,
+    },
+    borderRadius: radii.full,
+    flexShrink: 0,
+    transitionDuration: durations.hover,
+    transitionProperty: "background-color",
+    transitionTimingFunction: "ease",
+    height: { default: px6, ":is([data-size='lg'] > *)": space.xs },
+    width: { default: px6, ":is([data-size='lg'] > *)": space.xs },
+  },
   link: {
     color: colors.textPrimary,
     textDecorationLine: linkHover("none", "underline"),
     textUnderlineOffset: space.xxs,
   },
+  successTint: {
+    backgroundColor: linkHover(colors.successFillSubtle, colors.successFill),
+    color: colors.success,
+  },
+  infoTint: {
+    backgroundColor: linkHover(colors.infoFillSubtle, colors.infoFill),
+    color: colors.info,
+  },
+  warningTint: {
+    backgroundColor: linkHover(colors.warningFillSubtle, colors.warningFill),
+    color: colors.warning,
+  },
+  dangerTint: {
+    backgroundColor: linkHover(colors.dangerFillSubtle, colors.dangerFill),
+    color: colors.danger,
+  },
+  successText: { color: colors.success },
+  infoText: { color: colors.info },
+  warningText: { color: colors.warning },
+  dangerText: { color: colors.danger },
 });
+
+// A tint on secondary, colored text on ghost and link. Outline keeps its text neutral and
+// colors only its dot; primary stays the accent, and danger already carries a status.
+const statusStyles = {
+  danger: null,
+  ghost: {
+    danger: styles.dangerText,
+    info: styles.infoText,
+    success: styles.successText,
+    warning: styles.warningText,
+  },
+  link: {
+    danger: styles.dangerText,
+    info: styles.infoText,
+    success: styles.successText,
+    warning: styles.warningText,
+  },
+  outline: null,
+  primary: null,
+  secondary: {
+    danger: styles.dangerTint,
+    info: styles.infoTint,
+    success: styles.successTint,
+    warning: styles.warningTint,
+  },
+} satisfies Record<
+  BadgeVariant,
+  Record<BadgeStatus, stylex.StyleXStyles> | null
+>;
+
+const sizeStyles = {
+  default: styles.default,
+  lg: styles.lg,
+  sm: styles.sm,
+} satisfies Record<BadgeSize, stylex.StyleXStyles>;
 
 const variantStyles = {
   danger: styles.danger,
@@ -124,23 +235,61 @@ const variantStyles = {
 
 /** A badge's styles for another element. */
 function badgeStyles({
+  size = "default",
+  status,
   variant = "secondary",
-}: Pick<BadgeProps, "variant"> = {}) {
-  return [styles.base, variantStyles[variant]];
+}: Pick<BadgeProps, "size" | "status" | "variant"> = {}) {
+  return [
+    styles.base,
+    sizeStyles[size],
+    variantStyles[variant],
+    status && statusStyles[variant]?.[status],
+  ];
 }
 
-function Badge({ render, sx, variant = "secondary", ...props }: BadgeProps) {
+function Badge({
+  render,
+  size = "default",
+  status,
+  sx,
+  variant = "secondary",
+  ...props
+}: BadgeProps) {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(
       props,
-      stylex.props(badgeStyles({ variant }), sx)
+      stylex.props(badgeStyles({ size, status, variant }), sx)
     ),
     render,
-    // Base UI writes state as data attributes: `data-slot="badge"`, `data-variant`.
-    state: { slot: "badge", variant },
+    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-status`.
+    state: { size, slot: "badge", status, variant },
   });
 }
 
-export { Badge, badgeStyles, badgeVariants };
-export type { BadgeProps, BadgeVariant };
+function BadgeDot({
+  sx,
+  ...props
+}: Omit<ComponentProps<"span">, "className" | "style"> & {
+  sx?: stylex.StyleXStyles;
+}) {
+  return (
+    <span
+      aria-hidden
+      data-icon="inline-start"
+      data-slot="badge-dot"
+      {...props}
+      {...stylex.props(styles.dot, sx)}
+    />
+  );
+}
+
+export {
+  Badge,
+  BadgeDot,
+  badgeSizes,
+  badgeStatuses,
+  badgeStyles,
+  badgeVariants,
+};
+export type { BadgeProps, BadgeSize, BadgeStatus, BadgeVariant };

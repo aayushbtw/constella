@@ -6,13 +6,13 @@ Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: 
 
 ## Color
 
-Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. Three roles differ by theme, through variables in `base.css`. `textMuted` is `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. The danger fills are red `a3`/`a4` in light and `a5`/`a6` in dark: low red steps vanish on a dark page, and the dark steps turn pink on a light one. `onAccentFill`, a fill on the accent surface, is white `a4` in light and black `a2` in dark, since the accent flips from near-black to near-white.
+Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued by Radix gray step. A component asks for what it means, so a palette change is one file. Three roles differ by theme, through variables in `base.css`. `textMuted` is `gray-10` in light; in dark, halfway between `gray-10` and `gray-11`, since `gray-10` is too faint for small labels (APCA Lc 32) and `gray-11` would merge it with `textSecondary`. The status tints are step 9 mixed at 14% (`FillSubtle`) and 22% (`Fill`) in both themes: Radix's dark alpha steps go muddy, and the vivid step stays the same hue on any page. Status text is step 11 in dark; in light it leans 30% toward step 12, since step 11 drops under 4.5:1 on its own tint. `onAccentFill`, a fill on the accent surface, is white `a4` in light and black `a2` in dark, since the accent flips from near-black to near-white.
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills (danger's sit higher, see above), and `Edge`. Status color marks the small thing that carries the meaning and never body text: step 11 clears text contrast on `FillSubtle` but drops just under on `Fill`, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, `Edge`, and `Solid` for a dot that carries the status alone. Status color marks the small thing that carries the meaning and never body text, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too, and a dot with no text beside it has an accessible name.
 
-Status is never a saturated solid. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway.
+Status is never a saturated solid behind text. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway. Only a dot is solid, step 9, and amber takes step 11 in light, since step 9 is 1.5:1 on the page.
 
 ## Theme
 
@@ -36,7 +36,7 @@ Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. Th
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.
 
-A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a tooltip it takes `onAccentFill` and `onAccent`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
+A keycap (`Kbd`) is a `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Its corner is `radii.chip` (6px): at 20px, 4 reads square and 8 a pill. Inside a button or input group it sits as far from the side as from the top and bottom, and its corner nests in the box's up to `default`; at `lg` the inset reaches the radius, so it keeps its own. Inside a tooltip it takes `onAccentFill` and `onAccent`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
 
 A separator is a 1px `edgeSubtle` line, the same faint edge as a divider anywhere else, not `edge`: it groups content, it doesn't bound a control. A vertical one stretches to its row, so it matches whatever sits beside it.
 
@@ -46,9 +46,9 @@ Popups opened from a control (select, dropdown menu, popover) share one surface 
 
 A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center.
 
-A badge takes the button's six variants on a 20px pill, so emphasis means the same thing on both. Only a badge rendered as a link answers hover.
+A badge takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. Only a badge rendered as a link answers hover. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot or spinner, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`.
 
-A table's rows are divided by `edgeSubtle`, the faint divider, and its footer sits on `fillSubtle`. A selected row takes `fill`. An avatar follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself, and avatars in a group are cut apart by a ring of the page color.
+A table's rows are divided by `edgeSubtle`, the faint divider, and its footer sits on `fillSubtle`. A selected row takes `fill`. An avatar follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself, and avatars in a group are cut apart by a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through. Its badge's status is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers.
 
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 
@@ -118,7 +118,7 @@ Restraint is the default. A component used every day gets one motion that explai
 
 ### Crossfades
 
-When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing.
+When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing. An avatar's fallback can't stay either (Base UI unmounts it), so the photo fades in over the avatar's `fillOpaque`. A status change only fades color, on `ease` + `hover`.
 
 ### Layout animation
 
