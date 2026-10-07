@@ -32,7 +32,13 @@ export default defineConfig({
       "jsx-a11y/label-has-associated-control": [
         "error",
         {
-          controlComponents: ["Checkbox", "Input", "Switch", "Textarea"],
+          controlComponents: [
+            "Checkbox",
+            "Input",
+            "RadioGroupItem",
+            "Switch",
+            "Textarea",
+          ],
           depth: 3,
         },
       ],

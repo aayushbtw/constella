@@ -108,6 +108,14 @@ import {
   PopoverFormDemo,
 } from "~/components/demos/popover";
 import {
+  RadioGroupCardDemo,
+  RadioGroupDemo,
+  RadioGroupDescriptionDemo,
+  RadioGroupDisabledDemo,
+  RadioGroupFieldsetDemo,
+  RadioGroupInvalidDemo,
+} from "~/components/demos/radio-group";
+import {
   SelectAlignItemDemo,
   SelectDemo,
   SelectDisabledDemo,
@@ -254,6 +262,12 @@ const demos = {
   "popover-align": PopoverAlignDemo,
   "popover-basic": PopoverBasicDemo,
   "popover-form": PopoverFormDemo,
+  "radio-group": RadioGroupDemo,
+  "radio-group-card": RadioGroupCardDemo,
+  "radio-group-description": RadioGroupDescriptionDemo,
+  "radio-group-disabled": RadioGroupDisabledDemo,
+  "radio-group-fieldset": RadioGroupFieldsetDemo,
+  "radio-group-invalid": RadioGroupInvalidDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,
   "select-disabled": SelectDisabledDemo,
