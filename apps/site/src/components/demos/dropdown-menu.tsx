@@ -9,6 +9,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
+import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
+
+const styles = stylex.create({
+  wide: { width: 224 },
+});
 
 function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
   return (
@@ -55,7 +60,7 @@ function DropdownMenuDemo() {
     <DemoRow>
       <DropdownMenu>
         <Trigger />
-        <DropdownMenuContent>
+        <DropdownMenuContent sx={styles.wide}>
           <DropdownMenuGroup>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuItem>

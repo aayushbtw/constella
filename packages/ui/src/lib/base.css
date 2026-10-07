@@ -100,7 +100,12 @@
   }
 
   /* A popup takes focus to hold it, not as a control. */
-  :where([role="dialog"], [role="alertdialog"]):focus-visible {
+  :where(
+    [role="dialog"],
+    [role="alertdialog"],
+    [role="menu"],
+    [role="listbox"]
+  ):focus-visible {
     outline: none;
   }
 

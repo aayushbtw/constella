@@ -162,6 +162,7 @@ export const durations = stylex.defineConsts({
   hover: "150ms",
   move: "300ms",
   popover: "180ms",
+  popoverExit: "120ms",
   press: "160ms",
   layout: "300ms",
   spin: "1s",

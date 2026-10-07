@@ -42,7 +42,7 @@ A separator is a 1px `edgeSubtle` line, the same faint edge as a divider anywher
 
 A button group joins its items into one control: the corners where two meet go square, and the item before draws the shared edge, so the seam is one line, not two. A separator between filled buttons draws that line instead, full height, and the buttons on both sides keep their own padding. Nested groups sit `space.xs` apart and don't join.
 
-Popups opened from a control (select, dropdown menu, popover) share one surface and one motion: `background` on `shadows.popover`, a fade and a 0.96 scale from the trigger on `durations.popover`, above dialogs on `layers.popover`. A select opened over its trigger (`alignItemWithTrigger`) appears in place, with no motion. A select's items and a menu's are the same row: `controlSm` tall, `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A danger item turns red and highlights in `dangerFillSubtle`. A list item shows the keyboard on its highlight, so it draws no focus ring.
+Popups opened from a control (select, dropdown menu, popover) share one surface and one motion: `background` on `shadows.popover`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); a menu does too for arrow keys and a picked item, which Base UI doesn't mark, so the menu tracks the open-change reason itself. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration. A select opened over its trigger (`alignItemWithTrigger`) appears in place, with no motion. A select's items and a menu's are the same row: `controlSm` tall, `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerFillSubtle`. A list item shows the keyboard on its highlight, so it draws no focus ring.
 
 A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center.
 
@@ -76,7 +76,7 @@ The home page is the tagline set large with Docs, GitHub and X links under it, t
 
 ## Focus
 
-One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` line flush outside the edge. Flush, not offset: an offset ring read as a second box around a text field, and it broke at a button group's squared seams. Outside, not over the edge: over it, the line vanished on a filled button. An invalid control's ring is red, so the error survives focus. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. A popup (a dialog) takes focus to hold it, not as a control, so it draws none. Components never style focus themselves; `constella/no-focus-style` enforces it.
+One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` line flush outside the edge. Flush, not offset: an offset ring read as a second box around a text field, and it broke at a button group's squared seams. Outside, not over the edge: over it, the line vanished on a filled button. An invalid control's ring is red, so the error survives focus. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. A popup (a dialog, menu or list) takes focus to hold it, not as a control, so it draws none; a menu takes it whenever the pointer rests off its items. Components never style focus themselves; `constella/no-focus-style` enforces it.
 
 ## Motion
 
@@ -99,16 +99,17 @@ Never `ease-in`: it delays the moment the eye is watching.
 
 ### Duration
 
-| Token       | For                                     |
-| ----------- | --------------------------------------- |
-| `hover`     | Color changes on hover                  |
-| `press`     | Scale on `:active`                      |
-| `popover`   | Small surfaces that open from a trigger |
-| `dialog`    | A dialog and its backdrop               |
-| `move`      | Indicators and thumbs that travel       |
-| `crossfade` | Cross-fades between states              |
-| `layout`    | A surface growing or shrinking to fit   |
-| `spin`      | One turn of a spinner                   |
+| Token         | For                                     |
+| ------------- | --------------------------------------- |
+| `hover`       | Color changes on hover                  |
+| `press`       | Scale on `:active`                      |
+| `popover`     | Small surfaces that open from a trigger |
+| `popoverExit` | The same surfaces leaving, and submenus |
+| `dialog`      | A dialog and its backdrop               |
+| `move`        | Indicators and thumbs that travel       |
+| `crossfade`   | Cross-fades between states              |
+| `layout`      | A surface growing or shrinking to fit   |
+| `spin`        | One turn of a spinner                   |
 
 Interface motion stays under 300ms. A spinner is the exception: unhurried, so waiting reads as working, not urgent.
 

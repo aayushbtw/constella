@@ -4,6 +4,7 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createContext, useContext, useState } from "react";
 import type { ComponentProps } from "react";
 
 import {
@@ -41,6 +42,9 @@ const dropdownMenuItemVariants = ["default", "danger"] as const;
 type DropdownMenuItemVariant = (typeof dropdownMenuItemVariants)[number];
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
+const closing =
+  ":is([data-ending-style]):not([data-instant], [data-skip-motion])";
+const instant = ":is([data-instant], [data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-popup-open])";
 const danger = ":is([data-variant='danger'])";
 const off = ":is([data-disabled])";
@@ -69,12 +73,21 @@ const styles = stylex.create({
     padding: space.xxs,
     transform: { default: "none", [offstage]: "scale(0.96)" },
     transformOrigin: "var(--transform-origin)",
-    transitionDuration: durations.popover,
+    transitionDuration: {
+      default: durations.popover,
+      [closing]: durations.popoverExit,
+      [instant]: "0s",
+    },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
+  },
+  submenu: {
+    transform: "none",
+    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
+    transitionProperty: "opacity",
   },
   // Select's item, so a menu and a select read as one family.
   item: {
@@ -101,13 +114,28 @@ const styles = stylex.create({
   checkable: {
     paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
   },
+  // Checkbox's tick: draws in from its start, fades out quickly.
   indicator: {
     alignItems: "center",
+    clipPath: {
+      default: "inset(0)",
+      ":is([data-starting-style])": "inset(0 100% 0 0)",
+    },
     display: "flex",
     insetInlineEnd: space.xs,
     justifyContent: "center",
+    opacity: { default: 1, ":is([data-ending-style])": 0 },
     pointerEvents: "none",
     position: "absolute",
+    transitionDuration: {
+      default: durations.move,
+      ":is([data-ending-style])": durations.hover,
+    },
+    transitionProperty: {
+      default: "clip-path, opacity",
+      [media.reducedMotion]: "opacity",
+    },
+    transitionTimingFunction: easings.out,
   },
   chevron: {
     color: colors.textMuted,
@@ -146,8 +174,35 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
-function DropdownMenu(props: MenuPrimitive.Root.Props) {
-  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+const SkipMotion = createContext(false);
+
+// Base UI skips motion only for Enter, Space and Esc; arrow keys and a picked item should too.
+function useSkipMotion(onOpenChange: MenuPrimitive.Root.Props["onOpenChange"]) {
+  const inherited = useContext(SkipMotion);
+  const [skip, setSkip] = useState(false);
+  function handleOpenChange(
+    open: boolean,
+    details: MenuPrimitive.Root.ChangeEventDetails
+  ) {
+    setSkip(
+      details.reason === "list-navigation" || details.reason === "item-press"
+    );
+    onOpenChange?.(open, details);
+  }
+  return [inherited || skip, handleOpenChange] as const;
+}
+
+function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  return (
+    <SkipMotion value={skip}>
+      <MenuPrimitive.Root
+        data-slot="dropdown-menu"
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </SkipMotion>
+  );
 }
 
 function DropdownMenuPortal(props: MenuPrimitive.Portal.Props) {
@@ -168,6 +223,7 @@ function DropdownMenuContent({
   sx,
   ...props
 }: DropdownMenuContentProps) {
+  const skip = useContext(SkipMotion);
   return (
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
@@ -178,6 +234,7 @@ function DropdownMenuContent({
         {...stylex.props(styles.positioner)}
       >
         <MenuPrimitive.Popup
+          data-skip-motion={skip || undefined}
           data-slot="dropdown-menu-content"
           {...props}
           {...stylex.props(styles.popup, sx)}
@@ -224,8 +281,20 @@ function DropdownMenuItem({
   );
 }
 
-function DropdownMenuSub(props: MenuPrimitive.SubmenuRoot.Props) {
-  return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />;
+function DropdownMenuSub({
+  onOpenChange,
+  ...props
+}: MenuPrimitive.SubmenuRoot.Props) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  return (
+    <SkipMotion value={skip}>
+      <MenuPrimitive.SubmenuRoot
+        data-slot="dropdown-menu-sub"
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </SkipMotion>
+  );
 }
 
 function DropdownMenuSubTrigger({
@@ -256,6 +325,7 @@ function DropdownMenuSubContent({
   alignOffset = -Number.parseFloat(space.xxs),
   side = "inline-end",
   sideOffset = 0,
+  sx,
   ...props
 }: DropdownMenuContentProps) {
   return (
@@ -265,6 +335,7 @@ function DropdownMenuSubContent({
       data-slot="dropdown-menu-sub-content"
       side={side}
       sideOffset={sideOffset}
+      sx={[styles.submenu, sx]}
       {...props}
     />
   );

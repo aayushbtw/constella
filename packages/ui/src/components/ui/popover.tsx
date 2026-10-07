@@ -30,6 +30,8 @@ type PopoverContentProps = Styled<PopoverPrimitive.Popup.Props> &
   >;
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
+const closing = ":is([data-ending-style]):not([data-instant])";
+const instant = ":is([data-instant])";
 
 // shadcn's padding and gap, off our 4px grid.
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
@@ -54,7 +56,11 @@ const styles = stylex.create({
     padding: px10,
     transform: { default: "none", [offstage]: "scale(0.96)" },
     transformOrigin: "var(--transform-origin)",
-    transitionDuration: durations.popover,
+    transitionDuration: {
+      default: durations.popover,
+      [closing]: durations.popoverExit,
+      [instant]: "0s",
+    },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",

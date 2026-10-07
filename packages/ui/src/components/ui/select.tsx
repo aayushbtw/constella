@@ -50,6 +50,7 @@ const disabled = ":is(:disabled, [data-disabled])";
 const offstage = ":is([data-starting-style], [data-ending-style])";
 // Over the trigger, the popup opens in place, so it doesn't travel.
 const aligned = ":is([data-side='none'])";
+const closing = ":is([data-ending-style]):not([data-side='none'])";
 
 // In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
 const joined = ":not(:first-child, [data-slot='button-group-separator'] + *)";
@@ -173,7 +174,11 @@ const styles = stylex.create({
     // Holds the scroll arrows, which Base UI positions absolutely.
     position: "relative",
     transformOrigin: "var(--transform-origin)",
-    transitionDuration: { default: durations.popover, [aligned]: "0s" },
+    transitionDuration: {
+      default: durations.popover,
+      [closing]: durations.popoverExit,
+      [aligned]: "0s",
+    },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",
