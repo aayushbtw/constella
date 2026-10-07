@@ -139,6 +139,29 @@ Use `variant="danger"` for an action that can't be undone.
 </DropdownMenuItem>
 ```
 
+## Avatar
+
+Render an [Avatar](/docs/components/avatar) inside the trigger for an account menu.
+
+<!-- ::demo name="avatar-dropdown" -->
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger
+    render={<Button aria-label="Account" size="icon" variant="ghost" />}
+  >
+    <Avatar>
+      <AvatarImage alt="@shadcn" src="https://github.com/shadcn.png" />
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem variant="danger">Log out</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
 ## API Reference
 
 | Part | Adds |
@@ -148,9 +171,3 @@ Use `variant="danger"` for an action that can't be undone.
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Menu](https://base-ui.com/react/components/menu).
-
-## Pending
-
-Blocked on missing components. Remove this section before the page leaves draft.
-
-- Avatar: add shadcn's Avatar example (account switcher).

@@ -1,6 +1,14 @@
 import type { ComponentType } from "react";
 
 import {
+  AvatarBadgeDemo,
+  AvatarDemo,
+  AvatarDropdownDemo,
+  AvatarFallbackDemo,
+  AvatarGroupDemo,
+  AvatarSizeDemo,
+} from "~/components/demos/avatar";
+import {
   BadgeColorsDemo,
   BadgeDemo,
   BadgeIconDemo,
@@ -188,6 +196,12 @@ import {
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
+  avatar: AvatarDemo,
+  "avatar-badge": AvatarBadgeDemo,
+  "avatar-dropdown": AvatarDropdownDemo,
+  "avatar-fallback": AvatarFallbackDemo,
+  "avatar-group": AvatarGroupDemo,
+  "avatar-size": AvatarSizeDemo,
   badge: BadgeDemo,
   "badge-colors": BadgeColorsDemo,
   "badge-icon": BadgeIconDemo,
