@@ -44,6 +44,14 @@ import {
   DialogScrollableDemo,
 } from "~/components/demos/dialog";
 import {
+  DropdownMenuCheckboxesDemo,
+  DropdownMenuDangerDemo,
+  DropdownMenuDemo,
+  DropdownMenuIconsDemo,
+  DropdownMenuRadioGroupDemo,
+  DropdownMenuSubmenuDemo,
+} from "~/components/demos/dropdown-menu";
+import {
   FieldCardDemo,
   FieldDemo,
   FieldDisabledDemo,
@@ -189,6 +197,12 @@ const demos = {
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,
+  "dropdown-menu": DropdownMenuDemo,
+  "dropdown-menu-checkboxes": DropdownMenuCheckboxesDemo,
+  "dropdown-menu-danger": DropdownMenuDangerDemo,
+  "dropdown-menu-icons": DropdownMenuIconsDemo,
+  "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
+  "dropdown-menu-submenu": DropdownMenuSubmenuDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,
   "field-disabled": FieldDisabledDemo,
