@@ -97,6 +97,7 @@ Use `buttonStyles` to make a link look like a button.
 
 ```tsx
 import * as stylex from "@stylexjs/stylex";
+
 import { buttonStyles } from "@/components/ui/button";
 
 <a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>

@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@constella/lint": "workspace:*",
-    "@tanstack/intent": "^0.5.3",
+    "@tanstack/intent": "^0.5.5",
     "shadcn": "^4.21.1",
     "typescript": "^7.0.2",
-    "ultracite": "7.12.2",
+    "ultracite": "7.12.4",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
