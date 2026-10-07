@@ -263,6 +263,51 @@ Use `InputGroupButton` for an action inside the input. It's a ghost `Button` tha
 </InputGroup>
 ```
 
+Render a button as a [Popover](/docs/components/popover) trigger to explain the field.
+
+```tsx
+<InputGroupAddon>
+  <Popover>
+    <PopoverTrigger
+      render={<InputGroupButton size="icon-xs" variant="secondary" />}
+    >
+      <HugeiconsIcon icon={InformationCircleIcon} />
+    </PopoverTrigger>
+    <PopoverContent align="start">
+      <PopoverHeader>
+        <PopoverTitle>Your connection is not secure.</PopoverTitle>
+      </PopoverHeader>
+    </PopoverContent>
+  </Popover>
+  <InputGroupText>https://</InputGroupText>
+</InputGroupAddon>
+```
+
+## Dropdown
+
+Render a button as a [Dropdown Menu](/docs/components/dropdown-menu) trigger for more actions.
+
+<!-- ::demo name="input-group-dropdown" -->
+
+```tsx
+<InputGroup>
+  <InputGroupInput placeholder="Enter file name" />
+  <InputGroupAddon align="inline-end">
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<InputGroupButton aria-label="More" size="icon-xs" />}
+      >
+        <HugeiconsIcon icon={MoreHorizontalIcon} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem>Copy path</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </InputGroupAddon>
+</InputGroup>
+```
+
 ## Kbd
 
 Put a [Kbd](/docs/components/kbd) in an addon to show a shortcut.
@@ -363,10 +408,3 @@ import TextareaAutosize from "react-textarea-autosize";
 `InputGroupButton` takes `size`: `"xs"` (default), `"sm"`, `"icon-xs"` or `"icon-sm"`, and every other [Button](/docs/components/button) prop; `variant` defaults to `"ghost"`.
 
 `InputGroupInput` and `InputGroupTextarea` take every [Input](/docs/components/input) and [Textarea](/docs/components/textarea) prop. Every part takes `sx`, applied last.
-
-## Pending
-
-Blocked on missing components. Remove this section before the page leaves draft.
-
-- Popover: add shadcn's secure-connection button to Button.
-- DropdownMenu: add the Dropdown example.

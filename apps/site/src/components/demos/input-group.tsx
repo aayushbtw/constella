@@ -1,4 +1,5 @@
 import {
+  ArrowDown01Icon,
   ArrowTurnBackwardIcon,
   Copy01Icon,
   CreditCardIcon,
@@ -6,6 +7,7 @@ import {
   InformationCircleIcon,
   JavaScriptIcon,
   Mail01Icon,
+  MoreHorizontalIcon,
   Refresh01Icon,
   Search01Icon,
   StarIcon,
@@ -18,6 +20,13 @@ import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Field,
   FieldDescription,
@@ -34,6 +43,14 @@ import {
   inputGroupTextareaStyles,
 } from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
 import {
   durations,
@@ -386,6 +403,27 @@ function InputGroupButtonDemo() {
         </InputGroup>
         <InputGroup>
           <InputGroupAddon>
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <InputGroupButton
+                    aria-label="Connection info"
+                    size="icon-xs"
+                    variant="secondary"
+                  />
+                }
+              >
+                <Glyph icon={InformationCircleIcon} />
+              </PopoverTrigger>
+              <PopoverContent align="start">
+                <PopoverHeader>
+                  <PopoverTitle>Your connection is not secure.</PopoverTitle>
+                  <PopoverDescription>
+                    You should not enter any sensitive information on this site.
+                  </PopoverDescription>
+                </PopoverHeader>
+              </PopoverContent>
+            </Popover>
             <InputGroupText>https://</InputGroupText>
           </InputGroupAddon>
           <InputGroupInput aria-label="Website" />
@@ -412,6 +450,65 @@ function InputGroupButtonDemo() {
           />
           <InputGroupAddon align="inline-end">
             <InputGroupButton variant="secondary">Search</InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+      </div>
+    </DemoRow>
+  );
+}
+
+const fileActions = ["Settings", "Copy path", "Open location"];
+const searchScopes = ["Documentation", "Blog Posts", "Changelog"];
+
+function InputGroupDropdownDemo() {
+  return (
+    <DemoRow sx={styles.narrow}>
+      <div {...stylex.props(styles.stack)}>
+        <InputGroup>
+          <InputGroupInput
+            aria-label="File name"
+            placeholder="Enter file name"
+          />
+          <InputGroupAddon align="inline-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<InputGroupButton aria-label="More" size="icon-xs" />}
+              >
+                <Glyph icon={MoreHorizontalIcon} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  {fileActions.map((action) => (
+                    <DropdownMenuItem key={action}>{action}</DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </InputGroupAddon>
+        </InputGroup>
+        <InputGroup>
+          <InputGroupInput
+            aria-label="Search query"
+            placeholder="Enter search query"
+          />
+          <InputGroupAddon align="inline-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger render={<InputGroupButton />}>
+                Search In...
+                <Glyph
+                  data-icon="inline-end"
+                  icon={ArrowDown01Icon}
+                  size={sizes.iconXs}
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  {searchScopes.map((scope) => (
+                    <DropdownMenuItem key={scope}>{scope}</DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </InputGroupAddon>
         </InputGroup>
       </div>
@@ -525,6 +622,7 @@ function InputGroupCustomDemo() {
 }
 
 export {
+  InputGroupDropdownDemo,
   InputGroupBlockEndDemo,
   InputGroupBlockStartDemo,
   InputGroupButtonDemo,

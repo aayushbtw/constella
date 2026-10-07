@@ -1,11 +1,27 @@
 import {
   Add01Icon,
+  Alert02Icon,
+  Archive02Icon,
+  ArrowDown01Icon,
   ArrowLeft01Icon,
   ArrowRight01Icon,
   AudioWave01Icon,
+  CalendarAdd01Icon,
+  Clock01Icon,
+  Copy01Icon,
+  Delete02Icon,
+  FilterHorizontalIcon,
   Link01Icon,
+  Mail01Icon,
   MinusSignIcon,
+  MoreHorizontalIcon,
+  Robot01Icon,
   Search01Icon,
+  Share08Icon,
+  Tag01Icon,
+  Tick02Icon,
+  UserRemove01Icon,
+  VolumeOffIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
@@ -19,6 +35,20 @@ import {
   ButtonGroupSeparator,
   ButtonGroupText,
 } from "@/components/ui/button-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputGroup,
@@ -27,12 +57,21 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -50,6 +89,15 @@ const styles = stylex.create({
   },
   narrow: { maxWidth: 384, width: "100%" },
   fill: { flexGrow: 1 },
+  noResize: { resize: "none" },
+  srOnly: {
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1,
+  },
   mono: { fontFamily: fonts.mono },
   muted: { color: colors.textMuted },
 });
@@ -83,7 +131,152 @@ function ButtonGroupDemo() {
         </ButtonGroup>
         <ButtonGroup>
           <Button variant="outline">Snooze</Button>
+          <MoreMenu />
         </ButtonGroup>
+      </ButtonGroup>
+    </DemoRow>
+  );
+}
+
+function MoreMenu() {
+  const [label, setLabel] = useState("personal");
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button aria-label="More options" size="icon" variant="outline" />
+        }
+      >
+        <Glyph icon={MoreHorizontalIcon} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Glyph icon={Mail01Icon} />
+            Mark as Read
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Glyph icon={Archive02Icon} />
+            Archive
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Glyph icon={Clock01Icon} />
+            Snooze
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Glyph icon={CalendarAdd01Icon} />
+            Add to Calendar
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Glyph icon={FilterHorizontalIcon} />
+            Add to List
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Glyph icon={Tag01Icon} />
+              Label As...
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup onValueChange={setLabel} value={label}>
+                <DropdownMenuRadioItem value="personal">
+                  Personal
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="work">Work</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="other">
+                  Other
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="danger">
+          <Glyph icon={Delete02Icon} />
+          Trash
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+const conversationActions = [
+  { icon: VolumeOffIcon, label: "Mute Conversation" },
+  { icon: Tick02Icon, label: "Mark as Read" },
+  { icon: Alert02Icon, label: "Report Conversation" },
+  { icon: UserRemove01Icon, label: "Block User" },
+  { icon: Share08Icon, label: "Share Conversation" },
+  { icon: Copy01Icon, label: "Copy Conversation" },
+];
+
+function ButtonGroupDropdownDemo() {
+  return (
+    <DemoRow>
+      <ButtonGroup>
+        <Button variant="outline">Follow</Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button aria-label="More actions" size="icon" variant="outline" />
+            }
+          >
+            <Glyph icon={ArrowDown01Icon} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              {conversationActions.map((action) => (
+                <DropdownMenuItem key={action.label}>
+                  <Glyph icon={action.icon} />
+                  {action.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="danger">
+              <Glyph icon={Delete02Icon} />
+              Delete Conversation
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </ButtonGroup>
+    </DemoRow>
+  );
+}
+
+function ButtonGroupPopoverDemo() {
+  return (
+    <DemoRow>
+      <ButtonGroup>
+        <Button variant="outline">
+          <Glyph data-icon="inline-start" icon={Robot01Icon} />
+          Copilot
+        </Button>
+        <Popover>
+          <PopoverTrigger
+            render={
+              <Button aria-label="Open Popover" size="icon" variant="outline" />
+            }
+          >
+            <Glyph icon={ArrowDown01Icon} />
+          </PopoverTrigger>
+          <PopoverContent align="end">
+            <PopoverHeader>
+              <PopoverTitle>Start a new task with Copilot</PopoverTitle>
+              <PopoverDescription>
+                Describe your task in natural language.
+              </PopoverDescription>
+            </PopoverHeader>
+            <Field>
+              <FieldLabel sx={styles.srOnly}>Task Description</FieldLabel>
+              <Textarea placeholder="I need to..." sx={styles.noResize} />
+              <FieldDescription>
+                Copilot will open a pull request for review.
+              </FieldDescription>
+            </Field>
+          </PopoverContent>
+        </Popover>
       </ButtonGroup>
     </DemoRow>
   );
@@ -317,6 +510,8 @@ function ButtonGroupTextDemo() {
 }
 
 export {
+  ButtonGroupDropdownDemo,
+  ButtonGroupPopoverDemo,
   ButtonGroupDemo,
   ButtonGroupInputDemo,
   ButtonGroupInputGroupDemo,

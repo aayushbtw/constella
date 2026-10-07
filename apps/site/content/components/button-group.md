@@ -19,6 +19,19 @@ draft: true
   </ButtonGroup>
   <ButtonGroup>
     <Button variant="outline">Snooze</Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button aria-label="More options" size="icon" variant="outline" />
+        }
+      >
+        <MoreHorizontalIcon />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>Mark as Read</DropdownMenuItem>
+        <DropdownMenuItem>Archive</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </ButtonGroup>
 </ButtonGroup>
 ```
@@ -197,6 +210,31 @@ Put an `InputGroup` in the group for an input with its own addons.
 </ButtonGroup>
 ```
 
+## Dropdown Menu
+
+Render the last button as a [Dropdown Menu](/docs/components/dropdown-menu) trigger for a split button with more actions.
+
+<!-- ::demo name="button-group-dropdown" -->
+
+```tsx
+<ButtonGroup>
+  <Button variant="outline">Follow</Button>
+  <DropdownMenu>
+    <DropdownMenuTrigger
+      render={
+        <Button aria-label="More actions" size="icon" variant="outline" />
+      }
+    >
+      <ArrowDown01Icon />
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>Mute Conversation</DropdownMenuItem>
+      <DropdownMenuItem variant="danger">Delete Conversation</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</ButtonGroup>
+```
+
 ## Select
 
 Put a [Select](/docs/components/select) beside an input, like a currency before an amount.
@@ -216,6 +254,36 @@ Put a [Select](/docs/components/select) beside an input, like a currency before 
     </SelectContent>
   </Select>
   <Input placeholder="10.00" />
+</ButtonGroup>
+```
+
+## Popover
+
+Render the last button as a [Popover](/docs/components/popover) trigger for options that need more room.
+
+<!-- ::demo name="button-group-popover" -->
+
+```tsx
+<ButtonGroup>
+  <Button variant="outline">Copilot</Button>
+  <Popover>
+    <PopoverTrigger
+      render={
+        <Button aria-label="Open Popover" size="icon" variant="outline" />
+      }
+    >
+      <ArrowDown01Icon />
+    </PopoverTrigger>
+    <PopoverContent align="end">
+      <PopoverHeader>
+        <PopoverTitle>Start a new task with Copilot</PopoverTitle>
+        <PopoverDescription>
+          Describe your task in natural language.
+        </PopoverDescription>
+      </PopoverHeader>
+      <Textarea placeholder="I need to..." />
+    </PopoverContent>
+  </Popover>
 </ButtonGroup>
 ```
 
@@ -263,8 +331,3 @@ Takes every `div` prop, plus `sx`, applied last.
 | Prop     | Values               | Default |
 | -------- | -------------------- | ------- |
 | `render` | `React.ReactElement` |         |
-
-## Pending
-
-- **DropdownMenu:** the main preview's "More" menu and the Dropdown Menu example.
-- **Popover:** the Popover example.
