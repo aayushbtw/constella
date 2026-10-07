@@ -42,6 +42,14 @@ A separator is a 1px `edgeSubtle` line, the same faint edge as a divider anywher
 
 A button group joins its items into one control: the corners where two meet go square, and the item before draws the shared edge, so the seam is one line, not two. A separator between filled buttons draws that line instead, full height, and the buttons on both sides keep their own padding. Nested groups sit `space.xs` apart and don't join.
 
+Popups opened from a control (select, dropdown menu, popover) share one surface and one motion: `background` on `shadows.popover`, a fade and a 0.96 scale from the trigger on `durations.popover`, above dialogs on `layers.popover`. A select opened over its trigger (`alignItemWithTrigger`) appears in place, with no motion. A select's items and a menu's are the same row: `controlSm` tall, `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A danger item turns red and highlights in `dangerFillSubtle`. A list item shows the keyboard on its highlight, so it draws no focus ring.
+
+A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center.
+
+A badge takes the button's six variants on a 20px pill, so emphasis means the same thing on both. Only a badge rendered as a link answers hover.
+
+A table's rows are divided by `edgeSubtle`, the faint divider, and its footer sits on `fillSubtle`. A selected row takes `fill`. An avatar follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself, and avatars in a group are cut apart by a ring of the page color.
+
 A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popup's sides and bottom, so the actions read as their own row instead of floating under the text. The popup pads `space.md`; any more and the 16px title looks lost in it.
 
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
