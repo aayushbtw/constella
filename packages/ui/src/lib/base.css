@@ -48,46 +48,30 @@
     --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
   }
 
-  /* Every role is its own variable, valued by a scale step, so a theme can regenerate the
-     scales or override one role by hand. These defaults are Polaris, the default theme: gray, ink accent. A theme sets
-     these on `:root[data-theme]`, which outranks this layer. */
+  /* Every role is its own variable, valued by a step of the theme's scales (`theme` in
+     tokens.stylex.ts), so a theme can map the scales or override one role by hand. */
   :root {
-    --background: var(--gray-1);
-    --text-primary: var(--gray-12);
-    --text-secondary: var(--gray-11);
-    --fill-subtle: var(--gray-a2);
-    --fill: var(--gray-a3);
-    --fill-strong: var(--gray-a4);
-    --fill-opaque: var(--gray-3);
-    --edge-subtle: var(--gray-a4);
-    --edge: var(--gray-a6);
-    --inverted: var(--gray-12);
-    --on-inverted: var(--gray-1);
+    --background: var(--neutral-1);
+    --text-primary: var(--neutral-12);
+    --text-secondary: var(--neutral-11);
+    --fill-subtle: var(--neutral-a2);
+    --fill: var(--neutral-a3);
+    --fill-strong: var(--neutral-a4);
+    --fill-opaque: var(--neutral-3);
+    --edge-subtle: var(--neutral-a4);
+    --edge: var(--neutral-a6);
+    --inverted: var(--neutral-12);
+    --on-inverted: var(--neutral-1);
     --overlay: var(--black-a5);
     --danger-solid: var(--red-9);
     --info-solid: var(--blue-9);
     --success-solid: var(--green-9);
-    --accent-solid: var(--gray-12);
-    --on-accent: var(--gray-1);
-    --focus-ring: var(--gray-a8);
-    --selection: var(--gray-a5);
-    /* One radius, for controls; the rest derive from it so nested corners stay concentric
-       at `space.xxs` and all reach 0 together. */
-    --radius: 8px;
+    /* Corners derive from the one radius, so nested ones stay concentric at `space.xxs`
+       and all reach 0 together. */
     --radius-sm: var(--radius);
     --radius-md: calc(var(--radius) + min(var(--radius), 4px));
     --radius-xs: max(0px, var(--radius) - 4px);
     --radius-chip: max(0px, var(--radius) - 2px);
-    --size-control-xxs: 20px;
-    --size-control-xs: 24px;
-    --size-control-sm: 28px;
-    --size-control-md: 32px;
-    --size-control-lg: 36px;
-    --space-xs: 8px;
-    --space-sm: 12px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 48px;
   }
 
   /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.
@@ -95,7 +79,7 @@
      amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
   :root,
   .light {
-    --text-muted: var(--gray-10);
+    --text-muted: var(--neutral-10);
     --on-inverted-fill: var(--white-a4);
     /* Floating surfaces sit above the page: white on the off-white page, a step lighter in dark. */
     --raised: #fff;
@@ -107,9 +91,9 @@
   }
 
   .dark {
-    --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
+    --text-muted: color-mix(in oklab, var(--neutral-10), var(--neutral-11));
     --on-inverted-fill: var(--black-a2);
-    --raised: var(--gray-2);
+    --raised: var(--neutral-2);
     --danger: var(--red-11);
     --info: var(--blue-11);
     --success: var(--green-11);

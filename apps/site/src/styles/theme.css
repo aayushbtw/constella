@@ -1,5 +1,5 @@
 :root {
-  --stage: var(--gray-2);
+  --stage: var(--neutral-2);
 }
 
 /* Radix has no step below gray-1, so dark sets its own. */

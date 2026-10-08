@@ -1,0 +1,78 @@
+// Your theme: edit these to make Constella yours. Everything else in the system reads them.
+//
+// - Scales: `--neutral-*` and `--accent-*` point at Radix Colors scales by name. To change
+//   one, import its four files and point the steps at it (the theme builder writes this).
+// - Roles that carry the accent: its solid fill, the text on it, the focus ring, selection.
+// - Shape and density: one radius (the rest derive from it), control heights, spacing.
+//
+// The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing.
+// Literal names, so `base.css` can read them. For more themes to switch between at
+// runtime, `stylex.createTheme(theme, { … })` and apply it to <html>.
+import * as stylex from "@stylexjs/stylex";
+
+export const theme = stylex.defineVars({
+  "--neutral-1": "var(--gray-1)",
+  "--neutral-2": "var(--gray-2)",
+  "--neutral-3": "var(--gray-3)",
+  "--neutral-4": "var(--gray-4)",
+  "--neutral-5": "var(--gray-5)",
+  "--neutral-6": "var(--gray-6)",
+  "--neutral-7": "var(--gray-7)",
+  "--neutral-8": "var(--gray-8)",
+  "--neutral-9": "var(--gray-9)",
+  "--neutral-10": "var(--gray-10)",
+  "--neutral-11": "var(--gray-11)",
+  "--neutral-12": "var(--gray-12)",
+  "--neutral-a1": "var(--gray-a1)",
+  "--neutral-a2": "var(--gray-a2)",
+  "--neutral-a3": "var(--gray-a3)",
+  "--neutral-a4": "var(--gray-a4)",
+  "--neutral-a5": "var(--gray-a5)",
+  "--neutral-a6": "var(--gray-a6)",
+  "--neutral-a7": "var(--gray-a7)",
+  "--neutral-a8": "var(--gray-a8)",
+  "--neutral-a9": "var(--gray-a9)",
+  "--neutral-a10": "var(--gray-a10)",
+  "--neutral-a11": "var(--gray-a11)",
+  "--neutral-a12": "var(--gray-a12)",
+  "--accent-1": "var(--neutral-1)",
+  "--accent-2": "var(--neutral-2)",
+  "--accent-3": "var(--neutral-3)",
+  "--accent-4": "var(--neutral-4)",
+  "--accent-5": "var(--neutral-5)",
+  "--accent-6": "var(--neutral-6)",
+  "--accent-7": "var(--neutral-7)",
+  "--accent-8": "var(--neutral-8)",
+  "--accent-9": "var(--neutral-9)",
+  "--accent-10": "var(--neutral-10)",
+  "--accent-11": "var(--neutral-11)",
+  "--accent-12": "var(--neutral-12)",
+  "--accent-a1": "var(--neutral-a1)",
+  "--accent-a2": "var(--neutral-a2)",
+  "--accent-a3": "var(--neutral-a3)",
+  "--accent-a4": "var(--neutral-a4)",
+  "--accent-a5": "var(--neutral-a5)",
+  "--accent-a6": "var(--neutral-a6)",
+  "--accent-a7": "var(--neutral-a7)",
+  "--accent-a8": "var(--neutral-a8)",
+  "--accent-a9": "var(--neutral-a9)",
+  "--accent-a10": "var(--neutral-a10)",
+  "--accent-a11": "var(--neutral-a11)",
+  "--accent-a12": "var(--neutral-a12)",
+  "--accent-contrast": "var(--neutral-1)",
+  "--accent-solid": "var(--neutral-12)",
+  "--on-accent": "var(--neutral-1)",
+  "--focus-ring": "var(--neutral-a8)",
+  "--selection": "var(--neutral-a5)",
+  "--radius": "8px",
+  "--size-control-xxs": "20px",
+  "--size-control-xs": "24px",
+  "--size-control-sm": "28px",
+  "--size-control-md": "32px",
+  "--size-control-lg": "36px",
+  "--space-xs": "8px",
+  "--space-sm": "12px",
+  "--space-md": "16px",
+  "--space-lg": "24px",
+  "--space-xl": "48px",
+});

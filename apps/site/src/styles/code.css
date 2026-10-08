@@ -3,8 +3,8 @@
    The backing is the block's translucent fill over the page, made opaque.
    `code` outranks the highlighter's same rule, which loads after this file. */
 pre[data-lang] code .th-line::before {
-  background-color: var(--gray-1);
-  background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+  background-color: var(--neutral-1);
+  background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
   inset-inline-start: 0;
   padding-inline-start: 16px;
   position: sticky;

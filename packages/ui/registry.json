@@ -16,6 +16,10 @@
           "type": "registry:lib"
         },
         {
+          "path": "src/lib/theme.stylex.ts",
+          "type": "registry:lib"
+        },
+        {
           "path": "src/lib/base.css",
           "type": "registry:lib"
         },
