@@ -231,6 +231,15 @@ import {
   ToastTypesDemo,
 } from "~/components/demos/toast";
 import {
+  ToggleDemo,
+  ToggleDisabledDemo,
+  ToggleGroupDemo,
+  ToggleGroupSizeDemo,
+  ToggleGroupSpacingDemo,
+  ToggleOutlineDemo,
+  ToggleSizeDemo,
+} from "~/components/demos/toggle";
+import {
   TooltipDemo,
   TooltipDisabledDemo,
   TooltipKbdDemo,
@@ -424,6 +433,13 @@ const demos = {
   "textarea-invalid": TextareaInvalidDemo,
   "textarea-size": TextareaSizeDemo,
   "theme-builder": ThemeBuilderDemo,
+  toggle: ToggleDemo,
+  "toggle-disabled": ToggleDisabledDemo,
+  "toggle-group": ToggleGroupDemo,
+  "toggle-group-size": ToggleGroupSizeDemo,
+  "toggle-group-spacing": ToggleGroupSpacingDemo,
+  "toggle-outline": ToggleOutlineDemo,
+  "toggle-size": ToggleSizeDemo,
   tooltip: TooltipDemo,
   "tooltip-disabled": TooltipDisabledDemo,
   "tooltip-kbd": TooltipKbdDemo,

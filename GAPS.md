@@ -40,7 +40,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Input
 
-- [ ] **Toggle** and **ToggleGroup**: segmented filters.
+- [x] **Toggle** and **ToggleGroup**: segmented filters.
 - [ ] **PromptInput**: the chat composer on `InputGroup`. Grows with its text, submits on Enter (not Shift+Enter or mid-IME), a header for attachments, a footer for tools, and a submit that turns into Stop while streaming.
 
 ### Chat
