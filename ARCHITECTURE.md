@@ -40,6 +40,19 @@ Alert
 - **A component's own variables are `defineVars` in `tokens.stylex.ts`** (`joins`, `avatarVars`). StyleX's types reject a raw `--custom-property` key, and `defineVars` only compiles in a `.stylex.ts` file.
 - **Repeated style shapes are helpers.** StyleX evaluates arrow functions inside `stylex.create`, not function declarations, so those helpers are arrows with `func-style` disabled around them.
 
+## Styling boundaries
+
+Learned from Linear's move to StyleX ([Styling Linear for the future](https://linear.app/now/styling-linear-for-the-future-stylex)): the patterns hardest to keep correct at scale are the ones that style at a distance. Every rule here keeps a component's look readable from its own file.
+
+- **A component owns its look.** What a part looks like is written in its file. A child may adapt to where it sits by declaring the condition itself (Spinner's `:is([data-slot='badge'] *)`); a parent may change its own layout by what it holds (`:has(> [data-slot='field-content'])`). A parent never styles a component or element it didn't render.
+- **`sx` is the only way in.** No `className`, no `style`, no wrapping a component to restyle it. A part that takes `sx` passes it last, and a wrapper passes it through, never drops it.
+- **`base.css` is the only escape hatch.** Global CSS only for what StyleX can't reach: third-party DOM, and children a component doesn't render (the outline badge's icons). Each rule there says why it can't be StyleX.
+- **Longhands only.** StyleX resolves a shorthand against its longhands by property priority, not by order, so mixing them across styles that merge silently changes the winner. No multi-value shorthands either.
+- **Structure from JS before structural selectors.** When a parent can know a child's position or state without it leaking, pass it as a prop or `data-*`, not `:first-child`/`:nth-child`. Group joins stay CSS: context passes through portals, so every popup opened from a group would join too.
+- **Shared interaction states.** Hover and press come from one shared definition: hover only on pointer devices, press for touch, so every control answers the same way.
+- **Portals carry the theme.** The theme is a class on `<html>` today, so a portaled popup inherits it. If a theme is ever set on a subtree, every portaled part must re-apply it, or its popups render in the page's theme.
+- **Themes are tokens, never branches.** If themes are ever generated (a user's accent or contrast), they set the same `defineVars` tokens; components still read only tokens.
+
 ## Tokens
 
 Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `packages/ui/src/lib/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
