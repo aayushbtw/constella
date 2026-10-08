@@ -59,6 +59,7 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
+import { CollapsibleDemo } from "~/components/demos/collapsible";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import {
   DialogControlledDemo,
@@ -289,6 +290,7 @@ const demos = {
   "checkbox-table": CheckboxTableDemo,
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
+  collapsible: CollapsibleDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,
