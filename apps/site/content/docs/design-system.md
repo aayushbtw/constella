@@ -31,6 +31,7 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 | `accent` | The one solid fill, with `onAccent` text; the theme's brand color |
 | `inverted` | Tooltips: the ink surface, with `onInverted` text |
 | `background` | The page |
+| `raised` | Popovers, menus, dialogs and toasts |
 | `danger` | Errors and destructive actions |
 | `success` | Completed actions |
 | `warning` | Something needs attention |
@@ -97,6 +98,8 @@ Controls take a fixed height, so a button and an input in one row line up.
 | --------- | -------------------------------------------------------------- |
 | `control` | Under a bordered control                                       |
 | `popover` | Floating surfaces; it draws their edge, so they need no border |
+| `dialog`  | A dialog: the same edge, and a farther shadow                  |
+| `primary` | The primary button: a lit top edge, a shaded bottom one        |
 
 ## Motion
 
@@ -108,13 +111,13 @@ Each curve over `durations.move`. Slow it down to see the shape.
 
 <!-- ::demo name="motion-easing" -->
 
-| Token       | For                                   |
-| ----------- | ------------------------------------- |
-| `out`       | Entrances and presses                 |
-| `inOut`     | Things traveling across the screen    |
-| `overshoot` | Small elements that should feel alive |
-| `layout`    | A surface growing or shrinking to fit |
-| `crossfade` | One state replacing another in place  |
+| Token       | For                                               |
+| ----------- | ------------------------------------------------- |
+| `out`       | Entrances and presses                             |
+| `inOut`     | Things traveling across the screen                |
+| `overshoot` | A small mark landing: a switch thumb, a radio dot |
+| `layout`    | A surface growing or shrinking to fit             |
+| `crossfade` | One state replacing another in place              |
 
 Color changes on hover use the CSS keyword `ease`. Nothing uses `ease-in`.
 
@@ -127,7 +130,7 @@ Interface motion stays under 300ms. A spinner is the exception.
 | `hover`     | 150ms | Color changes on hover                  |
 | `press`     | 160ms | Scale on `:active`                      |
 | `popover`   | 180ms | Small surfaces that open from a trigger |
-| `move`      | 300ms | Indicators and thumbs that travel       |
+| `move`      | 250ms | Indicators and thumbs that travel       |
 | `layout`    | 300ms | A surface growing or shrinking to fit   |
 | `crossfade` | 300ms | Cross-fades between states              |
 | `spin`      | 1s    | One turn of a spinner                   |
