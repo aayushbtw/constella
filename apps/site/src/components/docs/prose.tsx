@@ -72,7 +72,10 @@ const styles = stylex.create({
   },
   code: {
     backgroundColor: colors.fillSubtle,
-    borderRadius: radii.xs,
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
     boxShadow: shadows.card,
     color: colors.textPrimary,
     fontFamily: fonts.mono,
@@ -85,7 +88,10 @@ const styles = stylex.create({
   codeBlock: {
     ...flow,
     backgroundColor: colors.fillSubtle,
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     boxShadow: shadows.card,
     position: "relative",
   },
@@ -135,7 +141,10 @@ const styles = stylex.create({
   // A thin frame on the page, holding the preview and any controls under it.
   demo: {
     ...flow,
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     boxShadow: shadows.inset,
     paddingBlock: space.xxs,
     paddingInlineEnd: space.xxs,

@@ -28,7 +28,31 @@ const styles = stylex.create({
   kbd: {
     alignItems: "center",
     backgroundColor: { default: colors.fill, [inTooltip]: colors.onAccentFill },
-    borderRadius: {
+    borderStartStartRadius: {
+      default: radii.chip,
+      [inButton("sm")]: nested(sizes.controlSm),
+      [inInputGroup("sm")]: nested(sizes.controlSm),
+      [inButton("default")]: nested(sizes.controlMd),
+      [inInputGroup("default")]: nested(sizes.controlMd),
+      [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
+    },
+    borderStartEndRadius: {
+      default: radii.chip,
+      [inButton("sm")]: nested(sizes.controlSm),
+      [inInputGroup("sm")]: nested(sizes.controlSm),
+      [inButton("default")]: nested(sizes.controlMd),
+      [inInputGroup("default")]: nested(sizes.controlMd),
+      [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
+    },
+    borderEndStartRadius: {
+      default: radii.chip,
+      [inButton("sm")]: nested(sizes.controlSm),
+      [inInputGroup("sm")]: nested(sizes.controlSm),
+      [inButton("default")]: nested(sizes.controlMd),
+      [inInputGroup("default")]: nested(sizes.controlMd),
+      [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
+    },
+    borderEndEndRadius: {
       default: radii.chip,
       [inButton("sm")]: nested(sizes.controlSm),
       [inInputGroup("sm")]: nested(sizes.controlSm),

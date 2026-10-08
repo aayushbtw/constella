@@ -30,7 +30,10 @@ const styles = stylex.create({
   popup: {
     alignItems: "center",
     backgroundColor: colors.accent,
-    borderRadius: radii.sm,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     color: colors.onAccent,
     display: "flex",
     fontSize: fontSizes.xxs,

@@ -19,7 +19,8 @@ const styles = stylex.create({
     color: colors.textSecondary,
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.text,
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
   },
 });
 

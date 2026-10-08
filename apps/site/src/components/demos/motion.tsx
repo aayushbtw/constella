@@ -58,7 +58,10 @@ const styles = stylex.create({
     position: "absolute",
   },
   graphWell: {
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     paddingBlock: space.lg,
     paddingInline: space.lg,
   },
@@ -120,12 +123,18 @@ const styles = stylex.create({
   },
   dot: {
     backgroundColor: colors.accent,
-    borderRadius: radii.full,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
     height: dot,
     width: dot,
   },
   trackWell: {
-    borderRadius: radii.full,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
     width: "100%",
   },
   // As wide as the track, so moving it its own width less a dot lands the dot at the end.

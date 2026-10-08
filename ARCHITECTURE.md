@@ -74,6 +74,7 @@ Components never branch on the theme. Every color is a token valued by a Radix s
 | `constella/box-edge` | `edgeSubtle` on a `borderColor` |
 | `constella/no-focus-style` | Any `outline*` in a component's styles |
 | `constella/no-raw-colors` | A Radix step or hex in styles, not a `colors` token |
-| `constella/no-shorthand-mix` | A shorthand in a file that also sets one of its longhands; StyleX lets the longhand win whatever the order |
+| `constella/no-shorthand` | A four-side shorthand (`margin`, `padding`, `inset`, `border`, `borderRadius`, `borderWidth/Color/Style`) in styles; it loses to any longhand merged in through `sx` |
+| `constella/no-shorthand-mix` | A two-side shorthand (`marginBlock`, `borderInlineColor`) in a file that also sets one of its longhands; StyleX lets the longhand win whatever the order |
 
 A rule earns its place when a correction comes up twice. Add one there before writing the same note again.

@@ -63,7 +63,10 @@ const styles = stylex.create({
   // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.background,
-    borderRadius: radii.sm,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     boxShadow: shadows.popover,
     boxSizing: "border-box",
     color: colors.textPrimary,
@@ -100,7 +103,10 @@ const styles = stylex.create({
       [highlighted]: colors.fillSubtle,
       [`${danger}${highlighted}`]: colors.dangerFillSubtle,
     },
-    borderRadius: radii.xs,
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
     color: { default: colors.textPrimary, [danger]: colors.danger },
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",

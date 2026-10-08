@@ -32,14 +32,24 @@ const styles = stylex.create({
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
     backgroundClip: { default: "padding-box", [on]: "border-box" },
     backgroundColor: { default: colors.fillSubtle, [on]: colors.accent },
-    borderColor: {
+    borderBlockColor: {
       default: colors.edge,
       [invalid]: colors.danger,
       [on]: colors.accent,
     },
-    borderRadius: radii.xs,
-    borderStyle: "solid",
-    borderWidth: strokes.border,
+    borderInlineColor: {
+      default: colors.edge,
+      [invalid]: colors.danger,
+      [on]: colors.accent,
+    },
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
+    borderBlockStyle: "solid",
+    borderInlineStyle: "solid",
+    borderBlockWidth: strokes.border,
+    borderInlineWidth: strokes.border,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     color: colors.onAccent,
@@ -66,7 +76,8 @@ const styles = stylex.create({
     width: sizes.icon,
     "::before": {
       content: "''",
-      inset: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
+      insetBlock: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
+      insetInline: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
       position: "absolute",
     },
   },

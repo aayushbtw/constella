@@ -89,7 +89,10 @@ const styles = stylex.create({
     zIndex: layers.toast,
   },
   toast: {
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     color: colors.textPrimary,
     cursor: "default",
     height: {
@@ -132,7 +135,10 @@ const styles = stylex.create({
     // resizing the toast, which Base UI is measuring.
     "::before": {
       backgroundColor: colors.background,
-      borderRadius: radii.md,
+      borderStartStartRadius: radii.md,
+      borderStartEndRadius: radii.md,
+      borderEndStartRadius: radii.md,
+      borderEndEndRadius: radii.md,
       boxShadow: shadows.popover,
       content: "''",
       insetBlockEnd: 0,
@@ -256,8 +262,12 @@ const styles = stylex.create({
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fill },
     },
-    borderRadius: radii.sm,
-    borderStyle: "none",
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
+    borderBlockStyle: "none",
+    borderInlineStyle: "none",
     color: {
       default: colors.textMuted,
       [media.hover]: {

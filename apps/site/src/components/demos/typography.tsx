@@ -42,13 +42,19 @@ const glyphs = [
 
 const styles = stylex.create({
   well: {
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     maxWidth: 520,
     width: "100%",
   },
   panel: {
     backgroundColor: colors.background,
-    borderRadius: radii.sm,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     display: "flex",
     flexDirection: "column",
     width: "100%",

@@ -43,7 +43,10 @@ const styles = stylex.create({
   // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.background,
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     boxShadow: shadows.popover,
     boxSizing: "border-box",
     color: colors.textPrimary,
@@ -53,7 +56,8 @@ const styles = stylex.create({
     gap: px10,
     maxWidth: "var(--available-width)",
     opacity: { default: 1, [offstage]: 0 },
-    padding: px10,
+    paddingBlock: px10,
+    paddingInline: px10,
     transform: { default: "none", [offstage]: "scale(0.96)" },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
@@ -77,13 +81,15 @@ const styles = stylex.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.text,
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
   },
   description: {
     color: colors.textSecondary,
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.text,
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
   },
 });
 

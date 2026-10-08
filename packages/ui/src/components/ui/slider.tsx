@@ -64,7 +64,10 @@ const styles = stylex.create({
     width: { default: "100%", [vertical]: strokes.track },
     "::before": {
       backgroundColor: colors.fill,
-      borderRadius: radii.full,
+      borderStartStartRadius: radii.full,
+      borderStartEndRadius: radii.full,
+      borderEndStartRadius: radii.full,
+      borderEndEndRadius: radii.full,
       content: "''",
       insetBlockEnd: { default: 0, [vertical]: halfThumbOut },
       insetBlockStart: { default: 0, [vertical]: halfThumbOut },
@@ -79,7 +82,10 @@ const styles = stylex.create({
     width: { default: null, [vertical]: "100%" },
     "::before": {
       backgroundColor: colors.accent,
-      borderRadius: radii.full,
+      borderStartStartRadius: radii.full,
+      borderStartEndRadius: radii.full,
+      borderEndStartRadius: radii.full,
+      borderEndEndRadius: radii.full,
       content: "''",
       insetBlockEnd: { default: 0, [vertical]: halfThumbOut },
       insetBlockStart: 0,
@@ -90,7 +96,10 @@ const styles = stylex.create({
   },
   thumb: {
     backgroundColor: colors.accent,
-    borderRadius: radii.full,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
     boxShadow: shadows.thumb,
     height: sizes.thumb,
     // Base UI positions the thumb with `translate`, so `transform` is free for the press.

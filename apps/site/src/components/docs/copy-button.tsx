@@ -19,7 +19,10 @@ import { durations as siteDurations } from "~/lib/tokens.stylex";
 const styles = stylex.create({
   copy: {
     alignItems: "center",
-    borderRadius: radii.xs,
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
     color: {
       default: colors.textMuted,
       [media.hover]: {
@@ -39,7 +42,8 @@ const styles = stylex.create({
     width: sizes.controlXs,
     "::before": {
       content: "''",
-      inset: `calc((${sizes.controlXs} - ${sizes.hitArea}) / 2)`,
+      insetBlock: `calc((${sizes.controlXs} - ${sizes.hitArea}) / 2)`,
+      insetInline: `calc((${sizes.controlXs} - ${sizes.hitArea}) / 2)`,
       position: "absolute",
     },
   },

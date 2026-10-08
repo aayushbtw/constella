@@ -98,12 +98,14 @@ const styles = stylex.create({
   base: {
     alignItems: "center",
     // Every variant reserves the border, so a fill and an outline are the same size.
-    borderColor: "transparent",
+    borderBlockColor: "transparent",
+    borderInlineColor: "transparent",
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
     borderInlineStartWidth: strokes.border,
-    borderStyle: "solid",
+    borderBlockStyle: "solid",
+    borderInlineStyle: "solid",
     cursor: {
       default: "pointer",
       ":disabled": "not-allowed",
@@ -116,7 +118,8 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     gap: px6,
     justifyContent: "center",
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
     opacity: {
       default: 1,
       ":disabled": opacities.disabled,
@@ -173,7 +176,8 @@ const styles = stylex.create({
   outline: {
     backgroundClip: "padding-box",
     backgroundColor: interactive(colors.background, colors.fillSubtle),
-    borderColor: colors.edge,
+    borderBlockColor: colors.edge,
+    borderInlineColor: colors.edge,
     boxShadow: shadows.control,
     color: colors.textPrimary,
   },

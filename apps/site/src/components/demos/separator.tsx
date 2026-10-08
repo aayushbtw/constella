@@ -56,11 +56,13 @@ const styles = stylex.create({
   row: {
     display: "flex",
     justifyContent: "space-between",
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
   },
   value: {
     color: colors.textSecondary,
-    margin: 0,
+    marginBlock: 0,
+    marginInline: 0,
   },
 });
 

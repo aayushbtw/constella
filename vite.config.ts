@@ -26,6 +26,7 @@ export default defineConfig({
       "constella/box-edge": "error",
       "constella/no-focus-style": "error",
       "constella/no-raw-colors": "error",
+      "constella/no-shorthand": "error",
       "constella/no-shorthand-mix": "error",
       // Hoisting lets a route's `component:` sit above the component it names.
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],

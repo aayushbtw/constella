@@ -34,7 +34,12 @@ import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   row: { gap: space.xl },
-  round: { borderRadius: radii.full },
+  round: {
+    borderEndEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderStartStartRadius: radii.full,
+  },
 });
 
 const me = { fallback: "AY", handle: "aayushbtw" };

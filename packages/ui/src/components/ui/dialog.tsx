@@ -59,7 +59,10 @@ const styles = stylex.create({
   },
   popup: {
     backgroundColor: colors.background,
-    borderRadius: radii.md,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     boxShadow: shadows.dialog,
     color: colors.textPrimary,
     display: "flex",

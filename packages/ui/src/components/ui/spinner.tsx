@@ -39,9 +39,14 @@ const styles = stylex.create({
     borderBlockStartColor: "currentColor",
     borderInlineEndColor: colors.fillStrong,
     borderInlineStartColor: colors.fillStrong,
-    borderRadius: radii.full,
-    borderStyle: "solid",
-    borderWidth: strokes.spinner,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
+    borderBlockStyle: "solid",
+    borderInlineStyle: "solid",
+    borderBlockWidth: strokes.spinner,
+    borderInlineWidth: strokes.spinner,
     boxSizing: "border-box",
     color: {
       default: null,
@@ -57,7 +62,12 @@ const styles = stylex.create({
       [inBadge]: badgeSpinner,
       [inLgBadge]: lgBadgeSpinner,
     },
-    margin: {
+    marginBlock: {
+      default: `calc((${sizes.icon} - ${sizes.iconSm}) / 2)`,
+      [inBadge]: `calc((${sizes.iconXs} - ${badgeSpinner}) / 2)`,
+      [inLgBadge]: `calc((${sizes.iconSm} - ${lgBadgeSpinner}) / 2)`,
+    },
+    marginInline: {
       default: `calc((${sizes.icon} - ${sizes.iconSm}) / 2)`,
       [inBadge]: `calc((${sizes.iconXs} - ${badgeSpinner}) / 2)`,
       [inLgBadge]: `calc((${sizes.iconSm} - ${lgBadgeSpinner}) / 2)`,

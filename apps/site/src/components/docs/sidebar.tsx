@@ -50,7 +50,10 @@ const styles = stylex.create({
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fillSubtle },
     },
-    borderRadius: radii.sm,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     // Every row reads at full strength; the fill alone marks hover and the current page.
     color: colors.textPrimary,
     display: "flex",

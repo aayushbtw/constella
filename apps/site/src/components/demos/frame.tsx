@@ -12,7 +12,10 @@ const styles = stylex.create({
   stage: {
     alignItems: "center",
     backgroundColor: surfaces.stage,
-    borderRadius: radii.sm,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     boxShadow: shadows.inset,
     display: "flex",
     justifyContent: "center",
