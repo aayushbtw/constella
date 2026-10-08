@@ -47,8 +47,8 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 - [ ] **MessageScroller**: sticks to the newest message, keeps its place when history loads above, and offers a scroll-to-end button (`@shadcn/react/message-scroller` underneath).
 - [ ] **Message**: a user message and an assistant answer, with an actions row.
-- [ ] **CopyButton**: copy with the tick cross-fade (the site has one to promote).
-- [ ] **SwapIcon** and **SwapText**: one icon or label cross-fading into another.
+- [x] **CopyButton**: copy with the tick cross-fade (the site has one to promote).
+- [x] **SwapIcon** and **SwapText**: one icon or label cross-fading into another.
 
 ### Text
 

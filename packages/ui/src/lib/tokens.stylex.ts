@@ -219,6 +219,8 @@ export const durations = stylex.defineConsts({
   // One breath of a skeleton: slow, so loading reads as calm.
   pulse: "2s",
   crossfade: "300ms",
+  // How long a confirmation (copied, saved) holds before it reverts; read in JS.
+  confirm: "1500ms",
   dialog: "200ms",
   tooltipDelay: "300ms",
 });

@@ -56,8 +56,3 @@ export const media = stylex.defineConsts({
 export const layers = stylex.defineConsts({
   header: "10",
 });
-
-export const durations = stylex.defineConsts({
-  // How long a confirmation (copied, saved) holds before it reverts.
-  confirm: "1500ms",
-});

@@ -149,6 +149,8 @@ Restraint is the default. A component used every day gets one motion that explai
 
 When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing. An avatar's fallback can't stay either (Base UI unmounts it), so the photo fades in over the avatar's `fillOpaque`. A status change only fades color, on `ease` + `hover`.
 
+`SwapIcon` and `SwapText` are these two crossfades as parts, and `CopyButton` is a button that swaps its copy icon for a tick for `durations.confirm` and back.
+
 ### Layout animation
 
 When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement.

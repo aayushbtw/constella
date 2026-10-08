@@ -63,7 +63,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
-import { durations as siteDurations, fonts } from "~/lib/tokens.stylex";
+import { fonts } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   narrow: { maxWidth: 320, width: "100%" },
@@ -94,7 +94,7 @@ const styles = stylex.create({
   },
 });
 
-const confirmFor = Number(siteDurations.confirm.slice(0, -"ms".length));
+const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
 
 function Glyph({
   size = sizes.icon,

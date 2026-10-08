@@ -95,6 +95,28 @@
       ]
     },
     {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "A button that copies text and shows a tick for a moment.",
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/swap-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
@@ -454,6 +476,34 @@
       "files": [
         {
           "path": "src/components/ui/button-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "swap-icon",
+      "type": "registry:ui",
+      "title": "Swap Icon",
+      "description": "Cross-fades one icon into another in place.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/swap-icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "swap-text",
+      "type": "registry:ui",
+      "title": "Swap Text",
+      "description": "Cross-fades one label into another in place.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/swap-text.tsx",
           "type": "registry:ui"
         }
       ]

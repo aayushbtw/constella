@@ -206,6 +206,12 @@ import {
 } from "~/components/demos/slider";
 import { SpinnerDemo } from "~/components/demos/spinner";
 import {
+  CopyButtonDemo,
+  CopyButtonVariantDemo,
+  SwapIconDemo,
+  SwapTextDemo,
+} from "~/components/demos/swap";
+import {
   SwitchCardDemo,
   SwitchDemo,
   SwitchDescriptionDemo,
@@ -317,6 +323,8 @@ const demos = {
   collapsible: CollapsibleDemo,
   command: CommandDemo,
   "command-dialog": CommandDialogDemo,
+  "copy-button": CopyButtonDemo,
+  "copy-button-variant": CopyButtonVariantDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,
@@ -433,6 +441,8 @@ const demos = {
   "toast-dismiss": ToastDismissDemo,
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
+  "swap-icon": SwapIconDemo,
+  "swap-text": SwapTextDemo,
   switch: SwitchDemo,
   "switch-card": SwitchCardDemo,
   "switch-description": SwitchDescriptionDemo,

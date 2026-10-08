@@ -3,18 +3,17 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 
+import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import {
   colors,
   durations,
   easings,
   media,
-  motion,
   presses,
   radii,
   sizes,
   strokes,
 } from "@/lib/tokens.stylex";
-import { durations as siteDurations } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   copy: {
@@ -48,28 +47,9 @@ const styles = stylex.create({
       position: "absolute",
     },
   },
-  // Both icons share one cell, so the swap is a crossfade in place.
-  icons: {
-    display: "grid",
-  },
-  icon: {
-    display: "flex",
-    gridArea: "1 / 1",
-    transitionDuration: durations.crossfade,
-    transitionProperty: {
-      default: "opacity, filter, transform",
-      [media.reducedMotion]: "opacity, filter",
-    },
-    transitionTimingFunction: easings.crossfade,
-  },
-  hidden: {
-    filter: `blur(${motion.crossfadeBlur})`,
-    opacity: 0,
-    transform: `scale(${motion.crossfadeScale})`,
-  },
 });
 
-const confirmFor = Number(siteDurations.confirm.slice(0, -"ms".length));
+const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
 
 function CopyButton({
   label = "Copy",
@@ -108,22 +88,22 @@ function CopyButton({
       type="button"
       {...stylex.props(styles.copy, sx)}
     >
-      <span aria-hidden {...stylex.props(styles.icons)}>
-        <span {...stylex.props(styles.icon, !copied && styles.hidden)}>
+      <SwapIcon aria-hidden value={copied ? "copied" : "copy"}>
+        <SwapIconItem value="copied">
           <HugeiconsIcon
             icon={Tick02Icon}
             size={sizes.icon}
             strokeWidth={Number(strokes.icon)}
           />
-        </span>
-        <span {...stylex.props(styles.icon, copied && styles.hidden)}>
+        </SwapIconItem>
+        <SwapIconItem value="copy">
           <HugeiconsIcon
             icon={Copy01Icon}
             size={sizes.icon}
             strokeWidth={Number(strokes.icon)}
           />
-        </span>
-      </span>
+        </SwapIconItem>
+      </SwapIcon>
     </button>
   );
 }
