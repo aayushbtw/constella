@@ -66,6 +66,7 @@ import {
 } from "~/components/demos/checkbox";
 import { CollapsibleDemo } from "~/components/demos/collapsible";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
+import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
   DialogControlledDemo,
   DialogDemo,
@@ -314,6 +315,8 @@ const demos = {
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
   collapsible: CollapsibleDemo,
+  command: CommandDemo,
+  "command-dialog": CommandDialogDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,

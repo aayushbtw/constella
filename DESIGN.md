@@ -50,6 +50,8 @@ Popups opened from a control (select, dropdown menu, popover) share one surface 
 
 A preview card is a popover opened by resting on a link, with the popover's surface and motion; the link still leads somewhere, so nothing lives only in the card.
 
+A command is a menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it.
+
 A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`. Held, a switch thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
 
 A badge takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. Only a badge rendered as a link answers hover. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`.
