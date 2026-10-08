@@ -1,5 +1,5 @@
+import * as RadixColors from "@radix-ui/colors";
 import * as stylex from "@stylexjs/stylex";
-import Color from "colorjs.io";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,11 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -31,8 +26,20 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { colors, fontSizes, radii, sizes, space } from "@/lib/tokens.stylex";
 import { DemoControls, Stage } from "~/components/demos/frame";
 import { CopyButton } from "~/components/docs/copy-button";
-import { defaultTheme, generateThemeCss, themes } from "~/lib/theme-css";
-import type { RadiusPreset, ScalingPreset, ThemeName } from "~/lib/theme-css";
+import {
+  accents,
+  defaultTheme,
+  generateThemeCss,
+  scaleFiles,
+  themes,
+  themeScales,
+} from "~/lib/theme-css";
+import type {
+  Accent,
+  RadiusPreset,
+  ScalingPreset,
+  ThemeName,
+} from "~/lib/theme-css";
 import { fonts, lineHeights, shadows } from "~/lib/tokens.stylex";
 
 const radiusLabels = {
@@ -109,14 +116,53 @@ const styles = stylex.create({
   },
 });
 
-function parseColor(value: string) {
-  try {
-    return new Color(value)
-      .to("srgb")
-      .toString({ collapse: false, format: "hex" });
-  } catch {
-    return null;
-  }
+const radix = new Map<string, Record<string, string>>(
+  Object.entries(RadixColors)
+);
+
+// Step 9, for a swatch before the scale's CSS has loaded.
+function swatch(accent: Accent) {
+  return accent === "ink"
+    ? RadixColors.gray.gray12
+    : (radix.get(accent)?.[`${accent}9`] ?? RadixColors.gray.gray9);
+}
+
+const accentItems = Object.fromEntries(
+  ["ink", ...accents].map((accent) => [
+    accent,
+    accent.charAt(0).toUpperCase() + accent.slice(1),
+  ])
+);
+
+const radixFiles = import.meta.glob<string>(
+  "/node_modules/@radix-ui/colors/*.css",
+  { import: "default", query: "?inline" }
+);
+
+async function loadRadixFile(file: string) {
+  const load = radixFiles[`/node_modules/@radix-ui/colors/${file}.css`];
+  return load === undefined ? "" : await load();
+}
+
+// A theme's `@import`s can't resolve in a runtime <style>, so the preview loads the files.
+function useScalesCss(scales: string[]) {
+  const key = scales.join(" ");
+  const [css, setCss] = useState("");
+  useEffect(() => {
+    let current = true;
+    const files = key === "" ? [] : key.split(" ").flatMap(scaleFiles);
+    async function load() {
+      const parts = await Promise.all(files.map(loadRadixFile));
+      if (current) {
+        setCss(parts.join("\n"));
+      }
+    }
+    void load();
+    return () => {
+      current = false;
+    };
+  }, [key]);
+  return css;
 }
 
 // Set on <html> while the builder is open, so popups and the site around the demo wear
@@ -137,25 +183,19 @@ const themeNames = Object.keys(themes).filter((name): name is ThemeName =>
 
 function ThemeBuilderDemo() {
   const [theme, setTheme] = useState<ThemeName>(defaultTheme);
-  const [accentInput, setAccentInput] = useState<string>(
-    themes[defaultTheme].accent
-  );
+  const [accent, setAccent] = useState<Accent>(themes[defaultTheme].accent);
   const [radius, setRadius] = useState<RadiusPreset>("medium");
   const [scaling, setScaling] = useState<ScalingPreset>("default");
-
-  const parsed = parseColor(accentInput);
-  const [accent, setAccent] = useState(parsed ?? themes[defaultTheme].accent);
-  if (parsed !== null && parsed !== accent) {
-    setAccent(parsed);
-  }
 
   const options = useDeferredValue({ accent, radius, scaling, theme });
   const css = useMemo(() => generateThemeCss(options), [options]);
   useLiveTheme(options.theme);
+  const scalesCss = useScalesCss(themeScales(options));
+  const previewCss = `${scalesCss}\n${css.replaceAll(/^@import .*$/gmu, "")}`;
 
   return (
     <>
-      <style>{css}</style>
+      <style>{previewCss}</style>
       <Stage>
         <div {...stylex.props(styles.preview)}>
           <div {...stylex.props(styles.row)}>
@@ -195,7 +235,7 @@ function ThemeBuilderDemo() {
               key={name}
               onClick={() => {
                 setTheme(name);
-                setAccentInput(themes[name].accent);
+                setAccent(themes[name].accent);
               }}
               size="sm"
               title={themes[name].description}
@@ -203,7 +243,7 @@ function ThemeBuilderDemo() {
             >
               <span
                 data-icon="inline-start"
-                {...stylex.props(styles.swatch(themes[name].accent))}
+                {...stylex.props(styles.swatch(swatch(themes[name].accent)))}
               />
               {themes[name].label}
             </Button>
@@ -211,19 +251,28 @@ function ThemeBuilderDemo() {
         </div>
         <Field>
           <FieldLabel>Accent</FieldLabel>
-          <InputGroup>
-            <InputGroupAddon>
-              <span {...stylex.props(styles.swatch(accent))} />
-            </InputGroupAddon>
-            <InputGroupInput
-              aria-invalid={parsed === null}
-              onChange={(event) => {
-                setAccentInput(event.target.value);
-              }}
-              spellCheck={false}
-              value={accentInput}
-            />
-          </InputGroup>
+          <Select
+            items={accentItems}
+            onValueChange={(value) => {
+              if (value !== null) {
+                setAccent(value);
+              }
+            }}
+            value={accent}
+          >
+            <SelectTrigger>
+              <span {...stylex.props(styles.swatch(swatch(accent)))} />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {(["ink", ...accents] as const).map((value) => (
+                <SelectItem key={value} value={value}>
+                  <span {...stylex.props(styles.swatch(swatch(value)))} />
+                  {accentItems[value]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </Field>
         <Field>
           <FieldLabel>Radius</FieldLabel>

@@ -12,7 +12,7 @@ Pick a theme, then change its accent, radius and sizing if you like, and copy th
 
 <!-- ::demo name="theme-builder" -->
 
-The accent becomes two 12-step scales, light and dark, matched to the nearest [Radix Colors](https://www.radix-ui.com/colors) scales. A near-gray accent stays monochrome: the solid fill is the gray ink, as in Polaris.
+Accents are [Radix Colors](https://www.radix-ui.com/colors) scales by name, so they're tuned for light and dark already, and the CSS imports them from `@radix-ui/colors`, which comes with Constella. Ink is the monochrome accent: the solid fill is the gray ink, as in Polaris. Amber, yellow, lime, mint and sky take dark text on their solid fill.
 
 ## Themes
 
@@ -75,7 +75,20 @@ Every color a component uses is a role, and every role is a variable valued by a
 
 ### Scales
 
-The builder writes these, and the roles read them: `--gray-1` … `--gray-12` and `--gray-a1` … `--gray-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9.
+The roles read these: `--gray-1` … `--gray-12` and `--gray-a1` … `--gray-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9. A theme points them at a Radix scale by name.
+
+```css
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/indigo-alpha.css";
+@import "@radix-ui/colors/indigo-dark-alpha.css";
+
+:root[data-theme="vega"] {
+  --accent-9: var(--indigo-9);
+  --accent-a8: var(--indigo-a8);
+  /* …each step, then the roles that carry the accent */
+}
+```
 
 ### Shape and density
 

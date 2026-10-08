@@ -1,32 +1,75 @@
-import * as RadixColors from "@radix-ui/colors";
-import Color from "colorjs.io";
+// Themes are Radix Colors scales by name, so a theme only maps them onto our roles.
+// Radix's dark files switch on `.dark`, so one block covers both appearances.
 
-import { generatePalette } from "~/lib/palette";
-import type { Palette } from "~/lib/palette";
+const grays = ["gray", "mauve", "slate", "sage", "olive", "sand"] as const;
+
+const accents = [
+  "tomato",
+  "red",
+  "ruby",
+  "crimson",
+  "pink",
+  "plum",
+  "purple",
+  "violet",
+  "iris",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "jade",
+  "green",
+  "grass",
+  "bronze",
+  "gold",
+  "brown",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "mint",
+  "sky",
+] as const;
+
+type Gray = (typeof grays)[number];
+// `ink` is the monochrome accent: the gray scale's step 12.
+type Accent = (typeof accents)[number] | "ink";
+
+// Step 9 of these is light in both appearances, so text on it is dark (Radix Themes' values).
+const darkText: Partial<Record<Accent, string>> = {
+  amber: "#21201c",
+  lime: "#1d211c",
+  mint: "#1a211e",
+  sky: "#1c2024",
+  yellow: "#21201c",
+};
 
 // Named after stars, each hinting at its color. A theme is colors only: its grays and a
 // default accent; radius and sizing are chosen on top. Polaris, the fixed point the rest are
 // read from, is the default that base.css ships, so it emits only what changes.
 const themes = {
   polaris: {
-    accent: "#111111",
+    accent: "ink",
     description: "Neutral gray, ink accent. The default.",
-    gray: RadixColors.gray.gray9,
+    gray: "gray",
     label: "Polaris",
   },
   vega: {
-    accent: "#3e63dd",
+    accent: "indigo",
     description: "Cool slate grays, indigo accent. A blue-white star.",
-    gray: RadixColors.slate.slate9,
+    gray: "slate",
     label: "Vega",
   },
   antares: {
-    accent: "#f76b15",
+    accent: "orange",
     description: "Warm sand grays, orange accent. A red supergiant.",
-    gray: RadixColors.sand.sand9,
+    gray: "sand",
     label: "Antares",
   },
-} as const;
+} as const satisfies Record<
+  string,
+  { accent: Accent; description: string; gray: Gray; label: string }
+>;
 
 const defaultTheme = "polaris";
 
@@ -59,57 +102,37 @@ type RadiusPreset = keyof typeof radiusPresets;
 type ScalingPreset = keyof typeof scalingPresets;
 
 interface ThemeOptions {
-  /** Any CSS color. Near-gray reads as monochrome: the accent becomes the gray ink. */
-  accent: string;
+  accent: Accent;
   radius: RadiusPreset;
   scaling: ScalingPreset;
-  /** Its colors, and the `data-theme` value on `<html>`. */
+  /** Its grays, and the `data-theme` value on `<html>`. */
   theme: ThemeName;
 }
 
-const backgrounds = { dark: "#111111", light: "#ffffff" } as const;
+const twelve = Array.from({ length: 12 }, (_, index) => index + 1);
 
-// Below this OKLCH chroma a color reads as gray, so it takes the ink accent.
-const monoChroma = 0.03;
-
-function isMonochrome(accent: string) {
-  return (new Color(accent).to("oklch").coords[1] ?? 0) < monoChroma;
-}
-
-function steps(prefix: string, values: string[]) {
-  return values.map((value, index) => `  --${prefix}-${index + 1}: ${value};`);
-}
-
-function grayLines(palette: Palette, wide: boolean) {
+function mapScale(role: string, scale: string) {
   return [
-    ...steps("gray", wide ? palette.grayP3 : palette.gray),
-    ...steps("gray-a", wide ? palette.grayAlphaP3 : palette.grayAlpha),
+    ...twelve.map((step) => `  --${role}-${step}: var(--${scale}-${step});`),
+    ...twelve.map((step) => `  --${role}-a${step}: var(--${scale}-a${step});`),
   ];
 }
 
-function accentLines(palette: Palette, wide: boolean) {
+/** The four Radix files a scale needs: light, dark, and their alphas. */
+function scaleFiles(scale: string) {
+  return [scale, `${scale}-dark`, `${scale}-alpha`, `${scale}-dark-alpha`];
+}
+
+function accentLines(accent: Exclude<Accent, "ink">) {
   return [
-    ...steps("accent", wide ? palette.accentP3 : palette.accent),
-    ...steps("accent-a", wide ? palette.accentAlphaP3 : palette.accentAlpha),
-    ...(wide ? [] : [`  --accent-contrast: ${palette.accentContrast};`]),
+    ...mapScale("accent", accent),
+    `  --accent-contrast: ${darkText[accent] ?? "white"};`,
+    "  --accent-solid: var(--accent-9);",
+    "  --on-accent: var(--accent-contrast);",
+    "  --focus-ring: var(--accent-a8);",
+    "  --selection: var(--accent-a5);",
   ];
 }
-
-function block(selector: string, lines: string[], indent = "") {
-  return [
-    `${indent}${selector} {`,
-    ...lines.map((line) => `${indent}${line}`),
-    `${indent}}`,
-  ].join("\n");
-}
-
-// The accent takes over the roles that carry it; a monochrome one leaves base.css's ink.
-const accentRoles = [
-  "  --accent-solid: var(--accent-9);",
-  "  --on-accent: var(--accent-contrast);",
-  "  --focus-ring: var(--accent-a8);",
-  "  --selection: var(--accent-a5);",
-];
 
 // Only what differs from base.css, so a theme's CSS says what makes it itself.
 function layoutLines(radius: RadiusPreset, scaling: ScalingPreset) {
@@ -129,67 +152,52 @@ function layoutLines(radius: RadiusPreset, scaling: ScalingPreset) {
   ];
 }
 
+/** The Radix scales a theme reads, beyond the gray base.css already imports. */
+function themeScales({
+  accent,
+  theme,
+}: Pick<ThemeOptions, "accent" | "theme">) {
+  const { gray } = themes[theme];
+  return [
+    ...(gray === "gray" ? [] : [gray]),
+    ...(accent === "ink" ? [] : [accent]),
+  ];
+}
+
 /** A theme's CSS: put it in your global CSS and set `data-theme` on `<html>`. */
 function generateThemeCss({ accent, radius, scaling, theme }: ThemeOptions) {
   const { gray } = themes[theme];
-  const ownGrays = theme !== defaultTheme;
-  const mono = isMonochrome(accent);
-
-  const light = generatePalette({
-    accent,
-    appearance: "light",
-    background: backgrounds.light,
-    gray,
-  });
-  const dark = generatePalette({
-    accent,
-    appearance: "dark",
-    background: backgrounds.dark,
-    gray,
-  });
-
-  const colors = (palette: Palette, wide: boolean) => [
-    ...(ownGrays ? grayLines(palette, wide) : []),
-    ...(mono ? [] : accentLines(palette, wide)),
-  ];
-  const lightLines = [
-    ...(mono ? [] : accentRoles),
+  const lines = [
+    ...(gray === "gray" ? [] : mapScale("gray", gray)),
+    ...(accent === "ink" ? [] : accentLines(accent)),
     ...layoutLines(radius, scaling),
-    ...colors(light, false),
   ];
 
-  const header = `/* Constella theme "${theme}": ${accent}, ${radius} radius, ${scaling} sizing */`;
-  if (lightLines.length === 0) {
+  if (lines.length === 0) {
     return `/* Constella theme "${theme}" is the default: no CSS needed. */\n`;
   }
 
-  const lightSelector = `:root[data-theme="${theme}"]`;
-  const darkSelector = `:root.dark[data-theme="${theme}"]`;
-  const hasColors = colors(light, false).length > 0;
-
   return [
-    header,
-    block(lightSelector, lightLines),
-    ...(hasColors
-      ? [
-          block(darkSelector, colors(dark, false)),
-          "@supports (color: color(display-p3 1 1 1)) {",
-          "  @media (color-gamut: p3) {",
-          block(lightSelector, colors(light, true), "    "),
-          block(darkSelector, colors(dark, true), "    "),
-          "  }",
-          "}",
-        ]
-      : []),
+    ...themeScales({ accent, theme }).flatMap((scale) =>
+      scaleFiles(scale).map((file) => `@import "@radix-ui/colors/${file}.css";`)
+    ),
+    "",
+    `/* Constella theme "${theme}": ${gray} grays, ${accent} accent, ${radius} radius, ${scaling} sizing */`,
+    `:root[data-theme="${theme}"] {`,
+    ...lines,
+    "}",
     "",
   ].join("\n");
 }
 
 export {
+  accents,
   defaultTheme,
   generateThemeCss,
   radiusPresets,
+  scaleFiles,
   scalingPresets,
+  themeScales,
   themes,
 };
-export type { RadiusPreset, ScalingPreset, ThemeName, ThemeOptions };
+export type { Accent, RadiusPreset, ScalingPreset, ThemeName, ThemeOptions };
