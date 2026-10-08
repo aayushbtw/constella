@@ -52,8 +52,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Text
 
-- [ ] **Text** and **Heading**: typography parts, so pages stop styling type ad hoc.
-- [ ] **Icon**: one wrapper for Hugeicons with the system's sizes and stroke. netigen lint-requires it.
+- [x] **Text**, **Heading** and **Icon**: not components. Type is set with `fontSizes`, `fontWeights` and `lineHeights`, adding heading sizes when the migration first needs them; an icon wrapper is the app's, since the icon set is its choice.
 
 ### Data
 
