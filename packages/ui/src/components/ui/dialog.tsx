@@ -38,6 +38,7 @@ type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 
+// Exported as `dialogStyles`, so an alert dialog wears the same surface.
 const styles = stylex.create({
   backdrop: {
     backgroundColor: colors.overlay,
@@ -325,5 +326,6 @@ export {
   DialogTrigger,
   DialogViewport,
   dialogSizes,
+  styles as dialogStyles,
 };
 export type { DialogPopupProps, DialogSize };

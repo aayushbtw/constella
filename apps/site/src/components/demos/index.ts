@@ -6,6 +6,11 @@ import {
   AlertStatusDemo,
 } from "~/components/demos/alert";
 import {
+  AlertDialogDangerDemo,
+  AlertDialogDemo,
+  AlertDialogSizeDemo,
+} from "~/components/demos/alert-dialog";
+import {
   AvatarBadgeDemo,
   AvatarBadgeIconDemo,
   AvatarDemo,
@@ -255,6 +260,9 @@ const demos = {
   alert: AlertDemo,
   "alert-action": AlertActionDemo,
   "alert-status": AlertStatusDemo,
+  "alert-dialog": AlertDialogDemo,
+  "alert-dialog-danger": AlertDialogDangerDemo,
+  "alert-dialog-size": AlertDialogSizeDemo,
   avatar: AvatarDemo,
   "avatar-badge": AvatarBadgeDemo,
   "avatar-badge-icon": AvatarBadgeIconDemo,
