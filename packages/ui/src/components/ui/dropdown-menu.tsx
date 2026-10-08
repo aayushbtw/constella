@@ -4,7 +4,7 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, useContext } from "react";
+import { createContext, use, useContext } from "react";
 import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/motion";
@@ -34,11 +34,15 @@ interface Inset {
   inset?: boolean;
 }
 
+const dropdownMenuSizes = ["sm", "default", "lg"] as const;
+
+type DropdownMenuSize = (typeof dropdownMenuSizes)[number];
+
 type DropdownMenuContentProps = Styled<MenuPrimitive.Popup.Props> &
   Pick<
     MenuPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
-  >;
+  > & { size?: DropdownMenuSize };
 
 const dropdownMenuItemVariants = ["default", "danger"] as const;
 
@@ -121,6 +125,8 @@ const styles = stylex.create({
     position: "relative",
     userSelect: "none",
   },
+  itemSm: { fontSize: fontSizes.xs, minHeight: sizes.controlXs },
+  itemLg: { minHeight: sizes.controlMd },
   // Room on the end for the tick, as in a select.
   checkable: {
     paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
@@ -186,7 +192,18 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
+const itemSizeStyles = {
+  default: null,
+  lg: styles.itemLg,
+  sm: styles.itemSm,
+} satisfies Record<DropdownMenuSize, stylex.StyleXStyles | null>;
+
 const SkipMotion = createContext(false);
+const Size = createContext<DropdownMenuSize>("default");
+
+function useItemSize() {
+  return itemSizeStyles[use(Size)];
+}
 
 function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
@@ -215,27 +232,33 @@ function DropdownMenuContent({
   alignOffset = 0,
   side = "bottom",
   sideOffset = Number(offsets.popover),
+  size: ownSize,
   sx,
   ...props
 }: DropdownMenuContentProps) {
   const skip = useContext(SkipMotion);
+  // A submenu takes its parent's size unless it sets its own.
+  const size = ownSize ?? use(Size);
   return (
-    <MenuPrimitive.Portal>
-      <MenuPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(styles.positioner)}
-      >
-        <MenuPrimitive.Popup
-          data-skip-motion={skip || undefined}
-          data-slot="dropdown-menu-content"
-          {...props}
-          {...stylex.props(styles.popup, sx)}
-        />
-      </MenuPrimitive.Positioner>
-    </MenuPrimitive.Portal>
+    <Size value={size}>
+      <MenuPrimitive.Portal>
+        <MenuPrimitive.Positioner
+          align={align}
+          alignOffset={alignOffset}
+          side={side}
+          sideOffset={sideOffset}
+          {...stylex.props(styles.positioner)}
+        >
+          <MenuPrimitive.Popup
+            data-size={size}
+            data-skip-motion={skip || undefined}
+            data-slot="dropdown-menu-content"
+            {...props}
+            {...stylex.props(styles.popup, sx)}
+          />
+        </MenuPrimitive.Positioner>
+      </MenuPrimitive.Portal>
+    </Size>
   );
 }
 
@@ -271,7 +294,7 @@ function DropdownMenuItem({
       data-slot="dropdown-menu-item"
       data-variant={variant}
       {...props}
-      {...stylex.props(styles.item, sx)}
+      {...stylex.props(styles.item, useItemSize(), sx)}
     />
   );
 }
@@ -304,7 +327,7 @@ function DropdownMenuSubTrigger({
       data-inset={isInset}
       data-slot="dropdown-menu-sub-trigger"
       {...props}
-      {...stylex.props(styles.item, sx)}
+      {...stylex.props(styles.item, useItemSize(), sx)}
     >
       {children}
       <span {...stylex.props(styles.chevron)}>
@@ -348,7 +371,7 @@ function DropdownMenuCheckboxItem({
       data-inset={isInset}
       data-slot="dropdown-menu-checkbox-item"
       {...props}
-      {...stylex.props(styles.item, styles.checkable, sx)}
+      {...stylex.props(styles.item, useItemSize(), styles.checkable, sx)}
     >
       {children}
       <MenuPrimitive.CheckboxItemIndicator {...stylex.props(styles.indicator)}>
@@ -378,7 +401,7 @@ function DropdownMenuRadioItem({
       data-inset={isInset}
       data-slot="dropdown-menu-radio-item"
       {...props}
-      {...stylex.props(styles.item, styles.checkable, sx)}
+      {...stylex.props(styles.item, useItemSize(), styles.checkable, sx)}
     >
       {children}
       <MenuPrimitive.RadioItemIndicator {...stylex.props(styles.indicator)}>
@@ -421,6 +444,7 @@ export {
   DropdownMenuGroup,
   DropdownMenuItem,
   dropdownMenuItemVariants,
+  dropdownMenuSizes,
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
@@ -432,4 +456,8 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 };
-export type { DropdownMenuContentProps, DropdownMenuItemVariant };
+export type {
+  DropdownMenuContentProps,
+  DropdownMenuItemVariant,
+  DropdownMenuSize,
+};

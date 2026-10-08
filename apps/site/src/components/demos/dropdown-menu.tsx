@@ -27,8 +27,10 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
+  dropdownMenuSizes,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { DropdownMenuSize } from "@/components/ui/dropdown-menu";
 import { sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -237,6 +239,41 @@ function DropdownMenuRadioGroupDemo() {
   );
 }
 
+const sizeLabels = {
+  default: "Default",
+  lg: "Large",
+  sm: "Small",
+} satisfies Record<DropdownMenuSize, string>;
+
+function DropdownMenuSizesDemo() {
+  return (
+    <DemoRow>
+      {dropdownMenuSizes.map((size) => (
+        <DropdownMenu key={size}>
+          <DropdownMenuTrigger render={<Button variant="outline" />}>
+            {sizeLabels[size]}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent size={size}>
+            <DropdownMenuItem>
+              <Glyph icon={UserIcon} />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Glyph icon={Settings01Icon} />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Glyph icon={Logout01Icon} />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ))}
+    </DemoRow>
+  );
+}
+
 function DropdownMenuDangerDemo() {
   return (
     <DemoRow>
@@ -268,5 +305,6 @@ export {
   DropdownMenuDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
+  DropdownMenuSizesDemo,
   DropdownMenuSubmenuDemo,
 };

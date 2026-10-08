@@ -126,6 +126,24 @@ Use `DropdownMenuRadioGroup` for one choice out of several.
 </DropdownMenuRadioGroup>
 ```
 
+## Size
+
+Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes its parent's size unless it sets its own.
+
+<!-- ::demo name="dropdown-menu-sizes" -->
+
+| Size      | Row  |
+| --------- | ---- |
+| `sm`      | 24px |
+| `default` | 28px |
+| `lg`      | 32px |
+
+```tsx
+<DropdownMenuContent size="lg">
+  <DropdownMenuItem>Profile</DropdownMenuItem>
+</DropdownMenuContent>
+```
+
 ## Danger
 
 Use `variant="danger"` for an action that can't be undone.
@@ -166,7 +184,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 
 | Part | Adds |
 | --- | --- |
-| `DropdownMenuContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets |
+| `DropdownMenuContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
 | `DropdownMenuItem` | `variant`: `"default"` or `"danger"` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
 

@@ -66,6 +66,7 @@ import {
   DropdownMenuDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
+  DropdownMenuSizesDemo,
   DropdownMenuSubmenuDemo,
 } from "~/components/demos/dropdown-menu";
 import {
@@ -265,6 +266,7 @@ const demos = {
   "dropdown-menu-danger": DropdownMenuDangerDemo,
   "dropdown-menu-icons": DropdownMenuIconsDemo,
   "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
+  "dropdown-menu-sizes": DropdownMenuSizesDemo,
   "dropdown-menu-submenu": DropdownMenuSubmenuDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,

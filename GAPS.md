@@ -4,8 +4,8 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ## Changes to existing components
 
-- [ ] **Menu and select row sizes.** `size` (`sm` 24, `default` 28, `lg` 32) on `DropdownMenuContent` and `SelectContent`, passed to every row through context, as `TabsList` sizes its triggers. netigen's rows are 32px.
-- [ ] **Select opens below its trigger**, like a dropdown menu, instead of over it (`alignItemWithTrigger` off by default).
+- [x] **Menu and select row sizes.** `size` (`sm` 24, `default` 28, `lg` 32) on `DropdownMenuContent` and `SelectContent`, passed to every row through context, as `TabsList` sizes its triggers. netigen's rows are 32px.
+- [x] **Select opens below its trigger**, like a dropdown menu, instead of over it (`alignItemWithTrigger` off by default).
 
 ## Tokens
 

@@ -9,7 +9,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, useContext } from "react";
+import { createContext, use, useContext } from "react";
 
 import { joinStyles } from "@/lib/join";
 import { useSkipMotion } from "@/lib/motion";
@@ -47,7 +47,7 @@ type SelectContentProps = Styled<SelectPrimitive.Popup.Props> &
   Pick<
     SelectPrimitive.Positioner.Props,
     "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset"
-  >;
+  > & { size?: SelectSize };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
 const disabled = ":is(:disabled, [data-disabled])";
@@ -153,7 +153,7 @@ const styles = stylex.create({
     boxSizing: "border-box",
     color: colors.textPrimary,
     maxHeight,
-    minWidth: `max(var(--anchor-width), ${sizes.menu})`,
+    minWidth: sizes.menu,
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     // Holds the scroll arrows, which Base UI positions absolutely.
@@ -170,10 +170,12 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
+    width: "var(--anchor-width)",
   },
   list: {
     boxSizing: "border-box",
     maxHeight,
+    overflowX: "hidden",
     overflowY: "auto",
     paddingBlock: space.xxs,
     paddingInlineEnd: space.xxs,
@@ -202,6 +204,8 @@ const styles = stylex.create({
     position: "relative",
     userSelect: "none",
   },
+  itemSm: { fontSize: fontSizes.xs, minHeight: sizes.controlXs },
+  itemLg: { minHeight: sizes.controlMd },
   itemText: {
     alignItems: "center",
     display: "flex",
@@ -266,7 +270,14 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
+const itemSizeStyles = {
+  default: null,
+  lg: styles.itemLg,
+  sm: styles.itemSm,
+} satisfies Record<SelectSize, stylex.StyleXStyles | null>;
+
 const SkipMotion = createContext(false);
+const Size = createContext<SelectSize>("default");
 
 function Select<Value, Multiple extends boolean | undefined = false>({
   onOpenChange,
@@ -353,40 +364,44 @@ function SelectScrollDownButton({
 
 /** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
 function SelectContent({
-  align = "center",
-  alignItemWithTrigger = true,
+  align = "start",
+  alignItemWithTrigger = false,
   alignOffset = 0,
   children,
   side = "bottom",
   sideOffset = Number(offsets.popover),
+  size = "default",
   sx,
   ...props
 }: SelectContentProps) {
   const skip = useContext(SkipMotion);
   return (
-    <SelectPrimitive.Portal>
-      <SelectPrimitive.Positioner
-        align={align}
-        alignItemWithTrigger={alignItemWithTrigger}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(styles.positioner)}
-      >
-        <SelectPrimitive.Popup
-          data-skip-motion={skip || undefined}
-          data-slot="select-content"
-          {...props}
-          {...stylex.props(styles.popup, sx)}
+    <Size value={size}>
+      <SelectPrimitive.Portal>
+        <SelectPrimitive.Positioner
+          align={align}
+          alignItemWithTrigger={alignItemWithTrigger}
+          alignOffset={alignOffset}
+          side={side}
+          sideOffset={sideOffset}
+          {...stylex.props(styles.positioner)}
         >
-          <SelectScrollUpButton />
-          <SelectPrimitive.List {...stylex.props(styles.list)}>
-            {children}
-          </SelectPrimitive.List>
-          <SelectScrollDownButton />
-        </SelectPrimitive.Popup>
-      </SelectPrimitive.Positioner>
-    </SelectPrimitive.Portal>
+          <SelectPrimitive.Popup
+            data-size={size}
+            data-skip-motion={skip || undefined}
+            data-slot="select-content"
+            {...props}
+            {...stylex.props(styles.popup, sx)}
+          >
+            <SelectScrollUpButton />
+            <SelectPrimitive.List {...stylex.props(styles.list)}>
+              {children}
+            </SelectPrimitive.List>
+            <SelectScrollDownButton />
+          </SelectPrimitive.Popup>
+        </SelectPrimitive.Positioner>
+      </SelectPrimitive.Portal>
+    </Size>
   );
 }
 
@@ -412,7 +427,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       {...props}
-      {...stylex.props(styles.item, sx)}
+      {...stylex.props(styles.item, itemSizeStyles[use(Size)], sx)}
     >
       <SelectPrimitive.ItemText {...stylex.props(styles.itemText)}>
         {children}

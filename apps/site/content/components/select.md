@@ -73,12 +73,12 @@ Select
 
 ## Align Item With Trigger
 
-Use `alignItemWithTrigger` on `SelectContent` to choose where the popup opens. When `true` (default), the selected item sits over the trigger. When `false`, the popup opens below the trigger.
+Use `alignItemWithTrigger` on `SelectContent` to choose where the popup opens. When `false` (default), the popup opens below the trigger, like a dropdown menu. When `true`, the selected item sits over the trigger.
 
 <!-- ::demo name="select-align-item" -->
 
 ```tsx
-<SelectContent alignItemWithTrigger={false}>
+<SelectContent alignItemWithTrigger>
   <SelectItem value="apple">Apple</SelectItem>
 </SelectContent>
 ```
@@ -126,20 +126,23 @@ A long list scrolls, with arrows at the ends while there's more to see.
 
 ## Size
 
-Use the `size` prop on `SelectTrigger` to match the controls beside it.
+Use the `size` prop on `SelectTrigger` to match the controls beside it, and on `SelectContent` to size its rows.
 
 <!-- ::demo name="select-sizes" -->
 
-| Size      | Height |
-| --------- | ------ |
-| `sm`      | 28px   |
-| `default` | 32px   |
-| `lg`      | 36px   |
+| Size      | Trigger | Row  |
+| --------- | ------- | ---- |
+| `sm`      | 28px    | 24px |
+| `default` | 32px    | 28px |
+| `lg`      | 36px    | 32px |
 
 ```tsx
 <SelectTrigger size="sm">
   <SelectValue />
 </SelectTrigger>
+<SelectContent size="sm">
+  <SelectItem value="apple">Apple</SelectItem>
+</SelectContent>
 ```
 
 ## Disabled
@@ -187,6 +190,6 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 | Part | Adds |
 | --- | --- |
 | `SelectTrigger` | `size`: `"sm"`, `"default"` or `"lg"` |
-| `SelectContent` | Renders the portal, positioner and popup; takes `side`, `align`, `alignItemWithTrigger` and their offsets |
+| `SelectContent` | Renders the portal, positioner and popup; takes `side`, `align`, `alignItemWithTrigger` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Select](https://base-ui.com/react/components/select).

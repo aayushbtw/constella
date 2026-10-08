@@ -25,9 +25,9 @@ import { space } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
-  trigger: { maxWidth: 192, width: "100%" },
-  wide: { maxWidth: 256, width: "100%" },
-  narrow: { maxWidth: 320, width: "100%" },
+  trigger: { maxWidth: "100%", width: 192 },
+  wide: { maxWidth: "100%", width: 256 },
+  narrow: { maxWidth: "100%", width: 320 },
   stack: {
     alignItems: "center",
     flexDirection: "column",
@@ -153,7 +153,7 @@ function SelectDemo() {
 }
 
 function SelectAlignItemDemo() {
-  const [alignItemWithTrigger, setAlignItemWithTrigger] = useState(true);
+  const [alignItemWithTrigger, setAlignItemWithTrigger] = useState(false);
   return (
     <DemoRow sx={styles.narrow}>
       <FieldGroup>
@@ -282,7 +282,7 @@ function SelectSizesDemo() {
           <SelectTrigger aria-label={sizeLabels[size]} size={size}>
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent size={size}>
             <SelectGroup>
               <Items items={fruits} />
             </SelectGroup>
