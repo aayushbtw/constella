@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { TableSize } from "@/components/ui/table";
 import { fontWeights, sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -71,9 +72,9 @@ const products = [
   { name: "USB-C Hub", price: "$49.99" },
 ];
 
-function Invoices({ rows }: { rows: typeof invoices }) {
+function Invoices({ rows, size }: { rows: typeof invoices; size?: TableSize }) {
   return (
-    <Table>
+    <Table size={size}>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
@@ -115,6 +116,14 @@ function TableFooterDemo() {
   return (
     <DemoRow sx={styles.wide}>
       <Invoices rows={invoices.slice(0, 3)} />
+    </DemoRow>
+  );
+}
+
+function TableSizeDemo() {
+  return (
+    <DemoRow sx={styles.wide}>
+      <Invoices rows={invoices.slice(0, 4)} size="sm" />
     </DemoRow>
   );
 }
@@ -169,4 +178,4 @@ function TableActionsDemo() {
   );
 }
 
-export { TableActionsDemo, TableDemo, TableFooterDemo };
+export { TableActionsDemo, TableDemo, TableFooterDemo, TableSizeDemo };

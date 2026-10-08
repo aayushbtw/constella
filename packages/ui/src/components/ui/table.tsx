@@ -1,4 +1,7 @@
+"use client";
+
 import * as stylex from "@stylexjs/stylex";
+import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import {
@@ -12,9 +15,15 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
+const tableSizes = ["sm", "default"] as const;
+
+type TableSize = (typeof tableSizes)[number];
+
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
+
+type TableProps = Styled<ComponentProps<"table">> & { size?: TableSize };
 
 const selected = ":is([data-state='selected'])";
 // A cell holding a checkbox hugs it, so the column stays as narrow as the box.
@@ -81,6 +90,13 @@ const styles = stylex.create({
     verticalAlign: "middle",
     whiteSpace: "nowrap",
   },
+  // Dense rows for data a reader scans, like logs and usage.
+  headSm: {
+    height: sizes.controlMd,
+  },
+  cellSm: {
+    paddingBlock: space.xxs,
+  },
   caption: {
     color: colors.textMuted,
     fontSize: fontSizes.sm,
@@ -88,11 +104,20 @@ const styles = stylex.create({
   },
 });
 
-function Table({ sx, ...props }: Styled<ComponentProps<"table">>) {
+const TableSizeContext = createContext<TableSize>("default");
+
+function Table({ size = "default", sx, ...props }: TableProps) {
   return (
-    <div data-slot="table-container" {...stylex.props(styles.container)}>
-      <table data-slot="table" {...props} {...stylex.props(styles.table, sx)} />
-    </div>
+    <TableSizeContext value={size}>
+      <div data-slot="table-container" {...stylex.props(styles.container)}>
+        <table
+          data-size={size}
+          data-slot="table"
+          {...props}
+          {...stylex.props(styles.table, sx)}
+        />
+      </div>
+    </TableSizeContext>
   );
 }
 
@@ -121,14 +146,24 @@ function TableRow({ sx, ...props }: Styled<ComponentProps<"tr">>) {
 }
 
 function TableHead({ sx, ...props }: Styled<ComponentProps<"th">>) {
+  const size = use(TableSizeContext);
   return (
-    <th data-slot="table-head" {...props} {...stylex.props(styles.head, sx)} />
+    <th
+      data-slot="table-head"
+      {...props}
+      {...stylex.props(styles.head, size === "sm" && styles.headSm, sx)}
+    />
   );
 }
 
 function TableCell({ sx, ...props }: Styled<ComponentProps<"td">>) {
+  const size = use(TableSizeContext);
   return (
-    <td data-slot="table-cell" {...props} {...stylex.props(styles.cell, sx)} />
+    <td
+      data-slot="table-cell"
+      {...props}
+      {...stylex.props(styles.cell, size === "sm" && styles.cellSm, sx)}
+    />
   );
 }
 
@@ -151,4 +186,6 @@ export {
   TableHead,
   TableHeader,
   TableRow,
+  tableSizes,
 };
+export type { TableProps, TableSize };

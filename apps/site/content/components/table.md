@@ -82,6 +82,21 @@ Table
         └── TableCell
 ```
 
+## Size
+
+Use the `size` prop on `Table` for denser rows, for data a reader scans rather than reads: logs, usage, runs.
+
+<!-- ::demo name="table-size" -->
+
+```tsx
+<Table size="sm">…</Table>
+```
+
+| Size      | Header height | Cell padding |
+| --------- | ------------- | ------------ |
+| `sm`      | 32px          | 4px          |
+| `default` | 40px          | 8px          |
+
 ## Footer
 
 Use `TableFooter` for a totals row.

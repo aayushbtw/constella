@@ -177,6 +177,7 @@ import {
   TableActionsDemo,
   TableDemo,
   TableFooterDemo,
+  TableSizeDemo,
 } from "~/components/demos/table";
 import {
   TabsDemo,
@@ -359,6 +360,7 @@ const demos = {
   table: TableDemo,
   "table-actions": TableActionsDemo,
   "table-footer": TableFooterDemo,
+  "table-size": TableSizeDemo,
   tabs: TabsDemo,
   "tabs-disabled": TabsDisabledDemo,
   "tabs-line": TabsLineDemo,
