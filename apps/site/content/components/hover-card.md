@@ -78,23 +78,12 @@ Use the `side` prop on `HoverCardContent` to place the card. It flips to the oth
 <HoverCardContent side="right">…</HoverCardContent>
 ```
 
-## Delay
-
-Use `delay` and `closeDelay` on `HoverCardTrigger`, in milliseconds. By default it opens after 600ms (`durations.hoverCardDelay`), twice a tooltip's wait, and closes after 300ms, so a pointer passing over text doesn't open it.
-
-<!-- ::demo name="hover-card-delay" -->
-
-```tsx
-<HoverCardTrigger closeDelay={0} delay={0}>
-  Instant
-</HoverCardTrigger>
-```
-
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
 | `HoverCardContent` | Renders the portal, positioner, popup and viewport; takes `side`, `align` and their offsets |
+| `HoverCardTrigger` | `delay` (600ms) and `closeDelay` (300ms) default to `durations.hoverCardDelay` and `hoverCardCloseDelay`; `handle`, `payload` |
 | `createHoverCardHandle` | A handle shared by `HoverCard` and its triggers |
 
 `HoverCardContent` takes `sx`, applied last. Base UI calls this Preview Card. For the rest, see [Base UI Preview Card](https://base-ui.com/react/components/preview-card).

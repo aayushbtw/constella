@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buttonStyles } from "@/components/ui/button";
+import { Button, buttonStyles } from "@/components/ui/button";
 import {
   createHoverCardHandle,
   HoverCard,
@@ -41,11 +41,6 @@ const styles = stylex.create({
     textDecorationLine: "underline",
     textDecorationColor: colors.edge,
     textUnderlineOffset: space.xxs,
-  },
-  grid: {
-    display: "grid",
-    gap: space.xs,
-    gridTemplateColumns: "repeat(2, auto)",
   },
 });
 
@@ -148,51 +143,23 @@ function HoverCardTriggersDemo() {
   );
 }
 
-const sides = ["top", "right", "bottom", "left"] as const;
+const sides = ["left", "top", "bottom", "right"] as const;
 
 function HoverCardSideDemo() {
   return (
     <DemoRow>
-      <div {...stylex.props(styles.grid)}>
-        {sides.map((side) => (
-          <HoverCard key={side}>
-            <HoverCardTrigger href="#hover-card" {...link}>
-              {side}
-            </HoverCardTrigger>
-            <HoverCardContent side={side}>
-              Opens on the {side}, and flips when there&apos;s no room.
-            </HoverCardContent>
-          </HoverCard>
-        ))}
-      </div>
+      {sides.map((side) => (
+        <HoverCard key={side}>
+          <HoverCardTrigger render={<Button variant="outline" />}>
+            {side}
+          </HoverCardTrigger>
+          <HoverCardContent side={side}>
+            <ProfileCard profile={profiles.shadcn} />
+          </HoverCardContent>
+        </HoverCard>
+      ))}
     </DemoRow>
   );
 }
 
-function HoverCardDelayDemo() {
-  return (
-    <DemoRow>
-      <HoverCard>
-        <HoverCardTrigger closeDelay={0} delay={0} href="#hover-card" {...link}>
-          Instant
-        </HoverCardTrigger>
-        <HoverCardContent>
-          Opens as soon as the pointer arrives.
-        </HoverCardContent>
-      </HoverCard>
-      <HoverCard>
-        <HoverCardTrigger delay={1000} href="#hover-card" {...link}>
-          After a second
-        </HoverCardTrigger>
-        <HoverCardContent>Waits until the pointer settles.</HoverCardContent>
-      </HoverCard>
-    </DemoRow>
-  );
-}
-
-export {
-  HoverCardDelayDemo,
-  HoverCardDemo,
-  HoverCardSideDemo,
-  HoverCardTriggersDemo,
-};
+export { HoverCardDemo, HoverCardSideDemo, HoverCardTriggersDemo };

@@ -43,6 +43,17 @@ ToggleGroup
 └── ToggleGroupItem
 ```
 
+## Multiple
+
+Without `multiple`, one item is on at a time, like an alignment. With it, any can be, like text styles.
+
+<!-- ::demo name="toggle-group-multiple" -->
+
+```tsx
+<ToggleGroup defaultValue={["left"]}>…</ToggleGroup>
+<ToggleGroup defaultValue={["bold", "italic"]} multiple>…</ToggleGroup>
+```
+
 ## Spacing
 
 Use the `spacing` prop to set the gap. At `0` the items join into one segmented control, as in a [Button Group](/docs/components/button-group).
@@ -62,6 +73,31 @@ Use the `spacing` prop to set the gap. At `0` the items join into one segmented 
 </ToggleGroup>
 ```
 
+### With Icon
+
+Put an icon before an item's label, marked `data-icon="inline-start"`, for a segmented view switcher.
+
+<!-- ::demo name="toggle-group-with-icon" -->
+
+```tsx
+<ToggleGroupItem value="grid">
+  <HugeiconsIcon data-icon="inline-start" icon={GridViewIcon} />
+  Grid
+</ToggleGroupItem>
+```
+
+## Orientation
+
+Use `orientation="vertical"` to stack the items. Arrow keys follow the axis.
+
+<!-- ::demo name="toggle-group-vertical" -->
+
+```tsx
+<ToggleGroup orientation="vertical" spacing={0} variant="outline">
+  …
+</ToggleGroup>
+```
+
 ## Size
 
 Use the `size` prop on `ToggleGroup`; every item takes it.
@@ -70,6 +106,18 @@ Use the `size` prop on `ToggleGroup`; every item takes it.
 
 ```tsx
 <ToggleGroup size="icon-sm">…</ToggleGroup>
+```
+
+## Disabled
+
+Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for all of them.
+
+<!-- ::demo name="toggle-group-disabled" -->
+
+```tsx
+<ToggleGroupItem disabled value="archived">
+  Archived
+</ToggleGroupItem>
 ```
 
 ## API Reference

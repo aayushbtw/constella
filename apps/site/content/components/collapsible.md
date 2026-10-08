@@ -58,6 +58,51 @@ Collapsible
 └── CollapsibleContent
 ```
 
+## Nested
+
+Collapsibles nest, for a tree. Each folder's `CollapsibleTrigger` carries `data-panel-open` while it's open, so its chevron can turn.
+
+<!-- ::demo name="collapsible-tree" -->
+
+```tsx
+<Collapsible defaultOpen>
+  <CollapsibleTrigger>components</CollapsibleTrigger>
+  <CollapsibleContent>
+    <Collapsible>
+      <CollapsibleTrigger>ui</CollapsibleTrigger>
+      <CollapsibleContent>…</CollapsibleContent>
+    </Collapsible>
+  </CollapsibleContent>
+</Collapsible>
+```
+
+## Controlled
+
+Use `open` and `onOpenChange` to hold the state yourself, here to swap the trigger's label.
+
+<!-- ::demo name="collapsible-controlled" -->
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Collapsible onOpenChange={setOpen} open={open}>
+  <CollapsibleTrigger>
+    <SwapText>{open ? "Hide details" : "Show details"}</SwapText>
+  </CollapsibleTrigger>
+  <CollapsibleContent>…</CollapsibleContent>
+</Collapsible>;
+```
+
+## Disabled
+
+Add `disabled` to `Collapsible` so its trigger does nothing.
+
+<!-- ::demo name="collapsible-disabled" -->
+
+```tsx
+<Collapsible disabled>…</Collapsible>
+```
+
 ## API Reference
 
 | Part | Adds |

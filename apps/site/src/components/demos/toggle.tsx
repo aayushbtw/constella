@@ -1,4 +1,9 @@
 import {
+  GridViewIcon,
+  LeftToRightListBulletIcon,
+  TextAlignCenterIcon,
+  TextAlignLeftIcon,
+  TextAlignRightIcon,
   TextBoldIcon,
   TextItalicIcon,
   TextUnderlineIcon,
@@ -133,7 +138,80 @@ function ToggleGroupSizeDemo() {
   );
 }
 
+function ToggleGroupMultipleDemo() {
+  return (
+    <DemoRow sx={styles.stack}>
+      <ToggleGroup defaultValue={["left"]} variant="outline">
+        <ToggleGroupItem aria-label="Align left" value="left">
+          <Glyph icon={TextAlignLeftIcon} />
+        </ToggleGroupItem>
+        <ToggleGroupItem aria-label="Align center" value="center">
+          <Glyph icon={TextAlignCenterIcon} />
+        </ToggleGroupItem>
+        <ToggleGroupItem aria-label="Align right" value="right">
+          <Glyph icon={TextAlignRightIcon} />
+        </ToggleGroupItem>
+      </ToggleGroup>
+      <ToggleGroup defaultValue={["bold", "italic"]} multiple variant="outline">
+        <Formatting />
+      </ToggleGroup>
+    </DemoRow>
+  );
+}
+
+function ToggleGroupWithIconDemo() {
+  return (
+    <DemoRow>
+      <ToggleGroup defaultValue={["list"]} spacing={0} variant="outline">
+        <ToggleGroupItem value="list">
+          <Glyph data-icon="inline-start" icon={LeftToRightListBulletIcon} />
+          List
+        </ToggleGroupItem>
+        <ToggleGroupItem value="grid">
+          <Glyph data-icon="inline-start" icon={GridViewIcon} />
+          Grid
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </DemoRow>
+  );
+}
+
+function ToggleGroupVerticalDemo() {
+  return (
+    <DemoRow>
+      <ToggleGroup
+        defaultValue={["all"]}
+        orientation="vertical"
+        spacing={0}
+        variant="outline"
+      >
+        <ToggleGroupItem value="all">All</ToggleGroupItem>
+        <ToggleGroupItem value="unread">Unread</ToggleGroupItem>
+        <ToggleGroupItem value="archived">Archived</ToggleGroupItem>
+      </ToggleGroup>
+    </DemoRow>
+  );
+}
+
+function ToggleGroupDisabledDemo() {
+  return (
+    <DemoRow>
+      <ToggleGroup defaultValue={["all"]} spacing={0} variant="outline">
+        <ToggleGroupItem value="all">All</ToggleGroupItem>
+        <ToggleGroupItem value="unread">Unread</ToggleGroupItem>
+        <ToggleGroupItem disabled value="archived">
+          Archived
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </DemoRow>
+  );
+}
+
 export {
+  ToggleGroupDisabledDemo,
+  ToggleGroupMultipleDemo,
+  ToggleGroupVerticalDemo,
+  ToggleGroupWithIconDemo,
   ToggleDemo,
   ToggleDisabledDemo,
   ToggleGroupDemo,

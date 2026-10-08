@@ -69,7 +69,12 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
-import { CollapsibleDemo } from "~/components/demos/collapsible";
+import {
+  CollapsibleControlledDemo,
+  CollapsibleDemo,
+  CollapsibleDisabledDemo,
+  CollapsibleTreeDemo,
+} from "~/components/demos/collapsible";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import { DataTableDemo } from "~/components/demos/data-table";
@@ -109,7 +114,6 @@ import {
   FieldSetDemo,
 } from "~/components/demos/field";
 import {
-  HoverCardDelayDemo,
   HoverCardDemo,
   HoverCardSideDemo,
   HoverCardTriggersDemo,
@@ -265,6 +269,10 @@ import {
   ToggleDemo,
   ToggleDisabledDemo,
   ToggleGroupDemo,
+  ToggleGroupDisabledDemo,
+  ToggleGroupMultipleDemo,
+  ToggleGroupVerticalDemo,
+  ToggleGroupWithIconDemo,
   ToggleGroupSizeDemo,
   ToggleGroupSpacingDemo,
   ToggleOutlineDemo,
@@ -335,6 +343,9 @@ const demos = {
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
   collapsible: CollapsibleDemo,
+  "collapsible-controlled": CollapsibleControlledDemo,
+  "collapsible-disabled": CollapsibleDisabledDemo,
+  "collapsible-tree": CollapsibleTreeDemo,
   command: CommandDemo,
   "command-dialog": CommandDialogDemo,
   "copy-button": CopyButtonDemo,
@@ -417,7 +428,6 @@ const demos = {
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
   "hover-card": HoverCardDemo,
-  "hover-card-delay": HoverCardDelayDemo,
   "hover-card-side": HoverCardSideDemo,
   "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
@@ -491,6 +501,10 @@ const demos = {
   toggle: ToggleDemo,
   "toggle-disabled": ToggleDisabledDemo,
   "toggle-group": ToggleGroupDemo,
+  "toggle-group-disabled": ToggleGroupDisabledDemo,
+  "toggle-group-multiple": ToggleGroupMultipleDemo,
+  "toggle-group-vertical": ToggleGroupVerticalDemo,
+  "toggle-group-with-icon": ToggleGroupWithIconDemo,
   "toggle-group-size": ToggleGroupSizeDemo,
   "toggle-group-spacing": ToggleGroupSpacingDemo,
   "toggle-outline": ToggleOutlineDemo,
