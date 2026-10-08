@@ -189,6 +189,7 @@ import {
   SeparatorMenuDemo,
   SeparatorVerticalDemo,
 } from "~/components/demos/separator";
+import { SheetDemo, SheetSideDemo } from "~/components/demos/sheet";
 import { SkeletonCardDemo, SkeletonDemo } from "~/components/demos/skeleton";
 import {
   SliderDemo,
@@ -408,6 +409,8 @@ const demos = {
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,
   "separator-vertical": SeparatorVerticalDemo,
+  sheet: SheetDemo,
+  "sheet-side": SheetSideDemo,
   skeleton: SkeletonDemo,
   "skeleton-card": SkeletonCardDemo,
   slider: SliderDemo,

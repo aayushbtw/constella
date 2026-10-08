@@ -151,6 +151,8 @@ When content changes, the layout takes its new size at once and only the surface
 
 A collapsible is the one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it.
 
+A sheet travels the whole way in from its edge on `layout` (the drawer curve, `durations.layout`), and leaves the same way, faster, on `dialog`: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. Under reduced motion it fades in place. It is the dialog's surface (backdrop, `raised`, `shadows.dialog`, footer bar), so a side panel and its narrow-window sheet read alike.
+
 ### Press and hover
 
 Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give. Two exceptions: a trigger (`[aria-haspopup]`) doesn't give, since pressing it opens something rather than acting, and keeps its hover look while its popup is open (`[data-popup-open]`); a text link answers with an underline, not a press.

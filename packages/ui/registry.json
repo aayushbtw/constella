@@ -343,6 +343,23 @@
       ]
     },
     {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "A dialog that slides in from an edge, for side panels on narrow screens.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/dialog.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
