@@ -1,5 +1,5 @@
-// Themes are Radix Colors scales by name, so a theme only maps them onto our roles.
-// Radix's dark files switch on `.dark`, so one block covers both appearances.
+// A theme is Radix Colors scales by name mapped onto theme.stylex.ts, plus shape and density.
+// Radix's dark files switch on `.dark`, so one value covers both appearances.
 
 const grays = ["gray", "mauve", "slate", "sage", "olive", "sand"] as const;
 
@@ -46,7 +46,7 @@ const darkText: Partial<Record<Accent, string>> = {
 
 // Named after stars, each hinting at its color. A theme is colors only: its grays and a
 // default accent; radius and sizing are chosen on top. Polaris, the fixed point the rest are
-// read from, is the default that base.css ships, so it emits only what changes.
+// read from, is the theme.stylex.ts Constella installs.
 const themes = {
   polaris: {
     accent: "ink",
@@ -105,16 +105,40 @@ interface ThemeOptions {
   accent: Accent;
   radius: RadiusPreset;
   scaling: ScalingPreset;
-  /** Its grays, and the `data-theme` value on `<html>`. */
+  /** Its grays and default accent. */
   theme: ThemeName;
 }
 
 const twelve = Array.from({ length: 12 }, (_, index) => index + 1);
 
-function mapScale(role: string, scale: string) {
+type Entry = readonly [name: string, value: string];
+
+// The same in every theme: they read the scales, which the theme maps.
+const roles: Entry[] = [
+  ["--background", "var(--neutral-1)"],
+  ["--text-primary", "var(--neutral-12)"],
+  ["--text-secondary", "var(--neutral-11)"],
+  ["--fill-subtle", "var(--neutral-a2)"],
+  ["--fill", "var(--neutral-a3)"],
+  ["--fill-strong", "var(--neutral-a4)"],
+  ["--fill-opaque", "var(--neutral-3)"],
+  ["--edge-subtle", "var(--neutral-a4)"],
+  ["--edge", "var(--neutral-a6)"],
+  ["--inverted", "var(--neutral-12)"],
+  ["--on-inverted", "var(--neutral-1)"],
+  ["--overlay", "var(--black-a5)"],
+];
+
+function scaleEntries(role: string, scale: string): Entry[] {
   return [
-    ...twelve.map((step) => `  --${role}-${step}: var(--${scale}-${step});`),
-    ...twelve.map((step) => `  --${role}-a${step}: var(--${scale}-a${step});`),
+    ...twelve.map((step): Entry => [
+      `--${role}-${step}`,
+      `var(--${scale}-${step})`,
+    ]),
+    ...twelve.map((step): Entry => [
+      `--${role}-a${step}`,
+      `var(--${scale}-a${step})`,
+    ]),
   ];
 }
 
@@ -123,33 +147,33 @@ function scaleFiles(scale: string) {
   return [scale, `${scale}-dark`, `${scale}-alpha`, `${scale}-dark-alpha`];
 }
 
-function accentLines(accent: Exclude<Accent, "ink">) {
-  return [
-    ...mapScale("accent", accent),
-    `  --accent-contrast: ${darkText[accent] ?? "white"};`,
-    "  --accent-solid: var(--accent-9);",
-    "  --on-accent: var(--accent-contrast);",
-    "  --focus-ring: var(--accent-a8);",
-    "  --selection: var(--accent-a5);",
-  ];
-}
-
-// Only what differs from base.css, so a theme's CSS says what makes it itself.
-function layoutLines(radius: RadiusPreset, scaling: ScalingPreset) {
+/** Every variable in theme.stylex.ts, in its order, for these choices. */
+function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
+  const { gray } = themes[theme];
+  const ink = accent === "ink";
   const { controls, space } = scalingPresets[scaling];
   return [
-    ...(radius === "medium" ? [] : [`  --radius: ${radiusPresets[radius]}px;`]),
-    ...(scaling === "default"
-      ? []
-      : [
-          ...Object.entries(controls).map(
-            ([size, value]) => `  --size-control-${size}: ${value}px;`
-          ),
-          ...Object.entries(space).map(
-            ([size, value]) => `  --space-${size}: ${value}px;`
-          ),
-        ]),
-  ];
+    ...scaleEntries("neutral", gray),
+    ...scaleEntries("accent", ink ? "neutral" : accent),
+    [
+      "--accent-contrast",
+      ink ? "var(--neutral-1)" : (darkText[accent] ?? "white"),
+    ],
+    ...roles,
+    ["--accent-solid", ink ? "var(--neutral-12)" : "var(--accent-9)"],
+    ["--on-accent", ink ? "var(--neutral-1)" : "var(--accent-contrast)"],
+    ["--focus-ring", ink ? "var(--neutral-a8)" : "var(--accent-a8)"],
+    ["--selection", ink ? "var(--neutral-a5)" : "var(--accent-a5)"],
+    ["--radius", `${radiusPresets[radius]}px`],
+    ...(["xxs", "xs", "sm", "md", "lg"] as const).map((size): Entry => [
+      `--size-control-${size}`,
+      `${controls[size]}px`,
+    ]),
+    ...(["xs", "sm", "md", "lg", "xl"] as const).map((size): Entry => [
+      `--space-${size}`,
+      `${space[size]}px`,
+    ]),
+  ] satisfies Entry[];
 }
 
 /** The Radix scales a theme reads, beyond the gray base.css already imports. */
@@ -164,36 +188,37 @@ function themeScales({
   ];
 }
 
-/** A theme's CSS: put it in your global CSS and set `data-theme` on `<html>`. */
-function generateThemeCss({ accent, radius, scaling, theme }: ThemeOptions) {
-  const { gray } = themes[theme];
-  const lines = [
-    ...(gray === "gray" ? [] : mapScale("gray", gray)),
-    ...(accent === "ink" ? [] : accentLines(accent)),
-    ...layoutLines(radius, scaling),
-  ];
-
-  if (lines.length === 0) {
-    return `/* Constella theme "${theme}" is the default: no CSS needed. */\n`;
-  }
-
+/** A complete theme.stylex.ts for these choices, to replace the one Constella installs. */
+function generateThemeFile(options: ThemeOptions) {
+  const { accent, radius, scaling, theme } = options;
   return [
-    ...themeScales({ accent, theme }).flatMap((scale) =>
-      scaleFiles(scale).map((file) => `@import "@radix-ui/colors/${file}.css";`)
+    `// ${themes[theme].label}: ${themes[theme].gray} grays, ${accent} accent, ${radius} radius, ${scaling} sizing.`,
+    ...themeScales(options).flatMap((scale) =>
+      scaleFiles(scale).map((file) => `import "@radix-ui/colors/${file}.css";`)
     ),
+    'import * as stylex from "@stylexjs/stylex";',
     "",
-    `/* Constella theme "${theme}": ${gray} grays, ${accent} accent, ${radius} radius, ${scaling} sizing */`,
-    `:root[data-theme="${theme}"] {`,
-    ...lines,
+    "export const theme = stylex.defineVars({",
+    ...themeEntries(options).map(([name, value]) => `  "${name}": "${value}",`),
+    "});",
+    "",
+  ].join("\n");
+}
+
+/** The same values as CSS, for the builder's live preview over the installed defaults. */
+function previewCss(options: ThemeOptions) {
+  return [
+    ":root:root {",
+    ...themeEntries(options).map(([name, value]) => `  ${name}: ${value};`),
     "}",
-    "",
   ].join("\n");
 }
 
 export {
   accents,
   defaultTheme,
-  generateThemeCss,
+  generateThemeFile,
+  previewCss,
   radiusPresets,
   scaleFiles,
   scalingPresets,

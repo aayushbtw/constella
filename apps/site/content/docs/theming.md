@@ -1,94 +1,98 @@
 ---
 title: Theming
-description: Pick a theme, then bring your accent, corners and density. A theme is CSS variables, so there's nothing to install.
+description: Pick a theme, then bring your accent, corners and density. A theme is one StyleX file you own.
 order: 2
 ---
 
-A theme is a block of CSS variables scoped to a `data-theme` value on `<html>`. Components read only tokens, and tokens read these variables, so every component follows the theme in light and dark.
+A theme is `theme.stylex.ts`: one file of variables you own. Components read only tokens, and tokens read these variables, so every component follows the theme in light and dark.
 
 ## Theme builder
 
-Pick a theme, then change its accent, radius and sizing if you like, and copy the CSS. The page wears the theme while you build it.
+Pick a theme, then change its accent, radius and sizing if you like, and copy the file. The page wears the theme while you build it.
 
 <!-- ::demo name="theme-builder" -->
 
-Accents are [Radix Colors](https://www.radix-ui.com/colors) scales by name, so they're tuned for light and dark already, and the CSS imports them from `@radix-ui/colors`, which comes with Constella. Ink is the monochrome accent: the solid fill is the gray ink, as in Polaris. Amber, yellow, lime, mint and sky take dark text on their solid fill.
+Accents are [Radix Colors](https://www.radix-ui.com/colors) scales by name, so they're tuned for light and dark already, and the file imports them from `@radix-ui/colors`, which comes with Constella. Ink is the monochrome accent: the solid fill is the gray ink, as in Polaris. Amber, yellow, lime, mint and sky take dark text on their solid fill.
 
 ## Themes
 
 Themes are named after stars, each hinting at its color. A theme sets colors only: its grays and a default accent. Radius and sizing are yours to pick on top.
 
-| Theme     | Grays | Accent | Note                                   |
-| --------- | ----- | ------ | -------------------------------------- |
-| `polaris` | Gray  | Ink    | The default; ships in `base.css`       |
-| `vega`    | Slate | Indigo | A blue-white star                      |
-| `antares` | Sand  | Orange | A red supergiant, kept clear of danger |
+| Theme     | Grays | Accent | Note                                    |
+| --------- | ----- | ------ | --------------------------------------- |
+| `polaris` | Gray  | Ink    | The default; ships as `theme.stylex.ts` |
+| `vega`    | Slate | Indigo | A blue-white star                       |
+| `antares` | Sand  | Orange | A red supergiant, kept clear of danger  |
 
-Polaris needs no CSS. Set `data-theme="polaris"` or nothing at all; the builder writes only what you change from it.
+Polaris is the `theme.stylex.ts` Constella installs.
 
 ## Usage
 
-Paste the CSS into your global stylesheet, then set the theme on `<html>`.
-
-```tsx
-<html data-theme="vega" lang="en">
-  <body>{children}</body>
-</html>
-```
-
-Ship as many themes as you like and switch between them by changing the attribute. Dark mode is still the `.dark` class, so every theme works in both.
+Constella installs `lib/theme.stylex.ts` with Polaris in it. To theme your app, replace it with the builder's file, or edit it by hand: it's yours, and nothing else in the system needs changing.
 
 ```ts
-document.documentElement.dataset.theme = "antares";
+// lib/theme.stylex.ts
+import "@radix-ui/colors/indigo.css";
+import "@radix-ui/colors/indigo-dark.css";
+import "@radix-ui/colors/indigo-alpha.css";
+import "@radix-ui/colors/indigo-dark-alpha.css";
+import * as stylex from "@stylexjs/stylex";
+
+export const theme = stylex.defineVars({
+  "--accent-9": "var(--indigo-9)",
+  // …
+  "--radius": "12px",
+});
 ```
 
-**Set the theme on `<html>`, not a subtree.** Popups render in a portal at the end of `<body>`, so they only see a theme set on the root.
+Dark mode is still the `.dark` class on `<html>`: Radix's dark scales switch on it, so every theme works in both.
+
+### More than one theme
+
+To let people switch themes at runtime, keep your default in `theme.stylex.ts` and make each other one a `createTheme` of it, applied to `<html>`. It only lists what differs.
+
+```tsx
+import * as stylex from "@stylexjs/stylex";
+import { theme } from "@/lib/theme.stylex";
+
+const vega = stylex.createTheme(theme, {
+  "--accent-9": "var(--indigo-9)",
+  // …
+});
+
+<html {...stylex.props(vega)} lang="en">
+```
+
+**Apply a theme to `<html>`, not a subtree.** Popups render in a portal at the end of `<body>`, so they only see a theme set on the root.
 
 ## Variables
 
-### Roles
-
-Every color a component uses is a role, and every role is a variable valued by a scale step. Override one by hand to change just that role, in light and dark.
-
-```css
-:root[data-theme="vega"] {
-  --edge: var(--gray-a7);
-}
-```
-
-| Variable | Default | For |
-| --- | --- | --- |
-| `--background` | `--gray-1` | The page |
-| `--raised` | white; `--gray-2` in dark | Popovers, menus, dialogs, toasts |
-| `--text-primary` | `--gray-12` | Content |
-| `--text-secondary` | `--gray-11` | Supporting copy |
-| `--text-muted` | `--gray-10` | Labels and hints |
-| `--fill-subtle`, `--fill`, `--fill-strong` | `--gray-a2`, `-a3`, `-a4` | Hover, selected, pressed |
-| `--fill-opaque` | `--gray-3` | A fill nothing shows through |
-| `--edge-subtle`, `--edge` | `--gray-a4`, `-a6` | Dividers, control borders |
-| `--accent-solid` | `--gray-12` | Primary buttons, checked controls |
-| `--on-accent` | `--gray-1` | Text and icons on the accent |
-| `--inverted`, `--on-inverted` | `--gray-12`, `--gray-1` | Tooltips |
-| `--focus-ring` | `--gray-a8` | The focus outline |
-| `--selection` | `--gray-a5` | Selected text |
-| `--overlay` | `--black-a5` | Behind a dialog |
+Everything in `theme.stylex.ts`. Variables keep their literal names, so `base.css` can read them.
 
 ### Scales
 
-The roles read these: `--gray-1` … `--gray-12` and `--gray-a1` … `--gray-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9. A theme points them at a Radix scale by name.
+`--neutral-1` … `--neutral-12` and `--neutral-a1` … `--neutral-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9. Each step points at a Radix scale by name; import that scale's four files at the top.
 
-```css
-@import "@radix-ui/colors/indigo.css";
-@import "@radix-ui/colors/indigo-dark.css";
-@import "@radix-ui/colors/indigo-alpha.css";
-@import "@radix-ui/colors/indigo-dark-alpha.css";
+### Roles
 
-:root[data-theme="vega"] {
-  --accent-9: var(--indigo-9);
-  --accent-a8: var(--indigo-a8);
-  /* …each step, then the roles that carry the accent */
-}
-```
+What components ask for. Each is a scale step, so changing one changes only that role, in light and dark.
+
+| Variable | Default | For |
+| --- | --- | --- |
+| `--background` | `--neutral-1` | The page |
+| `--text-primary` | `--neutral-12` | Content |
+| `--text-secondary` | `--neutral-11` | Supporting copy |
+| `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected, pressed |
+| `--fill-opaque` | `--neutral-3` | A fill nothing shows through |
+| `--edge-subtle`, `--edge` | `--neutral-a4`, `-a6` | Dividers, control borders |
+| `--accent-solid` | `--neutral-12` | Primary buttons, checked controls |
+| `--on-accent` | `--neutral-1` | Text and icons on the accent |
+| `--inverted`, `--on-inverted` | `--neutral-12`, `--neutral-1` | Tooltips |
+| `--focus-ring` | `--neutral-a8` | The focus outline |
+| `--selection` | `--neutral-a5` | Selected text |
+| `--overlay` | `--black-a5` | Behind a dialog |
+
+Muted text and raised surfaces differ between light and dark, so `base.css` sets them from the scales.
 
 ### Shape and density
 

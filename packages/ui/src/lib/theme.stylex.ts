@@ -2,7 +2,8 @@
 //
 // - Scales: `--neutral-*` and `--accent-*` point at Radix Colors scales by name. To change
 //   one, import its four files and point the steps at it (the theme builder writes this).
-// - Roles that carry the accent: its solid fill, the text on it, the focus ring, selection.
+// - Roles: what components ask for (`--edge`, `--fill`…), each a scale step; change one alone.
+//   The ones that differ between light and dark live in base.css.
 // - Shape and density: one radius (the rest derive from it), control heights, spacing.
 //
 // The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing.
@@ -60,6 +61,19 @@ export const theme = stylex.defineVars({
   "--accent-a11": "var(--neutral-a11)",
   "--accent-a12": "var(--neutral-a12)",
   "--accent-contrast": "var(--neutral-1)",
+  // Roles: what components ask for, valued by a scale step.
+  "--background": "var(--neutral-1)",
+  "--text-primary": "var(--neutral-12)",
+  "--text-secondary": "var(--neutral-11)",
+  "--fill-subtle": "var(--neutral-a2)",
+  "--fill": "var(--neutral-a3)",
+  "--fill-strong": "var(--neutral-a4)",
+  "--fill-opaque": "var(--neutral-3)",
+  "--edge-subtle": "var(--neutral-a4)",
+  "--edge": "var(--neutral-a6)",
+  "--inverted": "var(--neutral-12)",
+  "--on-inverted": "var(--neutral-1)",
+  "--overlay": "var(--black-a5)",
   "--accent-solid": "var(--neutral-12)",
   "--on-accent": "var(--neutral-1)",
   "--focus-ring": "var(--neutral-a8)",

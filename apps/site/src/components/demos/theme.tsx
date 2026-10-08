@@ -29,7 +29,8 @@ import { CopyButton } from "~/components/docs/copy-button";
 import {
   accents,
   defaultTheme,
-  generateThemeCss,
+  generateThemeFile,
+  previewCss,
   scaleFiles,
   themes,
   themeScales,
@@ -165,18 +166,6 @@ function useScalesCss(scales: string[]) {
   return css;
 }
 
-// Set on <html> while the builder is open, so popups and the site around the demo wear
-// the theme too; the CSS itself renders with the builder.
-function useLiveTheme(name: string) {
-  useEffect(() => {
-    const root = document.documentElement;
-    root.dataset.theme = name;
-    return () => {
-      delete root.dataset.theme;
-    };
-  }, [name]);
-}
-
 const themeNames = Object.keys(themes).filter((name): name is ThemeName =>
   Object.hasOwn(themes, name)
 );
@@ -188,14 +177,13 @@ function ThemeBuilderDemo() {
   const [scaling, setScaling] = useState<ScalingPreset>("default");
 
   const options = useDeferredValue({ accent, radius, scaling, theme });
-  const css = useMemo(() => generateThemeCss(options), [options]);
-  useLiveTheme(options.theme);
+  const file = useMemo(() => generateThemeFile(options), [options]);
   const scalesCss = useScalesCss(themeScales(options));
-  const previewCss = `${scalesCss}\n${css.replaceAll(/^@import .*$/gmu, "")}`;
+  const preview = `${scalesCss}\n${previewCss(options)}`;
 
   return (
     <>
-      <style>{previewCss}</style>
+      <style>{preview}</style>
       <Stage>
         <div {...stylex.props(styles.preview)}>
           <div {...stylex.props(styles.row)}>
@@ -323,9 +311,13 @@ function ThemeBuilderDemo() {
       </DemoControls>
       <div {...stylex.props(styles.output)}>
         <pre {...stylex.props(styles.pre)}>
-          <code>{css}</code>
+          <code>{file}</code>
         </pre>
-        <CopyButton label="Copy theme" sx={styles.copy} text={() => css} />
+        <CopyButton
+          label="Copy theme.stylex.ts"
+          sx={styles.copy}
+          text={() => file}
+        />
       </div>
     </>
   );

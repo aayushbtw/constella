@@ -48,21 +48,9 @@
     --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
   }
 
-  /* Every role is its own variable, valued by a step of the theme's scales (`theme` in
-     tokens.stylex.ts), so a theme can map the scales or override one role by hand. */
+  /* Status dots, and corners derived from the theme's one radius. The theme's roles and
+     scales live in theme.stylex.ts. */
   :root {
-    --background: var(--neutral-1);
-    --text-primary: var(--neutral-12);
-    --text-secondary: var(--neutral-11);
-    --fill-subtle: var(--neutral-a2);
-    --fill: var(--neutral-a3);
-    --fill-strong: var(--neutral-a4);
-    --fill-opaque: var(--neutral-3);
-    --edge-subtle: var(--neutral-a4);
-    --edge: var(--neutral-a6);
-    --inverted: var(--neutral-12);
-    --on-inverted: var(--neutral-1);
-    --overlay: var(--black-a5);
     --danger-solid: var(--red-9);
     --info-solid: var(--blue-9);
     --success-solid: var(--green-9);
