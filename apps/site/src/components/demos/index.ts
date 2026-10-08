@@ -175,7 +175,13 @@ import {
   TableDemo,
   TableFooterDemo,
 } from "~/components/demos/table";
-import { TabsDemo } from "~/components/demos/tabs";
+import {
+  TabsDemo,
+  TabsDisabledDemo,
+  TabsLineDemo,
+  TabsSizeDemo,
+  TabsVerticalDemo,
+} from "~/components/demos/tabs";
 import {
   TextareaButtonDemo,
   TextareaDemo,
@@ -347,6 +353,10 @@ const demos = {
   "table-actions": TableActionsDemo,
   "table-footer": TableFooterDemo,
   tabs: TabsDemo,
+  "tabs-disabled": TabsDisabledDemo,
+  "tabs-line": TabsLineDemo,
+  "tabs-size": TabsSizeDemo,
+  "tabs-vertical": TabsVerticalDemo,
   textarea: TextareaDemo,
   "textarea-button": TextareaButtonDemo,
   "textarea-disabled": TextareaDisabledDemo,

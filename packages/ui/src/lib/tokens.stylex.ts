@@ -129,6 +129,8 @@ export const strokes = stylex.defineConsts({
   border: "1px",
   // Hugeicons' weight beside medium text; read in JS, so a bare number.
   icon: "1.75",
+  // The line under a `line` tab, and the bar beside a vertical one.
+  indicator: "2px",
   spinner: "1.5px",
   track: "4px",
 });
