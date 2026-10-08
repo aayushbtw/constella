@@ -58,6 +58,7 @@ import {
   DialogControlledDemo,
   DialogDemo,
   DialogScrollableDemo,
+  DialogSizeDemo,
 } from "~/components/demos/dialog";
 import {
   DropdownMenuCheckboxesDemo,
@@ -257,6 +258,7 @@ const demos = {
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,
+  "dialog-size": DialogSizeDemo,
   "dropdown-menu": DropdownMenuDemo,
   "dropdown-menu-checkboxes": DropdownMenuCheckboxesDemo,
   "dropdown-menu-danger": DropdownMenuDangerDemo,

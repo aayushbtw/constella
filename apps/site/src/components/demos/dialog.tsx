@@ -13,7 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  dialogSizes,
 } from "@/components/ui/dialog";
+import type { DialogSize } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
@@ -68,6 +70,42 @@ function DialogDemo() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </DemoRow>
+  );
+}
+
+const sizeLabels = {
+  default: "Default",
+  full: "Full",
+  lg: "Large",
+  sm: "Small",
+} satisfies Record<DialogSize, string>;
+
+function DialogSizeDemo() {
+  return (
+    <DemoRow>
+      {dialogSizes.map((size) => (
+        <Dialog key={size}>
+          <DialogTrigger render={<Button variant="outline" />}>
+            {sizeLabels[size]}
+          </DialogTrigger>
+          <DialogContent size={size}>
+            <DialogCloseButton />
+            <DialogHeader>
+              <DialogTitle>{sizeLabels[size]} dialog</DialogTitle>
+              <DialogDescription>
+                {`size="${size}"`} sets the width; the content still sets the
+                height, except at full.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose render={<Button variant="primary" />}>
+                Done
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ))}
     </DemoRow>
   );
 }
@@ -149,4 +187,9 @@ function DialogScrollableDemo() {
   );
 }
 
-export { DialogControlledDemo, DialogDemo, DialogScrollableDemo };
+export {
+  DialogControlledDemo,
+  DialogDemo,
+  DialogScrollableDemo,
+  DialogSizeDemo,
+};

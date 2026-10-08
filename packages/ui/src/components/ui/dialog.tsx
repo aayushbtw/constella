@@ -24,8 +24,16 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
+const dialogSizes = ["sm", "default", "lg", "full"] as const;
+
+type DialogSize = (typeof dialogSizes)[number];
+
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
+};
+
+type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
+  size?: DialogSize;
 };
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
@@ -88,6 +96,10 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
     width: `min(100%, ${sizes.dialog})`,
   },
+  sm: { width: `min(100%, ${sizes.dialogSm})` },
+  lg: { width: `min(100%, ${sizes.dialogLg})` },
+  // The viewport's padding stays around it, so it still reads as a dialog over the page.
+  full: { height: "100%", width: "100%" },
   header: {
     display: "flex",
     flexDirection: "column",
@@ -115,6 +127,8 @@ const styles = stylex.create({
     gap: space.xs,
     justifyContent: "flex-end",
     marginBlockEnd: `calc(-1 * ${space.md})`,
+    // Pinned to the bottom when the popup is taller than its content, as at `full`.
+    marginBlockStart: "auto",
     marginInline: `calc(-1 * ${space.md})`,
     paddingBlock: space.md,
     paddingInline: space.md,
@@ -182,17 +196,25 @@ function DialogViewport({
   );
 }
 
-function DialogPopup({ sx, ...props }: Styled<DialogPrimitive.Popup.Props>) {
+const sizeStyles = {
+  default: null,
+  full: styles.full,
+  lg: styles.lg,
+  sm: styles.sm,
+} satisfies Record<DialogSize, stylex.StyleXStyles | null>;
+
+function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
   return (
     <DialogPrimitive.Popup
+      data-size={size}
       data-slot="dialog-popup"
       {...props}
-      {...stylex.props(styles.popup, sx)}
+      {...stylex.props(styles.popup, sizeStyles[size], sx)}
     />
   );
 }
 
-function DialogContent(props: Styled<DialogPrimitive.Popup.Props>) {
+function DialogContent(props: DialogPopupProps) {
   return (
     <DialogPortal>
       <DialogBackdrop />
@@ -302,4 +324,6 @@ export {
   DialogTitle,
   DialogTrigger,
   DialogViewport,
+  dialogSizes,
 };
+export type { DialogPopupProps, DialogSize };

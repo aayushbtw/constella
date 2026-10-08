@@ -69,6 +69,23 @@ Dialog
         └── DialogClose
 ```
 
+## Size
+
+Use the `size` prop on `DialogContent`. The content sets the height, except at `full`, which fills the window inside its margin.
+
+<!-- ::demo name="dialog-size" -->
+
+```tsx
+<DialogContent size="lg">…</DialogContent>
+```
+
+| Size      | Width                        |
+| --------- | ---------------------------- |
+| `sm`      | 320px                        |
+| `default` | 384px                        |
+| `lg`      | 512px                        |
+| `full`    | The window, less 16px a side |
+
 ## Scrollable Content
 
 Give `DialogContent` a `maxHeight` and put the content in `DialogBody`. The body scrolls between the header and footer.
