@@ -125,12 +125,13 @@ const styles = stylex.create({
       default: "scale(1)",
       ":is([data-starting-style])": `scale(${motion.dotScale})`,
     },
-    transitionDuration: durations.hover,
+    // The dot pops a touch past its size and settles.
+    transitionDuration: durations.popover,
     transitionProperty: {
       default: "transform, opacity",
       [media.reducedMotion]: "opacity",
     },
-    transitionTimingFunction: easings.out,
+    transitionTimingFunction: `${easings.overshoot}, ${easings.out}`,
   },
   dotSm: dot(sizes.iconSm),
   dotDefault: dot(sizes.icon),

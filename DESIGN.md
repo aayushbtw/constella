@@ -2,7 +2,9 @@
 
 ## Personality
 
-Quiet, crisp, and finished. Near-monochrome, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
+Quiet, crisp, and finished, with a pulse. Near-monochrome by default, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
+
+A few moments carry the character, and only these: a primary button that reads as a key, lit on top and shaded below; a switch thumb that stretches under the finger and lands with a little give; a radio dot that pops; floating surfaces that sit at a distance, with a near shadow and a far one, and a step lighter than the page in dark. A brand theme adds one hue to the accent, the focus ring, the text selection and the caret, and changes nothing else. Everything outside these stays still.
 
 ## Color
 
@@ -32,7 +34,9 @@ An input group is that surface drawn once around a borderless control and its ad
 
 Every control shows disabled the same way: one shared fade (`opacities.disabled`) and a not-allowed cursor, never a per-control look; a sunken fill read as fillable, not off. A button at work (`aria-busy`) is not a disabled one: it takes a busy cursor, and fades only to `opacities.busy` when it also can't be pressed. Busy and still pressable (Generate turning into Stop generating) stays at full strength.
 
-Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them.
+Floating surfaces (toasts, popovers, dialogs) draw their edge with `shadows`. They sit above the layout, so the edge taking no space is right for them. Their fill is `raised`: white on the off-white page in light, `gray-2` in dark, where a shadow barely shows and lightness has to say what floats. A field inside a dialog keeps `background`, so in dark it reads sunk into the surface.
+
+The primary button is the one control with depth of its own (`shadows.primary`): a white-a3 line inside its top edge and a black-a3 one inside its bottom, over a small drop. In dark, where the fill is near-white, the bottom shade does the work.
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. The thumb is 12px on a 4px track; at 16px it outweighed the bar.
 
@@ -44,7 +48,7 @@ A button group joins its items into one control: the corners where two meet go s
 
 Popups opened from a control (select, dropdown menu, popover) share one surface and one motion: `background` on `shadows.popover`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration. A select opened over its trigger (`alignItemWithTrigger`) appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport. A select's items and a menu's are the same row: `controlSm` tall, `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerFillSubtle`. A list item shows the keyboard on its highlight, so it draws no focus ring.
 
-A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center.
+A select's trigger is an input's surface, so a select and an input in one form read as one family. A switch is a checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. A radio is a round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`. Held, a switch thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
 
 A badge takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. Only a badge rendered as a link answers hover. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`.
 
@@ -90,7 +94,7 @@ Ask how often it's seen. Something used dozens of times a day gets little or no 
 | ----------- | ------------------------------------------------------------ |
 | `out`       | Entrances and presses: moves at once, so it feels responsive |
 | `inOut`     | Things traveling across the screen: leave and arrive gently  |
-| `overshoot` | Small elements that should feel alive                        |
+| `overshoot` | A small mark landing in place: a switch thumb, a radio dot   |
 | `ease`      | Color and hover changes (the CSS keyword, no token)          |
 | `crossfade` | One state replacing another in place: icons, text            |
 | `layout`    | A surface changing size: leaves at once, settles gently      |
@@ -115,7 +119,7 @@ Interface motion stays under 300ms. A spinner is the exception: unhurried, so wa
 
 The home page is the one exception, seen rarely and there to sell: on the first document load the logo spins in and the page staggers in inside that spin, landing as it settles. It never replays on client navigation.
 
-Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no bounce, no blur-ins, no timers drawing on screen.
+Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no blur-ins, no timers drawing on screen, and no bounce on a surface or anything that travels far. `overshoot` is only for a small mark landing where it already almost is.
 
 ### Crossfades
 

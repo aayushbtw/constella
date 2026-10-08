@@ -88,11 +88,13 @@ function roleLines(mono: boolean) {
         "  --accent-solid: var(--gray-12);",
         "  --on-accent: var(--gray-1);",
         "  --focus-ring: var(--gray-a8);",
+        "  --selection: var(--gray-a5);",
       ]
     : [
         "  --accent-solid: var(--accent-9);",
         "  --on-accent: var(--accent-contrast);",
         "  --focus-ring: var(--accent-a8);",
+        "  --selection: var(--accent-a5);",
       ];
 }
 

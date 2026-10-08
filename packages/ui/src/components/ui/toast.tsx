@@ -134,7 +134,7 @@ const styles = stylex.create({
     // The surface is its own layer, so a content change can grow it without
     // resizing the toast, which Base UI is measuring.
     "::before": {
-      backgroundColor: colors.background,
+      backgroundColor: colors.raised,
       borderStartStartRadius: radii.md,
       borderStartEndRadius: radii.md,
       borderEndStartRadius: radii.md,

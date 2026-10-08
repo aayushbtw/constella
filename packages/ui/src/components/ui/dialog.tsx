@@ -66,7 +66,7 @@ const styles = stylex.create({
     zIndex: layers.dialog,
   },
   popup: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.raised,
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,

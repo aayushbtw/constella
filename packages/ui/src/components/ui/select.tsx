@@ -132,7 +132,7 @@ const styles = stylex.create({
     zIndex: layers.popover,
   },
   popup: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.raised,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
@@ -220,7 +220,7 @@ const styles = stylex.create({
   },
   scrollArrow: {
     alignItems: "center",
-    backgroundColor: colors.background,
+    backgroundColor: colors.raised,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,

@@ -43,6 +43,7 @@ A theme sets these. Edit any of them by hand; the builder only writes them for y
 | `--accent-solid` | `--gray-12` | Primary buttons, checked controls |
 | `--on-accent` | `--gray-1` | Text and icons on `--accent-solid` |
 | `--focus-ring` | `--gray-a8` | The focus outline |
+| `--selection` | `--gray-a5` | Selected text |
 | `--gray-1` … `--gray-12` | Radix gray | Text, fills and edges; `-a1` … `-a12` |
 | `--radius-xs`, `-chip`, `-sm`, `-md` | 4, 6, 8, 12px | Corners |
 | `--size-control-xxs` … `-lg` | 20 … 36px | Control heights |

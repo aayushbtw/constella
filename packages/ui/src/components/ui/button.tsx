@@ -163,6 +163,7 @@ const styles = stylex.create({
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
     backgroundColor: colors.accent,
+    boxShadow: shadows.primary,
     color: colors.onAccent,
     opacity: {
       ...interactive<number | string>(1, opacities.hover),

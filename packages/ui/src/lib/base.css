@@ -55,6 +55,7 @@
     --accent-solid: var(--gray-12);
     --on-accent: var(--gray-1);
     --focus-ring: var(--gray-a8);
+    --selection: var(--gray-a5);
     --radius-xs: 4px;
     --radius-chip: 6px;
     --radius-sm: 8px;
@@ -78,6 +79,8 @@
   .light {
     --text-muted: var(--gray-10);
     --on-inverted-fill: var(--white-a4);
+    /* Floating surfaces sit above the page: white on the off-white page, a step lighter in dark. */
+    --raised: #fff;
     --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
     --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
     --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
@@ -88,11 +91,17 @@
   .dark {
     --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
     --on-inverted-fill: var(--black-a2);
+    --raised: var(--gray-2);
     --danger: var(--red-11);
     --info: var(--blue-11);
     --success: var(--green-11);
     --warning: var(--amber-11);
     --warning-solid: var(--amber-9);
+  }
+
+  /* Selected text is the page's, not a component's, so the theme tints it here. */
+  ::selection {
+    background-color: var(--selection);
   }
 
   /* Flush outside the edge, so it shows on any fill. */

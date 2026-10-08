@@ -64,7 +64,7 @@ const styles = stylex.create({
   },
   // Select's surface and motion, so every popup opens the same way.
   popup: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.raised,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,

@@ -8,6 +8,7 @@ import {
   durations,
   easings,
   lineHeights,
+  media,
   opacities,
   radii,
   shadows,
@@ -44,13 +45,18 @@ const track = (thumb: string) => ({
   },
 });
 
+// Held, the thumb stretches a quarter of itself toward where it will go, like a finger
+// pressing into it; checked, it stretches back from the end, so it stays inside the track.
+const pressed = ":is([data-slot='switch']:active:not([data-disabled]) > *)";
+
 const knob = (thumb: string) => ({
   height: thumb,
   transform: {
     default: "translateX(0)",
     ":is([data-checked])": `translateX(calc(${thumb} - 2 * ${strokes.border}))`,
+    [`:is([data-checked])${pressed}`]: `translateX(calc(${thumb} * 3 / 4 - 2 * ${strokes.border}))`,
   },
-  width: thumb,
+  width: { default: thumb, [pressed]: `calc(${thumb} * 5 / 4)` },
 });
 
 const styles = stylex.create({
@@ -101,9 +107,13 @@ const styles = stylex.create({
     borderEndEndRadius: radii.full,
     display: "block",
     pointerEvents: "none",
-    transitionDuration: `${durations.press}, ${durations.hover}`,
-    transitionProperty: "transform, background-color",
-    transitionTimingFunction: `${easings.out}, ease`,
+    // The thumb lands with a little give; the stretch answers the press at once.
+    transitionDuration: `${durations.move}, ${durations.press}, ${durations.hover}`,
+    transitionProperty: {
+      default: "transform, width, background-color",
+      [media.reducedMotion]: "background-color",
+    },
+    transitionTimingFunction: `${easings.overshoot}, ${easings.out}, ease`,
   },
   thumbDefault: knob(sizes.icon),
   thumbSm: knob(sizes.iconXs),
