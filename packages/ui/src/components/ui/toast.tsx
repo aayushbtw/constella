@@ -261,6 +261,7 @@ const styles = stylex.create({
     backgroundColor: {
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fill },
+      ":active": colors.fill,
     },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
@@ -274,6 +275,7 @@ const styles = stylex.create({
         default: colors.textMuted,
         ":hover": colors.textPrimary,
       },
+      ":active": colors.textPrimary,
     },
     cursor: "pointer",
     display: "flex",

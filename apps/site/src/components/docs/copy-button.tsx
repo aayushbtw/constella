@@ -29,6 +29,7 @@ const styles = stylex.create({
         default: colors.textMuted,
         ":hover": colors.textPrimary,
       },
+      ":active": colors.textPrimary,
     },
     display: "flex",
     flexShrink: 0,

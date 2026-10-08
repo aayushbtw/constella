@@ -62,6 +62,7 @@ const styles = stylex.create({
         ":hover": colors.textPrimary,
         ":is([data-active])": colors.textPrimary,
       },
+      ":active": colors.textPrimary,
     },
     cursor: "pointer",
     display: "inline-flex",

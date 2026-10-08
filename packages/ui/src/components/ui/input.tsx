@@ -79,6 +79,7 @@ const styles = stylex.create({
           default: colors.fill,
           ":hover:not(:disabled)": colors.fillStrong,
         },
+        ":active:not(:disabled)": colors.fillStrong,
       },
       borderBlockEndWidth: 0,
       borderBlockStartWidth: 0,

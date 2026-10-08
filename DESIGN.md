@@ -131,7 +131,7 @@ Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `li
 
 A slider thumb gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which Base UI sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
 
-A pressable that also changes color on hover transitions both, each on its own clock: color on `ease` + `hover`, transform on `out` + `press`. Hover styles sit behind `media.hover` so touch doesn't stick.
+A pressable that also changes color on hover transitions both, each on its own clock: color on `ease` + `hover`, transform on `out` + `press`. Hover styles sit behind `media.hover` so touch doesn't stick, and repeat ungated on `:active`, so a tap highlights on touch the way a hover does on a pointer.
 
 ### Entrances
 

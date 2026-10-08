@@ -49,7 +49,7 @@ Learned from Linear's move to StyleX ([Styling Linear for the future](https://li
 - **`base.css` is the only escape hatch.** Global CSS only for what StyleX can't reach: third-party DOM, and children a component doesn't render (the outline badge's icons). Each rule there says why it can't be StyleX.
 - **Longhands only.** StyleX resolves a shorthand against its longhands by property priority, not by order, so mixing them across styles that merge silently changes the winner. No multi-value shorthands either.
 - **Structure from JS before structural selectors.** When a parent can know a child's position or state without it leaking, pass it as a prop or `data-*`, not `:first-child`/`:nth-child`. Group joins stay CSS: context passes through portals, so every popup opened from a group would join too.
-- **Shared interaction states.** Hover and press come from one shared definition: hover only on pointer devices, press for touch, so every control answers the same way.
+- **Shared interaction states.** Every highlight is the same pair: the hover value behind `media.hover`, and the same value ungated on `:active` (its specificity beats the media block's `default`), so touch gets a press highlight and never a sticky hover. StyleX can't import a helper into `stylex.create`, so the pair is a convention, written out per style.
 - **Portals carry the theme.** The theme is a class on `<html>` today, so a portaled popup inherits it. If a theme is ever set on a subtree, every portaled part must re-apply it, or its popups render in the page's theme.
 - **Themes are tokens, never branches.** If themes are ever generated (a user's accent or contrast), they set the same `defineVars` tokens; components still read only tokens.
 

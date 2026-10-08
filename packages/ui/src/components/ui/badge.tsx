@@ -53,6 +53,7 @@ const link = ":is(a)";
 const linkHover = <T,>(rest: T, active: T) => ({
   default: rest,
   [media.hover]: { default: rest, [`${link}:hover`]: active },
+  [`${link}:active`]: active,
 });
 
 // A dot takes its badge's status, but on primary and danger it follows the text, which

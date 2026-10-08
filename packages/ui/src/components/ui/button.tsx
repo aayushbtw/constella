@@ -62,6 +62,7 @@ const interactive = <T,>(rest: T, active: T) => ({
   default: rest,
   ":is([data-popup-open])": active,
   [media.hover]: { default: rest, ":hover:not(:disabled)": active },
+  ":active:not(:disabled)": active,
 });
 
 const kbdInset = (height: string) =>

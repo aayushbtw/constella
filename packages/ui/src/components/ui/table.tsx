@@ -51,6 +51,7 @@ const styles = stylex.create({
         ":hover": colors.fillSubtle,
         [selected]: colors.fill,
       },
+      ":active": colors.fillSubtle,
     },
     borderBlockEndColor: colors.edgeSubtle,
     borderBlockEndStyle: "solid",

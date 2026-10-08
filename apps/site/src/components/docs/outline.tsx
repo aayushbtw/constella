@@ -44,6 +44,7 @@ const styles = stylex.create({
         default: colors.textMuted,
         ":hover": colors.textPrimary,
       },
+      ":active": colors.textPrimary,
     },
     display: "block",
     fontSize: fontSizes.xs,

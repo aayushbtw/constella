@@ -95,6 +95,7 @@ const styles = stylex.create({
           ":hover:not([data-disabled])": colors.fillSubtle,
           ":has([data-checked])": colors.fillSubtle,
         },
+        ":active:not([data-disabled])": colors.fillSubtle,
       },
     },
     borderBlockColor: {

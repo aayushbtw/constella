@@ -66,6 +66,7 @@ const styles = stylex.create({
         default: colors.edge,
         ":hover": colors.textPrimary,
       },
+      ":active": colors.textPrimary,
     },
     textDecorationLine: "underline",
     textUnderlineOffset: 3,

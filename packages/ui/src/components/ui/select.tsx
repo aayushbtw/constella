@@ -74,6 +74,7 @@ const styles = stylex.create({
         default: colors.background,
         ":hover:not(:disabled)": colors.fillSubtle,
       },
+      ":active:not(:disabled)": colors.fillSubtle,
     },
     borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
     borderInlineColor: { default: colors.edge, [invalid]: colors.danger },

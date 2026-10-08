@@ -49,6 +49,7 @@ const styles = stylex.create({
     backgroundColor: {
       default: "transparent",
       [media.hover]: { default: "transparent", ":hover": colors.fillSubtle },
+      ":active": colors.fillSubtle,
     },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
