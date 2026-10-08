@@ -5,6 +5,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import {
+  avatarVars,
   colors,
   durations,
   easings,
@@ -38,24 +39,68 @@ const inGroup = ":is([data-slot='avatar-group'] > *)";
 /* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 const groupOf = (size: AvatarSize) =>
   `:is([data-slot='avatar-group']:has(> [data-size='${size}']) > *)`;
+
+const gap = `calc(2 * ${strokes.border})`;
+const overlap = space.xs;
+
+// A hole one gap wider than a circle of `size` centered at `x y`, so whatever surface is
+// behind shows through. Chromium rejects a radius mixing `%` and `px`, so all are lengths.
+const hole = (size: string, x: string, y: string) =>
+  `radial-gradient(circle calc(${size} / 2 + ${gap}) at ${x} ${y}, transparent calc(100% - 0.5px), black calc(100% + 0.5px))`;
 /* eslint-enable func-style */
-// Overlapping avatars are cut apart by a ring of the page behind them.
-const cutout = `0 0 0 calc(2 * ${strokes.border}) ${colors.background}`;
+
+// Each avatar but the last is cut where the next one overlaps it.
+const overlapped = `${inGroup}:not(:last-child)`;
+const hasBadge = ":has(> [data-slot='avatar-badge'])";
+// Not `:dir(rtl)`: Lightning CSS lowers it to a `:lang()` list that ignores `dir`.
+const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 
 const styles = stylex.create({
   avatar: {
     // The fallback leaves as the photo arrives, so the photo fades in over its fill.
     backgroundColor: colors.fillOpaque,
     borderRadius: radii.full,
-    boxShadow: { default: null, [inGroup]: cutout },
     display: "flex",
     flexShrink: 0,
+    height: avatarVars.size,
     marginInlineStart: {
       default: null,
-      [`${inGroup}:not(:first-child)`]: `calc(-1 * ${space.xs})`,
+      [`${inGroup}:not(:first-child)`]: `calc(-1 * ${overlap})`,
+    },
+    maskImage: {
+      default: null,
+      [overlapped]: {
+        default: hole(
+          avatarVars.size,
+          `calc(${avatarVars.size} * 1.5 - ${overlap})`,
+          `calc(${avatarVars.size} / 2)`
+        ),
+        [rtl]: hole(
+          avatarVars.size,
+          `calc(${overlap} - ${avatarVars.size} / 2)`,
+          `calc(${avatarVars.size} / 2)`
+        ),
+      },
     },
     position: "relative",
+    // The photo, fallback and edge read this; the badge itself stays whole.
+    [avatarVars.badgeCut]: {
+      default: null,
+      [hasBadge]: {
+        default: hole(
+          avatarVars.badge,
+          `calc(${avatarVars.size} - ${avatarVars.badge} / 2)`,
+          `calc(${avatarVars.size} - ${avatarVars.badge} / 2)`
+        ),
+        [rtl]: hole(
+          avatarVars.badge,
+          `calc(${avatarVars.badge} / 2)`,
+          `calc(${avatarVars.size} - ${avatarVars.badge} / 2)`
+        ),
+      },
+    },
     userSelect: "none",
+    width: avatarVars.size,
     // A photo's edge is drawn inside it, so a light or dark image keeps its shape.
     "::after": {
       borderColor: colors.edge,
@@ -64,17 +109,28 @@ const styles = stylex.create({
       borderWidth: strokes.border,
       content: "''",
       inset: 0,
+      maskImage: avatarVars.badgeCut,
       pointerEvents: "none",
       position: "absolute",
     },
   },
-  sm: { height: sizes.controlXs, width: sizes.controlXs },
-  default: { height: sizes.controlMd, width: sizes.controlMd },
-  lg: { height: sizes.controlLg, width: sizes.controlLg },
+  sm: {
+    [avatarVars.size]: sizes.controlXs,
+    [avatarVars.badge]: space.xs,
+  },
+  default: {
+    [avatarVars.size]: sizes.controlMd,
+    [avatarVars.badge]: `calc(${space.xs} + ${space.xxxs})`,
+  },
+  lg: {
+    [avatarVars.size]: sizes.controlLg,
+    [avatarVars.badge]: space.sm,
+  },
   image: {
     aspectRatio: "1",
     borderRadius: radii.full,
     height: "100%",
+    maskImage: avatarVars.badgeCut,
     objectFit: "cover",
     opacity: { default: 1, ":is([data-starting-style])": 0 },
     transitionDuration: durations.crossfade,
@@ -95,20 +151,16 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     height: "100%",
     justifyContent: "center",
+    maskImage: avatarVars.badgeCut,
     width: "100%",
   },
   badge: {
     alignItems: "center",
     backgroundColor: colors.accent,
     borderRadius: radii.full,
-    boxShadow: cutout,
     color: colors.onAccent,
     display: "inline-flex",
-    height: {
-      default: `calc(${space.xs} + ${space.xxxs})`,
-      ":is([data-size='sm'] *)": space.xs,
-      ":is([data-size='lg'] *)": space.sm,
-    },
+    height: avatarVars.badge,
     insetBlockEnd: 0,
     insetInlineEnd: 0,
     justifyContent: "center",
@@ -116,11 +168,7 @@ const styles = stylex.create({
     transitionDuration: durations.hover,
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
-    width: {
-      default: `calc(${space.xs} + ${space.xxxs})`,
-      ":is([data-size='sm'] *)": space.xs,
-      ":is([data-size='lg'] *)": space.sm,
-    },
+    width: avatarVars.badge,
     zIndex: 1,
   },
   online: { backgroundColor: colors.successSolid },
@@ -134,7 +182,6 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: colors.fillOpaque,
     borderRadius: radii.full,
-    boxShadow: cutout,
     color: colors.textSecondary,
     display: "flex",
     flexShrink: 0,

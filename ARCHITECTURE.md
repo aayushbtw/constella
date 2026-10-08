@@ -36,7 +36,8 @@ Alert
 - **Every control has the size scale.** `xs`, `sm`, `default`, `lg` (and `icon-xs`, `icon-sm`, `icon`, `icon-lg` where it has icon-only sizes), shadcn's names. Text fields skip `xs`: 24px is too short for typed text. The default is a real value, so `size="default"` can be passed, not only implied.
 - **Styles for other elements are a function.** When an element must keep its own semantics (a link styled as a button), the component exports a style getter (`buttonStyles`) instead of rendering through `render`.
 - **State comes from Base UI's data attributes** (`[data-open]`, `[data-disabled]`, `[data-starting-style]`), never mirrored into React state.
-- **Groups talk to their children through variables.** A `ButtonGroup` sets the `joins` vars (`inline`, `block`, `either`) to `0`; a joinable child multiplies its corners and start edge by them, by its own `:first-child`/`:last-child`. Outside a group they stay `1`, so nothing changes. A part that must stay whole inside a group (an input group's addon) resets them to `1`.
+- **Groups talk to their children through variables.** A `ButtonGroup` sets the `joins` vars (`inline`, `block`, `either`) to `0`; a joinable child multiplies its corners and start edge by them, by whether it's the group's first or last part: `:nth-child(1 of [data-slot])`, not `:first-child`, because Base UI drops focus guards and a portal placeholder beside an open popup's trigger. Outside a group they stay `1`, so nothing changes. A part that must stay whole inside a group (an input group's addon) resets them to `1`.
+- **A component's own variables are `defineVars` in `tokens.stylex.ts`** (`joins`, `avatarVars`). StyleX's types reject a raw `--custom-property` key, and `defineVars` only compiles in a `.stylex.ts` file.
 - **Repeated style shapes are helpers.** StyleX evaluates arrow functions inside `stylex.create`, not function declarations, so those helpers are arrows with `func-style` disabled around them.
 
 ## Tokens

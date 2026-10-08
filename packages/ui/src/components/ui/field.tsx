@@ -63,9 +63,12 @@ const styles = stylex.create({
   vertical: {
     flexDirection: "column",
   },
-  // Top-aligned, so a description under the label grows downward and the control stays on the first line.
+  // With a description, top-aligned, so it grows downward and the control stays on the first line.
   horizontal: {
-    alignItems: "flex-start",
+    alignItems: {
+      default: "center",
+      ":has(> [data-slot='field-content'])": "flex-start",
+    },
     flexDirection: "row",
   },
   content: {

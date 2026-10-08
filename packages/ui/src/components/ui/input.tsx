@@ -39,34 +39,35 @@ const disabled = ":is(:disabled, [data-disabled])";
 const joinedCorners = (radius: string) => ({
   borderEndEndRadius: {
     default: radius,
-    ":not(:last-child)": `calc(${radius} * ${joins.either})`,
+    ":not(:nth-last-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
   },
   borderEndStartRadius: {
     default: radius,
-    ":not(:first-child)": `calc(${radius} * ${joins.inline})`,
-    ":not(:last-child)": {
+    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.inline})`,
+    ":not(:nth-last-child(1 of [data-slot]))": {
       default: `calc(${radius} * ${joins.block})`,
-      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
     },
   },
   borderStartEndRadius: {
     default: radius,
-    ":not(:first-child)": `calc(${radius} * ${joins.block})`,
-    ":not(:last-child)": {
+    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.block})`,
+    ":not(:nth-last-child(1 of [data-slot]))": {
       default: `calc(${radius} * ${joins.inline})`,
-      ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
     },
   },
   borderStartStartRadius: {
     default: radius,
-    ":not(:first-child)": `calc(${radius} * ${joins.either})`,
+    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
   },
 });
 
 /* eslint-enable func-style */
 
 // In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
-const joined = ":not(:first-child, [data-slot='button-group-separator'] + *)";
+const joined =
+  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
 
 const joinedEdges = {
   borderBlockStartWidth: {
