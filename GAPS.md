@@ -26,7 +26,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Feedback
 
-- [ ] **Alert**, with icon, title, description and action (`ARCHITECTURE.md` already uses it as the composition example).
+- [x] **Alert**, with icon, title, description and action (`ARCHITECTURE.md` already uses it as the composition example).
 - [ ] **AlertDialog**: destructive confirms.
 - [ ] **Meter** and **Progress**: usage against a cap; progress of a task.
 - [ ] **Skeleton**: content still arriving.
