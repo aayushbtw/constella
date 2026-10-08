@@ -166,6 +166,10 @@ import {
   RadioGroupSizeDemo,
 } from "~/components/demos/radio-group";
 import {
+  ScrollAreaDemo,
+  ScrollAreaHorizontalDemo,
+} from "~/components/demos/scroll-area";
+import {
   SelectAlignItemDemo,
   SelectDemo,
   SelectDisabledDemo,
@@ -384,6 +388,8 @@ const demos = {
   "radio-group-fieldset": RadioGroupFieldsetDemo,
   "radio-group-invalid": RadioGroupInvalidDemo,
   "radio-group-size": RadioGroupSizeDemo,
+  "scroll-area": ScrollAreaDemo,
+  "scroll-area-horizontal": ScrollAreaHorizontalDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,
   "select-disabled": SelectDisabledDemo,

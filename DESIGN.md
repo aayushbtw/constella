@@ -68,6 +68,8 @@ A progress bar and a meter are the slider's track: `strokes.track` tall, `fill` 
 
 A toggle is a ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`, the selected role, and hover stays a step under it at `fillSubtle`, so on and hovered never read alike. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one segmented control.
 
+A scroll area's scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
