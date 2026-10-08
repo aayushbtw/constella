@@ -44,6 +44,7 @@ import {
   ButtonGroupSplitDemo,
   ButtonGroupTextDemo,
 } from "~/components/demos/button-group";
+import { CardDemo, CardSizeDemo, CardWellDemo } from "~/components/demos/card";
 import {
   CheckboxControlledDemo,
   CheckboxDemo,
@@ -236,6 +237,9 @@ const demos = {
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
   "button-variants": ButtonVariantsDemo,
+  card: CardDemo,
+  "card-size": CardSizeDemo,
+  "card-well": CardWellDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,

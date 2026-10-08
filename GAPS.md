@@ -17,7 +17,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Layout
 
-- [ ] **Card**, with a `well` variant (a muted tray around one card) and `sm`/flush sizes.
+- [x] **Card**, with a `well` variant (a muted tray around one card) and `sm`/flush sizes.
 - [ ] **Item** and **ItemGroup**: list rows with media, content, actions and separators.
 - [ ] **Empty**: an empty state with media, title, description and content.
 - [ ] **Sidebar**: sections, nav items with sizes, collapse to a rail, a header row the page's height. netigen's is 965 lines.

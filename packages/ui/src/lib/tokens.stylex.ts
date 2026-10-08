@@ -62,6 +62,11 @@ export const avatarVars = stylex.defineVars({
   size: "0px",
 });
 
+// A card's padding, which its header, content and footer read so they line up at every size.
+export const cardVars = stylex.defineVars({
+  spacing: "0px",
+});
+
 export const shadows = stylex.defineConsts({
   // The ladder under a bordered control: the border is its edge, these its height. It
   // rises a step on hover and settles flat while pressed.
