@@ -134,6 +134,7 @@ Use the `size` prop on `SelectTrigger` to match the controls beside it.
 | --------- | ------ |
 | `sm`      | 28px   |
 | `default` | 32px   |
+| `lg`      | 36px   |
 
 ```tsx
 <SelectTrigger size="sm">
@@ -185,7 +186,7 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 
 | Part | Adds |
 | --- | --- |
-| `SelectTrigger` | `size`: `"sm"` or `"default"` |
+| `SelectTrigger` | `size`: `"sm"`, `"default"` or `"lg"` |
 | `SelectContent` | Renders the portal, positioner and popup; takes `side`, `align`, `alignItemWithTrigger` and their offsets |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Select](https://base-ui.com/react/components/select).

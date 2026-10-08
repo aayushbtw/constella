@@ -31,7 +31,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
-const selectSizes = ["sm", "default"] as const;
+const selectSizes = ["sm", "default", "lg"] as const;
 
 type SelectSize = (typeof selectSizes)[number];
 
@@ -112,6 +112,7 @@ const styles = stylex.create({
     zIndex: { default: null, ":focus-visible": 1 },
   },
   sm: { fontSize: fontSizes.xs, height: sizes.controlSm },
+  lg: { height: sizes.controlLg },
   value: {
     alignItems: "center",
     color: { default: null, ":is([data-placeholder] *)": colors.textMuted },
@@ -238,6 +239,7 @@ const styles = stylex.create({
 
 const sizeStyles = {
   default: null,
+  lg: styles.lg,
   sm: styles.sm,
 } satisfies Record<SelectSize, stylex.StyleXStyles | null>;
 

@@ -122,6 +122,7 @@ const timezoneItems: Option[] = [
 
 const sizeLabels = {
   default: "Default",
+  lg: "Large",
   sm: "Small",
 } satisfies Record<SelectSize, string>;
 

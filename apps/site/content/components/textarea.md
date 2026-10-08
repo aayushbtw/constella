@@ -24,6 +24,22 @@ import { Textarea } from "@/components/ui/textarea";
 <Textarea />
 ```
 
+## Size
+
+Use the `size` prop to match the controls beside it. The text stays 16px on small screens, so iOS doesn't zoom on focus.
+
+<!-- ::demo name="textarea-size" -->
+
+```tsx
+<Textarea size="sm" />
+```
+
+| Size      | Minimum height | Text |
+| --------- | -------------- | ---- |
+| `sm`      | 56px           | 13px |
+| `default` | 64px           | 14px |
+| `lg`      | 72px           | 14px |
+
 ## Disabled
 
 Use the `disabled` prop on `Field` to disable the textarea and dim its label. On a bare textarea, use `disabled` on the textarea.

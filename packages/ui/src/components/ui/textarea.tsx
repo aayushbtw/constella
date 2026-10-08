@@ -19,14 +19,20 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
+const textareaSizes = ["sm", "default", "lg"] as const;
+
+type TextareaSize = (typeof textareaSizes)[number];
+
 type TextareaProps = Omit<ComponentProps<"textarea">, "className" | "style"> & {
+  size?: TextareaSize;
   sx?: stylex.StyleXStyles;
 };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
 const disabled = ":is(:disabled, [data-disabled])";
 
-// shadcn's inline padding, off our 4px grid.
+// shadcn's padding, off our 4px grid.
+const px6 = `calc(${space.xs} - ${space.xxxs})`;
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
 const styles = stylex.create({
@@ -67,26 +73,45 @@ const styles = stylex.create({
     width: "100%",
     "::placeholder": { color: colors.textMuted },
   },
+  // Text steps down with the height like Input's, but stays 16px under `sm` so iOS doesn't zoom.
+  sm: {
+    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.xs },
+    minHeight: `calc(${sizes.controlSm} * 2)`,
+    paddingBlock: px6,
+  },
+  lg: {
+    minHeight: `calc(${sizes.controlLg} * 2)`,
+    paddingBlock: px10,
+  },
 });
 
+const sizeStyles = {
+  default: null,
+  lg: styles.lg,
+  sm: styles.sm,
+} satisfies Record<TextareaSize, stylex.StyleXStyles | null>;
+
 /** A textarea's styles for another element, like a third-party autosizing textarea. */
-function textareaStyles() {
-  return [styles.textarea];
+function textareaStyles({
+  size = "default",
+}: Pick<TextareaProps, "size"> = {}) {
+  return [styles.textarea, sizeStyles[size]];
 }
 
-function Textarea({ sx, ...props }: TextareaProps) {
+function Textarea({ size = "default", sx, ...props }: TextareaProps) {
   return (
     <FieldPrimitive.Control
       render={(controlProps) => (
         <textarea
+          data-size={size}
           data-slot="textarea"
           {...mergeProps<"textarea">(controlProps, props)}
-          {...stylex.props(textareaStyles(), sx)}
+          {...stylex.props(textareaStyles({ size }), sx)}
         />
       )}
     />
   );
 }
 
-export { Textarea, textareaStyles };
-export type { TextareaProps };
+export { Textarea, textareaSizes, textareaStyles };
+export type { TextareaProps, TextareaSize };

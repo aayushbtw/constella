@@ -188,6 +188,7 @@ import {
   TextareaDisabledDemo,
   TextareaFieldDemo,
   TextareaInvalidDemo,
+  TextareaSizeDemo,
 } from "~/components/demos/textarea";
 import { ThemeBuilderDemo } from "~/components/demos/theme";
 import {
@@ -362,6 +363,7 @@ const demos = {
   "textarea-disabled": TextareaDisabledDemo,
   "textarea-field": TextareaFieldDemo,
   "textarea-invalid": TextareaInvalidDemo,
+  "textarea-size": TextareaSizeDemo,
   "theme-builder": ThemeBuilderDemo,
   tooltip: TooltipDemo,
   "tooltip-disabled": TooltipDisabledDemo,
