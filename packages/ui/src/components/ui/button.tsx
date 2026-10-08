@@ -3,17 +3,16 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
+import { joinStyles } from "@/lib/join";
 import {
   colors,
   durations,
   easings,
   fontSizes,
   fontWeights,
-  joins,
   media,
   opacities,
   presses,
-  radii,
   shadows,
   sizes,
   space,
@@ -85,34 +84,6 @@ const inset = (padding: string, tight: string, height: string) => ({
   },
 });
 
-// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
-const joinedCorners = (radius: string) => ({
-  borderEndEndRadius: {
-    default: radius,
-    ":not(:nth-last-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-  borderEndStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.inline})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.block})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartEndRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.block})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.inline})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-});
-
 const square = (size: string) => ({
   height: size,
   paddingInline: 0,
@@ -121,21 +92,6 @@ const square = (size: string) => ({
 });
 
 /* eslint-enable func-style */
-
-// In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
-const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
-
-const joinedEdges = {
-  borderBlockStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.block})`,
-  },
-  borderInlineStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.inline})`,
-  },
-};
 
 // shadcn's spacing, which sits off our 4px grid at 6px and 10px.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -146,10 +102,8 @@ const styles = stylex.create({
     alignItems: "center",
     // Every variant reserves the border, so a fill and an outline are the same size.
     borderColor: "transparent",
-    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
-    ...joinedEdges,
     cursor: {
       default: "pointer",
       ":disabled": "not-allowed",
@@ -240,8 +194,6 @@ const styles = stylex.create({
     textUnderlineOffset: space.xxs,
     transform: null,
   },
-  rounded: {},
-  pill: joinedCorners(radii.full),
 });
 
 const variantStyles = {
@@ -265,8 +217,8 @@ const sizeStyles = {
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
 
 const cornerStyles = {
-  pill: styles.pill,
-  rounded: styles.rounded,
+  pill: joinStyles.full,
+  rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
 type ButtonStyleOptions = Pick<ButtonProps, "corners" | "size" | "variant">;
@@ -279,6 +231,7 @@ function buttonStyles({
 }: ButtonStyleOptions = {}) {
   return [
     styles.base,
+    joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],
     cornerStyles[corners],

@@ -11,6 +11,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, useContext } from "react";
 
+import { joinStyles } from "@/lib/join";
 import { useSkipMotion } from "@/lib/motion";
 import {
   colors,
@@ -18,7 +19,6 @@ import {
   easings,
   fontSizes,
   fontWeights,
-  joins,
   layers,
   media,
   opacities,
@@ -56,53 +56,6 @@ const closing =
   ":is([data-ending-style]):not([data-side='none'], [data-skip-motion])";
 const instant = ":is([data-skip-motion])";
 
-// In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
-const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
-
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
-// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
-const joinedCorners = (radius: string) => ({
-  borderEndEndRadius: {
-    default: radius,
-    ":not(:nth-last-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-  borderEndStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.inline})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.block})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartEndRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.block})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.inline})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-});
-
-/* eslint-enable func-style */
-
-const joinedEdges = {
-  borderBlockStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.block})`,
-  },
-  borderInlineStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.inline})`,
-  },
-};
-
 // Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
 const maxHeight = `min(var(--available-height), ${sizes.menuHeight})`;
 
@@ -123,10 +76,8 @@ const styles = stylex.create({
       },
     },
     borderColor: { default: colors.edge, [invalid]: colors.danger },
-    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
-    ...joinedEdges,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     color: colors.textPrimary,
@@ -319,7 +270,13 @@ function SelectTrigger({
       data-size={size}
       data-slot="select-trigger"
       {...props}
-      {...stylex.props(styles.trigger, sizeStyles[size], sx)}
+      {...stylex.props(
+        styles.trigger,
+        joinStyles.sm,
+        joinStyles.edges,
+        sizeStyles[size],
+        sx
+      )}
     >
       {children}
       <SelectPrimitive.Icon {...stylex.props(styles.icon)}>

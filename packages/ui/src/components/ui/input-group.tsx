@@ -10,6 +10,7 @@ import { Input, inputStyles } from "@/components/ui/input";
 import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
+import { joinStyles } from "@/lib/join";
 import {
   colors,
   durations,
@@ -18,7 +19,6 @@ import {
   joins,
   lineHeights,
   opacities,
-  radii,
   shadows,
   sizes,
   space,
@@ -89,50 +89,7 @@ const bySize = (values: Record<InputGroupSize, string>) => ({
 const insetMargin = (group: string, item: string) =>
   `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
 
-// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
-const joinedCorners = (radius: string) => ({
-  borderEndEndRadius: {
-    default: radius,
-    ":not(:nth-last-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-  borderEndStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.inline})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.block})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartEndRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.block})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.inline})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-});
-
 /* eslint-enable func-style */
-
-// In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
-const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
-
-const joinedEdges = {
-  borderBlockStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.block})`,
-  },
-  borderInlineStartWidth: {
-    default: strokes.border,
-    [joined]: `calc(${strokes.border} * ${joins.inline})`,
-  },
-};
 
 // shadcn's spacing, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -165,10 +122,8 @@ const styles = stylex.create({
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
     borderColor: { default: colors.edge, [invalid]: colors.danger },
-    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
-    ...joinedEdges,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
     boxSizing: "border-box",
     cursor: { default: null, [disabled]: "not-allowed" },
@@ -306,13 +261,11 @@ const styles = stylex.create({
   },
   // Concentric with the group's corner at the even inset.
   buttonXs: {
-    ...joinedCorners(radii.xs),
     fontSize: textSize,
     gap: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
   },
-  buttonIconXs: joinedCorners(radii.xs),
 });
 
 const alignStyles = {
@@ -332,9 +285,9 @@ const separatedStyles = {
 
 const buttonSizeStyles = {
   "icon-sm": null,
-  "icon-xs": styles.buttonIconXs,
+  "icon-xs": joinStyles.xs,
   sm: null,
-  xs: styles.buttonXs,
+  xs: [styles.buttonXs, joinStyles.xs],
 } satisfies Record<InputGroupButtonSize, stylex.StyleXStyles | null>;
 
 const InputGroupSizeContext = createContext<InputGroupSize>("default");
@@ -348,7 +301,7 @@ function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
         // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
         role="group"
         {...props}
-        {...stylex.props(styles.group, sx)}
+        {...stylex.props(styles.group, joinStyles.sm, joinStyles.edges, sx)}
       />
     </InputGroupSizeContext>
   );

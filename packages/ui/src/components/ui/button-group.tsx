@@ -7,12 +7,12 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import type { SeparatorProps } from "@/components/ui/separator";
+import { joinStyles } from "@/lib/join";
 import {
   colors,
   fontSizes,
   fontWeights,
   joins,
-  radii,
   space,
   strokes,
 } from "@/lib/tokens.stylex";
@@ -33,42 +33,6 @@ type ButtonGroupTextProps = Styled<useRender.ComponentProps<"div">>;
 
 // Groups inside a group sit apart, so nothing joins at this level.
 const nested = ":has(> [data-slot='button-group'])";
-
-// The neighbor before draws the shared edge, or the separator does.
-const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
-
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
-// Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
-const joinedCorners = (radius: string) => ({
-  borderEndEndRadius: {
-    default: radius,
-    ":not(:nth-last-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-  borderEndStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.inline})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.block})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartEndRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.block})`,
-    ":not(:nth-last-child(1 of [data-slot]))": {
-      default: `calc(${radius} * ${joins.inline})`,
-      ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-    },
-  },
-  borderStartStartRadius: {
-    default: radius,
-    ":not(:nth-child(1 of [data-slot]))": `calc(${radius} * ${joins.either})`,
-  },
-});
-
-/* eslint-enable func-style */
 
 // shadcn's inline padding, off our 4px grid.
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
@@ -96,17 +60,8 @@ const styles = stylex.create({
     backgroundClip: "padding-box",
     backgroundColor: colors.fill,
     borderColor: colors.edge,
-    ...joinedCorners(radii.sm),
     borderStyle: "solid",
     borderWidth: strokes.border,
-    borderBlockStartWidth: {
-      default: strokes.border,
-      [joined]: `calc(${strokes.border} * ${joins.block})`,
-    },
-    borderInlineStartWidth: {
-      default: strokes.border,
-      [joined]: `calc(${strokes.border} * ${joins.inline})`,
-    },
     boxSizing: "border-box",
     color: colors.textPrimary,
     display: "flex",
@@ -148,7 +103,10 @@ function ButtonGroup({
 function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
   return useRender({
     defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.text, sx)),
+    props: mergeProps<"div">(
+      props,
+      stylex.props(styles.text, joinStyles.sm, joinStyles.edges, sx)
+    ),
     render,
     // Base UI writes state as data attributes: `data-slot="button-group-text"`.
     state: { slot: "button-group-text" },
