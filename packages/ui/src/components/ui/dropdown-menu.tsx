@@ -16,6 +16,7 @@ import {
   fontWeights,
   layers,
   media,
+  motion,
   opacities,
   radii,
   shadows,
@@ -77,7 +78,7 @@ const styles = stylex.create({
     paddingBlock: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
-    transform: { default: "none", [offstage]: "scale(0.96)" },
+    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
       default: durations.popover,

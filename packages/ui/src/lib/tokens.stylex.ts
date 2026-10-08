@@ -180,7 +180,9 @@ export const durations = stylex.defineConsts({
 // how much each surface behind a stack shrinks.
 export const motion = stylex.defineConsts({
   dialogScale: "0.96",
+  dotScale: "0.5",
   exitOffset: "8px",
+  popoverScale: "0.96",
   stackScale: "0.05",
   crossfadeBlur: "4px",
   crossfadeScale: "0.25",

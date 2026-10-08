@@ -13,6 +13,7 @@ import {
   layers,
   lineHeights,
   media,
+  motion,
   radii,
   shadows,
   sizes,
@@ -58,7 +59,7 @@ const styles = stylex.create({
     opacity: { default: 1, [offstage]: 0 },
     paddingBlock: px10,
     paddingInline: px10,
-    transform: { default: "none", [offstage]: "scale(0.96)" },
+    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
       default: durations.popover,
@@ -83,6 +84,7 @@ const styles = stylex.create({
     lineHeight: lineHeights.text,
     marginBlock: 0,
     marginInline: 0,
+    textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
@@ -90,6 +92,7 @@ const styles = stylex.create({
     lineHeight: lineHeights.text,
     marginBlock: 0,
     marginInline: 0,
+    textWrap: "pretty",
   },
 });
 

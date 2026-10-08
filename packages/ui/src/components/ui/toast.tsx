@@ -260,8 +260,8 @@ const styles = stylex.create({
     marginInlineEnd: `calc(${space.xxs} - ${space.sm})`,
     backgroundColor: {
       default: "transparent",
-      [media.hover]: { default: "transparent", ":hover": colors.fill },
-      ":active": colors.fill,
+      [media.hover]: { default: "transparent", ":hover": colors.fillSubtle },
+      ":active": colors.fillSubtle,
     },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,

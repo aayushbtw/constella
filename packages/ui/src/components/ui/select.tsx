@@ -21,6 +21,7 @@ import {
   fontWeights,
   layers,
   media,
+  motion,
   opacities,
   radii,
   shadows,
@@ -140,7 +141,7 @@ const styles = stylex.create({
     maxHeight,
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
     opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: "scale(0.96)" },
+    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     // Holds the scroll arrows, which Base UI positions absolutely.
     position: "relative",
     transformOrigin: "var(--transform-origin)",

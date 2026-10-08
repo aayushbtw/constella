@@ -12,6 +12,7 @@ import {
   layers,
   lineHeights,
   media,
+  motion,
   radii,
   sizes,
   space,
@@ -48,7 +49,7 @@ const styles = stylex.create({
       ":has(> [data-slot^='kbd']:last-child)": space.xxs,
     },
     paddingInlineStart: space.xs,
-    transform: { default: "none", [offstage]: "scale(0.96)" },
+    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     // Once one tooltip is open, the next opens at once, so moving along a toolbar stays quick.
     transitionDuration: {

@@ -122,7 +122,7 @@ const styles = stylex.create({
   title: {
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: 1,
+    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInline: 0,

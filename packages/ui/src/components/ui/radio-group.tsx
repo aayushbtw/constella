@@ -10,6 +10,7 @@ import {
   easings,
   lineHeights,
   media,
+  motion,
   opacities,
   presses,
   radii,
@@ -96,10 +97,13 @@ const styles = stylex.create({
     borderEndEndRadius: radii.full,
     display: "block",
     height: `calc(${sizes.icon} / 2)`,
-    opacity: { default: 1, ":is([data-ending-style])": 0 },
+    opacity: {
+      default: 1,
+      ":is([data-starting-style], [data-ending-style])": 0,
+    },
     transform: {
       default: "scale(1)",
-      ":is([data-starting-style])": "scale(0)",
+      ":is([data-starting-style])": `scale(${motion.dotScale})`,
     },
     transitionDuration: durations.hover,
     transitionProperty: {
