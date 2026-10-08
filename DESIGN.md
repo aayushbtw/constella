@@ -58,6 +58,8 @@ A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popu
 
 A card is a box in the layout, so it takes a real `edge` border, not a shadow, and the `raised` fill: white on the off-white page, a step lighter in dark. Its corner is `radii.lg`; its padding (`space.md`, `sm` at `sm`, none at `flush` for rows that pad themselves) is one variable its header, content and footer read, so they line up at every size. Its footer is the dialog's: a `fillSubtle` bar with a top edge, flush with the sides and bottom. A `well` is a `fillSubtle` tray a ladder step around a card, `space.xxs` padding and the card's corner a step down to `md`, so the two are concentric; a header in the tray lines its text up with the card's.
 
+An item is a row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `edge` when `outline`, and has `fillSubtle` when `muted`. Only an item rendered as a link or button answers: `fillSubtle` on hover, `presses.row` held. Its media sits level with the title's first line when there's a description, and an image follows the control heights (`media` 40, then 32 and 24). Items with separators between them drop their gap and let their own padding space them.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.

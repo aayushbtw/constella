@@ -144,6 +144,8 @@ export const sizes = stylex.defineConsts({
   iconXs: "12px",
   iconXxs: "8px",
   kbd: "20px",
+  // An item's image or avatar, beside a title and description.
+  media: "40px",
   menu: "144px",
   menuHeight: "320px",
   popover: "288px",

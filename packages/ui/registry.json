@@ -405,6 +405,23 @@
       ]
     },
     {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "description": "A row with media, a title, a description and actions, alone or in a list.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/separator.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/item.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",

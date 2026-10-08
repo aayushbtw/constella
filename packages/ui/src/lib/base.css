@@ -160,6 +160,13 @@
     }
   }
 
+  /* StyleX can't style a child it didn't render, so an item's image fills its media box here. */
+  :where([data-slot="item-media"][data-variant="image"]) > :where(img) {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
   /* An input group rings its whole box, so the borderless control inside draws none. */
   :where([data-slot="input-group-control"]:focus-visible) {
     outline: none;

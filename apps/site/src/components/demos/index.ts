@@ -118,6 +118,15 @@ import {
   InputGroupTextDemo,
 } from "~/components/demos/input-group";
 import {
+  ItemAvatarDemo,
+  ItemDemo,
+  ItemGroupDemo,
+  ItemIconDemo,
+  ItemLinkDemo,
+  ItemSizeDemo,
+  ItemVariantDemo,
+} from "~/components/demos/item";
+import {
   KbdButtonDemo,
   KbdDemo,
   KbdGroupDemo,
@@ -313,6 +322,13 @@ const demos = {
   "input-invalid": InputInvalidDemo,
   "input-required": InputRequiredDemo,
   "input-size": InputSizeDemo,
+  item: ItemDemo,
+  "item-avatar": ItemAvatarDemo,
+  "item-group": ItemGroupDemo,
+  "item-icon": ItemIconDemo,
+  "item-link": ItemLinkDemo,
+  "item-size": ItemSizeDemo,
+  "item-variant": ItemVariantDemo,
   kbd: KbdDemo,
   "kbd-button": KbdButtonDemo,
   "kbd-group": KbdGroupDemo,
