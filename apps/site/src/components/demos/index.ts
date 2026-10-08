@@ -56,6 +56,11 @@ import {
 } from "~/components/demos/button-group";
 import { CardDemo, CardSizeDemo, CardWellDemo } from "~/components/demos/card";
 import {
+  ChatDemo,
+  MessageDemo,
+  PromptInputDemo,
+} from "~/components/demos/chat";
+import {
   CheckboxControlledDemo,
   CheckboxDemo,
   CheckboxDisabledDemo,
@@ -301,6 +306,7 @@ const demos = {
   card: CardDemo,
   "card-size": CardSizeDemo,
   "card-well": CardWellDemo,
+  chat: ChatDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,
@@ -399,10 +405,12 @@ const demos = {
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
   meter: MeterDemo,
+  message: MessageDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
   "preview-card": PreviewCardDemo,
+  "prompt-input": PromptInputDemo,
   progress: ProgressDemo,
   "progress-label": ProgressLabelDemo,
   "radio-group": RadioGroupDemo,

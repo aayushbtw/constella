@@ -95,6 +95,8 @@ export const fontSizes = stylex.defineConsts({
 });
 
 export const lineHeights = stylex.defineConsts({
+  // Reading copy at `md`, like a chat message.
+  prose: "24px",
   row: "18px",
   text: "20px",
 });
