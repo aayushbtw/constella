@@ -80,6 +80,8 @@ A side panel is part of the layout, not a layer: it opens into a slot beside the
 
 A conversation reads as a page with the user's words set off: a user's message is a `fillOpaque` bubble on `radii.lg` at the end, at most 80% wide; an answer is plain `md` text on `lineHeights.prose`, with its actions as ghost icon buttons under it. The composer is an input group on `radii.xl`, the top of the corner ladder, whose text grows to six lines; its submit is a primary pill that swaps its arrow for a stop square while an answer streams. The scroller opens at the newest message and follows a stream only while the reader is at the end; its jump-to-end pill rises in on `popover` when there's more below.
 
+A data table is a table whose rows render only while on screen, so its layout is fixed and narrow columns set their width. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark; a selected row takes `fill`.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, split from it by an `edgeSubtle` hairline, so it reads as the frame and the page as the content. It's in the flow and sticky, not fixed, so it sits beside the page at any height. Its rows are a control tall, `space.xxxs` apart, hover on `fillSubtle` and give with `presses.row`; the current one takes `fill` and medium weight, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.

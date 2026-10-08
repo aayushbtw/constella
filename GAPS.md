@@ -56,7 +56,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Data
 
-- [ ] **DataTable**: `Table` driven by TanStack Table, with sorting and selection.
+- [x] **DataTable**: `Table` driven by TanStack Table, with sorting and selection.
 
 ## Chat parts
 
