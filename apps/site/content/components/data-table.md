@@ -83,6 +83,33 @@ column.display({
 });
 ```
 
+## Filtering
+
+Add `globalFilteringFeature` for a search across columns and `columnFilteringFeature` for one column's filter, with a `filteredRowModel`, and pass both through `state`. When nothing is left, `empty` fills the table. Put a row's actions in a last display column, here a [Dropdown Menu](/docs/components/dropdown-menu).
+
+<!-- ::demo name="data-table-filter" -->
+
+```tsx
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { equalsString: filterFn_equalsString, includesString: filterFn_includesString },
+});
+
+const table = useTable({
+  columns,
+  data,
+  features,
+  globalFilterFn: "includesString",
+  onRowSelectionChange: setRowSelection,
+  state: { columnFilters, globalFilter, rowSelection },
+});
+```
+
 ## API Reference
 
 | Part | Adds |

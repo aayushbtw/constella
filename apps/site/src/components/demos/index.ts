@@ -77,7 +77,10 @@ import {
 } from "~/components/demos/collapsible";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
-import { DataTableDemo } from "~/components/demos/data-table";
+import {
+  DataTableDemo,
+  DataTableFilterDemo,
+} from "~/components/demos/data-table";
 import {
   DialogControlledDemo,
   DialogDemo,
@@ -352,6 +355,7 @@ const demos = {
   "copy-button": CopyButtonDemo,
   "copy-button-variant": CopyButtonVariantDemo,
   "data-table": DataTableDemo,
+  "data-table-filter": DataTableFilterDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,
