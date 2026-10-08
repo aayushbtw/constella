@@ -11,7 +11,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 - [x] **`radii.lg`** (16px, cards) and **`radii.xl`** (20px, the composer), derived from `--radius` like the others.
 - [x] **Surface roles:** `sidebar` (gray-2); `track` is `fillOpaque` and `selected` is `fill`.
-- [ ] **Chart roles:** a categorical set for data series, and meter fill, track and over-cap.
+- [ ] **Chart roles:** a categorical set for data series, and meter fill, track and over-cap. Added with Meter and the first chart, not before.
 
 ## Components
 
