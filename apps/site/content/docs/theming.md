@@ -1,6 +1,6 @@
 ---
 title: Theming
-description: Bring your brand color, gray, corners and density. A theme is CSS variables, so there's nothing to install.
+description: Pick a theme, then bring your accent, corners and density. A theme is CSS variables, so there's nothing to install.
 order: 2
 ---
 
