@@ -151,6 +151,11 @@ import {
   PopoverFormDemo,
 } from "~/components/demos/popover";
 import {
+  MeterDemo,
+  ProgressDemo,
+  ProgressLabelDemo,
+} from "~/components/demos/progress";
+import {
   RadioGroupCardDemo,
   RadioGroupDemo,
   RadioGroupDescriptionDemo,
@@ -355,9 +360,12 @@ const demos = {
   "layout-sizes": LayoutSizesDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
+  meter: MeterDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
+  progress: ProgressDemo,
+  "progress-label": ProgressLabelDemo,
   "radio-group": RadioGroupDemo,
   "radio-group-card": RadioGroupCardDemo,
   "radio-group-description": RadioGroupDescriptionDemo,

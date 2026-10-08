@@ -64,6 +64,8 @@ An empty state is centered, balanced text in a short measure (`sizes.measure`), 
 
 An alert is a box like a card, a control's radius and padding: `edge` border, `raised` fill. Its `status` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text.
 
+A progress bar and a meter are the slider's track: `strokes.track` tall, `fill` under `accent`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. A meter at or past its max turns `dangerSolid`, so a spent quota reads at a glance; it needs no roles of its own.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
