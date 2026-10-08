@@ -21,7 +21,7 @@ import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   short: { maxHeight: 400 },
-  paragraph: { margin: 0, marginBlockEnd: "1em" },
+  paragraph: { marginBlockEnd: "1em", marginBlockStart: 0, marginInline: 0 },
 });
 
 const terms = [

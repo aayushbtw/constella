@@ -59,7 +59,8 @@ const styles = stylex.create({
   },
   graphWell: {
     borderRadius: radii.md,
-    padding: space.lg,
+    paddingBlock: space.lg,
+    paddingInline: space.lg,
   },
   graph: {
     height: graph,
@@ -67,7 +68,10 @@ const styles = stylex.create({
     width: graph,
   },
   plot: {
-    inset: 0,
+    insetBlockEnd: 0,
+    insetBlockStart: 0,
+    insetInlineEnd: 0,
+    insetInlineStart: 0,
     overflow: "visible",
     position: "absolute",
   },

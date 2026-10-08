@@ -22,7 +22,8 @@ const styles = stylex.create({
     insetBlockStart: 0,
     height: "100dvh",
     overflowY: "auto",
-    paddingBlock: layout.pageTop,
+    paddingBlockEnd: layout.pageTop,
+    paddingBlockStart: layout.pageTop,
     position: "sticky",
   },
   label: {

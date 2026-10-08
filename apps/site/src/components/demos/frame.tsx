@@ -41,7 +41,8 @@ const styles = stylex.create({
     backgroundColor: colors.fillSubtle,
     boxShadow: shadows.inset,
     display: "flex",
-    padding: space.xxs,
+    paddingBlock: space.xxs,
+    paddingInline: space.xxs,
   },
 });
 

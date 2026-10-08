@@ -58,7 +58,8 @@ const styles = stylex.create({
     display: "grid",
     gap: space.lg,
     gridTemplateColumns: "auto minmax(0, 1fr)",
-    padding: space.lg,
+    paddingBlock: space.lg,
+    paddingInline: space.lg,
   },
   glyph: {
     color: colors.textPrimary,

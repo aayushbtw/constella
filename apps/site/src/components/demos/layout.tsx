@@ -74,7 +74,10 @@ const styles = stylex.create({
     width: 64,
   }),
   cornerWell: {
-    borderRadius: radii.md,
+    borderEndEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderStartStartRadius: radii.md,
     paddingBlockStart: space.md,
     paddingInlineStart: space.md,
   },

@@ -34,7 +34,8 @@ const styles = stylex.create({
     borderWidth: strokes.border,
     display: "flex",
     // With the border, the tabs sit `space.xxs` in, so the corners stay concentric.
-    padding: `calc(${space.xxs} - ${strokes.border})`,
+    paddingBlock: `calc(${space.xxs} - ${strokes.border})`,
+    paddingInline: `calc(${space.xxs} - ${strokes.border})`,
     position: "relative",
     width: "fit-content",
   },

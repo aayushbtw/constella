@@ -86,7 +86,8 @@ const inset = (padding: string, tight: string, height: string) => ({
 
 const square = (size: string) => ({
   height: size,
-  paddingInline: 0,
+  paddingInlineEnd: 0,
+  paddingInlineStart: 0,
   transform: { default: null, [press]: presses.icon },
   width: size,
 });
@@ -102,8 +103,11 @@ const styles = stylex.create({
     alignItems: "center",
     // Every variant reserves the border, so a fill and an outline are the same size.
     borderColor: "transparent",
+    borderBlockEndWidth: strokes.border,
+    borderBlockStartWidth: strokes.border,
+    borderInlineEndWidth: strokes.border,
+    borderInlineStartWidth: strokes.border,
     borderStyle: "solid",
-    borderWidth: strokes.border,
     cursor: {
       default: "pointer",
       ":disabled": "not-allowed",

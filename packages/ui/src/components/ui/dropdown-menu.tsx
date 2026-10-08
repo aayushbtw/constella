@@ -71,7 +71,9 @@ const styles = stylex.create({
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
     opacity: { default: 1, [offstage]: 0 },
     overflowY: "auto",
-    padding: space.xxs,
+    paddingBlock: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
     transform: { default: "none", [offstage]: "scale(0.96)" },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
@@ -155,7 +157,8 @@ const styles = stylex.create({
     backgroundColor: colors.edgeSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
-    marginInline: `calc(-1 * ${space.xxs})`,
+    marginInlineEnd: `calc(-1 * ${space.xxs})`,
+    marginInlineStart: `calc(-1 * ${space.xxs})`,
   },
   shortcut: {
     color: colors.textMuted,

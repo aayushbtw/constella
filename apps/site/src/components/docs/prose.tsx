@@ -79,7 +79,8 @@ const styles = stylex.create({
     fontVariantLigatures: "none",
     fontSize: fontSizes.xs,
     paddingBlock: 1,
-    paddingInline: 3,
+    paddingInlineEnd: 3,
+    paddingInlineStart: 3,
   },
   codeBlock: {
     ...flow,
@@ -136,7 +137,9 @@ const styles = stylex.create({
     ...flow,
     borderRadius: radii.md,
     boxShadow: shadows.inset,
-    padding: space.xxs,
+    paddingBlock: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
   },
 });
 
