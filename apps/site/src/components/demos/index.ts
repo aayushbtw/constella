@@ -156,6 +156,7 @@ import {
   PopoverDemo,
   PopoverFormDemo,
 } from "~/components/demos/popover";
+import { PreviewCardDemo } from "~/components/demos/preview-card";
 import {
   MeterDemo,
   ProgressDemo,
@@ -388,6 +389,7 @@ const demos = {
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
+  "preview-card": PreviewCardDemo,
   progress: ProgressDemo,
   "progress-label": ProgressLabelDemo,
   "radio-group": RadioGroupDemo,

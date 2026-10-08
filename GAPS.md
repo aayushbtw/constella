@@ -34,7 +34,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 ### Disclosure
 
 - [x] **Collapsible**: tool steps, reasoning.
-- [ ] **PreviewCard**: a citation's preview on hover.
+- [x] **PreviewCard**: a citation's preview on hover.
 - [ ] **Command**: a searchable palette and list, for chat search and the model picker.
 - [x] **ScrollArea**.
 
