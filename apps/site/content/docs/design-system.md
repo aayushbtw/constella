@@ -14,7 +14,7 @@ Every color comes from a [Radix Colors](https://www.radix-ui.com/colors) scale o
 
 ### Roles
 
-Components ask for a role, never a step, so every role flips with the theme. Each status has a base for icons and short labels, `FillSubtle` and `Fill` tints, and an `Edge`: `dangerFillSubtle`, `successEdge` and so on.
+Components ask for a role, never a step, so every role flips with the theme. Each status has a base for icons and short labels, `FillSubtle` and `Fill` tints, and a `Solid`: `dangerFillSubtle`, `successSolid` and so on.
 
 <!-- ::demo name="color-roles" -->
 

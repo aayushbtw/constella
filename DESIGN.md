@@ -10,7 +10,7 @@ Tokens are named by role (`textMuted`, `fillSubtle`), never by hue, and valued b
 
 The accent is near-black (near-white in dark), not a hue, so color stays out of the way and type, spacing and motion carry the design.
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, `Edge`, and `Solid` for a dot that carries the status alone. Status color marks the small thing that carries the meaning and never body text, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too, and a dot with no text beside it has an accessible name.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The accent is gray, so none of them collides with it. Each has the base for icons and short labels, `FillSubtle` and `Fill` as tints that mirror the neutral fills, and `Solid` for a dot that carries the status alone. Status color marks the small thing that carries the meaning and never body text, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too, and a dot with no text beside it has an accessible name.
 
 Status is never a saturated solid behind text. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway. Only a dot is solid, step 9, and amber takes step 11 in light, since step 9 is 1.5:1 on the page.
 

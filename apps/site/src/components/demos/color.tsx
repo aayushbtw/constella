@@ -45,7 +45,6 @@ const statuses = [
 const statusParts = [
   { kind: "fill", step: "a2" },
   { kind: "fill", step: "a3" },
-  { kind: "edge", step: "a6" },
   // Last, so it lines up with the neutral text swatches above.
   { kind: "text", step: "11" },
 ] as const satisfies readonly { kind: Kind; step: string }[];

@@ -18,25 +18,21 @@ export const colors = stylex.defineVars({
   textSecondary: "var(--gray-11)",
 
   // Status: the base is the foreground step, for icons and short labels; the
-  // fills mirror the neutral ones as tints, `Edge` is a tinted edge, `Solid`
-  // fills a shape that carries the status alone, like a dot.
+  // fills mirror the neutral ones as tints, `Solid` fills a shape that
+  // carries the status alone, like a dot.
   danger: "var(--danger)",
-  dangerEdge: "var(--red-a6)",
   dangerFill: "var(--danger-fill)",
   dangerFillSubtle: "var(--danger-fill-subtle)",
   dangerSolid: "var(--red-9)",
   info: "var(--info)",
-  infoEdge: "var(--blue-a6)",
   infoFill: "var(--info-fill)",
   infoFillSubtle: "var(--info-fill-subtle)",
   infoSolid: "var(--blue-9)",
   success: "var(--success)",
-  successEdge: "var(--green-a6)",
   successFill: "var(--success-fill)",
   successFillSubtle: "var(--success-fill-subtle)",
   successSolid: "var(--green-9)",
   warning: "var(--warning)",
-  warningEdge: "var(--amber-a6)",
   warningFill: "var(--warning-fill)",
   warningFillSubtle: "var(--warning-fill-subtle)",
   warningSolid: "var(--warning-solid)",
