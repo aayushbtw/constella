@@ -48,18 +48,36 @@
     --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
   }
 
-  /* What a theme sets (see the theming docs): the accent's solid and its text, the focus
-     ring, corners, control heights and the scaled spacing. Unthemed, the accent is the
-     gray ink. A theme overrides these on `:root[data-theme]`, which outranks this layer. */
+  /* Every role is its own variable, valued by a scale step, so a theme can regenerate the
+     scales or override one role by hand. Unthemed, the accent is the gray ink. A theme sets
+     these on `:root[data-theme]`, which outranks this layer. */
   :root {
+    --background: var(--gray-1);
+    --text-primary: var(--gray-12);
+    --text-secondary: var(--gray-11);
+    --fill-subtle: var(--gray-a2);
+    --fill: var(--gray-a3);
+    --fill-strong: var(--gray-a4);
+    --fill-opaque: var(--gray-3);
+    --edge-subtle: var(--gray-a4);
+    --edge: var(--gray-a6);
+    --inverted: var(--gray-12);
+    --on-inverted: var(--gray-1);
+    --overlay: var(--black-a5);
+    --danger-solid: var(--red-9);
+    --info-solid: var(--blue-9);
+    --success-solid: var(--green-9);
     --accent-solid: var(--gray-12);
     --on-accent: var(--gray-1);
     --focus-ring: var(--gray-a8);
     --selection: var(--gray-a5);
-    --radius-xs: 4px;
-    --radius-chip: 6px;
-    --radius-sm: 8px;
-    --radius-md: 12px;
+    /* One radius, for controls; the rest derive from it so nested corners stay concentric
+       at `space.xxs` and all reach 0 together. */
+    --radius: 8px;
+    --radius-sm: var(--radius);
+    --radius-md: calc(var(--radius) + min(var(--radius), 4px));
+    --radius-xs: max(0px, var(--radius) - 4px);
+    --radius-chip: max(0px, var(--radius) - 2px);
     --size-control-xxs: 20px;
     --size-control-xs: 24px;
     --size-control-sm: 28px;

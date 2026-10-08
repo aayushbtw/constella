@@ -34,22 +34,46 @@ document.documentElement.dataset.theme = "midnight";
 
 ## Variables
 
-A theme sets these. Edit any of them by hand; the builder only writes them for you.
+### Roles
+
+Every color a component uses is a role, and every role is a variable valued by a scale step. Override one by hand to change just that role, in light and dark.
+
+```css
+:root[data-theme="brand"] {
+  --edge: var(--gray-a7);
+}
+```
 
 | Variable | Default | For |
 | --- | --- | --- |
-| `--accent-1` … `--accent-12` | none | The accent scale; `-a1` … `-a12` alpha |
-| `--accent-contrast` | none | Text on step 9 |
+| `--background` | `--gray-1` | The page |
+| `--raised` | white; `--gray-2` in dark | Popovers, menus, dialogs, toasts |
+| `--text-primary` | `--gray-12` | Content |
+| `--text-secondary` | `--gray-11` | Supporting copy |
+| `--text-muted` | `--gray-10` | Labels and hints |
+| `--fill-subtle`, `--fill`, `--fill-strong` | `--gray-a2`, `-a3`, `-a4` | Hover, selected, pressed |
+| `--fill-opaque` | `--gray-3` | A fill nothing shows through |
+| `--edge-subtle`, `--edge` | `--gray-a4`, `-a6` | Dividers, control borders |
 | `--accent-solid` | `--gray-12` | Primary buttons, checked controls |
-| `--on-accent` | `--gray-1` | Text and icons on `--accent-solid` |
+| `--on-accent` | `--gray-1` | Text and icons on the accent |
+| `--inverted`, `--on-inverted` | `--gray-12`, `--gray-1` | Tooltips |
 | `--focus-ring` | `--gray-a8` | The focus outline |
 | `--selection` | `--gray-a5` | Selected text |
-| `--gray-1` … `--gray-12` | Radix gray | Text, fills and edges; `-a1` … `-a12` |
-| `--radius-xs`, `-chip`, `-sm`, `-md` | 4, 6, 8, 12px | Corners |
+| `--overlay` | `--black-a5` | Behind a dialog |
+
+### Scales
+
+The builder writes these, and the roles read them: `--gray-1` … `--gray-12` and `--gray-a1` … `--gray-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9.
+
+### Shape and density
+
+| Variable | Default | For |
+| --- | --- | --- |
+| `--radius` | 8px | Controls; menus and cards derive theirs from it |
 | `--size-control-xxs` … `-lg` | 20 … 36px | Control heights |
 | `--space-xs` … `--space-xl` | 8 … 48px | Spacing; `xxxs` and `xxs` stay fixed |
 
-Keep nested corners concentric when setting radii by hand: `md` is `sm` plus 4px, and `xs` is `sm` minus 4px.
+The other corners follow `--radius` so nested ones stay concentric: `md` is `--radius` plus up to 4px, `xs` is 4px less, and all reach 0 together.
 
 ## Status colors
 

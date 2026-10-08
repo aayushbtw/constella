@@ -13,12 +13,12 @@ const grayFlavors = {
   slate: RadixColors.slate.slate9,
 } as const;
 
-// Concentric at `space.xxs`: md = sm + 4, xs = sm - 4.
+// The control radius; base.css derives the rest from it.
 const radiusPresets = {
-  none: { chip: 0, md: 0, sm: 0, xs: 0 },
-  small: { chip: 4, md: 10, sm: 6, xs: 2 },
-  medium: { chip: 6, md: 12, sm: 8, xs: 4 },
-  large: { chip: 8, md: 16, sm: 12, xs: 8 },
+  none: 0,
+  small: 6,
+  medium: 8,
+  large: 12,
 } as const;
 
 // Control heights step by 2px so every size keeps an even height and its icon a whole pixel.
@@ -99,13 +99,9 @@ function roleLines(mono: boolean) {
 }
 
 function layoutLines(radius: RadiusPreset, scaling: ScalingPreset) {
-  const r = radiusPresets[radius];
   const { controls, space } = scalingPresets[scaling];
   return [
-    `  --radius-xs: ${r.xs}px;`,
-    `  --radius-chip: ${r.chip}px;`,
-    `  --radius-sm: ${r.sm}px;`,
-    `  --radius-md: ${r.md}px;`,
+    `  --radius: ${radiusPresets[radius]}px;`,
     ...Object.entries(controls).map(
       ([size, value]) => `  --size-control-${size}: ${value}px;`
     ),
