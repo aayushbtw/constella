@@ -58,9 +58,11 @@ A dialog's footer is a `fillSubtle` bar with a top edge, set flush into the popu
 
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
+The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
+
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
-Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
+Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). So the corners are one ladder, `xs` to `xl`, a `space.xxs` step apart: a card (`lg`) holds an `md` surface, a composer (`xl`) an `lg` one. The step shrinks under a 4px radius so every corner reaches 0 together. When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
 
 ## Details
 

@@ -116,6 +116,7 @@ type Entry = readonly [name: string, value: string];
 // The same in every theme: they read the scales, which the theme maps.
 const roles: Entry[] = [
   ["--background", "var(--neutral-1)"],
+  ["--sidebar", "var(--neutral-2)"],
   ["--text-primary", "var(--neutral-12)"],
   ["--text-secondary", "var(--neutral-11)"],
   ["--fill-subtle", "var(--neutral-a2)"],

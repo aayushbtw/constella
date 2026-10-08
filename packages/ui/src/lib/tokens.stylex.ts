@@ -19,6 +19,7 @@ export const colors = stylex.defineVars({
   overlay: "var(--overlay)",
   // Floating surfaces: popovers, menus, dialogs, toasts.
   raised: "var(--raised)",
+  sidebar: "var(--sidebar)",
   textMuted: "var(--text-muted)",
   textPrimary: "var(--text-primary)",
   textSecondary: "var(--text-secondary)",
@@ -115,7 +116,9 @@ export const radii = stylex.defineConsts({
   // The 20px pieces, Badge and Kbd; off the 4px grid, as 4 reads square and 8 a pill.
   chip: "var(--radius-chip)",
   full: "9999px",
+  lg: "var(--radius-lg)",
   md: "var(--radius-md)",
+  xl: "var(--radius-xl)",
   sm: "var(--radius-sm)",
   xs: "var(--radius-xs)",
 });

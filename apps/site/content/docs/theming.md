@@ -80,10 +80,11 @@ What components ask for. Each is a scale step, so changing one changes only that
 | Variable | Default | For |
 | --- | --- | --- |
 | `--background` | `--neutral-1` | The page |
+| `--sidebar` | `--neutral-2` | The sidebar, a step off the page |
 | `--text-primary` | `--neutral-12` | Content |
 | `--text-secondary` | `--neutral-11` | Supporting copy |
-| `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected, pressed |
-| `--fill-opaque` | `--neutral-3` | A fill nothing shows through |
+| `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected (a row, the current nav item), pressed |
+| `--fill-opaque` | `--neutral-3` | A fill nothing shows through: avatars, tracks, user messages |
 | `--edge-subtle`, `--edge` | `--neutral-a4`, `-a6` | Dividers, control borders |
 | `--accent-solid` | `--neutral-12` | Primary buttons, checked controls |
 | `--on-accent` | `--neutral-1` | Text and icons on the accent |
@@ -102,7 +103,15 @@ Muted text and raised surfaces differ between light and dark, so `base.css` sets
 | `--size-control-xxs` … `-lg` | 20 … 36px | Control heights |
 | `--space-xs` … `--space-xl` | 8 … 48px | Spacing; `xxxs` and `xxs` stay fixed |
 
-The other corners follow `--radius` so nested ones stay concentric: `md` is `--radius` plus up to 4px, `xs` is 4px less, and all reach 0 together.
+The other corners step from `--radius` by `min(--radius, 4px)`, so each nests concentrically in the next and all reach 0 together:
+
+| Corner | Value            | At 8px |
+| ------ | ---------------- | ------ |
+| `xs`   | radius − step    | 4px    |
+| `sm`   | radius           | 8px    |
+| `md`   | radius + step    | 12px   |
+| `lg`   | radius + 2 steps | 16px   |
+| `xl`   | radius + 3 steps | 20px   |
 
 ## Status colors
 

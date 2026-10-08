@@ -63,6 +63,7 @@ export const theme = stylex.defineVars({
   "--accent-contrast": "var(--neutral-1)",
   // Roles: what components ask for, valued by a scale step.
   "--background": "var(--neutral-1)",
+  "--sidebar": "var(--neutral-2)",
   "--text-primary": "var(--neutral-12)",
   "--text-secondary": "var(--neutral-11)",
   "--fill-subtle": "var(--neutral-a2)",

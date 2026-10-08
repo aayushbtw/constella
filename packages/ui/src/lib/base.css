@@ -54,11 +54,14 @@
     --danger-solid: var(--red-9);
     --info-solid: var(--blue-9);
     --success-solid: var(--green-9);
-    /* Corners derive from the one radius, so nested ones stay concentric at `space.xxs`
-       and all reach 0 together. */
+    /* Corners climb from the one radius a `space.xxs` step at a time, so each nests
+       concentrically in the next; the step shrinks with a small radius so all reach 0 together. */
+    --radius-step: min(var(--radius), 4px);
+    --radius-xs: calc(var(--radius) - var(--radius-step));
     --radius-sm: var(--radius);
-    --radius-md: calc(var(--radius) + min(var(--radius), 4px));
-    --radius-xs: max(0px, var(--radius) - 4px);
+    --radius-md: calc(var(--radius) + var(--radius-step));
+    --radius-lg: calc(var(--radius) + 2 * var(--radius-step));
+    --radius-xl: calc(var(--radius) + 3 * var(--radius-step));
     --radius-chip: max(0px, var(--radius) - 2px);
   }
 
