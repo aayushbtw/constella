@@ -16,7 +16,6 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const inTooltip = ":where([data-slot='tooltip-popup'] *)";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 const inButton = (size: string) =>
   `:where([data-slot='button'][data-size='${size}'] > *)`;
 const inInputGroup = (size: string) =>
@@ -24,7 +23,6 @@ const inInputGroup = (size: string) =>
 // Concentric with the box's corner; at `lg` the inset reaches the radius, so it keeps its own.
 const nested = (height: string) =>
   `calc(${radii.sm} - (${height} - ${sizes.kbd}) / 2)`;
-/* eslint-enable func-style */
 
 const styles = stylex.create({
   kbd: {

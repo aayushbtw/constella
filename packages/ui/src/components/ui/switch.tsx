@@ -29,8 +29,6 @@ const disabled = ":is([data-disabled])";
 const beside =
   ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 // The track is the thumb wide twice, and the thumb plus its edge tall; the thumb travels the difference.
 const track = (thumb: string) => ({
   height: `calc(${thumb} + 2 * ${strokes.border})`,
@@ -54,8 +52,6 @@ const knob = (thumb: string) => ({
   },
   width: thumb,
 });
-
-/* eslint-enable func-style */
 
 const styles = stylex.create({
   switch: {

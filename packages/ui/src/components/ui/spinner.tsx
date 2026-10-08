@@ -23,10 +23,8 @@ const badgeSpinner = `calc(${sizes.iconXs} - ${space.xxxs})`;
 const lgBadgeSpinner = `calc(${sizes.iconSm} - ${space.xxxs})`;
 
 // An outline badge keeps its text neutral, so its spinner carries the status.
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 const inStatus = (status: string) =>
   `:where([data-slot='badge'][data-variant='outline'][data-status='${status}'] *)`;
-/* eslint-enable func-style */
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 

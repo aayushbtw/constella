@@ -57,8 +57,6 @@ const press = ":active:not([aria-haspopup], :disabled)";
 const busy = "[aria-busy='true']";
 const loading = "[aria-busy='true']:disabled";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 // At rest, and while hovered or while its popup is open (Base UI marks the trigger).
 const interactive = <T,>(rest: T, active: T) => ({
   default: rest,
@@ -91,8 +89,6 @@ const square = (size: string) => ({
   transform: { default: null, [press]: presses.icon },
   width: size,
 });
-
-/* eslint-enable func-style */
 
 // shadcn's spacing, which sits off our 4px grid at 6px and 10px.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;

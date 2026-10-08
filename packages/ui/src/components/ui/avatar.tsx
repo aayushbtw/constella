@@ -36,7 +36,6 @@ type AvatarBadgeProps = Styled<ComponentProps<"span">> & {
 };
 
 const inGroup = ":is([data-slot='avatar-group'] > *)";
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
 const groupOf = (size: AvatarSize) =>
   `:is([data-slot='avatar-group']:has(> [data-size='${size}']) > *)`;
 
@@ -47,7 +46,6 @@ const overlap = space.xs;
 // behind shows through. Chromium rejects a radius mixing `%` and `px`, so all are lengths.
 const hole = (size: string, x: string, y: string) =>
   `radial-gradient(circle calc(${size} / 2 + ${gap}) at ${x} ${y}, transparent calc(100% - 0.5px), black calc(100% + 0.5px))`;
-/* eslint-enable func-style */
 
 // Each avatar but the last is cut where the next one overlaps it.
 const overlapped = `${inGroup}:not(:last-child)`;

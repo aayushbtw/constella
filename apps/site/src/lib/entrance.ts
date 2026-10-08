@@ -22,8 +22,6 @@ const rise = stylex.keyframes({
 });
 const fade = stylex.keyframes({ from: { opacity: 0 } });
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 // Reduced motion keeps only the fade; after a client navigation nothing replays.
 const play = (name: string, duration: number) => ({
   animationDuration: `${duration}ms`,
@@ -35,8 +33,6 @@ const play = (name: string, duration: number) => ({
   },
   animationTimingFunction: easings.out,
 });
-
-/* eslint-enable func-style */
 
 const styles = stylex.create({
   spin: play(spinIn, spinFor),

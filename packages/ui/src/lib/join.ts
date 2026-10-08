@@ -10,8 +10,6 @@ const notLast = ":not(:nth-last-child(1 of [data-slot]))";
 const joined =
   ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: string) => ({
   borderEndEndRadius: {
@@ -39,8 +37,6 @@ const corners = (radius: string) => ({
     [notFirst]: `calc(${radius} * ${joins.either})`,
   },
 });
-
-/* eslint-enable func-style */
 
 /** Corners and start edge that join a neighbor in a ButtonGroup. Apply after a part's own styles. */
 const joinStyles = stylex.create({

@@ -71,8 +71,6 @@ const beforeSuffix =
 const trailingButton = ":has(> [data-slot='button']:last-child)";
 const stacked = ":has(> [data-align^='block'], > textarea)";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 // Conditions on the control, read from the group around it.
 const inGroupWith = (align: InputGroupAddonAlign) =>
   `:where([data-slot='input-group']:has(> [data-align='${align}']) *)`;
@@ -88,8 +86,6 @@ const bySize = (values: Record<InputGroupSize, string>) => ({
 
 const insetMargin = (group: string, item: string) =>
   `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
-
-/* eslint-enable func-style */
 
 // shadcn's spacing, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;

@@ -50,8 +50,6 @@ type BadgeProps = Omit<
 // A badge only answers when it's rendered as a link.
 const link = ":is(a)";
 
-/* eslint-disable func-style -- StyleX evaluates arrow functions inside `stylex.create`, not declarations. */
-
 const linkHover = <T,>(rest: T, active: T) => ({
   default: rest,
   [media.hover]: { default: rest, [`${link}:hover`]: active },
@@ -73,8 +71,6 @@ const inset = (padding: string, tight: string) => ({
     ":has(> [data-icon='inline-start'])": tight,
   },
 });
-
-/* eslint-enable func-style */
 
 // shadcn's 6px and 10px, and an 18px small, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
