@@ -179,6 +179,24 @@
     color: var(--danger);
   }
 
+  /* StyleX can't style a child it didn't render, so a sidebar row's label fades as the
+     sidebar narrows to its icons and the width clips it (`durations.layout` on `easings.layout`). */
+  :where([data-slot="sidebar-menu-button"]) > :where(svg) {
+    flex-shrink: 0;
+  }
+  :where([data-slot="sidebar-menu-button"]) > :where(span:last-child) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  :where(
+      [data-slot="sidebar"][data-collapsible="icon"]
+        [data-slot="sidebar-menu-button"]
+    )
+    > :where(span:last-child) {
+    opacity: 0;
+  }
+
   /* StyleX can't style a child it didn't render, so an item's image fills its media box here. */
   :where([data-slot="item-media"][data-variant="image"]) > :where(img) {
     height: 100%;

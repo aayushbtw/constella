@@ -80,7 +80,7 @@ A side panel is part of the layout, not a layer: it opens into a slot beside the
 
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
-The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
+The sidebar sits on `sidebar`, a step off the page, split from it by an `edgeSubtle` hairline, so it reads as the frame and the page as the content. It's in the flow and sticky, not fixed, so it sits beside the page at any height. Its rows are a control tall, `space.xxxs` apart, hover on `fillSubtle` and give with `presses.row`; the current one takes `fill` and medium weight, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
 
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
@@ -160,6 +160,8 @@ When content changes, the layout takes its new size at once and only the surface
 A collapsible is the one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it.
 
 A sheet travels the whole way in from its edge on `layout` (the drawer curve, `durations.layout`), and leaves the same way, faster, on `dialog`: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. Under reduced motion it fades in place. It is the dialog's surface (backdrop, `raised`, `shadows.dialog`, footer bar), so a side panel and its narrow-window sheet read alike.
+
+The sidebar is the one surface whose width animates: it narrows on `layout` while its inner panel keeps its full width, so the content is clipped, never reflowed, the logo stays put, and each row's label fades out as the edge reaches it. Collapsed to icons it's `sizes.sidebarIcon`, a control and its group padding, and each row names itself in a tooltip. Below `media.md` it opens as a sheet.
 
 ### Press and hover
 

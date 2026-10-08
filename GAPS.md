@@ -20,7 +20,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 - [x] **Card**, with a `well` variant (a muted tray around one card) and `sm`/flush sizes.
 - [x] **Item** and **ItemGroup**: list rows with media, content, actions and separators.
 - [x] **Empty**: an empty state with media, title, description and content.
-- [ ] **Sidebar**: sections, nav items with sizes, collapse to a rail, a header row the page's height. netigen's is 965 lines.
+- [x] **Sidebar**: sections, nav items with sizes, collapse to a rail, a header row the page's height. netigen's is 965 lines.
 - [x] **Side panel**: row details beside the content under the header, split by a hairline, not floating.
 - [x] **Sheet**: the same panel as a dialog, for narrow windows.
 
@@ -74,7 +74,7 @@ netigen builds these today. Each could become a Constella part once the componen
 ## Motion
 
 - [ ] **Sidebar section change**: slides like a stack, forward into a section and back out, with a light blur; the page swaps at once.
-- [ ] **Sidebar collapse**: labels fade as the width clips them; the logo stays put.
+- [x] **Sidebar collapse**: labels fade as the width clips them; the logo stays put.
 
 ## Open
 

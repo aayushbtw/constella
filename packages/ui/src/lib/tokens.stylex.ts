@@ -153,6 +153,9 @@ export const sizes = stylex.defineConsts({
   popover: "288px",
   // A side panel beside the content.
   sidePanel: "400px",
+  // A sidebar open, and collapsed to its icons (a control and its group padding).
+  sidebar: "256px",
+  sidebarIcon: "48px",
   thumb: "12px",
   toast: "356px",
   tooltip: "320px",
@@ -194,6 +197,8 @@ export const media = stylex.defineConsts({
   hover: "@media (hover: hover)",
   reducedMotion: "@media (prefers-reduced-motion: reduce)",
   sm: "@media (min-width: 640px)",
+  // Below it, a sidebar opens as a sheet; JS reads the query.
+  md: "@media (min-width: 768px)",
 });
 
 export const presses = stylex.defineConsts({
