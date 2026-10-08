@@ -31,6 +31,22 @@ import { Label } from "@/components/ui/label";
 </Label>
 ```
 
+## Size
+
+Use the `size` prop to change the size of the box and its tick.
+
+<!-- ::demo name="checkbox-size" -->
+
+```tsx
+<Checkbox size="lg" />
+```
+
+| Size      | Box  | Mark |
+| --------- | ---- | ---- |
+| `sm`      | 14px | 12px |
+| `default` | 16px | 14px |
+| `lg`      | 20px | 16px |
+
 ## Description
 
 Use a horizontal [Field](/docs/components/field) with `FieldContent` and `FieldDescription` for helper text.
@@ -199,4 +215,4 @@ Put a checkbox in the first cell of each row, and one in the header to select th
 
 ## API Reference
 
-`Checkbox` renders the box and its tick, which turns into a dash when `indeterminate`. It takes `sx`, applied last. For the rest, see [Base UI Checkbox](https://base-ui.com/react/components/checkbox).
+`Checkbox` renders the box and its tick, which turns into a dash when `indeterminate`. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. For the rest, see [Base UI Checkbox](https://base-ui.com/react/components/checkbox).

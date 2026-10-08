@@ -49,6 +49,22 @@ RadioGroup
 └── RadioGroupItem
 ```
 
+## Size
+
+Use the `size` prop on `RadioGroupItem`. The dot is always half the circle.
+
+<!-- ::demo name="radio-group-size" -->
+
+```tsx
+<RadioGroupItem size="lg" value="option-one" />
+```
+
+| Size      | Circle | Dot  |
+| --------- | ------ | ---- |
+| `sm`      | 14px   | 7px  |
+| `default` | 16px   | 8px  |
+| `lg`      | 20px   | 10px |
+
 ## Description
 
 Put each item in a horizontal `Field`, with the label and description in a `FieldContent`.
@@ -136,4 +152,4 @@ Add `invalid` to each `Field`, and `aria-invalid` to its item.
 
 ## API Reference
 
-`RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [Base UI Radio Group](https://base-ui.com/react/components/radio).
+`RadioGroupItem` takes `size` (`"sm"`, `"default"` or `"lg"`). `RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [Base UI Radio Group](https://base-ui.com/react/components/radio).

@@ -19,6 +19,7 @@ const styles = stylex.create({
 
 const labels = {
   default: "Default",
+  lg: "Large",
   sm: "Small",
 } satisfies Record<SwitchSize, string>;
 

@@ -24,8 +24,35 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
+const radioGroupItemSizes = ["sm", "default", "lg"] as const;
+
+type RadioGroupItemSize = (typeof radioGroupItemSizes)[number];
+
+type RadioGroupItemProps = Styled<RadioPrimitive.Root.Props> & {
+  size?: RadioGroupItemSize;
+};
+
 const on = ":is([data-checked])";
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
+
+// The circle, centered on the label's first line beside top-aligned text, with its hit area.
+const circle = (size: string) => ({
+  height: size,
+  marginBlock: {
+    default: null,
+    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${size}) / 2)`,
+  },
+  width: size,
+  "::before": {
+    insetBlock: `calc((${size} - ${sizes.hitArea}) / 2)`,
+    insetInline: `calc((${size} - ${sizes.hitArea}) / 2)`,
+  },
+});
+
+const dot = (size: string) => ({
+  height: `calc(${size} / 2)`,
+  width: `calc(${size} / 2)`,
+});
 
 const styles = stylex.create({
   group: {
@@ -62,13 +89,7 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
-    height: sizes.icon,
     justifyContent: "center",
-    // Beside top-aligned text, the circle centers on the label's first line.
-    marginBlock: {
-      default: null,
-      ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${sizes.icon}) / 2)`,
-    },
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
     paddingBlock: 0,
     paddingInline: 0,
@@ -80,14 +101,14 @@ const styles = stylex.create({
     transitionDuration: `${durations.hover}, ${durations.hover}, ${durations.press}`,
     transitionProperty: "background-color, border-color, transform",
     transitionTimingFunction: `ease, ease, ${easings.out}`,
-    width: sizes.icon,
     "::before": {
       content: "''",
-      insetBlock: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
-      insetInline: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
       position: "absolute",
     },
   },
+  sm: circle(sizes.iconSm),
+  default: circle(sizes.icon),
+  lg: circle(sizes.iconLg),
   // The dot grows from the center and fades out; unchecking is the system answering, so it's quick.
   indicator: {
     backgroundColor: colors.onAccent,
@@ -96,7 +117,6 @@ const styles = stylex.create({
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
     display: "block",
-    height: `calc(${sizes.icon} / 2)`,
     opacity: {
       default: 1,
       ":is([data-starting-style], [data-ending-style])": 0,
@@ -111,9 +131,20 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
-    width: `calc(${sizes.icon} / 2)`,
   },
+  dotSm: dot(sizes.iconSm),
+  dotDefault: dot(sizes.icon),
+  dotLg: dot(sizes.iconLg),
 });
+
+const sizeStyles = {
+  default: [styles.default, styles.dotDefault],
+  lg: [styles.lg, styles.dotLg],
+  sm: [styles.sm, styles.dotSm],
+} satisfies Record<
+  RadioGroupItemSize,
+  [stylex.StyleXStyles, stylex.StyleXStyles]
+>;
 
 function RadioGroup({ sx, ...props }: Styled<RadioGroupPrimitive.Props>) {
   return (
@@ -125,19 +156,26 @@ function RadioGroup({ sx, ...props }: Styled<RadioGroupPrimitive.Props>) {
   );
 }
 
-function RadioGroupItem({ sx, ...props }: Styled<RadioPrimitive.Root.Props>) {
+function RadioGroupItem({
+  size = "default",
+  sx,
+  ...props
+}: RadioGroupItemProps) {
+  const [item, indicator] = sizeStyles[size];
   return (
     <RadioPrimitive.Root
+      data-size={size}
       data-slot="radio-group-item"
       {...props}
-      {...stylex.props(styles.item, sx)}
+      {...stylex.props(styles.item, item, sx)}
     >
       <RadioPrimitive.Indicator
         data-slot="radio-group-indicator"
-        {...stylex.props(styles.indicator)}
+        {...stylex.props(styles.indicator, indicator)}
       />
     </RadioPrimitive.Root>
   );
 }
 
-export { RadioGroup, RadioGroupItem };
+export { RadioGroup, RadioGroupItem, radioGroupItemSizes };
+export type { RadioGroupItemProps, RadioGroupItemSize };

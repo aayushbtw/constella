@@ -15,7 +15,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
-const switchSizes = ["sm", "default"] as const;
+const switchSizes = ["sm", "default", "lg"] as const;
 
 type SwitchSize = (typeof switchSizes)[number];
 
@@ -89,6 +89,7 @@ const styles = stylex.create({
   },
   default: track(sizes.icon),
   sm: track(sizes.iconXs),
+  lg: track(sizes.iconLg),
   thumb: {
     backgroundColor: {
       default: colors.textSecondary,
@@ -106,10 +107,12 @@ const styles = stylex.create({
   },
   thumbDefault: knob(sizes.icon),
   thumbSm: knob(sizes.iconXs),
+  thumbLg: knob(sizes.iconLg),
 });
 
 const sizeStyles = {
   default: [styles.default, styles.thumbDefault],
+  lg: [styles.lg, styles.thumbLg],
   sm: [styles.sm, styles.thumbSm],
 } satisfies Record<SwitchSize, [stylex.StyleXStyles, stylex.StyleXStyles]>;
 

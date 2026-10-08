@@ -50,6 +50,7 @@ import {
   CheckboxDisabledDemo,
   CheckboxIndeterminateDemo,
   CheckboxInvalidDemo,
+  CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
 import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
@@ -134,6 +135,7 @@ import {
   RadioGroupDisabledDemo,
   RadioGroupFieldsetDemo,
   RadioGroupInvalidDemo,
+  RadioGroupSizeDemo,
 } from "~/components/demos/radio-group";
 import {
   SelectAlignItemDemo,
@@ -248,6 +250,7 @@ const demos = {
   "checkbox-disabled": CheckboxDisabledDemo,
   "checkbox-indeterminate": CheckboxIndeterminateDemo,
   "checkbox-invalid": CheckboxInvalidDemo,
+  "checkbox-size": CheckboxSizeDemo,
   "checkbox-table": CheckboxTableDemo,
   "color-roles": ColorRolesDemo,
   "color-scales": ColorScalesDemo,
@@ -319,6 +322,7 @@ const demos = {
   "radio-group-disabled": RadioGroupDisabledDemo,
   "radio-group-fieldset": RadioGroupFieldsetDemo,
   "radio-group-invalid": RadioGroupInvalidDemo,
+  "radio-group-size": RadioGroupSizeDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,
   "select-disabled": SelectDisabledDemo,

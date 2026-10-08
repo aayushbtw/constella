@@ -19,12 +19,34 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
-type Styled<T> = Omit<T, "className" | "style"> & {
+const checkboxSizes = ["sm", "default", "lg"] as const;
+
+type CheckboxSize = (typeof checkboxSizes)[number];
+
+type CheckboxProps = Omit<
+  CheckboxPrimitive.Root.Props,
+  "className" | "style"
+> & {
+  size?: CheckboxSize;
   sx?: stylex.StyleXStyles;
 };
 
 const on = ":is([data-checked], [data-indeterminate])";
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
+
+// The box, centered on the label's first line beside top-aligned text, with its hit area.
+const box = (size: string) => ({
+  height: size,
+  marginBlock: {
+    default: null,
+    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${size}) / 2)`,
+  },
+  width: size,
+  "::before": {
+    insetBlock: `calc((${size} - ${sizes.hitArea}) / 2)`,
+    insetInline: `calc((${size} - ${sizes.hitArea}) / 2)`,
+  },
+});
 
 const styles = stylex.create({
   checkbox: {
@@ -56,13 +78,7 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
-    height: sizes.icon,
     justifyContent: "center",
-    // Beside top-aligned text, the box centers on the label's first line.
-    marginBlock: {
-      default: null,
-      ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${sizes.icon}) / 2)`,
-    },
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
     position: "relative",
     transform: {
@@ -73,14 +89,14 @@ const styles = stylex.create({
     transitionProperty: "background-color, border-color, transform",
     transitionTimingFunction: `ease, ease, ${easings.out}`,
     verticalAlign: "middle",
-    width: sizes.icon,
     "::before": {
       content: "''",
-      insetBlock: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
-      insetInline: `calc((${sizes.icon} - ${sizes.hitArea}) / 2)`,
       position: "absolute",
     },
   },
+  sm: box(sizes.iconSm),
+  default: box(sizes.icon),
+  lg: box(sizes.iconLg),
   // The tick draws in from its start and fades out; unchecking is the system answering, so it's quick.
   indicator: {
     clipPath: {
@@ -107,12 +123,26 @@ const styles = stylex.create({
   },
 });
 
-function Checkbox({ sx, ...props }: Styled<CheckboxPrimitive.Root.Props>) {
+const sizeStyles = {
+  default: styles.default,
+  lg: styles.lg,
+  sm: styles.sm,
+} satisfies Record<CheckboxSize, stylex.StyleXStyles>;
+
+// The tick is a step under the box.
+const tickSizes = {
+  default: sizes.iconSm,
+  lg: sizes.icon,
+  sm: sizes.iconXs,
+} satisfies Record<CheckboxSize, string>;
+
+function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
   return (
     <CheckboxPrimitive.Root
+      data-size={size}
       data-slot="checkbox"
       {...props}
-      {...stylex.props(styles.checkbox, sx)}
+      {...stylex.props(styles.checkbox, sizeStyles[size], sx)}
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
@@ -121,14 +151,14 @@ function Checkbox({ sx, ...props }: Styled<CheckboxPrimitive.Root.Props>) {
         <HugeiconsIcon
           aria-hidden
           icon={Tick02Icon}
-          size={sizes.iconSm}
+          size={tickSizes[size]}
           strokeWidth={Number(strokes.icon)}
           {...stylex.props(styles.tick)}
         />
         <HugeiconsIcon
           aria-hidden
           icon={MinusSignIcon}
-          size={sizes.iconSm}
+          size={tickSizes[size]}
           strokeWidth={Number(strokes.icon)}
           {...stylex.props(styles.minus)}
         />
@@ -137,4 +167,5 @@ function Checkbox({ sx, ...props }: Styled<CheckboxPrimitive.Root.Props>) {
   );
 }
 
-export { Checkbox };
+export { Checkbox, checkboxSizes };
+export type { CheckboxProps, CheckboxSize };

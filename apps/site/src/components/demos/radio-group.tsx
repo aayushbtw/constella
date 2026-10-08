@@ -11,7 +11,11 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupItem,
+  radioGroupItemSizes,
+} from "@/components/ui/radio-group";
 import { fontWeights } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -73,6 +77,27 @@ function RadioGroupDemo() {
           <Label key={item.value}>
             <RadioGroupItem value={item.value} />
             {item.label}
+          </Label>
+        ))}
+      </RadioGroup>
+    </DemoRow>
+  );
+}
+
+const sizeLabels = {
+  default: "Default",
+  lg: "Large",
+  sm: "Small",
+} as const;
+
+function RadioGroupSizeDemo() {
+  return (
+    <DemoRow>
+      <RadioGroup defaultValue="default" sx={styles.fit}>
+        {radioGroupItemSizes.map((size) => (
+          <Label key={size}>
+            <RadioGroupItem size={size} value={size} />
+            {sizeLabels[size]}
           </Label>
         ))}
       </RadioGroup>
@@ -188,4 +213,5 @@ export {
   RadioGroupDisabledDemo,
   RadioGroupFieldsetDemo,
   RadioGroupInvalidDemo,
+  RadioGroupSizeDemo,
 };

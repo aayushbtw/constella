@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox, checkboxSizes } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Table,
@@ -66,6 +66,25 @@ function CheckboxDemo() {
         <Checkbox defaultChecked />
         Accept terms and conditions
       </Label>
+    </DemoRow>
+  );
+}
+
+const sizeLabels = {
+  default: "Default",
+  lg: "Large",
+  sm: "Small",
+} as const;
+
+function CheckboxSizeDemo() {
+  return (
+    <DemoRow>
+      {checkboxSizes.map((size) => (
+        <Label key={size}>
+          <Checkbox defaultChecked size={size} />
+          {sizeLabels[size]}
+        </Label>
+      ))}
     </DemoRow>
   );
 }
@@ -212,5 +231,6 @@ export {
   CheckboxDisabledDemo,
   CheckboxIndeterminateDemo,
   CheckboxInvalidDemo,
+  CheckboxSizeDemo,
   CheckboxTableDemo,
 };

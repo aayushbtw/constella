@@ -37,6 +37,7 @@ Use the `size` prop to change the size of the switch.
 | --------- | ------- | ----- |
 | `sm`      | 24 × 14 | 12    |
 | `default` | 32 × 18 | 16    |
+| `lg`      | 40 × 22 | 20    |
 
 ```tsx
 <Switch size="sm" />

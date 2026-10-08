@@ -113,6 +113,7 @@ export const sizes = stylex.defineConsts({
   dialog: "384px",
   hitArea: "40px",
   icon: "16px",
+  iconLg: "20px",
   iconSm: "14px",
   iconXs: "12px",
   iconXxs: "8px",
