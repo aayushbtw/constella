@@ -18,22 +18,23 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 
 <!-- ::demo name="color-roles" -->
 
-| Token           | For                                      |
-| --------------- | ---------------------------------------- |
-| `textPrimary`   | Content                                  |
-| `textSecondary` | Supporting copy                          |
-| `textMuted`     | Labels and hints                         |
-| `fillSubtle`    | Hover                                    |
-| `fill`          | Selected                                 |
-| `fillStrong`    | Pressed                                  |
-| `edgeSubtle`    | Dividers                                 |
-| `edge`          | Control and box borders                  |
-| `accent`        | The one solid fill, with `onAccent` text |
-| `background`    | The page                                 |
-| `danger`        | Errors and destructive actions           |
-| `success`       | Completed actions                        |
-| `warning`       | Something needs attention                |
-| `info`          | Neutral news that isn't an error         |
+| Token | For |
+| --- | --- |
+| `textPrimary` | Content |
+| `textSecondary` | Supporting copy |
+| `textMuted` | Labels and hints |
+| `fillSubtle` | Hover |
+| `fill` | Selected |
+| `fillStrong` | Pressed |
+| `edgeSubtle` | Dividers |
+| `edge` | Control and box borders |
+| `accent` | The one solid fill, with `onAccent` text; the theme's brand color |
+| `inverted` | Tooltips: the ink surface, with `onInverted` text |
+| `background` | The page |
+| `danger` | Errors and destructive actions |
+| `success` | Completed actions |
+| `warning` | Something needs attention |
+| `info` | Neutral news that isn't an error |
 
 **Keep body text neutral on a status tint.** The base color marks the icon or label that carries the meaning.
 

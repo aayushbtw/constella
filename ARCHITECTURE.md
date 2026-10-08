@@ -57,13 +57,15 @@ Learned from Linear's move to StyleX ([Styling Linear for the future](https://li
 
 Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `packages/ui/src/lib/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
 
-Tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`.
+Fixed tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`, a popup takes `offsets`. Themeable tokens (`radii` but `full`, `sizes.control*`, `space` from `xs`) are `var()` references to variables `base.css` defaults, so JS never reads them.
 
 ## Theme
 
 Switched by a `.dark` class on `<html>`: Radix's dark scales are scoped to that class, and it's what shadcn and next-themes already set, so a consumer's existing toggle works. The site follows the system until the visitor picks one.
 
 Components never branch on the theme. Every color is a token valued by a Radix step, so the `.dark` class flips it. Not `light-dark()`: Lightning CSS lowers it to fallbacks that ignore the class, and the color comes out invalid.
+
+A brand theme is a `data-theme` value on `<html>`, beside `.dark`: a block of CSS variables (the accent and gray scales, `--accent-solid`, `--on-accent`, `--focus-ring`, radii, control heights, spacing) on `:root[data-theme]`, and the dark colors on `:root.dark[data-theme]`. Those selectors outrank Radix's `.dark` and the `base` layer's defaults whatever order the CSS loads in. No package: a consumer edits the variables by hand, or generates them on the site's theming page, whose builder ports Radix's custom palette generator (colorjs.io, bezier-easing) and never ships. A theme picks coarse presets (radius, scaling), not every token, because components compute nested values (concentric corners, keycap insets) from tokens.
 
 ## Lint
 

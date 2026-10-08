@@ -183,6 +183,7 @@ import {
   TextareaFieldDemo,
   TextareaInvalidDemo,
 } from "~/components/demos/textarea";
+import { ThemeBuilderDemo } from "~/components/demos/theme";
 import {
   ToastActionDemo,
   ToastDemo,
@@ -351,6 +352,7 @@ const demos = {
   "textarea-disabled": TextareaDisabledDemo,
   "textarea-field": TextareaFieldDemo,
   "textarea-invalid": TextareaInvalidDemo,
+  "theme-builder": ThemeBuilderDemo,
   tooltip: TooltipDemo,
   "tooltip-disabled": TooltipDisabledDemo,
   "tooltip-kbd": TooltipKbdDemo,
