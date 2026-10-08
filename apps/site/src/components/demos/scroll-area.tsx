@@ -57,6 +57,29 @@ const styles = stylex.create({
     paddingInlineStart: space.md,
     width: "max-content",
   },
+  sheet: { ...box, height: 240, maxWidth: "100%", width: 384 },
+  grid: {
+    borderCollapse: "collapse",
+    color: colors.textPrimary,
+    fontSize: fontSizes.sm,
+    fontVariantNumeric: "tabular-nums",
+  },
+  cell: {
+    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndStyle: "solid",
+    borderBlockEndWidth: strokes.border,
+    paddingBlockEnd: space.xs,
+    paddingBlockStart: space.xs,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
+    textAlign: "end",
+    whiteSpace: "nowrap",
+  },
+  head: {
+    color: colors.textSecondary,
+    fontWeight: fontWeights.medium,
+    textAlign: "start",
+  },
   tile: {
     backgroundColor: colors.fill,
     borderStartStartRadius: radii.sm,
@@ -103,4 +126,65 @@ function ScrollAreaHorizontalDemo() {
   );
 }
 
-export { ScrollAreaDemo, ScrollAreaHorizontalDemo };
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const regions = [
+  "North America",
+  "South America",
+  "Europe",
+  "Africa",
+  "Middle East",
+  "South Asia",
+  "East Asia",
+  "Oceania",
+  "Caribbean",
+  "Central Asia",
+];
+
+function ScrollAreaBothDemo() {
+  return (
+    <DemoRow>
+      <ScrollArea sx={styles.sheet}>
+        <table {...stylex.props(styles.grid)}>
+          <thead>
+            <tr>
+              <th {...stylex.props(styles.cell, styles.head)}>Region</th>
+              {months.map((month) => (
+                <th key={month} {...stylex.props(styles.cell, styles.head)}>
+                  {month}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {regions.map((region, row) => (
+              <tr key={region}>
+                <td {...stylex.props(styles.cell, styles.head)}>{region}</td>
+                {months.map((month, column) => (
+                  <td key={month} {...stylex.props(styles.cell)}>
+                    {((row + 3) * (column + 7) * 37) % 900}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </DemoRow>
+  );
+}
+
+export { ScrollAreaBothDemo, ScrollAreaDemo, ScrollAreaHorizontalDemo };

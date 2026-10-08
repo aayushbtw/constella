@@ -188,6 +188,7 @@ import {
   RadioGroupSizeDemo,
 } from "~/components/demos/radio-group";
 import {
+  ScrollAreaBothDemo,
   ScrollAreaDemo,
   ScrollAreaHorizontalDemo,
 } from "~/components/demos/scroll-area";
@@ -441,6 +442,7 @@ const demos = {
   "radio-group-invalid": RadioGroupInvalidDemo,
   "radio-group-size": RadioGroupSizeDemo,
   "scroll-area": ScrollAreaDemo,
+  "scroll-area-both": ScrollAreaBothDemo,
   "scroll-area-horizontal": ScrollAreaHorizontalDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,

@@ -76,9 +76,11 @@ Command
     └── CommandSeparator
 ```
 
+Add `disabled` to a `CommandItem` to show it but skip it, and a `CommandSeparator` between groups. Handle a pick with the item's `onClick`, which Enter fires too.
+
 ## Command Dialog
 
-Use `CommandDialog` for a palette over the page. It's named for screen readers by `title` and `description`.
+Use `CommandDialog` for a palette over the page, opened by a shortcut you listen for. It's named for screen readers by `title` and `description`. Close it when an item runs.
 
 <!-- ::demo name="command-dialog" -->
 

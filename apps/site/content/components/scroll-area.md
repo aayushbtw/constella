@@ -52,6 +52,17 @@ ScrollArea
 </ScrollArea>
 ```
 
+Add both for content wider and taller than the area, like a wide table. The corner between them stays clear.
+
+<!-- ::demo name="scroll-area-both" -->
+
+```tsx
+<ScrollArea sx={styles.sheet}>
+  <table>…</table>
+  <ScrollBar orientation="horizontal" />
+</ScrollArea>
+```
+
 ## API Reference
 
 | Part         | Adds                                                        |
