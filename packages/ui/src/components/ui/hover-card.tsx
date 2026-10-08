@@ -22,7 +22,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-type PreviewCardContentProps = Styled<PreviewCardPrimitive.Popup.Props> &
+type HoverCardContentProps = Styled<PreviewCardPrimitive.Popup.Props> &
   Pick<
     PreviewCardPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
@@ -72,25 +72,25 @@ const styles = stylex.create({
   },
 });
 
-function PreviewCard(props: PreviewCardPrimitive.Root.Props) {
+function HoverCard(props: PreviewCardPrimitive.Root.Props) {
   return <PreviewCardPrimitive.Root {...props} />;
 }
 
-function PreviewCardTrigger(props: PreviewCardPrimitive.Trigger.Props) {
+function HoverCardTrigger(props: PreviewCardPrimitive.Trigger.Props) {
   return (
-    <PreviewCardPrimitive.Trigger data-slot="preview-card-trigger" {...props} />
+    <PreviewCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
   );
 }
 
 /** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
-function PreviewCardContent({
+function HoverCardContent({
   align = "center",
   alignOffset = 0,
   side = "bottom",
   sideOffset = Number(offsets.popover),
   sx,
   ...props
-}: PreviewCardContentProps) {
+}: HoverCardContentProps) {
   return (
     <PreviewCardPrimitive.Portal>
       <PreviewCardPrimitive.Positioner
@@ -101,7 +101,7 @@ function PreviewCardContent({
         {...stylex.props(styles.positioner)}
       >
         <PreviewCardPrimitive.Popup
-          data-slot="preview-card-content"
+          data-slot="hover-card-content"
           {...props}
           {...stylex.props(styles.popup, sx)}
         />
@@ -110,5 +110,5 @@ function PreviewCardContent({
   );
 }
 
-export { PreviewCard, PreviewCardContent, PreviewCardTrigger };
-export type { PreviewCardContentProps };
+export { HoverCard, HoverCardContent, HoverCardTrigger };
+export type { HoverCardContentProps };

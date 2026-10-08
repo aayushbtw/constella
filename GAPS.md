@@ -34,7 +34,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 ### Disclosure
 
 - [x] **Collapsible**: tool steps, reasoning.
-- [x] **PreviewCard**: a citation's preview on hover.
+- [x] **HoverCard**: a citation's preview on hover.
 - [x] **Command**: a searchable palette and list, for chat search and the model picker.
 - [x] **ScrollArea**.
 
@@ -65,7 +65,7 @@ netigen builds these today. Each could become a Constella part once the componen
 - [ ] **Tool steps**: a collapsible list of steps, each with a status and a live label.
 - [ ] **Suggestions**: starter prompts as chips.
 - [ ] **Attachment**: a file tile with upload progress.
-- [ ] **Citation**: a pill that opens a PreviewCard.
+- [ ] **Citation**: a pill that opens a HoverCard.
 - [ ] **Model picker**: a Command of models with their details.
 - [ ] **Approval**: a card asking to allow a tool call.
 - [ ] **Questionnaire**: questions the model asks, one at a time.

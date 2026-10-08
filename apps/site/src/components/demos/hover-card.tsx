@@ -3,10 +3,10 @@ import * as stylex from "@stylexjs/stylex";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonStyles } from "@/components/ui/button";
 import {
-  PreviewCard,
-  PreviewCardContent,
-  PreviewCardTrigger,
-} from "@/components/ui/preview-card";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import {
   colors,
   fontSizes,
@@ -28,17 +28,17 @@ const styles = stylex.create({
   muted: { color: colors.textMuted, fontSize: fontSizes.xs },
 });
 
-function PreviewCardDemo() {
+function HoverCardDemo() {
   return (
     <DemoRow>
-      <PreviewCard>
-        <PreviewCardTrigger
+      <HoverCard>
+        <HoverCardTrigger
           href="https://nextjs.org"
           {...stylex.props(buttonStyles({ variant: "link" }))}
         >
           @nextjs
-        </PreviewCardTrigger>
-        <PreviewCardContent>
+        </HoverCardTrigger>
+        <HoverCardContent>
           <div {...stylex.props(styles.row)}>
             <Avatar>
               <AvatarImage alt="" src="https://github.com/vercel.png" />
@@ -52,10 +52,10 @@ function PreviewCardDemo() {
               <div {...stylex.props(styles.muted)}>Joined December 2021</div>
             </div>
           </div>
-        </PreviewCardContent>
-      </PreviewCard>
+        </HoverCardContent>
+      </HoverCard>
     </DemoRow>
   );
 }
 
-export { PreviewCardDemo };
+export { HoverCardDemo };
