@@ -151,6 +151,8 @@ export const sizes = stylex.defineConsts({
   // A centered block of short text, like an empty state's.
   measure: "384px",
   popover: "288px",
+  // A side panel beside the content.
+  sidePanel: "400px",
   thumb: "12px",
   toast: "356px",
   tooltip: "320px",

@@ -76,6 +76,8 @@ A scroll area's scrollbar is an overlay: a 10px rail with an `edge` thumb on ful
 
 An alert dialog wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
 
+A side panel is part of the layout, not a layer: it opens into a slot beside the content on the page's `background`, split by an `edgeSubtle` hairline, so the content narrows instead of being covered. It's non-modal, so the list beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.

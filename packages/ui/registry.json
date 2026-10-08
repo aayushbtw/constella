@@ -405,6 +405,28 @@
       ]
     },
     {
+      "name": "side-panel",
+      "type": "registry:ui",
+      "title": "Side Panel",
+      "description": "A non-modal panel that opens beside the content, split by a hairline.",
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/side-panel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
