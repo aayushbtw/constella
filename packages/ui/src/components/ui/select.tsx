@@ -86,7 +86,19 @@ const styles = stylex.create({
     borderInlineStartWidth: strokes.border,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
+    boxShadow: {
+      default: shadows.control,
+      // Repeated inside the media block, which StyleX ranks above the bare conditions.
+      [media.hover]: {
+        default: shadows.control,
+        [`:hover:not(:disabled, :active):not(${invalid})`]:
+          shadows.controlHover,
+        [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
+        [invalid]: shadows.invalid,
+      },
+      [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
+      [invalid]: shadows.invalid,
+    },
     boxSizing: "border-box",
     color: colors.textPrimary,
     cursor: { default: "pointer", [disabled]: "not-allowed" },

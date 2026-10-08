@@ -163,7 +163,10 @@ const styles = stylex.create({
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
     backgroundColor: colors.accent,
-    boxShadow: shadows.primary,
+    boxShadow: {
+      default: shadows.primary,
+      ":active:not(:disabled)": shadows.primaryPressed,
+    },
     color: colors.onAccent,
     opacity: {
       ...interactive<number | string>(1, opacities.hover),
@@ -180,7 +183,17 @@ const styles = stylex.create({
     backgroundColor: interactive(colors.background, colors.fillSubtle),
     borderBlockColor: colors.edge,
     borderInlineColor: colors.edge,
-    boxShadow: shadows.control,
+    // The press repeats inside the media block, which StyleX ranks above a bare `:active`.
+    boxShadow: {
+      default: shadows.control,
+      ":is([data-popup-open])": shadows.controlHover,
+      [media.hover]: {
+        default: shadows.control,
+        ":hover:not(:disabled, :active)": shadows.controlHover,
+        ":active:not(:disabled)": shadows.controlPressed,
+      },
+      ":active:not(:disabled)": shadows.controlPressed,
+    },
     color: colors.textPrimary,
   },
   ghost: {

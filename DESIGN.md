@@ -24,7 +24,7 @@ A theme switch cross-fades the whole page as one (a view transition, on the `cro
 
 ## Surfaces
 
-Controls (buttons, inputs) have a real border and a light `shadows.control`. The edge takes space, so what the user sees is what's laid out. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill paints under the translucent edge and muddies it, and bleeds through anti-aliased corners.
+Controls (buttons, inputs) have a real border for their edge and a shadow for their height: the edge takes space, so what the user sees is what's laid out, and a shadow ring would draw outside the box, look 2px larger and double up at a button group's seams. The height is a ladder of soft drops with no ring: `shadows.control` at rest, `controlHover` a step higher, `controlPressed` nearly flat while held, and `primary`/`primaryPressed` for the solid fill. Only pressables climb it (an outline button, a select trigger); a field stays at rest. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill paints under the translucent edge and muddies it, and bleeds through anti-aliased corners.
 
 Controls have fixed heights from `sizes.control*`, so a button and an input in one row line up. Text steps down with the height like a button's (13px at `sm`, 14px from `default`), but an input keeps 16px below 640px so iOS doesn't zoom on focus. Text fields stop at `sm`: at 24px a typed line has no room above and below.
 

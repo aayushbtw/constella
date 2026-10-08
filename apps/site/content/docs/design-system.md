@@ -94,12 +94,12 @@ Controls take a fixed height, so a button and an input in one row line up.
 
 ### Shadow
 
-| Token     | For                                                            |
-| --------- | -------------------------------------------------------------- |
-| `control` | Under a bordered control                                       |
+| Token | For |
+| --- | --- |
+| `control` | Under a bordered control at rest; `controlHover` and `controlPressed` for a pressable |
 | `popover` | Floating surfaces; it draws their edge, so they need no border |
-| `dialog`  | A dialog: the same edge, and a farther shadow                  |
-| `primary` | The primary button: a lit top edge, a shaded bottom one        |
+| `dialog` | A dialog: the same edge, and a farther shadow |
+| `primary` | The primary button: a lit top edge, a shaded bottom one |
 
 ## Motion
 

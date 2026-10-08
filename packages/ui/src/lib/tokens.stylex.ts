@@ -62,7 +62,11 @@ export const avatarVars = stylex.defineVars({
 });
 
 export const shadows = stylex.defineConsts({
-  control: "0 1px 2px var(--black-a1)",
+  // The ladder under a bordered control: the border is its edge, these its height. It
+  // rises a step on hover and settles flat while pressed.
+  control: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
+  controlHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
+  controlPressed: "0 1px 1px -1px var(--black-a2)",
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   dialog:
     "0 0 0 1px var(--neutral-a4), 0 2px 6px var(--black-a2), 0 24px 56px -8px var(--black-a6)",
@@ -71,7 +75,9 @@ export const shadows = stylex.defineConsts({
     "0 0 0 1px var(--neutral-a4), 0 1px 3px var(--black-a2), 0 8px 24px -4px var(--black-a5)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
   primary:
-    "inset 0 1px 0 var(--white-a3), inset 0 -1px 0 var(--black-a3), 0 1px 2px var(--black-a3)",
+    "inset 0 1px 0 var(--white-a3), inset 0 -1px 0 var(--black-a3), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
+  primaryPressed:
+    "inset 0 1px 0 var(--white-a3), inset 0 -1px 0 var(--black-a3), 0 1px 1px -1px var(--black-a3)",
   thumb: "0 0 0 1px var(--neutral-a6), 0 1px 3px var(--black-a5)",
 });
 
