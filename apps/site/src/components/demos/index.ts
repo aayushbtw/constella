@@ -71,6 +71,11 @@ import {
   DropdownMenuSubmenuDemo,
 } from "~/components/demos/dropdown-menu";
 import {
+  EmptyAvatarDemo,
+  EmptyCardDemo,
+  EmptyDemo,
+} from "~/components/demos/empty";
+import {
   FieldCardDemo,
   FieldDemo,
   FieldDisabledDemo,
@@ -281,6 +286,9 @@ const demos = {
   "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
   "dropdown-menu-sizes": DropdownMenuSizesDemo,
   "dropdown-menu-submenu": DropdownMenuSubmenuDemo,
+  empty: EmptyDemo,
+  "empty-avatar": EmptyAvatarDemo,
+  "empty-card": EmptyCardDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,
   "field-disabled": FieldDisabledDemo,

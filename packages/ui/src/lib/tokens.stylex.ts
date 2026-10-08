@@ -148,6 +148,8 @@ export const sizes = stylex.defineConsts({
   media: "40px",
   menu: "144px",
   menuHeight: "320px",
+  // A centered block of short text, like an empty state's.
+  measure: "384px",
   popover: "288px",
   thumb: "12px",
   toast: "356px",

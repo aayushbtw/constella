@@ -60,6 +60,8 @@ A card is a box in the layout, so it takes a real `edge` border, not a shadow, a
 
 An item is a row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `edge` when `outline`, and has `fillSubtle` when `muted`. Only an item rendered as a link or button answers: `fillSubtle` on hover, `presses.row` held. Its media sits level with the title's first line when there's a description, and an image follows the control heights (`media` 40, then 32 and 24). Items with separators between them drop their gap and let their own padding space them.
 
+An empty state is centered, balanced text in a short measure (`sizes.measure`), led by its media: an icon on a `fill` tile a control tall, or an avatar as it is. It draws no box of its own, so it sits in whatever holds its place, a card or a page.
+
 On the site, the demo stage is the stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
 
 The sidebar sits on `sidebar`, a step off the page, so it reads as the frame and the page as the content. Its current item takes `fill`, as a selected table row does, and a resting track, avatar or user message takes `fillOpaque`: one role per meaning, not per component.
