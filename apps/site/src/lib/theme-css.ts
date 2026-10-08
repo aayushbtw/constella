@@ -4,14 +4,31 @@ import Color from "colorjs.io";
 import { generatePalette } from "~/lib/palette";
 import type { Palette } from "~/lib/palette";
 
-const grayFlavors = {
-  gray: RadixColors.gray.gray9,
-  mauve: RadixColors.mauve.mauve9,
-  olive: RadixColors.olive.olive9,
-  sage: RadixColors.sage.sage9,
-  sand: RadixColors.sand.sand9,
-  slate: RadixColors.slate.slate9,
+// Named after stars, each hinting at its color. A theme is colors only: its grays and a
+// default accent; radius and sizing are chosen on top. Polaris, the fixed point the rest are
+// read from, is the default that base.css ships, so it emits only what changes.
+const themes = {
+  polaris: {
+    accent: "#111111",
+    description: "Neutral gray, ink accent. The default.",
+    gray: RadixColors.gray.gray9,
+    label: "Polaris",
+  },
+  vega: {
+    accent: "#3e63dd",
+    description: "Cool slate grays, indigo accent. A blue-white star.",
+    gray: RadixColors.slate.slate9,
+    label: "Vega",
+  },
+  antares: {
+    accent: "#f76b15",
+    description: "Warm sand grays, orange accent. A red supergiant.",
+    gray: RadixColors.sand.sand9,
+    label: "Antares",
+  },
 } as const;
+
+const defaultTheme = "polaris";
 
 // The control radius; base.css derives the rest from it.
 const radiusPresets = {
@@ -37,18 +54,17 @@ const scalingPresets = {
   },
 } as const;
 
-type GrayFlavor = keyof typeof grayFlavors;
+type ThemeName = keyof typeof themes;
 type RadiusPreset = keyof typeof radiusPresets;
 type ScalingPreset = keyof typeof scalingPresets;
 
 interface ThemeOptions {
   /** Any CSS color. Near-gray reads as monochrome: the accent becomes the gray ink. */
   accent: string;
-  gray: GrayFlavor;
-  /** The `data-theme` value on `<html>`. */
-  name: string;
   radius: RadiusPreset;
   scaling: ScalingPreset;
+  /** Its colors, and the `data-theme` value on `<html>`. */
+  theme: ThemeName;
 }
 
 const backgrounds = { dark: "#111111", light: "#ffffff" } as const;
@@ -64,10 +80,15 @@ function steps(prefix: string, values: string[]) {
   return values.map((value, index) => `  --${prefix}-${index + 1}: ${value};`);
 }
 
-function colorLines(palette: Palette, wide: boolean) {
+function grayLines(palette: Palette, wide: boolean) {
   return [
     ...steps("gray", wide ? palette.grayP3 : palette.gray),
     ...steps("gray-a", wide ? palette.grayAlphaP3 : palette.grayAlpha),
+  ];
+}
+
+function accentLines(palette: Palette, wide: boolean) {
+  return [
     ...steps("accent", wide ? palette.accentP3 : palette.accent),
     ...steps("accent-a", wide ? palette.accentAlphaP3 : palette.accentAlpha),
     ...(wide ? [] : [`  --accent-contrast: ${palette.accentContrast};`]),
@@ -82,76 +103,93 @@ function block(selector: string, lines: string[], indent = "") {
   ].join("\n");
 }
 
-function roleLines(mono: boolean) {
-  return mono
-    ? [
-        "  --accent-solid: var(--gray-12);",
-        "  --on-accent: var(--gray-1);",
-        "  --focus-ring: var(--gray-a8);",
-        "  --selection: var(--gray-a5);",
-      ]
-    : [
-        "  --accent-solid: var(--accent-9);",
-        "  --on-accent: var(--accent-contrast);",
-        "  --focus-ring: var(--accent-a8);",
-        "  --selection: var(--accent-a5);",
-      ];
-}
+// The accent takes over the roles that carry it; a monochrome one leaves base.css's ink.
+const accentRoles = [
+  "  --accent-solid: var(--accent-9);",
+  "  --on-accent: var(--accent-contrast);",
+  "  --focus-ring: var(--accent-a8);",
+  "  --selection: var(--accent-a5);",
+];
 
+// Only what differs from base.css, so a theme's CSS says what makes it itself.
 function layoutLines(radius: RadiusPreset, scaling: ScalingPreset) {
   const { controls, space } = scalingPresets[scaling];
   return [
-    `  --radius: ${radiusPresets[radius]}px;`,
-    ...Object.entries(controls).map(
-      ([size, value]) => `  --size-control-${size}: ${value}px;`
-    ),
-    ...Object.entries(space).map(
-      ([size, value]) => `  --space-${size}: ${value}px;`
-    ),
+    ...(radius === "medium" ? [] : [`  --radius: ${radiusPresets[radius]}px;`]),
+    ...(scaling === "default"
+      ? []
+      : [
+          ...Object.entries(controls).map(
+            ([size, value]) => `  --size-control-${size}: ${value}px;`
+          ),
+          ...Object.entries(space).map(
+            ([size, value]) => `  --space-${size}: ${value}px;`
+          ),
+        ]),
   ];
 }
 
 /** A theme's CSS: put it in your global CSS and set `data-theme` on `<html>`. */
-function generateThemeCss({
-  accent,
-  gray,
-  name,
-  radius,
-  scaling,
-}: ThemeOptions) {
+function generateThemeCss({ accent, radius, scaling, theme }: ThemeOptions) {
+  const { gray } = themes[theme];
+  const ownGrays = theme !== defaultTheme;
+  const mono = isMonochrome(accent);
+
   const light = generatePalette({
     accent,
     appearance: "light",
     background: backgrounds.light,
-    gray: grayFlavors[gray],
+    gray,
   });
   const dark = generatePalette({
     accent,
     appearance: "dark",
     background: backgrounds.dark,
-    gray: grayFlavors[gray],
+    gray,
   });
 
-  const lightSelector = `:root[data-theme="${name}"]`;
-  const darkSelector = `:root.dark[data-theme="${name}"]`;
+  const colors = (palette: Palette, wide: boolean) => [
+    ...(ownGrays ? grayLines(palette, wide) : []),
+    ...(mono ? [] : accentLines(palette, wide)),
+  ];
+  const lightLines = [
+    ...(mono ? [] : accentRoles),
+    ...layoutLines(radius, scaling),
+    ...colors(light, false),
+  ];
+
+  const header = `/* Constella theme "${theme}": ${accent}, ${radius} radius, ${scaling} sizing */`;
+  if (lightLines.length === 0) {
+    return `/* Constella theme "${theme}" is the default: no CSS needed. */\n`;
+  }
+
+  const lightSelector = `:root[data-theme="${theme}"]`;
+  const darkSelector = `:root.dark[data-theme="${theme}"]`;
+  const hasColors = colors(light, false).length > 0;
 
   return [
-    `/* Constella theme "${name}": ${accent}, ${gray}, ${radius} radius, ${scaling} */`,
-    block(lightSelector, [
-      ...roleLines(isMonochrome(accent)),
-      ...layoutLines(radius, scaling),
-      ...colorLines(light, false),
-    ]),
-    block(darkSelector, colorLines(dark, false)),
-    "@supports (color: color(display-p3 1 1 1)) {",
-    "  @media (color-gamut: p3) {",
-    block(lightSelector, colorLines(light, true), "    "),
-    block(darkSelector, colorLines(dark, true), "    "),
-    "  }",
-    "}",
+    header,
+    block(lightSelector, lightLines),
+    ...(hasColors
+      ? [
+          block(darkSelector, colors(dark, false)),
+          "@supports (color: color(display-p3 1 1 1)) {",
+          "  @media (color-gamut: p3) {",
+          block(lightSelector, colors(light, true), "    "),
+          block(darkSelector, colors(dark, true), "    "),
+          "  }",
+          "}",
+        ]
+      : []),
     "",
   ].join("\n");
 }
 
-export { generateThemeCss, grayFlavors, radiusPresets, scalingPresets };
-export type { GrayFlavor, RadiusPreset, ScalingPreset, ThemeOptions };
+export {
+  defaultTheme,
+  generateThemeCss,
+  radiusPresets,
+  scalingPresets,
+  themes,
+};
+export type { RadiusPreset, ScalingPreset, ThemeName, ThemeOptions };

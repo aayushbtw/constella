@@ -49,7 +49,7 @@
   }
 
   /* Every role is its own variable, valued by a scale step, so a theme can regenerate the
-     scales or override one role by hand. Unthemed, the accent is the gray ink. A theme sets
+     scales or override one role by hand. These defaults are Polaris, the default theme: gray, ink accent. A theme sets
      these on `:root[data-theme]`, which outranks this layer. */
   :root {
     --background: var(--gray-1);

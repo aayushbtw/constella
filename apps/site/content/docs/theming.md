@@ -8,18 +8,30 @@ A theme is a block of CSS variables scoped to a `data-theme` value on `<html>`. 
 
 ## Theme builder
 
-Pick an accent and the rest, then copy the CSS. The page wears the theme while you build it.
+Pick a theme, then change its accent, radius and sizing if you like, and copy the CSS. The page wears the theme while you build it.
 
 <!-- ::demo name="theme-builder" -->
 
-The accent becomes two 12-step scales, light and dark, matched to the nearest [Radix Colors](https://www.radix-ui.com/colors) scales. A near-gray accent stays monochrome: the solid fill is the gray ink, as in the default theme.
+The accent becomes two 12-step scales, light and dark, matched to the nearest [Radix Colors](https://www.radix-ui.com/colors) scales. A near-gray accent stays monochrome: the solid fill is the gray ink, as in Polaris.
+
+## Themes
+
+Themes are named after stars, each hinting at its color. A theme sets colors only: its grays and a default accent. Radius and sizing are yours to pick on top.
+
+| Theme     | Grays | Accent | Note                                   |
+| --------- | ----- | ------ | -------------------------------------- |
+| `polaris` | Gray  | Ink    | The default; ships in `base.css`       |
+| `vega`    | Slate | Indigo | A blue-white star                      |
+| `antares` | Sand  | Orange | A red supergiant, kept clear of danger |
+
+Polaris needs no CSS. Set `data-theme="polaris"` or nothing at all; the builder writes only what you change from it.
 
 ## Usage
 
 Paste the CSS into your global stylesheet, then set the theme on `<html>`.
 
 ```tsx
-<html data-theme="brand" lang="en">
+<html data-theme="vega" lang="en">
   <body>{children}</body>
 </html>
 ```
@@ -27,7 +39,7 @@ Paste the CSS into your global stylesheet, then set the theme on `<html>`.
 Ship as many themes as you like and switch between them by changing the attribute. Dark mode is still the `.dark` class, so every theme works in both.
 
 ```ts
-document.documentElement.dataset.theme = "midnight";
+document.documentElement.dataset.theme = "antares";
 ```
 
 **Set the theme on `<html>`, not a subtree.** Popups render in a portal at the end of `<body>`, so they only see a theme set on the root.
@@ -39,7 +51,7 @@ document.documentElement.dataset.theme = "midnight";
 Every color a component uses is a role, and every role is a variable valued by a scale step. Override one by hand to change just that role, in light and dark.
 
 ```css
-:root[data-theme="brand"] {
+:root[data-theme="vega"] {
   --edge: var(--gray-a7);
 }
 ```

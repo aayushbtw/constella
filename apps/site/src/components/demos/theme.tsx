@@ -31,17 +31,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { colors, fontSizes, radii, sizes, space } from "@/lib/tokens.stylex";
 import { DemoControls, Stage } from "~/components/demos/frame";
 import { CopyButton } from "~/components/docs/copy-button";
-import { generateThemeCss } from "~/lib/theme-css";
-import type { GrayFlavor, RadiusPreset, ScalingPreset } from "~/lib/theme-css";
+import { defaultTheme, generateThemeCss, themes } from "~/lib/theme-css";
+import type { RadiusPreset, ScalingPreset, ThemeName } from "~/lib/theme-css";
 import { fonts, lineHeights, shadows } from "~/lib/tokens.stylex";
-
-const presets = [
-  { color: "#111111", name: "Ink" },
-  { color: "#3e63dd", name: "Indigo" },
-  { color: "#6e56cf", name: "Violet" },
-  { color: "#12a594", name: "Teal" },
-  { color: "#f76b15", name: "Orange" },
-] as const;
 
 const radiusLabels = {
   large: "Large",
@@ -55,17 +47,6 @@ const scalingLabels = {
   default: "Default",
   spacious: "Spacious",
 } satisfies Record<ScalingPreset, string>;
-
-const grayLabels = {
-  gray: "Gray",
-  mauve: "Mauve",
-  olive: "Olive",
-  sage: "Sage",
-  sand: "Sand",
-  slate: "Slate",
-} satisfies Record<GrayFlavor, string>;
-
-const slug = /^[a-z][a-z0-9-]*$/u;
 
 const styles = stylex.create({
   preview: {
@@ -150,23 +131,27 @@ function useLiveTheme(name: string) {
   }, [name]);
 }
 
+const themeNames = Object.keys(themes).filter((name): name is ThemeName =>
+  Object.hasOwn(themes, name)
+);
+
 function ThemeBuilderDemo() {
-  const [accentInput, setAccentInput] = useState<string>(presets[1].color);
-  const [gray, setGray] = useState<GrayFlavor>("slate");
+  const [theme, setTheme] = useState<ThemeName>(defaultTheme);
+  const [accentInput, setAccentInput] = useState<string>(
+    themes[defaultTheme].accent
+  );
   const [radius, setRadius] = useState<RadiusPreset>("medium");
   const [scaling, setScaling] = useState<ScalingPreset>("default");
-  const [nameInput, setNameInput] = useState("brand");
 
   const parsed = parseColor(accentInput);
-  const [accent, setAccent] = useState(parsed ?? presets[1].color);
+  const [accent, setAccent] = useState(parsed ?? themes[defaultTheme].accent);
   if (parsed !== null && parsed !== accent) {
     setAccent(parsed);
   }
-  const name = slug.test(nameInput) ? nameInput : "brand";
 
-  const options = useDeferredValue({ accent, gray, name, radius, scaling });
+  const options = useDeferredValue({ accent, radius, scaling, theme });
   const css = useMemo(() => generateThemeCss(options), [options]);
-  useLiveTheme(options.name);
+  useLiveTheme(options.theme);
 
   return (
     <>
@@ -205,20 +190,22 @@ function ThemeBuilderDemo() {
       </Stage>
       <DemoControls>
         <div {...stylex.props(styles.presets)}>
-          {presets.map((preset) => (
+          {themeNames.map((name) => (
             <Button
-              key={preset.name}
+              key={name}
               onClick={() => {
-                setAccentInput(preset.color);
+                setTheme(name);
+                setAccentInput(themes[name].accent);
               }}
               size="sm"
-              variant={accent === preset.color ? "secondary" : "ghost"}
+              title={themes[name].description}
+              variant={theme === name ? "secondary" : "ghost"}
             >
               <span
                 data-icon="inline-start"
-                {...stylex.props(styles.swatch(preset.color))}
+                {...stylex.props(styles.swatch(themes[name].accent))}
               />
-              {preset.name}
+              {themes[name].label}
             </Button>
           ))}
         </div>
@@ -237,29 +224,6 @@ function ThemeBuilderDemo() {
               value={accentInput}
             />
           </InputGroup>
-        </Field>
-        <Field>
-          <FieldLabel>Gray</FieldLabel>
-          <Select
-            items={grayLabels}
-            onValueChange={(value) => {
-              if (value !== null) {
-                setGray(value);
-              }
-            }}
-            value={gray}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(grayLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </Field>
         <Field>
           <FieldLabel>Radius</FieldLabel>
@@ -285,7 +249,7 @@ function ThemeBuilderDemo() {
           </Select>
         </Field>
         <Field>
-          <FieldLabel>Scaling</FieldLabel>
+          <FieldLabel>Sizing</FieldLabel>
           <Select
             items={scalingLabels}
             onValueChange={(value) => {
@@ -306,17 +270,6 @@ function ThemeBuilderDemo() {
               ))}
             </SelectContent>
           </Select>
-        </Field>
-        <Field>
-          <FieldLabel>Name</FieldLabel>
-          <Input
-            aria-invalid={!slug.test(nameInput)}
-            onChange={(event) => {
-              setNameInput(event.target.value);
-            }}
-            spellCheck={false}
-            value={nameInput}
-          />
         </Field>
       </DemoControls>
       <div {...stylex.props(styles.output)}>
