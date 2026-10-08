@@ -9,7 +9,9 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createContext, useContext } from "react";
 
+import { useSkipMotion } from "@/lib/motion";
 import {
   colors,
   durations,
@@ -50,7 +52,9 @@ const disabled = ":is(:disabled, [data-disabled])";
 const offstage = ":is([data-starting-style], [data-ending-style])";
 // Over the trigger, the popup opens in place, so it doesn't travel.
 const aligned = ":is([data-side='none'])";
-const closing = ":is([data-ending-style]):not([data-side='none'])";
+const closing =
+  ":is([data-ending-style]):not([data-side='none'], [data-skip-motion])";
+const instant = ":is([data-skip-motion])";
 
 // In a ButtonGroup, the neighbor before draws the shared edge, or the separator does.
 const joined = ":not(:first-child, [data-slot='button-group-separator'] + *)";
@@ -97,6 +101,9 @@ const joinedEdges = {
     [joined]: `calc(${strokes.border} * ${joins.inline})`,
   },
 };
+
+// Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
+const maxHeight = `min(var(--available-height), ${sizes.menuHeight})`;
 
 // shadcn's padding, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -168,6 +175,7 @@ const styles = stylex.create({
     boxShadow: shadows.popover,
     boxSizing: "border-box",
     color: colors.textPrimary,
+    maxHeight,
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: "scale(0.96)" },
@@ -178,6 +186,7 @@ const styles = stylex.create({
       default: durations.popover,
       [closing]: durations.popoverExit,
       [aligned]: "0s",
+      [instant]: "0s",
     },
     transitionProperty: {
       default: "opacity, transform",
@@ -187,7 +196,7 @@ const styles = stylex.create({
   },
   list: {
     boxSizing: "border-box",
-    maxHeight: "var(--available-height)",
+    maxHeight,
     overflowY: "auto",
     padding: space.xxs,
     position: "relative",
@@ -270,7 +279,19 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
-const Select = SelectPrimitive.Root;
+const SkipMotion = createContext(false);
+
+function Select<Value, Multiple extends boolean | undefined = false>({
+  onOpenChange,
+  ...props
+}: SelectPrimitive.Root.Props<Value, Multiple>) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  return (
+    <SkipMotion value={skip}>
+      <SelectPrimitive.Root onOpenChange={handleOpenChange} {...props} />
+    </SkipMotion>
+  );
+}
 
 function SelectGroup(props: SelectPrimitive.Group.Props) {
   return <SelectPrimitive.Group data-slot="select-group" {...props} />;
@@ -349,6 +370,7 @@ function SelectContent({
   sx,
   ...props
 }: SelectContentProps) {
+  const skip = useContext(SkipMotion);
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Positioner
@@ -360,6 +382,7 @@ function SelectContent({
         {...stylex.props(styles.positioner)}
       >
         <SelectPrimitive.Popup
+          data-skip-motion={skip || undefined}
           data-slot="select-content"
           {...props}
           {...stylex.props(styles.popup, sx)}

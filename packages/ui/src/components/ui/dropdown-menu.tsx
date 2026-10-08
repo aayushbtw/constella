@@ -4,9 +4,10 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import type { ComponentProps } from "react";
 
+import { useSkipMotion } from "@/lib/motion";
 import {
   colors,
   durations,
@@ -176,22 +177,6 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 
 const SkipMotion = createContext(false);
 
-// Base UI skips motion only for Enter, Space and Esc; arrow keys and a picked item should too.
-function useSkipMotion(onOpenChange: MenuPrimitive.Root.Props["onOpenChange"]) {
-  const inherited = useContext(SkipMotion);
-  const [skip, setSkip] = useState(false);
-  function handleOpenChange(
-    open: boolean,
-    details: MenuPrimitive.Root.ChangeEventDetails
-  ) {
-    setSkip(
-      details.reason === "list-navigation" || details.reason === "item-press"
-    );
-    onOpenChange?.(open, details);
-  }
-  return [inherited || skip, handleOpenChange] as const;
-}
-
 function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
@@ -285,9 +270,10 @@ function DropdownMenuSub({
   onOpenChange,
   ...props
 }: MenuPrimitive.SubmenuRoot.Props) {
+  const inherited = useContext(SkipMotion);
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
-    <SkipMotion value={skip}>
+    <SkipMotion value={inherited || skip}>
       <MenuPrimitive.SubmenuRoot
         data-slot="dropdown-menu-sub"
         onOpenChange={handleOpenChange}

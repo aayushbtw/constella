@@ -18,6 +18,10 @@
         {
           "path": "src/lib/base.css",
           "type": "registry:lib"
+        },
+        {
+          "path": "src/lib/motion.ts",
+          "type": "registry:lib"
         }
       ],
       "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://constella.aayush.cv/docs/installation"
