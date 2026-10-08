@@ -160,6 +160,25 @@
     }
   }
 
+  /* StyleX can't style a child it didn't render, so an alert's icon sits beside its title,
+     centered on the title's 20px line, and takes its status here. */
+  :where([data-slot="alert"]) > :where(svg) {
+    grid-row: span 2;
+    translate: 0 2px;
+  }
+  :where([data-slot="alert"][data-status="success"]) > :where(svg) {
+    color: var(--success);
+  }
+  :where([data-slot="alert"][data-status="info"]) > :where(svg) {
+    color: var(--info);
+  }
+  :where([data-slot="alert"][data-status="warning"]) > :where(svg) {
+    color: var(--warning);
+  }
+  :where([data-slot="alert"][data-status="danger"]) > :where(svg) {
+    color: var(--danger);
+  }
+
   /* StyleX can't style a child it didn't render, so an item's image fills its media box here. */
   :where([data-slot="item-media"][data-variant="image"]) > :where(img) {
     height: 100%;

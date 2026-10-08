@@ -129,6 +129,8 @@ Interface motion stays under 300ms. A spinner is the exception: unhurried, so wa
 
 The home page is the one exception, seen rarely and there to sell: on the first document load the logo spins in and the page staggers in inside that spin, landing as it settles. It never replays on client navigation.
 
+A skeleton breathes, `fill` dimming to `opacities.pulse` and back over `durations.pulse` on `inOut`: slow and in place, so loading reads as calm. It doesn't move, so it keeps breathing under reduced motion.
+
 Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no blur-ins, no timers drawing on screen, and no bounce on a surface or anything that travels far. `overshoot` is only for a small mark landing where it already almost is.
 
 ### Crossfades

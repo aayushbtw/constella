@@ -182,6 +182,8 @@ export const layers = stylex.defineConsts({
 
 export const opacities = stylex.defineConsts({
   busy: "0.8",
+  // A skeleton at the low point of its pulse.
+  pulse: "0.5",
   disabled: "0.6",
   hover: "0.88",
 });
@@ -214,6 +216,8 @@ export const durations = stylex.defineConsts({
   press: "160ms",
   layout: "300ms",
   spin: "1s",
+  // One breath of a skeleton: slow, so loading reads as calm.
+  pulse: "2s",
   crossfade: "300ms",
   dialog: "200ms",
   tooltipDelay: "300ms",

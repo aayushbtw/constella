@@ -35,6 +35,20 @@
       "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://constella.aayush.cv/docs/installation"
     },
     {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A callout with an icon, a title, a description and an action, its status on the icon.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
@@ -258,6 +272,20 @@
       "files": [
         {
           "path": "src/components/ui/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "A pulsing placeholder for content still loading.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/skeleton.tsx",
           "type": "registry:ui"
         }
       ]

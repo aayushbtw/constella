@@ -1,6 +1,11 @@
 import type { ComponentType } from "react";
 
 import {
+  AlertActionDemo,
+  AlertDemo,
+  AlertStatusDemo,
+} from "~/components/demos/alert";
+import {
   AvatarBadgeDemo,
   AvatarBadgeIconDemo,
   AvatarDemo,
@@ -169,6 +174,7 @@ import {
   SeparatorMenuDemo,
   SeparatorVerticalDemo,
 } from "~/components/demos/separator";
+import { SkeletonCardDemo, SkeletonDemo } from "~/components/demos/skeleton";
 import {
   SliderDemo,
   SliderDisabledDemo,
@@ -227,6 +233,9 @@ import {
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
+  alert: AlertDemo,
+  "alert-action": AlertActionDemo,
+  "alert-status": AlertStatusDemo,
   avatar: AvatarDemo,
   "avatar-badge": AvatarBadgeDemo,
   "avatar-badge-icon": AvatarBadgeIconDemo,
@@ -366,6 +375,8 @@ const demos = {
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,
   "separator-vertical": SeparatorVerticalDemo,
+  skeleton: SkeletonDemo,
+  "skeleton-card": SkeletonCardDemo,
   slider: SliderDemo,
   "slider-disabled": SliderDisabledDemo,
   "slider-input": SliderInputDemo,
