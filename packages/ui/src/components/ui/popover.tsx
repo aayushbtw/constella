@@ -14,6 +14,7 @@ import {
   lineHeights,
   media,
   motion,
+  offsets,
   radii,
   shadows,
   sizes,
@@ -109,8 +110,7 @@ function PopoverContent({
   align = "center",
   alignOffset = 0,
   side = "bottom",
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("4px")` is NaN
-  sideOffset = Number.parseFloat(space.xxs),
+  sideOffset = Number(offsets.popover),
   sx,
   ...props
 }: PopoverContentProps) {

@@ -17,6 +17,7 @@ import {
   layers,
   media,
   motion,
+  offsets,
   opacities,
   radii,
   shadows,
@@ -213,8 +214,7 @@ function DropdownMenuContent({
   align = "start",
   alignOffset = 0,
   side = "bottom",
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("4px")` is NaN
-  sideOffset = Number.parseFloat(space.xxs),
+  sideOffset = Number(offsets.popover),
   sx,
   ...props
 }: DropdownMenuContentProps) {

@@ -48,13 +48,36 @@
     --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
   }
 
+  /* What a theme sets (see the theming docs): the accent's solid and its text, the focus
+     ring, corners, control heights and the scaled spacing. Unthemed, the accent is the
+     gray ink. A theme overrides these on `:root[data-theme]`, which outranks this layer. */
+  :root {
+    --accent-solid: var(--gray-12);
+    --on-accent: var(--gray-1);
+    --focus-ring: var(--gray-a8);
+    --radius-xs: 4px;
+    --radius-chip: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --size-control-xxs: 20px;
+    --size-control-xs: 24px;
+    --size-control-sm: 28px;
+    --size-control-md: 32px;
+    --size-control-lg: 36px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 48px;
+  }
+
   /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.
      Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12;
      amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
   :root,
   .light {
     --text-muted: var(--gray-10);
-    --on-accent-fill: var(--white-a4);
+    --on-inverted-fill: var(--white-a4);
     --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
     --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
     --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
@@ -64,7 +87,7 @@
 
   .dark {
     --text-muted: color-mix(in oklab, var(--gray-10), var(--gray-11));
-    --on-accent-fill: var(--black-a2);
+    --on-inverted-fill: var(--black-a2);
     --danger: var(--red-11);
     --info: var(--blue-11);
     --success: var(--green-11);
@@ -79,7 +102,7 @@
       > [data-slot="input-group-control"]:focus-visible
     )
   ) {
-    outline: 1px solid var(--gray-a8);
+    outline: 1px solid var(--focus-ring);
     outline-offset: 0;
   }
 

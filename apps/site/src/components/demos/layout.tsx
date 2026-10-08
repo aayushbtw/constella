@@ -11,6 +11,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 import { Stage, Well } from "~/components/demos/frame";
+import { useTokenValue } from "~/lib/token-value";
 import { fonts } from "~/lib/tokens.stylex";
 
 const radiusScale = [
@@ -92,7 +93,7 @@ function Label({ name, value }: { name: string; value: string }) {
   return (
     <span {...stylex.props(styles.label)}>
       <span {...stylex.props(styles.labelName)}>{name}</span>
-      <span {...stylex.props(styles.value)}>{value}</span>
+      <span {...stylex.props(styles.value)}>{useTokenValue(value)}</span>
     </span>
   );
 }

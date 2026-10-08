@@ -13,6 +13,7 @@ import {
   lineHeights,
   media,
   motion,
+  offsets,
   radii,
   sizes,
   space,
@@ -30,12 +31,12 @@ const styles = stylex.create({
   },
   popup: {
     alignItems: "center",
-    backgroundColor: colors.accent,
+    backgroundColor: colors.inverted,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    color: colors.onAccent,
+    color: colors.onInverted,
     display: "flex",
     fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
@@ -91,8 +92,7 @@ function TooltipPortal(props: TooltipPrimitive.Portal.Props) {
 }
 
 function TooltipPositioner({
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("8px")` is NaN
-  sideOffset = Number.parseFloat(space.xs),
+  sideOffset = Number(offsets.tooltip),
   sx,
   ...props
 }: Styled<TooltipPrimitive.Positioner.Props>) {

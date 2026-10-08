@@ -2,7 +2,7 @@ import "./base.css";
 import * as stylex from "@stylexjs/stylex";
 
 export const colors = stylex.defineVars({
-  accent: "var(--gray-12)",
+  accent: "var(--accent-solid)",
   background: "var(--gray-1)",
   edge: "var(--gray-a6)",
   edgeSubtle: "var(--gray-a4)",
@@ -10,8 +10,10 @@ export const colors = stylex.defineVars({
   fillOpaque: "var(--gray-3)",
   fillStrong: "var(--gray-a4)",
   fillSubtle: "var(--gray-a2)",
-  onAccent: "var(--gray-1)",
-  onAccentFill: "var(--on-accent-fill)",
+  inverted: "var(--gray-12)",
+  onAccent: "var(--on-accent)",
+  onInverted: "var(--gray-1)",
+  onInvertedFill: "var(--on-inverted-fill)",
   overlay: "var(--black-a5)",
   textMuted: "var(--text-muted)",
   textPrimary: "var(--gray-12)",
@@ -81,31 +83,33 @@ export const fontWeights = stylex.defineConsts({
   semibold: "600",
 });
 
+// Values a theme can change point at variables `base.css` defaults and a theme overrides.
+// `xxxs` and `xxs` stay fixed: they're hairline gaps, and JS reads `xxs` as a popup offset.
 export const space = stylex.defineConsts({
   xxxs: "2px",
   xxs: "4px",
-  xs: "8px",
-  sm: "12px",
-  md: "16px",
-  lg: "24px",
-  xl: "48px",
+  xs: "var(--space-xs)",
+  sm: "var(--space-sm)",
+  md: "var(--space-md)",
+  lg: "var(--space-lg)",
+  xl: "var(--space-xl)",
 });
 
 export const radii = stylex.defineConsts({
   // The 20px pieces, Badge and Kbd; off the 4px grid, as 4 reads square and 8 a pill.
-  chip: "6px",
+  chip: "var(--radius-chip)",
   full: "9999px",
-  md: "12px",
-  sm: "8px",
-  xs: "4px",
+  md: "var(--radius-md)",
+  sm: "var(--radius-sm)",
+  xs: "var(--radius-xs)",
 });
 
 export const sizes = stylex.defineConsts({
-  controlLg: "36px",
-  controlMd: "32px",
-  controlSm: "28px",
-  controlXs: "24px",
-  controlXxs: "20px",
+  controlLg: "var(--size-control-lg)",
+  controlMd: "var(--size-control-md)",
+  controlSm: "var(--size-control-sm)",
+  controlXs: "var(--size-control-xs)",
+  controlXxs: "var(--size-control-xxs)",
   dialog: "384px",
   hitArea: "40px",
   icon: "16px",
@@ -127,6 +131,12 @@ export const strokes = stylex.defineConsts({
   icon: "1.75",
   spinner: "1.5px",
   track: "4px",
+});
+
+// Popup distances from their trigger, read in JS by Base UI, so bare numbers.
+export const offsets = stylex.defineConsts({
+  popover: "4",
+  tooltip: "8",
 });
 
 export const layers = stylex.defineConsts({

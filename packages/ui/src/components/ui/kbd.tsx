@@ -27,7 +27,10 @@ const nested = (height: string) =>
 const styles = stylex.create({
   kbd: {
     alignItems: "center",
-    backgroundColor: { default: colors.fill, [inTooltip]: colors.onAccentFill },
+    backgroundColor: {
+      default: colors.fill,
+      [inTooltip]: colors.onInvertedFill,
+    },
     borderStartStartRadius: {
       default: radii.chip,
       [inButton("sm")]: nested(sizes.controlSm),
@@ -60,7 +63,7 @@ const styles = stylex.create({
       [inInputGroup("default")]: nested(sizes.controlMd),
       [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
     },
-    color: { default: colors.textSecondary, [inTooltip]: colors.onAccent },
+    color: { default: colors.textSecondary, [inTooltip]: colors.onInverted },
     display: "inline-flex",
     // `<kbd>` is monospace by default.
     fontFamily: "inherit",
