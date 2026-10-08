@@ -232,6 +232,9 @@ export const durations = stylex.defineConsts({
   confirm: "1500ms",
   dialog: "200ms",
   tooltipDelay: "300ms",
+  // Longer than a tooltip's: a card covers content, so it waits for the pointer to settle.
+  hoverCardDelay: "600ms",
+  hoverCardCloseDelay: "300ms",
 });
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,

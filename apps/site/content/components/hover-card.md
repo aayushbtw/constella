@@ -46,10 +46,55 @@ HoverCard
 └── HoverCardContent
 ```
 
+## Handle
+
+Use `createHoverCardHandle` for one card that several triggers share, like mentions in a sentence. Pass it to `HoverCard` and each trigger as `handle`, with the trigger's data as `payload`. Moving from one trigger to the next, the card glides over and cross-fades to the new content, growing to its height.
+
+<!-- ::demo name="hover-card-triggers" -->
+
+```tsx
+const mentions = createHoverCardHandle<Profile>();
+
+<HoverCardTrigger handle={mentions} payload={profile}>
+  {profile.handle}
+</HoverCardTrigger>
+
+<HoverCard handle={mentions}>
+  {({ payload }) => (
+    <HoverCardContent>
+      <ProfileCard profile={payload} />
+    </HoverCardContent>
+  )}
+</HoverCard>
+```
+
+## Side
+
+Use the `side` prop on `HoverCardContent` to place the card. It flips to the other side when there's no room.
+
+<!-- ::demo name="hover-card-side" -->
+
+```tsx
+<HoverCardContent side="right">…</HoverCardContent>
+```
+
+## Delay
+
+Use `delay` and `closeDelay` on `HoverCardTrigger`, in milliseconds. By default it opens after 600ms (`durations.hoverCardDelay`), twice a tooltip's wait, and closes after 300ms, so a pointer passing over text doesn't open it.
+
+<!-- ::demo name="hover-card-delay" -->
+
+```tsx
+<HoverCardTrigger closeDelay={0} delay={0}>
+  Instant
+</HoverCardTrigger>
+```
+
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
-| `HoverCardContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets |
+| `HoverCardContent` | Renders the portal, positioner, popup and viewport; takes `side`, `align` and their offsets |
+| `createHoverCardHandle` | A handle shared by `HoverCard` and its triggers |
 
 `HoverCardContent` takes `sx`, applied last. Base UI calls this Preview Card. For the rest, see [Base UI Preview Card](https://base-ui.com/react/components/preview-card).

@@ -36,7 +36,15 @@ const instant = ":is([data-instant])";
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
 const styles = stylex.create({
+  // Moving between triggers that share one card, it glides to the new one.
   positioner: {
+    transitionDuration: {
+      default: durations.move,
+      [instant]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "top, left, right, bottom",
+    transitionTimingFunction: easings.out,
     zIndex: layers.popover,
   },
   // A popover's surface and motion.
@@ -50,6 +58,8 @@ const styles = stylex.create({
     boxSizing: "border-box",
     color: colors.textPrimary,
     fontSize: fontSizes.sm,
+    // Base UI measures each trigger's content, so the card can grow to the next one's height.
+    height: "var(--popup-height, auto)",
     maxWidth: "var(--available-width)",
     opacity: { default: 1, [offstage]: 0 },
     paddingBlockEnd: px10,
@@ -59,26 +69,48 @@ const styles = stylex.create({
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
-      default: durations.popover,
+      default: `${durations.popover}, ${durations.popover}, ${durations.move}`,
       [closing]: durations.popoverExit,
       [instant]: "0s",
     },
     transitionProperty: {
-      default: "opacity, transform",
+      default: "opacity, transform, height",
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
     width: sizes.popover,
   },
+  viewport: {
+    height: "100%",
+    overflow: "clip",
+    position: "relative",
+  },
 });
 
-function HoverCard(props: PreviewCardPrimitive.Root.Props) {
+/** One card several triggers share: pass it to `HoverCard` and each `HoverCardTrigger` as `handle`. */
+const createHoverCardHandle = PreviewCardPrimitive.createHandle;
+
+/** Its children can be a function of the open trigger's `payload`. */
+function HoverCard<Payload>(props: PreviewCardPrimitive.Root.Props<Payload>) {
   return <PreviewCardPrimitive.Root {...props} />;
 }
 
-function HoverCardTrigger(props: PreviewCardPrimitive.Trigger.Props) {
+// Base UI takes bare milliseconds; the tokens carry `ms`.
+const openDelay = Number(durations.hoverCardDelay.slice(0, -"ms".length));
+const closeAfter = Number(durations.hoverCardCloseDelay.slice(0, -"ms".length));
+
+function HoverCardTrigger<Payload>({
+  closeDelay = closeAfter,
+  delay = openDelay,
+  ...props
+}: PreviewCardPrimitive.Trigger.Props<Payload>) {
   return (
-    <PreviewCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
+    <PreviewCardPrimitive.Trigger
+      closeDelay={closeDelay}
+      data-slot="hover-card-trigger"
+      delay={delay}
+      {...props}
+    />
   );
 }
 
@@ -86,6 +118,7 @@ function HoverCardTrigger(props: PreviewCardPrimitive.Trigger.Props) {
 function HoverCardContent({
   align = "center",
   alignOffset = 0,
+  children,
   side = "bottom",
   sideOffset = Number(offsets.popover),
   sx,
@@ -104,11 +137,18 @@ function HoverCardContent({
           data-slot="hover-card-content"
           {...props}
           {...stylex.props(styles.popup, sx)}
-        />
+        >
+          <PreviewCardPrimitive.Viewport
+            data-slot="hover-card-viewport"
+            {...stylex.props(styles.viewport)}
+          >
+            {children}
+          </PreviewCardPrimitive.Viewport>
+        </PreviewCardPrimitive.Popup>
       </PreviewCardPrimitive.Positioner>
     </PreviewCardPrimitive.Portal>
   );
 }
 
-export { HoverCard, HoverCardContent, HoverCardTrigger };
+export { createHoverCardHandle, HoverCard, HoverCardContent, HoverCardTrigger };
 export type { HoverCardContentProps };

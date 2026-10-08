@@ -108,7 +108,12 @@ import {
   FieldErrorDemo,
   FieldSetDemo,
 } from "~/components/demos/field";
-import { HoverCardDemo } from "~/components/demos/hover-card";
+import {
+  HoverCardDelayDemo,
+  HoverCardDemo,
+  HoverCardSideDemo,
+  HoverCardTriggersDemo,
+} from "~/components/demos/hover-card";
 import {
   InputBadgeDemo,
   InputButtonGroupDemo,
@@ -412,6 +417,9 @@ const demos = {
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
   "hover-card": HoverCardDemo,
+  "hover-card-delay": HoverCardDelayDemo,
+  "hover-card-side": HoverCardSideDemo,
+  "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
   progress: ProgressDemo,
   "progress-label": ProgressLabelDemo,

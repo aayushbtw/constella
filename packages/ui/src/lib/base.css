@@ -197,6 +197,26 @@
     opacity: 0;
   }
 
+  /* Base UI renders the hover card viewport's content wrappers, so their crossfade between
+     triggers lives here: the old content fades out on top while the new fades in
+     (`durations.popover` on `easings.out`). */
+  :where([data-slot="hover-card-viewport"])
+    > :where([data-current], [data-previous]) {
+    transition: opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  :where([data-slot="hover-card-viewport"]) > :where([data-previous]) {
+    inset: 0 auto auto 0;
+    position: absolute;
+    width: 100%;
+  }
+  :where([data-slot="hover-card-viewport"])
+    > :where(
+      [data-current][data-starting-style],
+      [data-previous][data-ending-style]
+    ) {
+    opacity: 0;
+  }
+
   /* StyleX can't style a child it didn't render, so an item's image fills its media box here. */
   :where([data-slot="item-media"][data-variant="image"]) > :where(img) {
     height: 100%;
