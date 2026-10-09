@@ -1,22 +1,24 @@
 import {
-  Add01Icon,
   ArrowLeft01Icon,
+  BookOpen01Icon,
+  BotIcon,
+  BubbleChatIcon,
   CreditCardIcon,
-  Key01Icon,
-  UserGroupIcon,
   Delete02Icon,
+  Folder01Icon,
+  Key01Icon,
   MoreHorizontalIcon,
   PencilEdit01Icon,
-  BookOpen01Icon,
-  BubbleChatIcon,
-  CommandIcon,
-  CpuIcon,
+  PencilEdit02Icon,
+  Search01Icon,
   Settings01Icon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,22 +28,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
+import { Kbd } from "@/components/ui/kbd";
 import {
   Sidebar,
   SidebarContent,
+  SidebarExpandedOnly,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarHeaderActions,
   SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuKbd,
+  SidebarMenuLabel,
   SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
@@ -49,6 +53,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
+  SidebarTriggerMark,
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { SidebarCollapsible, SidebarSide } from "@/components/ui/sidebar";
@@ -62,6 +67,7 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
+import { Logo } from "~/components/logo";
 
 const styles = stylex.create({
   stage: { width: "100%" },
@@ -86,23 +92,19 @@ const styles = stylex.create({
     minHeight: 0,
     overflow: "hidden",
   },
+  // Clips past the edge while the sidebar opens, until it fits.
   brand: {
     alignItems: "center",
-    backgroundColor: colors.accent,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
-    color: colors.onAccent,
+    color: colors.textPrimary,
     display: "flex",
-    flexShrink: 0,
-    height: sizes.controlMd,
-    justifyContent: "center",
-    width: sizes.controlMd,
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.medium,
+    gap: space.xs,
+    minWidth: 0,
+    overflow: "hidden",
+    paddingInlineStart: space.xs,
+    whiteSpace: "nowrap",
   },
-  stack: { display: "flex", flexDirection: "column", lineHeight: 1.3 },
-  strong: { fontWeight: fontWeights.medium },
-  muted: { color: colors.textSecondary, fontSize: fontSizes.xs },
   topbar: {
     alignItems: "center",
     borderBlockEndColor: colors.edgeSubtle,
@@ -110,13 +112,14 @@ const styles = stylex.create({
     borderBlockEndWidth: strokes.border,
     color: colors.textPrimary,
     display: "flex",
+    flexShrink: 0,
     fontSize: fontSizes.sm,
     gap: space.xs,
-    height: sizes.media,
+    height: sizes.header,
     paddingInlineEnd: space.sm,
-    paddingInlineStart: space.xs,
+    paddingInlineStart: space.md,
   },
-  separator: { height: space.md },
+  topbarWithTrigger: { paddingInlineStart: space.xs },
   body: {
     display: "grid",
     gap: space.sm,
@@ -148,107 +151,336 @@ function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
 }
 
 const nav = [
-  { icon: BubbleChatIcon, label: "Chats", badge: "12" },
-  { icon: CpuIcon, label: "Models" },
-  { icon: BookOpen01Icon, label: "Docs" },
-  { icon: Settings01Icon, label: "Settings" },
+  { icon: BubbleChatIcon, label: "Chats" },
+  { icon: Folder01Icon, label: "Assets" },
+  { icon: BotIcon, label: "Agents" },
 ];
 
 const docs = ["Introduction", "Get Started", "Changelog"];
 
-function AppSidebar({
+const recents = [
+  "Quarterly revenue summary for the board",
+  "Draft the launch email",
+  "Compare vector databases for semantic search",
+  "Fix flaky checkout test",
+  "Plan the offsite agenda",
+];
+
+// In the sidebar only where the page has none: beside the icon rail, and in the mobile sheet to close it.
+function HeaderTrigger({
   collapsible,
-  side = "left",
+  mark,
 }: {
   collapsible: SidebarCollapsible;
-  side?: SidebarSide;
+  mark: ReactNode;
 }) {
-  const [current, setCurrent] = useState("Chats");
+  const { isMobile } = useSidebar();
+  if (collapsible !== "icon" && !isMobile) {
+    return null;
+  }
   return (
-    <Sidebar collapsible={collapsible} side={side}>
-      <SidebarHeader>
+    <SidebarHeaderActions>
+      <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+        <SidebarTriggerMark>{mark}</SidebarTriggerMark>
+      </SidebarTrigger>
+    </SidebarHeaderActions>
+  );
+}
+
+function Header({ collapsible }: { collapsible: SidebarCollapsible }) {
+  return (
+    <SidebarHeader>
+      <SidebarExpandedOnly>
+        <span {...stylex.props(styles.brand)}>
+          <Logo size={sizes.icon} />
+          <SidebarMenuLabel>Constella</SidebarMenuLabel>
+        </span>
+      </SidebarExpandedOnly>
+      <HeaderTrigger
+        collapsible={collapsible}
+        mark={<Logo size={sizes.icon} />}
+      />
+    </SidebarHeader>
+  );
+}
+
+function Row({
+  current,
+  icon,
+  label,
+  onSelect,
+}: {
+  current: string;
+  icon: HugeiconsIconProps["icon"];
+  label: string;
+  onSelect: (label: string) => void;
+}) {
+  return (
+    <SidebarMenuButton
+      isActive={current === label}
+      onClick={() => {
+        onSelect(label);
+      }}
+      tooltip={label}
+    >
+      <Glyph icon={icon} />
+      <SidebarMenuLabel>{label}</SidebarMenuLabel>
+    </SidebarMenuButton>
+  );
+}
+
+function ChatActions() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={<SidebarMenuAction aria-label="More" showOnHover />}
+      >
+        <Glyph icon={MoreHorizontalIcon} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" side="right">
+        <DropdownMenuItem>
+          <Glyph icon={PencilEdit01Icon} />
+          Rename
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="danger">
+          <Glyph icon={Delete02Icon} />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function Recents({
+  current,
+  onSelect,
+}: {
+  current: string;
+  onSelect: (label: string) => void;
+}) {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Recents</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {recents.map((chat) => (
+            <SidebarMenuItem key={chat}>
+              <SidebarMenuButton
+                isActive={current === chat}
+                onClick={() => {
+                  onSelect(chat);
+                }}
+                tooltip={chat}
+              >
+                <SidebarMenuLabel>{chat}</SidebarMenuLabel>
+              </SidebarMenuButton>
+              <ChatActions />
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
+function User() {
+  return (
+    <SidebarFooter>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton tooltip="shadcn">
+            <Avatar size="sm">
+              <AvatarImage alt="" src="https://github.com/shadcn.png" />
+              <AvatarFallback>SC</AvatarFallback>
+            </Avatar>
+            <SidebarMenuLabel>shadcn</SidebarMenuLabel>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarFooter>
+  );
+}
+
+const settings = [
+  { icon: Settings01Icon, label: "General" },
+  { icon: UserGroupIcon, label: "Members" },
+  { icon: CreditCardIcon, label: "Billing" },
+  { icon: Key01Icon, label: "API keys" },
+];
+
+function SettingsHeader({
+  collapsible,
+  onBack,
+}: {
+  collapsible: SidebarCollapsible;
+  onBack: () => void;
+}) {
+  return (
+    <SidebarHeader>
+      <SidebarExpandedOnly>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <span {...stylex.props(styles.brand)}>
-                <Glyph icon={CommandIcon} />
-              </span>
-              <span {...stylex.props(styles.stack)}>
-                <span {...stylex.props(styles.strong)}>Acme Inc</span>
-                <span {...stylex.props(styles.muted)}>Enterprise</span>
-              </span>
+            <SidebarMenuButton onClick={onBack}>
+              <Glyph icon={ArrowLeft01Icon} />
+              <SidebarMenuLabel>Back</SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
-          <SidebarGroupAction aria-label="New chat" title="New chat">
-            <Glyph icon={Add01Icon} />
-          </SidebarGroupAction>
-          <SidebarGroupContent>
+      </SidebarExpandedOnly>
+      <HeaderTrigger
+        collapsible={collapsible}
+        mark={<Logo size={sizes.icon} />}
+      />
+    </SidebarHeader>
+  );
+}
+
+function AppSidebar({
+  collapsible,
+  current,
+  onSelect,
+  side,
+}: {
+  collapsible: SidebarCollapsible;
+  current: string;
+  onSelect: (label: string) => void;
+  side: SidebarSide;
+}) {
+  const { changeSection } = useSidebar();
+  const [inSettings, setInSettings] = useState(false);
+  if (inSettings) {
+    return (
+      <Sidebar collapsible={collapsible} side={side}>
+        <SettingsHeader
+          collapsible={collapsible}
+          onBack={() => {
+            changeSection("back", () => {
+              setInSettings(false);
+              onSelect("Chats");
+            });
+          }}
+        />
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Settings</SidebarGroupLabel>
             <SidebarMenu>
-              {nav.map((item) => (
+              {settings.map((item) => (
                 <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton
-                    isActive={current === item.label}
-                    onClick={() => {
-                      setCurrent(item.label);
-                    }}
-                    tooltip={item.label}
-                    withEnd={item.badge !== undefined}
-                  >
-                    <Glyph icon={item.icon} />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                  {item.badge !== undefined && (
-                    <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
-                  )}
-                  {item.label === "Docs" && (
-                    <SidebarMenuSub>
-                      {docs.map((doc) => (
-                        <SidebarMenuSubItem key={doc}>
-                          <SidebarMenuSubButton href="#sidebar">
-                            {doc}
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  )}
+                  <Row
+                    current={current}
+                    icon={item.icon}
+                    label={item.label}
+                    onSelect={onSelect}
+                  />
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
+          </SidebarGroup>
+        </SidebarContent>
+        <User />
+        <SidebarRail />
+      </Sidebar>
+    );
+  }
+  return (
+    <Sidebar collapsible={collapsible} side={side}>
+      <Header collapsible={collapsible} />
+      <SidebarContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <Avatar>
-                <AvatarImage alt="" src="https://github.com/shadcn.png" />
-                <AvatarFallback>SC</AvatarFallback>
-              </Avatar>
-              <span {...stylex.props(styles.stack)}>
-                <span {...stylex.props(styles.strong)}>shadcn</span>
-                <span {...stylex.props(styles.muted)}>m@example.com</span>
-              </span>
+            <SidebarMenuButton
+              tooltip={
+                <>
+                  New chat
+                  <Kbd>⌘O</Kbd>
+                </>
+              }
+            >
+              <Glyph icon={PencilEdit02Icon} />
+              <SidebarMenuLabel>New chat</SidebarMenuLabel>
+              <SidebarMenuKbd>
+                <Kbd>⌘O</Kbd>
+              </SidebarMenuKbd>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="Search">
+              <Glyph icon={Search01Icon} />
+              <SidebarMenuLabel>Search</SidebarMenuLabel>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          {nav.map((item) => (
+            <SidebarMenuItem key={item.label}>
+              <Row
+                current={current}
+                icon={item.icon}
+                label={item.label}
+                onSelect={onSelect}
+              />
+            </SidebarMenuItem>
+          ))}
+          <SidebarMenuItem>
+            <Row
+              current={current}
+              icon={BookOpen01Icon}
+              label="Docs"
+              onSelect={onSelect}
+            />
+            <SidebarMenuSub>
+              {docs.map((doc) => (
+                <SidebarMenuSubItem key={doc}>
+                  <SidebarMenuSubButton href="#sidebar">
+                    {doc}
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              ))}
+            </SidebarMenuSub>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => {
+                changeSection("forward", () => {
+                  setInSettings(true);
+                  onSelect("General");
+                });
+              }}
+              tooltip="Settings"
+            >
+              <Glyph icon={Settings01Icon} />
+              <SidebarMenuLabel>Settings</SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter>
+        <SidebarExpandedOnly>
+          <Recents current={current} onSelect={onSelect} />
+        </SidebarExpandedOnly>
+      </SidebarContent>
+      <User />
       <SidebarRail />
     </Sidebar>
   );
 }
 
-function Page({ title = "Chats" }: { title?: string }) {
+// The sidebar holds its own trigger; the page shows one only where the sidebar can't.
+function Page({
+  title,
+  trigger = false,
+}: {
+  title: string;
+  trigger?: boolean;
+}) {
+  const { isMobile } = useSidebar();
+  const showTrigger = trigger || isMobile;
   return (
     <SidebarInset>
-      <header {...stylex.props(styles.topbar)}>
-        <SidebarTrigger />
-        <Separator orientation="vertical" sx={styles.separator} />
+      <header
+        {...stylex.props(
+          styles.topbar,
+          showTrigger && styles.topbarWithTrigger
+        )}
+      >
+        {showTrigger && <SidebarTrigger />}
         {title}
       </header>
       <div {...stylex.props(styles.body)}>
@@ -260,35 +492,46 @@ function Page({ title = "Chats" }: { title?: string }) {
   );
 }
 
-function SidebarDemo() {
+function App({
+  collapsible,
+  side = "left",
+  trigger = false,
+}: {
+  collapsible: SidebarCollapsible;
+  side?: SidebarSide;
+  trigger?: boolean;
+}) {
+  const [current, setCurrent] = useState("Chats");
+  const sidebar = (
+    <AppSidebar
+      collapsible={collapsible}
+      current={current}
+      onSelect={setCurrent}
+      side={side}
+    />
+  );
+  const page = <Page title={current} trigger={trigger} />;
   return (
     <DemoRow sx={styles.stage}>
       <SidebarProvider sx={styles.frame}>
-        <AppSidebar collapsible="icon" />
-        <Page />
+        {side === "left" ? sidebar : page}
+        {side === "left" ? page : sidebar}
       </SidebarProvider>
     </DemoRow>
   );
+}
+
+function SidebarDemo() {
+  return <App collapsible="icon" />;
 }
 
 function SidebarOffcanvasDemo() {
-  return (
-    <DemoRow sx={styles.stage}>
-      <SidebarProvider sx={styles.frame}>
-        <AppSidebar collapsible="offcanvas" />
-        <Page />
-      </SidebarProvider>
-    </DemoRow>
-  );
+  return <App collapsible="offcanvas" trigger />;
 }
 
-const recents = [
-  "Quarterly revenue summary",
-  "Draft the launch email",
-  "Compare vector databases",
-  "Fix flaky checkout test",
-  "Plan the offsite agenda",
-];
+function SidebarRightDemo() {
+  return <App collapsible="icon" side="right" />;
+}
 
 function RecentChats() {
   const [loading, setLoading] = useState(true);
@@ -301,50 +544,19 @@ function RecentChats() {
       clearTimeout(timer);
     };
   }, []);
+  if (!loading) {
+    return <Recents current={current} onSelect={setCurrent} />;
+  }
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Recent</SidebarGroupLabel>
+      <SidebarGroupLabel>Recents</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {loading
-            ? recents.map((chat) => (
-                <SidebarMenuItem key={chat}>
-                  <SidebarMenuSkeleton />
-                </SidebarMenuItem>
-              ))
-            : recents.map((chat) => (
-                <SidebarMenuItem key={chat}>
-                  <SidebarMenuButton
-                    isActive={current === chat}
-                    onClick={() => {
-                      setCurrent(chat);
-                    }}
-                    withEnd
-                  >
-                    <span>{chat}</span>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      render={
-                        <SidebarMenuAction aria-label="More" showOnHover />
-                      }
-                    >
-                      <Glyph icon={MoreHorizontalIcon} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" side="right">
-                      <DropdownMenuItem>
-                        <Glyph icon={PencilEdit01Icon} />
-                        Rename
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem variant="danger">
-                        <Glyph icon={Delete02Icon} />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))}
+          {recents.map((chat) => (
+            <SidebarMenuItem key={chat}>
+              <SidebarMenuSkeleton />
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
@@ -360,121 +572,7 @@ function SidebarActionDemo() {
             <RecentChats />
           </SidebarContent>
         </Sidebar>
-        <Page />
-      </SidebarProvider>
-    </DemoRow>
-  );
-}
-
-function SidebarRightDemo() {
-  return (
-    <DemoRow sx={styles.stage}>
-      <SidebarProvider sx={styles.frame}>
-        <Page />
-        <AppSidebar collapsible="icon" side="right" />
-      </SidebarProvider>
-    </DemoRow>
-  );
-}
-
-const settings = [
-  { icon: Settings01Icon, label: "General" },
-  { icon: UserGroupIcon, label: "Members" },
-  { icon: CreditCardIcon, label: "Billing" },
-  { icon: Key01Icon, label: "API keys" },
-];
-
-function SectionSidebar() {
-  const { changeSection } = useSidebar();
-  const [inSettings, setInSettings] = useState(false);
-  const [current, setCurrent] = useState("Chats");
-  const items = inSettings ? settings : nav.slice(0, 3);
-  return (
-    <>
-      <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              {inSettings ? (
-                <SidebarMenuButton
-                  onClick={() => {
-                    changeSection("back", () => {
-                      setInSettings(false);
-                      setCurrent("Chats");
-                    });
-                  }}
-                  tooltip="Back"
-                >
-                  <Glyph icon={ArrowLeft01Icon} />
-                  <span>Back</span>
-                </SidebarMenuButton>
-              ) : (
-                <SidebarMenuButton size="lg">
-                  <span {...stylex.props(styles.brand)}>
-                    <Glyph icon={CommandIcon} />
-                  </span>
-                  <span {...stylex.props(styles.stack)}>
-                    <span {...stylex.props(styles.strong)}>Acme Inc</span>
-                    <span {...stylex.props(styles.muted)}>Enterprise</span>
-                  </span>
-                </SidebarMenuButton>
-              )}
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>
-              {inSettings ? "Settings" : "Platform"}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton
-                      isActive={current === item.label}
-                      onClick={() => {
-                        setCurrent(item.label);
-                      }}
-                      tooltip={item.label}
-                    >
-                      <Glyph icon={item.icon} />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-                {!inSettings && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={() => {
-                        changeSection("forward", () => {
-                          setInSettings(true);
-                          setCurrent("General");
-                        });
-                      }}
-                      tooltip="Settings"
-                    >
-                      <Glyph icon={Settings01Icon} />
-                      <span>Settings</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarRail />
-      </Sidebar>
-      <Page title={current} />
-    </>
-  );
-}
-
-function SidebarSectionDemo() {
-  return (
-    <DemoRow sx={styles.stage}>
-      <SidebarProvider sx={styles.frame}>
-        <SectionSidebar />
+        <Page title="Chats" trigger />
       </SidebarProvider>
     </DemoRow>
   );
@@ -485,5 +583,4 @@ export {
   SidebarDemo,
   SidebarOffcanvasDemo,
   SidebarRightDemo,
-  SidebarSectionDemo,
 };

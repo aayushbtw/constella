@@ -8,14 +8,14 @@ Restraint is the default. A component used every day gets one motion that explai
 
 ## Easing
 
-| Token       | For                                                          |
-| ----------- | ------------------------------------------------------------ |
-| `out`       | Entrances and presses: moves at once, so it feels responsive |
-| `inOut`     | Things traveling across the screen: leave and arrive gently  |
-| `overshoot` | A small mark landing in place: a switch thumb, a radio dot   |
-| `ease`      | Color and hover changes (the CSS keyword, no token)          |
-| `crossfade` | One state replacing another in place: icons, text            |
-| `layout`    | A surface changing size: leaves at once, settles gently      |
+| Token | For |
+| --- | --- |
+| `out` | Entrances and presses: moves at once, so it feels responsive |
+| `inOut` | Things traveling across the screen, and the sidebar morphing in place: leave and arrive gently |
+| `overshoot` | A small mark landing in place: a switch thumb, a radio dot |
+| `ease` | Color and hover changes (the CSS keyword, no token) |
+| `crossfade` | One state replacing another in place: icons, text |
+| `layout` | A surface changing size: leaves at once, settles gently |
 
 Never `ease-in`: it delays the moment the eye is watching.
 
@@ -28,6 +28,8 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `popover`        | Small surfaces that open from a trigger           |
 | `popoverExit`    | The same surfaces leaving, and submenus           |
 | `dialog`         | A dialog and its backdrop                         |
+| `sidebar`        | The sidebar opening to its full width             |
+| `sidebarExit`    | The sidebar narrowing to its rail or out of view  |
 | `move`           | Indicators and thumbs that travel                 |
 | `crossfade`      | Cross-fades between states                        |
 | `layout`         | A surface growing or shrinking to fit             |
@@ -47,7 +49,7 @@ Never from `scale(0)` or full transparency in place. Start close to the final st
 
 When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing. A status change only fades color, on `ease` + `hover`.
 
-`SwapIcon` and `SwapText` are these two crossfades as parts.
+`SwapIcon` and `SwapText` are these two crossfades as parts. The sidebar trigger's mark is the one crossfade that isn't a state change: it reveals the toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
 
 ## Layout animation
 

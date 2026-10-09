@@ -2,7 +2,11 @@
 
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
+import {
+  Cancel01Icon,
+  Menu01Icon,
+  SidebarLeftIcon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
@@ -10,11 +14,13 @@ import {
   use,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 
 import { Button } from "@/components/ui/button";
@@ -39,9 +45,10 @@ import {
   easings,
   fontSizes,
   fontWeights,
+  lineHeights,
   media,
+  motion,
   opacities,
-  presses,
   radii,
   sizes,
   space,
@@ -89,6 +96,24 @@ function useSidebar() {
   return context;
 }
 
+// Inside the mobile sheet, where the trigger closes it.
+const InSheetContext = createContext(false);
+
+// `collapsing` from the moment an icon sidebar starts to narrow; `rail` once it has,
+// so until then the full layout stays and the width clips it. Tooltips point away
+// from the window's edge.
+const RailContext = createContext<{
+  collapsing: boolean;
+  rail: boolean;
+  tooltipSide: "left" | "right";
+}>({ collapsing: false, rail: false, tooltipSide: "right" });
+
+// Toggles without the animation: a keyboard action is too frequent to animate.
+const KeyboardToggleContext = createContext<(() => void) | null>(null);
+
+// Tells a row's button whether its label is cut off, so its tooltip can show it whole.
+const LabelContext = createContext<((truncated: boolean) => void) | null>(null);
+
 // The media token is a full at-rule; matchMedia takes only its query.
 const desktopQuery = media.md.slice("@media ".length);
 
@@ -117,26 +142,96 @@ function useIsMobile() {
   );
 }
 
-const collapsed = ":is([data-slot='sidebar'][data-state='collapsed'] *)";
+// Measured, so a label that fits never shows faded. Faded until then: the server
+// can't measure, and a long label must never paint hard-clipped.
+function useTruncated(enabled: boolean) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const report = use(LabelContext);
+  const [truncated, setTruncated] = useState(enabled);
+  useLayoutEffect(() => {
+    const node = ref.current;
+    function measure() {
+      const next =
+        enabled && node !== null && node.scrollWidth > node.clientWidth;
+      setTruncated(next);
+      report?.(next);
+    }
+    measure();
+    // Its box changes width with the sidebar, and its text on a rename.
+    const resize = new ResizeObserver(measure);
+    const content = new MutationObserver(measure);
+    if (node !== null) {
+      resize.observe(node);
+      content.observe(node, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+    return () => {
+      resize.disconnect();
+      content.disconnect();
+    };
+  }, [enabled, report]);
+  return { ref, truncated };
+}
+
 const inSectionChange = ":is([data-section-change] *)";
+// Toggled from the keyboard: too frequent to animate.
+const fromKeyboard = ":is([data-instant] *)";
 const iconOnly = ":is([data-slot='sidebar'][data-collapsible='icon'] *)";
+const expandingContent =
+  ":is([data-slot='sidebar'][data-expanding] [data-slot='sidebar-content'] *)";
+const fadeIn = stylex.keyframes({ from: { opacity: 0 } });
+const inContentIconOnly =
+  ":is([data-slot='sidebar'][data-collapsible='icon'] [data-slot='sidebar-content'] *)";
+const inRail = ":is([data-slot='sidebar'][data-rail] *)";
 const highlighted = ":is([data-active])";
 const pressable = ":not(:disabled, [aria-disabled='true'])";
+const rtl = ":is([dir='rtl'] *)";
+const triggerHovered = ":is([data-slot='sidebar-trigger']:hover *)";
+const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 
-// A row's hover and press take `fillSubtle`; the current one stays a step above, on `fill`.
+// The whole row answers the pointer, so reaching for its action keeps it lit, and so
+// does an open menu from it.
+const item = "[data-slot='sidebar-menu-item']";
+// Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
+const action = "[data-sidebar-menu-action]";
+// Its own children only, so a sub-row doesn't light its parent.
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub']):hover)`;
+const ownFocus = `${item}:has(> :focus-visible)`;
+const rowHovered = `:is(${ownHover} > *)`;
+// The action's menu only: the row's own tooltip writes the same attribute.
+const actionOpen = `${item}:has(> ${action}[data-popup-open])`;
+const rowOpen = `:is(${actionOpen} > *)`;
+const idle = ":not([data-active])";
 const rowFill = {
   default: "transparent",
   [media.hover]: {
     default: "transparent",
-    [`:hover${pressable}:not([data-active])`]: colors.fillSubtle,
+    [`${rowHovered}${idle}`]: colors.fillSubtle,
     [highlighted]: colors.fill,
   },
-  [`:active${pressable}:not([data-active])`]: colors.fillSubtle,
+  [`${rowOpen}${idle}`]: colors.fillSubtle,
+  [`:active${pressable}${idle}`]: colors.fillSubtle,
   [highlighted]: colors.fill,
 };
+// An inset shadow, not a second fill, so hover stacks on the current row's `fill` and still fades.
+const lit = `inset 0 0 0 100vmax ${colors.fillSubtle}`;
+const unlit = "inset 0 0 0 100vmax transparent";
 
-// shadcn's padding, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
+// The label fades out before the row's end, or before an action drawn over it:
+// the action's width and inset, less the row's padding.
+const actionRoom = `(${sizes.controlXs} + ${space.xxs} - ${space.xs})`;
+const fadeAtEdge = (to: string) =>
+  `linear-gradient(to ${to}, black calc(100% - ${space.lg}), transparent)`;
+const fadeBeforeAction = (to: string) =>
+  `linear-gradient(to ${to}, black calc(100% - ${actionRoom} - ${space.md}), transparent calc(100% - ${actionRoom}))`;
+const withAction = `${item}:has(> ${action})`;
+// Whenever the action is drawn: always unless it waits for hover, and while its row is
+// hovered, focused or has its menu open.
+const actionShown = `:is(${item}:has(> ${action}:not([data-show-on-hover])) *, ${withAction}${ownFocus} *, ${actionOpen} *)`;
+const actionHovered = `:is(${withAction}${ownHover} *)`;
 
 const styles = stylex.create({
   wrapper: {
@@ -146,47 +241,55 @@ const styles = stylex.create({
   },
   // In the flow and sticky, so it sits beside the content and fills the window's height.
   sidebar: {
-    color: colors.textPrimary,
-    display: { default: "none", [media.md]: "block" },
-    flexShrink: 0,
-    height: "100svh",
-    insetBlockStart: 0,
-    maxHeight: "100%",
-    overflow: "hidden",
-    position: "sticky",
-    transitionDuration: {
-      default: durations.layout,
-      [media.reducedMotion]: "0s",
-    },
-    transitionProperty: "width",
-    transitionTimingFunction: easings.layout,
-    width: sizes.sidebar,
-  },
-  offcanvas: { width: 0 },
-  icon: { width: sizes.sidebarIcon },
-  // Keeps its full width while the sidebar narrows, so its content is clipped, not reflowed.
-  inner: {
-    backgroundColor: colors.sidebar,
+    // On the column, not its full-width inside, so the edge stays drawn while the width moves.
     borderInlineEndColor: colors.edgeSubtle,
     borderInlineEndStyle: "solid",
     borderInlineEndWidth: strokes.border,
     boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    position: "relative",
+    color: colors.textPrimary,
+    // Rows size to it, so they narrow with the width instead of being cut at its edge.
+    containerType: "inline-size",
+    display: { default: "none", [media.md]: "block" },
+    flexShrink: 0,
+    height: "100svh",
+    insetBlockStart: 0,
+    // Lets a sub-menu's height fold with the width.
+    interpolateSize: "allow-keywords",
+    maxHeight: "100%",
+    overflow: "hidden",
+    position: "sticky",
+    transitionDuration: {
+      default: durations.sidebar,
+      ":is([data-collapsible])": durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "width",
+    transitionTimingFunction: easings.inOut,
     width: sizes.sidebar,
   },
-  innerRight: {
+  offcanvas: { borderInlineEndWidth: 0, borderInlineStartWidth: 0, width: 0 },
+  sidebarRight: {
     borderInlineEndWidth: 0,
     borderInlineStartColor: colors.edgeSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
-    marginInlineStart: "auto",
   },
-  innerIcon: {
-    width: { default: sizes.sidebar, [collapsed]: sizes.sidebarIcon },
+  icon: { width: sizes.sidebarIcon },
+  // Keeps its full width while the sidebar narrows, so its content is clipped, not reflowed.
+  inner: {
+    backgroundColor: colors.sidebar,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    position: "relative",
+    // Inside the column's border.
+    width: {
+      default: `calc(${sizes.sidebar} - ${strokes.border})`,
+      [inRail]: `calc(${sizes.sidebarIcon} - ${strokes.border})`,
+    },
   },
+  innerRight: { marginInlineStart: "auto" },
   static: {
     backgroundColor: colors.sidebar,
     color: colors.textPrimary,
@@ -255,7 +358,30 @@ const styles = stylex.create({
       width: strokes.indicator,
     },
   },
-  section: {
+  // Named only while its own sidebar changes section; base.css slides the snapshots.
+  swap: {
+    viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
+    viewTransitionName: { default: null, [inSectionChange]: "match-element" },
+  },
+  // The page's header height, so the two line up across the edge.
+  header: {
+    alignItems: "center",
+    display: "flex",
+    flexShrink: 0,
+    gap: space.xxs,
+    height: sizes.header,
+    // Alone in the rail, the trigger keeps to the start, on the rows' icon column.
+    justifyContent: "space-between",
+    paddingInlineEnd: space.xs,
+    paddingInlineStart: space.xs,
+  },
+  headerActions: {
+    alignItems: "center",
+    display: "flex",
+    flexShrink: 0,
+    gap: space.xxs,
+  },
+  footer: {
     display: "flex",
     flexDirection: "column",
     gap: space.xs,
@@ -264,18 +390,17 @@ const styles = stylex.create({
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
   },
-  // Named only while its own sidebar changes section; base.css slides the snapshots.
-  swap: {
-    viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
-    viewTransitionName: { default: null, [inSectionChange]: "match-element" },
-  },
   content: {
     display: "flex",
     flex: 1,
     flexDirection: "column",
+    gap: space.md,
     minHeight: 0,
     overflowX: "hidden",
     overflowY: { default: "auto", [iconOnly]: "hidden" },
+    paddingBlockEnd: space.xs,
+    paddingInlineEnd: space.xs,
+    paddingInlineStart: space.xs,
   },
   separator: {
     marginInlineEnd: space.xs,
@@ -286,32 +411,33 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     minWidth: 0,
-    paddingBlockEnd: space.xs,
-    paddingBlockStart: space.xs,
-    paddingInlineEnd: space.xs,
-    paddingInlineStart: space.xs,
     position: "relative",
     width: "100%",
   },
-  // Folds away as the sidebar narrows to its icons.
+  // Folds away with the width, rather than leaving the rows below to jump up when it goes.
   groupLabel: {
     alignItems: "center",
-    color: colors.textMuted,
+    color: colors.textSecondary,
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.xxs,
-    fontWeight: fontWeights.medium,
-    height: sizes.controlMd,
+    fontSize: fontSizes.xs,
+    height: sizes.controlXs,
     marginBlockStart: {
       default: 0,
-      [iconOnly]: `calc(-1 * ${sizes.controlMd})`,
+      [iconOnly]: `calc(-1 * ${sizes.controlXs})`,
     },
     opacity: { default: 1, [iconOnly]: 0 },
+    overflow: "hidden",
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
-    transitionDuration: durations.layout,
+    transitionDuration: {
+      default: durations.sidebar,
+      [iconOnly]: durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [media.reducedMotion]: "0s",
+    },
     transitionProperty: "margin, opacity",
-    transitionTimingFunction: easings.layout,
+    transitionTimingFunction: easings.inOut,
     whiteSpace: "nowrap",
   },
   action: {
@@ -324,25 +450,29 @@ const styles = stylex.create({
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
+    // Concentric with the row: its radius less the inset it sits at.
     borderStartStartRadius: radii.xs,
     borderStartEndRadius: radii.xs,
     borderEndStartRadius: radii.xs,
     borderEndEndRadius: radii.xs,
     color: colors.textSecondary,
     cursor: "pointer",
-    display: { default: "flex", [iconOnly]: "none" },
-    height: sizes.controlXxs,
+    display: { default: "flex", [inRail]: "none" },
+    height: sizes.controlXs,
+    insetInlineEnd: space.xxs,
     justifyContent: "center",
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
     position: "absolute",
-    width: sizes.controlXxs,
+    transitionDuration: durations.hover,
+    transitionProperty: "background-color, opacity",
+    transitionTimingFunction: "ease",
+    width: sizes.controlXs,
   },
   groupAction: {
-    insetBlockStart: `calc(${space.xs} + (${sizes.controlMd} - ${sizes.controlXxs}) / 2)`,
-    insetInlineEnd: `calc(${space.xs} + ${space.xxs})`,
+    insetBlockStart: 0,
   },
   groupContent: {
     fontSize: fontSizes.sm,
@@ -363,6 +493,26 @@ const styles = stylex.create({
   menuItem: {
     position: "relative",
   },
+  // In the content it fades with the width, as it has no icon to keep in the rail; the
+  // header's stays, so its logo holds where the rail's mark takes over.
+  expandedOnly: {
+    // Mounted as the rail opens, it fades in with the labels instead of starting whole.
+    animationDuration: durations.sidebar,
+    animationName: { default: null, [expandingContent]: fadeIn },
+    animationTimingFunction: easings.inOut,
+    display: "flex",
+    flexDirection: "column",
+    minWidth: 0,
+    opacity: { default: 1, [inContentIconOnly]: 0 },
+    transitionDuration: {
+      default: durations.sidebar,
+      [iconOnly]: durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "opacity",
+    transitionTimingFunction: easings.inOut,
+  },
   button: {
     alignItems: "center",
     backgroundColor: rowFill,
@@ -374,18 +524,24 @@ const styles = stylex.create({
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
+    boxShadow: {
+      default: null,
+      [highlighted]: {
+        default: unlit,
+        [media.hover]: { default: unlit, [rowHovered]: lit },
+        [rowOpen]: lit,
+      },
+    },
     boxSizing: "border-box",
     color: colors.textPrimary,
     cursor: "pointer",
     display: "flex",
     fontFamily: "inherit",
     fontSize: fontSizes.sm,
-    fontWeight: {
-      default: fontWeights.regular,
-      [highlighted]: fontWeights.medium,
-    },
+    fontWeight: fontWeights.regular,
     gap: space.xs,
     height: sizes.controlMd,
+    lineHeight: lineHeights.row,
     opacity: {
       default: 1,
       ":is(:disabled, [aria-disabled='true'])": opacities.disabled,
@@ -397,18 +553,20 @@ const styles = stylex.create({
     paddingInlineStart: space.xs,
     textAlign: "start",
     textDecorationLine: "none",
-    transform: { default: null, [`:active${pressable}`]: presses.row },
-    transitionDuration: `${durations.hover}, ${durations.press}`,
-    transitionProperty: "background-color, transform",
-    transitionTimingFunction: `ease, ${easings.out}`,
+    transitionDuration: durations.hover,
+    transitionProperty: "background-color, box-shadow",
+    transitionTimingFunction: "ease",
     whiteSpace: "nowrap",
-    width: { default: "100%", [iconOnly]: sizes.controlMd },
+    width: {
+      default: `min(100%, 100cqi - 2 * ${space.xs})`,
+      [inRail]: sizes.controlMd,
+    },
   },
-  // Room on the end for an action or badge.
+  // Room on the end for a badge.
   buttonWithEnd: {
     paddingInlineEnd: {
-      default: `calc(${space.xs} + ${sizes.controlXxs} + ${space.xxs})`,
-      [iconOnly]: space.xs,
+      default: `calc(${space.xs} + ${sizes.controlXs} + ${space.xxs})`,
+      [inRail]: space.xs,
     },
   },
   buttonOutline: {
@@ -417,37 +575,88 @@ const styles = stylex.create({
   },
   buttonSm: { fontSize: fontSizes.xs, height: sizes.controlSm },
   buttonLg: {
-    height: { default: sizes.media, [iconOnly]: sizes.controlMd },
-    paddingInlineEnd: { default: space.xs, [iconOnly]: 0 },
-    paddingInlineStart: { default: space.xs, [iconOnly]: 0 },
+    height: { default: sizes.media, [inRail]: sizes.controlMd },
+    paddingInlineEnd: { default: space.xs, [inRail]: 0 },
+    paddingInlineStart: { default: space.xs, [inRail]: 0 },
+  },
+  // Stays put while the sidebar's edge passes over it; the rail's narrow button hides it.
+  label: {
+    // One mounted as the rail opens (a brand's name) fades in like the rest, not whole.
+    animationDuration: durations.sidebar,
+    animationName: {
+      default: null,
+      ":is([data-slot='sidebar'][data-expanding] *)": fadeIn,
+    },
+    animationTimingFunction: easings.inOut,
+    flexGrow: 1,
+    maskImage: {
+      default: null,
+      ":is([data-truncated])": fadeAtEdge("right"),
+      [`:is([data-truncated])${rtl}`]: fadeAtEdge("left"),
+      [actionShown]: fadeBeforeAction("right"),
+      [`${actionShown}${rtl}`]: fadeBeforeAction("left"),
+      [media.hover]: {
+        [actionHovered]: fadeBeforeAction("right"),
+        [`${actionHovered}${rtl}`]: fadeBeforeAction("left"),
+      },
+    },
+    minWidth: 0,
+    // On the width's own clock, so it's gone just as the edge reaches the icons.
+    opacity: { default: 1, [iconOnly]: 0 },
+    overflow: "hidden",
+    transitionDuration: {
+      default: durations.sidebar,
+      [iconOnly]: durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "opacity",
+    transitionTimingFunction: easings.inOut,
+    whiteSpace: "nowrap",
+  },
+  // Drawn while its row is pointed at or focused, and kept in the layout when hidden,
+  // so the label's width never moves.
+  kbd: {
+    display: { default: "flex", [inRail]: "none" },
+    flexShrink: 0,
+    opacity: {
+      default: 0,
+      [`:is(${ownFocus} *)`]: 1,
+      [media.hover]: {
+        default: 0,
+        [`:is(${ownHover} *)`]: 1,
+      },
+    },
+    transitionDuration: durations.hover,
+    transitionProperty: "opacity",
+    transitionTimingFunction: "ease",
   },
   menuAction: {
-    insetBlockStart: `calc((${sizes.controlMd} - ${sizes.controlXxs}) / 2)`,
-    insetInlineEnd: space.xxs,
+    insetBlockStart: `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2)`,
   },
-  // Shown while its row is hovered or focused, or while its menu is open.
+  // Shown while its row is hovered or focused, or while its menu is open; always on touch.
   onHover: {
     opacity: {
       default: 1,
       [media.hover]: {
         default: 0,
-        ":is([data-slot='sidebar-menu-item']:hover *, [data-slot='sidebar-menu-item']:focus-within *)": 1,
-        ":is([aria-expanded='true'])": 1,
+        [`:is(${ownHover} *, ${ownFocus} *)`]: 1,
+        ":is([data-popup-open])": 1,
       },
     },
   },
   badge: {
     alignItems: "center",
     color: colors.textSecondary,
-    display: { default: "flex", [iconOnly]: "none" },
+    display: { default: "flex", [inRail]: "none" },
     fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     fontWeight: fontWeights.medium,
-    height: sizes.controlXxs,
-    insetBlockStart: `calc((${sizes.controlMd} - ${sizes.controlXxs}) / 2)`,
+    height: sizes.controlXs,
+    insetBlockStart: `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2)`,
     insetInlineEnd: space.xxs,
     justifyContent: "center",
-    minWidth: sizes.controlXxs,
+    minWidth: sizes.controlXs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
     pointerEvents: "none",
@@ -475,24 +684,46 @@ const styles = stylex.create({
     borderInlineStartColor: colors.edgeSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
-    display: { default: "flex", [iconOnly]: "none" },
+    display: "flex",
     flexDirection: "column",
     gap: space.xxxs,
+    // Folds shut with the width, so the rows under it close up in the same motion.
+    height: { default: "auto", [iconOnly]: 0 },
     listStyleType: "none",
     marginBlockEnd: 0,
     marginBlockStart: 0,
-    marginInlineEnd: px6,
+    marginInlineEnd: `calc(${space.xs} - ${space.xxxs})`,
     // Under the parent row's icon.
     marginInlineStart: `calc(${space.xs} + ${sizes.icon} / 2)`,
     minWidth: 0,
-    paddingBlockEnd: space.xxxs,
-    paddingBlockStart: space.xxxs,
+    opacity: { default: 1, [iconOnly]: 0 },
+    overflow: "clip",
+    overflowClipMargin: space.xxs,
+    paddingBlockEnd: { default: space.xxxs, [iconOnly]: 0 },
+    paddingBlockStart: { default: space.xxxs, [iconOnly]: 0 },
     paddingInlineEnd: 0,
-    paddingInlineStart: px6,
+    paddingInlineStart: `calc(${space.xs} - ${space.xxxs})`,
+    transitionDuration: {
+      default: durations.sidebar,
+      [iconOnly]: durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "height, padding-block, opacity",
+    transitionTimingFunction: easings.inOut,
   },
   subButton: {
     alignItems: "center",
-    backgroundColor: rowFill,
+    backgroundColor: {
+      default: "transparent",
+      [media.hover]: {
+        default: "transparent",
+        [`:hover${pressable}`]: colors.fillSubtle,
+        [highlighted]: colors.fill,
+      },
+      [`:active${pressable}`]: colors.fillSubtle,
+      [highlighted]: colors.fill,
+    },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
@@ -512,6 +743,65 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   subButtonSm: { fontSize: fontSizes.xs },
+  // The rail's mark and the icon share one cell, and cross-fade as the trigger is pointed at.
+  markStack: {
+    display: "inline-grid",
+  },
+  markLayer: {
+    display: "flex",
+    gridArea: "1 / 1",
+    transitionDuration: {
+      default: durations.hover,
+      // Keyboard focus never animates.
+      [triggerFocused]: "0s",
+    },
+    transitionProperty: {
+      default: "opacity, scale, filter",
+      [media.reducedMotion]: "opacity",
+    },
+    transitionTimingFunction: easings.crossfade,
+  },
+  // The outgoing layer shrinks and softens, so the two never double-expose.
+  markIdle: {
+    filter: {
+      default: "none",
+      [triggerFocused]: `blur(${motion.crossfadeTextBlur})`,
+      [media.hover]: {
+        default: "none",
+        [triggerHovered]: `blur(${motion.crossfadeTextBlur})`,
+      },
+    },
+    opacity: {
+      default: 1,
+      [triggerFocused]: 0,
+      [media.hover]: { default: 1, [triggerHovered]: 0 },
+    },
+    scale: {
+      default: 1,
+      [triggerFocused]: motion.popoverScale,
+      [media.hover]: { default: 1, [triggerHovered]: motion.popoverScale },
+    },
+  },
+  markActive: {
+    filter: {
+      default: `blur(${motion.crossfadeTextBlur})`,
+      [triggerFocused]: "none",
+      [media.hover]: {
+        default: `blur(${motion.crossfadeTextBlur})`,
+        [triggerHovered]: "none",
+      },
+    },
+    opacity: {
+      default: 0,
+      [triggerFocused]: 1,
+      [media.hover]: { default: 0, [triggerHovered]: 1 },
+    },
+    scale: {
+      default: motion.popoverScale,
+      [triggerFocused]: 1,
+      [media.hover]: { default: motion.popoverScale, [triggerHovered]: 1 },
+    },
+  },
 });
 
 /** Holds the open state, toggles on ⌘B / Ctrl+B, and lays the sidebar out beside its inset. */
@@ -531,10 +821,13 @@ function SidebarProvider({
   const [ownOpen, setOwnOpen] = useState(defaultOpen);
   // A count, so a change started mid-slide isn't unnamed when the first one ends.
   const [sectionChanges, setSectionChanges] = useState(0);
+  // Whether the last toggle came from ⌘B / Ctrl+B.
+  const [instant, setInstant] = useState(false);
   const open = openProp ?? ownOpen;
 
   const setOpen = useCallback(
     (next: boolean) => {
+      setInstant(false);
       if (onOpenChange) {
         onOpenChange(next);
       } else {
@@ -551,6 +844,11 @@ function SidebarProvider({
       setOpen(!open);
     }
   }, [isMobile, open, openMobile, setOpen]);
+
+  const toggleFromKeyboard = useCallback(() => {
+    toggleSidebar();
+    setInstant(true);
+  }, [toggleSidebar]);
 
   const changeSection = useCallback(
     (
@@ -584,14 +882,14 @@ function SidebarProvider({
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "b" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        toggleSidebar();
+        toggleFromKeyboard();
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [toggleSidebar]);
+  }, [toggleFromKeyboard]);
 
   const context = useMemo<SidebarContextValue>(
     () => ({
@@ -618,11 +916,14 @@ function SidebarProvider({
 
   return (
     <SidebarContext value={context}>
-      <div
-        data-slot="sidebar-wrapper"
-        {...props}
-        {...stylex.props(styles.wrapper, sx)}
-      />
+      <KeyboardToggleContext value={toggleFromKeyboard}>
+        <div
+          data-instant={instant || undefined}
+          data-slot="sidebar-wrapper"
+          {...props}
+          {...stylex.props(styles.wrapper, sx)}
+        />
+      </KeyboardToggleContext>
     </SidebarContext>
   );
 }
@@ -633,12 +934,41 @@ function Sidebar({
   side = "left",
   sx,
   ...props
-}: Styled<ComponentProps<"div">> & {
+}: Styled<Omit<ComponentProps<"div">, "ref">> & {
   collapsible?: SidebarCollapsible;
   side?: SidebarSide;
 }) {
   const { isMobile, openMobile, sectionChanging, setOpenMobile, state } =
     useSidebar();
+  const desktop = useRef<HTMLDivElement>(null);
+  const isCollapsed = state === "collapsed";
+  const [settled, setSettled] = useState(isCollapsed);
+  // Settles once the width transition ends; with none running (reduced motion) at once.
+  useEffect(() => {
+    const running = desktop.current?.getAnimations() ?? [];
+    let cancelled = false;
+    async function settle() {
+      await Promise.allSettled(
+        running.map(async (animation) => await animation.finished)
+      );
+      // The next toggle cancels this run, and its own run settles it. Any other end, like the
+      // column unmounting for the sheet, still settles, so the rail never waits on it.
+      if (!cancelled) {
+        setSettled(isCollapsed);
+      }
+    }
+    void settle();
+    return () => {
+      cancelled = true;
+    };
+  }, [isCollapsed]);
+  const collapsing = isCollapsed && collapsible === "icon";
+  const rail = collapsing && settled;
+  const tooltipSide: "left" | "right" = side === "right" ? "left" : "right";
+  const railState = useMemo(
+    () => ({ collapsing, rail, tooltipSide }),
+    [collapsing, rail, tooltipSide]
+  );
   // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
   const sectionChange = sectionChanging ? "" : undefined;
 
@@ -670,23 +1000,27 @@ function Sidebar({
           <SheetDescription sx={styles.hidden}>
             Displays the mobile sidebar.
           </SheetDescription>
-          {children}
+          <InSheetContext value>{children}</InSheetContext>
         </SheetContent>
       </Sheet>
     );
   }
 
-  const isCollapsed = state === "collapsed";
   return (
     <div
       data-collapsible={isCollapsed ? collapsible : undefined}
+      data-expanding={
+        (collapsible === "icon" && !isCollapsed && settled) || undefined
+      }
+      data-rail={rail || undefined}
       data-section-change={sectionChange}
       data-side={side}
       data-slot="sidebar"
-      data-state={state}
+      ref={desktop}
       {...props}
       {...stylex.props(
         styles.sidebar,
+        side === "right" && styles.sidebarRight,
         isCollapsed && collapsible === "offcanvas" && styles.offcanvas,
         isCollapsed && collapsible === "icon" && styles.icon
       )}
@@ -696,43 +1030,129 @@ function Sidebar({
         {...stylex.props(
           styles.inner,
           side === "right" && styles.innerRight,
-          collapsible === "icon" && styles.innerIcon,
           sx
         )}
       >
-        {children}
+        <RailContext value={railState}>{children}</RailContext>
       </div>
     </div>
   );
 }
 
+/**
+ * Collapses the sidebar, or opens it as a sheet on narrow screens; inside the sheet it
+ * closes it. Its children default to `SidebarTriggerIcon`; `kbd` follows the label in its
+ * tooltip.
+ */
 function SidebarTrigger({
-  "aria-label": label = "Toggle Sidebar",
+  "aria-label": ariaLabel,
+  children,
+  kbd,
   onClick,
-  size = "icon-sm",
+  size = "icon",
   variant = "ghost",
   ...props
-}: ButtonProps) {
-  const { toggleSidebar } = useSidebar();
+}: ButtonProps & { kbd?: ReactNode }) {
+  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
+  const inSheet = use(InSheetContext);
+  const toggleFromKeyboard = use(KeyboardToggleContext);
+  const { rail, tooltipSide } = use(RailContext);
+
+  if (inSheet) {
+    return (
+      <Button
+        aria-label={ariaLabel ?? "Close sidebar"}
+        data-slot="sidebar-trigger"
+        onClick={(event) => {
+          onClick?.(event);
+          setOpenMobile(false);
+        }}
+        size={size}
+        variant={variant}
+        {...props}
+      >
+        {children ?? <SidebarTriggerIcon />}
+      </Button>
+    );
+  }
+
+  let label = open ? "Collapse sidebar" : "Expand sidebar";
+  if (isMobile) {
+    label = "Open sidebar";
+  }
   return (
-    <Button
-      aria-label={label}
-      data-slot="sidebar-trigger"
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
-      size={size}
-      variant={variant}
-      {...props}
-    >
-      <HugeiconsIcon
-        aria-hidden
-        icon={SidebarLeftIcon}
-        size={sizes.icon}
-        strokeWidth={Number(strokes.icon)}
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            aria-expanded={isMobile ? undefined : open}
+            aria-label={ariaLabel ?? label}
+            data-slot="sidebar-trigger"
+            onClick={(event) => {
+              onClick?.(event);
+              // Enter or Space: a keyboard toggle, so it skips the animation.
+              if (event.detail === 0 && toggleFromKeyboard) {
+                toggleFromKeyboard();
+              } else {
+                toggleSidebar();
+              }
+            }}
+            size={size}
+            variant={variant}
+            {...props}
+          >
+            {children ?? <SidebarTriggerIcon />}
+          </Button>
+        }
       />
-    </Button>
+      <TooltipContent side={rail ? tooltipSide : "bottom"}>
+        {ariaLabel ?? label}
+        {kbd}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+/** The trigger's glyph for where it is: close in the mobile sheet, a menu below 768px, the sidebar otherwise. */
+function SidebarTriggerIcon() {
+  const { isMobile } = useSidebar();
+  let icon = SidebarLeftIcon;
+  if (use(InSheetContext)) {
+    icon = Cancel01Icon;
+  } else if (isMobile) {
+    icon = Menu01Icon;
+  }
+  return <Glyph icon={icon} />;
+}
+
+/**
+ * A mark, like your logo, that stands in for `SidebarTriggerIcon` in the icon rail until
+ * the trigger is pointed at or focused. Anywhere else it's the icon.
+ */
+function SidebarTriggerMark({ children }: { children: ReactNode }) {
+  if (!use(RailContext).rail) {
+    return <SidebarTriggerIcon />;
+  }
+  return (
+    <span {...stylex.props(styles.markStack)}>
+      <span {...stylex.props(styles.markLayer, styles.markIdle)}>
+        {children}
+      </span>
+      <span {...stylex.props(styles.markLayer, styles.markActive)}>
+        <SidebarTriggerIcon />
+      </span>
+    </span>
+  );
+}
+
+function Glyph({ icon }: { icon: typeof SidebarLeftIcon }) {
+  return (
+    <HugeiconsIcon
+      aria-hidden
+      icon={icon}
+      size={sizes.icon}
+      strokeWidth={Number(strokes.icon)}
+    />
   );
 }
 
@@ -763,15 +1183,41 @@ function SidebarInset({ sx, ...props }: Styled<ComponentProps<"main">>) {
   );
 }
 
+/** Renders its children except in the collapsed icon rail. */
+function SidebarExpandedOnly({ children }: { children: ReactNode }) {
+  if (use(RailContext).rail) {
+    return null;
+  }
+  return (
+    <div
+      data-slot="sidebar-expanded-only"
+      {...stylex.props(styles.expandedOnly)}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** `swap`: whether it slides when the section changes. */
 type SwapProps = Styled<ComponentProps<"div">> & { swap?: boolean };
 
+/** A row the page's header height: a brand or title first, `SidebarHeaderActions` last. */
 function SidebarHeader({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-header"
       {...props}
-      {...stylex.props(styles.section, swap && styles.swap, sx)}
+      {...stylex.props(styles.header, swap && styles.swap, sx)}
+    />
+  );
+}
+
+function SidebarHeaderActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="sidebar-header-actions"
+      {...props}
+      {...stylex.props(styles.headerActions, sx)}
     />
   );
 }
@@ -781,7 +1227,7 @@ function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
     <div
       data-slot="sidebar-footer"
       {...props}
-      {...stylex.props(styles.section, swap && styles.swap, sx)}
+      {...stylex.props(styles.footer, swap && styles.swap, sx)}
     />
   );
 }
@@ -882,7 +1328,10 @@ const buttonSizeStyles = {
   sm: styles.buttonSm,
 } satisfies Record<SidebarMenuButtonSize, stylex.StyleXStyles | null>;
 
-/** A row in the menu. `isActive` marks the current page; `tooltip` names it while collapsed to icons. */
+/**
+ * A row in the menu. `isActive` marks the current page; `tooltip` names it in the icon
+ * rail, and whenever its `SidebarMenuLabel` is cut off.
+ */
 function SidebarMenuButton({
   isActive = false,
   render,
@@ -895,12 +1344,13 @@ function SidebarMenuButton({
 }: Styled<useRender.ComponentProps<"button">> & {
   isActive?: boolean;
   size?: SidebarMenuButtonSize;
-  tooltip?: string;
+  tooltip?: ReactNode;
   variant?: SidebarMenuButtonVariant;
-  /** Leaves room for a `SidebarMenuAction` or `SidebarMenuBadge` at its end. */
+  /** Leaves room for a `SidebarMenuBadge` at its end. */
   withEnd?: boolean;
 }) {
-  const { isMobile, state } = useSidebar();
+  const { rail, tooltipSide } = use(RailContext);
+  const [truncated, setTruncated] = useState(false);
   const button = useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -919,16 +1369,45 @@ function SidebarMenuButton({
   });
 
   if (tooltip === undefined) {
-    return button;
+    return <LabelContext value={null}>{button}</LabelContext>;
   }
 
   return (
-    <Tooltip disabled={state !== "collapsed" || isMobile}>
-      {button}
-      <TooltipContent align="center" side="right">
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
+    <LabelContext value={setTruncated}>
+      <Tooltip disabled={!(rail || truncated)}>
+        {button}
+        <TooltipContent align="center" side={tooltipSide}>
+          {tooltip}
+        </TooltipContent>
+      </Tooltip>
+    </LabelContext>
+  );
+}
+
+/** A row's label: fades at the edge when cut off, and out as the sidebar narrows to its icons. */
+function SidebarMenuLabel({ sx, ...props }: Styled<ComponentProps<"span">>) {
+  const { rail } = use(RailContext);
+  const { ref, truncated } = useTruncated(!rail);
+  return (
+    <span
+      data-slot="sidebar-menu-label"
+      data-truncated={truncated || undefined}
+      ref={ref}
+      {...props}
+      {...stylex.props(styles.label, sx)}
+    />
+  );
+}
+
+/** A row's shortcut, after its label; shown while the row is pointed at or focused. */
+function SidebarMenuKbd({ sx, ...props }: Styled<ComponentProps<"span">>) {
+  return (
+    <span
+      aria-hidden
+      data-slot="sidebar-menu-kbd"
+      {...props}
+      {...stylex.props(styles.kbd, sx)}
+    />
   );
 }
 
@@ -938,10 +1417,15 @@ function SidebarMenuAction({
   sx,
   ...props
 }: Styled<useRender.ComponentProps<"button">> & { showOnHover?: boolean }) {
+  const marker = {
+    "data-show-on-hover": showOnHover ? "" : undefined,
+    "data-sidebar-menu-action": "",
+    type: "button" as const,
+  };
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
-      { type: "button" },
+      marker,
       props,
       stylex.props(
         styles.action,
@@ -987,6 +1471,7 @@ function SidebarMenuSub({ sx, ...props }: Styled<ComponentProps<"ul">>) {
   return (
     <ul
       data-slot="sidebar-menu-sub"
+      inert={use(RailContext).collapsing}
       {...props}
       {...stylex.props(styles.sub, sx)}
     />
@@ -1028,12 +1513,14 @@ export {
   Sidebar,
   sidebarCollapsibles,
   SidebarContent,
+  SidebarExpandedOnly,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarHeaderActions,
   SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
@@ -1042,16 +1529,20 @@ export {
   sidebarMenuButtonSizes,
   sidebarMenuButtonVariants,
   SidebarMenuItem,
+  SidebarMenuKbd,
+  SidebarMenuLabel,
   SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
-  SidebarSeparator,
   sidebarSectionDirections,
+  SidebarSeparator,
   sidebarSides,
   SidebarTrigger,
+  SidebarTriggerIcon,
+  SidebarTriggerMark,
   useSidebar,
 };
 export type {

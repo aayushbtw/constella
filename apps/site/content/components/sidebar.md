@@ -9,28 +9,30 @@ draft: true
 ```tsx
 <SidebarProvider>
   <Sidebar collapsible="icon">
-    <SidebarHeader>…</SidebarHeader>
+    <SidebarHeader>
+      <SidebarExpandedOnly>…</SidebarExpandedOnly>
+      <SidebarHeaderActions>
+        <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+          <SidebarTriggerMark>
+            <Logo />
+          </SidebarTriggerMark>
+        </SidebarTrigger>
+      </SidebarHeaderActions>
+    </SidebarHeader>
     <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton isActive tooltip="Chats">
-                <HugeiconsIcon icon={BubbleChatIcon} />
-                <span>Chats</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton isActive tooltip="Chats">
+            <HugeiconsIcon icon={BubbleChatIcon} />
+            <SidebarMenuLabel>Chats</SidebarMenuLabel>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
     </SidebarContent>
     <SidebarFooter>…</SidebarFooter>
     <SidebarRail />
   </Sidebar>
-  <SidebarInset>
-    <SidebarTrigger />…
-  </SidebarInset>
+  <SidebarInset>…</SidebarInset>
 </SidebarProvider>
 ```
 
@@ -50,7 +52,7 @@ import {
 } from "@/components/ui/sidebar";
 ```
 
-`SidebarProvider` holds the open state and toggles it on ⌘B or Ctrl+B. Put the `Sidebar` and a `SidebarInset` for the page inside it. Below 768px the sidebar opens as a [Sheet](/docs/components/sheet) instead.
+`SidebarProvider` holds the open state and toggles it on ⌘B or Ctrl+B with no animation. Put the `Sidebar` and a `SidebarInset` for the page inside it. Below 768px the sidebar opens as a [Sheet](/docs/components/sheet) instead.
 
 ```tsx
 <SidebarProvider>
@@ -63,7 +65,7 @@ import {
 </SidebarProvider>
 ```
 
-Put each row's label last, in a `<span>`, so it fades as the sidebar narrows to its icons.
+Put each row's text in a `SidebarMenuLabel`. A label too long for the row fades at its edge, and the row's `tooltip` shows it whole. As the sidebar narrows to its icons, the label fades out with the width.
 
 ## Composition
 
@@ -71,6 +73,10 @@ Put each row's label last, in a `<span>`, so it fades as the sidebar narrows to 
 SidebarProvider
 ├── Sidebar
 │   ├── SidebarHeader
+│   │   ├── SidebarExpandedOnly
+│   │   └── SidebarHeaderActions
+│   │       └── SidebarTrigger
+│   │           └── SidebarTriggerMark
 │   ├── SidebarContent
 │   │   └── SidebarGroup
 │   │       ├── SidebarGroupLabel
@@ -79,6 +85,8 @@ SidebarProvider
 │   │           └── SidebarMenu
 │   │               └── SidebarMenuItem
 │   │                   ├── SidebarMenuButton
+│   │                   │   ├── SidebarMenuLabel
+│   │                   │   └── SidebarMenuKbd
 │   │                   ├── SidebarMenuAction
 │   │                   ├── SidebarMenuBadge
 │   │                   └── SidebarMenuSub
@@ -87,12 +95,34 @@ SidebarProvider
 │   ├── SidebarFooter
 │   └── SidebarRail
 └── SidebarInset
-    └── SidebarTrigger
+```
+
+## Sidebar Header
+
+`SidebarHeader` is a row the page header's height (48px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
+
+Wrap anything that only fits the open sidebar in `SidebarExpandedOnly`. It stays while the width moves, so the edge passes over it, and is removed once the sidebar has narrowed to its icons. In the content it fades with the labels.
+
+```tsx
+<SidebarHeader>
+  <SidebarExpandedOnly>
+    <Brand />
+  </SidebarExpandedOnly>
+  <SidebarHeaderActions>
+    <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+      <SidebarTriggerMark>
+        <Logo />
+      </SidebarTriggerMark>
+    </SidebarTrigger>
+  </SidebarHeaderActions>
+</SidebarHeader>
 ```
 
 ## Sidebar Menu Button
 
-Use `isActive` for the current page and `tooltip` to name the row when collapsed. Pass `withEnd` when the row has a `SidebarMenuAction` or `SidebarMenuBadge`, so its label leaves room for it.
+Use `isActive` for the current page and `tooltip` to name the row in the icon rail, or when its label is cut off. Pass `withEnd` when the row has a `SidebarMenuBadge`, so its label leaves room for it.
+
+Put a shortcut after the label in a `SidebarMenuKbd`. It shows while the row is pointed at or focused. In the rail, put it in the `tooltip` instead.
 
 | Size      | Height |
 | --------- | ------ |
@@ -101,23 +131,31 @@ Use `isActive` for the current page and `tooltip` to name the row when collapsed
 | `lg`      | 40px   |
 
 ```tsx
-<SidebarMenuButton isActive tooltip="Chats" withEnd>
-  <HugeiconsIcon icon={BubbleChatIcon} />
-  <span>Chats</span>
+<SidebarMenuButton
+  tooltip={
+    <>
+      New chat<Kbd>⌘O</Kbd>
+    </>
+  }
+>
+  <HugeiconsIcon icon={PencilEdit02Icon} />
+  <SidebarMenuLabel>New chat</SidebarMenuLabel>
+  <SidebarMenuKbd>
+    <Kbd>⌘O</Kbd>
+  </SidebarMenuKbd>
 </SidebarMenuButton>
-<SidebarMenuBadge>12</SidebarMenuBadge>
 ```
 
 ## Sidebar Menu Action
 
-Put a `SidebarMenuAction` after a row's button for an action of its own, like a menu. With `showOnHover` it shows only while its row is hovered or focused, or its menu is open. Show `SidebarMenuSkeleton` rows while the list loads.
+Put a `SidebarMenuAction` after a row's button for an action of its own, like a menu. It's drawn over the row's end, and the label fades out before it. With `showOnHover` it shows only while its row is hovered or focused, or its menu is open, so the label keeps the full width the rest of the time. Show `SidebarMenuSkeleton` rows while the list loads.
 
 <!-- ::demo name="sidebar-action" -->
 
 ```tsx
 <SidebarMenuItem>
-  <SidebarMenuButton isActive withEnd>
-    <span>Quarterly revenue summary</span>
+  <SidebarMenuButton isActive tooltip="Quarterly revenue summary">
+    <SidebarMenuLabel>Quarterly revenue summary</SidebarMenuLabel>
   </SidebarMenuButton>
   <DropdownMenu>
     <DropdownMenuTrigger
@@ -132,9 +170,7 @@ Put a `SidebarMenuAction` after a row's button for an action of its own, like a 
 
 ## Sections
 
-When a row leads into a section with its own sidebar, like Settings, change it with `changeSection` from `useSidebar`. It runs your update in a view transition: the header and content slide forward into the section, or back out of it, and the page swaps at once.
-
-<!-- ::demo name="sidebar-section" -->
+When a row leads into a section with its own sidebar, like Settings in the first demo, change it with `changeSection` from `useSidebar`. It runs your update in a view transition: the header and content slide forward into the section, or back out of it, and the page swaps at once.
 
 ```tsx
 const { changeSection } = useSidebar();
@@ -195,6 +231,8 @@ Use the `collapsible` prop on `Sidebar` to choose how it closes. Collapsed to ic
 | --- | --- |
 | `SidebarProvider` | `open`, `defaultOpen`, `onOpenChange`; ⌘B / Ctrl+B |
 | `Sidebar` | `side`: `"left"` or `"right"`; `collapsible`: `"offcanvas"`, `"icon"` or `"none"` |
+| `SidebarTrigger` | `kbd`; children default to `SidebarTriggerIcon` |
+| `SidebarTriggerMark` | children: the mark shown in the rail |
 | `SidebarMenuButton` | `isActive`, `tooltip`, `withEnd`; `variant`: `"default"` or `"outline"`; `size`: `"sm"`, `"default"` or `"lg"`; `render` |
 | `SidebarMenuAction` | `showOnHover` |
 | `SidebarMenuSkeleton` | `showIcon` |

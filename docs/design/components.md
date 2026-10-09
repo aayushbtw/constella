@@ -114,9 +114,19 @@ Part of the layout, not a layer: it opens into a slot beside the content on the 
 
 ## Sidebar
 
-Sits on `sidebar`, a step off the page, split from it by an `edgeSubtle` hairline, so it reads as the frame and the page as the content. It's in the flow and sticky, not fixed, so it sits beside the page at any height. Its rows are a control tall, `space.xxxs` apart, hover on `fillSubtle` and give with `presses.row`; the current one takes `fill` and medium weight.
+Sits on `sidebar`, a step off the page, split from it by an `edgeSubtle` hairline, so it reads as the frame and the page as the content. It's in the flow and sticky, not fixed, so it sits beside the page at any height. Its header is a row `sizes.header` tall, the page header's height, so the two line up across the edge, with the trigger at its end.
 
-The one surface whose width animates: it narrows on `layout` while its inner panel keeps its full width, so the content is clipped, never reflowed, the logo stays put, and each row's label fades out as the edge reaches it. Collapsed to icons it's `sizes.sidebarIcon`, a control and its group padding, and each row names itself in a tooltip. Below `media.md` it opens as a sheet.
+Rows are a control tall, `space.xxxs` apart. The whole row answers the pointer, its action included, on `fillSubtle`, and stays lit while a menu from it is open. The current row takes `fill`, and hover stacks on it as an inset shadow so it still fades. Rows don't press. The current one keeps regular weight, since a weight change shifts the label. A label cut off fades over its last `space.lg` instead of an ellipsis, and fades out before an action drawn over the row's end; its tooltip shows it whole. A row's shortcut shows only while the row is pointed at or focused, and keeps its room when hidden so the label never moves.
+
+The one surface whose width animates. It morphs on screen rather than entering or leaving, so it runs on `inOut`, taking `sidebar` to open and `sidebarExit` to close.
+
+Everything that changes with it runs on that one clock, with no delays. The inner panel keeps its full width, so the content is clipped and never reflowed. Labels fade. Rows size to the column, so they narrow with the edge and a pill keeps its rounded end. Sub-menus and group labels fold. The hairline rides the column's edge.
+
+Nothing snaps at the start. The rail layout applies only once the width settles, and by then it matches what's already showing. From the keyboard (⌘B, or Enter on the trigger) it changes at once, with no animation.
+
+Narrowed, it's `sizes.sidebarIcon` wide, a control plus its group padding. Each row names itself in a tooltip, which points away from the window's edge. The trigger sits on the rows' icon column and shows the app's mark where the brand's logo was. Pointed at or focused, the toggle cross-fades in on `hover`, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, and at once on keyboard focus.
+
+Below `media.md` it opens as a sheet, where the trigger closes it.
 
 A section change (into Settings and back) slides like a stack: the header and content leave `motion.exitOffset` toward where they came from, on `popoverExit`, and the new section arrives from the other side on `popover`, both on `crossfade` under `motion.crossfadeBlur`, clipped to their own boxes. The blur is the one exception to "no blur-ins": it's rare, and it tells two sections apart. The footer and the page stay put. Under `media.reducedMotion` it only fades. It's a view transition, so the old section is a snapshot and never re-renders.
 

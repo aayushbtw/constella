@@ -18,6 +18,6 @@ Selected is `fill`; hover stays a step under at `fillSubtle`, so on and hovered 
 
 ## Press
 
-Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give. Two exceptions: a trigger (`[aria-haspopup]`) doesn't give, since pressing it opens something rather than acting; a text link answers with an underline, not a press.
+Pressables scale down on `:active`, from `presses`: `icon` for icon buttons, `link` for buttons, `row` for full-width rows. The smaller the target, the bigger the give. Two exceptions: a trigger (`[aria-haspopup]`) doesn't give, since pressing it opens something rather than acting; a text link answers with an underline, not a press. Sidebar rows don't press either: they're navigation used all day, and the current row's fill already answers.
 
 A pressable that also changes color on hover transitions both, each on its own clock: color on `ease` + `hover`, transform on `out` + `press`.

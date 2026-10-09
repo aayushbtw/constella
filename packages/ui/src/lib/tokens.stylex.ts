@@ -142,6 +142,8 @@ export const sizes = stylex.defineConsts({
   dialog: "384px",
   dialogLg: "512px",
   dialogSm: "320px",
+  // The top row the sidebar and the page share, so their headers line up.
+  header: "48px",
   hitArea: "40px",
   icon: "16px",
   iconLg: "20px",
@@ -234,6 +236,8 @@ export const durations = stylex.defineConsts({
   // How long a confirmation (copied, saved) holds before it reverts; read in JS.
   confirm: "1500ms",
   dialog: "200ms",
+  sidebar: "250ms",
+  sidebarExit: "200ms",
   tooltipDelay: "300ms",
   // Longer than a tooltip's: a card covers content, so it waits for the pointer to settle.
   hoverCardDelay: "600ms",

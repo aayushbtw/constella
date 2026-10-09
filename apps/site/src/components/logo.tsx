@@ -1,13 +1,13 @@
 import { layout } from "~/lib/tokens.stylex";
 
-function Logo() {
+function Logo({ size = layout.logo }: { size?: string }) {
   return (
     <svg
       aria-hidden
       fill="currentColor"
-      height={layout.logo}
+      height={size}
       viewBox="0 0 32 32"
-      width={layout.logo}
+      width={size}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
