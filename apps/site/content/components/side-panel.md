@@ -1,6 +1,6 @@
 ---
 title: Side Panel
-description: Details of a row, beside the content instead of over it.
+description: A panel beside the page for details, a form or anything else, full height.
 draft: true
 ---
 
@@ -10,7 +10,7 @@ draft: true
 const slot = useRef<HTMLDivElement>(null);
 
 <div {...stylex.props(styles.row)}>
-  <List onSelect={setSelected} />
+  <Page onSelect={setSelected} />
   <SidePanelSlot ref={slot} />
   <SidePanel
     onOpenChange={(open) => !open && setSelected(null)}
@@ -19,9 +19,9 @@ const slot = useRef<HTMLDivElement>(null);
     <SidePanelContent container={slot}>
       <SidePanelHeader>
         <SidePanelTitle>Signed in</SidePanelTitle>
-        <SidePanelDescription>ana@acme.com</SidePanelDescription>
       </SidePanelHeader>
       <SidePanelBody>…</SidePanelBody>
+      <SidePanelFooter>…</SidePanelFooter>
     </SidePanelContent>
   </SidePanel>
 </div>;
@@ -38,13 +38,16 @@ import {
   SidePanel,
   SidePanelBody,
   SidePanelContent,
+  SidePanelFooter,
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
 ```
 
-Put a `SidePanelSlot` after the content in a flex row, and pass its ref to `SidePanelContent` as `container`. The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
+Put a `SidePanelSlot` after the whole page, header included, in a flex row, so the panel runs the full height of it. Pass its ref to `SidePanelContent` as `container`.
+
+The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
 
 On a narrow window, show the same details in a [Sheet](/docs/components/sheet) instead.
 
@@ -55,9 +58,9 @@ SidePanelSlot
 SidePanel
 └── SidePanelContent
     ├── SidePanelHeader
-    │   ├── SidePanelTitle
-    │   └── SidePanelDescription
-    └── SidePanelBody
+    │   └── SidePanelTitle
+    ├── SidePanelBody
+    └── SidePanelFooter
 ```
 
 ## API Reference
@@ -66,6 +69,8 @@ SidePanel
 | --- | --- |
 | `SidePanel` | Base UI Dialog, non-modal, not closed by an outside click |
 | `SidePanelContent` | `container`: the slot's ref; renders the portal and popup |
-| `SidePanelHeader` | Renders a Close button at its end |
+| `SidePanelHeader` | A row `sizes.header` tall, pinned: the title, any actions, then Close |
+| `SidePanelBody` | Scrolls on its own |
+| `SidePanelFooter` | Pinned below the body |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Dialog](https://base-ui.com/react/components/dialog).

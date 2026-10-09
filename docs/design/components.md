@@ -110,7 +110,9 @@ Travels the whole way in from its edge on `layout` (the drawer curve, `durations
 
 ## Side panel
 
-Part of the layout, not a layer: it opens into a slot beside the content on the page's `background`, split by an `edgeSubtle` hairline, so the content narrows instead of being covered. It's non-modal, so the list beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step.
+Part of the layout, not a layer: it opens into a slot after the whole page, so it runs the full height beside the page's header too. It sits on the page's `background`, split by an `edgeSubtle` hairline, so the content narrows instead of being covered. What it holds is the app's: details, a form, anything. It's non-modal, so the page beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step.
+
+Its header is a row `sizes.header` tall, the page header's height, so the two hairlines line up across the edge, like the sidebar's. It holds a title, any actions, then Close, and never info or a description: that goes in the body. The header and footer are pinned; the body scrolls on its own. The footer is the sidebar's, a column with a `space.xs` gap, on the body's `space.md` inset.
 
 ## Sidebar
 

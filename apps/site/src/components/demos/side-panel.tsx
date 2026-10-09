@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemActions,
@@ -13,12 +14,19 @@ import {
   SidePanel,
   SidePanelBody,
   SidePanelContent,
-  SidePanelDescription,
+  SidePanelFooter,
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
-import { colors, radii, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  radii,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -46,12 +54,28 @@ const styles = stylex.create({
     overflow: "hidden",
     width: "100%",
   },
+  page: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    minWidth: 0,
+  },
+  topbar: {
+    alignItems: "center",
+    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndStyle: "solid",
+    borderBlockEndWidth: strokes.border,
+    display: "flex",
+    flexShrink: 0,
+    fontSize: fontSizes.sm,
+    height: sizes.header,
+    paddingInlineStart: space.md,
+  },
   list: {
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     gap: space.xxs,
-    minWidth: 0,
     overflowY: "auto",
     paddingBlockEnd: space.xs,
     paddingBlockStart: space.xs,
@@ -105,25 +129,28 @@ function SidePanelDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
-        <div {...stylex.props(styles.list)}>
-          {events.map((item, index) => (
-            <Item
-              key={item.time}
-              onClick={() => {
-                setSelected(index);
-              }}
-              // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- the item renders its children into the button
-              render={<button type="button" />}
-              size="sm"
-              sx={[styles.row, selected === index && styles.selected]}
-            >
-              <ItemContent>
-                <ItemTitle>{item.action}</ItemTitle>
-                <ItemDescription>{item.actor}</ItemDescription>
-              </ItemContent>
-              <ItemActions>{item.time}</ItemActions>
-            </Item>
-          ))}
+        <div {...stylex.props(styles.page)}>
+          <header {...stylex.props(styles.topbar)}>Activity</header>
+          <div {...stylex.props(styles.list)}>
+            {events.map((item, index) => (
+              <Item
+                key={item.time}
+                onClick={() => {
+                  setSelected(index);
+                }}
+                // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- the item renders its children into the button
+                render={<button type="button" />}
+                size="sm"
+                sx={[styles.row, selected === index && styles.selected]}
+              >
+                <ItemContent>
+                  <ItemTitle>{item.action}</ItemTitle>
+                  <ItemDescription>{item.actor}</ItemDescription>
+                </ItemContent>
+                <ItemActions>{item.time}</ItemActions>
+              </Item>
+            ))}
+          </div>
         </div>
         <SidePanelSlot ref={slot} />
         <SidePanel
@@ -137,10 +164,11 @@ function SidePanelDemo() {
           <SidePanelContent container={slot}>
             <SidePanelHeader>
               <SidePanelTitle>{event?.action}</SidePanelTitle>
-              <SidePanelDescription>{event?.actor}</SidePanelDescription>
             </SidePanelHeader>
             <SidePanelBody>
               <dl {...stylex.props(styles.facts)}>
+                <dt {...stylex.props(styles.term)}>User</dt>
+                <dd {...stylex.props(styles.value)}>{event?.actor}</dd>
                 <dt {...stylex.props(styles.term)}>Time</dt>
                 <dd {...stylex.props(styles.value)}>{event?.time}</dd>
                 <dt {...stylex.props(styles.term)}>Status</dt>
@@ -154,6 +182,9 @@ function SidePanelDemo() {
                 </dd>
               </dl>
             </SidePanelBody>
+            <SidePanelFooter>
+              <Button variant="outline">Copy event ID</Button>
+            </SidePanelFooter>
           </SidePanelContent>
         </SidePanel>
       </div>

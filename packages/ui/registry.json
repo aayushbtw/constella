@@ -408,7 +408,7 @@
       "name": "side-panel",
       "type": "registry:ui",
       "title": "Side Panel",
-      "description": "A non-modal panel that opens beside the content, split by a hairline.",
+      "description": "A full-height, non-modal panel that opens beside the page, for details, a form or anything else.",
       "dependencies": [
         "@base-ui/react",
         "@hugeicons/core-free-icons",

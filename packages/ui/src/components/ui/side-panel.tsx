@@ -59,7 +59,7 @@ const styles = stylex.create({
     maxWidth: "100vw",
     minHeight: 0,
     opacity: { default: 1, [entering]: 0 },
-    overflowY: "auto",
+    overflow: "hidden",
     transform: {
       default: "none",
       [entering]: {
@@ -76,42 +76,46 @@ const styles = stylex.create({
     transitionTimingFunction: easings.layout,
     width: sizes.sidePanel,
   },
+  // The page's header height, so the two line up across the edge.
   header: {
-    alignItems: "flex-start",
+    alignItems: "center",
     borderBlockEndColor: colors.edgeSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
+    boxSizing: "border-box",
     display: "flex",
     flexShrink: 0,
-    gap: space.sm,
-    justifyContent: "space-between",
-    paddingBlockEnd: space.sm,
-    paddingBlockStart: space.sm,
+    gap: space.xxs,
+    height: sizes.header,
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.md,
   },
-  heading: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.xxs,
-    minWidth: 0,
-    paddingBlockStart: space.xxs,
-  },
   title: {
+    flexGrow: 1,
     fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
-  },
-  description: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
+    minWidth: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   body: {
+    flexGrow: 1,
+    minHeight: 0,
+    overflowY: "auto",
+    paddingBlockEnd: space.md,
+    paddingBlockStart: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
+  },
+  footer: {
+    display: "flex",
+    flexDirection: "column",
+    flexShrink: 0,
+    gap: space.xs,
     paddingBlockEnd: space.md,
     paddingBlockStart: space.md,
     paddingInlineEnd: space.md,
@@ -152,7 +156,7 @@ function SidePanelContent({ container, sx, ...props }: SidePanelContentProps) {
   );
 }
 
-/** Holds the title and description, with Close at its end. */
+/** A row the page's header height: the title first, any actions after it, Close last. */
 function SidePanelHeader({
   children,
   sx,
@@ -164,7 +168,7 @@ function SidePanelHeader({
       {...props}
       {...stylex.props(styles.header, sx)}
     >
-      <div {...stylex.props(styles.heading)}>{children}</div>
+      {children}
       <DialogPrimitive.Close
         aria-label="Close"
         render={<Button size="icon-sm" variant="ghost" />}
@@ -190,19 +194,6 @@ function SidePanelTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
   );
 }
 
-function SidePanelDescription({
-  sx,
-  ...props
-}: Styled<DialogPrimitive.Description.Props>) {
-  return (
-    <DialogPrimitive.Description
-      data-slot="side-panel-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
-    />
-  );
-}
-
 function SidePanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -213,11 +204,22 @@ function SidePanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
+/** Pinned below the body, which scrolls on its own. */
+function SidePanelFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="side-panel-footer"
+      {...props}
+      {...stylex.props(styles.footer, sx)}
+    />
+  );
+}
+
 export {
   SidePanel,
   SidePanelBody,
   SidePanelContent,
-  SidePanelDescription,
+  SidePanelFooter,
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
