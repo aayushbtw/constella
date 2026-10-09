@@ -37,6 +37,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
@@ -179,6 +180,7 @@ function useTruncated(enabled: boolean) {
 const inSectionChange = ":is([data-section-change] *)";
 // Toggled from the keyboard: too frequent to animate.
 const fromKeyboard = ":is([data-instant] *)";
+// The collapsed selectors outrank it, so each close duration pairs with it to stay at once.
 const iconOnly = ":is([data-slot='sidebar'][data-collapsible='icon'] *)";
 const expandingContent =
   ":is([data-slot='sidebar'][data-expanding] [data-slot='sidebar-content'] *)";
@@ -262,6 +264,7 @@ const styles = stylex.create({
       default: durations.sidebar,
       ":is([data-collapsible])": durations.sidebarExit,
       [fromKeyboard]: "0s",
+      [`:is([data-collapsible])${fromKeyboard}`]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "width",
@@ -434,6 +437,7 @@ const styles = stylex.create({
       default: durations.sidebar,
       [iconOnly]: durations.sidebarExit,
       [fromKeyboard]: "0s",
+      [`${iconOnly}${fromKeyboard}`]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "margin, opacity",
@@ -508,6 +512,7 @@ const styles = stylex.create({
       default: durations.sidebar,
       [iconOnly]: durations.sidebarExit,
       [fromKeyboard]: "0s",
+      [`${iconOnly}${fromKeyboard}`]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "opacity",
@@ -608,6 +613,7 @@ const styles = stylex.create({
       default: durations.sidebar,
       [iconOnly]: durations.sidebarExit,
       [fromKeyboard]: "0s",
+      [`${iconOnly}${fromKeyboard}`]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "opacity",
@@ -707,6 +713,7 @@ const styles = stylex.create({
       default: durations.sidebar,
       [iconOnly]: durations.sidebarExit,
       [fromKeyboard]: "0s",
+      [`${iconOnly}${fromKeyboard}`]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "height, padding-block, opacity",
@@ -916,14 +923,17 @@ function SidebarProvider({
 
   return (
     <SidebarContext value={context}>
-      <KeyboardToggleContext value={toggleFromKeyboard}>
-        <div
-          data-instant={instant || undefined}
-          data-slot="sidebar-wrapper"
-          {...props}
-          {...stylex.props(styles.wrapper, sx)}
-        />
-      </KeyboardToggleContext>
+      {/* One group, so once a row's tooltip is open, the next opens at once. */}
+      <TooltipProvider>
+        <KeyboardToggleContext value={toggleFromKeyboard}>
+          <div
+            data-instant={instant || undefined}
+            data-slot="sidebar-wrapper"
+            {...props}
+            {...stylex.props(styles.wrapper, sx)}
+          />
+        </KeyboardToggleContext>
+      </TooltipProvider>
     </SidebarContext>
   );
 }
