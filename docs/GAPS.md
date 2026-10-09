@@ -1,6 +1,6 @@
 # Gaps
 
-What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit (2026-10-08). netigen adopts Constella's look and colors with its own `theme.stylex.ts`; these are the missing pieces. Tick one off as it lands, and record its decisions in `DESIGN.md` or `docs/ARCHITECTURE.md`, not here.
+What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit (2026-10-08). netigen adopts Constella's look and colors with its own `theme.stylex.ts`; these are the missing pieces. Tick one off as it lands, and record its decisions in `docs/design/` or `docs/ARCHITECTURE.md`, not here.
 
 ## Changes to existing components
 

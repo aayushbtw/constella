@@ -16,15 +16,15 @@ Before editing files for a substantial task:
 
 Read the one that fits before changing things, and record new decisions in it, not in another:
 
-- **`DESIGN.md`:** how it looks and moves. Color, surfaces, spacing, details, focus, motion.
+- **`DESIGN.md`:** how it looks and moves. Personality, conflict order, never-list, review checklist, and an index of `docs/design/*.md` (color, type, space, surfaces, states, motion, components, site). Read the index, then only the topic file the task touches.
 - **`docs/ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
 - **`docs/DOCS.md`:** how to write the docs pages in `apps/site/content`.
 
-`DESIGN.md` and `docs/ARCHITECTURE.md` are long. List their headings with `rg -n '^## ' DESIGN.md`, then `Read` only the section the task touches, with `offset` and `limit`.
+`docs/ARCHITECTURE.md` is long. List its headings with `rg -n '^## ' docs/ARCHITECTURE.md`, then `Read` only the section the task touches, with `offset` and `limit`.
 
 ## Workflow
 
-- Review also checks: `DESIGN.md` and `docs/ARCHITECTURE.md`, and that no demo fakes a missing component.
+- Review also checks: `DESIGN.md`, the `docs/design/` files the change touches, `docs/ARCHITECTURE.md`, and that no demo fakes a missing component.
 
 ## Dependencies first
 
@@ -35,6 +35,6 @@ Before building a component, list every component it and its docs examples use (
 Load these from `.agents/skills/` at these points, every time:
 
 - **Writing or changing any transition, keyframe or `:active`/hover motion:** `emil-design-eng`. Add `apple-design` when it's a gesture, drag, sheet or spring.
-- **A component is done, before committing:** `find-animation-opportunities` on it, then apply what fits `DESIGN.md`.
+- **A component is done, before committing:** `find-animation-opportunities` on it, then apply what fits `docs/design/motion.md`.
 - **Motion across several components:** `improve-animations` for the audit.
 - **The user describes an effect without naming it:** `animation-vocabulary` to get the term before building.

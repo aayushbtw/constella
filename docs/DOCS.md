@@ -15,7 +15,7 @@ Pages read like shadcn's, written for someone using the component, not for us:
 - **Enforced:** `apps/site/src/lib/lint` checks them as each page parses, one rule per file in `rules/`, so a broken page fails dev and the build. A new rule that can be checked goes there, not only here. A new page that 404s in dev usually means the lint threw and dev shows nothing. The lint caches the component-name list at server start, so a heading that names a component created after start counts as the page's own section; restart dev.
 - **Drafts track their gaps** in a `## Pending` section at the end: each line names the missing component and what it unblocks. A page leaves draft only once that section is gone.
 - **Use the native term** (React, Base UI, CSS, shadcn) over a plain-English stand-in: "Controlled", not "Open from Code".
-- **One or two plain sentences per section**, starting with what to do: "Use the `size` prop to…", "Add `data-icon` to…". No design reasoning; that lives in `DESIGN.md`.
+- **One or two plain sentences per section**, starting with what to do: "Use the `size` prop to…", "Add `data-icon` to…". No design reasoning; that lives in `docs/design/`.
 - **Show a variant matrix once.** All variants in Variant, all sizes in Size; every other example shows one representative.
 - **Previews:** place one with `<!-- ::demo name="…" -->`, and its code block right below it. Every code block gets a copy button; blocks of more than one line get line numbers.
 - **Values go in a table**, not a sentence: a row per option (size, token, variant) with its values in columns.
