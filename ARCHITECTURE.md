@@ -83,3 +83,9 @@ Two files hold the system's values. `tokens.stylex.ts` is the system: roles as t
 | `constella/sx-last` | `sx` passed to `stylex.props` or in an `sx` array anywhere but last |
 
 A rule earns its place when a correction comes up twice. Add one there before writing the same note again.
+
+## Gotchas
+
+- **Equal-specificity StyleX conditions emit in StyleX's own order.** Exclude one with `:not()` and check the built CSS.
+- **Lightning CSS lowers `:dir(rtl)` to a `:lang()` list.** Write `:is([dir='rtl'], [dir='rtl'] *)` instead.
+- **Base UI Root `children` can be a render function.** Wrap providers outside Root, not around its children.
