@@ -98,6 +98,25 @@ Use `AlertDialogMedia` for an icon above the title. Pass `variant="danger"` to `
 </AlertDialogFooter>
 ```
 
+## Alert Dialog Action
+
+`AlertDialogAction` doesn't close the dialog, so it can stay open while the work runs. Mark the action `aria-busy` with a [Spinner](/docs/components/spinner), keep the dialog open until it's done, then close it.
+
+<!-- ::demo name="alert-dialog-async" -->
+
+```tsx
+<AlertDialog onOpenChange={(next) => !busy && setOpen(next)} open={open}>
+  …
+  <AlertDialogFooter>
+    <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+    <AlertDialogAction aria-busy={busy} onClick={revoke} variant="danger">
+      {busy && <Spinner data-icon="inline-start" />}
+      {busy ? "Revoking" : "Revoke"}
+    </AlertDialogAction>
+  </AlertDialogFooter>
+</AlertDialog>
+```
+
 ## API Reference
 
 | Part | Adds |

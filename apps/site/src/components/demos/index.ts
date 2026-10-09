@@ -7,6 +7,7 @@ import {
   AlertTitleDemo,
 } from "~/components/demos/alert";
 import {
+  AlertDialogAsyncDemo,
   AlertDialogDangerDemo,
   AlertDialogDemo,
   AlertDialogSizeDemo,
@@ -66,6 +67,7 @@ import {
   ChatDemo,
   MessageDemo,
   PromptInputDemo,
+  PromptInputHeaderDemo,
 } from "~/components/demos/chat";
 import {
   CheckboxControlledDemo,
@@ -317,6 +319,7 @@ const demos = {
   "alert-status": AlertStatusDemo,
   "alert-title": AlertTitleDemo,
   "alert-dialog": AlertDialogDemo,
+  "alert-dialog-async": AlertDialogAsyncDemo,
   "alert-dialog-danger": AlertDialogDangerDemo,
   "alert-dialog-size": AlertDialogSizeDemo,
   avatar: AvatarDemo,
@@ -463,6 +466,7 @@ const demos = {
   "hover-card-side": HoverCardSideDemo,
   "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
+  "prompt-input-header": PromptInputHeaderDemo,
   progress: ProgressDemo,
   "progress-indeterminate": ProgressIndeterminateDemo,
   "progress-label": ProgressLabelDemo,

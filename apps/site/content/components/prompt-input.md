@@ -51,6 +51,26 @@ PromptInput
     └── PromptInputSubmit
 ```
 
+## Prompt Input Header
+
+Put attachments in a `PromptInputHeader`, above the text. A submit can send files with no text.
+
+<!-- ::demo name="prompt-input-header" -->
+
+```tsx
+<PromptInput onSubmit={send}>
+  <PromptInputHeader>
+    {files.map((file) => (
+      <Badge key={file} variant="outline">
+        {file}
+      </Badge>
+    ))}
+  </PromptInputHeader>
+  <PromptInputTextarea />
+  <PromptInputFooter>…</PromptInputFooter>
+</PromptInput>
+```
+
 ## Prompt Input Submit
 
 Pass the answer's `status`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.

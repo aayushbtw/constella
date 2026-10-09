@@ -1,5 +1,7 @@
 import {
   Attachment01Icon,
+  Cancel01Icon,
+  File01Icon,
   RepeatIcon,
   ThumbsUpIcon,
 } from "@hugeicons/core-free-icons";
@@ -8,6 +10,7 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { InputGroupButton } from "@/components/ui/input-group";
@@ -27,6 +30,7 @@ import {
 import {
   PromptInput,
   PromptInputFooter,
+  PromptInputHeader,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
@@ -70,6 +74,21 @@ const styles = stylex.create({
     width: 560,
   },
   scroller: { flex: 1 },
+  remove: {
+    alignItems: "center",
+    backgroundColor: "transparent",
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
+    color: colors.textMuted,
+    cursor: "pointer",
+    display: "flex",
+    paddingBlockEnd: 0,
+    paddingBlockStart: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
+  },
   thread: {
     gap: space.lg,
     paddingBlockEnd: space.md,
@@ -270,4 +289,70 @@ function ChatDemo() {
   );
 }
 
-export { ChatDemo, MessageDemo, PromptInputDemo };
+function PromptInputHeaderDemo() {
+  const [files, setFiles] = useState([
+    "q3-report.xlsx",
+    "brand-guidelines.pdf",
+  ]);
+  const [text, setText] = useState("");
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <PromptInput
+          onSubmit={(event) => {
+            event.preventDefault();
+            setText("");
+            setFiles([]);
+          }}
+        >
+          {files.length > 0 && (
+            <PromptInputHeader>
+              {files.map((file) => (
+                <Badge key={file} size="lg" variant="outline">
+                  <Glyph data-icon="inline-start" icon={File01Icon} />
+                  {file}
+                  <button
+                    aria-label={`Remove ${file}`}
+                    onClick={() => {
+                      setFiles(files.filter((other) => other !== file));
+                    }}
+                    type="button"
+                    {...stylex.props(styles.remove)}
+                  >
+                    <Glyph icon={Cancel01Icon} />
+                  </button>
+                </Badge>
+              ))}
+            </PromptInputHeader>
+          )}
+          <PromptInputTextarea
+            aria-label="Message"
+            onChange={(event) => {
+              setText(event.target.value);
+            }}
+            placeholder="Ask about these files…"
+            value={text}
+          />
+          <PromptInputFooter>
+            <PromptInputTools>
+              <InputGroupButton
+                aria-label="Attach"
+                onClick={() => {
+                  setFiles([...files, `notes-${files.length + 1}.md`]);
+                }}
+                size="icon-sm"
+              >
+                <Glyph icon={Attachment01Icon} />
+              </InputGroupButton>
+            </PromptInputTools>
+            <PromptInputSubmit
+              disabled={text.trim() === "" && files.length === 0}
+            />
+          </PromptInputFooter>
+        </PromptInput>
+      </div>
+    </DemoRow>
+  );
+}
+
+export { ChatDemo, MessageDemo, PromptInputDemo, PromptInputHeaderDemo };
