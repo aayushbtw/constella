@@ -49,7 +49,7 @@ import { DataTable } from "@/components/ui/data-table";
 
 Build the table with [TanStack Table](https://tanstack.com/table)'s `useTable`, with the features you need, and pass it to `DataTable`. It renders the headers and rows as a [Table](/docs/components/table), and only the rows on screen, against the window's scroll.
 
-When the table sits in an element that scrolls on its own, like an app's main area beside a sidebar, pass that element as `scrollRef`, as the Row Click example does.
+When the table sits in an element that scrolls on its own, like an app's main area beside a sidebar, pass that element as `scrollRef`, as the Row Click example does with a ScrollArea's `viewportRef`.
 
 The table's layout is fixed, as only the rows on screen render, so set narrow columns' widths with `columnSx`. Text too long for its column ends in an ellipsis. Give the table a `minWidth` in `sx`. On a narrow screen it then scrolls sideways, and a column without a width keeps its room.
 

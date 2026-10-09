@@ -48,7 +48,7 @@ A button that swaps its copy icon for a tick for `durations.confirm` and back.
 
 ## Data table
 
-A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width; text too long for a column ends in an ellipsis. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark; a selected row takes `fill`, and so does the row open beside it (`aria-current`).
+A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width; text too long for a column ends in an ellipsis. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark; a selected row takes `fill`; the row open beside it (`aria-current`) takes `fillStrong`, a step above, since only one row is open at a time. Hovering a filled row stacks `fillSubtle` on it as an inset shadow, as in the sidebar.
 
 A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows; while the next page loads over the old one, the body fades to `opacities.busy`.
 
@@ -152,7 +152,7 @@ A checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` t
 
 ## Table
 
-Rows are divided by `edgeSubtle` and its footer sits on `fillSubtle`. A selected row takes `fill`.
+Rows are divided by `edgeSubtle` and its footer sits on `fillSubtle`. A selected row takes `fill`. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
 
 ## Textarea
 

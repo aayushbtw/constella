@@ -69,6 +69,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   SidePanel,
   SidePanelBody,
@@ -93,7 +94,6 @@ const styles = stylex.create({
   table: { maxWidth: "100%", minWidth: 480, width: 640 },
   // Narrower than its columns, the table scrolls rather than squeezing the email to nothing.
   wide: { minWidth: 480 },
-  narrow: { minWidth: 360 },
   select: { width: sizes.media },
   // The icon-sm button and the cell's padding on both sides.
   actions: {
@@ -142,10 +142,10 @@ const styles = stylex.create({
     overflow: "hidden",
     width: "100%",
   },
-  main: {
-    flexGrow: 1,
-    minWidth: 0,
-    overflowY: "auto",
+  main: { flexGrow: 1, minWidth: 0 },
+  // The docs column is narrower than an app, so a slimmer panel leaves the table room.
+  panel: { width: 288 },
+  content: {
     paddingBlockEnd: space.xs,
     paddingBlockStart: space.xs,
     paddingInlineEnd: space.sm,
@@ -754,25 +754,26 @@ function DataTableRowClickDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
-        <div ref={main} {...stylex.props(styles.main)}>
-          <OpenPayment value={setOpenId}>
-            <DataTable
-              activeRowId={openId}
-              columnSx={{
-                amount: styles.amount,
-                select: styles.select,
-              }}
-              empty="No payments."
-              label="Payments"
-              scrollRef={main}
-              sx={styles.narrow}
-              onRowClick={(row) => {
-                setOpenId(row.id);
-              }}
-              table={table}
-            />
-          </OpenPayment>
-        </div>
+        <ScrollArea sx={styles.main} viewportRef={main}>
+          <div {...stylex.props(styles.content)}>
+            <OpenPayment value={setOpenId}>
+              <DataTable
+                activeRowId={openId}
+                columnSx={{
+                  amount: styles.amount,
+                  select: styles.select,
+                }}
+                empty="No payments."
+                label="Payments"
+                scrollRef={main}
+                onRowClick={(row) => {
+                  setOpenId(row.id);
+                }}
+                table={table}
+              />
+            </OpenPayment>
+          </div>
+        </ScrollArea>
         <SidePanelSlot ref={slot} />
         <SidePanel
           onOpenChange={(open) => {
@@ -782,7 +783,7 @@ function DataTableRowClickDemo() {
           }}
           open={payment !== undefined}
         >
-          <SidePanelContent container={slot}>
+          <SidePanelContent container={slot} sx={styles.panel}>
             <SidePanelHeader>
               <SidePanelTitle>{payment?.email}</SidePanelTitle>
             </SidePanelHeader>

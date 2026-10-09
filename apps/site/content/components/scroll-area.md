@@ -65,9 +65,9 @@ Add both for content wider and taller than the area, like a wide table. The corn
 
 ## API Reference
 
-| Part         | Adds                                                        |
-| ------------ | ----------------------------------------------------------- |
-| `ScrollArea` | Renders the viewport, a vertical `ScrollBar` and the corner |
-| `ScrollBar`  | Shows while the area is hovered or scrolling                |
+| Part | Adds |
+| --- | --- |
+| `ScrollArea` | Renders the viewport, a vertical `ScrollBar` and the corner; `viewportRef` is the element that scrolls, for a virtualizer or a data table's `scrollRef` |
+| `ScrollBar` | Shows while the area is hovered or scrolling |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Scroll Area](https://base-ui.com/react/components/scroll-area).

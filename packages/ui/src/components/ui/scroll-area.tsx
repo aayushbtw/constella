@@ -2,6 +2,7 @@
 
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import * as stylex from "@stylexjs/stylex";
+import type { Ref } from "react";
 
 import { colors, durations, radii, space, strokes } from "@/lib/tokens.stylex";
 
@@ -55,12 +56,15 @@ const styles = stylex.create({
   },
 });
 
-/** Renders the viewport, a vertical scrollbar and the corner around its children. */
+/** Renders the viewport, a vertical scrollbar and the corner around its children. `viewportRef` is the element that scrolls, for a virtualizer to watch. */
 function ScrollArea({
   children,
   sx,
+  viewportRef,
   ...props
-}: Styled<ScrollAreaPrimitive.Root.Props>) {
+}: Styled<ScrollAreaPrimitive.Root.Props> & {
+  viewportRef?: Ref<HTMLDivElement>;
+}) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -69,6 +73,7 @@ function ScrollArea({
     >
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
+        ref={viewportRef}
         {...stylex.props(styles.viewport)}
       >
         {children}

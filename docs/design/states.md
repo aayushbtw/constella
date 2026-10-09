@@ -2,7 +2,7 @@
 
 ## Focus
 
-One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` line flush outside the edge. Flush, not offset: an offset ring read as a second box around a text field, and it broke at a button group's squared seams. Outside, not over the edge: over it, the line vanished on a filled button. An invalid control's ring is red, so the error survives focus. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. A popup (a dialog, menu or list) takes focus to hold it, not as a control, so it draws none; a menu takes it whenever the pointer rests off its items. A list item shows the keyboard on its highlight, so it draws no ring. Components never style focus themselves; `constella/no-focus-style` enforces it.
+One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` line flush outside the edge. Flush, not offset: an offset ring read as a second box around a text field, and it broke at a button group's squared seams. Outside, not over the edge: over it, the line vanished on a filled button. An invalid control's ring is red, so the error survives focus. An input group takes the ring for the control inside it, so the ring wraps the box the user sees. A popup (a dialog, menu or list) takes focus to hold it, not as a control, so it draws none; a menu takes it whenever the pointer rests off its items. A list item shows the keyboard on its highlight, so it draws no ring. A table row draws its ring 1px inside, since the scroll container around it would clip the sides. Components never style focus themselves; `constella/no-focus-style` enforces it.
 
 ## Disabled and busy
 
@@ -14,7 +14,7 @@ Hover styles sit behind `media.hover` so touch doesn't stick, and repeat ungated
 
 ## Selected
 
-Selected is `fill`; hover stays a step under at `fillSubtle`, so on and hovered never read alike. The current sidebar row, a selected table row, the table row open in a side panel and a pressed toggle all take it.
+Selected is `fill`; hover stays a step under at `fillSubtle`, so on and hovered never read alike, and hovering a selected row stacks `fillSubtle` on its fill as an inset shadow instead of replacing it. The current sidebar row, a selected table row and a pressed toggle all take it. The table row open in a side panel takes `fillStrong`, a step above, so it stands out among selected rows.
 
 ## Press
 

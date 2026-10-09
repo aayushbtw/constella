@@ -144,6 +144,11 @@
     outline: none;
   }
 
+  /* A table row spans its scroll container, which would clip the ring's sides, so it draws inside. */
+  :where(tr):focus-visible {
+    outline-offset: -1px;
+  }
+
   /* StyleX can't style a child it didn't render, so an outline badge's icon takes its status here. */
   :where([data-slot="badge"][data-variant="outline"]) {
     &[data-status="success"] > [data-icon] {

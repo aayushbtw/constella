@@ -25,7 +25,14 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 type TableProps = Styled<ComponentProps<"table">> & { size?: TableSize };
 
-const selected = ":is([data-state='selected'], [aria-current='true'])";
+const marked = ":is([data-state='selected'], [aria-current='true'])";
+const open = "[aria-current='true']";
+const checked = "[data-state='selected']";
+const idle = ":not([data-state='selected'], [aria-current='true'])";
+// As in the sidebar: an inset shadow, not a second fill, so hover stacks on a marked row's fill and still fades.
+const lit = `inset 0 0 0 100vmax ${colors.fillSubtle}`;
+const unlit = "inset 0 0 0 100vmax transparent";
+const lastRow = ":is(tbody > :last-child > *, tfoot > :last-child > *)";
 // A cell holding a checkbox hugs it, so the column stays as narrow as the box.
 const checkbox = ":has([data-slot='checkbox'])";
 
@@ -35,8 +42,10 @@ const styles = stylex.create({
     position: "relative",
     width: "100%",
   },
+  // Separate, so the cells draw the dividers: collapsed, Chrome hides them under a selected row's fill in a cell that clips.
   table: {
-    borderCollapse: "collapse",
+    borderCollapse: "separate",
+    borderSpacing: 0,
     captionSide: "bottom",
     color: colors.textPrimary,
     fontSize: fontSizes.sm,
@@ -44,33 +53,40 @@ const styles = stylex.create({
   },
   footer: {
     backgroundColor: colors.fillSubtle,
-    borderBlockStartColor: colors.edgeSubtle,
-    borderBlockStartStyle: "solid",
-    borderBlockStartWidth: strokes.border,
     fontWeight: fontWeights.medium,
   },
   // Rows are divided by the faint edge; the last row of a body or footer needs none.
+  divider: {
+    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndStyle: "solid",
+    borderBlockEndWidth: { default: strokes.border, [lastRow]: 0 },
+  },
   row: {
     backgroundColor: {
       default: "transparent",
-      ":has([aria-expanded='true'])": colors.fillSubtle,
-      [selected]: colors.fill,
       [media.hover]: {
         default: "transparent",
-        ":hover": colors.fillSubtle,
-        [selected]: colors.fill,
+        [`:hover${idle}`]: colors.fillSubtle,
+        [checked]: colors.fill,
+        [open]: colors.fillStrong,
       },
-      ":active": colors.fillSubtle,
+      [`:has([aria-expanded='true'])${idle}`]: colors.fillSubtle,
+      [`:active${idle}`]: colors.fillSubtle,
+      [checked]: colors.fill,
+      // One row at a time, so it can stand a step above the checked ones.
+      [open]: colors.fillStrong,
     },
-    borderBlockEndColor: colors.edgeSubtle,
-    borderBlockEndStyle: "solid",
-    borderBlockEndWidth: {
-      default: strokes.border,
-      ":is(tbody > :last-child, tfoot > :last-child)": 0,
+    boxShadow: {
+      default: null,
+      [marked]: {
+        default: unlit,
+        [media.hover]: { default: unlit, ":hover": lit },
+        ":has([aria-expanded='true'])": lit,
+      },
     },
     // A row selected from the keyboard fills at once.
     transitionDuration: { default: durations.hover, ":focus-visible": "0s" },
-    transitionProperty: "background-color",
+    transitionProperty: "background-color, box-shadow",
     transitionTimingFunction: "ease",
   },
   head: {
@@ -85,6 +101,13 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   cell: {
+    // The footer's top edge; a row group can't draw a border in the separate model.
+    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartStyle: "solid",
+    borderBlockStartWidth: {
+      default: 0,
+      ":is(tfoot > :first-child > *)": strokes.border,
+    },
     paddingBlock: space.xs,
     paddingInlineEnd: { default: space.xs, [checkbox]: 0 },
     paddingInlineStart: space.xs,
@@ -152,7 +175,12 @@ function TableHead({ sx, ...props }: Styled<ComponentProps<"th">>) {
     <th
       data-slot="table-head"
       {...props}
-      {...stylex.props(styles.head, size === "sm" && styles.headSm, sx)}
+      {...stylex.props(
+        styles.divider,
+        styles.head,
+        size === "sm" && styles.headSm,
+        sx
+      )}
     />
   );
 }
@@ -163,7 +191,12 @@ function TableCell({ sx, ...props }: Styled<ComponentProps<"td">>) {
     <td
       data-slot="table-cell"
       {...props}
-      {...stylex.props(styles.cell, size === "sm" && styles.cellSm, sx)}
+      {...stylex.props(
+        styles.divider,
+        styles.cell,
+        size === "sm" && styles.cellSm,
+        sx
+      )}
     />
   );
 }
