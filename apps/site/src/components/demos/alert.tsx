@@ -135,4 +135,30 @@ function AlertActionDemo() {
   );
 }
 
-export { AlertActionDemo, AlertDemo, AlertStatusDemo };
+function AlertTitleDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <Alert status="success">
+          <Glyph icon={CheckmarkCircle02Icon} />
+          <AlertTitle>Your changes are live.</AlertTitle>
+        </Alert>
+        <Alert>
+          <Glyph icon={InformationCircleIcon} />
+          <AlertDescription>
+            Exports run overnight. You&apos;ll get an email with a download link
+            when yours is ready, usually before 9am in your time zone.
+          </AlertDescription>
+        </Alert>
+        <Alert status="warning">
+          <AlertTitle>No icon</AlertTitle>
+          <AlertDescription>
+            Without an icon, the text takes the full width.
+          </AlertDescription>
+        </Alert>
+      </div>
+    </DemoRow>
+  );
+}
+
+export { AlertActionDemo, AlertDemo, AlertStatusDemo, AlertTitleDemo };

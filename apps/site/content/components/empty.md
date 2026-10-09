@@ -76,6 +76,23 @@ Use `variant="icon"` on `EmptyMedia` to set an icon on a `fill` tile. Leave the 
 | `default` | Its children as they are |
 | `icon`    | A 32px `fill` tile       |
 
+## Empty Content
+
+Put the way out in `EmptyContent`, like clearing a search that found nothing. An empty state draws no box; give it a dashed edge with `sx` to mark a place waiting for content.
+
+<!-- ::demo name="empty-content" -->
+
+```tsx
+<Empty sx={styles.dashed}>
+  <EmptyHeader>
+    <EmptyTitle>No files match “{query}”</EmptyTitle>
+  </EmptyHeader>
+  <EmptyContent>
+    <Button onClick={() => setQuery("")}>Clear search</Button>
+  </EmptyContent>
+</Empty>
+```
+
 ## Card
 
 Put an empty state in a [Card](/docs/components/card) to hold a section's place.

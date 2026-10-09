@@ -4,6 +4,7 @@ import {
   AlertActionDemo,
   AlertDemo,
   AlertStatusDemo,
+  AlertTitleDemo,
 } from "~/components/demos/alert";
 import {
   AlertDialogDangerDemo,
@@ -99,6 +100,7 @@ import {
 import {
   EmptyAvatarDemo,
   EmptyCardDemo,
+  EmptyContentDemo,
   EmptyDemo,
 } from "~/components/demos/empty";
 import {
@@ -221,7 +223,11 @@ import {
   SidebarOffcanvasDemo,
   SidebarRightDemo,
 } from "~/components/demos/sidebar";
-import { SkeletonCardDemo, SkeletonDemo } from "~/components/demos/skeleton";
+import {
+  SkeletonCardDemo,
+  SkeletonDemo,
+  SkeletonItemDemo,
+} from "~/components/demos/skeleton";
 import {
   SliderDemo,
   SliderDisabledDemo,
@@ -302,6 +308,7 @@ const demos = {
   alert: AlertDemo,
   "alert-action": AlertActionDemo,
   "alert-status": AlertStatusDemo,
+  "alert-title": AlertTitleDemo,
   "alert-dialog": AlertDialogDemo,
   "alert-dialog-danger": AlertDialogDangerDemo,
   "alert-dialog-size": AlertDialogSizeDemo,
@@ -378,6 +385,7 @@ const demos = {
   empty: EmptyDemo,
   "empty-avatar": EmptyAvatarDemo,
   "empty-card": EmptyCardDemo,
+  "empty-content": EmptyContentDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,
   "field-disabled": FieldDisabledDemo,
@@ -478,6 +486,7 @@ const demos = {
   "sidebar-right": SidebarRightDemo,
   skeleton: SkeletonDemo,
   "skeleton-card": SkeletonCardDemo,
+  "skeleton-item": SkeletonItemDemo,
   slider: SliderDemo,
   "slider-disabled": SliderDisabledDemo,
   "slider-input": SliderInputDemo,

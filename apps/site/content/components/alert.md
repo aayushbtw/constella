@@ -67,6 +67,19 @@ Use the `status` prop to color the icon. The title and description stay neutral.
 </Alert>
 ```
 
+## Alert Title
+
+An alert can be a title alone, a description alone, or skip the icon; the text takes the room that's left.
+
+<!-- ::demo name="alert-title" -->
+
+```tsx
+<Alert status="success">
+  <HugeiconsIcon icon={CheckmarkCircle02Icon} />
+  <AlertTitle>Your changes are live.</AlertTitle>
+</Alert>
+```
+
 ## Alert Action
 
 Use `AlertAction` for a button at the alert's end.

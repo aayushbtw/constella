@@ -46,6 +46,23 @@ Fill a [Card](/docs/components/card) with skeletons in the shape of its content.
 </Card>
 ```
 
+## Item
+
+Keep the real layout and swap only what's loading, so nothing moves when the content arrives.
+
+<!-- ::demo name="skeleton-item" -->
+
+```tsx
+<Item>
+  <ItemMedia>
+    {loading ? <Skeleton sx={styles.avatar} /> : <Avatar>…</Avatar>}
+  </ItemMedia>
+  <ItemContent>
+    {loading ? <Skeleton sx={styles.title} /> : <ItemTitle>{name}</ItemTitle>}
+  </ItemContent>
+</Item>
+```
+
 ## API Reference
 
 `Skeleton` renders a `div` hidden from screen readers, and takes `sx`, applied last.
