@@ -22,8 +22,6 @@ Read the one that fits before changing things, and record new decisions in it, n
 
 ## Workflow
 
-- Check: `vpr check`, then `vpr build`.
-- Land: `main`.
 - Review also checks: `DESIGN.md` and `ARCHITECTURE.md`, and that no demo fakes a missing component.
 
 ## Dependencies first
@@ -38,7 +36,3 @@ Load these from `.agents/skills/` at these points, every time:
 - **A component is done, before committing:** `find-animation-opportunities` on it, then apply what fits `DESIGN.md`.
 - **Motion across several components:** `improve-animations` for the audit.
 - **The user describes an effect without naming it:** `animation-vocabulary` to get the term before building.
-
-## Comments
-
-The files above hold the _why_. A comment that repeats one, or needs a paragraph, is an edit to that file instead.
