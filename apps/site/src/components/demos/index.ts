@@ -89,6 +89,9 @@ import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
   DataTableDemo,
   DataTableFilterDemo,
+  DataTablePaginationDemo,
+  DataTableQueryDemo,
+  DataTableRowClickDemo,
 } from "~/components/demos/data-table";
 import {
   DialogControlledDemo,
@@ -384,6 +387,9 @@ const demos = {
   "copy-button-variant": CopyButtonVariantDemo,
   "data-table": DataTableDemo,
   "data-table-filter": DataTableFilterDemo,
+  "data-table-pagination": DataTablePaginationDemo,
+  "data-table-query": DataTableQueryDemo,
+  "data-table-row-click": DataTableRowClickDemo,
   dialog: DialogDemo,
   "dialog-controlled": DialogControlledDemo,
   "dialog-scrollable": DialogScrollableDemo,

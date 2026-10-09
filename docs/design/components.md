@@ -48,7 +48,11 @@ A button that swaps its copy icon for a tick for `durations.confirm` and back.
 
 ## Data table
 
-A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark; a selected row takes `fill`.
+A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width; text too long for a column ends in an ellipsis. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark; a selected row takes `fill`, and so does the row open beside it (`aria-current`).
+
+A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows; while the next page loads over the old one, the body fades to `opacities.busy`.
+
+Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. The column menu is an outline button that opens a menu of checkbox items.
 
 ## Dialog
 

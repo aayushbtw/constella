@@ -25,7 +25,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 type TableProps = Styled<ComponentProps<"table">> & { size?: TableSize };
 
-const selected = ":is([data-state='selected'])";
+const selected = ":is([data-state='selected'], [aria-current='true'])";
 // A cell holding a checkbox hugs it, so the column stays as narrow as the box.
 const checkbox = ":has([data-slot='checkbox'])";
 
@@ -68,7 +68,8 @@ const styles = stylex.create({
       default: strokes.border,
       ":is(tbody > :last-child, tfoot > :last-child)": 0,
     },
-    transitionDuration: durations.hover,
+    // A row selected from the keyboard fills at once.
+    transitionDuration: { default: durations.hover, ":focus-visible": "0s" },
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
   },

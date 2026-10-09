@@ -6,7 +6,7 @@ One ring, set once in `base.css`, the same on every control: a 1px `gray-a8` lin
 
 ## Disabled and busy
 
-Every control shows disabled the same way: one shared fade (`opacities.disabled`) and a not-allowed cursor, never a per-control look; a sunken fill read as fillable, not off. A button at work (`aria-busy`) is not a disabled one: it takes a busy cursor, and fades only to `opacities.busy` when it also can't be pressed. Busy and still pressable (Generate turning into Stop generating) stays at full strength.
+Every control shows disabled the same way: one shared fade (`opacities.disabled`) and a not-allowed cursor, never a per-control look; a sunken fill read as fillable, not off. A button at work (`aria-busy`) is not a disabled one: it takes a busy cursor, and fades only to `opacities.busy` when it also can't be pressed. Busy and still pressable (Generate turning into Stop generating) stays at full strength. A data table loading its next page over the current one fades its body to `opacities.busy` too, marked `aria-busy`.
 
 ## Hover
 
@@ -14,7 +14,7 @@ Hover styles sit behind `media.hover` so touch doesn't stick, and repeat ungated
 
 ## Selected
 
-Selected is `fill`; hover stays a step under at `fillSubtle`, so on and hovered never read alike. The current sidebar row, a selected table row and a pressed toggle all take it.
+Selected is `fill`; hover stays a step under at `fillSubtle`, so on and hovered never read alike. The current sidebar row, a selected table row, the table row open in a side panel and a pressed toggle all take it.
 
 ## Press
 

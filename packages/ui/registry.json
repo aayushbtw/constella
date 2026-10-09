@@ -802,11 +802,12 @@
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
-      "description": "Renders a TanStack Table as a Table, virtualized, with sorting headers and selection checkboxes.",
+      "description": "Renders a TanStack Table as a Table, virtualized, with sorting, selection, pagination, column visibility and TanStack Query states.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex",
+        "@tanstack/react-query",
         "@tanstack/react-table",
         "@tanstack/react-virtual"
       ],
@@ -814,6 +815,9 @@
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/checkbox.json",
+        "https://constella.aayush.cv/r/dropdown-menu.json",
+        "https://constella.aayush.cv/r/select.json",
+        "https://constella.aayush.cv/r/skeleton.json",
         "https://constella.aayush.cv/r/table.json"
       ],
       "files": [
