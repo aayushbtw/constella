@@ -1,5 +1,8 @@
 import {
   Add01Icon,
+  Delete02Icon,
+  MoreHorizontalIcon,
+  PencilEdit01Icon,
   BookOpen01Icon,
   BubbleChatIcon,
   CommandIcon,
@@ -9,9 +12,16 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
@@ -24,9 +34,11 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
@@ -34,7 +46,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import type { SidebarCollapsible } from "@/components/ui/sidebar";
+import type { SidebarCollapsible, SidebarSide } from "@/components/ui/sidebar";
 import {
   colors,
   fontSizes,
@@ -139,10 +151,16 @@ const nav = [
 
 const docs = ["Introduction", "Get Started", "Changelog"];
 
-function AppSidebar({ collapsible }: { collapsible: SidebarCollapsible }) {
+function AppSidebar({
+  collapsible,
+  side = "left",
+}: {
+  collapsible: SidebarCollapsible;
+  side?: SidebarSide;
+}) {
   const [current, setCurrent] = useState("Chats");
   return (
-    <Sidebar collapsible={collapsible}>
+    <Sidebar collapsible={collapsible} side={side}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -259,4 +277,104 @@ function SidebarOffcanvasDemo() {
   );
 }
 
-export { SidebarDemo, SidebarOffcanvasDemo };
+const recents = [
+  "Quarterly revenue summary",
+  "Draft the launch email",
+  "Compare vector databases",
+  "Fix flaky checkout test",
+  "Plan the offsite agenda",
+];
+
+function RecentChats() {
+  const [loading, setLoading] = useState(true);
+  const [current, setCurrent] = useState(recents[0]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Recent</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {loading
+            ? recents.map((chat) => (
+                <SidebarMenuItem key={chat}>
+                  <SidebarMenuSkeleton />
+                </SidebarMenuItem>
+              ))
+            : recents.map((chat) => (
+                <SidebarMenuItem key={chat}>
+                  <SidebarMenuButton
+                    isActive={current === chat}
+                    onClick={() => {
+                      setCurrent(chat);
+                    }}
+                    withEnd
+                  >
+                    <span>{chat}</span>
+                  </SidebarMenuButton>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={
+                        <SidebarMenuAction aria-label="More" showOnHover />
+                      }
+                    >
+                      <Glyph icon={MoreHorizontalIcon} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" side="right">
+                      <DropdownMenuItem>
+                        <Glyph icon={PencilEdit01Icon} />
+                        Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="danger">
+                        <Glyph icon={Delete02Icon} />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </SidebarMenuItem>
+              ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
+function SidebarActionDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <SidebarProvider sx={styles.frame}>
+        <Sidebar collapsible="offcanvas">
+          <SidebarContent>
+            <RecentChats />
+          </SidebarContent>
+        </Sidebar>
+        <Page />
+      </SidebarProvider>
+    </DemoRow>
+  );
+}
+
+function SidebarRightDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <SidebarProvider sx={styles.frame}>
+        <Page />
+        <AppSidebar collapsible="icon" side="right" />
+      </SidebarProvider>
+    </DemoRow>
+  );
+}
+
+export {
+  SidebarActionDemo,
+  SidebarDemo,
+  SidebarOffcanvasDemo,
+  SidebarRightDemo,
+};

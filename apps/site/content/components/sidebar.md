@@ -108,6 +108,43 @@ Use `isActive` for the current page and `tooltip` to name the row when collapsed
 <SidebarMenuBadge>12</SidebarMenuBadge>
 ```
 
+## Sidebar Menu Action
+
+Put a `SidebarMenuAction` after a row's button for an action of its own, like a menu. With `showOnHover` it shows only while its row is hovered or focused, or its menu is open. Show `SidebarMenuSkeleton` rows while the list loads.
+
+<!-- ::demo name="sidebar-action" -->
+
+```tsx
+<SidebarMenuItem>
+  <SidebarMenuButton isActive withEnd>
+    <span>Quarterly revenue summary</span>
+  </SidebarMenuButton>
+  <DropdownMenu>
+    <DropdownMenuTrigger
+      render={<SidebarMenuAction aria-label="More" showOnHover />}
+    >
+      <HugeiconsIcon icon={MoreHorizontalIcon} />
+    </DropdownMenuTrigger>
+    <DropdownMenuContent side="right">…</DropdownMenuContent>
+  </DropdownMenu>
+</SidebarMenuItem>
+```
+
+## Side
+
+Use `side="right"` to put the sidebar after the page. It collapses toward its own edge.
+
+<!-- ::demo name="sidebar-right" -->
+
+```tsx
+<SidebarProvider>
+  <SidebarInset>…</SidebarInset>
+  <Sidebar collapsible="icon" side="right">
+    …
+  </Sidebar>
+</SidebarProvider>
+```
+
 ## Collapsible
 
 Use the `collapsible` prop on `Sidebar` to choose how it closes. Collapsed to icons, a row shows its `tooltip`.

@@ -206,7 +206,15 @@ const styles = stylex.create({
     cursor: "ew-resize",
     insetBlockEnd: 0,
     insetBlockStart: 0,
-    insetInlineEnd: `calc(-1 * ${space.xs})`,
+    // On the edge that meets the page, whichever side the sidebar is on.
+    insetInlineEnd: {
+      default: `calc(-1 * ${space.xs})`,
+      ":is([data-side='right'] *)": "auto",
+    },
+    insetInlineStart: {
+      default: "auto",
+      ":is([data-side='right'] *)": `calc(-1 * ${space.xs})`,
+    },
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
     paddingInlineEnd: 0,

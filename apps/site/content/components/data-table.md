@@ -97,7 +97,10 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { equalsString: filterFn_equalsString, includesString: filterFn_includesString },
+  filterFns: {
+    equalsString: filterFn_equalsString,
+    includesString: filterFn_includesString,
+  },
 });
 
 const table = useTable({

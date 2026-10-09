@@ -212,7 +212,12 @@ import {
 } from "~/components/demos/separator";
 import { SheetDemo, SheetSideDemo } from "~/components/demos/sheet";
 import { SidePanelDemo } from "~/components/demos/side-panel";
-import { SidebarDemo, SidebarOffcanvasDemo } from "~/components/demos/sidebar";
+import {
+  SidebarActionDemo,
+  SidebarDemo,
+  SidebarOffcanvasDemo,
+  SidebarRightDemo,
+} from "~/components/demos/sidebar";
 import { SkeletonCardDemo, SkeletonDemo } from "~/components/demos/skeleton";
 import {
   SliderDemo,
@@ -462,7 +467,9 @@ const demos = {
   "sheet-side": SheetSideDemo,
   "side-panel": SidePanelDemo,
   sidebar: SidebarDemo,
+  "sidebar-action": SidebarActionDemo,
   "sidebar-offcanvas": SidebarOffcanvasDemo,
+  "sidebar-right": SidebarRightDemo,
   skeleton: SkeletonDemo,
   "skeleton-card": SkeletonCardDemo,
   slider: SliderDemo,
