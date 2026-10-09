@@ -48,6 +48,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import {
   Table,
   TableBody,
@@ -500,7 +501,6 @@ const styles = stylex.create({
   },
   sortIcon: {
     color: colors.textMuted,
-    display: "flex",
   },
   // The number and the checkbox share one spot; the checkbox sits on top, so a click on the number selects.
   numbered: {
@@ -848,14 +848,21 @@ function DataTableColumnHeader({
       variant="ghost"
     >
       {title}
-      <span {...stylex.props(styles.sortIcon)}>
-        <HugeiconsIcon
-          aria-hidden
-          icon={sortIcons[sorted === false ? "none" : sorted]}
-          size={sizes.iconSm}
-          strokeWidth={Number(strokes.icon)}
-        />
-      </span>
+      <SwapIcon
+        aria-hidden
+        sx={styles.sortIcon}
+        value={sorted === false ? "none" : sorted}
+      >
+        {Object.entries(sortIcons).map(([value, icon]) => (
+          <SwapIconItem key={value} value={value}>
+            <HugeiconsIcon
+              icon={icon}
+              size={sizes.iconSm}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </SwapIconItem>
+        ))}
+      </SwapIcon>
     </Button>
   );
 }
