@@ -17,14 +17,14 @@ Before editing files for a substantial task:
 Read the one that fits before changing things, and record new decisions in it, not in another:
 
 - **`DESIGN.md`:** how it looks and moves. Color, surfaces, spacing, details, focus, motion.
-- **`ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
-- **`DOCS.md`:** how to write the docs pages in `apps/site/content`.
+- **`docs/ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
+- **`docs/DOCS.md`:** how to write the docs pages in `apps/site/content`.
 
-`DESIGN.md` and `ARCHITECTURE.md` are long. List their headings with `rg -n '^## ' DESIGN.md`, then `Read` only the section the task touches, with `offset` and `limit`.
+`DESIGN.md` and `docs/ARCHITECTURE.md` are long. List their headings with `rg -n '^## ' DESIGN.md`, then `Read` only the section the task touches, with `offset` and `limit`.
 
 ## Workflow
 
-- Review also checks: `DESIGN.md` and `ARCHITECTURE.md`, and that no demo fakes a missing component.
+- Review also checks: `DESIGN.md` and `docs/ARCHITECTURE.md`, and that no demo fakes a missing component.
 
 ## Dependencies first
 

@@ -1,4 +1,4 @@
-// The DOCS.md rules that can drift, checked as each page is parsed, so a broken page fails dev and the build.
+// The docs/DOCS.md rules that can drift, checked as each page is parsed, so a broken page fails dev and the build.
 
 import { headingNames } from "./rules/heading-names.ts";
 import { nestByTopic } from "./rules/nest-by-topic.ts";
@@ -26,7 +26,9 @@ function run(rules: Record<string, PageRule>, page: Page) {
   );
 
   if (errors.length > 0) {
-    throw new Error(`${page.title} breaks DOCS.md:\n- ${errors.join("\n- ")}`);
+    throw new Error(
+      `${page.title} breaks docs/DOCS.md:\n- ${errors.join("\n- ")}`
+    );
   }
 }
 
