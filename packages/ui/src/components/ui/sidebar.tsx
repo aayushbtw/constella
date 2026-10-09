@@ -15,6 +15,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import type { ComponentProps } from "react";
+import { flushSync } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
@@ -51,20 +52,27 @@ const sidebarSides = ["left", "right"] as const;
 const sidebarCollapsibles = ["offcanvas", "icon", "none"] as const;
 const sidebarMenuButtonSizes = ["sm", "default", "lg"] as const;
 const sidebarMenuButtonVariants = ["default", "outline"] as const;
+const sidebarSectionDirections = ["forward", "back"] as const;
 
 type SidebarSide = (typeof sidebarSides)[number];
 type SidebarCollapsible = (typeof sidebarCollapsibles)[number];
 type SidebarMenuButtonSize = (typeof sidebarMenuButtonSizes)[number];
 type SidebarMenuButtonVariant = (typeof sidebarMenuButtonVariants)[number];
+type SidebarSectionDirection = (typeof sidebarSectionDirections)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
 interface SidebarContextValue {
+  changeSection: (
+    direction: SidebarSectionDirection,
+    update: () => void | Promise<void>
+  ) => void;
   isMobile: boolean;
   open: boolean;
   openMobile: boolean;
+  sectionChanging: boolean;
   setOpen: (open: boolean) => void;
   setOpenMobile: (open: boolean) => void;
   state: "collapsed" | "expanded";
@@ -92,6 +100,15 @@ function subscribe(onChange: () => void) {
   };
 }
 
+// Without transition types the slide can't tell forward from back, and without
+// `match-element` two sidebars would share a name, so those browsers swap at once.
+function supportsSectionChange() {
+  return (
+    CSS.supports("selector(:active-view-transition-type(a))") &&
+    CSS.supports("view-transition-name: match-element")
+  );
+}
+
 function useIsMobile() {
   return useSyncExternalStore(
     subscribe,
@@ -101,6 +118,7 @@ function useIsMobile() {
 }
 
 const collapsed = ":is([data-slot='sidebar'][data-state='collapsed'] *)";
+const inSectionChange = ":is([data-section-change] *)";
 const iconOnly = ":is([data-slot='sidebar'][data-collapsible='icon'] *)";
 const highlighted = ":is([data-active])";
 const pressable = ":not(:disabled, [aria-disabled='true'])";
@@ -245,6 +263,11 @@ const styles = stylex.create({
     paddingBlockStart: space.xs,
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
+  },
+  // Named only while its own sidebar changes section; base.css slides the snapshots.
+  swap: {
+    viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
+    viewTransitionName: { default: null, [inSectionChange]: "match-element" },
   },
   content: {
     display: "flex",
@@ -506,6 +529,8 @@ function SidebarProvider({
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = useState(false);
   const [ownOpen, setOwnOpen] = useState(defaultOpen);
+  // A count, so a change started mid-slide isn't unnamed when the first one ends.
+  const [sectionChanges, setSectionChanges] = useState(0);
   const open = openProp ?? ownOpen;
 
   const setOpen = useCallback(
@@ -527,6 +552,34 @@ function SidebarProvider({
     }
   }, [isMobile, open, openMobile, setOpen]);
 
+  const changeSection = useCallback(
+    (
+      direction: SidebarSectionDirection,
+      update: () => void | Promise<void>
+    ) => {
+      if (!supportsSectionChange()) {
+        void update();
+        return;
+      }
+      flushSync(() => {
+        setSectionChanges((count) => count + 1);
+      });
+      const transition = document.startViewTransition({
+        types: [`sidebar-${direction}`],
+        update: async () => {
+          await flushSync(update);
+        },
+      });
+      // `finished` rejects when `update` does; the names come off either way.
+      async function settle() {
+        await Promise.allSettled([transition.finished]);
+        setSectionChanges((count) => count - 1);
+      }
+      void settle();
+    },
+    []
+  );
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "b" && (event.metaKey || event.ctrlKey)) {
@@ -542,15 +595,25 @@ function SidebarProvider({
 
   const context = useMemo<SidebarContextValue>(
     () => ({
+      changeSection,
       isMobile,
       open,
       openMobile,
+      sectionChanging: sectionChanges > 0,
       setOpen,
       setOpenMobile,
       state: open ? "expanded" : "collapsed",
       toggleSidebar,
     }),
-    [isMobile, open, openMobile, setOpen, toggleSidebar]
+    [
+      changeSection,
+      isMobile,
+      open,
+      openMobile,
+      sectionChanges,
+      setOpen,
+      toggleSidebar,
+    ]
   );
 
   return (
@@ -574,11 +637,19 @@ function Sidebar({
   collapsible?: SidebarCollapsible;
   side?: SidebarSide;
 }) {
-  const { isMobile, openMobile, setOpenMobile, state } = useSidebar();
+  const { isMobile, openMobile, sectionChanging, setOpenMobile, state } =
+    useSidebar();
+  // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
+  const sectionChange = sectionChanging ? "" : undefined;
 
   if (collapsible === "none") {
     return (
-      <div data-slot="sidebar" {...props} {...stylex.props(styles.static, sx)}>
+      <div
+        data-section-change={sectionChange}
+        data-slot="sidebar"
+        {...props}
+        {...stylex.props(styles.static, sx)}
+      >
         {children}
       </div>
     );
@@ -589,6 +660,7 @@ function Sidebar({
       <Sheet onOpenChange={setOpenMobile} open={openMobile}>
         <SheetContent
           data-mobile
+          data-section-change={sectionChange}
           data-slot="sidebar"
           showCloseButton={false}
           side={side}
@@ -608,6 +680,7 @@ function Sidebar({
   return (
     <div
       data-collapsible={isCollapsed ? collapsible : undefined}
+      data-section-change={sectionChange}
       data-side={side}
       data-slot="sidebar"
       data-state={state}
@@ -690,22 +763,25 @@ function SidebarInset({ sx, ...props }: Styled<ComponentProps<"main">>) {
   );
 }
 
-function SidebarHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
+/** `swap`: whether it slides when the section changes. */
+type SwapProps = Styled<ComponentProps<"div">> & { swap?: boolean };
+
+function SidebarHeader({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-header"
       {...props}
-      {...stylex.props(styles.section, sx)}
+      {...stylex.props(styles.section, swap && styles.swap, sx)}
     />
   );
 }
 
-function SidebarFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
+function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-footer"
       {...props}
-      {...stylex.props(styles.section, sx)}
+      {...stylex.props(styles.section, swap && styles.swap, sx)}
     />
   );
 }
@@ -720,12 +796,12 @@ function SidebarSeparator({ sx, ...props }: SeparatorProps) {
   );
 }
 
-function SidebarContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
+function SidebarContent({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-content"
       {...props}
-      {...stylex.props(styles.content, sx)}
+      {...stylex.props(styles.content, swap && styles.swap, sx)}
     />
   );
 }
@@ -973,6 +1049,7 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
+  sidebarSectionDirections,
   sidebarSides,
   SidebarTrigger,
   useSidebar,
@@ -981,5 +1058,6 @@ export type {
   SidebarCollapsible,
   SidebarMenuButtonSize,
   SidebarMenuButtonVariant,
+  SidebarSectionDirection,
   SidebarSide,
 };

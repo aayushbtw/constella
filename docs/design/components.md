@@ -118,6 +118,8 @@ Sits on `sidebar`, a step off the page, split from it by an `edgeSubtle` hairlin
 
 The one surface whose width animates: it narrows on `layout` while its inner panel keeps its full width, so the content is clipped, never reflowed, the logo stays put, and each row's label fades out as the edge reaches it. Collapsed to icons it's `sizes.sidebarIcon`, a control and its group padding, and each row names itself in a tooltip. Below `media.md` it opens as a sheet.
 
+A section change (into Settings and back) slides like a stack: the header and content leave `motion.exitOffset` toward where they came from, on `popoverExit`, and the new section arrives from the other side on `popover`, both on `crossfade` under `motion.crossfadeBlur`, clipped to their own boxes. The blur is the one exception to "no blur-ins": it's rare, and it tells two sections apart. The footer and the page stay put. Under `media.reducedMotion` it only fades. It's a view transition, so the old section is a snapshot and never re-renders.
+
 ## Skeleton
 
 Breathes, `fill` dimming to `opacities.pulse` and back over `durations.pulse` on `inOut`: slow and in place, so loading reads as calm. It doesn't move, so it keeps breathing under reduced motion.

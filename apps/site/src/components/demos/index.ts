@@ -231,6 +231,7 @@ import {
   SidebarDemo,
   SidebarOffcanvasDemo,
   SidebarRightDemo,
+  SidebarSectionDemo,
 } from "~/components/demos/sidebar";
 import {
   SkeletonCardDemo,
@@ -498,6 +499,7 @@ const demos = {
   "sidebar-action": SidebarActionDemo,
   "sidebar-offcanvas": SidebarOffcanvasDemo,
   "sidebar-right": SidebarRightDemo,
+  "sidebar-section": SidebarSectionDemo,
   skeleton: SkeletonDemo,
   "skeleton-card": SkeletonCardDemo,
   "skeleton-item": SkeletonItemDemo,

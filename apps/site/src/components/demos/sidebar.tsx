@@ -1,5 +1,9 @@
 import {
   Add01Icon,
+  ArrowLeft01Icon,
+  CreditCardIcon,
+  Key01Icon,
+  UserGroupIcon,
   Delete02Icon,
   MoreHorizontalIcon,
   PencilEdit01Icon,
@@ -45,6 +49,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import type { SidebarCollapsible, SidebarSide } from "@/components/ui/sidebar";
 import {
@@ -238,13 +243,13 @@ function AppSidebar({
   );
 }
 
-function Page() {
+function Page({ title = "Chats" }: { title?: string }) {
   return (
     <SidebarInset>
       <header {...stylex.props(styles.topbar)}>
         <SidebarTrigger />
         <Separator orientation="vertical" sx={styles.separator} />
-        Chats
+        {title}
       </header>
       <div {...stylex.props(styles.body)}>
         {Array.from({ length: 6 }, (_, i) => (
@@ -372,9 +377,113 @@ function SidebarRightDemo() {
   );
 }
 
+const settings = [
+  { icon: Settings01Icon, label: "General" },
+  { icon: UserGroupIcon, label: "Members" },
+  { icon: CreditCardIcon, label: "Billing" },
+  { icon: Key01Icon, label: "API keys" },
+];
+
+function SectionSidebar() {
+  const { changeSection } = useSidebar();
+  const [inSettings, setInSettings] = useState(false);
+  const [current, setCurrent] = useState("Chats");
+  const items = inSettings ? settings : nav.slice(0, 3);
+  return (
+    <>
+      <Sidebar collapsible="icon">
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              {inSettings ? (
+                <SidebarMenuButton
+                  onClick={() => {
+                    changeSection("back", () => {
+                      setInSettings(false);
+                      setCurrent("Chats");
+                    });
+                  }}
+                  tooltip="Back"
+                >
+                  <Glyph icon={ArrowLeft01Icon} />
+                  <span>Back</span>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton size="lg">
+                  <span {...stylex.props(styles.brand)}>
+                    <Glyph icon={CommandIcon} />
+                  </span>
+                  <span {...stylex.props(styles.stack)}>
+                    <span {...stylex.props(styles.strong)}>Acme Inc</span>
+                    <span {...stylex.props(styles.muted)}>Enterprise</span>
+                  </span>
+                </SidebarMenuButton>
+              )}
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>
+              {inSettings ? "Settings" : "Platform"}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {items.map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton
+                      isActive={current === item.label}
+                      onClick={() => {
+                        setCurrent(item.label);
+                      }}
+                      tooltip={item.label}
+                    >
+                      <Glyph icon={item.icon} />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+                {!inSettings && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      onClick={() => {
+                        changeSection("forward", () => {
+                          setInSettings(true);
+                          setCurrent("General");
+                        });
+                      }}
+                      tooltip="Settings"
+                    >
+                      <Glyph icon={Settings01Icon} />
+                      <span>Settings</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarRail />
+      </Sidebar>
+      <Page title={current} />
+    </>
+  );
+}
+
+function SidebarSectionDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <SidebarProvider sx={styles.frame}>
+        <SectionSidebar />
+      </SidebarProvider>
+    </DemoRow>
+  );
+}
+
 export {
   SidebarActionDemo,
   SidebarDemo,
   SidebarOffcanvasDemo,
   SidebarRightDemo,
+  SidebarSectionDemo,
 };

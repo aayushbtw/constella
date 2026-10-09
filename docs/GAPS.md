@@ -73,7 +73,7 @@ netigen builds these today. Each could become a Constella part once the componen
 
 ## Motion
 
-- [ ] **Sidebar section change**: slides like a stack, forward into a section and back out, with a light blur; the page swaps at once.
+- [x] **Sidebar section change**: slides like a stack, forward into a section and back out, with a light blur; the page swaps at once.
 - [x] **Sidebar collapse**: labels fade as the width clips them; the logo stays put.
 
 ## Open

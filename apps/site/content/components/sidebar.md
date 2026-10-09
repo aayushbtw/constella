@@ -130,6 +130,34 @@ Put a `SidebarMenuAction` after a row's button for an action of its own, like a 
 </SidebarMenuItem>
 ```
 
+## Sections
+
+When a row leads into a section with its own sidebar, like Settings, change it with `changeSection` from `useSidebar`. It runs your update in a view transition: the header and content slide forward into the section, or back out of it, and the page swaps at once.
+
+<!-- ::demo name="sidebar-section" -->
+
+```tsx
+const { changeSection } = useSidebar();
+
+<SidebarMenuButton
+  onClick={() => {
+    changeSection("forward", () => setSection("settings"));
+  }}
+>
+  …
+</SidebarMenuButton>;
+```
+
+`update` can return a promise, like a router's `navigate`; the new section is captured when it settles. Only the provider that changed slides, so another sidebar on the page stays put.
+
+| Region           | Slides by default | Change it      |
+| ---------------- | ----------------- | -------------- |
+| `SidebarHeader`  | Yes               | `swap={false}` |
+| `SidebarContent` | Yes               | `swap={false}` |
+| `SidebarFooter`  | No                | `swap`         |
+
+Browsers without view transition types swap at once.
+
 ## Side
 
 Use `side="right"` to put the sidebar after the page. It collapses toward its own edge.
@@ -170,6 +198,7 @@ Use the `collapsible` prop on `Sidebar` to choose how it closes. Collapsed to ic
 | `SidebarMenuButton` | `isActive`, `tooltip`, `withEnd`; `variant`: `"default"` or `"outline"`; `size`: `"sm"`, `"default"` or `"lg"`; `render` |
 | `SidebarMenuAction` | `showOnHover` |
 | `SidebarMenuSkeleton` | `showIcon` |
-| `useSidebar` | `state`, `open`, `setOpen`, `openMobile`, `setOpenMobile`, `isMobile`, `toggleSidebar` |
+| `SidebarHeader`, `SidebarContent`, `SidebarFooter` | `swap` |
+| `useSidebar` | `state`, `open`, `setOpen`, `openMobile`, `setOpenMobile`, `isMobile`, `toggleSidebar`, `changeSection(direction, update)` |
 
 Every part takes `sx`, applied last.
