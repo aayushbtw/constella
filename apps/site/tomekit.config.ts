@@ -22,6 +22,8 @@ function pages(path: string, check?: typeof checkComponentPage) {
       description: z.string(),
       // Until a page has had its full pass. Built in dev only.
       draft: z.boolean().default(false),
+      // The sidebar section for a page built on a library, in place of Components.
+      section: z.enum(["TanStack"]).optional(),
       // Sidebar position within a section; ties sort by title.
       order: z.number().default(0),
       title: z.string(),

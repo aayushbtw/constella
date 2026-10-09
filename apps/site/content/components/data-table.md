@@ -2,6 +2,7 @@
 title: Data Table
 description: A Table driven by TanStack Table, with sorting, selection, pagination, column visibility and TanStack Query states.
 draft: true
+section: TanStack
 ---
 
 <!-- ::demo name="data-table" -->

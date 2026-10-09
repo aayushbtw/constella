@@ -2,7 +2,7 @@
 
 Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<slug>`), components in `components` (`/docs/components/<slug>`). Both are parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
 
-A page marked `draft: true` in its frontmatter is built in dev only, labelled "Draft", until the component has had its full design pass.
+A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components.
 
 ## Writing a page
 

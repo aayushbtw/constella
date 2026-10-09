@@ -8,6 +8,7 @@ const getComponents = createServerFn({ method: "GET" }).handler(() =>
     .map(({ metadata, slug }) => ({
       slug,
       draft: metadata.draft,
+      section: metadata.section,
       title: metadata.title,
     }))
     .toSorted((a, b) => a.title.localeCompare(b.title))

@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 
+import { Badge } from "@/components/ui/badge";
 import {
   colors,
   durations,
@@ -68,6 +69,9 @@ const styles = stylex.create({
     transitionProperty: "background-color, transform",
     transitionTimingFunction: `ease, ${easings.out}`,
   },
+  badge: {
+    marginInlineStart: "auto",
+  },
   active: {
     backgroundColor: colors.fill,
     fontWeight: fontWeights.medium,
@@ -75,7 +79,7 @@ const styles = stylex.create({
 });
 
 interface SidebarGroup {
-  items: { slug: string; title: string }[];
+  items: { draft?: boolean; slug: string; title: string }[];
   label: string;
   to: "/docs/$slug" | "/docs/components/$slug";
 }
@@ -91,7 +95,7 @@ function Sidebar({ groups }: { groups: SidebarGroup[] }) {
           <section key={label} {...stylex.props(styles.group)}>
             <h2 {...stylex.props(styles.label)}>{label}</h2>
             <ul {...stylex.props(styles.list)}>
-              {items.map(({ slug, title }) => (
+              {items.map(({ draft = false, slug, title }) => (
                 <li key={slug}>
                   <Link
                     params={{ slug }}
@@ -103,6 +107,11 @@ function Sidebar({ groups }: { groups: SidebarGroup[] }) {
                     )}
                   >
                     {title}
+                    {draft && (
+                      <Badge size="sm" sx={styles.badge} variant="outline">
+                        Draft
+                      </Badge>
+                    )}
                   </Link>
                 </li>
               ))}

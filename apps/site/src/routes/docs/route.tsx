@@ -37,6 +37,11 @@ const styles = stylex.create({
   },
 });
 
+const sectionItems = (
+  components: Awaited<ReturnType<typeof getComponents>>,
+  section?: string
+) => components.filter((component) => component.section === section);
+
 function DocsLayout() {
   const { components, docs } = Route.useLoaderData();
 
@@ -46,13 +51,13 @@ function DocsLayout() {
         groups={[
           { items: docs, label: "Getting started", to: "/docs/$slug" },
           {
-            items: components.filter(({ draft }) => !draft),
+            items: sectionItems(components),
             label: "Components",
             to: "/docs/components/$slug",
           },
           {
-            items: components.filter(({ draft }) => draft),
-            label: "Drafts",
+            items: sectionItems(components, "TanStack"),
+            label: "TanStack",
             to: "/docs/components/$slug",
           },
         ]}
