@@ -73,6 +73,22 @@ Card
 └── CardFooter
 ```
 
+## Card Action
+
+Put a control in `CardAction` to pin it to the header's end, beside the title and description, like a [Dropdown Menu](/docs/components/dropdown-menu).
+
+<!-- ::demo name="card-action" -->
+
+```tsx
+<CardHeader>
+  <CardTitle>Weekly digest</CardTitle>
+  <CardDescription>Sent every Monday to 12 people.</CardDescription>
+  <CardAction>
+    <DropdownMenu>…</DropdownMenu>
+  </CardAction>
+</CardHeader>
+```
+
 ## Size
 
 Use the `size` prop on `Card` to set its padding. `flush` drops it, for rows that run edge to edge and pad themselves.
@@ -106,6 +122,24 @@ Use `variant="well"` for a tinted tray around a card and the header that labels 
     <CardDescription>Available to everyone in the workspace.</CardDescription>
   </CardHeader>
   <Card size="flush">{rows}</Card>
+</Card>
+```
+
+Small cards fit a grid of numbers, each with its change as a status badge.
+
+<!-- ::demo name="card-stats" -->
+
+```tsx
+<Card size="sm">
+  <CardHeader>
+    <CardDescription>Messages</CardDescription>
+    <CardAction>
+      <Badge status="success" variant="secondary">
+        +12.5%
+      </Badge>
+    </CardAction>
+  </CardHeader>
+  <CardContent>48,210</CardContent>
 </Card>
 ```
 

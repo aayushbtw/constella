@@ -55,7 +55,13 @@ import {
   ButtonGroupSplitDemo,
   ButtonGroupTextDemo,
 } from "~/components/demos/button-group";
-import { CardDemo, CardSizeDemo, CardWellDemo } from "~/components/demos/card";
+import {
+  CardActionDemo,
+  CardDemo,
+  CardSizeDemo,
+  CardStatsDemo,
+  CardWellDemo,
+} from "~/components/demos/card";
 import {
   ChatDemo,
   MessageDemo,
@@ -159,6 +165,7 @@ import {
   ItemAvatarDemo,
   ItemDemo,
   ItemGroupDemo,
+  ItemHeaderDemo,
   ItemIconDemo,
   ItemLinkDemo,
   ItemSizeDemo,
@@ -337,6 +344,8 @@ const demos = {
   "button-disabled": ButtonDisabledDemo,
   "button-variants": ButtonVariantsDemo,
   card: CardDemo,
+  "card-action": CardActionDemo,
+  "card-stats": CardStatsDemo,
   "card-size": CardSizeDemo,
   "card-well": CardWellDemo,
   chat: ChatDemo,
@@ -430,6 +439,7 @@ const demos = {
   item: ItemDemo,
   "item-avatar": ItemAvatarDemo,
   "item-group": ItemGroupDemo,
+  "item-header": ItemHeaderDemo,
   "item-icon": ItemIconDemo,
   "item-link": ItemLinkDemo,
   "item-size": ItemSizeDemo,

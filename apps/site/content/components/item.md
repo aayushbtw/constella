@@ -125,6 +125,30 @@ Use `ItemGroup` for a list of items, and `ItemSeparator` between them.
 </ItemGroup>
 ```
 
+## Item Header
+
+Use `ItemHeader` and `ItemFooter` for full-width rows above and below the content, like a title with a tag and a footer with a date and an action.
+
+<!-- ::demo name="item-header" -->
+
+```tsx
+<Item variant="outline">
+  <ItemHeader>
+    <ItemTitle>v0.9.0</ItemTitle>
+    <Badge variant="secondary">Latest</Badge>
+  </ItemHeader>
+  <ItemContent>
+    <ItemDescription>Hover cards glide between triggers.</ItemDescription>
+  </ItemContent>
+  <ItemFooter>
+    Today
+    <Button size="sm" variant="ghost">
+      Read notes
+    </Button>
+  </ItemFooter>
+</Item>
+```
+
 ## Link
 
 Use the `render` prop to render an item as a link. Only a link or a button answers hover and press.

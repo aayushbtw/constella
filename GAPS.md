@@ -52,7 +52,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Text
 
-- [x] **Text**, **Heading** and **Icon**: not components. Type is set with `fontSizes`, `fontWeights` and `lineHeights`, adding heading sizes when the migration first needs them; an icon wrapper is the app's, since the icon set is its choice.
+- [x] **Text**, **Heading** and **Icon**: not components. Type is set with `fontSizes`, `fontWeights` and `lineHeights`, with `fontSizes.lg` (20) and `xl` (24) for headings and figures; an icon wrapper is the app's, since the icon set is its choice.
 
 ### Data
 

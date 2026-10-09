@@ -1,3 +1,9 @@
+import {
+  ArrowDown01Icon,
+  ArrowUp01Icon,
+  MoreHorizontalIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +17,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { colors, space } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -32,6 +52,26 @@ const styles = stylex.create({
     paddingInline: space.md,
   },
   muted: { color: colors.textSecondary },
+  grid: {
+    display: "grid",
+    gap: space.sm,
+    gridTemplateColumns: "repeat(auto-fit, minmax(176px, 1fr))",
+    maxWidth: "100%",
+    width: 576,
+  },
+  stat: {
+    color: colors.textPrimary,
+    fontSize: fontSizes.xl,
+    fontVariantNumeric: "tabular-nums",
+    fontWeight: fontWeights.semibold,
+  },
+  trend: {
+    alignItems: "center",
+    color: colors.textSecondary,
+    display: "flex",
+    fontSize: fontSizes.xs,
+    gap: space.xxs,
+  },
 });
 
 function CardDemo() {
@@ -127,4 +167,86 @@ function CardWellDemo() {
   );
 }
 
-export { CardDemo, CardSizeDemo, CardWellDemo };
+function Glyph({ icon }: { icon: typeof MoreHorizontalIcon }) {
+  return (
+    <HugeiconsIcon
+      aria-hidden
+      icon={icon}
+      size={sizes.icon}
+      strokeWidth={Number(strokes.icon)}
+    />
+  );
+}
+
+function CardActionDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <Card sx={styles.card}>
+        <CardHeader>
+          <CardTitle>Weekly digest</CardTitle>
+          <CardDescription>Sent every Monday to 12 people.</CardDescription>
+          <CardAction>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button aria-label="More" size="icon-sm" variant="ghost" />
+                }
+              >
+                <Glyph icon={MoreHorizontalIcon} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>Edit recipients</DropdownMenuItem>
+                <DropdownMenuItem>Send now</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="danger">Turn off</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          Includes new chats, the week&apos;s most used models and spend against
+          your budget.
+        </CardContent>
+      </Card>
+    </DemoRow>
+  );
+}
+
+const stats = [
+  { change: "+12.5%", label: "Messages", up: true, value: "48,210" },
+  { change: "-3.1%", label: "Active users", up: false, value: "1,284" },
+  { change: "+8.0%", label: "Spend", up: true, value: "$3,912" },
+];
+
+function CardStatsDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.grid)}>
+        {stats.map((stat) => (
+          <Card key={stat.label} size="sm">
+            <CardHeader>
+              <CardDescription>{stat.label}</CardDescription>
+              <CardAction>
+                <Badge
+                  status={stat.up ? "success" : "danger"}
+                  variant="secondary"
+                >
+                  {stat.change}
+                </Badge>
+              </CardAction>
+            </CardHeader>
+            <CardContent>
+              <div {...stylex.props(styles.stat)}>{stat.value}</div>
+              <div {...stylex.props(styles.trend)}>
+                <Glyph icon={stat.up ? ArrowUp01Icon : ArrowDown01Icon} />
+                vs. last month
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </DemoRow>
+  );
+}
+
+export { CardActionDemo, CardStatsDemo, CardDemo, CardSizeDemo, CardWellDemo };

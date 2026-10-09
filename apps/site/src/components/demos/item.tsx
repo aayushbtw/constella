@@ -10,13 +10,16 @@ import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemFooter,
   ItemGroup,
+  ItemHeader,
   ItemMedia,
   ItemSeparator,
   ItemTitle,
@@ -24,10 +27,11 @@ import {
   itemVariants,
 } from "@/components/ui/item";
 import type { ItemSize, ItemVariant } from "@/components/ui/item";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
+  meta: { color: colors.textMuted, fontSize: fontSizes.xs },
   stage: { width: "100%" },
   column: {
     display: "flex",
@@ -271,8 +275,52 @@ function ItemLinkDemo() {
   );
 }
 
+const releases = [
+  {
+    notes: "Hover cards glide between triggers.",
+    tag: "Latest",
+    version: "v0.9.0",
+    when: "Today",
+  },
+  {
+    notes: "Data tables, sidebars and the chat parts.",
+    tag: null,
+    version: "v0.8.0",
+    when: "Last week",
+  },
+];
+
+function ItemHeaderDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        {releases.map((release) => (
+          <Item key={release.version} variant="outline">
+            <ItemHeader>
+              <ItemTitle>{release.version}</ItemTitle>
+              {release.tag !== null && (
+                <Badge variant="secondary">{release.tag}</Badge>
+              )}
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription>{release.notes}</ItemDescription>
+            </ItemContent>
+            <ItemFooter>
+              <span {...stylex.props(styles.meta)}>{release.when}</span>
+              <Button size="sm" variant="ghost">
+                Read notes
+              </Button>
+            </ItemFooter>
+          </Item>
+        ))}
+      </div>
+    </DemoRow>
+  );
+}
+
 export {
   ItemAvatarDemo,
+  ItemHeaderDemo,
   ItemDemo,
   ItemGroupDemo,
   ItemIconDemo,

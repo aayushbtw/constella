@@ -88,6 +88,9 @@ export const shadows = stylex.defineConsts({
 });
 
 export const fontSizes = stylex.defineConsts({
+  // Headings and figures, above the reading size.
+  xl: "24px",
+  lg: "20px",
   md: "16px",
   sm: "14px",
   xs: "13px",
