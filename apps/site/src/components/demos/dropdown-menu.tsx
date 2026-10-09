@@ -17,9 +17,13 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuEmpty,
+  DropdownMenuFilterProvider,
   DropdownMenuGroup,
+  DropdownMenuInput,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuList,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -274,6 +278,44 @@ function DropdownMenuSizesDemo() {
   );
 }
 
+function DropdownMenuFilterDemo() {
+  return (
+    <DemoRow>
+      <DropdownMenuFilterProvider>
+        <DropdownMenu>
+          <Trigger />
+          <DropdownMenuContent sx={styles.wide}>
+            <DropdownMenuInput
+              aria-label="Filter actions"
+              placeholder="Filter..."
+            />
+            <DropdownMenuEmpty>No actions found.</DropdownMenuEmpty>
+            <DropdownMenuList>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>File</DropdownMenuLabel>
+                <DropdownMenuItem>New file</DropdownMenuItem>
+                <DropdownMenuItem>Open file</DropdownMenuItem>
+                <DropdownMenuItem>Save</DropdownMenuItem>
+                <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                <DropdownMenuItem>Rename</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Share</DropdownMenuLabel>
+                <DropdownMenuItem>Copy link</DropdownMenuItem>
+                <DropdownMenuItem>Invite people</DropdownMenuItem>
+                <DropdownMenuItem>Publish to web</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuGroup>
+                <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuList>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </DropdownMenuFilterProvider>
+    </DemoRow>
+  );
+}
+
 function DropdownMenuDangerDemo() {
   return (
     <DemoRow>
@@ -303,6 +345,7 @@ export {
   DropdownMenuCheckboxesDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
+  DropdownMenuFilterDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,

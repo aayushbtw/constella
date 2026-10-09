@@ -56,6 +56,17 @@ import {
 ## Composition
 
 ```
+DropdownMenuFilterProvider (optional)
+└── DropdownMenu
+    ├── DropdownMenuTrigger
+    └── DropdownMenuContent
+        ├── DropdownMenuInput
+        ├── DropdownMenuEmpty
+        └── DropdownMenuList
+            └── items, as below
+```
+
+```
 DropdownMenu
 ├── DropdownMenuTrigger
 └── DropdownMenuContent
@@ -126,6 +137,30 @@ Use `DropdownMenuRadioGroup` for one choice out of several.
 </DropdownMenuRadioGroup>
 ```
 
+## Filter
+
+Wrap the menu in `DropdownMenuFilterProvider`, add `DropdownMenuInput`, and put the items in `DropdownMenuList`. Typing narrows the items and highlights the first match, so Enter runs it. Filtering is a [Base UI preview](https://base-ui.com/react/components/menu), so its API may change.
+
+<!-- ::demo name="dropdown-menu-filter" -->
+
+```tsx
+<DropdownMenuFilterProvider>
+  <DropdownMenu>
+    <DropdownMenuTrigger render={<Button variant="outline" />}>
+      Open
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <DropdownMenuInput aria-label="Filter actions" placeholder="Filter..." />
+      <DropdownMenuEmpty>No actions found.</DropdownMenuEmpty>
+      <DropdownMenuList>
+        <DropdownMenuItem>New file</DropdownMenuItem>
+        <DropdownMenuItem>Save</DropdownMenuItem>
+      </DropdownMenuList>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</DropdownMenuFilterProvider>
+```
+
 ## Size
 
 Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes its parent's size unless it sets its own.
@@ -186,6 +221,8 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | --- | --- |
 | `DropdownMenuContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
 | `DropdownMenuItem` | `variant`: `"default"` or `"danger"` |
+| `DropdownMenuFilterProvider` | `autoHighlight` defaults to `true` |
+| `DropdownMenuInput` | A search field sized with the content's `size`; label it with `aria-label` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Menu](https://base-ui.com/react/components/menu).

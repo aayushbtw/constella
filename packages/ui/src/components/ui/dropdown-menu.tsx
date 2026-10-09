@@ -1,12 +1,21 @@
 "use client";
 
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowRight01Icon,
+  Search01Icon,
+  Tick02Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useContext } from "react";
 import type { ComponentProps } from "react";
 
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { useSkipMotion } from "@/lib/motion";
 import {
   colors,
@@ -56,6 +65,7 @@ const highlighted = ":is([data-highlighted], [data-popup-open])";
 const danger = ":is([data-variant='danger'])";
 const off = ":is([data-disabled])";
 const inset = ":is([data-inset])";
+const filtering = ":has(> [data-slot='dropdown-menu-list'])";
 
 // shadcn's padding, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -76,11 +86,15 @@ const styles = stylex.create({
     boxShadow: shadows.popover,
     boxSizing: "border-box",
     color: colors.textPrimary,
+    // A filtered popup keeps its field in place and scrolls the list instead.
+    display: { default: null, [filtering]: "flex" },
+    flexDirection: { default: null, [filtering]: "column" },
     maxHeight: "var(--available-height)",
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
     opacity: { default: 1, [offstage]: 0 },
-    overflowY: "auto",
-    paddingBlock: space.xxs,
+    overflowY: { default: "auto", [filtering]: "hidden" },
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
@@ -95,6 +109,37 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
+  },
+  // Inside the popup's padding, so its corner nests in the popup's.
+  input: {
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
+    flexShrink: 0,
+  },
+  searchIcon: {
+    color: colors.textMuted,
+    display: "flex",
+  },
+  list: {
+    maxHeight: sizes.menuHeight,
+    minHeight: 0,
+    overflowX: "hidden",
+    overflowY: "auto",
+    // Filtered-out groups stay mounted with `hidden`.
+    paddingBlockStart: {
+      default: space.xxs,
+      ":not(:has(> :not([hidden])))": 0,
+    },
+    scrollPaddingBlock: space.xxs,
+  },
+  empty: {
+    color: colors.textSecondary,
+    fontSize: fontSizes.sm,
+    paddingBlockEnd: { default: space.lg, ":empty": 0 },
+    paddingBlockStart: { default: space.lg, ":empty": 0 },
+    textAlign: "center",
   },
   submenu: {
     transform: "none",
@@ -163,7 +208,8 @@ const styles = stylex.create({
     color: colors.textMuted,
     fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
-    paddingBlock: space.xxs,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: { default: px6, [inset]: insetStart },
   },
@@ -259,6 +305,60 @@ function DropdownMenuContent({
         </MenuPrimitive.Positioner>
       </MenuPrimitive.Portal>
     </Size>
+  );
+}
+
+/** Makes the `DropdownMenu` or `DropdownMenuSub` directly inside it filterable. Highlights the first match while filtering, so Enter runs it. */
+function DropdownMenuFilterProvider({
+  autoHighlight = true,
+  ...props
+}: MenuPrimitive.FilterProvider.Props) {
+  return (
+    <MenuPrimitive.FilterProvider autoHighlight={autoHighlight} {...props} />
+  );
+}
+
+function DropdownMenuInput({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Input.Props>) {
+  return (
+    <InputGroup
+      data-slot="dropdown-menu-input"
+      size={use(Size)}
+      sx={styles.input}
+    >
+      {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
+      <MenuPrimitive.Input render={<InputGroupInput sx={sx} />} {...props} />
+      <InputGroupAddon>
+        <span {...stylex.props(styles.searchIcon)}>
+          <Glyph icon={Search01Icon} />
+        </span>
+      </InputGroupAddon>
+    </InputGroup>
+  );
+}
+
+function DropdownMenuList({ sx, ...props }: Styled<MenuPrimitive.List.Props>) {
+  return (
+    <MenuPrimitive.List
+      data-slot="dropdown-menu-list"
+      {...props}
+      {...stylex.props(styles.list, sx)}
+    />
+  );
+}
+
+function DropdownMenuEmpty({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Empty.Props>) {
+  return (
+    <MenuPrimitive.Empty
+      data-slot="dropdown-menu-empty"
+      {...props}
+      {...stylex.props(styles.empty, sx)}
+    />
   );
 }
 
@@ -441,11 +541,15 @@ export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuEmpty,
+  DropdownMenuFilterProvider,
   DropdownMenuGroup,
+  DropdownMenuInput,
   DropdownMenuItem,
   dropdownMenuItemVariants,
   dropdownMenuSizes,
   DropdownMenuLabel,
+  DropdownMenuList,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
