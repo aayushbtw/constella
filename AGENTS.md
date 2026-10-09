@@ -20,6 +20,8 @@ Read the one that fits before changing things, and record new decisions in it, n
 - **`ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
 - **`DOCS.md`:** how to write the docs pages in `apps/site/content`.
 
+`DESIGN.md` and `ARCHITECTURE.md` are long. List their headings with `rg -n '^## ' DESIGN.md`, then `Read` only the section the task touches, with `offset` and `limit`.
+
 ## Workflow
 
 - Review also checks: `DESIGN.md` and `ARCHITECTURE.md`, and that no demo fakes a missing component.
