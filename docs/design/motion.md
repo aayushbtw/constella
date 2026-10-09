@@ -21,23 +21,23 @@ Never `ease-in`: it delays the moment the eye is watching.
 
 ## Duration
 
-| Token            | For                                               |
-| ---------------- | ------------------------------------------------- |
-| `hover`          | Color changes on hover                            |
-| `press`          | Scale on `:active`                                |
-| `popover`        | Small surfaces that open from a trigger           |
-| `popoverExit`    | The same surfaces leaving, and submenus           |
-| `dialog`         | A dialog and its backdrop                         |
-| `sidebar`        | The sidebar opening to its full width             |
-| `sidebarExit`    | The sidebar narrowing to its rail or out of view  |
-| `move`           | Indicators and thumbs that travel                 |
-| `crossfade`      | Cross-fades between states                        |
-| `layout`         | A surface growing or shrinking to fit             |
-| `spin`           | One turn of a spinner                             |
-| `pulse`          | One breath of a skeleton or indeterminate bar     |
-| `confirm`        | How long a confirmation (copied, saved) holds     |
-| `tooltipDelay`   | Rest before a tooltip opens                       |
-| `hoverCardDelay` | Rest before a hover card opens, twice a tooltip's |
+| Token            | For                                                     |
+| ---------------- | ------------------------------------------------------- |
+| `hover`          | Color changes on hover                                  |
+| `press`          | Scale on `:active`                                      |
+| `popover`        | Small surfaces that open from a trigger                 |
+| `popoverExit`    | The same surfaces leaving, and submenus                 |
+| `dialog`         | A dialog and its backdrop                               |
+| `sidebar`        | The sidebar opening to its full width                   |
+| `sidebarExit`    | The sidebar narrowing to its rail or out of view        |
+| `move`           | Indicators and thumbs that travel                       |
+| `crossfade`      | Cross-fades between states                              |
+| `layout`         | A surface growing or shrinking to fit                   |
+| `spin`           | One turn of a spinner                                   |
+| `pulse`          | One breath of a skeleton or indeterminate bar           |
+| `confirm`        | How long a confirmation (copied, saved) holds           |
+| `tooltipDelay`   | Rest before a tooltip opens                             |
+| `hoverCardDelay` | Rest before a hover card opens, the same as a tooltip's |
 
 Interface motion stays at or under 300ms. A spinner and a pulse are the exceptions: unhurried, so waiting reads as working, not urgent.
 

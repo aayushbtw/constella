@@ -238,9 +238,9 @@ export const durations = stylex.defineConsts({
   dialog: "200ms",
   sidebar: "250ms",
   sidebarExit: "200ms",
+  // Half Base UI's 600ms, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
-  // Longer than a tooltip's: a card covers content, so it waits for the pointer to settle.
-  hoverCardDelay: "600ms",
+  hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",
 });
 

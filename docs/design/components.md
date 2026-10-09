@@ -68,7 +68,7 @@ Its button is a `fill` chip set into the box with an even inset on three sides, 
 
 ## Hover card
 
-A popover opened by resting on a link, with the popover's surface and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, since a card covers content and a pointer sweeping over text shouldn't raise one. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
+A popover opened by resting on a link, with the popover's surface and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half Base UI's default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
 
 ## Input group
 
