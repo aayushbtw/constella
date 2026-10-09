@@ -68,7 +68,7 @@ An empty state is centered, balanced text in a short measure (`sizes.measure`), 
 
 An alert is a box like a card, a control's radius and padding: `edge` border, `raised` fill. Its `status` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text.
 
-A progress bar and a meter are the slider's track: `strokes.track` tall, `fill` under `accent`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. A meter at or past its max turns `dangerSolid`, so a spent quota reads at a glance; it needs no roles of its own.
+A progress bar and a meter are the slider's track: `strokes.track` tall, `fill` under `accent`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter at or past its max turns `dangerSolid`, so a spent quota reads at a glance; it needs no roles of its own.
 
 A toggle is a ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`, the selected role, and hover stays a step under it at `fillSubtle`, so on and hovered never read alike. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one segmented control.
 

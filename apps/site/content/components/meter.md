@@ -42,6 +42,21 @@ Meter
     └── MeterIndicator
 ```
 
+## Meter Value
+
+Set `max` to measure in the quota's own units, and give `MeterValue` a function to show the value your way. At the cap the fill turns red.
+
+<!-- ::demo name="meter-value" -->
+
+```tsx
+<Meter max={5} value={3.2}>
+  <MeterLabel>Storage</MeterLabel>
+  <MeterValue>
+    {(_, value) => `${gb.format(value)} of ${gb.format(5)}`}
+  </MeterValue>
+</Meter>
+```
+
 ## API Reference
 
 | Part | Adds |

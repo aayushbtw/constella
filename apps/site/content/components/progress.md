@@ -47,6 +47,33 @@ Put a `ProgressLabel` and `ProgressValue` in `Progress` to name it and show its 
 </Progress>
 ```
 
+## Progress Value
+
+Give `ProgressValue` a function to show the value your way, like a file's size. Set `max` to count in its own units. The fill travels to each new value.
+
+<!-- ::demo name="progress-value" -->
+
+```tsx
+<Progress max={file.size} value={sent}>
+  <ProgressLabel>{file.name}</ProgressLabel>
+  <ProgressValue>
+    {() => (sent >= file.size ? "Done" : `${mb(sent)} of ${mb(file.size)}`)}
+  </ProgressValue>
+</Progress>
+```
+
+## Indeterminate
+
+Pass `value={null}` while the amount isn't known yet. A segment sweeps across the track; under reduced motion it breathes in place.
+
+<!-- ::demo name="progress-indeterminate" -->
+
+```tsx
+<Progress value={null}>
+  <ProgressLabel>Preparing export</ProgressLabel>
+</Progress>
+```
+
 ## API Reference
 
 | Part | Adds |

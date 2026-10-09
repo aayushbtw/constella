@@ -178,8 +178,11 @@ import {
 } from "~/components/demos/popover";
 import {
   MeterDemo,
+  MeterValueDemo,
   ProgressDemo,
+  ProgressIndeterminateDemo,
   ProgressLabelDemo,
+  ProgressValueDemo,
 } from "~/components/demos/progress";
 import {
   RadioGroupCardDemo,
@@ -433,6 +436,7 @@ const demos = {
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
   meter: MeterDemo,
+  "meter-value": MeterValueDemo,
   message: MessageDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
@@ -442,7 +446,9 @@ const demos = {
   "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
   progress: ProgressDemo,
+  "progress-indeterminate": ProgressIndeterminateDemo,
   "progress-label": ProgressLabelDemo,
+  "progress-value": ProgressValueDemo,
   "radio-group": RadioGroupDemo,
   "radio-group-card": RadioGroupCardDemo,
   "radio-group-description": RadioGroupDescriptionDemo,

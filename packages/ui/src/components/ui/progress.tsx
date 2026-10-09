@@ -11,6 +11,7 @@ import {
   fontWeights,
   lineHeights,
   media,
+  opacities,
   radii,
   space,
   strokes,
@@ -19,6 +20,16 @@ import {
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
+
+// A segment a third the track's width, crossing it while the amount is unknown.
+const sweep = stylex.keyframes({
+  from: { transform: "translateX(-100%)" },
+  to: { transform: "translateX(300%)" },
+});
+const breathe = stylex.keyframes({
+  "50%": { opacity: opacities.pulse },
+});
+const unknown = ":is([data-indeterminate])";
 
 const styles = stylex.create({
   root: {
@@ -41,6 +52,13 @@ const styles = stylex.create({
     width: "100%",
   },
   indicator: {
+    animationDuration: { default: null, [unknown]: durations.pulse },
+    animationIterationCount: { default: null, [unknown]: "infinite" },
+    animationName: {
+      default: null,
+      [unknown]: { default: sweep, [media.reducedMotion]: breathe },
+    },
+    animationTimingFunction: { default: null, [unknown]: easings.inOut },
     backgroundColor: colors.accent,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
@@ -53,6 +71,7 @@ const styles = stylex.create({
     },
     transitionProperty: "width, background-color",
     transitionTimingFunction: easings.out,
+    width: { default: null, [unknown]: "33.333%" },
   },
   label: {
     color: colors.textPrimary,
