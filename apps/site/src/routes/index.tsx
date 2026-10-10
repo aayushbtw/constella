@@ -2,7 +2,8 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
-import { colors, space } from "@/lib/tokens.stylex";
+import { colors, media as uiMedia, space } from "@/lib/tokens.stylex";
+import { Showcase, showcaseSize } from "~/components/home/showcase";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
 import {
@@ -26,7 +27,7 @@ const styles = stylex.create({
     marginInline: "auto",
     maxWidth: {
       default: `calc(${layout.content} + 2 * ${layout.gutter})`,
-      [media.sidebar]: layout.shell,
+      [uiMedia.md]: layout.shell,
     },
     paddingBottom: layout.pageBottom,
     paddingInline: {
@@ -34,6 +35,11 @@ const styles = stylex.create({
       [media.sidebar]: layout.gutterWide,
     },
     paddingTop: layout.pageTop,
+  },
+  hero: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.lg,
   },
   title: {
     fontSize: siteFontSizes.display,
@@ -47,17 +53,20 @@ const styles = stylex.create({
     gap: { default: space.sm, [media.sidebar]: space.lg },
     gridTemplateColumns: {
       default: "1fr",
-      [media.sidebar]: `${layout.sidebar} minmax(0, ${layout.content})`,
+      [media.sidebar]: `${layout.sidebar} minmax(0, 1fr)`,
     },
   },
   label: {
     color: colors.textMuted,
   },
   list: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.sm,
+    columnCount: { default: 2, [uiMedia.md]: 3, [media.sidebar]: 4 },
+    columnGap: space.lg,
     listStyle: "none",
+  },
+  item: {
+    breakInside: "avoid",
+    paddingBottom: space.sm,
   },
   inline: {
     display: "flex",
@@ -73,27 +82,55 @@ const styles = stylex.create({
 function Home() {
   // Drafts only exist in dev; hidden here so the page reads as it ships.
   const components = Route.useLoaderData().filter(({ draft }) => !draft);
-  // The label, each component, then the links row.
-  const items = components.length + 2;
+  // The links row, each tile, then the index.
+  const items = showcaseSize + 2;
 
   return (
     <main {...stylex.props(styles.main)}>
-      <h1 {...stylex.props(styles.title)}>
-        {config.description.split(" ").map((word, index) => (
-          <Fragment key={`${word}${index}`}>
-            {index > 0 && " "}
-            <span {...stylex.props(entrance.word(index))}>{word}</span>
-          </Fragment>
-        ))}
-      </h1>
+      <div {...stylex.props(styles.hero)}>
+        <h1 {...stylex.props(styles.title)}>
+          {config.description.split(" ").map((word, index) => (
+            <Fragment key={`${word}${index}`}>
+              {index > 0 && " "}
+              <span {...stylex.props(entrance.word(index))}>{word}</span>
+            </Fragment>
+          ))}
+        </h1>
 
-      <section {...stylex.props(styles.section)}>
-        <h2 {...stylex.props(styles.label, entrance.item(0, items))}>
-          Components
-        </h2>
+        <ul {...stylex.props(styles.inline, entrance.item(0, items))}>
+          <li>
+            <Link to="/docs" {...stylex.props(styles.link)}>
+              Docs
+            </Link>
+          </li>
+          <li>
+            <a
+              href={`https://github.com/${config.socials.github}`}
+              {...stylex.props(styles.link)}
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href={`https://x.com/${config.socials.twitter}`}
+              {...stylex.props(styles.link)}
+            >
+              X
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <Showcase count={items} order={1} />
+
+      <section
+        {...stylex.props(styles.section, entrance.item(items - 1, items))}
+      >
+        <h2 {...stylex.props(styles.label)}>Components</h2>
         <ul {...stylex.props(styles.list)}>
-          {components.map(({ slug, title }, index) => (
-            <li key={slug} {...stylex.props(entrance.item(index + 1, items))}>
+          {components.map(({ slug, title }) => (
+            <li key={slug} {...stylex.props(styles.item)}>
               <Link
                 params={{ slug }}
                 to="/docs/components/$slug"
@@ -105,30 +142,6 @@ function Home() {
           ))}
         </ul>
       </section>
-
-      <ul {...stylex.props(styles.inline, entrance.item(items - 1, items))}>
-        <li>
-          <Link to="/docs" {...stylex.props(styles.link)}>
-            Docs
-          </Link>
-        </li>
-        <li>
-          <a
-            href={`https://github.com/${config.socials.github}`}
-            {...stylex.props(styles.link)}
-          >
-            GitHub
-          </a>
-        </li>
-        <li>
-          <a
-            href={`https://x.com/${config.socials.twitter}`}
-            {...stylex.props(styles.link)}
-          >
-            X
-          </a>
-        </li>
-      </ul>
     </main>
   );
 }

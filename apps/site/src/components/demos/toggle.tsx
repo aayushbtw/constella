@@ -208,6 +208,7 @@ function ToggleGroupDisabledDemo() {
 }
 
 export {
+  Formatting,
   ToggleGroupDisabledDemo,
   ToggleGroupMultipleDemo,
   ToggleGroupVerticalDemo,

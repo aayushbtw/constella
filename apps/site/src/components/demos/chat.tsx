@@ -39,6 +39,9 @@ import type { PromptInputStatus } from "@/components/ui/prompt-input";
 import { colors, radii, sizes, space, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
+// Concentric with the composer: its corner plus the inset and border around it.
+const frame = `calc(${radii.xl} + ${space.xs} + ${strokes.border})`;
+
 const styles = stylex.create({
   stage: { width: "100%" },
   column: {
@@ -62,10 +65,10 @@ const styles = stylex.create({
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
     borderInlineStartWidth: strokes.border,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
+    borderStartStartRadius: frame,
+    borderStartEndRadius: frame,
+    borderEndStartRadius: frame,
+    borderEndEndRadius: frame,
     display: "flex",
     flexDirection: "column",
     height: 480,
@@ -212,7 +215,7 @@ function PromptInputDemo() {
   );
 }
 
-function ChatDemo() {
+function Chat({ sx }: { sx?: stylex.StyleXStyles }) {
   const [turns, setTurns] = useState(opening);
   const [status, setStatus] = useState<PromptInputStatus>("ready");
   const timer = useRef<ReturnType<typeof setInterval>>(null);
@@ -255,36 +258,42 @@ function ChatDemo() {
   }
 
   return (
-    <DemoRow sx={styles.stage}>
-      <div {...stylex.props(styles.chat)}>
-        <MessageScrollerProvider>
-          <MessageScroller sx={styles.scroller}>
-            <MessageScrollerViewport aria-label="Conversation">
-              <MessageScrollerContent sx={styles.thread}>
-                {turns.map((turn) => (
-                  <MessageScrollerItem
-                    key={turn.id}
-                    messageId={turn.id}
-                    scrollAnchor={turn.from === "user"}
-                  >
-                    {turn.from === "user" ? (
-                      <Message from="user">
-                        <MessageContent>{turn.text}</MessageContent>
-                      </Message>
-                    ) : (
-                      <Answer text={turn.text} />
-                    )}
-                  </MessageScrollerItem>
-                ))}
-              </MessageScrollerContent>
-            </MessageScrollerViewport>
-            <MessageScrollerButton />
-          </MessageScroller>
-        </MessageScrollerProvider>
-        <div {...stylex.props(styles.composer)}>
-          <Composer onStop={stop} onSubmit={send} status={status} />
-        </div>
+    <div {...stylex.props(styles.chat, sx)}>
+      <MessageScrollerProvider>
+        <MessageScroller sx={styles.scroller}>
+          <MessageScrollerViewport aria-label="Conversation">
+            <MessageScrollerContent sx={styles.thread}>
+              {turns.map((turn) => (
+                <MessageScrollerItem
+                  key={turn.id}
+                  messageId={turn.id}
+                  scrollAnchor={turn.from === "user"}
+                >
+                  {turn.from === "user" ? (
+                    <Message from="user">
+                      <MessageContent>{turn.text}</MessageContent>
+                    </Message>
+                  ) : (
+                    <Answer text={turn.text} />
+                  )}
+                </MessageScrollerItem>
+              ))}
+            </MessageScrollerContent>
+          </MessageScrollerViewport>
+          <MessageScrollerButton />
+        </MessageScroller>
+      </MessageScrollerProvider>
+      <div {...stylex.props(styles.composer)}>
+        <Composer onStop={stop} onSubmit={send} status={status} />
       </div>
+    </div>
+  );
+}
+
+function ChatDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <Chat />
     </DemoRow>
   );
 }
@@ -355,4 +364,4 @@ function PromptInputHeaderDemo() {
   );
 }
 
-export { ChatDemo, MessageDemo, PromptInputDemo, PromptInputHeaderDemo };
+export { Chat, ChatDemo, MessageDemo, PromptInputDemo, PromptInputHeaderDemo };

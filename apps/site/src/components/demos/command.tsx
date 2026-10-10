@@ -182,4 +182,4 @@ function CommandDialogDemo() {
   );
 }
 
-export { CommandDemo, CommandDialogDemo };
+export { CommandDemo, CommandDialogDemo, groups, Palette };

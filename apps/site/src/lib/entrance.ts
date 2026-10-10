@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { AnyRouter } from "@tanstack/react-router";
 
-import { easings, media, space } from "@/lib/tokens.stylex";
+import { easings, media, motion, space } from "@/lib/tokens.stylex";
 
 // One gesture: the tagline and the page stagger in inside the logo's spin, and the
 // last item lands as it settles. In ms.
@@ -10,6 +10,8 @@ const wordsAt = 60;
 const wordStep = 60;
 const itemsAt = 300;
 const itemFor = 450;
+// A tile's content comes into focus this long after its surface starts rising.
+const contentLag = 80;
 
 const spinIn = stylex.keyframes({
   from: { opacity: 0, transform: "rotate(-180deg) scale(0.85)" },
@@ -19,6 +21,9 @@ const focusIn = stylex.keyframes({
 });
 const rise = stylex.keyframes({
   from: { opacity: 0, transform: `translateY(${space.xs})` },
+});
+const develop = stylex.keyframes({
+  from: { filter: `blur(${motion.crossfadeBlur})`, opacity: 0 },
 });
 const fade = stylex.keyframes({ from: { opacity: 0 } });
 
@@ -38,8 +43,13 @@ const styles = stylex.create({
   spin: play(spinIn, spinFor),
   word: { ...play(focusIn, 500), display: "inline-block" },
   item: play(rise, itemFor),
+  content: play(develop, itemFor - contentLag),
   delay: (ms: number) => ({ animationDelay: `${ms}ms` }),
 });
+
+// Spaced so the last item, and a tile's content with it, lands as the logo settles.
+const itemAt = (order: number, count: number) =>
+  itemsAt + (order * (spinFor - itemsAt - itemFor)) / (count - 1);
 
 const entrance = {
   spin: styles.spin,
@@ -47,12 +57,15 @@ const entrance = {
     styles.word,
     styles.delay(wordsAt + index * wordStep),
   ],
-  /** Item `order` of `count`, spaced so the last lands as the logo settles. */
+  /** Item `order` of `count`: rises into place. */
   item: (order: number, count: number) => [
     styles.item,
-    styles.delay(
-      itemsAt + (order * (spinFor - itemsAt - itemFor)) / (count - 1)
-    ),
+    styles.delay(itemAt(order, count)),
+  ],
+  /** The content of tile `order`: comes into focus once its surface is moving. */
+  content: (order: number, count: number) => [
+    styles.content,
+    styles.delay(itemAt(order, count) + contentLag),
   ],
 };
 
