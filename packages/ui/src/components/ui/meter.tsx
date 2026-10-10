@@ -16,6 +16,10 @@ import {
   strokes,
 } from "@/lib/tokens.stylex";
 
+const meterStatuses = ["success", "info", "warning", "danger"] as const;
+
+type MeterStatus = (typeof meterStatuses)[number];
+
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
@@ -54,8 +58,16 @@ const styles = stylex.create({
     transitionProperty: "width, background-color",
     transitionTimingFunction: easings.out,
   },
-  // At or past its cap, the fill turns red.
-  full: {
+  success: {
+    backgroundColor: colors.successSolid,
+  },
+  info: {
+    backgroundColor: colors.infoSolid,
+  },
+  warning: {
+    backgroundColor: colors.warningSolid,
+  },
+  danger: {
     backgroundColor: colors.dangerSolid,
   },
   label: {
@@ -73,19 +85,30 @@ const styles = stylex.create({
   },
 });
 
+const statusStyles = {
+  danger: styles.danger,
+  info: styles.info,
+  success: styles.success,
+  warning: styles.warning,
+} satisfies Record<MeterStatus, stylex.StyleXStyles>;
+
 /** Renders the track and indicator after its children, so a label and value sit above. */
-function Meter({ children, sx, ...props }: Styled<MeterPrimitive.Root.Props>) {
-  const isFull = props.value >= (props.max ?? 100);
+function Meter({
+  children,
+  status,
+  sx,
+  ...props
+}: Styled<MeterPrimitive.Root.Props> & { status?: MeterStatus }) {
   return (
     <MeterPrimitive.Root
-      data-full={isFull || undefined}
       data-slot="meter"
+      data-status={status}
       {...props}
       {...stylex.props(styles.root, sx)}
     >
       {children}
       <MeterTrack>
-        <MeterIndicator sx={isFull && styles.full} />
+        <MeterIndicator sx={status && statusStyles[status]} />
       </MeterTrack>
     </MeterPrimitive.Root>
   );
@@ -134,4 +157,12 @@ function MeterValue({ sx, ...props }: Styled<MeterPrimitive.Value.Props>) {
   );
 }
 
-export { Meter, MeterIndicator, MeterLabel, MeterTrack, MeterValue };
+export {
+  Meter,
+  MeterIndicator,
+  MeterLabel,
+  meterStatuses,
+  MeterTrack,
+  MeterValue,
+};
+export type { MeterStatus };

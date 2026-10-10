@@ -67,8 +67,29 @@ function MeterDemo() {
           <MeterLabel>Storage</MeterLabel>
           <MeterValue />
         </Meter>
-        <Meter value={100}>
+        <Meter value={68}>
           <MeterLabel>Messages this month</MeterLabel>
+          <MeterValue />
+        </Meter>
+      </div>
+    </DemoRow>
+  );
+}
+
+function MeterStatusDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <Meter status="success" value={100}>
+          <MeterLabel>Battery</MeterLabel>
+          <MeterValue />
+        </Meter>
+        <Meter status="warning" value={82}>
+          <MeterLabel>Memory</MeterLabel>
+          <MeterValue />
+        </Meter>
+        <Meter status="danger" value={100}>
+          <MeterLabel>Storage</MeterLabel>
           <MeterValue />
         </Meter>
       </div>
@@ -192,6 +213,7 @@ function MeterValueDemo() {
 
 export {
   MeterDemo,
+  MeterStatusDemo,
   MeterValueDemo,
   ProgressDemo,
   ProgressIndeterminateDemo,

@@ -193,6 +193,7 @@ import {
 } from "~/components/demos/popover";
 import {
   MeterDemo,
+  MeterStatusDemo,
   MeterValueDemo,
   ProgressDemo,
   ProgressIndeterminateDemo,
@@ -466,6 +467,7 @@ const demos = {
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
   meter: MeterDemo,
+  "meter-status": MeterStatusDemo,
   "meter-value": MeterValueDemo,
   message: MessageDemo,
   popover: PopoverDemo,
