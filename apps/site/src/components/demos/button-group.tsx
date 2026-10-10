@@ -78,7 +78,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
-import { DemoRow } from "~/components/demos/frame";
+import { DemoRow, demoStyles } from "~/components/demos/frame";
 import { fonts } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
@@ -122,7 +122,10 @@ function ButtonGroupDemo() {
       <ButtonGroup aria-label="Message actions">
         <ButtonGroup>
           <Button aria-label="Go back" size="icon" variant="outline">
-            <Glyph icon={ArrowLeft01Icon} />
+            <Glyph
+              icon={ArrowLeft01Icon}
+              {...stylex.props(demoStyles.mirror)}
+            />
           </Button>
         </ButtonGroup>
         <ButtonGroup>
@@ -346,10 +349,18 @@ function ButtonGroupNestedDemo() {
         </ButtonGroup>
         <ButtonGroup>
           <Button aria-label="Previous" size="icon-sm" variant="outline">
-            <Glyph icon={ArrowLeft01Icon} size={sizes.iconSm} />
+            <Glyph
+              icon={ArrowLeft01Icon}
+              size={sizes.iconSm}
+              {...stylex.props(demoStyles.mirror)}
+            />
           </Button>
           <Button aria-label="Next" size="icon-sm" variant="outline">
-            <Glyph icon={ArrowRight01Icon} size={sizes.iconSm} />
+            <Glyph
+              icon={ArrowRight01Icon}
+              size={sizes.iconSm}
+              {...stylex.props(demoStyles.mirror)}
+            />
           </Button>
         </ButtonGroup>
       </ButtonGroup>
@@ -481,7 +492,10 @@ function ButtonGroupSelectDemo() {
         </ButtonGroup>
         <ButtonGroup>
           <Button aria-label="Send" size="icon" variant="outline">
-            <Glyph icon={ArrowRight01Icon} />
+            <Glyph
+              icon={ArrowRight01Icon}
+              {...stylex.props(demoStyles.mirror)}
+            />
           </Button>
         </ButtonGroup>
       </ButtonGroup>

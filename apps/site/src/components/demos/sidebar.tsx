@@ -66,7 +66,7 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
-import { DemoRow } from "~/components/demos/frame";
+import { DemoRow, demoStyles } from "~/components/demos/frame";
 import { Logo } from "~/components/logo";
 
 const styles = stylex.create({
@@ -322,7 +322,10 @@ function SettingsHeader({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={onBack}>
-              <Glyph icon={ArrowLeft01Icon} />
+              <Glyph
+                icon={ArrowLeft01Icon}
+                {...stylex.props(demoStyles.mirror)}
+              />
               <SidebarMenuLabel>Back</SidebarMenuLabel>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -8,6 +8,12 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
+const rtl = ":is([dir='rtl'] *)";
+
+const demoStyles = stylex.create({
+  mirror: { transform: { default: null, [rtl]: "scaleX(-1)" } },
+});
+
 const styles = stylex.create({
   stage: {
     alignItems: "center",
@@ -81,4 +87,4 @@ function Well({
   return <div {...stylex.props(styles.well, sx)}>{children}</div>;
 }
 
-export { DemoControls, DemoRow, Stage, Well };
+export { DemoControls, DemoRow, demoStyles, Stage, Well };

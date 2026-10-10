@@ -30,6 +30,9 @@ import {
 } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
+const panelOpen = ":is([data-panel-open] *)";
+const rtl = ":is([dir='rtl'] *)";
+
 const styles = stylex.create({
   stage: { alignItems: "flex-start", minHeight: 240, width: "100%" },
   root: {
@@ -92,7 +95,12 @@ const styles = stylex.create({
   chevron: {
     color: colors.textMuted,
     display: "flex",
-    transform: { default: "none", ":is([data-panel-open] *)": "rotate(90deg)" },
+    transform: {
+      default: "none",
+      [panelOpen]: "rotate(90deg)",
+      [rtl]: "scaleX(-1)",
+      [`${panelOpen}${rtl}`]: "scaleX(-1) rotate(90deg)",
+    },
     transitionDuration: durations.move,
     transitionProperty: "transform",
     transitionTimingFunction: easings.out,
