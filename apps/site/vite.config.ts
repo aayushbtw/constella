@@ -27,6 +27,14 @@ export default defineConfig({
     lazyPlugins(() => [
       tomekit(),
       tanstackStart({
+        // Dev-only: it 404s in builds.
+        pages: [
+          {
+            path: "/break",
+            prerender: { enabled: false },
+            sitemap: { exclude: true },
+          },
+        ],
         prerender: {
           crawlLinks: true,
           enabled: true,
