@@ -49,12 +49,16 @@ const track = (thumb: string) => ({
 // pressing into it; checked, it stretches back from the end, so it stays inside the track.
 const pressed = ":is([data-slot='switch']:active:not([data-disabled]) > *)";
 
+const rtl = ":is([dir='rtl'] *)";
+
 const knob = (thumb: string) => ({
   height: thumb,
   transform: {
     default: "translateX(0)",
     ":is([data-checked])": `translateX(calc(${thumb} - 2 * ${strokes.border}))`,
     [`:is([data-checked])${pressed}`]: `translateX(calc(${thumb} * 3 / 4 - 2 * ${strokes.border}))`,
+    [`:is([data-checked])${rtl}`]: `translateX(calc(2 * ${strokes.border} - ${thumb}))`,
+    [`:is([data-checked])${pressed}${rtl}`]: `translateX(calc(2 * ${strokes.border} - ${thumb} * 3 / 4))`,
   },
   width: { default: thumb, [pressed]: `calc(${thumb} * 5 / 4)` },
 });
