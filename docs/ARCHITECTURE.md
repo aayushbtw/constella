@@ -95,3 +95,4 @@ A rule earns its place when a correction comes up twice. Add one there before wr
 - **Lightning CSS lowers `:dir(rtl)` to a `:lang()` list.** Write `:is([dir='rtl'], [dir='rtl'] *)` instead.
 - **Base UI places thumbs and popups by its own direction, not `dir`.** An RTL app also wraps it in Base UI's `DirectionProvider`; a physical `translateX` in our styles flips under the `dir` selector.
 - **Base UI Root `children` can be a render function.** Wrap providers outside Root, not around its children.
+- **Chat demos stream through `@shadcn/helpers/tanstack-ai`, a site-only dependency.** Its peer range is `@tanstack/ai` 0.40, but it runs on the 0.65 that `@tanstack/ai-react` needs (checked 2026-10-10). Keep `@tanstack/ai` at `@tanstack/ai-client`'s version so only one copy installs.

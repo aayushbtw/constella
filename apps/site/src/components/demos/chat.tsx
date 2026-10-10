@@ -7,8 +7,11 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
+import { createChat } from "@shadcn/helpers/tanstack-ai";
 import * as stylex from "@stylexjs/stylex";
-import { useEffect, useRef, useState } from "react";
+import { useChat } from "@tanstack/ai-react";
+import type { UIMessage } from "@tanstack/ai-react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -117,19 +120,16 @@ function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
   );
 }
 
-interface Turn {
-  from: "assistant" | "user";
-  id: string;
-  text: string;
-}
-
 const reply =
   "Constella is a component library on Base UI and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
 
-const opening: Turn[] = [
-  { from: "user", id: "1", text: "What is Constella?" },
-  { from: "assistant", id: "2", text: reply },
-];
+const script = createChat().user("What is Constella?").assistant(reply);
+
+function textOf(message: UIMessage) {
+  return message.parts
+    .map((part) => (part.type === "text" ? part.content : ""))
+    .join("");
+}
 
 function Answer({ text }: { text: string }) {
   return (
@@ -216,46 +216,10 @@ function PromptInputDemo() {
 }
 
 function Chat({ sx }: { sx?: stylex.StyleXStyles }) {
-  const [turns, setTurns] = useState(opening);
-  const [status, setStatus] = useState<PromptInputStatus>("ready");
-  const timer = useRef<ReturnType<typeof setInterval>>(null);
-
-  useEffect(
-    () => () => {
-      clearInterval(timer.current ?? undefined);
-    },
-    []
-  );
-
-  function stop() {
-    clearInterval(timer.current ?? undefined);
-    setStatus("ready");
-  }
-
-  function send(text: string) {
-    const id = String(Date.now());
-    setTurns((all) => [
-      ...all,
-      { from: "user", id: `${id}u`, text },
-      { from: "assistant", id: `${id}a`, text: "" },
-    ]);
-    setStatus("streaming");
-    const words = reply.split(" ");
-    let shown = 0;
-    timer.current = setInterval(() => {
-      shown += 1;
-      setTurns((all) =>
-        all.map((turn) =>
-          turn.id === `${id}a`
-            ? { ...turn, text: words.slice(0, shown).join(" ") }
-            : turn
-        )
-      );
-      if (shown >= words.length) {
-        stop();
-      }
-    }, 60);
-  }
+  const { messages, sendMessage, status, stop } = useChat({
+    connection: script.transport({ delayMs: 60, fallback: reply }),
+    initialMessages: script.get(),
+  });
 
   return (
     <div {...stylex.props(styles.chat, sx)}>
@@ -263,18 +227,18 @@ function Chat({ sx }: { sx?: stylex.StyleXStyles }) {
         <MessageScroller sx={styles.scroller}>
           <MessageScrollerViewport aria-label="Conversation">
             <MessageScrollerContent sx={styles.thread}>
-              {turns.map((turn) => (
+              {messages.map((message) => (
                 <MessageScrollerItem
-                  key={turn.id}
-                  messageId={turn.id}
-                  scrollAnchor={turn.from === "user"}
+                  key={message.id}
+                  messageId={message.id}
+                  scrollAnchor={message.role === "user"}
                 >
-                  {turn.from === "user" ? (
+                  {message.role === "user" ? (
                     <Message from="user">
-                      <MessageContent>{turn.text}</MessageContent>
+                      <MessageContent>{textOf(message)}</MessageContent>
                     </Message>
                   ) : (
-                    <Answer text={turn.text} />
+                    <Answer text={textOf(message)} />
                   )}
                 </MessageScrollerItem>
               ))}
@@ -284,7 +248,13 @@ function Chat({ sx }: { sx?: stylex.StyleXStyles }) {
         </MessageScroller>
       </MessageScrollerProvider>
       <div {...stylex.props(styles.composer)}>
-        <Composer onStop={stop} onSubmit={send} status={status} />
+        <Composer
+          onStop={stop}
+          onSubmit={(text) => {
+            void sendMessage(text);
+          }}
+          status={status === "error" ? "ready" : status}
+        />
       </div>
     </div>
   );
