@@ -77,7 +77,7 @@ Pagination sits under the table: the range in `textSecondary` at the start; rows
 
 ## Dialog
 
-Pads `space.md`. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Pads `space.md`. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
 
 ## Empty state
 
@@ -97,7 +97,7 @@ An input's surface drawn once around a borderless control and its addons, so the
 
 ## Item
 
-A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `edge` when `outline`, and has `fillSubtle` when `muted`. Only an item rendered as a link or button answers: `fillSubtle` on hover, `presses.row` held. Its media sits level with the title's first line when there's a description.
+A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `edge` when `outline`, and has `fillSubtle` when `muted`. Only an item rendered as a link or button answers: `fillSubtle` on hover, `presses.row` held. Its media sits level with the title's first line when there's a description. Its text keeps at least `sizes.itemText`; narrower, the actions drop under it rather than squeeze it.
 
 ## Keycap (Kbd)
 

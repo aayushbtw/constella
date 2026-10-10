@@ -16,6 +16,7 @@ import {
   Chart,
   ChartLegendContent,
   chartColor,
+  chartFold,
   chartGroupScale,
   chartTickFormat,
 } from "@/components/ui/chart";
@@ -256,8 +257,8 @@ const worstMonths = [
 
 function chartFor(data: Dataset) {
   const worst = data === "worst" || data === "huge";
-  const config: ChartConfig = worst ? worstConfig : demoConfig;
-  const series = Object.keys(config);
+  const all: ChartConfig = worst ? worstConfig : demoConfig;
+  const keys = Object.keys(all);
   const months = {
     demo: demoMonths,
     empty: demoMonths,
@@ -266,17 +267,21 @@ function chartFor(data: Dataset) {
     worst: worstMonths,
   }[data];
   const scale = worst ? 104_729 : 37;
-  const rows = months.flatMap((month, m) =>
-    series.map((key, s) => ({
-      key,
-      month,
-      visitors:
-        data === "empty"
-          ? 0
-          : ((m + 1) * (s + 3) * scale) % (worst ? 12_345_678 : 300),
-    }))
+  const { config, rows } = chartFold(
+    all,
+    months.flatMap((month, m) =>
+      keys.map((key, s) => ({
+        key,
+        month,
+        visitors:
+          data === "empty"
+            ? 0
+            : ((m + 1) * (s + 3) * scale) % (worst ? 12_345_678 : 300),
+      }))
+    ),
+    { series: "key", value: "visitors" }
   );
-  return { config, months, rows, series };
+  return { config, months, rows, series: Object.keys(config) };
 }
 
 function ChartBreak({ data }: { data: Dataset }) {

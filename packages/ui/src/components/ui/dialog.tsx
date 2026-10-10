@@ -8,6 +8,7 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
+  blurs,
   colors,
   durations,
   easings,
@@ -41,6 +42,7 @@ const offstage = ":is([data-starting-style], [data-ending-style])";
 // Exported as `dialogStyles`, so an alert dialog wears the same surface.
 const styles = stylex.create({
   backdrop: {
+    backdropFilter: `blur(${blurs.backdrop})`,
     backgroundColor: colors.overlay,
     insetBlockEnd: 0,
     insetBlockStart: 0,

@@ -47,13 +47,66 @@ const palette = [
   colors.chart6,
 ];
 
-// Past six, a series is "Other" rather than a reused hue, so it takes muted ink.
+// The seventh is `chartFold`'s "Other", so it takes muted ink rather than a reused hue.
 const chartSeries = (config: ChartConfig) =>
   Object.entries(config).map(([key, series], index) => ({
     color: series.color ?? palette[index] ?? colors.textMuted,
     key,
     label: series.label ?? key,
   }));
+
+/**
+ * Folds every series past six into one `other`, summing the rows that share their other fields, so
+ * no hue repeats. `series` and `value` name the rows' series and number fields.
+ */
+const chartFold = <TRow extends Record<string, unknown>>(
+  config: ChartConfig,
+  rows: readonly TRow[],
+  {
+    label = "Other",
+    series,
+    value,
+  }: { label?: ReactNode; series: keyof TRow; value: keyof TRow }
+) => {
+  const keys = Object.keys(config);
+  if (keys.length <= palette.length) {
+    return { config, rows };
+  }
+  const kept = new Set(keys.slice(0, palette.length));
+  const folded: TRow[] = [];
+  const at = new Map<string, number>();
+  for (const row of rows) {
+    if (kept.has(String(row[series]))) {
+      folded.push(row);
+      continue;
+    }
+    const by = JSON.stringify(
+      Object.entries(row).filter(
+        ([field]) => field !== series && field !== value
+      )
+    );
+    const index = at.get(by);
+    if (index === undefined) {
+      at.set(by, folded.length);
+      folded.push({ ...row, [series]: "other", [value]: Number(row[value]) });
+    } else {
+      const sum = folded[index];
+      folded[index] = {
+        ...sum,
+        [value]: Number(sum[value]) + Number(row[value]),
+      };
+    }
+  }
+  return {
+    config: {
+      ...Object.fromEntries(
+        keys.slice(0, palette.length).map((key) => [key, config[key]])
+      ),
+      other: { label },
+    },
+    rows: folded,
+  };
+};
 
 /** The definition's `color`: every series in `config` keeps its paint, shown or hidden. */
 const chartColor = (config: ChartConfig) => {
@@ -546,6 +599,7 @@ export {
   ChartTooltipTitle,
   ChartTooltipValue,
   chartColor,
+  chartFold,
   chartTickFormat,
   chartGroupScale,
   chartIndicatorVariants,

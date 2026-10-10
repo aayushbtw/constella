@@ -103,7 +103,14 @@ const config = {
 } satisfies ChartConfig;
 ```
 
-A series without a `color` takes the next in the palette, in the config's order. Past six, fold the rest into one "Other" series.
+A series without a `color` takes the next in the palette, in the config's order. Past six, fold the rest into one gray "Other" with `chartFold`, which sums their rows that share every other field:
+
+```tsx
+const { config, rows } = chartFold(allConfig, allRows, {
+  series: "device",
+  value: "visitors",
+});
+```
 
 | Series | Token           | Hue    |
 | ------ | --------------- | ------ |
@@ -294,6 +301,7 @@ defineChart({
 | `ChartLegend` | Toggle Group's props, always `multiple` |
 | `ChartLegendItem` | Toggle Group Item's props |
 | `chartColor` | `config` in, the definition's `color` out: every series' domain and paint |
+| `chartFold` | `config`, `rows`, and `{ series, value }`, the rows' field names; `label`, `Other` by default; the first six series and one `other`, summed |
 | `chartTickFormat` | `locale` in, an axis's `ticks.format` out: compact counts (`12M`), whole numbers only |
 | `useChartTween` | `target`, values by key; `animate`; returns them eased over `dialog` on `out`, or at once when `animate` is false or motion is reduced |
 | `chartGroupScale` | `weights`, each series' share of a slot from 0 to 1; `padding`; a band scale for `group({ scale })` |

@@ -166,6 +166,8 @@ export const sizes = stylex.defineConsts({
   kbd: "20px",
   // An item's image or avatar, beside a title and description.
   media: "40px",
+  // The least an item's text keeps beside its actions before they drop under it.
+  itemText: "160px",
   menu: "144px",
   menuHeight: "320px",
   // A centered block of short text, like an empty state's.
@@ -269,4 +271,8 @@ export const motion = stylex.defineConsts({
   crossfadeBlur: "4px",
   crossfadeScale: "0.25",
   crossfadeTextBlur: "2px",
+});
+
+export const blurs = stylex.defineConsts({
+  backdrop: "4px",
 });

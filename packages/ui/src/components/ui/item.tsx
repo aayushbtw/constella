@@ -150,9 +150,13 @@ const styles = stylex.create({
       [inSize("xs")]: sizes.controlXs,
     },
   },
+  // The basis wraps actions under the text once both no longer fit on one line.
   content: {
     display: "flex",
-    flex: { default: 1, ":is([data-slot='item-content'] + *)": "none" },
+    flex: {
+      default: `1 1 ${sizes.itemText}`,
+      ":is([data-slot='item-content'] + *)": "none",
+    },
     flexDirection: "column",
     gap: { default: space.xxs, [inSize("xs")]: 0 },
     minWidth: 0,
