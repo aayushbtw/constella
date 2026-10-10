@@ -28,6 +28,7 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `popover`        | Small surfaces that open from a trigger                 |
 | `popoverExit`    | The same surfaces leaving, and submenus                 |
 | `dialog`         | A dialog and its backdrop                               |
+| `chart`          | A chart's marks moving to a legend change               |
 | `sidebar`        | The sidebar opening to its full width                   |
 | `sidebarExit`    | The sidebar narrowing to its rail or out of view        |
 | `move`           | Indicators and thumbs that travel                       |

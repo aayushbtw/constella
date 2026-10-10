@@ -26,6 +26,8 @@ import {
   ChartTooltipTitle,
   ChartTooltipValue,
   chartColor,
+  chartGroupScale,
+  useChartTween,
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import { colors, space } from "@/lib/tokens.stylex";
@@ -89,13 +91,15 @@ const besidePointer = {
 } as const;
 
 const visitorsY = {
-  scale: scaleLinear,
-  nice: true,
   grid: true,
   axis: { ...axis, ticks: { ...axis.ticks, count: 4 } },
 };
 
-const barDefinition = (rows: typeof visitors) =>
+const barDefinition = (
+  rows: typeof visitors,
+  max: number,
+  weights: readonly (readonly [string, number])[]
+) =>
   defineChart({
     marks: [
       // Under the bars, the column the tooltip reads.
@@ -108,14 +112,14 @@ const barDefinition = (rows: typeof visitors) =>
         y: "visitors",
         z: "device",
         color: "device",
-        layout: group({ padding: 0.1 }),
+        layout: group({ scale: chartGroupScale(weights, 0.1) }),
         radius: 4,
         inset: 1,
       }),
     ],
     scales: {
       x: { scale: () => scaleBand().padding(0.25), axis },
-      y: visitorsY,
+      y: { ...visitorsY, scale: scaleLinear().domain([0, max]) },
     },
     color: chartColor(deviceConfig),
     focus: "group-x",
@@ -123,21 +127,34 @@ const barDefinition = (rows: typeof visitors) =>
     tooltip: besidePointer,
   });
 
-const lineDefinition = (rows: typeof visitors) =>
+// A line per series, so each can fade on its own.
+const lineDefinition = (
+  rows: typeof visitors,
+  domain: readonly [number, number],
+  opacities: readonly (readonly [string, number])[]
+) =>
   defineChart({
     marks: [
       crosshair({ x: true, y: false }),
-      lineY(rows, {
-        x: "month",
-        y: "visitors",
-        z: "device",
-        color: "device",
-        strokeWidth: 2,
-      }),
+      ...opacities.map(([device, opacity]) =>
+        lineY(
+          rows.filter((row) => row.device === device),
+          {
+            id: `line-${device}`,
+            x: "month",
+            y: "visitors",
+            color: "device",
+            strokeOpacity: opacity,
+            strokeWidth: 2,
+          }
+        )
+      ),
     ],
+    // A fading line follows the scale past the plot's edge.
+    clip: true,
     scales: {
       x: { scale: () => scalePoint().padding(0.25), axis },
-      y: visitorsY,
+      y: { ...visitorsY, scale: scaleLinear().domain(domain) },
     },
     color: chartColor(deviceConfig),
     focus: "group-x",
@@ -145,7 +162,7 @@ const lineDefinition = (rows: typeof visitors) =>
     tooltip: besidePointer,
   });
 
-const areaDefinition = (rows: typeof visitors) =>
+const areaDefinition = (rows: typeof visitors, max: number) =>
   defineChart({
     marks: [
       areaY(rows, {
@@ -158,7 +175,7 @@ const areaDefinition = (rows: typeof visitors) =>
     ],
     scales: {
       x: { scale: () => scalePoint(), axis },
-      y: visitorsY,
+      y: { ...visitorsY, scale: scaleLinear().domain([0, max]) },
     },
     color: chartColor(deviceConfig),
     focus: "group-x",
@@ -196,23 +213,94 @@ const pieDefinition = (rows: typeof browsers) =>
     },
   });
 
-// The series shown, and a legend that toggles them; the last one shown stays.
-function useShown(config: ChartConfig) {
+// The series shown, and a legend that toggles them; the last one shown stays. Only a click
+// animates: a keyboard press reports a `detail` of 0.
+function useLegend(config: ChartConfig) {
   const [shown, setShown] = useState<string[]>(() => Object.keys(config));
+  const [animate, setAnimate] = useState(false);
   const legend = (
     <ChartLegendContent
       aria-label="Series"
       config={config}
-      onValueChange={(next) => {
+      onValueChange={(next, { event }) => {
         if (next.length > 0) {
           setShown(next);
+          setAnimate(event instanceof MouseEvent && event.detail > 0);
         }
       }}
       value={shown}
     />
   );
-  return [shown, legend] as const;
+  return { animate, legend, shown };
 }
+
+// The rows of the series shown, each eased to its new value, or toward 0 while it leaves.
+function useEasedRows<T extends { visitors: number }>(
+  rows: readonly T[],
+  seriesOf: (row: T) => string,
+  keyOf: (row: T) => string,
+  shown: readonly string[],
+  animate: boolean
+) {
+  const target = useMemo(
+    () =>
+      Object.fromEntries(
+        rows.map((row) => [
+          keyOf(row),
+          shown.includes(seriesOf(row)) ? row.visitors : 0,
+        ])
+      ),
+    [keyOf, rows, seriesOf, shown]
+  );
+  const values = useChartTween(target, animate);
+  return useMemo(
+    () =>
+      rows
+        .map((row) => ({ ...row, visitors: values[keyOf(row)] ?? 0 }))
+        .filter((row) => row.visitors > 0),
+    [keyOf, rows, values]
+  );
+}
+
+// Each device's share of the chart: 1 shown, 0 hidden, eased between.
+const deviceWeights = (shown: readonly string[]) => ({
+  desktop: shown.includes("desktop") ? 1 : 0,
+  mobile: shown.includes("mobile") ? 1 : 0,
+});
+
+const visibleWeights = (weights: ReturnType<typeof deviceWeights>) =>
+  Object.entries(weights).filter(([, weight]) => weight > 0);
+
+const deviceOf = (row: Visits) => row.device;
+const visitKey = (row: Visits) => `${row.month}-${row.device}`;
+const browserOf = (row: (typeof browsers)[number]) => row.browser;
+
+// A range rounded out as `nice` would round it.
+const axisDomain = (from: number, to: number) => {
+  const [min, max] = scaleLinear()
+    .domain([from, to])
+    .nice(visitorsY.axis.ticks.count)
+    .domain();
+  return [min, max] as const;
+};
+
+const axisMax = (values: number[]) => axisDomain(0, Math.max(...values))[1];
+
+const stackTop = (shown: readonly string[]) =>
+  axisMax(
+    months.map((month) =>
+      visitors
+        .filter((row) => row.month === month && shown.includes(row.device))
+        .reduce((sum, row) => sum + row.visitors, 0)
+    )
+  );
+
+const barTop = (shown: readonly string[]) =>
+  axisMax(
+    visitors
+      .filter((row) => shown.includes(row.device))
+      .map((row) => row.visitors)
+  );
 
 function ChartCard({
   children,
@@ -242,14 +330,33 @@ function ChartCard({
 }
 
 function ChartDemo() {
-  const [shown, legend] = useShown(deviceConfig);
-  const definition = useMemo(
-    () => barDefinition(visitors.filter((row) => shown.includes(row.device))),
+  const { animate, legend, shown } = useLegend(deviceConfig);
+  const rows = useEasedRows(visitors, deviceOf, visitKey, shown, animate);
+  const target = useMemo(
+    () => ({ ...deviceWeights(shown), max: barTop(shown) }),
     [shown]
+  );
+  const eased = useChartTween(target, animate);
+  // On the final axis, scaled by the eased one, so bars move from where they were. A closing
+  // slot's bars go first, so they paint under the bars that widen over them.
+  const definition = useMemo(
+    () =>
+      barDefinition(
+        rows
+          .map((row) => ({
+            ...row,
+            visitors: (row.visitors * target.max) / eased.max,
+          }))
+          .toSorted((a, b) => eased[a.device] - eased[b.device]),
+        target.max,
+        visibleWeights({ desktop: eased.desktop, mobile: eased.mobile })
+      ),
+    [eased, rows, target]
   );
   return (
     <ChartCard description="January to June" legend={legend} title="Visitors">
       <Chart
+        animate={animate}
         ariaLabel="Monthly visitors on desktop and mobile, January to June"
         config={deviceConfig}
         definition={definition}
@@ -261,14 +368,36 @@ function ChartDemo() {
 }
 
 function ChartLineDemo() {
-  const [shown, legend] = useShown(deviceConfig);
+  const { animate, legend, shown } = useLegend(deviceConfig);
+  const target = useMemo(() => {
+    const values = visitors
+      .filter((row) => shown.includes(row.device))
+      .map((row) => row.visitors);
+    const [min, max] = axisDomain(Math.min(...values), Math.max(...values));
+    return { ...deviceWeights(shown), max, min };
+  }, [shown]);
+  const eased = useChartTween(target, animate);
+  // Lines keep their values, mapped from the eased axis onto the final one, so they move from
+  // where they were. A series leaving or arriving fades.
   const definition = useMemo(
-    () => lineDefinition(visitors.filter((row) => shown.includes(row.device))),
-    [shown]
+    () =>
+      lineDefinition(
+        visitors.map((row) => ({
+          ...row,
+          visitors:
+            target.min +
+            ((row.visitors - eased.min) * (target.max - target.min)) /
+              (eased.max - eased.min),
+        })),
+        [target.min, target.max],
+        visibleWeights({ desktop: eased.desktop, mobile: eased.mobile })
+      ),
+    [eased, target]
   );
   return (
     <ChartCard description="January to June" legend={legend} title="Visitors">
       <Chart
+        animate={animate}
         ariaLabel="Monthly visitors on desktop and mobile, January to June"
         config={deviceConfig}
         definition={definition}
@@ -305,10 +434,21 @@ const renderTotalTooltip = ({
 );
 
 function ChartAreaDemo() {
-  const [shown, legend] = useShown(deviceConfig);
+  const { animate, legend, shown } = useLegend(deviceConfig);
+  const rows = useEasedRows(visitors, deviceOf, visitKey, shown, animate);
+  const target = useMemo(() => ({ max: stackTop(shown) }), [shown]);
+  const { max } = useChartTween(target, animate);
+  // On the final axis, scaled by the eased one, so the stack moves from where it was.
   const definition = useMemo(
-    () => areaDefinition(visitors.filter((row) => shown.includes(row.device))),
-    [shown]
+    () =>
+      areaDefinition(
+        rows.map((row) => ({
+          ...row,
+          visitors: (row.visitors * target.max) / max,
+        })),
+        target.max
+      ),
+    [max, rows, target]
   );
   return (
     <ChartCard
@@ -317,6 +457,7 @@ function ChartAreaDemo() {
       title="Visitors"
     >
       <Chart
+        animate={animate}
         ariaLabel="Monthly visitors on desktop and mobile stacked, January to June"
         definition={definition}
         height={240}
@@ -328,11 +469,9 @@ function ChartAreaDemo() {
 }
 
 function ChartPieDemo() {
-  const [shown, legend] = useShown(browserConfig);
-  const definition = useMemo(
-    () => pieDefinition(browsers.filter((row) => shown.includes(row.browser))),
-    [shown]
-  );
+  const { animate, legend, shown } = useLegend(browserConfig);
+  const rows = useEasedRows(browsers, browserOf, browserOf, shown, animate);
+  const definition = useMemo(() => pieDefinition(rows), [rows]);
   return (
     <ChartCard
       description="January to June"

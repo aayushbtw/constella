@@ -249,6 +249,7 @@ export const durations = stylex.defineConsts({
   // How long a confirmation (copied, saved) holds before it reverts; read in JS.
   confirm: "1500ms",
   dialog: "200ms",
+  chart: "200ms",
   sidebar: "250ms",
   sidebarExit: "200ms",
   // Half Base UI's 600ms, for a tooltip and a hover card alike.

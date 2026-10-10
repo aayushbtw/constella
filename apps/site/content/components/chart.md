@@ -20,29 +20,30 @@ const definition = useMemo(
           x: { band: { fill: colors.fillSubtle, fillOpacity: 1, radius: 4 } },
           y: false,
         }),
-        barY(visitors.filter((row) => shown.includes(row.device)), {
+        barY(rows, {
           x: "month",
           y: "visitors",
           z: "device",
           color: "device",
-          layout: group({ padding: 0.1 }),
+          layout: group({ scale: chartGroupScale(weights, 0.1) }),
           radius: 4,
           inset: 1,
         }),
       ],
       scales: {
         x: { scale: () => scaleBand().padding(0.25) },
-        y: { scale: scaleLinear, nice: true, grid: true },
+        y: { scale: scaleLinear().domain([0, max]), grid: true },
       },
       color: chartColor(config),
       focus: "group-x",
       tooltip,
     }),
-  [shown]
+  [max, rows, weights]
 );
 
 <ChartLegendContent config={config} onValueChange={setShown} value={shown} />
 <Chart
+  animate={animate}
   ariaLabel="Monthly visitors"
   config={config}
   definition={definition}
@@ -188,6 +189,62 @@ For your own items, compose `ChartLegend`, `ChartLegendItem` and `ChartIndicator
 </ChartLegend>
 ```
 
+## Animate
+
+Ease the values with `useChartTween` and pass `animate` to `Chart` for a change from a click, never a key press.
+
+```tsx
+const [animate, setAnimate] = useState(false);
+const target = useMemo(
+  () =>
+    Object.fromEntries(
+      rows.map((row) => [
+        `${row.month}-${row.device}`,
+        shown.includes(row.device) ? row.visitors : 0,
+      ])
+    ),
+  [shown]
+);
+const values = useChartTween(target, animate);
+
+<ChartLegendContent
+  config={config}
+  onValueChange={(next, { event }) => {
+    setShown(next);
+    // A key press reports a `detail` of 0.
+    setAnimate(event instanceof MouseEvent && event.detail > 0);
+  }}
+  value={shown}
+/>
+<Chart animate={animate} definition={definition} {...props} />;
+```
+
+**Set the axis to where the change ends**, and scale the eased values onto it. An axis that eases re-ticks every frame. `animate` then fades in the tick labels that arrive, move or change.
+
+```tsx
+const { max = target.max } = useChartTween(target, animate);
+
+barY(rows.map((row) => ({ ...row, visitors: (row.visitors * target.max) / max })), …);
+// scales.y
+{ scale: scaleLinear().domain([0, target.max]), grid: true }
+```
+
+### Group Scale
+
+For grouped bars, ease each series' slot with `chartGroupScale`. Give it a weight from 0 to 1 per series, and put a closing series' rows first, so its bars sit under the ones that widen over them.
+
+```tsx
+layout: group({
+  scale: chartGroupScale(
+    [
+      ["desktop", values.desktop],
+      ["mobile", values.mobile],
+    ],
+    0.1
+  ),
+}),
+```
+
 ## Line
 
 <!-- ::demo name="chart-line" -->
@@ -196,17 +253,25 @@ For your own items, compose `ChartLegend`, `ChartLegendItem` and `ChartIndicator
 defineChart({
   marks: [
     crosshair({ x: true, y: false }),
-    lineY(rows, {
-      x: "month",
-      y: "visitors",
-      z: "device",
-      color: "device",
-      strokeWidth: 2,
-    }),
+    // A line per series, so a leaving one can fade alone.
+    ...opacities.map(([device, opacity]) =>
+      lineY(
+        rows.filter((row) => row.device === device),
+        {
+          id: `line-${device}`,
+          x: "month",
+          y: "visitors",
+          color: "device",
+          strokeOpacity: opacity,
+          strokeWidth: 2,
+        }
+      )
+    ),
   ],
+  clip: true,
   scales: {
     x: { scale: () => scalePoint().padding(0.25) },
-    y: { scale: scaleLinear, nice: true, grid: true },
+    y: { scale: scaleLinear().domain(domain), grid: true },
   },
   color: chartColor(config),
   focus: "group-x",
@@ -221,7 +286,7 @@ defineChart({
 
 | Part | Adds |
 | --- | --- |
-| `Chart` | `config`, naming series in the default tooltip; `renderTooltipBody`, `ChartTooltipContent` by default |
+| `Chart` | `config`, naming series in the default tooltip; `renderTooltipBody`, `ChartTooltipContent` by default; `animate`, fading in tick labels a change adds or moves |
 | `ChartTooltipContent` | `content`, TanStack's title and rows, or its text; `config`; `indicator`, `line` by default; `hideLabel` |
 | `ChartTooltipRow` | `active`, the series under the pointer or keyboard |
 | `ChartIndicator` | `color`, the series' paint; `variant`, `dot` or `line`; hollow in a hidden legend item |
@@ -229,3 +294,5 @@ defineChart({
 | `ChartLegend` | Toggle Group's props, always `multiple` |
 | `ChartLegendItem` | Toggle Group Item's props |
 | `chartColor` | `config` in, the definition's `color` out: every series' domain and paint |
+| `useChartTween` | `target`, values by key; `animate`; returns them eased over `dialog` on `out`, or at once when `animate` is false or motion is reduced |
+| `chartGroupScale` | `weights`, each series' share of a slot from 0 to 1; `padding`; a band scale for `group({ scale })` |

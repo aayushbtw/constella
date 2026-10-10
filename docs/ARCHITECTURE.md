@@ -7,6 +7,7 @@
 - **Command is Base UI too.** shadcn's Command is cmdk; ours is Base UI's Autocomplete, inline and always open, so it filters the `items` it's given rather than its children.
 - **TanStack for data.** A data table renders a `useTable` instance the app builds with its own features (Table v9), virtualizes with TanStack Virtual against the window or a `scrollRef`, and reads its loading, stale and error states from a TanStack Query `useQuery` result; the app owns state, the component owns markup. A chart renders a TanStack Charts definition the app builds; the definition owns marks, scales, focus and the tooltip's behavior, the component owns the surface, the tooltip's markup and the legend. The palette reaches the library through the `--ts-chart-*` names it reads, set in `base.css`, so a definition needs no theme. Docs list these under their own TanStack sidebar section.
 - **Motion is StyleX and CSS.** No animation library: transitions, keyframes and Base UI's data attributes (`data-starting-style`, `data-ending-style`) cover it, and consumers install nothing extra.
+- **Except a chart's data.** SVG geometry has no CSS transition, so `useChartTween` eases the values and the chart redraws each frame, timed by a Web Animation so it keeps the `out` curve and DevTools' playback speed. TanStack's own `svgAnimation` and `motion()` morph shapes instead: arcs bend across the ring and the axis disagrees with the marks mid-change, so neither is used.
 
 ## Workspace
 

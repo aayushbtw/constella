@@ -3,6 +3,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type {
   ChartTooltipContent as ChartTooltipModel,
+  ConfiguredScaleLike,
   ChartValue,
 } from "@tanstack/charts";
 import { Chart as ChartPrimitive } from "@tanstack/charts/react/tooltip";
@@ -10,6 +11,7 @@ import type {
   ChartProps as ChartPrimitiveProps,
   ChartTooltipBodyRenderContext,
 } from "@tanstack/charts/react/tooltip";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -307,26 +309,161 @@ function ChartTooltipContent({
   );
 }
 
+const tweenFor = Number(durations.chart.slice(0, -"ms".length));
+
+/**
+ * Eases each value toward `target` over `durations.chart`, or jumps when `animate` is false or
+ * motion is reduced. Memoize `target`: a new object restarts the tween. Keep one chart's values in
+ * one tween, or in tweens that share `animate`, so its axis and marks move together.
+ */
+function useChartTween<T extends Record<string, number>>(
+  target: T,
+  animate: boolean
+): T {
+  const [current, setCurrent] = useState(target);
+  const painted = useRef(target);
+  // Before paint, so a jump lands in the same frame as the axis it belongs to.
+  useLayoutEffect(() => {
+    const from = painted.current;
+    const duration =
+      animate && !matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? tweenFor
+        : 0;
+    // A real animation keeps time, so the tween takes the `out` curve and follows DevTools' playback speed.
+    const clock = document.documentElement.animate(null, {
+      duration,
+      easing: easings.out,
+      fill: "forwards",
+    });
+    const paint = () => {
+      const eased = clock.effect?.getComputedTiming().progress ?? 1;
+      const next = {
+        ...target,
+        ...Object.fromEntries(
+          Object.entries(target).map(([key, value]) => {
+            const begin = from[key] ?? 0;
+            return [key, begin + (value - begin) * eased];
+          })
+        ),
+      };
+      painted.current = next;
+      setCurrent(next);
+    };
+    if (duration === 0) {
+      paint();
+    }
+    let frame = requestAnimationFrame(function step() {
+      paint();
+      if (clock.playState !== "finished") {
+        frame = requestAnimationFrame(step);
+      }
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      clock.cancel();
+    };
+  }, [animate, target]);
+  return current;
+}
+
+/**
+ * A `group({ scale })` band scale where each series takes `weight` (0 to 1) of a slot, so a slot
+ * eases open or shut with `useChartTween`. Every bar keeps the full bandwidth and is pulled inside
+ * the group: put a closing series' rows first, and it paints under the bars that grow over it.
+ */
+const chartGroupScale = (
+  weights: readonly (readonly [string, number])[],
+  padding: number
+): ConfiguredScaleLike<string> => {
+  let [from, to] = [0, 1];
+  // At least one slot wide, so a last series closing doesn't stretch its bars.
+  const total = Math.max(
+    1,
+    weights.reduce((sum, [, weight]) => sum + weight, 0)
+  );
+  const step = () => (to - from) / (total + padding);
+  const scale = (key: string) => {
+    const index = weights.findIndex(([member]) => member === key);
+    // Not a member: NaN, which TanStack reports as a key outside the group's domain.
+    if (index === -1) {
+      return Number.NaN;
+    }
+    const before = weights
+      .slice(0, index)
+      .reduce((sum, [, weight]) => sum + weight, 0);
+    const first = from + step() * padding;
+    return Math.min(first + step() * before, first + step() * (total - 1));
+  };
+  const band = Object.assign(scale, {
+    bandwidth: () => step() * (1 - padding),
+    copy: () => chartGroupScale(weights, padding).range([from, to]),
+    domain: () => weights.map(([member]) => member),
+    // TanStack sets the range in place and reads the bandwidth after.
+    range: (values: Iterable<number>) => {
+      [from = 0, to = 1] = values;
+      return band;
+    },
+  });
+  return band;
+};
+
 /** Renders a TanStack Charts definition in the theme's palette, with a `ChartTooltipContent` unless `renderTooltipBody` replaces it. */
 function Chart<
   TDatum,
   TXValue extends ChartValue = ChartValue,
   TYValue extends ChartValue = ChartValue,
 >({
+  animate = false,
   config,
+  onRender,
   renderTooltipBody,
   sx,
   ...props
 }: Styled<ChartPrimitiveProps<TDatum, TXValue, TYValue>> & {
+  /** Axis labels that arrive, move or change with this definition fade in; set it for a click, not a key press. */
+  animate?: boolean;
   /** Names the series in the default tooltip. */
   config?: ChartConfig;
 }) {
+  // Where each axis label was painted, so only the ones a change adds or moves fade in; a resize
+  // moves labels too, so only a new definition counts.
+  const placed = useRef(
+    new WeakMap<Element, { text: string | null; x: number; y: number }>()
+  );
+  const painted = useRef(props.definition);
   const renderConfigTooltip = ({ content }: ChartTooltipBodyRenderContext) => (
     <ChartTooltipContent config={config} content={content} />
   );
+  const fadeLabels: typeof onRender = (context) => {
+    const changed = painted.current !== props.definition;
+    painted.current = props.definition;
+    for (const label of context.svg.querySelectorAll(".ts-chart__axes text")) {
+      const at = {
+        text: label.textContent,
+        x: Number(label.getAttribute("x")),
+        y: Number(label.getAttribute("y")),
+      };
+      const was = placed.current.get(label);
+      // A label width change nudges the plot under a pixel; that isn't a move.
+      const moved =
+        was === undefined ||
+        was.text !== at.text ||
+        Math.hypot(at.x - was.x, at.y - was.y) >= 1;
+      if (animate && changed && moved) {
+        // From partway, never from nothing: the old label is already gone.
+        label.animate([{ opacity: 0.4 }, { opacity: 1 }], {
+          duration: tweenFor,
+          easing: easings.crossfade,
+        });
+      }
+      placed.current.set(label, at);
+    }
+    onRender?.(context);
+  };
   return (
     <div data-slot="chart" {...stylex.props(styles.root, sx)}>
       <ChartPrimitive
+        onRender={fadeLabels}
         renderTooltipBody={renderTooltipBody ?? renderConfigTooltip}
         {...props}
       />
@@ -396,6 +533,8 @@ export {
   ChartTooltipTitle,
   ChartTooltipValue,
   chartColor,
+  chartGroupScale,
   chartIndicatorVariants,
+  useChartTween,
 };
 export type { ChartConfig, ChartIndicatorVariant };
