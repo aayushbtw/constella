@@ -64,6 +64,7 @@ const instant = ":is([data-instant], [data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-popup-open])";
 const danger = ":is([data-variant='danger'])";
 const off = ":is([data-disabled])";
+const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
 const filtering = ":has(> [data-slot='dropdown-menu-list'])";
 
@@ -203,6 +204,7 @@ const styles = stylex.create({
     color: colors.textMuted,
     display: "flex",
     marginInlineStart: "auto",
+    transform: { default: null, [rtl]: "scaleX(-1)" },
   },
   label: {
     color: colors.textMuted,
