@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/item";
 import type { ItemSize, ItemVariant } from "@/components/ui/item";
 import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
-import { DemoRow, demoStyles } from "~/components/demos/frame";
+import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   meta: { color: colors.textMuted, fontSize: fontSizes.xs },
@@ -83,10 +83,7 @@ function ItemDemo() {
             <ItemTitle>Your profile has been verified.</ItemTitle>
           </ItemContent>
           <ItemActions>
-            <Glyph
-              icon={ArrowRight01Icon}
-              {...stylex.props(demoStyles.mirror)}
-            />
+            <Glyph icon={ArrowRight01Icon} data-rtl-flip />
           </ItemActions>
         </Item>
       </div>
@@ -270,10 +267,7 @@ function ItemLinkDemo() {
             </ItemDescription>
           </ItemContent>
           <ItemActions>
-            <Glyph
-              icon={ArrowRight01Icon}
-              {...stylex.props(demoStyles.mirror)}
-            />
+            <Glyph icon={ArrowRight01Icon} data-rtl-flip />
           </ItemActions>
         </Item>
       </div>

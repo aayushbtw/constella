@@ -90,6 +90,7 @@ function PageButton({
     >
       <HugeiconsIcon
         aria-hidden
+        data-rtl-flip
         icon={icon}
         size={sizes.icon}
         strokeWidth={Number(strokes.icon)}

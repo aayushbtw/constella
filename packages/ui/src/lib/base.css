@@ -274,6 +274,12 @@
     width: 100%;
   }
 
+  /* A directional icon is the consumer's child, which StyleX can't reach, so one attribute
+     turns it to face the reading direction. */
+  :where([dir="rtl"] [data-rtl-flip]) {
+    transform: scaleX(-1);
+  }
+
   /* An input group rings its whole box, so the borderless control inside draws none. */
   :where([data-slot="input-group-control"]:focus-visible) {
     outline: none;

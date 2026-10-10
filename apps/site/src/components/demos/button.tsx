@@ -13,7 +13,7 @@ import { Button, buttonStyles, buttonVariants } from "@/components/ui/button";
 import type { ButtonSize, ButtonVariant } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { sizes, strokes } from "@/lib/tokens.stylex";
-import { DemoRow, demoStyles } from "~/components/demos/frame";
+import { DemoRow } from "~/components/demos/frame";
 
 const labels = {
   danger: "Danger",
@@ -97,11 +97,7 @@ function ButtonIconDemo() {
       </Button>
       <Button variant="outline">
         Continue
-        <Glyph
-          data-icon="inline-end"
-          icon={ArrowRight02Icon}
-          {...stylex.props(demoStyles.mirror)}
-        />
+        <Glyph data-icon="inline-end" icon={ArrowRight02Icon} data-rtl-flip />
       </Button>
     </DemoRow>
   );

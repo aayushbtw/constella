@@ -9,7 +9,7 @@ description: Joins buttons, inputs and text into one control, across or down.
 <ButtonGroup aria-label="Message actions">
   <ButtonGroup>
     <Button aria-label="Go back" size="icon" variant="outline">
-      <ArrowLeftIcon />
+      <ArrowLeftIcon data-rtl-flip />
     </Button>
   </ButtonGroup>
   <ButtonGroup>
@@ -127,10 +127,10 @@ Nest groups to space them apart.
   </ButtonGroup>
   <ButtonGroup>
     <Button aria-label="Previous" size="icon-sm" variant="outline">
-      <ArrowLeftIcon />
+      <ArrowLeftIcon data-rtl-flip />
     </Button>
     <Button aria-label="Next" size="icon-sm" variant="outline">
-      <ArrowRightIcon />
+      <ArrowRightIcon data-rtl-flip />
     </Button>
   </ButtonGroup>
 </ButtonGroup>
