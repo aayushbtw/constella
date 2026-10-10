@@ -62,7 +62,7 @@ toast.add({ title: "Syncing…", type: "loading" });
 
 ## Action
 
-Use `actionProps` to add a button. Keep it to one action.
+Use `actionProps` to add a button. Keep it to one action. A label too long to sit beside the text drops under it.
 
 <!-- ::demo name="toast-action" -->
 

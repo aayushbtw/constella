@@ -80,7 +80,7 @@ const styles = stylex.create({
     gridAutoRows: "min-content",
     gridTemplateColumns: {
       default: null,
-      ":has(> [data-slot='card-action'])": "1fr auto",
+      ":has(> [data-slot='card-action'])": "minmax(0, 1fr) auto",
     },
     paddingBlockEnd: { default: 0, [inWell]: space.xs },
     paddingBlockStart: { default: 0, [inWell]: space.xs },
@@ -94,12 +94,14 @@ const styles = stylex.create({
     },
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.text,
+    overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
     fontSize: fontSizes.sm,
     lineHeight: lineHeights.text,
+    overflowWrap: "anywhere",
     textWrap: "pretty",
   },
   action: {

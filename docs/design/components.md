@@ -4,7 +4,7 @@ What each component does beyond the shared rules in the other files. Alphabetica
 
 ## Alert
 
-A box like a card, a control's radius and padding: `edge` border, `raised` fill. Its `status` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text.
+A box like a card, a control's radius and padding: `edge` border, `raised` fill. Its `status` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text. In an alert under 24rem the action drops under the text instead.
 
 ## Alert dialog
 
@@ -16,7 +16,7 @@ Follows the control heights (24, 32, 36), so it lines up with a button of the sa
 
 ## Badge
 
-Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`.
+Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show.
 
 ## Button group
 
@@ -32,7 +32,7 @@ Its edge turns `accent` when checked.
 
 ## Chart
 
-Axes, ticks and grid lines take `textMuted` through `currentColor`, with no axis line or tick stubs in the examples: the grid carries the scale. Series take `chart1` to `chart6` in order and keep their color when another is hidden. Bars round 4px and sit 2px apart; lines are 2px. A hovered bar column takes a `fillSubtle` band under its bars, the hover fill; a line chart takes a rule.
+Axes, ticks and grid lines take `textMuted` through `currentColor`, with no axis line or tick stubs in the examples: the grid carries the scale. Series take `chart1` to `chart6` in order and keep their color when another is hidden. Bars round 4px and sit 2px apart; lines are 2px. A hovered bar column takes a `fillSubtle` band under its bars, the hover fill; a line chart takes a rule. Count axes read compact (`12M`) through `chartTickFormat`, which takes the locale, since the server's default can differ from the reader's.
 
 The tooltip is a popover's surface, not the Tooltip's inverted one: it holds figures to read, not a one-line hint. Title in medium, then a row per series: a short bar in its paint, its label in `textSecondary` and its value in medium. Rows share three columns, so a row without a bar (a total) lines up with the rest. The hovered series' label steps up to `textPrimary`, with no fill. It sits beside the pointer so it never covers the values it reads. It keeps that shape with one series shown.
 
@@ -107,7 +107,7 @@ A `fill` chip with `textSecondary` type in the surrounding font, not monospace, 
 
 Share one surface and one motion: `background` on `shadows.popover`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
-A select's items and a menu's are the same row: `controlSm` tall (`size` on the content makes it `controlXs` with `xs` type, or `controlMd`, and a submenu inherits it), `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerFillSubtle`.
+A select's items and a menu's are the same row: `controlSm` tall (`size` on the content makes it `controlXs` with `xs` type, or `controlMd`, and a submenu inherits it), `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerFillSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
 
 A filtered menu is a command in a popup: its field is the command's input group, sized with the rows a step up and its corner `xs` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
 

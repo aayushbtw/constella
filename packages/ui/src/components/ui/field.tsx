@@ -139,6 +139,7 @@ const styles = stylex.create({
     lineHeight: lineHeights.row,
     marginBlock: 0,
     marginInline: 0,
+    overflowWrap: "anywhere",
     textWrap: "pretty",
   },
   // A line, or a line broken by its text, so it needs no fill to sit on any surface.
@@ -158,6 +159,7 @@ const styles = stylex.create({
     color: colors.danger,
     fontSize: fontSizes.xs,
     lineHeight: lineHeights.row,
+    overflowWrap: "anywhere",
   },
 });
 

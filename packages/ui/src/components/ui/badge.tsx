@@ -95,8 +95,14 @@ const styles = stylex.create({
     display: "inline-flex",
     flexShrink: 0,
     fontWeight: fontWeights.medium,
-    justifyContent: "center",
-    overflow: "hidden",
+    // Safe, so a label wider than the cap clips at its end, not both.
+    justifyContent: "safe center",
+    // Capped at its container. Clipped only sideways: the text's line box is taller than the
+    // badge, so a clip on both axes would cut tall accents.
+    maxWidth: "100%",
+    minWidth: 0,
+    overflowX: "clip",
+    overflowY: "visible",
     textDecorationLine: "none",
     transitionDuration: durations.hover,
     transitionProperty: "background-color, border-color, color, opacity",

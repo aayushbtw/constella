@@ -213,10 +213,22 @@ const styles = stylex.create({
   info: { color: colors.info },
   success: { color: colors.success },
   warning: { color: colors.warning },
-  body: {
+  // The text and its action share a row while both fit, and the action drops under the text
+  // when its label is too long, so it never pushes the close button out.
+  main: {
+    alignItems: "center",
+    columnGap: space.sm,
     display: "flex",
     flex: 1,
+    flexWrap: "wrap",
+    minWidth: 0,
+    rowGap: space.xs,
+  },
+  body: {
+    display: "flex",
+    flexBasis: sizes.menu,
     flexDirection: "column",
+    flexGrow: 1,
     gap: space.xxxs,
     minWidth: 0,
     position: "relative",
@@ -242,16 +254,18 @@ const styles = stylex.create({
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.row,
+    overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
     fontSize: fontSizes.xs,
     lineHeight: lineHeights.row,
+    overflowWrap: "anywhere",
     textWrap: "pretty",
   },
   action: {
-    alignSelf: "center",
+    maxWidth: "100%",
   },
   close: {
     alignItems: "center",
@@ -531,31 +545,33 @@ function ToastItem({ item }: { item: ToastPrimitive.Root.ToastObject }) {
     <Toast ref={rootRef} toast={item}>
       <ToastContent ref={contentRef}>
         {isToastType(item.type) && <ToastIcon type={item.type} />}
-        <ToastBody>
-          {previous && (
-            <span
-              aria-hidden
-              key={previous.key}
-              onAnimationEnd={() => {
-                setPrevious(null);
-              }}
-              {...stylex.props(styles.body, styles.leaving)}
-            >
-              <span {...stylex.props(styles.title)}>{previous.title}</span>
-              {previous.description === undefined ? null : (
-                <span {...stylex.props(styles.description)}>
-                  {previous.description}
-                </span>
-              )}
-            </span>
-          )}
-          <ToastTitle key={seen.key} sx={previous && styles.entering} />
-          <ToastDescription
-            key={`d${seen.key}`}
-            sx={previous && styles.entering}
-          />
-        </ToastBody>
-        <ToastAction />
+        <div {...stylex.props(styles.main)}>
+          <ToastBody>
+            {previous && (
+              <span
+                aria-hidden
+                key={previous.key}
+                onAnimationEnd={() => {
+                  setPrevious(null);
+                }}
+                {...stylex.props(styles.body, styles.leaving)}
+              >
+                <span {...stylex.props(styles.title)}>{previous.title}</span>
+                {previous.description === undefined ? null : (
+                  <span {...stylex.props(styles.description)}>
+                    {previous.description}
+                  </span>
+                )}
+              </span>
+            )}
+            <ToastTitle key={seen.key} sx={previous && styles.entering} />
+            <ToastDescription
+              key={`d${seen.key}`}
+              sx={previous && styles.entering}
+            />
+          </ToastBody>
+          <ToastAction />
+        </div>
         <ToastClose />
       </ToastContent>
     </Toast>

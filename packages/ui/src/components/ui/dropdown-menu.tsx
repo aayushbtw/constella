@@ -90,6 +90,7 @@ const styles = stylex.create({
     display: { default: null, [filtering]: "flex" },
     flexDirection: { default: null, [filtering]: "column" },
     maxHeight: "var(--available-height)",
+    maxWidth: "var(--available-width)",
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
     opacity: { default: 1, [offstage]: 0 },
     overflowY: { default: "auto", [filtering]: "hidden" },
@@ -165,6 +166,7 @@ const styles = stylex.create({
     gap: px6,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
+    overflowWrap: "anywhere",
     paddingInlineEnd: px6,
     paddingInlineStart: { default: px6, [inset]: insetStart },
     position: "relative",
@@ -223,8 +225,10 @@ const styles = stylex.create({
   },
   shortcut: {
     color: colors.textMuted,
+    flexShrink: 0,
     fontSize: fontSizes.xxs,
     marginInlineStart: "auto",
+    whiteSpace: "nowrap",
   },
 });
 

@@ -108,6 +108,7 @@ const styles = stylex.create({
     justifyContent: "space-between",
     marginBlock: 0,
     marginInline: 0,
+    maxWidth: "100%",
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     paddingInlineEnd: space.xs,
@@ -123,12 +124,12 @@ const styles = stylex.create({
   },
   sm: { fontSize: fontSizes.xs, height: sizes.controlSm },
   lg: { height: sizes.controlLg },
+  // A block, not a flex box: an ellipsis only ends text in a block.
   value: {
-    alignItems: "center",
     color: { default: null, ":is([data-placeholder] *)": colors.textMuted },
-    display: "flex",
+    display: "block",
     flex: 1,
-    gap: px6,
+    minWidth: 0,
     overflow: "hidden",
     textAlign: "start",
     textOverflow: "ellipsis",
@@ -150,6 +151,7 @@ const styles = stylex.create({
     boxShadow: shadows.popover,
     color: colors.textPrimary,
     maxHeight,
+    maxWidth: "var(--available-width)",
     minWidth: sizes.menu,
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
@@ -202,12 +204,14 @@ const styles = stylex.create({
   },
   itemSm: { fontSize: fontSizes.xs, minHeight: sizes.controlXs },
   itemLg: { minHeight: sizes.controlMd },
+  // Wraps rather than truncating, so options that differ only at the end stay apart.
   itemText: {
     alignItems: "center",
     display: "flex",
     flex: 1,
     gap: space.xs,
-    whiteSpace: "nowrap",
+    minWidth: 0,
+    overflowWrap: "anywhere",
   },
   indicator: {
     alignItems: "center",

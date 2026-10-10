@@ -27,6 +27,7 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     gap: space.xs,
     lineHeight: lineHeights.text,
+    overflowWrap: "anywhere",
     userSelect: "none",
   },
 });

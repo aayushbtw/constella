@@ -146,7 +146,7 @@ function useIsMobile() {
 // Measured, so a label that fits never shows faded. Faded until then: the server
 // can't measure, and a long label must never paint hard-clipped.
 function useTruncated(enabled: boolean) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const report = use(LabelContext);
   const [truncated, setTruncated] = useState(enabled);
   useLayoutEffect(() => {
@@ -427,6 +427,12 @@ const styles = stylex.create({
     marginBlockStart: {
       default: 0,
       [iconOnly]: `calc(-1 * ${sizes.controlXs})`,
+    },
+    // Fades out at its end like a row's label, not cut off.
+    maskImage: {
+      default: null,
+      ":is([data-truncated])": fadeAtEdge("right"),
+      [`:is([data-truncated])${rtl}`]: fadeAtEdge("left"),
     },
     opacity: { default: 1, [iconOnly]: 0 },
     overflow: "hidden",
@@ -1274,11 +1280,14 @@ function SidebarGroupLabel({
   sx,
   ...props
 }: Styled<useRender.ComponentProps<"div">>) {
+  const { ref, truncated } = useTruncated(true);
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">(props, stylex.props(styles.groupLabel, sx)),
+    ref,
     render,
-    state: { slot: "sidebar-group-label" },
+    // Written as `data-truncated` while its text runs past its box.
+    state: { slot: "sidebar-group-label", truncated },
   });
 }
 

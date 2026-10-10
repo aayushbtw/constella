@@ -114,6 +114,7 @@ const styles = stylex.create({
     gap: px6,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
+    overflowWrap: "anywhere",
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
     userSelect: "none",
@@ -127,8 +128,10 @@ const styles = stylex.create({
   },
   shortcut: {
     color: colors.textMuted,
+    flexShrink: 0,
     fontSize: fontSizes.xxs,
     marginInlineStart: "auto",
+    whiteSpace: "nowrap",
   },
   dialog: {
     gap: 0,

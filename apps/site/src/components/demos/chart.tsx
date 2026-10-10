@@ -28,6 +28,7 @@ import {
   ChartTooltipValue,
   chartColor,
   chartGroupScale,
+  chartTickFormat,
   useChartTween,
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
@@ -106,7 +107,10 @@ const besidePointer = {
 
 const visitorsY = {
   grid: true,
-  axis: { ...axis, ticks: { ...axis.ticks, count: 4 } },
+  axis: {
+    ...axis,
+    ticks: { ...axis.ticks, count: 4, format: chartTickFormat("en-US") },
+  },
 };
 
 const barDefinition = (

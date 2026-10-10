@@ -64,6 +64,19 @@ const chartColor = (config: ChartConfig) => {
   };
 };
 
+/**
+ * An axis's `ticks.format` for counts: `1.2M`, not `1200000`, and no `0.2` steps on whole
+ * numbers. Takes the locale, as the server's default can differ from the reader's.
+ */
+const chartTickFormat = (locale: Intl.LocalesArgument) => {
+  const compact = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 1,
+    notation: "compact",
+  });
+  return (value: number) =>
+    Number.isInteger(value) ? compact.format(value) : "";
+};
+
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
 const hidden = ":is([data-slot='chart-legend-item']:not([data-pressed]) > *)";
@@ -533,6 +546,7 @@ export {
   ChartTooltipTitle,
   ChartTooltipValue,
   chartColor,
+  chartTickFormat,
   chartGroupScale,
   chartIndicatorVariants,
   useChartTween,

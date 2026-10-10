@@ -18,6 +18,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 const fromUser = ":is([data-slot='message'][data-from='user'] > *)";
+const emptyReply =
+  ":is([data-slot='message']:has(> [data-slot='message-content']:empty) > *)";
 
 const styles = stylex.create({
   message: {
@@ -41,16 +43,19 @@ const styles = stylex.create({
     lineHeight: lineHeights.prose,
     maxWidth: { default: "100%", [fromUser]: "80%" },
     overflowWrap: "break-word",
+    // A user's line breaks are part of what they wrote.
+    whiteSpace: { default: null, [fromUser]: "pre-wrap" },
     paddingBlockEnd: { default: 0, [fromUser]: space.xs },
     paddingBlockStart: { default: 0, [fromUser]: space.xs },
     paddingInlineEnd: { default: 0, [fromUser]: space.md },
     paddingInlineStart: { default: 0, [fromUser]: space.md },
     width: "fit-content",
   },
+  // Nothing to copy or rate until the reply has words, so they wait for its first.
   actions: {
     alignItems: "center",
     color: colors.textSecondary,
-    display: "flex",
+    display: { default: "flex", [emptyReply]: "none" },
     gap: space.xxxs,
   },
 });

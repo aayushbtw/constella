@@ -100,7 +100,7 @@ Add `disabled` to a `TabsTrigger` to keep it in place but out of reach.
 
 ## API Reference
 
-`TabsList` renders the indicator that slides to the active tab, and switches tabs as the arrow keys move focus; pass `activateOnFocus={false}` to switch on Enter instead.
+`TabsList` renders the indicator that slides to the active tab, and switches tabs as the arrow keys move focus; pass `activateOnFocus={false}` to switch on Enter instead. A row of tabs wider than its container scrolls sideways, and a vertical list's panel moves under it once it has less than `sizes.menu` beside it.
 
 | Prop      | Type                        | Default     |
 | --------- | --------------------------- | ----------- |

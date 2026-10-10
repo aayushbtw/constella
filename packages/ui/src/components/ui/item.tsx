@@ -164,6 +164,7 @@ const styles = stylex.create({
     gap: space.xs,
     lineHeight: lineHeights.text,
     overflow: "hidden",
+    overflowWrap: "anywhere",
     width: "fit-content",
   },
   description: {
@@ -174,6 +175,7 @@ const styles = stylex.create({
     marginBlockEnd: 0,
     marginBlockStart: 0,
     overflow: "hidden",
+    overflowWrap: "anywhere",
     textWrap: "pretty",
     WebkitBoxOrient: "vertical",
     WebkitLineClamp: 2,
@@ -183,10 +185,12 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
   },
+  // Wraps, so a long title pushes its badge to the next line rather than squeezing beside it.
   edge: {
     alignItems: "center",
     display: "flex",
     flexBasis: "100%",
+    flexWrap: "wrap",
     gap: space.xs,
     justifyContent: "space-between",
   },

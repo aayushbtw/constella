@@ -35,6 +35,8 @@ type TabsListProps = Styled<TabsPrimitive.List.Props> & {
 
 const vertical = ":is([data-orientation='vertical'])";
 
+const besideColumn = ":is([data-slot='tabs'][data-orientation='vertical'] > *)";
+
 // shadcn's padding, off our 4px grid.
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
@@ -42,12 +44,24 @@ const styles = stylex.create({
   tabs: {
     display: "flex",
     flexDirection: { default: "column", [vertical]: "row" },
+    flexWrap: { default: null, [vertical]: "wrap" },
     gap: space.sm,
   },
+  // Beside a column of tabs while it has a menu's width, under it once it hasn't.
+  panel: {
+    flexBasis: { default: null, [besideColumn]: 0 },
+    flexGrow: { default: null, [besideColumn]: 1 },
+    minWidth: { default: null, [besideColumn]: sizes.menu },
+  },
+  // A row too long for its container scrolls; arrow keys bring the next tab into view.
   list: {
     display: "flex",
     flexDirection: { default: "row", [vertical]: "column" },
+    flexShrink: 0,
+    maxWidth: "100%",
+    overflowX: { default: "auto", [vertical]: "visible" },
     position: "relative",
+    scrollbarWidth: { default: "none", [vertical]: "auto" },
     width: "fit-content",
   },
   // A tinted pill slides between tabs inside a bordered track.
@@ -70,14 +84,19 @@ const styles = stylex.create({
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     // With the border, the tabs sit `space.xxs` in, so the corners stay concentric.
-    paddingBlock: `calc(${space.xxs} - ${strokes.border})`,
+    paddingBlockEnd: `calc(${space.xxs} - ${strokes.border})`,
+    paddingBlockStart: `calc(${space.xxs} - ${strokes.border})`,
     paddingInline: `calc(${space.xxs} - ${strokes.border})`,
   },
   // An accent line slides along a faint baseline: under the row, beside the column.
+  // The row's baseline is an inset shadow in its padding, not a border, so the scrolling list
+  // doesn't clip the indicator that covers it.
   listLine: {
-    borderBlockEndColor: colors.edgeSubtle,
-    borderBlockEndStyle: { default: "solid", [vertical]: "none" },
-    borderBlockEndWidth: { default: strokes.border, [vertical]: 0 },
+    boxShadow: {
+      default: `inset 0 calc(-1 * ${strokes.border}) ${colors.edgeSubtle}`,
+      [vertical]: "none",
+    },
+    paddingBlockEnd: { default: strokes.border, [vertical]: 0 },
     borderInlineStartColor: colors.edgeSubtle,
     borderInlineStartStyle: { default: "none", [vertical]: "solid" },
     borderInlineStartWidth: { default: 0, [vertical]: strokes.border },
@@ -175,7 +194,7 @@ const styles = stylex.create({
     },
     left: { default: 0, [vertical]: null },
     top: {
-      default: `calc(100% - ${strokes.indicator} + ${strokes.border})`,
+      default: `calc(100% - ${strokes.indicator})`,
       [vertical]: 0,
     },
     transform: {
@@ -282,7 +301,7 @@ function TabsContent({ sx, ...props }: Styled<TabsPrimitive.Panel.Props>) {
     <TabsPrimitive.Panel
       data-slot="tabs-content"
       {...props}
-      {...stylex.props(sx)}
+      {...stylex.props(styles.panel, sx)}
     />
   );
 }

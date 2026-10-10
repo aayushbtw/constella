@@ -294,5 +294,6 @@ defineChart({
 | `ChartLegend` | Toggle Group's props, always `multiple` |
 | `ChartLegendItem` | Toggle Group Item's props |
 | `chartColor` | `config` in, the definition's `color` out: every series' domain and paint |
+| `chartTickFormat` | `locale` in, an axis's `ticks.format` out: compact counts (`12M`), whole numbers only |
 | `useChartTween` | `target`, values by key; `animate`; returns them eased over `dialog` on `out`, or at once when `animate` is false or motion is reduced |
 | `chartGroupScale` | `weights`, each series' share of a slot from 0 to 1; `padding`; a band scale for `group({ scale })` |

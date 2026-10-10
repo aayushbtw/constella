@@ -29,6 +29,8 @@ const text = {
   ":is([data-slot='alert']:has(> svg) > *)": 2,
 };
 
+const narrow = "@container (max-width: 24rem)";
+
 // shadcn's padding, off our 4px grid.
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
@@ -53,6 +55,8 @@ const styles = stylex.create({
     borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
     columnGap: space.xs,
+    // The action reads the alert's width, to drop under the text when they can't share a row.
+    containerType: "inline-size",
     display: "grid",
     fontSize: fontSizes.sm,
     gridTemplateColumns: {
@@ -73,17 +77,22 @@ const styles = stylex.create({
   title: {
     fontWeight: fontWeights.medium,
     gridColumnStart: text,
+    overflowWrap: "anywhere",
   },
   description: {
     color: colors.textSecondary,
     gridColumnStart: text,
+    overflowWrap: "anywhere",
     textWrap: "pretty",
   },
   action: {
     alignSelf: "center",
     gridColumnEnd: -1,
-    gridRowEnd: "span 2",
-    gridRowStart: 1,
+    gridColumnStart: { default: null, [narrow]: text },
+    gridRowEnd: { default: "span 2", [narrow]: "auto" },
+    gridRowStart: { default: 1, [narrow]: "auto" },
+    justifySelf: { default: null, [narrow]: "start" },
+    marginBlockStart: { default: null, [narrow]: space.xxs },
   },
 });
 

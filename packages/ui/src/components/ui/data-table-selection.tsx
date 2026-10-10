@@ -25,6 +25,7 @@ interface ToggleEvent {
 interface SelectableTable {
   getIsAllRowsSelected: () => boolean;
   getIsSomeRowsSelected: () => boolean;
+  getRowModel: () => { rows: readonly unknown[] };
   toggleAllRowsSelected: (value?: boolean) => void;
 }
 
@@ -197,6 +198,7 @@ function DataTableSelectAll({ table }: { table: SelectableTable }) {
     <Checkbox
       aria-label="Select all"
       checked={table.getIsAllRowsSelected()}
+      disabled={table.getRowModel().rows.length === 0}
       indeterminate={
         table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
       }
