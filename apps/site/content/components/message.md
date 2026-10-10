@@ -1,6 +1,7 @@
 ---
 title: Message
 description: One turn of a conversation, from the user or the assistant.
+section: AI
 ---
 
 <!-- ::demo name="message" -->

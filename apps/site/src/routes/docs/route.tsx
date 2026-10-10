@@ -56,6 +56,11 @@ function DocsLayout() {
             to: "/docs/components/$slug",
           },
           {
+            items: sectionItems(components, "AI"),
+            label: "AI",
+            to: "/docs/components/$slug",
+          },
+          {
             items: sectionItems(components, "TanStack"),
             label: "TanStack",
             to: "/docs/components/$slug",

@@ -1,6 +1,7 @@
 ---
 title: Shimmer
 description: A slow sweep of light across text still being worked on.
+section: AI
 draft: true
 ---
 
