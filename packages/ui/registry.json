@@ -882,6 +882,34 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "shimmer",
+      "type": "registry:ui",
+      "title": "Shimmer",
+      "description": "A slow sweep of light across text still being worked on.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/shimmer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "marker",
+      "type": "registry:ui",
+      "title": "Marker",
+      "description": "A note in a conversation: a status, a system line, or a labeled break.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/marker.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

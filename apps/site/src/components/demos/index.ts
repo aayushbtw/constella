@@ -191,6 +191,13 @@ import {
 } from "~/components/demos/kbd";
 import { LabelDemo, LabelWrapDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
+import {
+  MarkerDemo,
+  MarkerLinkDemo,
+  MarkerStatusDemo,
+  MarkerVariantsDemo,
+  ShimmerDemo,
+} from "~/components/demos/marker";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
   PopoverAlignDemo,
@@ -474,8 +481,13 @@ const demos = {
   "label-wrap": LabelWrapDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
+  marker: MarkerDemo,
+  "marker-link": MarkerLinkDemo,
+  "marker-status": MarkerStatusDemo,
+  "marker-variants": MarkerVariantsDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
+  shimmer: ShimmerDemo,
   meter: MeterDemo,
   "meter-status": MeterStatusDemo,
   "meter-value": MeterValueDemo,

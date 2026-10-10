@@ -247,6 +247,8 @@ export const durations = stylex.defineConsts({
   spin: "1s",
   // One breath of a skeleton: slow, so loading reads as calm.
   pulse: "2s",
+  // One sweep of a shimmer across working text.
+  shimmer: "2s",
   crossfade: "300ms",
   // How long a confirmation (copied, saved) holds before it reverts; read in JS.
   confirm: "1500ms",
