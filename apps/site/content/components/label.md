@@ -1,16 +1,13 @@
 ---
 title: Label
 description: Names a control.
-draft: true
 ---
 
 <!-- ::demo name="label" -->
 
 ```tsx
-<Label>
-  <Checkbox />
-  Accept terms and conditions
-</Label>
+<Checkbox id="terms" />
+<Label htmlFor="terms">Accept terms and conditions</Label>
 ```
 
 ## Installation
@@ -31,7 +28,7 @@ import { Label } from "@/components/ui/label";
 
 Put the control inside the label to associate them without an `id`.
 
-<!-- ::demo name="label" -->
+<!-- ::demo name="label-wrap" -->
 
 ```tsx
 <Label>
