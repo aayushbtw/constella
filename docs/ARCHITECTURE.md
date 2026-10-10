@@ -89,4 +89,5 @@ A rule earns its place when a correction comes up twice. Add one there before wr
 - **Equal-specificity StyleX conditions emit in StyleX's own order.** Exclude one with `:not()` and check the built CSS.
 - **Key order never makes a StyleX condition win; specificity does.** An override (like `:is([data-instant] *)`) loses to a more specific condition on the same property, so pair it with each one (``[`${iconOnly}${fromKeyboard}`]``) and check every state it covers.
 - **Lightning CSS lowers `:dir(rtl)` to a `:lang()` list.** Write `:is([dir='rtl'], [dir='rtl'] *)` instead.
+- **Base UI places thumbs and popups by its own direction, not `dir`.** An RTL app also wraps it in Base UI's `DirectionProvider`; a physical `translateX` in our styles flips under the `dir` selector.
 - **Base UI Root `children` can be a render function.** Wrap providers outside Root, not around its children.
