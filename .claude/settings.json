@@ -1,16 +1,3 @@
 {
-  "enabledMcpjsonServers": ["shadcn"],
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/intent-gate.mjs\""
-          }
-        ]
-      }
-    ]
-  }
+  "enabledMcpjsonServers": ["shadcn"]
 }
