@@ -226,6 +226,8 @@ import {
   ScrollAreaBothDemo,
   ScrollAreaDemo,
   ScrollAreaHorizontalDemo,
+  ScrollFadeDemo,
+  ScrollFadeHorizontalDemo,
 } from "~/components/demos/scroll-area";
 import {
   SelectAlignItemDemo,
@@ -514,6 +516,8 @@ const demos = {
   "scroll-area": ScrollAreaDemo,
   "scroll-area-both": ScrollAreaBothDemo,
   "scroll-area-horizontal": ScrollAreaHorizontalDemo,
+  "scroll-fade": ScrollFadeDemo,
+  "scroll-fade-horizontal": ScrollFadeHorizontalDemo,
   select: SelectDemo,
   "select-align-item": SelectAlignItemDemo,
   "select-disabled": SelectDisabledDemo,

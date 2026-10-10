@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 interface Page {
   /** The h2s, in order. */
@@ -46,11 +46,19 @@ function headings(body: string) {
 }
 
 function parts(title: string) {
+  const slug = title.toLowerCase().replaceAll(" ", "-");
+  const ui = new URL(
+    `../../../../../packages/ui/src/components/ui/${slug}.tsx`,
+    import.meta.url
+  );
+  // A page can document a lib file, like Scroll Fade, which has no parts.
   const source = readFileSync(
-    new URL(
-      `../../../../../packages/ui/src/components/ui/${title.toLowerCase().replaceAll(" ", "-")}.tsx`,
-      import.meta.url
-    ),
+    existsSync(ui)
+      ? ui
+      : new URL(
+          `../../../../../packages/ui/src/lib/${slug}.ts`,
+          import.meta.url
+        ),
     "utf-8"
   );
   const names =

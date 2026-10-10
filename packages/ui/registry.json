@@ -910,6 +910,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "scroll-fade",
+      "type": "registry:lib",
+      "title": "Scroll Fade",
+      "description": "Fades a scroller's edges while there's more content past them.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/lib/scroll-fade.stylex.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "src/lib/scroll-fade.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

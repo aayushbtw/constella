@@ -36,11 +36,12 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `layout`         | A surface growing or shrinking to fit                   |
 | `spin`           | One turn of a spinner                                   |
 | `pulse`          | One breath of a skeleton or indeterminate bar           |
+| `shimmer`        | One sweep of light across text still being worked on    |
 | `confirm`        | How long a confirmation (copied, saved) holds           |
 | `tooltipDelay`   | Rest before a tooltip opens                             |
 | `hoverCardDelay` | Rest before a hover card opens, the same as a tooltip's |
 
-Interface motion stays at or under 300ms. A spinner and a pulse are the exceptions: unhurried, so waiting reads as working, not urgent.
+Interface motion stays at or under 300ms. A spinner, a pulse and a shimmer are the exceptions: unhurried, so waiting reads as working, not urgent.
 
 ## Entrances
 
@@ -58,4 +59,4 @@ When content changes, the layout takes its new size at once and only the surface
 
 ## Reduced motion
 
-Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.
+Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay; a shimmer stops and its text shows plain. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.

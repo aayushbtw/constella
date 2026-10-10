@@ -3,6 +3,7 @@ import { Fragment } from "react";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { scrollFade } from "@/lib/scroll-fade";
 import {
   colors,
   fontSizes,
@@ -187,4 +188,43 @@ function ScrollAreaBothDemo() {
   );
 }
 
-export { ScrollAreaBothDemo, ScrollAreaDemo, ScrollAreaHorizontalDemo };
+function ScrollFadeDemo() {
+  return (
+    <DemoRow>
+      <ScrollArea sx={styles.tags} viewportSx={scrollFade.y}>
+        <div {...stylex.props(styles.list)}>
+          <div {...stylex.props(styles.heading)}>Tags</div>
+          {tags.map((tag, index) => (
+            <Fragment key={tag}>
+              {index > 0 && <Separator sx={styles.separator} />}
+              <div>{tag}</div>
+            </Fragment>
+          ))}
+        </div>
+      </ScrollArea>
+    </DemoRow>
+  );
+}
+
+function ScrollFadeHorizontalDemo() {
+  return (
+    <DemoRow>
+      <ScrollArea sx={styles.gallery} viewportSx={scrollFade.x}>
+        <div {...stylex.props(styles.row)}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} {...stylex.props(styles.tile)} />
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </DemoRow>
+  );
+}
+
+export {
+  ScrollAreaBothDemo,
+  ScrollAreaDemo,
+  ScrollAreaHorizontalDemo,
+  ScrollFadeDemo,
+  ScrollFadeHorizontalDemo,
+};

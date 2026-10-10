@@ -59,6 +59,10 @@ The one surface that animates its height: what sits below it has to make room, s
 
 A menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it.
 
+## Marker
+
+A note between messages, in `textSecondary` at `sm`: plain, over an `edge` hairline (`border`), or a centered label between two hairlines (`separator`). As a link it's underlined and turns `textPrimary` on hover. While work runs it's an `output` with a spinner and shimmering text.
+
 ## Conversation
 
 Reads as a page with the user's words set off: a user's message is a `fillOpaque` bubble on `radii.lg` at the end, at most 80% wide; an answer is plain `md` text on `lineHeights.prose`, with its actions as ghost icon buttons under it. The composer is an input group on `radii.xl`, the top of the corner ladder, whose text grows to six lines; its submit is a primary pill that swaps its arrow for a stop square while an answer streams. The scroller opens at the newest message and follows a stream only while the reader is at the end; its jump-to-end pill rises in on `popover` when there's more below.
@@ -122,6 +126,10 @@ A round checkbox with a dot that grows from the center, from half its size, a to
 ## Scroll area
 
 Its scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not.
+
+## Scroll fade
+
+A mask over the scroller, not a gradient in the page's color, so it works on any surface. An edge fades only while content is past it, up to `min(12%, space.xl)` deep and in full once `2 × space.xl` is past, driven by the scroll itself, so a list at rest is never dimmed. Without scroll-driven animations both edges fade.
 
 ## Select
 
