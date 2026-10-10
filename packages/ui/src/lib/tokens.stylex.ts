@@ -6,6 +6,13 @@ import * as stylex from "@stylexjs/stylex";
 export const colors = stylex.defineVars({
   accent: "var(--accent-solid)",
   background: "var(--background)",
+  // Chart series, in order; a legend or a tooltip's swatch reads them too.
+  chart1: "var(--chart-1)",
+  chart2: "var(--chart-2)",
+  chart3: "var(--chart-3)",
+  chart4: "var(--chart-4)",
+  chart5: "var(--chart-5)",
+  chart6: "var(--chart-6)",
   edge: "var(--edge)",
   edgeSubtle: "var(--edge-subtle)",
   fill: "var(--fill)",

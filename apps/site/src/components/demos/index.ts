@@ -64,6 +64,12 @@ import {
   CardWellDemo,
 } from "~/components/demos/card";
 import {
+  ChartAreaDemo,
+  ChartDemo,
+  ChartLineDemo,
+  ChartPieDemo,
+} from "~/components/demos/chart";
+import {
   ChatDemo,
   MessageDemo,
   PromptInputDemo,
@@ -356,6 +362,10 @@ const demos = {
   "card-stats": CardStatsDemo,
   "card-size": CardSizeDemo,
   "card-well": CardWellDemo,
+  chart: ChartDemo,
+  "chart-area": ChartAreaDemo,
+  "chart-line": ChartLineDemo,
+  "chart-pie": ChartPieDemo,
   chat: ChatDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,

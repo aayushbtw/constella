@@ -16,6 +16,10 @@ Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber)
 
 Status is never a saturated solid behind text. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway. Only a dot is solid, step 9, and amber takes step 11 in light, since step 9 is 1.5:1 on the page.
 
+## Chart series
+
+A chart's series take six hues of their own, step 9 of Radix indigo, teal, violet, cyan, orange and pink, in that order (`chart1` to `chart6`). None is a status hue, so a series never reads as danger or success. The order keeps each neighbor apart under red-green color blindness and for everyone else, checked in both themes; orange takes step 8 in dark, where 9 is too light for the page. Cyan and orange sit under 3:1 on the light page, so a series is always named beside its color, in a legend or the tooltip. Past six series, fold the rest into "Other" rather than reuse a hue.
+
 ## Theme
 
 Light and dark get the same care. Every color is a role token, so a component looks right in both without knowing which one it's in.

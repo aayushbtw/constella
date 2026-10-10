@@ -20,6 +20,18 @@
 @import "@radix-ui/colors/red-alpha.css";
 @import "@radix-ui/colors/red-dark.css";
 @import "@radix-ui/colors/red-dark-alpha.css";
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/teal.css";
+@import "@radix-ui/colors/teal-dark.css";
+@import "@radix-ui/colors/violet.css";
+@import "@radix-ui/colors/violet-dark.css";
+@import "@radix-ui/colors/cyan.css";
+@import "@radix-ui/colors/cyan-dark.css";
+@import "@radix-ui/colors/orange.css";
+@import "@radix-ui/colors/orange-dark.css";
+@import "@radix-ui/colors/pink.css";
+@import "@radix-ui/colors/pink-dark.css";
 @import "./reset.css";
 
 @layer base {
@@ -48,6 +60,19 @@
     --success-fill: color-mix(in oklab, var(--green-9) 22%, transparent);
     --warning-fill-subtle: color-mix(in oklab, var(--amber-9) 14%, transparent);
     --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
+    /* Chart series, in this order: no status hue, and each neighbor stays apart under
+       red-green color blindness. TanStack Charts reads its palette by the `--ts-chart-*` names. */
+    --chart-1: var(--indigo-9);
+    --chart-2: var(--teal-9);
+    --chart-3: var(--violet-9);
+    --chart-4: var(--cyan-9);
+    --chart-6: var(--pink-9);
+    --ts-chart-1: var(--chart-1);
+    --ts-chart-2: var(--chart-2);
+    --ts-chart-3: var(--chart-3);
+    --ts-chart-4: var(--chart-4);
+    --ts-chart-5: var(--chart-5);
+    --ts-chart-6: var(--chart-6);
   }
 
   /* Status dots, and corners derived from the theme's one radius. The theme's roles and
@@ -81,6 +106,7 @@
     --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
     --warning: color-mix(in oklab, var(--amber-11), var(--amber-12) 30%);
     --warning-solid: var(--amber-11);
+    --chart-5: var(--orange-9);
   }
 
   .dark {
@@ -92,6 +118,8 @@
     --success: var(--green-11);
     --warning: var(--amber-11);
     --warning-solid: var(--amber-9);
+    /* Step 9 is too light for the dark page's chart band. */
+    --chart-5: var(--orange-8);
   }
 
   /* Selected text is the page's, not a component's, so the theme tints it here. */
@@ -280,6 +308,17 @@
      turns it to face the reading direction. */
   :where([dir="rtl"] [data-rtl-flip]) {
     transform: scaleX(-1);
+  }
+
+  /* TanStack Charts renders the chart's focusable svg, which StyleX can't reach, so its ring's
+     corners round here to nest inside a card's. */
+  :where([data-slot="chart"] svg.ts-chart) {
+    border-radius: var(--radius-sm);
+  }
+
+  /* A click focuses that svg too, and the browser rings it; only the keyboard should. */
+  :where([data-slot="chart"] svg.ts-chart:focus:not(:focus-visible)) {
+    outline: none;
   }
 
   /* An input group rings its whole box, so the borderless control inside draws none. */

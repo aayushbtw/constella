@@ -5,7 +5,7 @@
 - **Base UI underneath.** Behavior, focus and accessibility come from the primitive. A component adds styling and composition, never its own version of what Base UI already handles.
 - **StyleX only.** Most shadcn registries ship Tailwind, so another one adds nothing.
 - **Command is Base UI too.** shadcn's Command is cmdk; ours is Base UI's Autocomplete, inline and always open, so it filters the `items` it's given rather than its children.
-- **TanStack for data.** A data table renders a `useTable` instance the app builds with its own features (Table v9), virtualizes with TanStack Virtual against the window or a `scrollRef`, and reads its loading, stale and error states from a TanStack Query `useQuery` result; the app owns state, the component owns markup. Docs list these under their own TanStack sidebar section.
+- **TanStack for data.** A data table renders a `useTable` instance the app builds with its own features (Table v9), virtualizes with TanStack Virtual against the window or a `scrollRef`, and reads its loading, stale and error states from a TanStack Query `useQuery` result; the app owns state, the component owns markup. A chart renders a TanStack Charts definition the app builds; the definition owns marks, scales, focus and the tooltip's behavior, the component owns the surface, the tooltip's markup and the legend. The palette reaches the library through the `--ts-chart-*` names it reads, set in `base.css`, so a definition needs no theme. Docs list these under their own TanStack sidebar section.
 - **Motion is StyleX and CSS.** No animation library: transitions, keyframes and Base UI's data attributes (`data-starting-style`, `data-ending-style`) cover it, and consumers install nothing extra.
 
 ## Workspace
@@ -21,6 +21,8 @@
 ## Composition
 
 Components compose like shadcn: one file per component, made of small parts the consumer assembles. Data Table is the exception. Past 1,000 lines, it splits into parts (`data-table-pagination`, `-selection`, `-view-options`) and hooks (`use-data-table-keys`, `-virtualizer`), all files of one registry item. `data-table.tsx` re-exports the parts, so imports stay `@/components/ui/data-table`.
+
+Chart keeps the rule across a library boundary. TanStack Charts paints its own tooltip, so `Chart` hands it `ChartTooltipContent`, which builds the tooltip from parts (`ChartTooltip`, `-Title`, `-Row`, `-Label`, `-Value`, `ChartIndicator`) the consumer can compose through `renderTooltipBody` instead. The legend is parts outside the chart (`ChartLegend`, `ChartLegendItem`, `ChartIndicator`), bound to it only by the app's state, so either can be replaced whole. A `ChartConfig` names and paints each series once, as shadcn's does, but as a plain value passed where it's read, not a context: `chartColor(config)` gives the definition its color scale, `Chart` and `ChartLegendContent` take it to label the tooltip and legend.
 
 ```
 Alert
