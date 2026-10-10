@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { areaY, barY, defineChart, group, lineY } from "@tanstack/charts";
+import type { ChartPoint, ChartTooltipContentContext } from "@tanstack/charts";
 import { crosshair } from "@tanstack/charts/crosshair";
 import { pie, polar, radialArc } from "@tanstack/charts/polar";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
@@ -83,11 +84,24 @@ const browsers = [
 // The grid carries the scale and the labels the values, so no axis line or tick stubs.
 const axis = { line: false, ticks: { size: 0 } };
 
-// Beside the pointer, so it never covers the values it reads.
+// Beside the pointer, so it never covers the values it reads. Titled by x even with one series
+// shown, where TanStack's default turns to a lone point's x and y rows.
 const besidePointer = {
   use: tooltip,
   anchor: "pointer",
   placement: ["right", "left"],
+  content: (
+    points: readonly ChartPoint[],
+    { formatX, formatY, primaryPoint }: ChartTooltipContentContext
+  ) => ({
+    title: points[0] === undefined ? undefined : formatX(points[0].xValue),
+    rows: points.map((point) => ({
+      active: point === primaryPoint,
+      color: point.color,
+      label: point.groupLabel,
+      value: formatY(point.yValue),
+    })),
+  }),
 } as const;
 
 const visitorsY = {

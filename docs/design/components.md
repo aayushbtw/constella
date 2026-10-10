@@ -34,7 +34,9 @@ Its edge turns `accent` when checked.
 
 Axes, ticks and grid lines take `textMuted` through `currentColor`, with no axis line or tick stubs in the examples: the grid carries the scale. Series take `chart1` to `chart6` in order and keep their color when another is hidden. Bars round 4px and sit 2px apart; lines are 2px. A hovered bar column takes a `fillSubtle` band under its bars, the hover fill; a line chart takes a rule.
 
-The tooltip is a popover's surface, not the Tooltip's inverted one: it holds figures to read, not a one-line hint. Title in medium, then a row per series: a short bar in its paint, its label in `textSecondary` and its value in medium. Rows share three columns, so a row without a bar (a total) lines up with the rest. The hovered series' label steps up to `textPrimary`, with no fill. It sits beside the pointer so it never covers the values it reads.
+The tooltip is a popover's surface, not the Tooltip's inverted one: it holds figures to read, not a one-line hint. Title in medium, then a row per series: a short bar in its paint, its label in `textSecondary` and its value in medium. Rows share three columns, so a row without a bar (a total) lines up with the rest. The hovered series' label steps up to `textPrimary`, with no fill. It sits beside the pointer so it never covers the values it reads. It keeps that shape with one series shown.
+
+Under RTL the header, legend and tooltip flip; the plot doesn't. Time and figures read left to right in most RTL locales, as in shadcn's charts.
 
 The legend is a row of small ghost toggles that wraps, pulled back to line its first dot up with the text above. Every entry starts shown, so shown stays quiet (`textPrimary`, filled dot) and hidden reads: `textMuted` and a hollow dot, never color alone. The change fades on `ease` at `hover` speed, like a toggle's fill. The last shown entry can't be hidden in the examples; an empty chart answers nothing.
 
