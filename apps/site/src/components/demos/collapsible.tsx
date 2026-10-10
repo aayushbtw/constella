@@ -83,7 +83,6 @@ const styles = stylex.create({
     color: "inherit",
     cursor: "pointer",
     display: "flex",
-    fontFamily: "inherit",
     fontSize: "inherit",
     gap: space.xs,
     height: sizes.controlSm,

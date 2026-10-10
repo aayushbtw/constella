@@ -92,7 +92,6 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxSizing: "border-box",
     display: "inline-flex",
     flexShrink: 0,
     fontWeight: fontWeights.medium,

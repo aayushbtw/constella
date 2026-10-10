@@ -41,7 +41,7 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 
 ## Typography
 
-Components set size and weight and inherit the font family. This site sets [Inter](https://rsms.me/inter/), and [JetBrains Mono](https://www.jetbrains.com/lp/mono/) for code; use them or your own. Every size shares one line height, `lineHeights.row`, so a row of mixed sizes still centers in a control.
+Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Every size shares one line height, `lineHeights.row`, so a row of mixed sizes still centers in a control.
 
 <!-- ::demo name="typography" -->
 

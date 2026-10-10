@@ -85,7 +85,6 @@ const styles = stylex.create({
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
     boxShadow: shadows.popover,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     // A filtered popup keeps its field in place and scrolls the list instead.
     display: { default: null, [filtering]: "flex" },

@@ -50,13 +50,11 @@ const styles = stylex.create({
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    boxSizing: "border-box",
     caretColor: colors.accent,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "block",
     fieldSizing: "content",
-    fontFamily: "inherit",
     // Under 16px, iOS Safari zooms the page on focus.
     fontSize: { default: fontSizes.md, [media.sm]: fontSizes.sm },
     lineHeight: lineHeights.text,

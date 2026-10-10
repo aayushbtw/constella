@@ -23,7 +23,14 @@ import {
 } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { colors, fontSizes, radii, sizes, space } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  radii,
+  sizes,
+  space,
+  fonts,
+} from "@/lib/tokens.stylex";
 import { DemoControls, Stage } from "~/components/demos/frame";
 import { CopyButton } from "~/components/docs/copy-button";
 import {
@@ -41,7 +48,7 @@ import type {
   ScalingPreset,
   ThemeName,
 } from "~/lib/theme-css";
-import { fonts, lineHeights, shadows } from "~/lib/tokens.stylex";
+import { lineHeights, shadows } from "~/lib/tokens.stylex";
 
 const radiusLabels = {
   large: "Large",

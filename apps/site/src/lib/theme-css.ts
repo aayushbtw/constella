@@ -127,8 +127,20 @@ const roles: Entry[] = [
   ["--edge", "var(--neutral-a6)"],
   ["--inverted", "var(--neutral-12)"],
   ["--on-inverted", "var(--neutral-1)"],
+  [
+    "--font-mono",
+    '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace',
+  ],
+  [
+    "--font-sans",
+    '"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+  ],
   ["--overlay", "var(--black-a5)"],
 ];
+
+// A font stack quotes its family names, so its value takes the other quote.
+const literal = (value: string) =>
+  value.includes('"') ? `'${value}'` : `"${value}"`;
 
 function scaleEntries(role: string, scale: string): Entry[] {
   return [
@@ -200,7 +212,9 @@ function generateThemeFile(options: ThemeOptions) {
     'import * as stylex from "@stylexjs/stylex";',
     "",
     "export const theme = stylex.defineVars({",
-    ...themeEntries(options).map(([name, value]) => `  "${name}": "${value}",`),
+    ...themeEntries(options).map(
+      ([name, value]) => `  "${name}": ${literal(value)},`
+    ),
     "});",
     "",
   ].join("\n");

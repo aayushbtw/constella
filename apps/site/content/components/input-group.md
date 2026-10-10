@@ -104,7 +104,7 @@ Use `align="block-start"` to place the addon above the input.
 ```tsx
 const styles = stylex.create({
   code: {
-    fontFamily: '"JetBrains Mono Variable", monospace',
+    fontFamily: fonts.mono,
     fontSize: fontSizes.xs,
     fontVariantLigatures: "none",
   },

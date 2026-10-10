@@ -50,7 +50,6 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",

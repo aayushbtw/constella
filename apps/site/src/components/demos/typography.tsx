@@ -10,11 +10,11 @@ import {
   radii,
   space,
   strokes,
+  fonts,
 } from "@/lib/tokens.stylex";
 import { DemoControls, Stage, Well } from "~/components/demos/frame";
 import {
   fontSizes as siteFontSizes,
-  fonts,
   lineHeights as siteLineHeights,
 } from "~/lib/tokens.stylex";
 

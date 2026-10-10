@@ -51,7 +51,6 @@ const styles = stylex.create({
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     columnGap: space.xs,
     display: "grid",

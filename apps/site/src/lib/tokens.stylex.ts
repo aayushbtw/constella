@@ -11,11 +11,6 @@ export const surfaces = stylex.defineConsts({
   stage: "var(--stage)",
 });
 
-export const fonts = stylex.defineConsts({
-  mono: '"JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace',
-  sans: '"Inter Variable", -apple-system, BlinkMacSystemFont, sans-serif',
-});
-
 export const fontSizes = stylex.defineConsts({
   base: "15px",
   display: "32px",

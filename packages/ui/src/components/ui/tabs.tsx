@@ -106,7 +106,6 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexGrow: { default: 1, [vertical]: 0 },
-    fontFamily: "inherit",
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.xs,

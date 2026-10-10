@@ -1,5 +1,5 @@
+import monoLatin from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
-import monoLatin from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
 import * as stylex from "@stylexjs/stylex";
 import { createThemeCss } from "@tanstack/highlight/theme";
 import { githubDarkTheme } from "@tanstack/highlight/themes/github-dark";
@@ -19,7 +19,7 @@ import { Header } from "~/components/header";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";
 import { themeScript } from "~/lib/theme";
-import { fonts, fontSizes, lineHeights } from "~/lib/tokens.stylex";
+import { fontSizes, lineHeights } from "~/lib/tokens.stylex";
 
 import appCss from "~/styles/styles.css?url";
 
@@ -83,7 +83,6 @@ const styles = stylex.create({
   body: {
     backgroundColor: colors.background,
     color: colors.textPrimary,
-    fontFamily: fonts.sans,
     fontFeatureSettings: '"cv01", "ss03"',
     fontSize: fontSizes.base,
     lineHeight: lineHeights.prose,

@@ -29,7 +29,6 @@ const styles = stylex.create({
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,
     borderEndEndRadius: radii.lg,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     display: "flex",
     flex: 1,

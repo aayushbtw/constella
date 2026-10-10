@@ -36,7 +36,6 @@ const styles = stylex.create({
     borderStartEndRadius: { default: 0, [fromUser]: radii.lg },
     borderEndStartRadius: { default: 0, [fromUser]: radii.lg },
     borderEndEndRadius: { default: 0, [fromUser]: radii.lg },
-    boxSizing: "border-box",
     color: colors.textPrimary,
     fontSize: fontSizes.md,
     lineHeight: lineHeights.prose,

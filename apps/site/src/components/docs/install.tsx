@@ -1,10 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, fontSizes, radii, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, radii, space, fonts } from "@/lib/tokens.stylex";
 import { CopyButton } from "~/components/docs/copy-button";
 import { config } from "~/lib/config";
 import { shellTokens } from "~/lib/highlight";
-import { fonts, lineHeights, shadows } from "~/lib/tokens.stylex";
+import { lineHeights, shadows } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   command: {

@@ -5,8 +5,10 @@
 // - Roles: what components ask for (`--edge`, `--fill`…), each a scale step; change one alone.
 //   The ones that differ between light and dark live in base.css.
 // - Shape and density: one radius (the rest derive from it), control heights, spacing.
+// - Fonts: `--font-sans` for text, `--font-mono` for code and figures. Named, not shipped: load
+//   them or put yours first. base.css sets them on the page and reset.css on controls and code; components inherit.
 //
-// The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing.
+// The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing, Inter and Geist Mono.
 // Literal names, so `base.css` can read them. For more themes to switch between at
 // runtime, `stylex.createTheme(theme, { … })` and apply it to <html>.
 import * as stylex from "@stylexjs/stylex";
@@ -74,6 +76,10 @@ export const theme = stylex.defineVars({
   "--edge": "var(--neutral-a6)",
   "--inverted": "var(--neutral-12)",
   "--on-inverted": "var(--neutral-1)",
+  "--font-mono":
+    '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace',
+  "--font-sans":
+    '"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
   "--overlay": "var(--black-a5)",
   "--accent-solid": "var(--neutral-12)",
   "--on-accent": "var(--neutral-1)",

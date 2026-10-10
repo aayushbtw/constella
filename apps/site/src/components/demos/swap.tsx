@@ -14,9 +14,9 @@ import {
   sizes,
   space,
   strokes,
+  fonts,
 } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
-import { fonts } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   command: {

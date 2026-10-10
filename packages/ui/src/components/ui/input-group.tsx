@@ -130,7 +130,6 @@ const styles = stylex.create({
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    boxSizing: "border-box",
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "flex",
     flexDirection: { default: "row", [stacked]: "column" },

@@ -73,7 +73,6 @@ const styles = stylex.create({
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    boxSizing: "border-box",
     color: colors.onAccent,
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",

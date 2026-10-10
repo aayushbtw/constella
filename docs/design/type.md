@@ -23,6 +23,7 @@ Peers share a role: two titles in one row never differ in size because one strin
 - **Crisp text.** Grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
 - **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
 - **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
+- **Figures to compare take `fonts.mono`** (a chart tooltip's values): Geist Mono, drawn for one width, reads crisper at 13px than proportional digits made tabular. Text stays in `fonts.sans`. Both are theme variables (`--font-sans`, `--font-mono`) naming Inter and Geist Mono, not shipped: an app that loads them gets them, otherwise the system's fonts.
 - **Inputs stay 16px below 640px**, so iOS doesn't zoom on focus. Above it, control text steps down with the height (13px at `sm`, 14px from `default`).
 
 ## Icons

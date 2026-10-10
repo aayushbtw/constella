@@ -7,7 +7,7 @@
       "name": "base",
       "type": "registry:lib",
       "title": "Base",
-      "description": "Tokens, color scales, theme and focus ring every component builds on.",
+      "description": "Tokens, color scales, theme, fonts, reset and focus ring every component builds on.",
       "dependencies": ["@stylexjs/stylex", "@radix-ui/colors"],
       "devDependencies": ["@stylexjs/unplugin"],
       "files": [
@@ -29,6 +29,10 @@
         },
         {
           "path": "src/lib/motion.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "src/lib/reset.css",
           "type": "registry:lib"
         }
       ],

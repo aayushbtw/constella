@@ -1,0 +1,21 @@
+/* What the browser styles that components rely on being otherwise, as Tailwind's preflight does.
+   In base's layer, so any StyleX rule wins over it. */
+@layer base {
+  /* Padding and borders count in a box's size. Margins stay the app's. */
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  /* The browser gives controls a font of their own, so they take the page's. */
+  :where(button, input, select, optgroup, textarea),
+  ::file-selector-button {
+    font-family: inherit;
+  }
+
+  /* Code takes the theme's mono; a part that wants the page font names it, as Kbd does. */
+  :where(code, kbd, samp, pre) {
+    font-family: var(--font-mono);
+  }
+}

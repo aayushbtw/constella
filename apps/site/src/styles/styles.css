@@ -1,6 +1,6 @@
 /* StyleX appends its generated CSS to this file at build time. */
 @import "@fontsource-variable/inter";
-@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/geist-mono";
 @import "./reset.css";
 @import "./theme.css";
 @import "./code.css";

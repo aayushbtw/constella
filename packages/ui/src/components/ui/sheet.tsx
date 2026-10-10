@@ -44,7 +44,6 @@ const styles = stylex.create({
   popup: {
     backgroundColor: colors.raised,
     boxShadow: shadows.dialog,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",

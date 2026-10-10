@@ -55,7 +55,6 @@ const styles = stylex.create({
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
     boxShadow: shadows.popover,
-    boxSizing: "border-box",
     color: colors.textPrimary,
     fontSize: fontSizes.sm,
     // Base UI measures each trigger's content, so the card can grow to the next one's height.

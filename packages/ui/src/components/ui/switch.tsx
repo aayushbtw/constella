@@ -81,7 +81,6 @@ const styles = stylex.create({
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
     boxShadow: { default: null, [invalid]: shadows.invalid },
-    boxSizing: "border-box",
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,

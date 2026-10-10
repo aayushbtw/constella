@@ -67,7 +67,6 @@ const styles = stylex.create({
     borderInlineStartWidth: strokes.border,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
-    boxSizing: "border-box",
     color: colors.textPrimary,
     display: "flex",
     fontSize: fontSizes.sm,

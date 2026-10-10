@@ -15,6 +15,7 @@ Set up the components from https://constella.aayush.cv in this project. They ins
 3. Add StyleX's compiler to the bundler, before the React plugin: @stylexjs/unplugin/vite for Vite, or see https://github.com/facebook/stylex/tree/main/packages/%40stylexjs/unplugin. Pass the project's "@/*" alias as `aliases`, matching tsconfig.json paths.
 4. In dev, load /virtual:stylex.css and import("virtual:stylex:runtime") from the HTML shell.
 5. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle if it has one.
+6. Load Inter and Geist Mono (@fontsource-variable/inter, @fontsource-variable/geist-mono), or put the project's fonts first in --font-sans and --font-mono in theme.stylex.ts.
 
 Then render a Button and check it's styled in dev and in a production build.
 ```
@@ -102,6 +103,10 @@ export function App() {
   return <Button>Get started</Button>;
 }
 ```
+
+### Fonts
+
+Constella sets the page in `--font-sans` and code in `--font-mono`, and components inherit them. The theme names Inter and Geist Mono there but doesn't ship them: load them (for example `@fontsource-variable/inter` and `@fontsource-variable/geist-mono`), or put your own first in `theme.stylex.ts`.
 
 ### Dark mode
 

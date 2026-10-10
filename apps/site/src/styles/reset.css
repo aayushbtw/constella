@@ -1,11 +1,5 @@
 /* Declared before StyleX's layers, so any StyleX rule wins over it. */
 @layer reset {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
   html {
     -webkit-text-size-adjust: 100%;
   }

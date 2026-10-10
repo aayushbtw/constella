@@ -6,7 +6,7 @@ Only the navigation a reader needs, added as it's needed: a header (name, theme 
 
 ## Type
 
-Text is Inter; code is JetBrains Mono with ligatures off, so `</` and `...` read as the characters typed. Line numbers stay pinned while long lines scroll.
+Text is Inter; code is Geist Mono with ligatures off, so `</` and `...` read as the characters typed. Line numbers stay pinned while long lines scroll.
 
 ## Demo stage
 

@@ -21,9 +21,9 @@ import {
   sizes,
   space,
   strokes,
+  fonts,
 } from "@/lib/tokens.stylex";
 import { DemoControls, Stage, Well } from "~/components/demos/frame";
-import { fonts } from "~/lib/tokens.stylex";
 
 const dot = "12px";
 const graph = "200px";

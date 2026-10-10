@@ -87,6 +87,12 @@ export const shadows = stylex.defineConsts({
   thumb: "0 0 0 1px var(--neutral-a6), 0 1px 3px var(--black-a5)",
 });
 
+// The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.
+export const fonts = stylex.defineConsts({
+  mono: "var(--font-mono)",
+  sans: "var(--font-sans)",
+});
+
 export const fontSizes = stylex.defineConsts({
   // Headings and figures, above the reading size.
   xl: "24px",

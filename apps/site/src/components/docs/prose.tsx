@@ -22,7 +22,6 @@ import { CopyButton } from "~/components/docs/copy-button";
 import { Install } from "~/components/docs/install";
 import { highlightCode } from "~/lib/highlight";
 import {
-  fonts,
   layout,
   lineHeights as siteLineHeights,
   shadows,
@@ -79,7 +78,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.xs,
     boxShadow: shadows.card,
     color: colors.textPrimary,
-    fontFamily: fonts.mono,
     fontVariantLigatures: "none",
     fontSize: fontSizes.xs,
     paddingBlock: 1,
@@ -116,7 +114,6 @@ const styles = stylex.create({
   },
   preCode: {
     display: "inline-block",
-    fontFamily: fonts.mono,
     fontVariantLigatures: "none",
     minWidth: "100%",
   },

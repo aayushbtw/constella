@@ -65,7 +65,7 @@ const styles = stylex.create({
     },
     color: { default: colors.textSecondary, [inTooltip]: colors.onInverted },
     display: "inline-flex",
-    // `<kbd>` is monospace by default.
+    // Keycaps read as labels, not code, so they take the text around them over `<kbd>`'s mono.
     fontFamily: "inherit",
     fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
@@ -81,7 +81,6 @@ const styles = stylex.create({
   group: {
     alignItems: "center",
     display: "inline-flex",
-    fontFamily: "inherit",
     gap: space.xxs,
   },
 });

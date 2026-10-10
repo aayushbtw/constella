@@ -47,7 +47,6 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.spinner,
     borderInlineWidth: strokes.spinner,
-    boxSizing: "border-box",
     color: {
       default: null,
       [inStatus("success")]: colors.success,

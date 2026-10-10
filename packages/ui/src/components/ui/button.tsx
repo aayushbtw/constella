@@ -114,7 +114,6 @@ const styles = stylex.create({
     },
     display: "inline-flex",
     flexShrink: 0,
-    fontFamily: "inherit",
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: px6,
