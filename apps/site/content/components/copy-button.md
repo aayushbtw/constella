@@ -1,7 +1,6 @@
 ---
 title: Copy Button
 description: Copies text, and shows a tick for a moment after.
-draft: true
 ---
 
 <!-- ::demo name="copy-button" -->

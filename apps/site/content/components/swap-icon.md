@@ -1,7 +1,6 @@
 ---
 title: Swap Icon
 description: Cross-fades one icon into another in place.
-draft: true
 ---
 
 <!-- ::demo name="swap-icon" -->

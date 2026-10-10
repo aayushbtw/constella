@@ -1,7 +1,6 @@
 ---
 title: Swap Text
 description: Cross-fades one label into another in place.
-draft: true
 ---
 
 <!-- ::demo name="swap-text" -->

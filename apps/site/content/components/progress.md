@@ -1,7 +1,6 @@
 ---
 title: Progress
 description: Shows how far along a task is.
-draft: true
 ---
 
 <!-- ::demo name="progress" -->

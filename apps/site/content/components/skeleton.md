@@ -1,7 +1,6 @@
 ---
 title: Skeleton
 description: Holds the place of content that's still loading.
-draft: true
 ---
 
 <!-- ::demo name="skeleton" -->

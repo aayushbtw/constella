@@ -1,7 +1,6 @@
 ---
 title: Tooltip
 description: Names what's under the pointer.
-draft: true
 ---
 
 <!-- ::demo name="tooltip" -->

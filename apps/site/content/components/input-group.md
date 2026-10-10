@@ -1,7 +1,6 @@
 ---
 title: Input Group
 description: Add icons, text, keys and buttons inside an input or textarea.
-draft: true
 ---
 
 <!-- ::demo name="input-group" -->

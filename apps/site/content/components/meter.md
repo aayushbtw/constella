@@ -1,7 +1,6 @@
 ---
 title: Meter
 description: Shows a measurement against a limit, like usage against a quota.
-draft: true
 ---
 
 <!-- ::demo name="meter" -->

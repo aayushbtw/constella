@@ -1,7 +1,6 @@
 ---
 title: Switch
 description: A control that turns a setting on or off.
-draft: true
 ---
 
 <!-- ::demo name="switch" -->

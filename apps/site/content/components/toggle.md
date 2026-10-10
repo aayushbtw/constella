@@ -1,7 +1,6 @@
 ---
 title: Toggle
 description: A two-state button that stays pressed until pressed again.
-draft: true
 ---
 
 <!-- ::demo name="toggle" -->

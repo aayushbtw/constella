@@ -1,7 +1,6 @@
 ---
 title: Field
 description: Lays out a control with its label, description and error.
-draft: true
 ---
 
 <!-- ::demo name="field-form" -->

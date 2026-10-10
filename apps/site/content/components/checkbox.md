@@ -1,7 +1,6 @@
 ---
 title: Checkbox
 description: Turns an option on or off.
-draft: true
 ---
 
 <!-- ::demo name="checkbox" -->

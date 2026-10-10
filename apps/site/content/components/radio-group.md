@@ -1,7 +1,6 @@
 ---
 title: Radio Group
 description: A set of options where only one can be picked at a time.
-draft: true
 ---
 
 <!-- ::demo name="radio-group" -->

@@ -1,7 +1,6 @@
 ---
 title: Sidebar
 description: The app's navigation, beside the page, collapsing to icons or out of view.
-draft: true
 ---
 
 <!-- ::demo name="sidebar" -->

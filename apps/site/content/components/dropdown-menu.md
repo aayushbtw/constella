@@ -1,7 +1,6 @@
 ---
 title: Dropdown Menu
 description: Displays a menu of actions or options, triggered by a button.
-draft: true
 ---
 
 <!-- ::demo name="dropdown-menu" -->

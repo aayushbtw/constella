@@ -1,7 +1,6 @@
 ---
 title: Hover Card
 description: Previews what's behind a link while the pointer rests on it.
-draft: true
 ---
 
 <!-- ::demo name="hover-card" -->

@@ -1,7 +1,6 @@
 ---
 title: Side Panel
 description: A panel beside the page for details, a form or anything else, full height.
-draft: true
 ---
 
 <!-- ::demo name="side-panel" -->

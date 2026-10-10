@@ -1,7 +1,6 @@
 ---
 title: Message Scroller
 description: Scrolls a conversation, sticking to the newest message as it streams.
-draft: true
 ---
 
 <!-- ::demo name="chat" -->

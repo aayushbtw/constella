@@ -1,7 +1,6 @@
 ---
 title: Textarea
 description: A multi-line text box that grows with what's typed.
-draft: true
 ---
 
 <!-- ::demo name="textarea" -->

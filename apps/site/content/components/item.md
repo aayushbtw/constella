@@ -1,7 +1,6 @@
 ---
 title: Item
 description: A row of media, a title, a description and actions, alone or in a list.
-draft: true
 ---
 
 <!-- ::demo name="item" -->

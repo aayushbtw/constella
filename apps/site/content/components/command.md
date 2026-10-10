@@ -1,7 +1,6 @@
 ---
 title: Command
 description: A searchable list of commands, inline or as a palette.
-draft: true
 ---
 
 <!-- ::demo name="command" -->

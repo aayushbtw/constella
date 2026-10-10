@@ -1,7 +1,6 @@
 ---
 title: Popover
 description: Displays rich content in a portal, triggered by a button.
-draft: true
 ---
 
 <!-- ::demo name="popover" -->

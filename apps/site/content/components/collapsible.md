@@ -1,7 +1,6 @@
 ---
 title: Collapsible
 description: Shows and hides a section of content.
-draft: true
 ---
 
 <!-- ::demo name="collapsible" -->

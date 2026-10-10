@@ -1,7 +1,6 @@
 ---
 title: Sheet
 description: A panel that slides in from an edge of the screen, over the page.
-draft: true
 ---
 
 <!-- ::demo name="sheet" -->

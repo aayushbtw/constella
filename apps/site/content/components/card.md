@@ -1,7 +1,6 @@
 ---
 title: Card
 description: Groups related content and actions on one surface.
-draft: true
 ---
 
 <!-- ::demo name="card" -->

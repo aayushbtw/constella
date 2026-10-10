@@ -1,7 +1,6 @@
 ---
 title: Badge
 description: Displays a badge or a component that looks like a badge.
-draft: true
 ---
 
 <!-- ::demo name="badge" -->

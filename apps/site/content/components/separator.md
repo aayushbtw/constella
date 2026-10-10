@@ -1,7 +1,6 @@
 ---
 title: Separator
 description: Divides content, across or down.
-draft: true
 ---
 
 <!-- ::demo name="separator" -->

@@ -1,7 +1,6 @@
 ---
 title: Message
 description: One turn of a conversation, from the user or the assistant.
-draft: true
 ---
 
 <!-- ::demo name="message" -->

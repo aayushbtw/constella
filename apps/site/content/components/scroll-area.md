@@ -1,7 +1,6 @@
 ---
 title: Scroll Area
 description: A scrolling region with a slim scrollbar that shows while it's in use.
-draft: true
 ---
 
 <!-- ::demo name="scroll-area" -->

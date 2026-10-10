@@ -1,7 +1,6 @@
 ---
 title: Input
 description: A single-line text box for forms and user data entry.
-draft: true
 ---
 
 <!-- ::demo name="input" -->

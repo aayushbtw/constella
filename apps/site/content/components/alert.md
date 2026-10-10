@@ -1,7 +1,6 @@
 ---
 title: Alert
 description: Calls out something the reader should know, inline with the page.
-draft: true
 ---
 
 <!-- ::demo name="alert" -->

@@ -1,7 +1,6 @@
 ---
 title: Empty
 description: Shows that there's nothing here yet, and what to do about it.
-draft: true
 ---
 
 <!-- ::demo name="empty" -->

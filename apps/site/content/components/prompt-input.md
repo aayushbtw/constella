@@ -1,7 +1,6 @@
 ---
 title: Prompt Input
 description: The chat composer, growing with its text.
-draft: true
 ---
 
 <!-- ::demo name="prompt-input" -->

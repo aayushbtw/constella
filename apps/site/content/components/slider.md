@@ -1,7 +1,6 @@
 ---
 title: Slider
 description: Picks a value from a range.
-draft: true
 ---
 
 <!-- ::demo name="slider" -->
@@ -289,9 +288,3 @@ const [draft, setDraft] = useState("100");
 ## API Reference
 
 `SliderControl` renders the track, indicator and one thumb when it has no children. Every part takes `sx`, applied last. For the rest, see [Base UI Slider](https://base-ui.com/react/components/slider).
-
-## Pending
-
-Blocked on draft components. Remove this section before the page leaves draft.
-
-- Tooltip and Input Group: leaves draft with them, which the With Tooltip and With Input examples link.

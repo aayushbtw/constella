@@ -1,7 +1,6 @@
 ---
 title: Alert Dialog
 description: A dialog that asks to confirm an action before it happens.
-draft: true
 ---
 
 <!-- ::demo name="alert-dialog" -->

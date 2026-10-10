@@ -1,7 +1,6 @@
 ---
 title: Kbd
 description: Shows a key or a shortcut.
-draft: true
 ---
 
 <!-- ::demo name="kbd" -->
@@ -94,9 +93,3 @@ Inside a [Tooltip](/docs/components/tooltip), the key inverts with the popup.
 ## API Reference
 
 `Kbd` and `KbdGroup` take every prop of `<kbd>`, plus `sx`, applied last.
-
-## Pending
-
-Blocked on a draft component. Remove this section before the page leaves draft.
-
-- Tooltip: leaves draft with Tooltip, which the Tooltip example uses.

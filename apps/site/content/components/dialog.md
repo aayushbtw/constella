@@ -1,7 +1,6 @@
 ---
 title: Dialog
 description: Asks for a decision in a window over the page.
-draft: true
 ---
 
 <!-- ::demo name="dialog" -->

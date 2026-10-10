@@ -1,7 +1,6 @@
 ---
 title: Button Group
 description: Joins buttons, inputs and text into one control, across or down.
-draft: true
 ---
 
 <!-- ::demo name="button-group" -->

@@ -1,7 +1,6 @@
 ---
 title: Toggle Group
 description: A set of toggles where one or several can be on.
-draft: true
 ---
 
 <!-- ::demo name="toggle-group" -->
