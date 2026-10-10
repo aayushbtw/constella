@@ -20,7 +20,7 @@
 
 ## Composition
 
-Components compose like shadcn: one file per component, made of small parts the consumer assembles.
+Components compose like shadcn: one file per component, made of small parts the consumer assembles. Data Table is the exception. Past 1,000 lines, it splits into parts (`data-table-pagination`, `-selection`, `-view-options`) and hooks (`use-data-table-keys`, `-virtualizer`), all files of one registry item. `data-table.tsx` re-exports the parts, so imports stay `@/components/ui/data-table`.
 
 ```
 Alert

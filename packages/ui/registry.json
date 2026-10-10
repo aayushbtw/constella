@@ -825,6 +825,26 @@
         {
           "path": "src/components/ui/data-table.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/data-table-pagination.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/data-table-selection.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/data-table-view-options.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/use-data-table-keys.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/use-data-table-virtualizer.ts",
+          "type": "registry:ui"
         }
       ]
     },
