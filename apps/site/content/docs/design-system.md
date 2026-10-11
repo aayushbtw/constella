@@ -26,6 +26,7 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 | `fillSubtle` | Hover |
 | `fill` | Selected |
 | `fillStrong` | Pressed |
+| `edgeFaint` | The composer's ring |
 | `edgeSubtle` | Dividers |
 | `edge` | Control and box borders |
 | `accent` | The one solid fill, with `onAccent` text; the theme's brand color |

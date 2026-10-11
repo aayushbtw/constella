@@ -5,6 +5,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { Button } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
@@ -18,9 +20,12 @@ import type {
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import type { TextareaProps } from "@/components/ui/textarea";
 import {
+  colors,
   fontSizes,
   lineHeights,
+  media,
   radii,
+  shadows,
   sizes,
   space,
   strokes,
@@ -34,6 +39,15 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
+// Pills nest in the composer's corner at any radius (inset = outer radius − pill radius);
+// `sm` attachments match them at the default radius.
+const inset = `max(${space.xxs}, calc(${radii.xl} - ${sizes.controlSm} / 2))`;
+// A bar button's leading icon (6px padding past a 1px border) lines up with the composer's text (10px in).
+const barInset = `calc(${space.xxs} - ${strokes.border})`;
+const invalid =
+  ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
+const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
+
 const styles = stylex.create({
   form: {
     width: "100%",
@@ -44,6 +58,16 @@ const styles = stylex.create({
     borderStartEndRadius: radii.xl,
     borderEndStartRadius: radii.xl,
     borderEndEndRadius: radii.xl,
+    // A surface, not a control: the `raised` fill, and its edge a ring in its shadow, so no border.
+    backgroundColor: colors.raised,
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
+    boxShadow: {
+      default: shadows.composer,
+      [invalid]: shadows.composerInvalid,
+    },
     height: "auto",
   },
   textarea: {
@@ -54,13 +78,65 @@ const styles = stylex.create({
     minHeight: sizes.controlLg,
     overflowY: "auto",
   },
+  header: {
+    paddingBlockStart: {
+      default: inset,
+      // The group already pads `space.xxs` so focus rings aren't clipped.
+      ":has(> [data-slot='attachment-group'])": `calc(${inset} - ${space.xxs})`,
+    },
+    paddingInlineEnd: inset,
+    paddingInlineStart: inset,
+  },
   footer: {
     justifyContent: "space-between",
+    paddingBlockEnd: inset,
+    paddingInlineEnd: inset,
+    paddingInlineStart: inset,
   },
   tools: {
     alignItems: "center",
     display: "flex",
     gap: space.xxs,
+  },
+  // The one corner past the top of the ladder: the composer keeps `xl` inside it.
+  well: {
+    backgroundColor: colors.well,
+    borderStartStartRadius: wellCorner,
+    borderStartEndRadius: wellCorner,
+    borderEndStartRadius: wellCorner,
+    borderEndEndRadius: wellCorner,
+    display: "flex",
+    flexDirection: "column",
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+    width: "100%",
+  },
+  barButton: {
+    color: {
+      default: colors.textSecondary,
+      ":is([data-popup-open])": colors.textPrimary,
+      [media.hover]: {
+        default: colors.textSecondary,
+        ":hover:not(:disabled)": colors.textPrimary,
+      },
+      ":active:not(:disabled)": colors.textPrimary,
+    },
+  },
+  bar: {
+    alignItems: "center",
+    color: colors.textSecondary,
+    display: "flex",
+    fontSize: fontSizes.sm,
+    gap: space.xs,
+    lineHeight: lineHeights.text,
+    minHeight: sizes.controlSm,
+    // The well's own padding is the gap on its outer side, so each side reads `space.xxs`.
+    paddingBlockEnd: { default: space.xxs, ":last-child": 0 },
+    paddingBlockStart: { default: space.xxs, ":first-child": 0 },
+    paddingInlineEnd: barInset,
+    paddingInlineStart: barInset,
   },
 });
 
@@ -113,12 +189,16 @@ function PromptInputTextarea({
 }
 
 /** Above the text, for attachments. */
-function PromptInputHeader(props: Omit<InputGroupAddonProps, "align">) {
+function PromptInputHeader({
+  sx,
+  ...props
+}: Omit<InputGroupAddonProps, "align">) {
   return (
     <InputGroupAddon
       align="block-start"
       data-prompt-input-header=""
       {...props}
+      sx={[styles.header, sx]}
     />
   );
 }
@@ -144,6 +224,48 @@ function PromptInputTools({ sx, ...props }: Styled<ComponentProps<"div">>) {
       data-slot="prompt-input-tools"
       {...props}
       {...stylex.props(styles.tools, sx)}
+    />
+  );
+}
+
+/** A tinted tray around a prompt input and the bars that set its context, like a project or apps. */
+function PromptInputWell({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="prompt-input-well"
+      {...props}
+      {...stylex.props(styles.well, sx)}
+    />
+  );
+}
+
+/** A quiet pill for a bar: secondary text, so the context reads behind the prompt. */
+function PromptInputBarButton({
+  corners = "pill",
+  size = "sm",
+  sx,
+  variant = "ghost",
+  ...props
+}: ButtonProps) {
+  return (
+    <Button
+      corners={corners}
+      data-slot="prompt-input-bar-button"
+      size={size}
+      variant={variant}
+      {...props}
+      sx={[styles.barButton, sx]}
+    />
+  );
+}
+
+/** A row in the well, above or below the prompt input. */
+function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="prompt-input-bar"
+      {...props}
+      {...stylex.props(styles.bar, sx)}
     />
   );
 }
@@ -194,11 +316,14 @@ function PromptInputSubmit({
 
 export {
   PromptInput,
+  PromptInputBar,
+  PromptInputBarButton,
   PromptInputFooter,
   PromptInputHeader,
   promptInputStatuses,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
+  PromptInputWell,
 };
 export type { PromptInputStatus };

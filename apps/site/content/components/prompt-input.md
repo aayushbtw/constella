@@ -14,7 +14,7 @@ section: AI
   />
   <PromptInputFooter>
     <PromptInputTools>
-      <InputGroupButton aria-label="Attach" size="icon-sm">
+      <InputGroupButton aria-label="Attach" corners="pill" size="icon-sm">
         <HugeiconsIcon icon={Attachment01Icon} />
       </InputGroupButton>
     </PromptInputTools>
@@ -43,12 +43,16 @@ import {
 ## Composition
 
 ```
-PromptInput
-├── PromptInputHeader
-├── PromptInputTextarea
-└── PromptInputFooter
-    ├── PromptInputTools
-    └── PromptInputSubmit
+PromptInputWell
+├── PromptInputBar
+│   └── PromptInputBarButton
+├── PromptInput
+│   ├── PromptInputHeader
+│   ├── PromptInputTextarea
+│   └── PromptInputFooter
+│       ├── PromptInputTools
+│       └── PromptInputSubmit
+└── PromptInputBar
 ```
 
 ## Prompt Input Header
@@ -73,6 +77,24 @@ Put an [Attachment](/docs/components/attachment) group in a `PromptInputHeader`,
 </PromptInput>
 ```
 
+## Prompt Input Well
+
+Put the prompt input in a `PromptInputWell`, a tinted tray, when it needs context around it, like a project or connected apps. A `PromptInputBar` is a row above or below it, usually on one side. Its controls line up with the composer's.
+
+<!-- ::demo name="prompt-input-well" -->
+
+```tsx
+<PromptInputWell>
+  <PromptInputBar>
+    <PromptInputBarButton>
+      <HugeiconsIcon data-icon="inline-start" icon={Folder01Icon} />
+      Select a project
+    </PromptInputBarButton>
+  </PromptInputBar>
+  <PromptInput onSubmit={send}>…</PromptInput>
+</PromptInputWell>
+```
+
 ## Prompt Input Submit
 
 Pass the answer's `status`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.
@@ -93,6 +115,9 @@ Pass the answer's `status`. While it's `streaming`, the arrow swaps to a stop sq
 | --- | --- |
 | `PromptInputTextarea` | Submits on Enter |
 | `PromptInputHeader` | Above the text, for attachments |
+| `PromptInputWell` | A tray around the prompt input and its bars |
+| `PromptInputBar` | A row in the well |
+| `PromptInputBarButton` | A ghost `sm` pill in secondary text |
 | `PromptInputSubmit` | `status`: `"ready"`, `"submitted"` or `"streaming"`; `onStop` |
 
 Every part takes `sx`, applied last.

@@ -72,6 +72,7 @@ export const theme = stylex.defineVars({
   "--fill": "var(--neutral-a3)",
   "--fill-strong": "var(--neutral-a4)",
   "--fill-opaque": "var(--neutral-3)",
+  "--edge-faint": "var(--neutral-a3)",
   "--edge-subtle": "var(--neutral-a4)",
   "--edge": "var(--neutral-a6)",
   "--inverted": "var(--neutral-12)",

@@ -2,6 +2,8 @@ import {
   Attachment01Icon,
   Cancel01Icon,
   File01Icon,
+  Folder01Icon,
+  Plug01Icon,
   RepeatIcon,
   ThumbsUpIcon,
 } from "@hugeicons/core-free-icons";
@@ -40,11 +42,14 @@ import {
 } from "@/components/ui/message-scroller";
 import {
   PromptInput,
+  PromptInputBar,
+  PromptInputBarButton,
   PromptInputFooter,
   PromptInputHeader,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
+  PromptInputWell,
 } from "@/components/ui/prompt-input";
 import type { PromptInputStatus } from "@/components/ui/prompt-input";
 import { colors, radii, sizes, space, strokes } from "@/lib/tokens.stylex";
@@ -102,7 +107,7 @@ const styles = stylex.create({
   },
 });
 
-function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
+function Glyph(props: Omit<HugeiconsIconProps, "strokeWidth">) {
   return (
     <HugeiconsIcon
       aria-hidden
@@ -184,7 +189,7 @@ function Composer({
       />
       <PromptInputFooter>
         <PromptInputTools>
-          <InputGroupButton aria-label="Attach" size="icon-sm">
+          <InputGroupButton aria-label="Attach" corners="pill" size="icon-sm">
             <Glyph icon={Attachment01Icon} />
           </InputGroupButton>
         </PromptInputTools>
@@ -315,6 +320,7 @@ function PromptInputHeaderDemo() {
             <PromptInputTools>
               <InputGroupButton
                 aria-label="Attach"
+                corners="pill"
                 onClick={() => {
                   setFiles([...files, `notes-${files.length + 1}.md`]);
                 }}
@@ -333,4 +339,46 @@ function PromptInputHeaderDemo() {
   );
 }
 
-export { Chat, ChatDemo, MessageDemo, PromptInputDemo, PromptInputHeaderDemo };
+function PromptInputWellDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <PromptInputWell>
+          <PromptInputBar>
+            <PromptInputBarButton>
+              <Glyph
+                data-icon="inline-start"
+                icon={Folder01Icon}
+                size={sizes.iconSm}
+              />
+              Select a project
+            </PromptInputBarButton>
+          </PromptInputBar>
+          <Composer status="ready" />
+        </PromptInputWell>
+        <PromptInputWell>
+          <Composer status="ready" />
+          <PromptInputBar>
+            <PromptInputBarButton>
+              <Glyph
+                data-icon="inline-start"
+                icon={Plug01Icon}
+                size={sizes.iconSm}
+              />
+              Connect apps
+            </PromptInputBarButton>
+          </PromptInputBar>
+        </PromptInputWell>
+      </div>
+    </DemoRow>
+  );
+}
+
+export {
+  Chat,
+  ChatDemo,
+  MessageDemo,
+  PromptInputDemo,
+  PromptInputHeaderDemo,
+  PromptInputWellDemo,
+};

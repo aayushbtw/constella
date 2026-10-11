@@ -14,6 +14,7 @@ export const colors = stylex.defineVars({
   chart5: "var(--chart-5)",
   chart6: "var(--chart-6)",
   edge: "var(--edge)",
+  edgeFaint: "var(--edge-faint)",
   edgeSubtle: "var(--edge-subtle)",
   fill: "var(--fill)",
   fillOpaque: "var(--fill-opaque)",
@@ -28,6 +29,7 @@ export const colors = stylex.defineVars({
   raised: "var(--raised)",
   sidebar: "var(--sidebar)",
   textMuted: "var(--text-muted)",
+  well: "var(--well)",
   textPrimary: "var(--text-primary)",
   textSecondary: "var(--text-secondary)",
 
@@ -84,6 +86,9 @@ export const shadows = stylex.defineConsts({
   dialog:
     "0 0 0 1px var(--neutral-a4), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
   invalid: "0 0 0 2px var(--red-a4)",
+  composer:
+    "0 0 0 0.5px var(--edge-faint), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+  composerInvalid: "0 0 0 1px var(--danger), 0 0 0 3px var(--red-a4)",
   popover:
     "0 0 0 1px var(--neutral-a4), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.

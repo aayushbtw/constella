@@ -24,7 +24,7 @@ Whatever sits inside a box keeps an even inset on every side it touches: an xs b
 
 ## Corners
 
-Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). So the corners are one ladder, `xs` to `xl`, a `space.xxs` step apart: a card (`lg`) holds an `md` surface, a composer (`xl`) an `lg` one. The step shrinks under a 4px radius so every corner reaches 0 together. When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius.
+Nested corners are concentric: outer radius = inner radius + the padding between them (`radii.md` 12 around `radii.sm` 8 at `space.xxs` 4). So the corners are one ladder, `xs` to `xl`, a `space.xxs` step apart: a card (`lg`) holds an `md` surface, a composer (`xl`) an `lg` one. The step shrinks under a 4px radius so every corner reaches 0 together. When the padding is at least the outer radius, the inner corner no longer reads against the outer one and keeps its own radius. The one corner past `xl` is a prompt input's well: `xl` plus its `space.xxs` padding, so the composer keeps `xl` inside it. A bar's ghost pills show no shape at rest, so they line up with the composer's text instead of nesting in the well's corner.
 
 `radii.chip` (6px) sits off the ladder, for the 20px pieces (badge, keycap): at that size 4 reads square and 8 a pill.
 

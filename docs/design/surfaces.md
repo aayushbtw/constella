@@ -10,13 +10,17 @@ A slider thumb rides above its track, so it does the same: `shadows.thumb` is a 
 
 ## Edges
 
-Every control and box draws its border in `edge`: a button, an input, a tabs list and a choice card match, so a row of them reads as one family. `edgeSubtle` is too faint for that: an input's fill sits inside its edge, and with the faint one it reads 30px tall beside a 32px button on the dark page. `edgeSubtle` is for dividers that group content without bounding a control: a separator, table rows, the hairline beside a side panel or sidebar.
+Every control and box draws its border in `edge`: a button, an input, a tabs list and a choice card match, so a row of them reads as one family. `edgeSubtle` is too faint for that: an input's fill sits inside its edge, and with the faint one it reads 30px tall beside a 32px button on the dark page. `edgeSubtle` is for dividers that group content without bounding a control: a separator, table rows, the hairline beside a side panel or sidebar. `edgeFaint` (`neutral-a3`) is only the composer's ring, a large surface whose shadow carries most of its edge.
 
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
 ## Layout boxes
 
 A box in the layout (a card, an alert) takes a real `edge` border, not a shadow, and the `raised` fill: white on the off-white page, a step lighter in dark.
+
+## Composer
+
+The prompt input is a surface, not a control: no border, and its edge is a 0.5px `edgeFaint` ring inside `shadows.composer`, over a soft drop, so the biggest box on the page reads lighter than a field. It never sits in a button group, so the ring's drawing outside the box costs nothing. Invalid swaps in `composerInvalid`, a 1px `danger` ring and its halo. In a well the ring stays outside: `edgeFaint` over the well's `fill` darkens the edge rather than leaving the light halo an outer edge leaves on a frame. Its fill is `raised`, like a layout box.
 
 ## Floating
 

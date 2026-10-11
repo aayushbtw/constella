@@ -82,6 +82,7 @@ import {
   MessageDemo,
   PromptInputDemo,
   PromptInputHeaderDemo,
+  PromptInputWellDemo,
 } from "~/components/demos/chat";
 import {
   CheckboxControlledDemo,
@@ -516,6 +517,7 @@ const demos = {
   "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
   "prompt-input-header": PromptInputHeaderDemo,
+  "prompt-input-well": PromptInputWellDemo,
   progress: ProgressDemo,
   "progress-indeterminate": ProgressIndeterminateDemo,
   "progress-label": ProgressLabelDemo,

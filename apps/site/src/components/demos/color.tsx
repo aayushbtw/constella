@@ -30,6 +30,7 @@ const neutrals = [
   { kind: "fill", name: "fillSubtle", step: "gray-a2" },
   { kind: "fill", name: "fill", step: "gray-a3" },
   { kind: "fill", name: "fillStrong", step: "gray-a4" },
+  { kind: "edge", name: "edgeFaint", step: "gray-a3" },
   { kind: "edge", name: "edgeSubtle", step: "gray-a4" },
   { kind: "edge", name: "edge", step: "gray-a6" },
   { kind: "fill", name: "accent", step: "gray-12" },
