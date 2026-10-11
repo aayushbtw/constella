@@ -103,6 +103,8 @@
     --raised: #fff;
     /* A prompt input's tray: a2 is enough against white; dark needs a3 to part from `raised`. */
     --well: var(--neutral-a2);
+    /* A mark on a `fillStrong` track, like a switch's off thumb: white in light; dark takes step 12 to stand off its track. */
+    --on-fill-strong: #fff;
     --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
     --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
     --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
@@ -116,6 +118,7 @@
     --on-inverted-fill: var(--black-a2);
     --raised: var(--neutral-2);
     --well: var(--neutral-a3);
+    --on-fill-strong: var(--neutral-12);
     --danger: var(--red-11);
     --info: var(--blue-11);
     --success: var(--green-11);

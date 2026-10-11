@@ -101,13 +101,14 @@ const styles = stylex.create({
   lg: track(sizes.iconLg),
   thumb: {
     backgroundColor: {
-      default: colors.textSecondary,
+      default: colors.onFillStrong,
       ":is([data-checked])": colors.onAccent,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
+    boxShadow: shadows.control,
     display: "block",
     pointerEvents: "none",
     // The thumb lands with a little give; the stretch answers the press at once.

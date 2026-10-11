@@ -181,7 +181,7 @@ The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`pres
 
 ## Switch
 
-A checkbox that slides: `fillStrong` track off, `accent` on, a `textSecondary` thumb that turns `onAccent` when on, so it reads in both themes without its own token. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
+A checkbox that slides: `fillStrong` track off, `accent` on. Off, the thumb takes `onFillStrong`: white in light, `gray-12` in dark. On, it takes `onAccent`. Either way it stands off its track. A `textSecondary` thumb read as disabled on the light track. It takes `shadows.control` in both states; `shadows.thumb`'s ring made off look heavier than on. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
 
 ## Table
 

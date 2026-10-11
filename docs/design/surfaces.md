@@ -6,7 +6,7 @@ Controls (buttons, inputs) have a real border for their edge and a shadow for th
 
 The primary button is the one control with depth of its own (`shadows.primary`): a white-a3 line inside its top edge and a black-a3 one inside its bottom, over a small drop. In dark, where the fill is near-white, the bottom shade does the work.
 
-A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat.
+A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. A switch thumb takes `control`: its fill does the separating.
 
 ## Edges
 

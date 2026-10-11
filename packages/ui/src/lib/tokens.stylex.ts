@@ -22,6 +22,7 @@ export const colors = stylex.defineVars({
   fillSubtle: "var(--fill-subtle)",
   inverted: "var(--inverted)",
   onAccent: "var(--on-accent)",
+  onFillStrong: "var(--on-fill-strong)",
   onInverted: "var(--on-inverted)",
   onInvertedFill: "var(--on-inverted-fill)",
   overlay: "var(--overlay)",
