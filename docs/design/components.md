@@ -10,6 +10,10 @@ A box like a card, a control's radius and padding: `edge` border, `raised` fill.
 
 Wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
 
+## Approval
+
+An `sm` card that names itself by its title. The title leads with a `fill` media tile `sizes.iconLg` square, shared with Tool steps. Arguments are a `dl` grid, labels in `textSecondary`. A full-bleed separator splits the arguments from a long body. Once answered, the footer goes and a Badge in the action says what happened.
+
 ## Attachment
 
 A file as a small `raised` card on an `edge`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerFillSubtle` and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group scrolls sideways, snaps and fades its edges.

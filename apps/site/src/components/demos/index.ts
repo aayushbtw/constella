@@ -12,6 +12,7 @@ import {
   AlertDialogDemo,
   AlertDialogSizeDemo,
 } from "~/components/demos/alert-dialog";
+import { ApprovalDecidedDemo, ApprovalDemo } from "~/components/demos/approval";
 import {
   AttachmentDemo,
   AttachmentGroupDemo,
@@ -359,6 +360,8 @@ const demos = {
   "alert-dialog-async": AlertDialogAsyncDemo,
   "alert-dialog-danger": AlertDialogDangerDemo,
   "alert-dialog-size": AlertDialogSizeDemo,
+  approval: ApprovalDemo,
+  "approval-decided": ApprovalDecidedDemo,
   attachment: AttachmentDemo,
   "attachment-group": AttachmentGroupDemo,
   "attachment-image": AttachmentImageDemo,

@@ -71,6 +71,23 @@
       ]
     },
     {
+      "name": "approval",
+      "type": "registry:ui",
+      "title": "Approval",
+      "description": "A card asking to allow a tool call, with its arguments and answer buttons.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/card.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/approval.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
