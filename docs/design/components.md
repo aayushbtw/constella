@@ -28,7 +28,7 @@ Joins its items into one control: the corners where two meet go square, and the 
 
 ## Card
 
-Its corner is `radii.lg`; its padding (`space.md`, `sm` at `sm`, none at `flush` for rows that pad themselves) is one variable its header, content and footer read, so they line up at every size. Its footer is the dialog's. A `well` is a `fillSubtle` tray a ladder step around a card, `space.xxs` padding and the card's corner a step down to `md`, so the two are concentric; a header in the tray lines its text up with the card's.
+Its corner is `radii.lg`; its padding (`space.md`, `sm` at `sm`, none at `flush` for rows that pad themselves) is one variable its header, content and footer read, so they line up at every size. Its footer is the dialog's. A `well` is a `fillSubtle` tray a ladder step around a card, `space.xxs` padding and the card's corner a step down to `md`, so the two are concentric; a header in the tray lines its text up with the card's. The action spans the description's row only when there is one, so a lone title stays one row tall.
 
 ## Choice card
 

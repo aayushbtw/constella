@@ -107,7 +107,11 @@ const styles = stylex.create({
   action: {
     alignSelf: "start",
     gridColumnStart: 2,
-    gridRowEnd: "span 2",
+    // Spans the description's row only when there is one, so a lone title gets no empty row.
+    gridRowEnd: {
+      default: "span 1",
+      ":is(:has(> [data-slot='card-description']) > *)": "span 2",
+    },
     gridRowStart: 1,
     justifySelf: "end",
   },
