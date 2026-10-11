@@ -127,6 +127,10 @@ The slider's track: `strokes.track` tall, `fill` under `accent`, full corners. T
 
 A round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`.
 
+## Reasoning
+
+A quiet text button in `textSecondary` at `sm`, with no fill. It turns `textPrimary` on hover, with a chevron that turns a quarter on `move` + `out`. The thinking sits under it in `textSecondary`, lined up with the label, beside a 1px `edge` rail that starts under the trigger's icon. The app decides when it opens and closes.
+
 ## Scroll area
 
 Its scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not.
@@ -194,3 +198,7 @@ An input's surface, two control heights tall, growing with its content and resiz
 ## Toggle
 
 A ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one segmented control.
+
+## Tool steps
+
+Reasoning's trigger over a list of steps. Each step is a row a control tall: a status mark in an icon's column under the trigger's icon, the tool's icon on an `iconLg` `fill` tile, a medium title and a `textMuted` description cut short. The mark is a spinner, a tick or an alert in `danger`, cross-fading as the status changes, with its status named for screen readers; a failure also says why in words. A running title shimmers. A 1px `edge` rail threads the marks and the trigger's icon, stopping `space.xxs` short of each, and runs unbroken past an open step's results.

@@ -232,6 +232,10 @@ import {
   RadioGroupSizeDemo,
 } from "~/components/demos/radio-group";
 import {
+  ReasoningControlledDemo,
+  ReasoningDemo,
+} from "~/components/demos/reasoning";
+import {
   ScrollAreaBothDemo,
   ScrollAreaDemo,
   ScrollAreaHorizontalDemo,
@@ -334,6 +338,10 @@ import {
   ToggleOutlineDemo,
   ToggleSizeDemo,
 } from "~/components/demos/toggle";
+import {
+  ToolStepsDemo,
+  ToolStepsStatusDemo,
+} from "~/components/demos/tool-steps";
 import {
   TooltipDemo,
   TooltipDisabledDemo,
@@ -529,6 +537,8 @@ const demos = {
   "radio-group-fieldset": RadioGroupFieldsetDemo,
   "radio-group-invalid": RadioGroupInvalidDemo,
   "radio-group-size": RadioGroupSizeDemo,
+  reasoning: ReasoningDemo,
+  "reasoning-controlled": ReasoningControlledDemo,
   "scroll-area": ScrollAreaDemo,
   "scroll-area-both": ScrollAreaBothDemo,
   "scroll-area-horizontal": ScrollAreaHorizontalDemo,
@@ -569,6 +579,8 @@ const demos = {
   "toast-dismiss": ToastDismissDemo,
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
+  "tool-steps": ToolStepsDemo,
+  "tool-steps-status": ToolStepsStatusDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
   switch: SwitchDemo,
