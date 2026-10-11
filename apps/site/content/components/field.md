@@ -16,7 +16,7 @@ description: Lays out a control with its label, description and error.
       <FieldGroup>
         <Field>
           <FieldLabel>Name on Card</FieldLabel>
-          <Input placeholder="Evil Rabbit" required />
+          <Input placeholder="Jordan Kim" required />
         </Field>
         <Field>
           <FieldLabel>Card Number</FieldLabel>
@@ -218,7 +218,7 @@ Use the `disabled` prop on `Field` to disable its control and dim its label.
 ```tsx
 <Field>
   <FieldLabel>Username</FieldLabel>
-  <Input placeholder="Max Leiter" />
+  <Input placeholder="Sam Lee" />
   <FieldDescription>
     Choose a unique username for your account.
   </FieldDescription>

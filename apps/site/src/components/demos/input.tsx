@@ -93,7 +93,7 @@ function InputFieldGroupDemo() {
         </Field>
         <Field>
           <FieldLabel>Email</FieldLabel>
-          <Input placeholder="name@example.com" type="email" />
+          <Input placeholder="name@acme.com" type="email" />
           <FieldDescription>
             We’ll send updates to this address.
           </FieldDescription>
@@ -166,7 +166,7 @@ function InputInputGroupDemo() {
       <Field>
         <FieldLabel>Website URL</FieldLabel>
         <InputGroup>
-          <InputGroupInput placeholder="example.com" />
+          <InputGroupInput placeholder="acme.com" />
           <InputGroupAddon>
             <InputGroupText>https://</InputGroupText>
           </InputGroupAddon>
@@ -225,7 +225,7 @@ function InputBadgeDemo() {
           Webhook URL
           <Badge>Beta</Badge>
         </FieldLabel>
-        <Input placeholder="https://api.example.com/webhook" type="url" />
+        <Input placeholder="https://api.acme.com/webhook" type="url" />
       </Field>
     </DemoRow>
   );
@@ -252,11 +252,11 @@ function InputFormDemo() {
         <FieldGroup>
           <Field>
             <FieldLabel>Name</FieldLabel>
-            <Input placeholder="Evil Rabbit" required />
+            <Input placeholder="Jordan Kim" required />
           </Field>
           <Field>
             <FieldLabel>Email</FieldLabel>
-            <Input placeholder="john@example.com" type="email" />
+            <Input placeholder="jordan@acme.com" type="email" />
             <FieldDescription>
               We&apos;ll never share your email with anyone.
             </FieldDescription>

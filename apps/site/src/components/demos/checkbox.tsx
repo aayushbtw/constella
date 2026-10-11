@@ -18,27 +18,27 @@ const fruits = ["Apples", "Oranges", "Pears"];
 
 const people = [
   {
-    email: "sarah.chen@example.com",
+    email: "alex@acme.com",
     id: "1",
-    name: "Sarah Chen",
+    name: "Alex Smith",
     role: "Admin",
   },
   {
-    email: "marcus.rodriguez@example.com",
+    email: "sam@acme.com",
     id: "2",
-    name: "Marcus Rodriguez",
+    name: "Sam Lee",
     role: "User",
   },
   {
-    email: "priya.patel@example.com",
+    email: "jordan@acme.com",
     id: "3",
-    name: "Priya Patel",
+    name: "Jordan Kim",
     role: "User",
   },
   {
-    email: "david.kim@example.com",
+    email: "taylor@acme.com",
     id: "4",
-    name: "David Kim",
+    name: "Taylor Brown",
     role: "Editor",
   },
 ];

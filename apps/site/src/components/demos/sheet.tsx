@@ -38,11 +38,11 @@ function SheetDemo() {
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="sheet-name">Name</FieldLabel>
-                <Input defaultValue="Pedro Duarte" id="sheet-name" />
+                <Input defaultValue="Alex Smith" id="sheet-name" />
               </Field>
               <Field>
                 <FieldLabel htmlFor="sheet-username">Username</FieldLabel>
-                <Input defaultValue="@peduarte" id="sheet-username" />
+                <Input defaultValue="@alex" id="sheet-username" />
               </Field>
             </FieldGroup>
           </SheetBody>

@@ -91,7 +91,7 @@ function CardDemo() {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="card-email">Email</FieldLabel>
-              <Input id="card-email" placeholder="m@example.com" type="email" />
+              <Input id="card-email" placeholder="m@acme.com" type="email" />
             </Field>
             <Field>
               <FieldLabel htmlFor="card-password">Password</FieldLabel>

@@ -291,8 +291,8 @@ function User() {
         <SidebarMenuItem>
           <SidebarMenuButton tooltip="shadcn">
             <Avatar size="sm">
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>SC</AvatarFallback>
+              <AvatarImage alt="" src="/avatars/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <SidebarMenuLabel>shadcn</SidebarMenuLabel>
           </SidebarMenuButton>

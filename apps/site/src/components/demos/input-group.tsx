@@ -316,7 +316,7 @@ function InputGroupTextDemo() {
           <InputGroupAddon>
             <InputGroupText>https://</InputGroupText>
           </InputGroupAddon>
-          <InputGroupInput aria-label="Website" placeholder="example.com" />
+          <InputGroupInput aria-label="Website" placeholder="acme.com" />
           <InputGroupAddon align="inline-end">
             <InputGroupText>.com</InputGroupText>
           </InputGroupAddon>
@@ -327,7 +327,7 @@ function InputGroupTextDemo() {
             placeholder="Enter your username"
           />
           <InputGroupAddon align="inline-end">
-            <InputGroupText>@company.com</InputGroupText>
+            <InputGroupText>@acme.com</InputGroupText>
           </InputGroupAddon>
         </InputGroup>
         <InputGroup>
@@ -372,7 +372,7 @@ function InputGroupButtonDemo() {
   );
 
   async function copy() {
-    await navigator.clipboard.writeText("https://x.com/shadcn");
+    await navigator.clipboard.writeText("https://x.com/acme");
     setCopied(true);
     clearTimeout(timeout.current ?? undefined);
     timeout.current = setTimeout(() => {
@@ -386,7 +386,7 @@ function InputGroupButtonDemo() {
         <InputGroup>
           <InputGroupInput
             aria-label="Profile link"
-            placeholder="https://x.com/shadcn"
+            placeholder="https://x.com/acme"
             readOnly
           />
           <InputGroupAddon align="inline-end">

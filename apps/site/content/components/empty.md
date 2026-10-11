@@ -117,8 +117,8 @@ Put an [Avatar](/docs/components/avatar) in `EmptyMedia`.
 ```tsx
 <EmptyMedia>
   <Avatar size="lg">
-    <AvatarImage alt="" src="https://github.com/shadcn.png" />
-    <AvatarFallback>SC</AvatarFallback>
+    <AvatarImage alt="" src="/avatars/shadcn.png" />
+    <AvatarFallback>CN</AvatarFallback>
   </Avatar>
 </EmptyMedia>
 ```

@@ -40,7 +40,7 @@ import {
     <FieldGroup>
       <Field>
         <FieldLabel>Name</FieldLabel>
-        <Input defaultValue="Pedro Duarte" name="name" />
+        <Input defaultValue="Alex Smith" name="name" />
       </Field>
     </FieldGroup>
     <DialogFooter>

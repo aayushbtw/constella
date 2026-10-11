@@ -203,7 +203,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
     render={<Button aria-label="Account" size="icon" variant="ghost" />}
   >
     <Avatar>
-      <AvatarImage alt="@shadcn" src="https://github.com/shadcn.png" />
+      <AvatarImage alt="@shadcn" src="/avatars/shadcn.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   </DropdownMenuTrigger>

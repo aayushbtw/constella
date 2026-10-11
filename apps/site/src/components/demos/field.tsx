@@ -130,7 +130,7 @@ function FieldFormDemo() {
             <FieldGroup>
               <Field>
                 <FieldLabel>Name on Card</FieldLabel>
-                <Input placeholder="Evil Rabbit" required />
+                <Input placeholder="Jordan Kim" required />
               </Field>
               <Field>
                 <FieldLabel>Card Number</FieldLabel>
@@ -189,7 +189,7 @@ function FieldInputDemo() {
       <FieldGroup>
         <Field>
           <FieldLabel>Username</FieldLabel>
-          <Input placeholder="Max Leiter" />
+          <Input placeholder="Sam Lee" />
           <FieldDescription>
             Choose a unique username for your account.
           </FieldDescription>

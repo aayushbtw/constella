@@ -93,22 +93,22 @@ function SkeletonCardDemo() {
 
 const people = [
   {
-    email: "shadcn@vercel.com",
-    initials: "SC",
+    email: "shadcn@acme.com",
+    initials: "CN",
     name: "shadcn",
-    src: "https://github.com/shadcn.png",
+    src: "/avatars/shadcn.png",
   },
   {
-    email: "maxleiter@vercel.com",
-    initials: "ML",
-    name: "maxleiter",
-    src: "https://github.com/maxleiter.png",
+    email: "emilkowalski@acme.com",
+    initials: "EK",
+    name: "emilkowalski",
+    src: "/avatars/emilkowalski.png",
   },
   {
-    email: "evilrabbit@vercel.com",
+    email: "evilrabbit@acme.com",
     initials: "ER",
     name: "evilrabbit",
-    src: "https://github.com/evilrabbit.png",
+    src: "/avatars/evilrabbit.png",
   },
 ];
 

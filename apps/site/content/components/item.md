@@ -171,8 +171,8 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 ```tsx
 <ItemMedia>
   <Avatar size="lg">
-    <AvatarImage alt="" src="https://github.com/shadcn.png" />
-    <AvatarFallback>SC</AvatarFallback>
+    <AvatarImage alt="" src="/avatars/shadcn.png" />
+    <AvatarFallback>CN</AvatarFallback>
   </Avatar>
 </ItemMedia>
 ```

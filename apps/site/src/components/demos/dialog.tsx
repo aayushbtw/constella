@@ -53,11 +53,11 @@ function DialogDemo() {
           <FieldGroup>
             <Field>
               <FieldLabel>Name</FieldLabel>
-              <Input defaultValue="Pedro Duarte" name="name" />
+              <Input defaultValue="Alex Smith" name="name" />
             </Field>
             <Field>
               <FieldLabel>Username</FieldLabel>
-              <Input defaultValue="@peduarte" name="username" />
+              <Input defaultValue="@alex" name="username" />
             </Field>
           </FieldGroup>
           <DialogFooter>

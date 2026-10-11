@@ -26,48 +26,48 @@ const panorama = `data:image/svg+xml,${encodeURIComponent(
 
 const demoPeople: Person[] = [
   {
-    email: "shadcn@vercel.com",
-    initials: "SC",
+    email: "shadcn@acme.com",
+    initials: "CN",
     name: "shadcn",
-    src: "https://github.com/shadcn.png",
+    src: "/avatars/shadcn.png",
   },
   {
-    email: "maxleiter@vercel.com",
-    initials: "ML",
-    name: "maxleiter",
-    src: "https://github.com/maxleiter.png",
+    email: "emilkowalski@acme.com",
+    initials: "EK",
+    name: "emilkowalski",
+    src: "/avatars/emilkowalski.png",
   },
   {
-    email: "evilrabbit@vercel.com",
+    email: "evilrabbit@acme.com",
     initials: "ER",
     name: "evilrabbit",
-    src: "https://github.com/evilrabbit.png",
+    src: "/avatars/evilrabbit.png",
   },
 ];
 
 const worstPeople: Person[] = [
   {
-    email: "bartholomew.fitzgerald@northwind-industries-holdings.example.com",
+    email: "bartholomew.fitzgerald-worthington.accounts-payable@acme.com",
     initials: "AW",
     name: "Aleksandra Wiśniewska-Kowalczyk",
     src: "/break/missing-avatar.png",
   },
   { email: "a@b.co", initials: "J", name: "Jo" },
   {
-    email: "first.last+billing-notifications@example.com",
+    email: "first.last+billing-notifications@acme.com",
     initials: "CAM",
     name: "Christopher Alexander Montgomery III",
     src: panorama,
   },
-  { email: "wang.xiuying@example.cn", initials: "王", name: "王秀英" },
-  { email: "fox@example.com", initials: "🦊", name: "🦊 Fox" },
+  { email: "wang.xiuying@acme.com", initials: "王", name: "王秀英" },
+  { email: "fox@acme.com", initials: "🦊", name: "🦊 Fox" },
   {
-    email: "hanh.dang@example.vn",
+    email: "hanh.dang@acme.com",
     initials: "ĐH",
     name: "Đặng Thị Ngọc Hân",
   },
   {
-    email: "nour@example.com",
+    email: "nour@acme.com",
     initials: "نع",
     name: "نور الهدى عبد الرحمن",
   },
@@ -87,7 +87,7 @@ const firstNames = [
 const hugePeople: Person[] = Array.from({ length: 1284 }, (_, index) => {
   const name = `${firstNames[index % firstNames.length]} ${index + 1}`;
   return {
-    email: `member-${index + 1}@northwind-industries-holdings.example.com`,
+    email: `member-${index + 1}@acme.com`,
     initials: name.slice(0, 1),
     name,
   };
@@ -116,7 +116,7 @@ const text = {
   markup: "<script>alert(1)</script> &amp; **bold**",
   status: "Invitation expired 12 days ago",
   tag: "customer-feedback-from-enterprise-onboarding",
-  url: "https://example.com/workspaces/acme/projects/q3-launch/docs/9f8e7d6c5b4a?tab=comments&filter=unresolved",
+  url: "https://acme.com/workspaces/acme/projects/q3-launch/docs/9f8e7d6c5b4a?tab=comments&filter=unresolved",
   uuid: "9f8e7d6c-5b4a-4c3d-8e2f-1a0b9c8d7e6f",
 } as const;
 

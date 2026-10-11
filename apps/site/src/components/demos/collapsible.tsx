@@ -149,7 +149,7 @@ function CollapsibleDemo() {
     <DemoRow sx={styles.stage}>
       <Collapsible {...stylex.props(styles.root)}>
         <div {...stylex.props(styles.header)}>
-          @peduarte starred 3 repositories
+          @alex starred 3 repositories
           <CollapsibleTrigger
             render={
               <Button aria-label="Toggle" size="icon-sm" variant="ghost" />

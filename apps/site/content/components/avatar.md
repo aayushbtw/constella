@@ -7,7 +7,7 @@ description: An image element with a fallback for representing the user.
 
 ```tsx
 <Avatar>
-  <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+  <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
 </Avatar>
 ```
@@ -24,7 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 ```tsx
 <Avatar>
-  <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+  <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
 </Avatar>
 ```
@@ -54,7 +54,7 @@ Use the `size` prop to match the controls beside it.
 
 ```tsx
 <Avatar size="sm">
-  <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+  <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
 </Avatar>
 ```
@@ -86,7 +86,7 @@ Use `AvatarBadge` for a dot on the avatar's corner. Its `status` prop colors it 
 
 ```tsx
 <Avatar>
-  <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+  <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
   <AvatarBadge status="busy" />
 </Avatar>
@@ -100,7 +100,7 @@ Put an icon inside `AvatarBadge`, with or without a `status`.
 
 ```tsx
 <Avatar>
-  <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+  <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
   <AvatarBadge status="online">
     <HugeiconsIcon icon={Tick02Icon} size={sizes.iconXxs} />
@@ -117,11 +117,11 @@ Use `AvatarGroup` to overlap avatars.
 ```tsx
 <AvatarGroup>
   <Avatar>
-    <AvatarImage alt="@shadcn" src="https://github.com/shadcn.png" />
+    <AvatarImage alt="@shadcn" src="/avatars/shadcn.png" />
     <AvatarFallback>CN</AvatarFallback>
   </Avatar>
   <Avatar>
-    <AvatarImage alt="@evilrabbit" src="https://github.com/evilrabbit.png" />
+    <AvatarImage alt="@evilrabbit" src="/avatars/evilrabbit.png" />
     <AvatarFallback>ER</AvatarFallback>
   </Avatar>
 </AvatarGroup>
@@ -136,11 +136,11 @@ Use `AvatarGroupCount` for the avatars left out.
 ```tsx
 <AvatarGroup>
   <Avatar>
-    <AvatarImage alt="@shadcn" src="https://github.com/shadcn.png" />
+    <AvatarImage alt="@shadcn" src="/avatars/shadcn.png" />
     <AvatarFallback>CN</AvatarFallback>
   </Avatar>
   <Avatar>
-    <AvatarImage alt="@evilrabbit" src="https://github.com/evilrabbit.png" />
+    <AvatarImage alt="@evilrabbit" src="/avatars/evilrabbit.png" />
     <AvatarFallback>ER</AvatarFallback>
   </Avatar>
   <AvatarGroupCount>+3</AvatarGroupCount>
@@ -156,7 +156,7 @@ Put an icon inside `AvatarGroupCount` in place of the number.
 ```tsx
 <AvatarGroup>
   <Avatar>
-    <AvatarImage alt="@shadcn" src="https://github.com/shadcn.png" />
+    <AvatarImage alt="@shadcn" src="/avatars/shadcn.png" />
     <AvatarFallback>CN</AvatarFallback>
   </Avatar>
   <AvatarGroupCount>
@@ -177,7 +177,7 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
     render={<Button aria-label="Account" size="icon" variant="ghost" />}
   >
     <Avatar>
-      <AvatarImage alt="@aayushbtw" src="https://github.com/aayushbtw.png" />
+      <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
       <AvatarFallback>AY</AvatarFallback>
     </Avatar>
   </DropdownMenuTrigger>

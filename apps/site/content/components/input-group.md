@@ -219,7 +219,7 @@ Put an icon in an `InputGroupAddon`. An addon can hold more than one.
 
 ## Text
 
-Use `InputGroupText` for a prefix, a suffix or a hint. A text prefix or suffix sits close to the value, so `https://` and `example.com` read as one.
+Use `InputGroupText` for a prefix, a suffix or a hint. A text prefix or suffix sits close to the value, so `https://` and `acme.com` read as one.
 
 <!-- ::demo name="input-group-text" -->
 
@@ -228,7 +228,7 @@ Use `InputGroupText` for a prefix, a suffix or a hint. A text prefix or suffix s
   <InputGroupAddon>
     <InputGroupText>https://</InputGroupText>
   </InputGroupAddon>
-  <InputGroupInput aria-label="Website" placeholder="example.com" />
+  <InputGroupInput aria-label="Website" placeholder="acme.com" />
   <InputGroupAddon align="inline-end">
     <InputGroupText>.com</InputGroupText>
   </InputGroupAddon>
@@ -245,7 +245,7 @@ Use `InputGroupButton` for an action inside the input. It's a ghost `Button` tha
 <InputGroup>
   <InputGroupInput
     aria-label="Profile link"
-    placeholder="https://x.com/shadcn"
+    placeholder="https://x.com/acme"
     readOnly
   />
   <InputGroupAddon align="inline-end">

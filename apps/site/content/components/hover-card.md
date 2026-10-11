@@ -7,9 +7,9 @@ description: Previews what's behind a link while the pointer rests on it.
 
 ```tsx
 <HoverCard>
-  <HoverCardTrigger href="https://nextjs.org">@nextjs</HoverCardTrigger>
+  <HoverCardTrigger href="https://acme.com">@acme</HoverCardTrigger>
   <HoverCardContent>
-    The React Framework – created and maintained by @vercel.
+    Tools for teams that ship. Built and run by Acme.
   </HoverCardContent>
 </HoverCard>
 ```

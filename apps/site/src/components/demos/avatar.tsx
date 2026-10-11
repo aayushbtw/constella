@@ -52,10 +52,7 @@ const people = [
 function Person({ fallback, handle }: { fallback: string; handle: string }) {
   return (
     <>
-      <AvatarImage
-        alt={`@${handle}`}
-        src={`https://github.com/${handle}.png`}
-      />
+      <AvatarImage alt={`@${handle}`} src={`/avatars/${handle}.png`} />
       <AvatarFallback>{fallback}</AvatarFallback>
     </>
   );

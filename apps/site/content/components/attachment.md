@@ -96,7 +96,7 @@ Use `variant="image"` on `AttachmentMedia` for a picture, with `orientation="ver
     <img alt="" src={url} />
   </AttachmentMedia>
   <AttachmentContent>
-    <AttachmentTitle>shadcn.png</AttachmentTitle>
+    <AttachmentTitle>workspace.png</AttachmentTitle>
     <AttachmentDescription>PNG · 180 KB</AttachmentDescription>
   </AttachmentContent>
 </Attachment>

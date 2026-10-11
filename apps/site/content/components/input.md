@@ -110,7 +110,7 @@ Inputs with a [Select](/docs/components/select) in a `FieldGroup`, for a whole f
   <FieldGroup>
     <Field>
       <FieldLabel>Name</FieldLabel>
-      <Input placeholder="Evil Rabbit" required />
+      <Input placeholder="Jordan Kim" required />
     </Field>
     <Field>
       <FieldLabel>Country</FieldLabel>
@@ -197,7 +197,7 @@ Put a [Badge](/docs/components/badge) in the `FieldLabel` to mark the field.
     Webhook URL
     <Badge>Beta</Badge>
   </FieldLabel>
-  <Input placeholder="https://api.example.com/webhook" type="url" />
+  <Input placeholder="https://api.acme.com/webhook" type="url" />
 </Field>
 ```
 
@@ -247,7 +247,7 @@ Use `FieldGroup` to stack several fields into a form.
   </Field>
   <Field>
     <FieldLabel>Email</FieldLabel>
-    <Input placeholder="name@example.com" type="email" />
+    <Input placeholder="name@acme.com" type="email" />
     <FieldDescription>We’ll send updates to this address.</FieldDescription>
   </Field>
   <Field orientation="horizontal">
@@ -271,7 +271,7 @@ Use [Input Group](/docs/components/input-group) to put icons, text or buttons in
 <Field>
   <FieldLabel>Website URL</FieldLabel>
   <InputGroup>
-    <InputGroupInput placeholder="example.com" />
+    <InputGroupInput placeholder="acme.com" />
     <InputGroupAddon>
       <InputGroupText>https://</InputGroupText>
     </InputGroupAddon>

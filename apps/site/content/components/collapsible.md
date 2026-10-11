@@ -8,7 +8,7 @@ description: Shows and hides a section of content.
 ```tsx
 <Collapsible>
   <div>
-    @peduarte starred 3 repositories
+    @alex starred 3 repositories
     <CollapsibleTrigger
       render={<Button aria-label="Toggle" size="icon-sm" variant="ghost" />}
     >

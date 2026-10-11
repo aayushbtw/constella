@@ -45,34 +45,37 @@ const styles = stylex.create({
 });
 
 interface Profile {
-  avatar: string;
+  avatar?: string;
   bio: string;
   handle: string;
+  href: string;
   initials: string;
   joined: string;
 }
 
 const profiles = {
-  nextjs: {
-    avatar: "https://github.com/vercel.png",
-    bio: "The React Framework – created and maintained by @vercel.",
-    handle: "@nextjs",
-    initials: "VC",
+  acme: {
+    bio: "Tools for teams that ship. Built and run by Acme.",
+    handle: "@acme",
+    href: "https://acme.com",
+    initials: "AC",
     joined: "Joined December 2021",
   },
   shadcn: {
-    avatar: "https://github.com/shadcn.png",
+    avatar: "/avatars/shadcn.png",
     bio: "Building shadcn/ui, beautifully designed components you copy and paste.",
     handle: "@shadcn",
-    initials: "SC",
-    joined: "Joined March 2018",
+    href: "https://github.com/shadcn",
+    initials: "CN",
+    joined: "Joined September 2009",
   },
-  base: {
-    avatar: "https://github.com/mui.png",
-    bio: "Unstyled UI components for building accessible web apps and design systems. From the creators of Radix, Floating UI and Material UI.",
-    handle: "@base-ui",
-    initials: "BU",
-    joined: "Joined June 2024",
+  emilkowalski: {
+    avatar: "/avatars/emilkowalski.png",
+    bio: "Design engineer.",
+    handle: "@emilkowalski",
+    href: "https://github.com/emilkowalski",
+    initials: "EK",
+    joined: "Joined February 2018",
   },
 } satisfies Record<string, Profile>;
 
@@ -80,7 +83,9 @@ function ProfileCard({ profile }: { profile: Profile }) {
   return (
     <div {...stylex.props(styles.row)}>
       <Avatar>
-        <AvatarImage alt="" src={profile.avatar} />
+        {profile.avatar === undefined ? null : (
+          <AvatarImage alt="" src={profile.avatar} />
+        )}
         <AvatarFallback>{profile.initials}</AvatarFallback>
       </Avatar>
       <div {...stylex.props(styles.text)}>
@@ -98,11 +103,11 @@ function HoverCardDemo() {
   return (
     <DemoRow>
       <HoverCard>
-        <HoverCardTrigger href="https://nextjs.org" {...link}>
-          @nextjs
+        <HoverCardTrigger href="https://acme.com" {...link}>
+          @acme
         </HoverCardTrigger>
         <HoverCardContent>
-          <ProfileCard profile={profiles.nextjs} />
+          <ProfileCard profile={profiles.acme} />
         </HoverCardContent>
       </HoverCard>
     </DemoRow>
@@ -116,7 +121,7 @@ function Mention({ id }: { id: keyof typeof profiles }) {
   return (
     <HoverCardTrigger
       handle={mentions}
-      href={`https://github.com/${id}`}
+      href={profile.href}
       payload={profile}
       {...stylex.props(styles.mention)}
     >
@@ -129,8 +134,8 @@ function HoverCardTriggersDemo() {
   return (
     <DemoRow>
       <p {...stylex.props(styles.sentence)}>
-        Built by <Mention id="shadcn" /> on <Mention id="base" />, and
-        documented with <Mention id="nextjs" />.
+        Follow <Mention id="shadcn" />, <Mention id="emilkowalski" /> and{" "}
+        <Mention id="acme" /> for updates.
       </p>
       <HoverCard handle={mentions}>
         {({ payload }) => (

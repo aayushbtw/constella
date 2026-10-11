@@ -174,35 +174,35 @@ interface Payment {
 const payments: Payment[] = [
   {
     amount: 316,
-    email: "ken99@example.com",
+    email: "ken99@acme.com",
     id: "m5gr84i9",
     status: "success",
   },
   {
     amount: 242,
-    email: "abe45@example.com",
+    email: "abe45@acme.com",
     id: "3u1reuv4",
     status: "success",
   },
   {
     amount: 837,
-    email: "monserrat44@example.com",
+    email: "monserrat44@acme.com",
     id: "derv1ws0",
     status: "processing",
   },
   {
     amount: 874,
-    email: "silas22@example.com",
+    email: "silas22@acme.com",
     id: "5kma53ae",
     status: "success",
   },
   {
     amount: 721,
-    email: "carmella@example.com",
+    email: "carmella@acme.com",
     id: "bhqecj4p",
     status: "failed",
   },
-  { amount: 129, email: "dee@example.com", id: "p0q8x2nz", status: "pending" },
+  { amount: 129, email: "dee@acme.com", id: "p0q8x2nz", status: "pending" },
 ];
 
 const statusBadges = {
@@ -305,7 +305,7 @@ const statuses = ["success", "processing", "failed", "pending"] as const;
 
 const ledger: Payment[] = Array.from({ length: 36 }, (_, index) => ({
   amount: (((index + 7) * 137) % 990) + 10,
-  email: `${names[index % names.length]}${index + 1}@example.com`,
+  email: `${names[index % names.length]}${index + 1}@acme.com`,
   id: `pay_${String(index + 1).padStart(3, "0")}`,
   status: statuses[(index * 7) % statuses.length] ?? "pending",
 }));

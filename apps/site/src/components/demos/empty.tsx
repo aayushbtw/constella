@@ -105,8 +105,8 @@ function EmptyAvatarDemo() {
         <EmptyHeader>
           <EmptyMedia>
             <Avatar size="lg">
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>SC</AvatarFallback>
+              <AvatarImage alt="" src="/avatars/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </EmptyMedia>
           <EmptyTitle>User Offline</EmptyTitle>
