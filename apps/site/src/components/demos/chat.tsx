@@ -13,7 +13,15 @@ import { useChat } from "@tanstack/ai-react";
 import type { UIMessage } from "@tanstack/ai-react";
 import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentGroup,
+  AttachmentMedia,
+  AttachmentTitle,
+} from "@/components/ui/attachment";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { InputGroupButton } from "@/components/ui/input-group";
@@ -80,21 +88,6 @@ const styles = stylex.create({
     width: 560,
   },
   scroller: { flex: 1 },
-  remove: {
-    alignItems: "center",
-    backgroundColor: "transparent",
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
-    color: colors.textMuted,
-    cursor: "pointer",
-    display: "flex",
-    paddingBlockEnd: 0,
-    paddingBlockStart: 0,
-    paddingInlineEnd: 0,
-    paddingInlineStart: 0,
-  },
   thread: {
     gap: space.lg,
     paddingBlockEnd: space.md,
@@ -286,22 +279,28 @@ function PromptInputHeaderDemo() {
         >
           {files.length > 0 && (
             <PromptInputHeader>
-              {files.map((file) => (
-                <Badge key={file} size="lg" variant="outline">
-                  <Glyph data-icon="inline-start" icon={File01Icon} />
-                  {file}
-                  <button
-                    aria-label={`Remove ${file}`}
-                    onClick={() => {
-                      setFiles(files.filter((other) => other !== file));
-                    }}
-                    type="button"
-                    {...stylex.props(styles.remove)}
-                  >
-                    <Glyph icon={Cancel01Icon} />
-                  </button>
-                </Badge>
-              ))}
+              <AttachmentGroup>
+                {files.map((file) => (
+                  <Attachment key={file} size="sm">
+                    <AttachmentMedia>
+                      <Glyph icon={File01Icon} />
+                    </AttachmentMedia>
+                    <AttachmentContent>
+                      <AttachmentTitle>{file}</AttachmentTitle>
+                    </AttachmentContent>
+                    <AttachmentActions>
+                      <AttachmentAction
+                        aria-label={`Remove ${file}`}
+                        onClick={() => {
+                          setFiles(files.filter((other) => other !== file));
+                        }}
+                      >
+                        <Glyph icon={Cancel01Icon} />
+                      </AttachmentAction>
+                    </AttachmentActions>
+                  </Attachment>
+                ))}
+              </AttachmentGroup>
             </PromptInputHeader>
           )}
           <PromptInputTextarea

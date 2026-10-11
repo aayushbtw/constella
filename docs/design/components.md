@@ -10,6 +10,10 @@ A box like a card, a control's radius and padding: `edge` border, `raised` fill.
 
 Wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
 
+## Attachment
+
+A file as a small `raised` card on an `edge`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerFillSubtle` and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group scrolls sideways, snaps and fades its edges.
+
 ## Avatar
 
 Follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through. Its badge's status is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`.

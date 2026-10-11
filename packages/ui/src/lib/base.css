@@ -305,8 +305,12 @@
     opacity: 0;
   }
 
-  /* StyleX can't style a child it didn't render, so an item's image fills its media box here. */
-  :where([data-slot="item-media"][data-variant="image"]) > :where(img) {
+  /* StyleX can't style a child it didn't render, so an item's or attachment's image fills its media box here. */
+  :where(
+      [data-slot="item-media"][data-variant="image"],
+      [data-slot="attachment-media"][data-variant="image"]
+    )
+    > :where(img) {
     height: 100%;
     object-fit: cover;
     width: 100%;

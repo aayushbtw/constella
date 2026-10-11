@@ -13,6 +13,14 @@ import {
   AlertDialogSizeDemo,
 } from "~/components/demos/alert-dialog";
 import {
+  AttachmentDemo,
+  AttachmentGroupDemo,
+  AttachmentImageDemo,
+  AttachmentSizeDemo,
+  AttachmentStateDemo,
+  AttachmentTriggerDemo,
+} from "~/components/demos/attachment";
+import {
   AvatarBadgeDemo,
   AvatarBadgeIconDemo,
   AvatarDemo,
@@ -342,6 +350,12 @@ const demos = {
   "alert-dialog-async": AlertDialogAsyncDemo,
   "alert-dialog-danger": AlertDialogDangerDemo,
   "alert-dialog-size": AlertDialogSizeDemo,
+  attachment: AttachmentDemo,
+  "attachment-group": AttachmentGroupDemo,
+  "attachment-image": AttachmentImageDemo,
+  "attachment-size": AttachmentSizeDemo,
+  "attachment-state": AttachmentStateDemo,
+  "attachment-trigger": AttachmentTriggerDemo,
   avatar: AvatarDemo,
   "avatar-badge": AvatarBadgeDemo,
   "avatar-badge-icon": AvatarBadgeIconDemo,

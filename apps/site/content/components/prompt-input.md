@@ -53,18 +53,20 @@ PromptInput
 
 ## Prompt Input Header
 
-Put attachments in a `PromptInputHeader`, above the text. A submit can send files with no text.
+Put an [Attachment](/docs/components/attachment) group in a `PromptInputHeader`, above the text. A submit can send files with no text.
 
 <!-- ::demo name="prompt-input-header" -->
 
 ```tsx
 <PromptInput onSubmit={send}>
   <PromptInputHeader>
-    {files.map((file) => (
-      <Badge key={file} variant="outline">
-        {file}
-      </Badge>
-    ))}
+    <AttachmentGroup>
+      {files.map((file) => (
+        <Attachment key={file} size="sm">
+          …
+        </Attachment>
+      ))}
+    </AttachmentGroup>
   </PromptInputHeader>
   <PromptInputTextarea />
   <PromptInputFooter>…</PromptInputFooter>

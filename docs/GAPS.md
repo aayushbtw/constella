@@ -60,11 +60,11 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ## Chat parts
 
-netigen builds these today. Each could become a Constella part once the components above exist.
+netigen builds these today. Each could become a Constella part once the components above exist. Built so far for them: Marker, Shimmer, Scroll Fade.
 
 - [ ] **Tool steps**: a collapsible list of steps, each with a status and a live label.
 - [ ] **Suggestions**: starter prompts as chips.
-- [ ] **Attachment**: a file tile with upload progress.
+- [x] **Attachment**: a file tile with upload progress.
 - [ ] **Citation**: a pill that opens a HoverCard.
 - [ ] **Model picker**: a Command of models with their details.
 - [ ] **Approval**: a card asking to allow a tool call.
