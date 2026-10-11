@@ -10,7 +10,7 @@ Text is Inter; code is Geist Mono with ligatures off, so `</` and `...` read as 
 
 ## Demo stage
 
-The stage color, a step below the page in both themes, so the preview sits in a well instead of washing into the page and controls lift off it: `gray-2` in light, `#050505` in dark (Radix has nothing below `gray-1`).
+The stage is the page's own `background`, so a demo looks as it will in an app; the tile's inset edge frames it.
 
 ## Home page
 

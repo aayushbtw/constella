@@ -1,10 +1,6 @@
+/* The page's own color, so a demo looks as it will in an app. */
 :root {
-  --stage: var(--neutral-2);
-}
-
-/* Radix has no step below gray-1, so dark sets its own. */
-.dark {
-  --stage: #050505;
+  --stage: var(--background);
 }
 
 ::view-transition-old(root),
