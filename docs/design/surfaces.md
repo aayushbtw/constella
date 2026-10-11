@@ -4,7 +4,12 @@
 
 Controls (buttons, inputs) have a real border for their edge and a shadow for their height: the edge takes space, so what the user sees is what's laid out, and a shadow ring would draw outside the box, look 2px larger and double up at a button group's seams. The height is a ladder of soft drops with no ring: `shadows.control` at rest, `controlHover` a step higher, `controlPressed` nearly flat while held, and `primary`/`primaryPressed` for the solid fill. Only pressables climb it (an outline button, a select trigger); a field stays at rest. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill paints under the translucent edge and muddies it, and bleeds through anti-aliased corners.
 
-The primary button is the one control with depth of its own (`shadows.primary`): a white-a3 line inside its top edge and a black-a3 one inside its bottom, over a small drop. In dark, where the fill is near-white, the bottom shade does the work.
+The primary button is the one control with depth of its own (`shadows.primary`): a lit line inside its top edge (`--primary-lit`) and a shaded one inside its bottom (`--primary-shade`), over a small drop. They're per-theme so both read lit from above:
+
+| Theme | Lit | Shade | Why |
+| --- | --- | --- | --- |
+| Light | `white-a3` | `black-a3` | A faint white line shows on the dark fill. |
+| Dark | `white-a11` | `black-a1` | Near-white fill hides a faint highlight and turns any real shade into a band. |
 
 A slider thumb rides above its track, so it does the same: `shadows.thumb` is a gray ring plus a drop shadow. `shadows.control` alone vanishes on the dark page and leaves the thumb flat. A switch thumb takes `control`: its fill does the separating.
 

@@ -105,6 +105,9 @@
     --well: var(--neutral-a2);
     /* A mark on a `fillStrong` track, like a switch's off thumb: white in light; dark takes step 12 to stand off its track. */
     --on-fill-strong: #fff;
+    /* The primary fill's bevel: dark's near-white fill hides a faint highlight and makes any shade a band. */
+    --primary-lit: var(--white-a3);
+    --primary-shade: var(--black-a3);
     --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
     --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
     --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
@@ -119,6 +122,8 @@
     --raised: var(--neutral-2);
     --well: var(--neutral-a3);
     --on-fill-strong: var(--neutral-12);
+    --primary-lit: var(--white-a11);
+    --primary-shade: var(--black-a1);
     --danger: var(--red-11);
     --info: var(--blue-11);
     --success: var(--green-11);
