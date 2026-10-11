@@ -1,7 +1,6 @@
 ---
 title: Scroll Fade
 description: Fades a scroller's edges while there's more content past them.
-draft: true
 ---
 
 <!-- ::demo name="scroll-fade" -->

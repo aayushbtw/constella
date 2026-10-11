@@ -2,7 +2,6 @@
 title: Attachment
 description: A file or image with its name, details, upload state and actions.
 section: AI
-draft: true
 ---
 
 <!-- ::demo name="attachment" -->
