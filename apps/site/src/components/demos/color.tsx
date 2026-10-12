@@ -30,9 +30,8 @@ const neutrals = [
   { kind: "fill", name: "fillSubtle", step: "gray-a2" },
   { kind: "fill", name: "fill", step: "gray-a3" },
   { kind: "fill", name: "fillStrong", step: "gray-a4" },
-  { kind: "edge", name: "edgeFaint", step: "gray-a3" },
-  { kind: "edge", name: "edgeSubtle", step: "gray-a4" },
-  { kind: "edge", name: "edge", step: "gray-a6" },
+  { kind: "edge", name: "edgeSubtle", step: "gray-4" },
+  { kind: "edge", name: "edge", step: "gray-6" },
   { kind: "fill", name: "accent", step: "gray-12" },
 ] as const satisfies readonly { kind: Kind; name: string; step: string }[];
 
@@ -119,7 +118,7 @@ const styles = stylex.create({
   },
   // A rule between neutrals and status, in the panel's own theme.
   group: {
-    borderBlockStartColor: "var(--gray-a4)",
+    borderBlockStartColor: "var(--gray-4)",
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     marginBlockStart: space.xs,

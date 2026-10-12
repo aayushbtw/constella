@@ -8,7 +8,7 @@ order: 1
 
 ### Scales
 
-Every color comes from a [Radix Colors](https://www.radix-ui.com/colors) scale of 12 steps. Text uses the solid steps; fills and edges use the translucent alpha versions, so they read the same on any surface.
+Every color comes from a [Radix Colors](https://www.radix-ui.com/colors) scale of 12 steps. Text and edges use the solid steps, so nothing shows through an edge; fills use the translucent alpha versions, so they read the same on any surface.
 
 <!-- ::demo name="color-scales" -->
 
@@ -26,8 +26,7 @@ Components ask for a role, never a step, so every role flips with the theme. Eac
 | `fillSubtle` | Hover |
 | `fill` | Selected |
 | `fillStrong` | Pressed |
-| `edgeFaint` | The composer's ring |
-| `edgeSubtle` | Dividers |
+| `edgeSubtle` | Dividers, the composer's ring |
 | `edge` | Control and box borders |
 | `accent` | The one solid fill, with `onAccent` text; the theme's brand color |
 | `inverted` | Tooltips: the ink surface, with `onInverted` text |

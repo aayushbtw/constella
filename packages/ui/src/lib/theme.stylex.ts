@@ -72,9 +72,9 @@ export const theme = stylex.defineVars({
   "--fill": "var(--neutral-a3)",
   "--fill-strong": "var(--neutral-a4)",
   "--fill-opaque": "var(--neutral-3)",
-  "--edge-faint": "var(--neutral-a3)",
-  "--edge-subtle": "var(--neutral-a4)",
-  "--edge": "var(--neutral-a6)",
+  // Edges are solid steps: a translucent one shows whatever it crosses.
+  "--edge-subtle": "var(--neutral-4)",
+  "--edge": "var(--neutral-6)",
   "--inverted": "var(--neutral-12)",
   "--on-inverted": "var(--neutral-1)",
   "--font-mono":
@@ -84,7 +84,7 @@ export const theme = stylex.defineVars({
   "--overlay": "var(--black-a5)",
   "--accent-solid": "var(--neutral-12)",
   "--on-accent": "var(--neutral-1)",
-  "--focus-ring": "var(--neutral-a8)",
+  "--focus-ring": "var(--neutral-8)",
   "--selection": "var(--neutral-a5)",
   "--radius": "8px",
   "--size-control-xxs": "20px",

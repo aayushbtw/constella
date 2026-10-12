@@ -14,7 +14,6 @@ export const colors = stylex.defineVars({
   chart5: "var(--chart-5)",
   chart6: "var(--chart-6)",
   edge: "var(--edge)",
-  edgeFaint: "var(--edge-faint)",
   edgeSubtle: "var(--edge-subtle)",
   fill: "var(--fill)",
   fillOpaque: "var(--fill-opaque)",
@@ -90,19 +89,19 @@ export const shadows = stylex.defineConsts({
   controlPressed: "0 1px 1px -1px var(--black-a2)",
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   dialog:
-    "0 0 0 1px var(--neutral-a4), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
+    "0 0 0 1px var(--edge-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
   invalid: "0 0 0 2px var(--red-a4)",
   composer:
-    "0 0 0 0.5px var(--edge-faint), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+    "0 0 0 0.5px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
   composerInvalid: "0 0 0 1px var(--danger), 0 0 0 3px var(--red-a4)",
   popover:
-    "0 0 0 1px var(--neutral-a4), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+    "0 0 0 1px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
   primary:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
   primaryPressed:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 1px -1px var(--black-a3)",
-  thumb: "0 0 0 1px var(--neutral-a6), 0 1px 3px var(--black-a5)",
+  thumb: "0 0 0 1px var(--edge), 0 1px 3px var(--black-a5)",
 });
 
 // The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.

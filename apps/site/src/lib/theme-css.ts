@@ -123,9 +123,8 @@ const roles: Entry[] = [
   ["--fill", "var(--neutral-a3)"],
   ["--fill-strong", "var(--neutral-a4)"],
   ["--fill-opaque", "var(--neutral-3)"],
-  ["--edge-faint", "var(--neutral-a3)"],
-  ["--edge-subtle", "var(--neutral-a4)"],
-  ["--edge", "var(--neutral-a6)"],
+  ["--edge-subtle", "var(--neutral-4)"],
+  ["--edge", "var(--neutral-6)"],
   ["--inverted", "var(--neutral-12)"],
   ["--on-inverted", "var(--neutral-1)"],
   [
@@ -176,7 +175,7 @@ function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
     ...roles,
     ["--accent-solid", ink ? "var(--neutral-12)" : "var(--accent-9)"],
     ["--on-accent", ink ? "var(--neutral-1)" : "var(--accent-contrast)"],
-    ["--focus-ring", ink ? "var(--neutral-a8)" : "var(--accent-a8)"],
+    ["--focus-ring", ink ? "var(--neutral-8)" : "var(--accent-8)"],
     ["--selection", ink ? "var(--neutral-a5)" : "var(--accent-a5)"],
     ["--radius", `${radiusPresets[radius]}px`],
     ...(["xxs", "xs", "sm", "md", "lg"] as const).map((size): Entry => [

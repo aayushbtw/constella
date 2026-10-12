@@ -16,7 +16,7 @@ An `sm` card that names itself by its title. The title leads with a `fill` media
 
 ## Attachment
 
-A file as a small `raised` card on an `edge`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerFillSubtle` and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group scrolls sideways, snaps and fades its edges.
+A file as a small `raised` card on an `edge`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerFillSubtle`, turns the edge `danger` as an invalid field's is, and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group scrolls sideways, snaps and fades its edges.
 
 ## Avatar
 

@@ -102,19 +102,19 @@ const styles = stylex.create({
     },
     borderBlockEndColor: {
       default: colors.edge,
-      ":is([data-state='error'])": colors.dangerFill,
+      ":is([data-state='error'])": colors.danger,
     },
     borderBlockStartColor: {
       default: colors.edge,
-      ":is([data-state='error'])": colors.dangerFill,
+      ":is([data-state='error'])": colors.danger,
     },
     borderInlineEndColor: {
       default: colors.edge,
-      ":is([data-state='error'])": colors.dangerFill,
+      ":is([data-state='error'])": colors.danger,
     },
     borderInlineStartColor: {
       default: colors.edge,
-      ":is([data-state='error'])": colors.dangerFill,
+      ":is([data-state='error'])": colors.danger,
     },
     borderBlockEndStyle: {
       default: "solid",
