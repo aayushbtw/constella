@@ -162,6 +162,8 @@ export const sizes = stylex.defineConsts({
   controlSm: "var(--size-control-sm)",
   controlXs: "var(--size-control-xs)",
   controlXxs: "var(--size-control-xxs)",
+  // A citation pill's widest; a longer publication name truncates.
+  citation: "160px",
   dialog: "384px",
   dialogLg: "512px",
   dialogSm: "320px",

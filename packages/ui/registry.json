@@ -1011,6 +1011,44 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "citation",
+      "type": "registry:ui",
+      "title": "Citation",
+      "description": "A source's pill in an answer, opening a card with its publication, headline and date.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/avatar.json",
+        "https://constella.aayush.cv/r/badge.json",
+        "https://constella.aayush.cv/r/hover-card.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/citation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "suggestions",
+      "type": "registry:ui",
+      "title": "Suggestions",
+      "description": "Starter prompts as a scrolling row of pills, for an empty chat.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/scroll-area.json",
+        "https://constella.aayush.cv/r/scroll-fade.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/suggestions.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

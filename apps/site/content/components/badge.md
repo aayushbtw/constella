@@ -129,7 +129,7 @@ Use the `render` prop to render a link as a badge. Only a link answers hover.
 
 ## Avatar
 
-Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`. **Render the badge as a trigger,** as in `<Badge render={<HoverCardTrigger />}>`, not the trigger as a badge: the trigger's slot would replace the badge's, and the avatar wouldn't size.
+Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`. **Render the badge as a trigger,** as in `<Badge render={<HoverCardTrigger />}>` ([Citation](/docs/components/citation) does), not the trigger as a badge: the trigger's slot would replace the badge's, and the avatar wouldn't size.
 
 <!-- ::demo name="badge-avatar" -->
 

@@ -59,6 +59,10 @@ A clicked legend entry moves the plot for `chart` on `out`; from the keyboard it
 
 The axis takes its final scale at the click, and the marks move to it from where they were. A tick label that arrives, moves or changes fades in from 0.4 on `crossfade` over the same `chart`: the old one is gone at once, so it never starts from nothing. Under `media.reducedMotion` the plot snaps and the labels still fade.
 
+## Citation
+
+A pill capped at `sizes.citation` (160px), its publication name truncating, with the logo as the badge's leading avatar. Every citation opens one shared card, so hovering the next moves it there: the logo and publication in `textSecondary`, the headline in medium `md` clamped to 2 lines, the date in `textMuted`.
+
 ## Collapsible
 
 The one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
@@ -186,6 +190,10 @@ Breathes, `fill` dimming to `opacities.pulse` and back over `durations.pulse` on
 ## Slider
 
 The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which Base UI sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
+
+## Suggestions
+
+`outline` `sm` pill buttons in one row that scrolls sideways with no scrollbar; `scrollFade.x` shows there's more. The row keeps `space.xxs` around the pills so the viewport doesn't clip a focus ring.
 
 ## Switch
 

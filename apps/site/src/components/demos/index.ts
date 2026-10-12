@@ -95,6 +95,7 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
+import { CitationDemo } from "~/components/demos/citation";
 import {
   CollapsibleControlledDemo,
   CollapsibleDemo,
@@ -284,6 +285,7 @@ import {
   SliderVerticalDemo,
 } from "~/components/demos/slider";
 import { SpinnerDemo } from "~/components/demos/spinner";
+import { SuggestionsDemo } from "~/components/demos/suggestions";
 import {
   CopyButtonDemo,
   CopyButtonVariantDemo,
@@ -404,6 +406,7 @@ const demos = {
   "chart-line": ChartLineDemo,
   "chart-pie": ChartPieDemo,
   chat: ChatDemo,
+  citation: CitationDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,
@@ -579,6 +582,7 @@ const demos = {
   "slider-tooltip": SliderTooltipDemo,
   "slider-vertical": SliderVerticalDemo,
   spinner: SpinnerDemo,
+  suggestions: SuggestionsDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,
   "toast-dismiss": ToastDismissDemo,
