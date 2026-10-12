@@ -2,7 +2,7 @@
 
 ## Layout
 
-Only the navigation a reader needs, added as it's needed: a header (name, theme toggle), a sidebar grouped by section (Getting started, Components), and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Content starts right under the header, so a linked section lands at its edge with nothing showing above it. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Sidebar rows sit `space.xxxs` apart, so a hovered row's fill never merges into the active one.
+Only the navigation a reader needs, added as it's needed: a header, a sidebar grouped by section (Getting started, Components, AI, TanStack; Blocks has its own), and an "On this page" outline of the h2s and h3s that marks the section being read. The sidebar appears once it fits beside the content, the outline once both fit; below that the page is one column. Header, sidebar and outline stay put; only the content scrolls. Content starts right under the header, so a linked section lands at its edge with nothing showing above it. Sidebar and outline sit at the window's edges with the content centered between them, so nothing is squeezed together. Sidebar rows sit `space.xxxs` apart, so a hovered row's fill never merges into the active one. The header holds the logo, then Docs, Components and Blocks as `sm` ghost button links, and the theme toggle at the end. The current section reads `textPrimary`, the rest `textSecondary`.
 
 ## Type
 

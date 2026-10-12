@@ -5,7 +5,11 @@ import { parseMarkdown } from "@tanstack/markdown/parser";
 import { defineCollection, defineConfig, directory } from "tomekit";
 import { z } from "zod";
 
-import { checkComponentPage, checkGuidePage } from "./src/lib/lint/index.ts";
+import {
+  checkBlockPage,
+  checkComponentPage,
+  checkGuidePage,
+} from "./src/lib/lint/index.ts";
 
 // Without a `tagName`, every comment component renders as the same element and
 // the components map can't tell `demo` from `install`.
@@ -52,6 +56,7 @@ function pages(path: string, check?: typeof checkComponentPage) {
 
 export default defineConfig({
   collections: {
+    blocks: pages("content/blocks", checkBlockPage),
     components: pages("content/components", checkComponentPage),
     docs: pages("content/docs", checkGuidePage),
   },

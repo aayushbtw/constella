@@ -81,14 +81,14 @@ const styles = stylex.create({
 interface SidebarGroup {
   items: { draft?: boolean; slug: string; title: string }[];
   label: string;
-  to: "/docs/$slug" | "/docs/components/$slug";
+  to: "/blocks/$slug" | "/docs/$slug" | "/docs/components/$slug";
 }
 
-function Sidebar({ groups }: { groups: SidebarGroup[] }) {
+function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
   const matchRoute = useMatchRoute();
 
   return (
-    <nav aria-label="Docs" {...stylex.props(styles.sidebar)}>
+    <nav aria-label={name} {...stylex.props(styles.sidebar)}>
       {groups
         .filter(({ items }) => items.length > 0)
         .map(({ items, label, to }) => (
@@ -123,3 +123,4 @@ function Sidebar({ groups }: { groups: SidebarGroup[] }) {
 }
 
 export { Sidebar };
+export type { SidebarGroup };

@@ -1,6 +1,6 @@
 # Docs
 
-Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<slug>`), components in `components` (`/docs/components/<slug>`). Both are parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
+Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<slug>`), components in `components` (`/docs/components/<slug>`), blocks in `blocks` (`/blocks/<slug>`, with their own sidebar). A block page starts like a component's: the preview, Installation, then Usage. All three are parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
 
 A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page whose component or demos use a draft is a draft too. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components; chat parts take `section: AI`.
 

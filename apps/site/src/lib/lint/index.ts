@@ -1,5 +1,6 @@
 // The docs/DOCS.md rules that can drift, checked as each page is parsed, so a broken page fails dev and the build.
 
+import { blockSkeleton } from "./rules/block-skeleton.ts";
 import { headingNames } from "./rules/heading-names.ts";
 import { nestByTopic } from "./rules/nest-by-topic.ts";
 import { requireComposition } from "./rules/require-composition.ts";
@@ -14,6 +15,11 @@ const componentRules = {
   "require-composition": requireComposition,
   "require-skeleton": requireSkeleton,
   "section-order": sectionOrder,
+} satisfies Record<string, PageRule>;
+
+const blockRules = {
+  "block-skeleton": blockSkeleton,
+  "nest-by-topic": nestByTopic,
 } satisfies Record<string, PageRule>;
 
 const guideRules = {
@@ -45,9 +51,14 @@ function checkComponentPage(body: string, title: string) {
   });
 }
 
+function checkBlockPage(body: string, title: string) {
+  const found = headings(body);
+  run(blockRules, { body, headings: found, parts: [], sections: found, title });
+}
+
 function checkGuidePage(body: string, title: string) {
   const found = headings(body);
   run(guideRules, { body, headings: found, parts: [], sections: found, title });
 }
 
-export { checkComponentPage, checkGuidePage };
+export { checkBlockPage, checkComponentPage, checkGuidePage };
