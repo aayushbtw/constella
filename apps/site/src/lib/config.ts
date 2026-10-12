@@ -6,7 +6,7 @@ export const config = {
   siteUrl:
     process.env.NODE_ENV === "production"
       ? "https://constella.aayush.cv"
-      : "http://localhost:3001",
+      : "http://localhost:8080",
   socials: {
     github: "aayushbtw",
     twitter: "aayushbtw",
