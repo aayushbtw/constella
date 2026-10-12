@@ -8,6 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Badge,
   BadgeDot,
@@ -34,6 +35,12 @@ const sizeLabels = {
   lg: "Large",
   sm: "Small",
 } satisfies Record<BadgeSize, string>;
+
+const people = [
+  { handle: "shadcn", initial: "C", size: "sm" },
+  { handle: "emilkowalski", initial: "E", size: "default" },
+  { handle: "evilrabbit", initial: "E", size: "lg" },
+] as const;
 
 const statusLabels = {
   danger: "Failed",
@@ -104,6 +111,22 @@ function BadgeIconDemo() {
   );
 }
 
+function BadgeAvatarDemo() {
+  return (
+    <DemoRow sx={styles.rows}>
+      {people.map((person) => (
+        <Badge key={person.handle} size={person.size}>
+          <Avatar aria-hidden>
+            <AvatarImage alt="" src={`/avatars/${person.handle}.png`} />
+            <AvatarFallback>{person.initial}</AvatarFallback>
+          </Avatar>
+          {person.handle}
+        </Badge>
+      ))}
+    </DemoRow>
+  );
+}
+
 function BadgeLinkDemo() {
   return (
     <DemoRow>
@@ -156,6 +179,7 @@ function BadgeSizeDemo() {
 }
 
 export {
+  BadgeAvatarDemo,
   BadgeDemo,
   BadgeIconDemo,
   BadgeLinkDemo,

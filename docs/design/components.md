@@ -24,7 +24,7 @@ Follows the control heights (24, 32, 36), so it lines up with a button of the sa
 
 ## Badge
 
-Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show.
+Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full`, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
 
 ## Button group
 

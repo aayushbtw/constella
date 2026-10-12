@@ -72,6 +72,11 @@ export const avatarVars = stylex.defineVars({
   size: "0px",
 });
 
+// The diameter of an avatar leading a badge. Badge sets it per size, Avatar reads it.
+export const badgeVars = stylex.defineVars({
+  avatar: "0px",
+});
+
 // A card's padding, which its header, content and footer read so they line up at every size.
 export const cardVars = stylex.defineVars({
   spacing: "0px",

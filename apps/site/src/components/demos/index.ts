@@ -33,6 +33,7 @@ import {
   AvatarSizeDemo,
 } from "~/components/demos/avatar";
 import {
+  BadgeAvatarDemo,
   BadgeDemo,
   BadgeIconDemo,
   BadgeLinkDemo,
@@ -378,6 +379,7 @@ const demos = {
   "avatar-group-icon": AvatarGroupIconDemo,
   "avatar-size": AvatarSizeDemo,
   badge: BadgeDemo,
+  "badge-avatar": BadgeAvatarDemo,
   "badge-icon": BadgeIconDemo,
   "badge-link": BadgeLinkDemo,
   "badge-size": BadgeSizeDemo,

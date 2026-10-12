@@ -6,6 +6,7 @@ import type { ComponentProps } from "react";
 
 import {
   avatarVars,
+  badgeVars,
   colors,
   durations,
   easings,
@@ -38,6 +39,12 @@ type AvatarBadgeProps = Styled<ComponentProps<"span">> & {
 const inGroup = ":is([data-slot='avatar-group'] > *)";
 const groupOf = (size: AvatarSize) =>
   `:is([data-slot='avatar-group']:has(> [data-size='${size}']) > *)`;
+
+// Leading a badge, it takes the size the badge sets for it.
+const inBadge = (size: string) => ({
+  default: size,
+  ":is([data-slot='badge'] > :first-child)": badgeVars.avatar,
+});
 
 const gap = `calc(2 * ${strokes.border})`;
 const overlap = space.xs;
@@ -125,15 +132,15 @@ const styles = stylex.create({
     },
   },
   sm: {
-    [avatarVars.size]: sizes.controlXs,
+    [avatarVars.size]: inBadge(sizes.controlXs),
     [avatarVars.badge]: space.xs,
   },
   default: {
-    [avatarVars.size]: sizes.controlMd,
+    [avatarVars.size]: inBadge(sizes.controlMd),
     [avatarVars.badge]: `calc(${space.xs} + ${space.xxxs})`,
   },
   lg: {
-    [avatarVars.size]: sizes.controlLg,
+    [avatarVars.size]: inBadge(sizes.controlLg),
     [avatarVars.badge]: space.sm,
   },
   image: {
@@ -163,6 +170,7 @@ const styles = stylex.create({
     fontSize: {
       default: fontSizes.sm,
       ":is([data-size='sm'] *)": fontSizes.xxs,
+      ":is([data-slot='badge'] > :first-child > *)": fontSizes.xxs,
     },
     fontWeight: fontWeights.medium,
     height: "100%",

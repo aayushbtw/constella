@@ -65,9 +65,9 @@ netigen builds these today. Each could become a Constella part once the componen
 - [x] **Tool steps**: a collapsible list of steps, each with a status and a live label, and **Reasoning** beside it.
 - [ ] **Suggestions**: starter prompts as chips.
 - [x] **Attachment**: a file tile with upload progress.
-- [ ] **Citation**: a pill that opens a HoverCard.
+- [x] **Citation**: a pill that opens a HoverCard. Not a component. It's a Badge with an avatar rendering a HoverCard trigger (Badge docs, "Avatar").
 - [ ] **Model picker**: a Command of models with their details.
-- [ ] **Approval**: a card asking to allow a tool call.
+- [x] **Approval**: a card asking to allow a tool call.
 - [ ] **Questionnaire**: questions the model asks, one at a time.
 - [ ] **Answer rendering**: markdown, code blocks, result tables and charts.
 

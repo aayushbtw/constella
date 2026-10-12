@@ -6,6 +6,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import {
+  badgeVars,
   colors,
   durations,
   fontSizes,
@@ -61,17 +62,27 @@ const linkHover = <T,>(rest: T, active: T) => ({
 const dotIn = (status: BadgeStatus) =>
   `:is([data-status='${status}']:not([data-variant='primary'], [data-variant='danger']) > *)`;
 
-// A glyph carries its own whitespace, so the side holding a `data-icon` sits tighter.
-const inset = (padding: string, tight: string) => ({
+const withAvatar = ":has(> [data-slot='avatar']:first-child)";
+
+// A glyph carries its own whitespace, so the side holding a `data-icon` sits tighter. A
+// leading avatar fills the height less this inset and the border on every side, and the
+// ends round, so the two stay concentric.
+// Positional: StyleX can't evaluate a destructured parameter.
+const sizing = (side: string, tight: string, height: string) => ({
+  height,
   paddingInlineEnd: {
-    default: padding,
+    default: side,
     ":has(> [data-icon='inline-end'])": tight,
   },
   paddingInlineStart: {
-    default: padding,
+    default: side,
     ":has(> [data-icon='inline-start'])": tight,
+    [withAvatar]: space.xxxs,
   },
+  [badgeVars.avatar]: `calc(${height} - 2 * (${space.xxxs} + ${strokes.border}))`,
 });
+
+const corner = { default: radii.chip, [withAvatar]: radii.full };
 
 // shadcn's 6px and 10px, and an 18px small, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
@@ -84,10 +95,10 @@ const styles = stylex.create({
     // Every variant reserves the border, so a fill and an outline are the same size.
     borderBlockColor: "transparent",
     borderInlineColor: "transparent",
-    borderStartStartRadius: radii.chip,
-    borderStartEndRadius: radii.chip,
-    borderEndStartRadius: radii.chip,
-    borderEndEndRadius: radii.chip,
+    borderStartStartRadius: corner,
+    borderStartEndRadius: corner,
+    borderEndStartRadius: corner,
+    borderEndEndRadius: corner,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
@@ -107,27 +118,27 @@ const styles = stylex.create({
     transitionDuration: durations.hover,
     transitionProperty: "background-color, border-color, color, opacity",
     transitionTimingFunction: "ease",
+    // In a sentence it centers on the text; a badge opening on an icon or avatar would
+    // otherwise take its baseline from that child's bottom edge.
+    verticalAlign: "middle",
     whiteSpace: "nowrap",
     width: "fit-content",
   },
   // Icons are `sizes.iconXs` up to default and `iconSm` at lg.
   sm: {
-    ...inset(px6, space.xxs),
+    ...sizing(px6, space.xxs, px18),
     fontSize: fontSizes.xxs,
     gap: space.xxs,
-    height: px18,
   },
   default: {
-    ...inset(space.xs, px6),
+    ...sizing(space.xs, px6, sizes.controlXxs),
     fontSize: fontSizes.xxs,
     gap: space.xxs,
-    height: sizes.controlXxs,
   },
   lg: {
-    ...inset(px10, space.xs),
+    ...sizing(px10, space.xs, sizes.controlXs),
     fontSize: fontSizes.xs,
     gap: px6,
-    height: sizes.controlXs,
   },
   primary: {
     backgroundColor: colors.accent,
