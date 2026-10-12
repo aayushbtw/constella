@@ -23,7 +23,7 @@ import {
   strokes,
   fonts,
 } from "@/lib/tokens.stylex";
-import { DemoControls, Stage, Well } from "~/components/demos/frame";
+import { Stage, Well } from "~/components/demos/frame";
 
 const dot = "12px";
 const graph = "200px";
@@ -49,13 +49,14 @@ const styles = stylex.create({
     gap: space.sm,
     width: `calc(${graph} + 2 * ${space.lg})`,
   },
-  stage: {
-    position: "relative",
+  replayRow: {
+    alignItems: "flex-end",
+    display: "flex",
+    gap: space.md,
+    gridColumn: "1 / -1",
   },
-  replay: {
-    insetBlockStart: space.sm,
-    insetInlineEnd: space.sm,
-    position: "absolute",
+  grow: {
+    flexGrow: 1,
   },
   graphWell: {
     borderStartStartRadius: radii.md,
@@ -175,25 +176,6 @@ function Plot({ d, sx }: { d: string; sx: stylex.StyleXStyles }) {
   );
 }
 
-function ReplayButton({ onReplay }: { onReplay: () => void }) {
-  return (
-    <Button
-      aria-label="Replay"
-      onClick={onReplay}
-      size="icon-sm"
-      sx={styles.replay}
-      variant="ghost"
-    >
-      <HugeiconsIcon
-        aria-hidden
-        icon={ArrowReloadHorizontalIcon}
-        size={sizes.icon}
-        strokeWidth={Number(strokes.icon)}
-      />
-    </Button>
-  );
-}
-
 function MotionEasingDemo() {
   const [name, setName] = useState<EasingName>("out");
   const [slow, setSlow] = useState(4);
@@ -203,101 +185,116 @@ function MotionEasingDemo() {
   const duration = slowed(durations.move, slow);
 
   return (
-    <>
-      <Stage sx={styles.stage}>
-        <ReplayButton
-          onReplay={() => {
-            setRun((value) => value + 1);
-          }}
-        />
-        <div {...stylex.props(styles.easing)}>
-          <Well sx={styles.graphWell}>
-            <div {...stylex.props(styles.graph)}>
-              <svg
+    <Stage
+      controls={
+        <>
+          <p {...stylex.props(styles.readout)}>
+            <span {...stylex.props(styles.readoutValue)}>{easing}</span>
+            <span>
+              {durations.move} × {slow} = {moveMs * slow}ms
+            </span>
+          </p>
+          <Tabs
+            onValueChange={(value: EasingName) => {
+              setName(value);
+            }}
+            sx={styles.span}
+            value={name}
+          >
+            <TabsList sx={styles.span}>
+              {easingNames.map((easingName) => (
+                <TabsTrigger key={easingName} value={easingName}>
+                  {easingName}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+          <div {...stylex.props(styles.replayRow)}>
+            <Slider
+              format={{ maximumFractionDigits: 0, style: "decimal" }}
+              max={8}
+              min={1}
+              onValueChange={(value) => {
+                setSlow(value);
+              }}
+              sx={styles.grow}
+              value={slow}
+            >
+              <SliderLabel>Slow down</SliderLabel>
+              <SliderValue>
+                {(formatted) => `${formatted[0] ?? ""}×`}
+              </SliderValue>
+              <SliderControl />
+            </Slider>
+            <Button
+              onClick={() => {
+                setRun((value) => value + 1);
+              }}
+              size="sm"
+              variant="outline"
+            >
+              <HugeiconsIcon
                 aria-hidden
-                preserveAspectRatio="none"
-                viewBox="0 0 1 1"
-                {...stylex.props(styles.plot)}
-              >
-                <Plot d="M0 0V1H1" sx={styles.axis} />
-                <Plot d="M0 1L1 0" sx={styles.linear} />
-                <Plot
-                  d={`M0 1C${x1} ${1 - y1} ${x2} ${1 - y2} 1 0`}
-                  sx={styles.curve}
-                />
-              </svg>
-              <div
-                key={`x${run}${name}`}
-                {...stylex.props(
-                  styles.traceX,
-                  styles.play,
-                  styles.timing(duration, "linear")
-                )}
-              >
-                <div
-                  {...stylex.props(
-                    styles.traceY,
-                    styles.play,
-                    styles.timing(duration, easing)
-                  )}
-                >
-                  <div {...stylex.props(styles.dot)} />
-                </div>
-              </div>
-            </div>
-          </Well>
-          <Well sx={styles.trackWell}>
+                icon={ArrowReloadHorizontalIcon}
+                size={sizes.icon}
+                strokeWidth={Number(strokes.icon)}
+              />
+              Replay
+            </Button>
+          </div>
+        </>
+      }
+    >
+      <div {...stylex.props(styles.easing)}>
+        <Well sx={styles.graphWell}>
+          <div {...stylex.props(styles.graph)}>
+            <svg
+              aria-hidden
+              preserveAspectRatio="none"
+              viewBox="0 0 1 1"
+              {...stylex.props(styles.plot)}
+            >
+              <Plot d="M0 0V1H1" sx={styles.axis} />
+              <Plot d="M0 1L1 0" sx={styles.linear} />
+              <Plot
+                d={`M0 1C${x1} ${1 - y1} ${x2} ${1 - y2} 1 0`}
+                sx={styles.curve}
+              />
+            </svg>
             <div
-              key={`t${run}${name}`}
+              key={`x${run}${name}`}
               {...stylex.props(
-                styles.runner,
+                styles.traceX,
                 styles.play,
-                styles.timing(duration, easing)
+                styles.timing(duration, "linear")
               )}
             >
-              <div {...stylex.props(styles.dot)} />
+              <div
+                {...stylex.props(
+                  styles.traceY,
+                  styles.play,
+                  styles.timing(duration, easing)
+                )}
+              >
+                <div {...stylex.props(styles.dot)} />
+              </div>
             </div>
-          </Well>
-        </div>
-      </Stage>
-      <DemoControls>
-        <p {...stylex.props(styles.readout)}>
-          <span {...stylex.props(styles.readoutValue)}>{easing}</span>
-          <span>
-            {durations.move} × {slow} = {moveMs * slow}ms
-          </span>
-        </p>
-        <Tabs
-          onValueChange={(value: EasingName) => {
-            setName(value);
-          }}
-          sx={styles.span}
-          value={name}
-        >
-          <TabsList sx={styles.span}>
-            {easingNames.map((easingName) => (
-              <TabsTrigger key={easingName} value={easingName}>
-                {easingName}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-        <Slider
-          format={{ maximumFractionDigits: 0, style: "decimal" }}
-          max={8}
-          min={1}
-          onValueChange={(value) => {
-            setSlow(value);
-          }}
-          sx={styles.span}
-          value={slow}
-        >
-          <SliderLabel>Slow down</SliderLabel>
-          <SliderValue>{(formatted) => `${formatted[0] ?? ""}×`}</SliderValue>
-          <SliderControl />
-        </Slider>
-      </DemoControls>
-    </>
+          </div>
+        </Well>
+        <Well sx={styles.trackWell}>
+          <div
+            key={`t${run}${name}`}
+            {...stylex.props(
+              styles.runner,
+              styles.play,
+              styles.timing(duration, easing)
+            )}
+          >
+            <div {...stylex.props(styles.dot)} />
+          </div>
+        </Well>
+      </div>
+    </Stage>
   );
 }
 

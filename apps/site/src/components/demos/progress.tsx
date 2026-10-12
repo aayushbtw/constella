@@ -148,18 +148,24 @@ function Uploads() {
 function ProgressValueDemo() {
   const [run, setRun] = useState(0);
   return (
-    <DemoRow sx={styles.stage}>
+    <DemoRow
+      sx={styles.stage}
+      controls={
+        <div>
+          <Button
+            onClick={() => {
+              setRun(run + 1);
+            }}
+            size="sm"
+            variant="outline"
+          >
+            Upload again
+          </Button>
+        </div>
+      }
+    >
       <div {...stylex.props(styles.column)}>
         <Uploads key={run} />
-        <Button
-          onClick={() => {
-            setRun(run + 1);
-          }}
-          size="sm"
-          variant="outline"
-        >
-          Upload again
-        </Button>
       </div>
     </DemoRow>
   );

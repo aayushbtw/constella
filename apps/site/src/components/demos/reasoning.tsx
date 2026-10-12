@@ -10,19 +10,12 @@ import {
   ReasoningTrigger,
 } from "@/components/ui/reasoning";
 import { Shimmer } from "@/components/ui/shimmer";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   stage: { alignItems: "flex-start", minHeight: 240, width: "100%" },
   width: { maxWidth: "100%", width: 384 },
-  column: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.md,
-    maxWidth: "100%",
-    width: 384,
-  },
 });
 
 function Brain() {
@@ -86,15 +79,9 @@ function ReasoningControlledDemo() {
   const seconds = Math.ceil((words.length * wordEvery) / 1000);
 
   return (
-    <DemoRow sx={styles.stage}>
-      <div {...stylex.props(styles.column)}>
-        <Reasoning onOpenChange={setOpen} open={open}>
-          <ReasoningTrigger>
-            <Brain />
-            {thinking ? <Shimmer>Thinking</Shimmer> : `Thought for ${seconds}s`}
-          </ReasoningTrigger>
-          <ReasoningContent>{words.slice(0, shown).join(" ")}</ReasoningContent>
-        </Reasoning>
+    <DemoRow
+      sx={styles.stage}
+      controls={
         <div>
           <Button
             disabled={thinking}
@@ -114,7 +101,15 @@ function ReasoningControlledDemo() {
             Think again
           </Button>
         </div>
-      </div>
+      }
+    >
+      <Reasoning onOpenChange={setOpen} open={open} sx={styles.width}>
+        <ReasoningTrigger>
+          <Brain />
+          {thinking ? <Shimmer>Thinking</Shimmer> : `Thought for ${seconds}s`}
+        </ReasoningTrigger>
+        <ReasoningContent>{words.slice(0, shown).join(" ")}</ReasoningContent>
+      </Reasoning>
     </DemoRow>
   );
 }

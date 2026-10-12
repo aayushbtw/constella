@@ -117,7 +117,23 @@ function ApprovalDemo() {
   const decided = answer === "sent" || answer === "cancelled";
 
   return (
-    <DemoRow sx={styles.stage}>
+    <DemoRow
+      sx={styles.stage}
+      controls={
+        <div>
+          <Button
+            disabled={!decided}
+            onClick={() => {
+              setAnswer("pending");
+            }}
+            size="sm"
+            variant="outline"
+          >
+            Ask again
+          </Button>
+        </div>
+      }
+    >
       <div {...stylex.props(styles.column)}>
         <Approval>
           <ApprovalHeader>
@@ -166,19 +182,6 @@ function ApprovalDemo() {
             </ApprovalFooter>
           )}
         </Approval>
-        {decided ? (
-          <div>
-            <Button
-              onClick={() => {
-                setAnswer("pending");
-              }}
-              size="sm"
-              variant="outline"
-            >
-              Ask again
-            </Button>
-          </div>
-        ) : null}
       </div>
     </DemoRow>
   );

@@ -31,7 +31,7 @@ import {
   space,
   fonts,
 } from "@/lib/tokens.stylex";
-import { DemoControls, Stage } from "~/components/demos/frame";
+import { Stage } from "~/components/demos/frame";
 import { CopyButton } from "~/components/docs/copy-button";
 import {
   accents,
@@ -191,7 +191,105 @@ function ThemeBuilderDemo() {
   return (
     <>
       <style>{preview}</style>
-      <Stage>
+      <Stage
+        controls={
+          <>
+            <div {...stylex.props(styles.presets)}>
+              {themeNames.map((name) => (
+                <Button
+                  key={name}
+                  onClick={() => {
+                    setTheme(name);
+                    setAccent(themes[name].accent);
+                  }}
+                  size="sm"
+                  title={themes[name].description}
+                  variant={theme === name ? "secondary" : "ghost"}
+                >
+                  <span
+                    data-icon="inline-start"
+                    {...stylex.props(
+                      styles.swatch(swatch(themes[name].accent))
+                    )}
+                  />
+                  {themes[name].label}
+                </Button>
+              ))}
+            </div>
+            <Field>
+              <FieldLabel>Accent</FieldLabel>
+              <Select
+                items={accentItems}
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setAccent(value);
+                  }
+                }}
+                value={accent}
+              >
+                <SelectTrigger>
+                  <span {...stylex.props(styles.swatch(swatch(accent)))} />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(["ink", ...accents] as const).map((value) => (
+                    <SelectItem key={value} value={value}>
+                      <span {...stylex.props(styles.swatch(swatch(value)))} />
+                      {accentItems[value]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel>Radius</FieldLabel>
+              <Select
+                items={radiusLabels}
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setRadius(value);
+                  }
+                }}
+                value={radius}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(radiusLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel>Sizing</FieldLabel>
+              <Select
+                items={scalingLabels}
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setScaling(value);
+                  }
+                }}
+                value={scaling}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(scalingLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+          </>
+        }
+      >
         <div {...stylex.props(styles.preview)}>
           <div {...stylex.props(styles.row)}>
             <Button variant="primary">Save changes</Button>
@@ -223,99 +321,6 @@ function ThemeBuilderDemo() {
           <Input placeholder="Email" />
         </div>
       </Stage>
-      <DemoControls>
-        <div {...stylex.props(styles.presets)}>
-          {themeNames.map((name) => (
-            <Button
-              key={name}
-              onClick={() => {
-                setTheme(name);
-                setAccent(themes[name].accent);
-              }}
-              size="sm"
-              title={themes[name].description}
-              variant={theme === name ? "secondary" : "ghost"}
-            >
-              <span
-                data-icon="inline-start"
-                {...stylex.props(styles.swatch(swatch(themes[name].accent)))}
-              />
-              {themes[name].label}
-            </Button>
-          ))}
-        </div>
-        <Field>
-          <FieldLabel>Accent</FieldLabel>
-          <Select
-            items={accentItems}
-            onValueChange={(value) => {
-              if (value !== null) {
-                setAccent(value);
-              }
-            }}
-            value={accent}
-          >
-            <SelectTrigger>
-              <span {...stylex.props(styles.swatch(swatch(accent)))} />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {(["ink", ...accents] as const).map((value) => (
-                <SelectItem key={value} value={value}>
-                  <span {...stylex.props(styles.swatch(swatch(value)))} />
-                  {accentItems[value]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <FieldLabel>Radius</FieldLabel>
-          <Select
-            items={radiusLabels}
-            onValueChange={(value) => {
-              if (value !== null) {
-                setRadius(value);
-              }
-            }}
-            value={radius}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(radiusLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <FieldLabel>Sizing</FieldLabel>
-          <Select
-            items={scalingLabels}
-            onValueChange={(value) => {
-              if (value !== null) {
-                setScaling(value);
-              }
-            }}
-            value={scaling}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(scalingLabels).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
-      </DemoControls>
       <div {...stylex.props(styles.output)}>
         <pre {...stylex.props(styles.pre)}>
           <code>{file}</code>

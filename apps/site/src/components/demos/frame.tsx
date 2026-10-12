@@ -10,7 +10,6 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 const styles = stylex.create({
   stage: {
-    alignItems: "center",
     backgroundColor: surfaces.stage,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
@@ -18,9 +17,18 @@ const styles = stylex.create({
     borderEndEndRadius: radii.sm,
     boxShadow: shadows.inset,
     display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  },
+  // With controls, the demo's frame is the one edge; the controls panel carries its own.
+  bare: {
+    boxShadow: "none",
+  },
+  view: {
+    alignItems: "center",
+    display: "flex",
     justifyContent: "center",
     minHeight: 280,
-    overflow: "hidden",
     paddingBlock: space.xl,
     paddingInline: space.md,
   },
@@ -31,13 +39,19 @@ const styles = stylex.create({
     gap: space.xs,
     justifyContent: "center",
   },
-  // Sits on the frame under the stage, so the controls read as part of the demo.
+  // Set into the stage's foot, concentric with it, so it reads as part of the demo but not the component.
   controls: {
+    backgroundColor: colors.raised,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
+    boxShadow: shadows.inset,
     display: "grid",
     gap: { default: space.md, [media.sm]: space.lg },
     gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-    paddingBlock: space.sm,
-    paddingInline: space.sm,
+    paddingBlock: space.md,
+    paddingInline: space.md,
   },
   // A tinted frame around a subject; the edge is drawn inside so it never stacks.
   well: {
@@ -49,26 +63,34 @@ const styles = stylex.create({
   },
 });
 
+/** The demo's surface; `controls` are the demo's own knobs and actions, kept apart from the component. */
 function Stage({
   children,
-  sx,
+  controls,
 }: {
   children: ReactNode;
-  sx?: stylex.StyleXStyles;
+  controls?: ReactNode;
 }) {
-  return <div {...stylex.props(styles.stage, sx)}>{children}</div>;
-}
-
-function DemoRow({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <Stage>
-      <div {...props} {...stylex.props(styles.row, sx)} />
-    </Stage>
+    <div {...stylex.props(styles.stage, controls !== undefined && styles.bare)}>
+      <div {...stylex.props(styles.view)}>{children}</div>
+      {controls === undefined ? null : (
+        <div {...stylex.props(styles.controls)}>{controls}</div>
+      )}
+    </div>
   );
 }
 
-function DemoControls({ children }: { children: ReactNode }) {
-  return <div {...stylex.props(styles.controls)}>{children}</div>;
+function DemoRow({
+  controls,
+  sx,
+  ...props
+}: Styled<ComponentProps<"div">> & { controls?: ReactNode }) {
+  return (
+    <Stage controls={controls}>
+      <div {...props} {...stylex.props(styles.row, sx)} />
+    </Stage>
+  );
 }
 
 function Well({
@@ -81,4 +103,4 @@ function Well({
   return <div {...stylex.props(styles.well, sx)}>{children}</div>;
 }
 
-export { DemoControls, DemoRow, Stage, Well };
+export { DemoRow, Stage, Well };

@@ -13,7 +13,7 @@ import {
   strokes,
   fonts,
 } from "@/lib/tokens.stylex";
-import { DemoControls, Stage, Well } from "~/components/demos/frame";
+import { Stage, Well } from "~/components/demos/frame";
 
 const steps = Array.from({ length: 12 }, (_, index) => index + 1);
 const hues = ["gray", "red", "amber", "green", "blue"] as const;
@@ -249,33 +249,8 @@ function ThemedTokens({ groups }: { groups: Row[][] }) {
   const [theme, setTheme] = useDemoTheme();
 
   return (
-    <>
-      <Stage>
-        <Well sx={styles.panelWell}>
-          {/* The class swaps the Radix scale under this panel. */}
-          <div className={theme}>
-            <div {...stylex.props(styles.panel)}>
-              {groups.map((rows, index) => (
-                <div
-                  key={rows[0]?.label}
-                  {...stylex.props(index > 0 && styles.group)}
-                >
-                  {rows.map(({ label, swatches, value }) => (
-                    <div key={label} {...stylex.props(styles.row)}>
-                      <span {...stylex.props(styles.name)}>
-                        {label}
-                        <span {...stylex.props(styles.value)}>{value}</span>
-                      </span>
-                      <span {...stylex.props(styles.swatches)}>{swatches}</span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </Well>
-      </Stage>
-      <DemoControls>
+    <Stage
+      controls={
         <Tabs
           onValueChange={(value: Theme) => {
             setTheme(value);
@@ -287,8 +262,32 @@ function ThemedTokens({ groups }: { groups: Row[][] }) {
             <TabsTrigger value="dark">Dark</TabsTrigger>
           </TabsList>
         </Tabs>
-      </DemoControls>
-    </>
+      }
+    >
+      <Well sx={styles.panelWell}>
+        {/* The class swaps the Radix scale under this panel. */}
+        <div className={theme}>
+          <div {...stylex.props(styles.panel)}>
+            {groups.map((rows, index) => (
+              <div
+                key={rows[0]?.label}
+                {...stylex.props(index > 0 && styles.group)}
+              >
+                {rows.map(({ label, swatches, value }) => (
+                  <div key={label} {...stylex.props(styles.row)}>
+                    <span {...stylex.props(styles.name)}>
+                      {label}
+                      <span {...stylex.props(styles.value)}>{value}</span>
+                    </span>
+                    <span {...stylex.props(styles.swatches)}>{swatches}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </Well>
+    </Stage>
   );
 }
 

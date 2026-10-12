@@ -34,13 +34,6 @@ import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   stage: { alignItems: "flex-start", minHeight: 240, width: "100%" },
-  column: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.md,
-    maxWidth: "100%",
-    width: 384,
-  },
   width: { maxWidth: "100%", width: 384 },
   results: {
     display: "flex",
@@ -174,40 +167,9 @@ function ToolStepsStatusDemo() {
   }, []);
 
   return (
-    <DemoRow sx={styles.stage}>
-      <div {...stylex.props(styles.column)}>
-        <ToolSteps defaultOpen>
-          <ToolStepsTrigger>
-            <SwapIcon value={finished ? "done" : "running"}>
-              <SwapIconItem value="running">
-                <Spinner />
-              </SwapIconItem>
-              <SwapIconItem value="done">
-                <Glyph icon={WrenchIcon} />
-              </SwapIconItem>
-            </SwapIcon>
-            {finished ? "Used 3 tools" : <Shimmer>Using 3 tools</Shimmer>}
-          </ToolStepsTrigger>
-          <ToolStepsContent>
-            {run.map((step, index) => {
-              const status = statusAt(index, elapsed);
-              return status === null ? null : (
-                <ToolStep key={step.title} status={status}>
-                  <ToolStepHeader>
-                    <ToolStepIndicator />
-                    <ToolStepMedia>
-                      <Glyph icon={step.icon} size={sizes.iconXs} />
-                    </ToolStepMedia>
-                    <ToolStepTitle>{step.title}</ToolStepTitle>
-                    <ToolStepDescription>
-                      {status === "failed" ? step.failure : step.description}
-                    </ToolStepDescription>
-                  </ToolStepHeader>
-                </ToolStep>
-              );
-            })}
-          </ToolStepsContent>
-        </ToolSteps>
+    <DemoRow
+      sx={styles.stage}
+      controls={
         <div>
           <Button
             disabled={!finished}
@@ -221,7 +183,40 @@ function ToolStepsStatusDemo() {
             Run again
           </Button>
         </div>
-      </div>
+      }
+    >
+      <ToolSteps defaultOpen sx={styles.width}>
+        <ToolStepsTrigger>
+          <SwapIcon value={finished ? "done" : "running"}>
+            <SwapIconItem value="running">
+              <Spinner />
+            </SwapIconItem>
+            <SwapIconItem value="done">
+              <Glyph icon={WrenchIcon} />
+            </SwapIconItem>
+          </SwapIcon>
+          {finished ? "Used 3 tools" : <Shimmer>Using 3 tools</Shimmer>}
+        </ToolStepsTrigger>
+        <ToolStepsContent>
+          {run.map((step, index) => {
+            const status = statusAt(index, elapsed);
+            return status === null ? null : (
+              <ToolStep key={step.title} status={status}>
+                <ToolStepHeader>
+                  <ToolStepIndicator />
+                  <ToolStepMedia>
+                    <Glyph icon={step.icon} size={sizes.iconXs} />
+                  </ToolStepMedia>
+                  <ToolStepTitle>{step.title}</ToolStepTitle>
+                  <ToolStepDescription>
+                    {status === "failed" ? step.failure : step.description}
+                  </ToolStepDescription>
+                </ToolStepHeader>
+              </ToolStep>
+            );
+          })}
+        </ToolStepsContent>
+      </ToolSteps>
     </DemoRow>
   );
 }

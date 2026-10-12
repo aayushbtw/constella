@@ -10,7 +10,13 @@ Text is Inter; code is Geist Mono with ligatures off, so `</` and `...` read as 
 
 ## Demo stage
 
-The stage is the page's own `background`, so a demo looks as it will in an app; the tile's inset edge frames it.
+The stage is the page's own `background`, so a demo looks as it will in an app; the frame's inset edge holds it.
+
+| Part | Rule |
+| --- | --- |
+| Frame | `radii.md`, inset edge, `space.xxs` padding |
+| Stage | `radii.sm`, its own inset edge, so a demo without controls reads as a double border |
+| Controls | Knobs and demo-only actions (replay, "Think again") go in the stage's `controls`, never beside the component. With controls, the stage drops its edge, so the frame is the one outer border. The panel sits at the stage's foot with a `raised` fill, its own edge, `radii.sm` concentric with the frame, and `space.md` padding |
 
 ## Home page
 

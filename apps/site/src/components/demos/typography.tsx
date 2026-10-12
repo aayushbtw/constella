@@ -12,7 +12,7 @@ import {
   strokes,
   fonts,
 } from "@/lib/tokens.stylex";
-import { DemoControls, Stage, Well } from "~/components/demos/frame";
+import { Stage, Well } from "~/components/demos/frame";
 import {
   fontSizes as siteFontSizes,
   lineHeights as siteLineHeights,
@@ -135,40 +135,8 @@ function TypographyDemo() {
     weights.find(({ name }) => name === weight)?.value ?? fontWeights.regular;
 
   return (
-    <>
-      <Stage>
-        <Well sx={styles.well}>
-          <div {...stylex.props(styles.panel, styles.weight(fontWeight))}>
-            <div {...stylex.props(styles.specimen)}>
-              <span aria-hidden {...stylex.props(styles.glyph)}>
-                Aa
-              </span>
-              <div {...stylex.props(styles.about)}>
-                <p {...stylex.props(styles.family)}>Inter</p>
-                <div>
-                  {glyphs.map((line) => (
-                    <p key={line} {...stylex.props(styles.set)}>
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {sizes.map(({ name, value }) => (
-              <div key={name} {...stylex.props(styles.row)}>
-                <span {...stylex.props(styles.label)}>{name}</span>
-                <span {...stylex.props(styles.text, styles.size(value))}>
-                  {sample}
-                </span>
-                <span {...stylex.props(styles.label)}>
-                  {value} / {lineHeights.row}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Well>
-      </Stage>
-      <DemoControls>
+    <Stage
+      controls={
         <Tabs
           onValueChange={(value: Weight) => {
             setWeight(value);
@@ -183,8 +151,39 @@ function TypographyDemo() {
             ))}
           </TabsList>
         </Tabs>
-      </DemoControls>
-    </>
+      }
+    >
+      <Well sx={styles.well}>
+        <div {...stylex.props(styles.panel, styles.weight(fontWeight))}>
+          <div {...stylex.props(styles.specimen)}>
+            <span aria-hidden {...stylex.props(styles.glyph)}>
+              Aa
+            </span>
+            <div {...stylex.props(styles.about)}>
+              <p {...stylex.props(styles.family)}>Inter</p>
+              <div>
+                {glyphs.map((line) => (
+                  <p key={line} {...stylex.props(styles.set)}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+          {sizes.map(({ name, value }) => (
+            <div key={name} {...stylex.props(styles.row)}>
+              <span {...stylex.props(styles.label)}>{name}</span>
+              <span {...stylex.props(styles.text, styles.size(value))}>
+                {sample}
+              </span>
+              <span {...stylex.props(styles.label)}>
+                {value} / {lineHeights.row}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Well>
+    </Stage>
   );
 }
 

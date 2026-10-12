@@ -158,18 +158,24 @@ function Members() {
 function SkeletonItemDemo() {
   const [run, setRun] = useState(0);
   return (
-    <DemoRow sx={styles.stage}>
+    <DemoRow
+      sx={styles.stage}
+      controls={
+        <div>
+          <Button
+            onClick={() => {
+              setRun(run + 1);
+            }}
+            size="sm"
+            variant="outline"
+          >
+            Load again
+          </Button>
+        </div>
+      }
+    >
       <div {...stylex.props(styles.column)}>
         <Members key={run} />
-        <Button
-          onClick={() => {
-            setRun(run + 1);
-          }}
-          size="sm"
-          variant="outline"
-        >
-          Load again
-        </Button>
       </div>
     </DemoRow>
   );
