@@ -135,6 +135,10 @@ A filtered menu is a command in a popup: its field is the command's input group,
 
 The slider's track: `strokes.track` tall, `fill` under `accent`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `status` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
 
+## Questionnaire
+
+One question at a time, each answer a choice card. The card is Field's: `edge`, `radii.md`, `fillSubtle` on hover and when picked, an `accent` edge when picked and `danger` when invalid. Its Checkbox or Radio indicator is drawn to match, since shadcn's headless questionnaire needs a native input. The whole card rings on keyboard focus. A shortcut is a Kbd at the card's end. Previous sits at the start of the actions, Skip and Next or Submit at the end. The active question swaps at once, with no motion: it's usually changed from the keyboard.
+
 ## Radio
 
 A round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`.

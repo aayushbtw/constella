@@ -68,7 +68,7 @@ netigen builds these today. Each could become a Constella part once the componen
 - [x] **Citation**: a source's pill (Badge + Avatar as a HoverCard trigger) opening one shared card: publication, headline, date.
 - [ ] **Model picker**: a Command of models with their details.
 - [x] **Approval**: a card asking to allow a tool call.
-- [ ] **Questionnaire**: questions the model asks, one at a time.
+- [x] **Questionnaire**: questions the model asks, one at a time.
 - [ ] **Answer rendering**: markdown, code blocks, result tables and charts.
 
 ## Motion

@@ -143,6 +143,9 @@
     :focus-visible,
     [data-slot="input-group"]:has(
       > [data-slot="input-group-control"]:focus-visible
+    ),
+    [data-slot="questionnaire-choice"]:has(
+      > [data-slot="questionnaire-choice-input"]:focus-visible
     )
   ) {
     outline: 1px solid var(--focus-ring);
@@ -160,17 +163,19 @@
     )
   ):where(
     :focus-visible,
-    :has(> [data-slot="input-group-control"]:focus-visible)
+    :has(> [data-slot="input-group-control"]:focus-visible),
+    :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
   ) {
     outline-color: var(--red-11);
   }
 
-  /* A popup takes focus to hold it, not as a control. */
+  /* A popup or questionnaire step takes focus to hold it, not as a control. */
   :where(
     [role="dialog"],
     [role="alertdialog"],
     [role="menu"],
-    [role="listbox"]
+    [role="listbox"],
+    [data-slot="questionnaire-item"]
   ):focus-visible {
     outline: none;
   }

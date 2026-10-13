@@ -711,6 +711,30 @@
       ]
     },
     {
+      "name": "questionnaire",
+      "type": "registry:ui",
+      "title": "Questionnaire",
+      "description": "Questions asked one at a time, with choices, a freeform answer and skips, on shadcn's questionnaire.",
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@shadcn/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/input.json",
+        "https://constella.aayush.cv/r/kbd.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/questionnaire.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
