@@ -56,14 +56,16 @@ const styles = stylex.create({
   },
 });
 
-/** Renders the viewport, a vertical scrollbar and the corner around its children. `viewportRef` and `viewportSx` reach the element that scrolls, for a virtualizer to watch or a scroll fade. */
+/** Renders the viewport, a vertical scrollbar unless `hideScrollbar`, and the corner around its children. `viewportRef` and `viewportSx` reach the element that scrolls, for a virtualizer to watch or a scroll fade. */
 function ScrollArea({
   children,
+  hideScrollbar = false,
   sx,
   viewportRef,
   viewportSx,
   ...props
 }: Styled<ScrollAreaPrimitive.Root.Props> & {
+  hideScrollbar?: boolean;
   viewportRef?: Ref<HTMLDivElement>;
   viewportSx?: stylex.StyleXStyles;
 }) {
@@ -80,7 +82,7 @@ function ScrollArea({
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
-      <ScrollBar />
+      {!hideScrollbar && <ScrollBar />}
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
   );

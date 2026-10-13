@@ -145,7 +145,7 @@ A quiet text button in `textSecondary` at `sm`, with no fill. It turns `textPrim
 
 ## Scroll area
 
-Its scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not.
+Its scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. Where a scroll fade already shows there's more, like the docs sidebar, `hideScrollbar` drops the scrollbar.
 
 ## Scroll fade
 
