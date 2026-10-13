@@ -1032,6 +1032,30 @@
       ]
     },
     {
+      "name": "model-picker",
+      "type": "registry:ui",
+      "title": "Model Picker",
+      "description": "A searchable list of models in a popover, with the highlighted model's details beside it.",
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/command.json",
+        "https://constella.aayush.cv/r/popover.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/model-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "suggestions",
       "type": "registry:ui",
       "title": "Suggestions",

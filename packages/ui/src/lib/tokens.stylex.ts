@@ -182,6 +182,8 @@ export const sizes = stylex.defineConsts({
   itemText: "160px",
   menu: "144px",
   menuHeight: "320px",
+  // A model picker's list: short names beside a search field.
+  modelPicker: "240px",
   // A centered block of short text, like an empty state's.
   measure: "384px",
   popover: "288px",

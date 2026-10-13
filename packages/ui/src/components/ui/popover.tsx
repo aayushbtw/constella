@@ -42,8 +42,8 @@ const styles = stylex.create({
   positioner: {
     zIndex: layers.popover,
   },
-  // Select's surface and motion, so every popup opens the same way.
-  popup: {
+  // Select's surface and motion (below), so every popup opens the same way.
+  surface: {
     backgroundColor: colors.raised,
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
@@ -56,9 +56,12 @@ const styles = stylex.create({
     fontSize: fontSizes.sm,
     gap: px10,
     maxWidth: "var(--available-width)",
-    opacity: { default: 1, [offstage]: 0 },
     paddingBlock: px10,
     paddingInline: px10,
+    width: sizes.popover,
+  },
+  motion: {
+    opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
@@ -71,7 +74,6 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
-    width: sizes.popover,
   },
   header: {
     display: "flex",
@@ -125,7 +127,7 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           {...props}
-          {...stylex.props(styles.popup, sx)}
+          {...stylex.props(styles.surface, styles.motion, sx)}
         />
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
@@ -165,11 +167,19 @@ function PopoverDescription({
   );
 }
 
+/** The positioner's layer, the popup's surface and its motion, for a part that draws its own popup. */
+const popoverStyles = {
+  motion: styles.motion,
+  positioner: styles.positioner,
+  surface: styles.surface,
+};
+
 export {
   Popover,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
+  popoverStyles,
   PopoverTitle,
   PopoverTrigger,
 };

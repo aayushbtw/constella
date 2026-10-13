@@ -17,6 +17,7 @@ The stage is the page's own `background`, so a demo looks as it will in an app; 
 | Frame | `radii.md`, inset edge, `space.xxs` padding |
 | Stage | `radii.sm`, its own inset edge, so a demo without controls reads as a double border |
 | Controls | Knobs and demo-only actions (replay, "Think again") go in the stage's `controls`, never beside the component. With controls, the stage drops its edge, so the frame is the one outer border. The panel sits at the stage's foot with a `raised` fill, its own edge, `radii.sm` concentric with the frame, and `space.md` padding |
+| Context | A component shown inside another (a model picker in a composer) gets that host as a wireframe: a dashed `edge` outline at the host's size and corner, Skeleton's `fill` for its text and controls, no real text. Only the subject is live |
 
 ## Home page
 

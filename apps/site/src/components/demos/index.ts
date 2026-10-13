@@ -210,6 +210,10 @@ import {
   MarkerVariantsDemo,
   ShimmerDemo,
 } from "~/components/demos/marker";
+import {
+  ModelPickerDemo,
+  ModelPickerSideDemo,
+} from "~/components/demos/model-picker";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
   PopoverAlignDemo,
@@ -518,6 +522,8 @@ const demos = {
   "marker-link": MarkerLinkDemo,
   "marker-status": MarkerStatusDemo,
   "marker-variants": MarkerVariantsDemo,
+  "model-picker": ModelPickerDemo,
+  "model-picker-side": ModelPickerSideDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
   shimmer: ShimmerDemo,
