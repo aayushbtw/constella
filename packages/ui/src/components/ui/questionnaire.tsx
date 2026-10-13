@@ -255,6 +255,7 @@ const styles = stylex.create({
     display: "grid",
     gap: space.xs,
     gridTemplateColumns: "minmax(0, 1fr) auto auto",
+    justifyItems: "start",
     minHeight: sizes.controlMd,
     width: "100%",
   },
