@@ -2,6 +2,8 @@ import * as stylex from "@stylexjs/stylex";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { scrollFade } from "@/lib/scroll-fade";
 import {
   colors,
   durations,
@@ -20,16 +22,23 @@ const styles = stylex.create({
   sidebar: {
     alignSelf: "start",
     display: { default: "none", [siteMedia.sidebar]: "block" },
-    insetBlockStart: 0,
+    insetBlockStart: layout.pageTop,
     // Room for the rows' fill, which reaches past the text; the scroll box clips it.
     marginInlineEnd: `calc(-1 * ${space.xs})`,
     marginInlineStart: `calc(-1 * ${space.xs})`,
-    height: "100dvh",
-    overflowY: "auto",
-    paddingBlockEnd: layout.pageTop,
-    paddingBlockStart: layout.pageTop,
-    paddingInline: space.xs,
+    height: `calc(100dvh - ${layout.pageTop})`,
+    // Here, not on the scroll area, whose root sets position inline.
     position: "sticky",
+  },
+  scroller: {
+    height: "100%",
+  },
+  viewport: {
+    overscrollBehaviorY: "contain",
+  },
+  content: {
+    paddingBlockEnd: layout.pageBottom,
+    paddingInline: space.xs,
   },
   group: {
     marginBlockEnd: { default: space.lg, ":last-child": 0 },
@@ -89,35 +98,43 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
 
   return (
     <nav aria-label={name} {...stylex.props(styles.sidebar)}>
-      {groups
-        .filter(({ items }) => items.length > 0)
-        .map(({ items, label, to }) => (
-          <section key={label} {...stylex.props(styles.group)}>
-            <h2 {...stylex.props(styles.label)}>{label}</h2>
-            <ul {...stylex.props(styles.list)}>
-              {items.map(({ draft = false, slug, title }) => (
-                <li key={slug}>
-                  <Link
-                    params={{ slug }}
-                    to={to}
-                    {...stylex.props(
-                      styles.link,
-                      Boolean(matchRoute({ params: { slug }, to })) &&
-                        styles.active
-                    )}
-                  >
-                    {title}
-                    {draft && (
-                      <Badge size="sm" sx={styles.badge} variant="outline">
-                        Draft
-                      </Badge>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+      <ScrollArea
+        hideScrollbar
+        sx={styles.scroller}
+        viewportSx={[scrollFade.y, styles.viewport]}
+      >
+        <div {...stylex.props(styles.content)}>
+          {groups
+            .filter(({ items }) => items.length > 0)
+            .map(({ items, label, to }) => (
+              <section key={label} {...stylex.props(styles.group)}>
+                <h2 {...stylex.props(styles.label)}>{label}</h2>
+                <ul {...stylex.props(styles.list)}>
+                  {items.map(({ draft = false, slug, title }) => (
+                    <li key={slug}>
+                      <Link
+                        params={{ slug }}
+                        to={to}
+                        {...stylex.props(
+                          styles.link,
+                          Boolean(matchRoute({ params: { slug }, to })) &&
+                            styles.active
+                        )}
+                      >
+                        {title}
+                        {draft && (
+                          <Badge size="sm" sx={styles.badge} variant="outline">
+                            Draft
+                          </Badge>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+        </div>
+      </ScrollArea>
     </nav>
   );
 }

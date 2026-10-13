@@ -32,8 +32,8 @@ export const layout = stylex.defineConsts({
   logo: "20px",
   outline: "200px",
   pageBottom: "96px",
-  // Clears the fixed header; where sidebar, content and outline start.
-  pageTop: "64px",
+  // `header` plus a 32px gap; change with it.
+  pageTop: "96px",
   sectionGap: "48px",
   // Past this, the sidebar and outline stop following the window's edges.
   shell: "1536px",
