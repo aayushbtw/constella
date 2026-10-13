@@ -24,6 +24,9 @@ minimumReleaseAgeExclude:
   - "@base-ui/utils@0.5.0"
 overrides:
   vite@*: "catalog:"
+# Choice kept its input in state, so a question with an Input loops on hydration; drop once shadcn ships the fix.
+patchedDependencies:
+  "@shadcn/react@0.3.1": patches/@shadcn__react@0.3.1.patch
 peerDependencyRules:
   allowAny:
     - vite
