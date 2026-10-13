@@ -46,7 +46,7 @@ section: AI
 
 <!-- ::install name="questionnaire" -->
 
-**Patch `@shadcn/react` 0.3.1 if you server-render.** A question with a `QuestionnaireInput` loops on hydration ("Maximum update depth exceeded"); apply [Constella's patch](https://github.com/aayushbtw/constella/blob/main/patches/@shadcn__react@0.3.1.patch) with `pnpm patch` until a fixed release ships.
+**Patch `@shadcn/react` 0.3.1 if you server-render.** On React 19.3, a question with a `QuestionnaireInput` loops on hydration ("Maximum update depth exceeded"); apply [Constella's patch](https://github.com/aayushbtw/constella/blob/main/patches/@shadcn__react@0.3.1.patch) with `pnpm patch` until a fixed release ships.
 
 ## Usage
 
