@@ -36,7 +36,7 @@
           "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup: https://constella.aayush.cv/docs/installation"
+      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup per framework: https://constella.aayush.cv/docs/installation/index.md. Every docs page: https://constella.aayush.cv/llms.txt"
     },
     {
       "name": "alert",
@@ -50,7 +50,8 @@
           "path": "src/components/ui/alert.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/alert/index.md"
     },
     {
       "name": "alert-dialog",
@@ -68,7 +69,8 @@
           "path": "src/components/ui/alert-dialog.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/alert-dialog/index.md"
     },
     {
       "name": "approval",
@@ -99,7 +101,8 @@
           "path": "src/components/ui/badge.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/badge/index.md"
     },
     {
       "name": "button",
@@ -113,7 +116,8 @@
           "path": "src/components/ui/button.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/button/index.md"
     },
     {
       "name": "copy-button",
@@ -135,7 +139,8 @@
           "path": "src/components/ui/copy-button.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/copy-button/index.md"
     },
     {
       "name": "dialog",
@@ -157,7 +162,8 @@
           "path": "src/components/ui/dialog.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/dialog/index.md"
     },
     {
       "name": "spinner",
@@ -171,7 +177,8 @@
           "path": "src/components/ui/spinner.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/spinner/index.md"
     },
     {
       "name": "toast",
@@ -195,7 +202,7 @@
           "type": "registry:ui"
         }
       ],
-      "docs": "Render <Toaster /> once near the root, then call toast.add({ title }) from anywhere."
+      "docs": "Render <Toaster /> once near the root, then call toast.add({ title }) from anywhere. Usage: https://constella.aayush.cv/docs/components/toast/index.md"
     },
     {
       "name": "card",
@@ -209,7 +216,8 @@
           "path": "src/components/ui/card.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/card/index.md"
     },
     {
       "name": "checkbox",
@@ -228,7 +236,8 @@
           "path": "src/components/ui/checkbox.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/checkbox/index.md"
     },
     {
       "name": "collapsible",
@@ -242,7 +251,8 @@
           "path": "src/components/ui/collapsible.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/collapsible/index.md"
     },
     {
       "name": "command",
@@ -265,7 +275,8 @@
           "path": "src/components/ui/command.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/command/index.md"
     },
     {
       "name": "toggle",
@@ -282,7 +293,8 @@
           "path": "src/components/ui/toggle.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/toggle/index.md"
     },
     {
       "name": "toggle-group",
@@ -299,7 +311,8 @@
           "path": "src/components/ui/toggle-group.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/toggle-group/index.md"
     },
     {
       "name": "tooltip",
@@ -313,7 +326,8 @@
           "path": "src/components/ui/tooltip.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/tooltip/index.md"
     },
     {
       "name": "field",
@@ -331,7 +345,8 @@
           "path": "src/components/ui/field.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/field/index.md"
     },
     {
       "name": "kbd",
@@ -345,7 +360,8 @@
           "path": "src/components/ui/kbd.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/kbd/index.md"
     },
     {
       "name": "label",
@@ -359,7 +375,8 @@
           "path": "src/components/ui/label.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/label/index.md"
     },
     {
       "name": "input",
@@ -373,7 +390,8 @@
           "path": "src/components/ui/input.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/input/index.md"
     },
     {
       "name": "textarea",
@@ -387,7 +405,8 @@
           "path": "src/components/ui/textarea.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/textarea/index.md"
     },
     {
       "name": "input-group",
@@ -406,7 +425,8 @@
           "path": "src/components/ui/input-group.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/input-group/index.md"
     },
     {
       "name": "sheet",
@@ -423,7 +443,8 @@
           "path": "src/components/ui/sheet.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/sheet/index.md"
     },
     {
       "name": "side-panel",
@@ -445,7 +466,8 @@
           "path": "src/components/ui/side-panel.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/side-panel/index.md"
     },
     {
       "name": "sidebar",
@@ -471,7 +493,8 @@
           "path": "src/components/ui/sidebar.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/sidebar/index.md"
     },
     {
       "name": "skeleton",
@@ -485,7 +508,8 @@
           "path": "src/components/ui/skeleton.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/skeleton/index.md"
     },
     {
       "name": "slider",
@@ -502,7 +526,8 @@
           "path": "src/components/ui/slider.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/slider/index.md"
     },
     {
       "name": "tabs",
@@ -516,7 +541,8 @@
           "path": "src/components/ui/tabs.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/tabs/index.md"
     },
     {
       "name": "separator",
@@ -530,7 +556,8 @@
           "path": "src/components/ui/separator.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/separator/index.md"
     },
     {
       "name": "button-group",
@@ -547,7 +574,8 @@
           "path": "src/components/ui/button-group.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/button-group/index.md"
     },
     {
       "name": "swap-icon",
@@ -561,7 +589,8 @@
           "path": "src/components/ui/swap-icon.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/swap-icon/index.md"
     },
     {
       "name": "swap-text",
@@ -575,7 +604,8 @@
           "path": "src/components/ui/swap-text.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/swap-text/index.md"
     },
     {
       "name": "switch",
@@ -589,7 +619,8 @@
           "path": "src/components/ui/switch.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/switch/index.md"
     },
     {
       "name": "scroll-area",
@@ -603,7 +634,8 @@
           "path": "src/components/ui/scroll-area.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/scroll-area/index.md"
     },
     {
       "name": "select",
@@ -622,7 +654,8 @@
           "path": "src/components/ui/select.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/select/index.md"
     },
     {
       "name": "popover",
@@ -636,7 +669,8 @@
           "path": "src/components/ui/popover.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/popover/index.md"
     },
     {
       "name": "dropdown-menu",
@@ -658,7 +692,8 @@
           "path": "src/components/ui/dropdown-menu.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/dropdown-menu/index.md"
     },
     {
       "name": "meter",
@@ -672,7 +707,8 @@
           "path": "src/components/ui/meter.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/meter/index.md"
     },
     {
       "name": "message",
@@ -686,7 +722,8 @@
           "path": "src/components/ui/message.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/message/index.md"
     },
     {
       "name": "message-scroller",
@@ -708,7 +745,8 @@
           "path": "src/components/ui/message-scroller.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/message-scroller/index.md"
     },
     {
       "name": "questionnaire",
@@ -732,7 +770,8 @@
           "path": "src/components/ui/questionnaire.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/questionnaire/index.md"
     },
     {
       "name": "hover-card",
@@ -746,7 +785,8 @@
           "path": "src/components/ui/hover-card.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/hover-card/index.md"
     },
     {
       "name": "prompt-input",
@@ -768,7 +808,8 @@
           "path": "src/components/ui/prompt-input.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/prompt-input/index.md"
     },
     {
       "name": "progress",
@@ -782,7 +823,8 @@
           "path": "src/components/ui/progress.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/progress/index.md"
     },
     {
       "name": "radio-group",
@@ -796,7 +838,8 @@
           "path": "src/components/ui/radio-group.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/radio-group/index.md"
     },
     {
       "name": "empty",
@@ -810,7 +853,8 @@
           "path": "src/components/ui/empty.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/empty/index.md"
     },
     {
       "name": "item",
@@ -827,7 +871,8 @@
           "path": "src/components/ui/item.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/item/index.md"
     },
     {
       "name": "table",
@@ -841,7 +886,8 @@
           "path": "src/components/ui/table.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/table/index.md"
     },
     {
       "name": "data-table",
@@ -891,7 +937,8 @@
           "path": "src/components/ui/use-data-table-virtualizer.ts",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/data-table/index.md"
     },
     {
       "name": "chart",
@@ -908,7 +955,8 @@
           "path": "src/components/ui/chart.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/chart/index.md"
     },
     {
       "name": "avatar",
@@ -922,7 +970,8 @@
           "path": "src/components/ui/avatar.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/avatar/index.md"
     },
     {
       "name": "shimmer",
@@ -936,7 +985,8 @@
           "path": "src/components/ui/shimmer.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/shimmer/index.md"
     },
     {
       "name": "markdown",
@@ -954,7 +1004,8 @@
           "path": "src/components/ui/markdown.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/markdown/index.md"
     },
     {
       "name": "marker",
@@ -968,7 +1019,8 @@
           "path": "src/components/ui/marker.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/marker/index.md"
     },
     {
       "name": "scroll-fade",
@@ -986,7 +1038,8 @@
           "path": "src/lib/scroll-fade.ts",
           "type": "registry:lib"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/scroll-fade/index.md"
     },
     {
       "name": "attachment",
@@ -1005,7 +1058,8 @@
           "path": "src/components/ui/attachment.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/attachment/index.md"
     },
     {
       "name": "tool-steps",
@@ -1071,7 +1125,8 @@
           "path": "src/components/ui/citation.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/citation/index.md"
     },
     {
       "name": "model-picker",
@@ -1095,7 +1150,8 @@
           "path": "src/components/ui/model-picker.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/model-picker/index.md"
     },
     {
       "name": "suggestions",
@@ -1114,7 +1170,8 @@
           "path": "src/components/ui/suggestions.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/suggestions/index.md"
     }
   ]
 }
