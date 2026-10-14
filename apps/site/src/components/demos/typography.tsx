@@ -34,6 +34,13 @@ const weights = [
 
 type Weight = (typeof weights)[number]["name"];
 
+const families = [
+  { label: "Inter", name: "sans", value: fonts.sans },
+  { label: "Geist Mono", name: "mono", value: fonts.mono },
+] as const;
+
+type Family = (typeof families)[number]["name"];
+
 const glyphs = [
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   "abcdefghijklmnopqrstuvwxyz",
@@ -121,46 +128,77 @@ const styles = stylex.create({
   size: (fontSize: string) => ({
     fontSize,
   }),
+  font: (fontFamily: string) => ({
+    fontFamily,
+  }),
   weight: (fontWeight: string) => ({
     fontWeight,
   }),
-  fullWidth: {
+  span: {
+    gridColumn: "1 / -1",
     width: "100%",
   },
 });
 
 function TypographyDemo() {
+  const [family, setFamily] = useState<Family>("sans");
   const [weight, setWeight] = useState<Weight>("regular");
+  const { label: familyLabel, value: fontFamily } =
+    families.find(({ name }) => name === family) ?? families[0];
   const fontWeight =
     weights.find(({ name }) => name === weight)?.value ?? fontWeights.regular;
 
   return (
     <Stage
       controls={
-        <Tabs
-          onValueChange={(value: Weight) => {
-            setWeight(value);
-          }}
-          value={weight}
-        >
-          <TabsList sx={styles.fullWidth}>
-            {weights.map(({ label, name, value }) => (
-              <TabsTrigger key={name} value={name}>
-                {label} {value}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <>
+          <Tabs
+            onValueChange={(value: Family) => {
+              setFamily(value);
+            }}
+            sx={styles.span}
+            value={family}
+          >
+            <TabsList sx={styles.span}>
+              {families.map(({ label, name }) => (
+                <TabsTrigger key={name} value={name}>
+                  {label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+          <Tabs
+            onValueChange={(value: Weight) => {
+              setWeight(value);
+            }}
+            sx={styles.span}
+            value={weight}
+          >
+            <TabsList sx={styles.span}>
+              {weights.map(({ label, name, value }) => (
+                <TabsTrigger key={name} value={name}>
+                  {label} {value}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </>
       }
     >
       <Well sx={styles.well}>
-        <div {...stylex.props(styles.panel, styles.weight(fontWeight))}>
+        <div
+          {...stylex.props(
+            styles.panel,
+            styles.font(fontFamily),
+            styles.weight(fontWeight)
+          )}
+        >
           <div {...stylex.props(styles.specimen)}>
             <span aria-hidden {...stylex.props(styles.glyph)}>
               Aa
             </span>
             <div {...stylex.props(styles.about)}>
-              <p {...stylex.props(styles.family)}>Inter</p>
+              <p {...stylex.props(styles.family)}>{familyLabel}</p>
               <div>
                 {glyphs.map((line) => (
                   <p key={line} {...stylex.props(styles.set)}>
