@@ -82,7 +82,11 @@ const sizing = (side: string, tight: string, height: string) => ({
   [badgeVars.avatar]: `calc(${height} - 2 * (${space.xxxs} + ${strokes.border}))`,
 });
 
-const corner = { default: radii.chip, [withAvatar]: radii.full };
+// A rounded avatar (a logo) keeps the chip corner, a ladder step around its own.
+const corner = {
+  default: radii.chip,
+  ":has(> [data-slot='avatar'][data-corners='pill']:first-child)": radii.full,
+};
 
 // shadcn's 6px and 10px, and an 18px small, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;

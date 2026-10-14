@@ -63,11 +63,13 @@ export const joins = stylex.defineVars({
   inline: "1",
 });
 
-// An avatar's diameter, its badge's, and the hole its photo leaves for the badge. Avatar
-// sets them per size, so the masks that cut it apart from its neighbors and badge can do math on them.
+// An avatar's diameter, its badge's, the hole its photo leaves for the badge, and its
+// corner. Avatar sets them per size, so the masks that cut it apart from its neighbors and
+// badge can do math on them.
 export const avatarVars = stylex.defineVars({
   badge: "0px",
   badgeCut: "none",
+  corner: "9999px",
   size: "0px",
 });
 

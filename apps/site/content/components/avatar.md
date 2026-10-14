@@ -59,6 +59,19 @@ Use the `size` prop to match the controls beside it.
 </Avatar>
 ```
 
+## Corners
+
+Use `corners="rounded"` for a logo or an app icon. Avatar groups take the default `pill`.
+
+<!-- ::demo name="avatar-corners" -->
+
+```tsx
+<Avatar corners="rounded">
+  <AvatarImage alt="shadcn" src="/avatars/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+```
+
 ## Fallback
 
 `AvatarFallback` shows while the image loads, and stays when it fails.
@@ -190,4 +203,4 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
 
 ## API Reference
 
-`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`). `AvatarBadge` takes `status`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).
+`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `status`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).

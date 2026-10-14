@@ -19,14 +19,20 @@ import {
 } from "@/lib/tokens.stylex";
 
 const avatarSizes = ["sm", "default", "lg"] as const;
+const avatarCorners = ["pill", "rounded"] as const;
 
 type AvatarSize = (typeof avatarSizes)[number];
+type AvatarCorners = (typeof avatarCorners)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-type AvatarProps = Styled<AvatarPrimitive.Root.Props> & { size?: AvatarSize };
+type AvatarProps = Styled<AvatarPrimitive.Root.Props> & {
+  /** `rounded` for a logo; a group's cut-outs assume a pill. */
+  corners?: AvatarCorners;
+  size?: AvatarSize;
+};
 
 const avatarStatuses = ["online", "away", "busy", "offline"] as const;
 
@@ -64,10 +70,10 @@ const styles = stylex.create({
   avatar: {
     // The fallback leaves as the photo arrives, so the photo fades in over its fill.
     backgroundColor: colors.fillOpaque,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
+    borderStartStartRadius: avatarVars.corner,
+    borderStartEndRadius: avatarVars.corner,
+    borderEndStartRadius: avatarVars.corner,
+    borderEndEndRadius: avatarVars.corner,
     display: "flex",
     flexShrink: 0,
     height: avatarVars.size,
@@ -113,10 +119,10 @@ const styles = stylex.create({
     "::after": {
       borderBlockColor: colors.edge,
       borderInlineColor: colors.edge,
-      borderStartStartRadius: radii.full,
-      borderStartEndRadius: radii.full,
-      borderEndStartRadius: radii.full,
-      borderEndEndRadius: radii.full,
+      borderStartStartRadius: avatarVars.corner,
+      borderStartEndRadius: avatarVars.corner,
+      borderEndStartRadius: avatarVars.corner,
+      borderEndEndRadius: avatarVars.corner,
       borderBlockStyle: "solid",
       borderInlineStyle: "solid",
       borderBlockWidth: strokes.border,
@@ -143,12 +149,20 @@ const styles = stylex.create({
     [avatarVars.size]: inBadge(sizes.controlLg),
     [avatarVars.badge]: space.sm,
   },
+  // A ladder step under the badge's or a control's corner, so a logo tile reads as one.
+  rounded: {
+    [avatarVars.corner]: {
+      default: radii.sm,
+      ":is([data-size='sm'])": radii.xs,
+      ":is([data-slot='badge'] > :first-child)": radii.xs,
+    },
+  },
   image: {
     aspectRatio: "1",
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
+    borderStartStartRadius: avatarVars.corner,
+    borderStartEndRadius: avatarVars.corner,
+    borderEndStartRadius: avatarVars.corner,
+    borderEndEndRadius: avatarVars.corner,
     height: "100%",
     maskImage: avatarVars.badgeCut,
     objectFit: "cover",
@@ -161,10 +175,10 @@ const styles = stylex.create({
   fallback: {
     alignItems: "center",
     backgroundColor: colors.fillOpaque,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
+    borderStartStartRadius: avatarVars.corner,
+    borderStartEndRadius: avatarVars.corner,
+    borderEndStartRadius: avatarVars.corner,
+    borderEndEndRadius: avatarVars.corner,
     color: colors.textSecondary,
     display: "flex",
     fontSize: {
@@ -239,13 +253,24 @@ const sizeStyles = {
   sm: styles.sm,
 } satisfies Record<AvatarSize, stylex.StyleXStyles>;
 
-function Avatar({ size = "default", sx, ...props }: AvatarProps) {
+function Avatar({
+  corners = "pill",
+  size = "default",
+  sx,
+  ...props
+}: AvatarProps) {
   return (
     <AvatarPrimitive.Root
+      data-corners={corners}
       data-size={size}
       data-slot="avatar"
       {...props}
-      {...stylex.props(styles.avatar, sizeStyles[size], sx)}
+      {...stylex.props(
+        styles.avatar,
+        sizeStyles[size],
+        corners === "rounded" && styles.rounded,
+        sx
+      )}
     />
   );
 }
@@ -327,7 +352,14 @@ export {
   AvatarGroup,
   AvatarGroupCount,
   AvatarImage,
+  avatarCorners,
   avatarSizes,
   avatarStatuses,
 };
-export type { AvatarBadgeProps, AvatarProps, AvatarSize, AvatarStatus };
+export type {
+  AvatarBadgeProps,
+  AvatarProps,
+  AvatarCorners,
+  AvatarSize,
+  AvatarStatus,
+};

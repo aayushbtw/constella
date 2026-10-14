@@ -190,6 +190,18 @@ function AvatarSizeDemo() {
   );
 }
 
+function AvatarCornersDemo() {
+  return (
+    <DemoRow>
+      {avatarSizes.map((size) => (
+        <Avatar corners="rounded" key={size} size={size}>
+          <Person fallback="CN" handle="shadcn" />
+        </Avatar>
+      ))}
+    </DemoRow>
+  );
+}
+
 function AvatarDropdownDemo() {
   return (
     <DemoRow>
@@ -225,6 +237,7 @@ function AvatarDropdownDemo() {
 export {
   AvatarBadgeDemo,
   AvatarBadgeIconDemo,
+  AvatarCornersDemo,
   AvatarDemo,
   AvatarDropdownDemo,
   AvatarFallbackDemo,

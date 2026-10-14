@@ -67,7 +67,7 @@ const styles = stylex.create({
 
 function Logo({ source, size }: { size?: "sm"; source: Source }) {
   return (
-    <Avatar aria-hidden size={size}>
+    <Avatar aria-hidden corners="rounded" size={size}>
       {source.icon === undefined ? null : (
         <AvatarImage alt="" src={source.icon} />
       )}
