@@ -1,6 +1,6 @@
 # Docs
 
-Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<slug>`), components in `components` (`/docs/components/<slug>`), blocks in `blocks` (`/blocks/<slug>`, with their own sidebar). A block page starts like a component's: the preview, Installation, then Usage. All three are parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
+Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<slug>`; a framework guide in `docs/installation/` opens from the Installation page's cards at `/docs/installation/<slug>` and stays out of the sidebar; a new one needs a card in `frameworks.tsx`), components in `components` (`/docs/components/<slug>`), blocks in `blocks` (`/blocks/<slug>`, with their own sidebar). A block page starts like a component's: the preview, Installation, then Usage. All three are parsed once at build time by tomekit, so a page ships no Markdown parser. Live previews are site-only components registered in `apps/site/src/components/demos` and placed with `<!-- ::demo name="…" -->`; they never go in the registry.
 
 A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page whose component or demos use a draft is a draft too. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components; chat parts take `section: AI`.
 
@@ -21,6 +21,6 @@ Pages read like shadcn's, written for someone using the component, not for us:
 - **Values go in a table**, not a sentence: a row per option (size, token, variant) with its values in columns.
 - **Example data is generic.** People are Alex Smith, Sam Lee, Jordan Kim and Taylor Brown (`@alex`, `alex@acme.com`), or plain first names in a long list. The company is Acme and the domain `acme.com`. Use no real names, handles or companies.
 - **Avatar photos are the exception.** They are shadcn, emilkowalski, evilrabbit and aayushbtw, saved by handle in `apps/site/public/avatars`, and keep their own handle. A company shows its initials. Break fixtures keep their long and non-Latin names, on `acme.com`.
-- **AI providers are the exception too.** A model picker with invented providers reads as fake, so models and their logos are real (Anthropic, OpenAI, Google, DeepSeek, Mistral, xAI), saved by provider in `apps/site/public/logos`.
+- **AI providers are the exception too.** A model picker with invented providers reads as fake, so models and their logos are real (Anthropic, OpenAI, Google, DeepSeek, Mistral, xAI), saved by provider in `apps/site/public/logos`. Framework logos on the installation cards (Next.js, TanStack) are real too, saved there by name.
 - **Warn in bold** when the obvious way is wrong, and say why in one line.
 - **API Reference** lists only what's added on top of Base UI and links to Base UI for the rest.

@@ -5,6 +5,7 @@ import { docs } from "tomekit/content";
 const getDocs = createServerFn({ method: "GET" }).handler(() =>
   docs
     .documents()
+    .filter(({ slug }) => !slug.includes("/"))
     .map(({ metadata, slug }) => ({
       slug,
       draft: metadata.draft,

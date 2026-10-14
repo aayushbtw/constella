@@ -117,8 +117,9 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
                         to={to}
                         {...stylex.props(
                           styles.link,
-                          Boolean(matchRoute({ params: { slug }, to })) &&
-                            styles.active
+                          Boolean(
+                            matchRoute({ fuzzy: true, params: { slug }, to })
+                          ) && styles.active
                         )}
                       >
                         {title}

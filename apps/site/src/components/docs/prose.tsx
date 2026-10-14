@@ -19,6 +19,7 @@ import {
 } from "@/lib/tokens.stylex";
 import { demos, isDemo } from "~/components/demos";
 import { CopyButton } from "~/components/docs/copy-button";
+import { Frameworks } from "~/components/docs/frameworks";
 import { Install } from "~/components/docs/install";
 import { highlightCode } from "~/lib/highlight";
 import {
@@ -198,6 +199,14 @@ function MarkdownInstall({ name }: { name?: string }) {
   );
 }
 
+function MarkdownFrameworks() {
+  return (
+    <div {...stylex.props(styles.p)}>
+      <Frameworks />
+    </div>
+  );
+}
+
 const components = {
   a: ({ children, ...props }) => (
     <a {...props} {...stylex.props(styles.a)}>
@@ -216,6 +225,7 @@ const components = {
     </h3>
   ),
   "md-demo": Demo,
+  "md-frameworks": MarkdownFrameworks,
   "md-install": MarkdownInstall,
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
   pre: CodeBlock,
