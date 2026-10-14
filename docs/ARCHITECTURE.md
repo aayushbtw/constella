@@ -19,6 +19,10 @@
 
 **Components and blocks.** A component (`registry:ui`, in `src/components/ui/`) is a part an app assembles, including AI parts built on other components (Citation is a Badge and a Hover Card). A block (`registry:block`, its files `registry:component` in `src/components/`, so they install where an app keeps its own) is a whole section: a page, a form, a chat screen, copied in to edit. Blocks are exempt from the part rules below and are documented at `/blocks`.
 
+**For agents.** Every item's `docs` names its page's Markdown URL, which `shadcn add` prints; a draft's item gets one when its page leaves draft, since drafts aren't built. After `shadcn build`, the site's build runs `scripts/registry-examples.ts`, which adds a `registry:example` `<name>-demo` per component page to `public/r`, so shadcn's MCP server returns usage snippets; they're labelled as snippets, since they don't compile alone. The agent skill is `skills/constella/SKILL.md`, installed from the repo with `npx skills add`. We'll build our own MCP server only if shadcn's turns out too limiting.
+
+**Markdown.** The worker entry is `src/server.ts`: with `runWorkerFirst`, every page request passes through it, and `Accept: text/markdown` gets the page's `/index.md` route instead of HTML, with `Vary: Accept`; a miss is a Markdown 404 that links `llms.txt`. Markdown is served at request time, not prerendered. `/docs/installation/index.md`, `/docs/components/index.md` and `/blocks/index.md` have their own routes, since the `$slug` page routes would take `index.md` as a slug.
+
 `registryDependencies` reference this registry by URL. A bare name like `base` means shadcn's official registry.
 
 ## Composition

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { colors, space } from "@/lib/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
 import type { Heading } from "~/components/docs/outline";
+import { PageActions } from "~/components/docs/page-actions";
 import { layout } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
@@ -34,11 +35,13 @@ function DocsPage({
   children,
   description,
   headings,
+  markdown,
   title,
 }: {
   children: ReactNode;
   description: string;
   headings: Heading[];
+  markdown: string;
   title: string;
 }) {
   return (
@@ -47,6 +50,7 @@ function DocsPage({
         <header {...stylex.props(styles.header)}>
           <h1>{title}</h1>
           <p {...stylex.props(styles.description)}>{description}</p>
+          <PageActions markdown={markdown} />
         </header>
         {children}
       </main>

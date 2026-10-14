@@ -14,8 +14,27 @@ import {
 } from "~/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  codeRepository: config.repo,
+  description: config.description,
+  name: config.name,
+  programmingLanguage: "TypeScript",
+  runtimePlatform: "React",
+  url: config.url,
+};
+
 export const Route = createFileRoute("/")({
   loader: async () => await getComponents(),
+  head: () => ({
+    scripts: [
+      {
+        children: JSON.stringify(structuredData),
+        type: "application/ld+json",
+      },
+    ],
+  }),
   component: Home,
 });
 

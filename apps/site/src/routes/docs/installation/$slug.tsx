@@ -18,12 +18,13 @@ export const Route = createFileRoute("/docs/installation/$slug")({
 });
 
 function InstallationPage() {
-  const { body, metadata } = Route.useLoaderData();
+  const { body, markdown, metadata } = Route.useLoaderData();
 
   return (
     <DocsPage
       description={metadata.description}
       headings={metadata.headings}
+      markdown={markdown}
       title={metadata.title}
     >
       <Prose body={body} />

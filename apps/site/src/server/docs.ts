@@ -1,6 +1,6 @@
 import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { docs } from "tomekit/content";
+import { docs, markdown } from "tomekit/content";
 
 const getDocs = createServerFn({ method: "GET" }).handler(() =>
   docs
@@ -19,12 +19,13 @@ const getDoc = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(({ data: slug }) => {
     const document = docs.get(slug);
+    const page = markdown.get(`docs/${slug}`);
 
-    if (!document) {
+    if (!document || !page) {
       throw notFound();
     }
 
-    return document;
+    return { ...document, markdown: page.body };
   });
 
 export { getDoc, getDocs };

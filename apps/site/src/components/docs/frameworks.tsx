@@ -11,15 +11,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { colors, media, sizes, space, strokes } from "@/lib/tokens.stylex";
-
-const frameworks = [
-  {
-    logo: "/logos/tanstack.svg",
-    slug: "tanstack-start",
-    title: "TanStack Start",
-  },
-  { logo: "/logos/nextjs.svg", slug: "next", title: "Next.js" },
-];
+import { frameworks } from "~/lib/frameworks";
 
 const styles = stylex.create({
   grid: {

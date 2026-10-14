@@ -38,6 +38,9 @@ export default defineConfig({
         prerender: {
           crawlLinks: true,
           enabled: true,
+          // The worker serves Markdown per request; crawling it would follow
+          // sample links in code blocks, like `/settings`.
+          filter: (page) => !page.path.endsWith("/index.md"),
         },
         sitemap: {
           enabled: true,
