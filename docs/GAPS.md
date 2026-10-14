@@ -11,7 +11,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 - [x] **`radii.lg`** (16px, cards) and **`radii.xl`** (20px, the composer), derived from `--radius` like the others.
 - [x] **Surface roles:** `sidebar` (gray-2); `track` is `fillOpaque` and `selected` is `fill`.
-- [ ] **Chart roles:** a categorical set for data series, added with the first chart. Meter needed none: `fill` track, `accent` fill, `dangerSolid` at the cap.
+- [x] **Chart roles:** a categorical set for data series, added with the first chart. Meter needed none: `fill` track, `accent` fill, `dangerSolid` at the cap.
 
 ## Components
 
@@ -66,10 +66,10 @@ netigen builds these today. Each could become a Constella part once the componen
 - [x] **Suggestions**: starter prompts as a scrolling row of pills.
 - [x] **Attachment**: a file tile with upload progress.
 - [x] **Citation**: a source's pill (Badge + Avatar as a HoverCard trigger) opening one shared card: publication, headline, date.
-- [ ] **Model picker**: a Command of models with their details.
+- [x] **Model picker**: a Command of models with their details.
 - [x] **Approval**: a card asking to allow a tool call.
 - [x] **Questionnaire**: questions the model asks, one at a time.
-- [ ] **Answer rendering**: markdown, code blocks, result tables and charts.
+- [x] **Answer rendering**: markdown, code blocks, result tables and charts. Markdown renders tables on Table; charts are Chart.
 
 ## Motion
 
@@ -78,4 +78,4 @@ netigen builds these today. Each could become a Constella part once the componen
 
 ## Open
 
-- [ ] **Lift on secondary and danger buttons.** Today only outline and primary climb the shadow ladder; netigen lifts every pressable surface.
+- [x] **Lift on secondary and danger buttons.** Today only outline and primary climb the shadow ladder; netigen lifts every pressable surface.

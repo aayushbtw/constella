@@ -20,11 +20,11 @@ A file as a small `raised` card on an `edge`, its corner the media's plus the in
 
 ## Avatar
 
-Follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through. Its badge's status is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`.
+Follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `edge` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through. Its badge's status is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
 
 ## Badge
 
-Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full`, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
+Takes the button's six variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. `primary` and `danger` already carry their color and ignore it. A dot is muted with no status, and follows the text on `primary` and `danger`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
 
 ## Button group
 
@@ -70,6 +70,10 @@ The one surface that animates its height: what sits below it has to make room, s
 ## Command
 
 A menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it.
+
+## Markdown
+
+An answer reads as the page: `md` text on `lineHeights.prose`, blocks `space.md` apart, headings in semibold a step down (`lg`, then `md`) and two levels down in the outline, so they sit under the page's own. Inline code is a `fill` chip in mono at 0.875em; a code block is a `fillSubtle` tray on `radii.md`, `xs` mono, with a ghost copy button centered on its first line. A quote is `textSecondary` behind a 2px `edge` rule. Tables are the Table component, taking GFM's column alignment. Links keep the text color, underlined in `textMuted`, and open in a new tab.
 
 ## Marker
 
@@ -121,7 +125,7 @@ A `fill` chip with `textSecondary` type in the surrounding font, not monospace, 
 
 ## Model picker
 
-A popover whose popup is no surface: it holds two cards, a Command list at `sizes.modelPicker` and the highlighted model's details, opening and closing together on the popover's motion. The card shows once a row is reached by arrow key or the pointer rests on it for `hoverCardDelay`, then follows the highlight, so skimming the list never flashes it. A pick closes the picker at once, with no exit. The card opens at the list's `inline-end`, or `inline-start` for a picker at a row's end; opening upward it lines up with the list's bottom, nearest the trigger, and it wraps under the list when both don't fit. Logos are one-color masks painted in the text color.
+A popover whose popup is no surface: it holds two cards, a Command list at `sizes.modelPicker` and the highlighted model's details, opening and closing together on the popover's motion. The card shows once a row is reached by arrow key or the pointer rests on it for `hoverCardDelay`, then follows the highlight, so skimming the list never flashes it. A pick closes the picker at once, with no exit. The card opens at the list's `inline-end`, or `inline-start` for a picker at a row's end; opening upward it lines up with the list's bottom, nearest the trigger, and it wraps under the list when both don't fit. Logos are one-color masks painted in the text color. While the card shows, each row is described by it (`aria-describedby`), so a screen reader hears the highlighted model's details after its name.
 
 ## Popups (select, menu, popover)
 

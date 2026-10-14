@@ -10,7 +10,8 @@ import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import { durations, sizes, strokes } from "@/lib/tokens.stylex";
 
 type CopyButtonProps = Omit<ButtonProps, "children" | "onClick" | "value"> & {
-  value: string;
+  /** The text, or a function read at the press for text only the page holds, like highlighted code. */
+  value: string | (() => string);
 };
 
 // The Web clock takes bare milliseconds; the token carries `ms`.
@@ -35,7 +36,10 @@ function CopyButton({
   );
 
   async function copy() {
-    await navigator.clipboard.writeText(value);
+    await navigator.clipboard.writeText(
+      // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `value` is a documented union of text or its getter
+      typeof value === "string" ? value : value()
+    );
     setCopied(true);
     clearTimeout(timeout.current ?? undefined);
     timeout.current = setTimeout(() => {

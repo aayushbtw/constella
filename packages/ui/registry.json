@@ -939,6 +939,24 @@
       ]
     },
     {
+      "name": "markdown",
+      "type": "registry:ui",
+      "title": "Markdown",
+      "description": "An answer's markdown: prose, lists, quotes, tables and code blocks with a copy button.",
+      "dependencies": ["@stylexjs/stylex", "@tanstack/markdown"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/copy-button.json",
+        "https://constella.aayush.cv/r/table.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/markdown.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "marker",
       "type": "registry:ui",
       "title": "Marker",

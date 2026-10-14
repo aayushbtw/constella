@@ -24,6 +24,7 @@ import {
 import {
   AvatarBadgeDemo,
   AvatarBadgeIconDemo,
+  AvatarCornersDemo,
   AvatarDemo,
   AvatarDropdownDemo,
   AvatarFallbackDemo,
@@ -203,6 +204,10 @@ import {
 } from "~/components/demos/kbd";
 import { LabelDemo, LabelWrapDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
+import {
+  MarkdownDemo,
+  MarkdownStreamingDemo,
+} from "~/components/demos/markdown";
 import {
   MarkerDemo,
   MarkerLinkDemo,
@@ -393,6 +398,7 @@ const demos = {
   avatar: AvatarDemo,
   "avatar-badge": AvatarBadgeDemo,
   "avatar-badge-icon": AvatarBadgeIconDemo,
+  "avatar-corners": AvatarCornersDemo,
   "avatar-dropdown": AvatarDropdownDemo,
   "avatar-fallback": AvatarFallbackDemo,
   "avatar-group": AvatarGroupDemo,
@@ -533,6 +539,8 @@ const demos = {
   "label-wrap": LabelWrapDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
+  markdown: MarkdownDemo,
+  "markdown-streaming": MarkdownStreamingDemo,
   marker: MarkerDemo,
   "marker-link": MarkerLinkDemo,
   "marker-status": MarkerStatusDemo,
