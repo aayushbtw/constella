@@ -4,7 +4,14 @@ import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Button, buttonStyles } from "@/components/ui/button";
-import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  fontWeights,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/tokens.stylex";
 import { Logo } from "~/components/logo";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
@@ -44,6 +51,16 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
   },
+  brand: {
+    alignItems: "center",
+    display: "flex",
+    gap: space.xs,
+  },
+  beta: {
+    color: colors.textMuted,
+    fontSize: fontSizes.xxs,
+    fontWeight: fontWeights.medium,
+  },
   nav: {
     display: "flex",
   },
@@ -76,13 +93,16 @@ function Header() {
     <header {...stylex.props(styles.header)}>
       <div {...stylex.props(styles.inner)}>
         <div {...stylex.props(styles.start)}>
-          <Link
-            aria-label={`${config.name} home`}
-            to="/"
-            {...stylex.props(styles.name, pathname === "/" && entrance.spin)}
-          >
-            <Logo />
-          </Link>
+          <div {...stylex.props(styles.brand)}>
+            <Link
+              aria-label={`${config.name} home`}
+              to="/"
+              {...stylex.props(styles.name, pathname === "/" && entrance.spin)}
+            >
+              <Logo />
+            </Link>
+            <span {...stylex.props(styles.beta)}>Beta</span>
+          </div>
           <nav aria-label="Main" {...stylex.props(styles.nav)}>
             {sections.map(({ label, to }) => (
               <Link
