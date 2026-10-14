@@ -8,6 +8,7 @@ import {
   createContext,
   use,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -100,12 +101,13 @@ const styles = stylex.create({
 
 interface Picker {
   actions: RefObject<PopoverPrimitive.Root.Actions | null>;
-  rest: () => void;
+  cancelShow: () => void;
+  detailsId: string;
   picked: boolean;
   setPicked: (picked: boolean) => void;
   setShown: (shown: boolean) => void;
+  showAfterRest: () => void;
   shown: boolean;
-  unrest: () => void;
 }
 
 const PickerContext = createContext<Picker | null>(null);
@@ -128,6 +130,7 @@ function ModelPicker({
   const [picked, setPicked] = useState(false);
   const [shown, setShown] = useState(false);
   const timer = useRef(0);
+  const detailsId = useId();
   useEffect(
     () => () => {
       clearTimeout(timer.current);
@@ -137,24 +140,25 @@ function ModelPicker({
   const picker = useMemo(
     () => ({
       actions,
-      picked,
-      rest: () => {
+      cancelShow: () => {
         clearTimeout(timer.current);
-        timer.current = window.setTimeout(() => {
-          setShown(true);
-        }, hoverDelay);
       },
+      detailsId,
+      picked,
       setPicked,
       setShown: (next: boolean) => {
         clearTimeout(timer.current);
         setShown(next);
       },
-      shown,
-      unrest: () => {
+      showAfterRest: () => {
         clearTimeout(timer.current);
+        timer.current = window.setTimeout(() => {
+          setShown(true);
+        }, hoverDelay);
       },
+      shown,
     }),
-    [actions, picked, shown]
+    [actions, detailsId, picked, shown]
   );
   return (
     <PickerContext value={picker}>
@@ -250,6 +254,7 @@ function ModelPickerCommand({
   const { setShown } = usePicker();
   return (
     <Command
+      data-slot="model-picker-command"
       keepHighlight={keepHighlight}
       onItemHighlighted={(value, details) => {
         if (value === undefined) {
@@ -265,7 +270,10 @@ function ModelPickerCommand({
   );
 }
 
-/** A `CommandItem` that closes the picker once picked, with a tick when `selected`. */
+/**
+ * A `CommandItem` that closes the picker once picked, with a tick when `selected`.
+ * Every row is described by the details card, which always shows the highlighted row's model.
+ */
 function ModelPickerItem({
   children,
   onClick,
@@ -274,10 +282,12 @@ function ModelPickerItem({
   selected = false,
   ...props
 }: ComponentProps<typeof CommandItem> & { selected?: boolean }) {
-  const { actions, rest, setPicked, unrest } = usePicker();
+  const { actions, cancelShow, detailsId, setPicked, showAfterRest, shown } =
+    usePicker();
   return (
     <CommandItem
       aria-checked={selected}
+      aria-describedby={shown ? detailsId : undefined}
       onClick={(event) => {
         onClick?.(event);
         setPicked(true);
@@ -285,11 +295,11 @@ function ModelPickerItem({
       }}
       onPointerEnter={(event) => {
         onPointerEnter?.(event);
-        rest();
+        showAfterRest();
       }}
       onPointerLeave={(event) => {
         onPointerLeave?.(event);
-        unrest();
+        cancelShow();
       }}
       {...props}
     >
@@ -326,7 +336,7 @@ function ModelPickerLogo({
 
 /** The highlighted model's card, beside the command. Hidden until a row is reached by key or rested on. */
 function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  const { shown } = usePicker();
+  const { detailsId, shown } = usePicker();
   if (!shown) {
     return null;
   }
@@ -334,6 +344,7 @@ function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="model-picker-details"
       {...props}
+      id={detailsId}
       {...stylex.props(popoverStyles.surface, styles.details, sx)}
     />
   );

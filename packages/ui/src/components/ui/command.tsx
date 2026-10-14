@@ -35,7 +35,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 type CommandProps = Omit<
   AutocompletePrimitive.Root.Props<unknown>,
   "inline"
-> & { sx?: stylex.StyleXStyles };
+> & { "data-slot"?: string; sx?: stylex.StyleXStyles };
 
 const highlighted = ":is([data-highlighted])";
 const off = ":is([data-disabled])";
@@ -152,9 +152,13 @@ const styles = stylex.create({
 });
 
 /** A searchable list, always open, built on Base UI's inline Autocomplete. Pass `items`. */
-function Command({ sx, ...props }: CommandProps) {
+function Command({
+  "data-slot": slot = "command",
+  sx,
+  ...props
+}: CommandProps) {
   return (
-    <div data-slot="command" {...stylex.props(styles.command, sx)}>
+    <div data-slot={slot} {...stylex.props(styles.command, sx)}>
       <AutocompletePrimitive.Root
         autoHighlight="always"
         inline
