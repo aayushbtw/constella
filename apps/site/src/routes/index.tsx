@@ -48,6 +48,12 @@ const styles = stylex.create({
     maxWidth: "16ch",
     textWrap: "balance",
   },
+  lead: {
+    color: colors.textSecondary,
+    lineHeight: lineHeights.prose,
+    maxWidth: "48ch",
+    textWrap: "pretty",
+  },
   section: {
     display: "grid",
     gap: { default: space.sm, [media.sidebar]: space.lg },
@@ -82,8 +88,8 @@ const styles = stylex.create({
 function Home() {
   // Drafts only exist in dev; hidden here so the page reads as it ships.
   const components = Route.useLoaderData().filter(({ draft }) => !draft);
-  // The links row, each tile, then the index.
-  const items = showcaseSize + 2;
+  // The lead, the links row, each tile, then the index.
+  const items = showcaseSize + 3;
 
   return (
     <main {...stylex.props(styles.main)}>
@@ -97,17 +103,23 @@ function Home() {
           ))}
         </h1>
 
-        <ul {...stylex.props(styles.inline, entrance.item(0, items))}>
+        <p {...stylex.props(styles.lead, entrance.item(0, items))}>
+          React components styled with StyleX, not Tailwind. Installed with the
+          shadcn CLI.
+        </p>
+
+        <ul {...stylex.props(styles.inline, entrance.item(1, items))}>
           <li>
-            <Link to="/docs" {...stylex.props(styles.link)}>
-              Docs
+            <Link
+              params={{ slug: "installation" }}
+              to="/docs/$slug"
+              {...stylex.props(styles.link)}
+            >
+              Get started
             </Link>
           </li>
           <li>
-            <a
-              href={`https://github.com/${config.socials.github}`}
-              {...stylex.props(styles.link)}
-            >
+            <a href={config.repo} {...stylex.props(styles.link)}>
               GitHub
             </a>
           </li>
@@ -122,7 +134,7 @@ function Home() {
         </ul>
       </div>
 
-      <Showcase count={items} order={1} />
+      <Showcase count={items} order={2} />
 
       <section
         {...stylex.props(styles.section, entrance.item(items - 1, items))}

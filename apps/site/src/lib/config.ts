@@ -3,12 +3,12 @@ export const config = {
   name: "Constella",
   // The namespace components.json maps to this site's registry.
   registry: "@constella",
+  repo: "https://github.com/aayushbtw/constella",
   siteUrl:
     process.env.NODE_ENV === "production"
       ? "https://constella.aayush.cv"
       : "http://localhost:8080",
   socials: {
-    github: "aayushbtw",
     twitter: "aayushbtw",
   },
 };
