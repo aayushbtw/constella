@@ -65,6 +65,19 @@ const interactive = <T,>(rest: T, active: T) => ({
   ":active:not(:disabled)": active,
 });
 
+// Every surface that can be pressed climbs the ladder. The press repeats inside the media
+// block, which StyleX ranks above a bare `:active`.
+const lift = {
+  default: shadows.control,
+  ":is([data-popup-open])": shadows.controlHover,
+  [media.hover]: {
+    default: shadows.control,
+    ":hover:not(:disabled, :active)": shadows.controlHover,
+    ":active:not(:disabled)": shadows.controlPressed,
+  },
+  ":active:not(:disabled)": shadows.controlPressed,
+};
+
 const kbdInset = (height: string) =>
   `calc((${height} - ${sizes.kbd}) / 2 - ${strokes.border})`;
 
@@ -175,6 +188,7 @@ const styles = stylex.create({
   },
   secondary: {
     backgroundColor: interactive(colors.fill, colors.fillStrong),
+    boxShadow: lift,
     color: colors.textPrimary,
   },
   outline: {
@@ -182,17 +196,7 @@ const styles = stylex.create({
     backgroundColor: interactive(colors.background, colors.fillSubtle),
     borderBlockColor: colors.edge,
     borderInlineColor: colors.edge,
-    // The press repeats inside the media block, which StyleX ranks above a bare `:active`.
-    boxShadow: {
-      default: shadows.control,
-      ":is([data-popup-open])": shadows.controlHover,
-      [media.hover]: {
-        default: shadows.control,
-        ":hover:not(:disabled, :active)": shadows.controlHover,
-        ":active:not(:disabled)": shadows.controlPressed,
-      },
-      ":active:not(:disabled)": shadows.controlPressed,
-    },
+    boxShadow: lift,
     color: colors.textPrimary,
   },
   ghost: {
@@ -202,6 +206,7 @@ const styles = stylex.create({
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
     backgroundColor: interactive(colors.dangerFillSubtle, colors.dangerFill),
+    boxShadow: lift,
     color: colors.danger,
   },
   // Reads as text, so it answers with an underline instead of a fill or a press.
