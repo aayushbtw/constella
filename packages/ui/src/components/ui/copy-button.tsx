@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
+import { visuallyHidden } from "@/lib/styles";
 import { durations, sizes, strokes } from "@/lib/tokens.stylex";
-import { visuallyHidden } from "@/lib/visually-hidden";
 
 type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
