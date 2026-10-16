@@ -96,6 +96,14 @@ Use the `size` prop on `Table` for denser rows, for data a reader scans rather t
 | `sm`      | 32px          | 4px          |
 | `default` | 40px          | 8px          |
 
+## Interactive
+
+Set `interactive={false}` on `Table` for a reference table a reader only reads, like a props list: rows stop lighting on hover and press. Selected rows keep their fill.
+
+```tsx
+<Table interactive={false}>…</Table>
+```
+
 ## Footer
 
 Use `TableFooter` for a totals row.

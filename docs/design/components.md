@@ -213,7 +213,7 @@ A checkbox that slides: `fillStrong` track off, `accent` on. Off, the thumb take
 
 ## Table
 
-Rows are divided by `edgeSubtle` and its footer sits on `fillSubtle`. A selected row takes `fill`. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
+Rows are divided by `edgeSubtle` and its footer sits on `fillSubtle`. A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
 
 ## Textarea
 

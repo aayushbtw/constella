@@ -23,7 +23,10 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-type TableProps = Styled<ComponentProps<"table">> & { size?: TableSize };
+type TableProps = Styled<ComponentProps<"table">> & {
+  interactive?: boolean;
+  size?: TableSize;
+};
 
 const marked = ":is([data-state='selected'], [aria-current='true'])";
 const open = "[aria-current='true']";
@@ -89,6 +92,15 @@ const styles = stylex.create({
     transitionProperty: "background-color, box-shadow",
     transitionTimingFunction: "ease",
   },
+  // Reference tables a reader only reads: rows keep their marked fills but don't answer the pointer.
+  rowStatic: {
+    backgroundColor: {
+      default: "transparent",
+      [checked]: colors.fill,
+      [open]: colors.fillStrong,
+    },
+    boxShadow: null,
+  },
   head: {
     color: colors.textPrimary,
     fontWeight: fontWeights.medium,
@@ -129,19 +141,27 @@ const styles = stylex.create({
 });
 
 const TableSizeContext = createContext<TableSize>("default");
+const TableInteractiveContext = createContext(true);
 
-function Table({ size = "default", sx, ...props }: TableProps) {
+function Table({
+  interactive = true,
+  size = "default",
+  sx,
+  ...props
+}: TableProps) {
   return (
-    <TableSizeContext value={size}>
-      <div data-slot="table-container" {...stylex.props(styles.container)}>
-        <table
-          data-size={size}
-          data-slot="table"
-          {...props}
-          {...stylex.props(styles.table, sx)}
-        />
-      </div>
-    </TableSizeContext>
+    <TableInteractiveContext value={interactive}>
+      <TableSizeContext value={size}>
+        <div data-slot="table-container" {...stylex.props(styles.container)}>
+          <table
+            data-size={size}
+            data-slot="table"
+            {...props}
+            {...stylex.props(styles.table, sx)}
+          />
+        </div>
+      </TableSizeContext>
+    </TableInteractiveContext>
   );
 }
 
@@ -164,8 +184,13 @@ function TableFooter({ sx, ...props }: Styled<ComponentProps<"tfoot">>) {
 }
 
 function TableRow({ sx, ...props }: Styled<ComponentProps<"tr">>) {
+  const interactive = use(TableInteractiveContext);
   return (
-    <tr data-slot="table-row" {...props} {...stylex.props(styles.row, sx)} />
+    <tr
+      data-slot="table-row"
+      {...props}
+      {...stylex.props(styles.row, !interactive && styles.rowStatic, sx)}
+    />
   );
 }
 

@@ -13,6 +13,14 @@ import {
 } from "@/components/ui/code-block";
 import { CopyButton } from "@/components/ui/copy-button";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   colors,
   fontSizes,
   fontWeights,
@@ -84,21 +92,16 @@ const styles = stylex.create({
     paddingInlineEnd: 3,
     paddingInlineStart: 3,
   },
+  // Docs cells hold sentences, so they wrap instead of scrolling the table sideways.
+  // Body text reads as the prose around it; headers keep the table's own textPrimary.
   table: {
-    ...flow,
-    borderCollapse: "collapse",
-    fontSize: fontSizes.sm,
-    width: "100%",
+    color: colors.textSecondary,
   },
-  cell: {
-    boxShadow: shadows.rule,
-    paddingBlock: space.xs,
-    paddingInlineEnd: space.md,
-    textAlign: "start",
+  wrap: {
+    whiteSpace: "normal",
   },
-  th: {
-    color: colors.textPrimary,
-    fontWeight: fontWeights.medium,
+  top: {
+    verticalAlign: "top",
   },
   strong: {
     fontWeight: fontWeights.semibold,
@@ -204,9 +207,16 @@ const components = {
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
   pre: ({ children }: ComponentPropsWithoutRef<"pre">): ReactNode => children,
   strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
-  table: (props) => <table {...props} {...stylex.props(styles.table)} />,
-  td: (props) => <td {...props} {...stylex.props(styles.cell)} />,
-  th: (props) => <th {...props} {...stylex.props(styles.cell, styles.th)} />,
+  table: (props) => (
+    <div {...stylex.props(styles.p)}>
+      <Table {...props} interactive={false} sx={styles.table} />
+    </div>
+  ),
+  tbody: (props) => <TableBody {...props} />,
+  td: (props) => <TableCell {...props} sx={[styles.wrap, styles.top]} />,
+  th: (props) => <TableHead {...props} sx={styles.wrap} />,
+  thead: (props) => <TableHeader {...props} />,
+  tr: (props) => <TableRow {...props} />,
 } satisfies MarkdownComponents;
 
 function Prose({ body }: { body: MarkdownProps["children"] }) {
