@@ -230,3 +230,7 @@ A ghost or outline button that stays pressed, with the button's sizes and press.
 ## Tool steps
 
 Reasoning's trigger over a list of steps. Each step is a row a control tall: a status mark in an icon's column under the trigger's icon, the tool's icon on an `iconLg` `fill` tile, a medium title and a `textMuted` description cut short. The mark is a spinner, a tick or an alert in `danger`, cross-fading as the status changes, with its status named for screen readers; a failure also says why in words. A running title shimmers. A 1px `edge` rail threads the marks and the trigger's icon, stopping `space.xxs` short of each, and runs unbroken past an open step's results.
+
+## Trace
+
+A Trace line is Reasoning's trigger as a part. It's a control tall, `textSecondary` at `sm`: an icon's column, a title cut short and a `textMuted` description that never truncates. It turns `textPrimary` on hover only inside a link or trigger. `error` is `danger`, hover included; `pending` dims to `opacities.disabled`; a running title shimmers. A trailing icon sits `space.xxs` closer, as the indicator. Lines stack `space.xs` apart. An open line's detail sits on Reasoning's rail, lined up with the title, so a nested trace lines up its icons there too. A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.

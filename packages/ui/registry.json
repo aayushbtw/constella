@@ -1081,6 +1081,29 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/attachment/index.md"
     },
     {
+      "name": "trace",
+      "type": "registry:ui",
+      "title": "Trace",
+      "description": "The steps an agent takes, one line each, that open, link or show a status.",
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/collapsible.json",
+        "https://constella.aayush.cv/r/shimmer.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/trace.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "tool-steps",
       "type": "registry:ui",
       "title": "Tool Steps",

@@ -386,6 +386,18 @@ import {
   TooltipKbdDemo,
   TooltipSideDemo,
 } from "~/components/demos/tooltip";
+import {
+  TraceCollapsibleDemo,
+  TraceControlledDemo,
+  TraceDemo,
+  TraceDescriptionDemo,
+  TraceDialogDemo,
+  TraceGroupDemo,
+  TraceLineDemo,
+  TraceLinkDemo,
+  TraceSheetDemo,
+  TraceStatusDemo,
+} from "~/components/demos/trace";
 import { TypographyDemo } from "~/components/demos/typography";
 
 const demos = {
@@ -650,6 +662,16 @@ const demos = {
   "toast-types": ToastTypesDemo,
   "tool-steps": ToolStepsDemo,
   "tool-steps-status": ToolStepsStatusDemo,
+  trace: TraceDemo,
+  "trace-collapsible": TraceCollapsibleDemo,
+  "trace-controlled": TraceControlledDemo,
+  "trace-description": TraceDescriptionDemo,
+  "trace-dialog": TraceDialogDemo,
+  "trace-group": TraceGroupDemo,
+  "trace-line": TraceLineDemo,
+  "trace-link": TraceLinkDemo,
+  "trace-sheet": TraceSheetDemo,
+  "trace-status": TraceStatusDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
   switch: SwitchDemo,
