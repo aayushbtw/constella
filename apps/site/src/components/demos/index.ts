@@ -318,6 +318,7 @@ import { SpinnerDemo } from "~/components/demos/spinner";
 import { SuggestionsDemo } from "~/components/demos/suggestions";
 import {
   CopyButtonDemo,
+  CopyButtonLabelDemo,
   CopyButtonVariantDemo,
   SwapIconDemo,
   SwapTextDemo,
@@ -483,6 +484,7 @@ const demos = {
   "code-block-size": CodeBlockSizeDemo,
   "code-block-wrap": CodeBlockWrapDemo,
   "copy-button": CopyButtonDemo,
+  "copy-button-label": CopyButtonLabelDemo,
   "copy-button-variant": CopyButtonVariantDemo,
   "data-table": DataTableDemo,
   "data-table-filter": DataTableFilterDemo,

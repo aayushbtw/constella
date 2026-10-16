@@ -9,7 +9,7 @@ import type { ButtonProps } from "@/components/ui/button";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import { durations, sizes, strokes } from "@/lib/tokens.stylex";
 
-type CopyButtonProps = Omit<ButtonProps, "children" | "onClick" | "value"> & {
+type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
   value: string | (() => string);
 };
@@ -17,10 +17,15 @@ type CopyButtonProps = Omit<ButtonProps, "children" | "onClick" | "value"> & {
 // The Web clock takes bare milliseconds; the token carries `ms`.
 const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
 
+const labelledIconSizes: Partial<
+  Record<NonNullable<ButtonProps["size"]>, string>
+> = { sm: sizes.iconSm, xs: sizes.iconXs };
+
 /** Copies `value`, and shows a tick for a moment after. */
 function CopyButton({
-  "aria-label": label = "Copy",
-  size = "icon-sm",
+  "aria-label": label,
+  children,
+  size,
   value,
   variant = "ghost",
   ...props
@@ -47,33 +52,46 @@ function CopyButton({
     }, confirmFor);
   }
 
+  const labelled = children !== undefined;
+  const buttonSize = size ?? (labelled ? "sm" : "icon-sm");
+  const iconSize = labelled
+    ? (labelledIconSizes[buttonSize] ?? sizes.icon)
+    : sizes.icon;
+
   return (
     <Button
-      aria-label={copied ? "Copied" : label}
+      aria-label={
+        copied ? "Copied" : (label ?? (labelled ? undefined : "Copy"))
+      }
       data-slot="copy-button"
       onClick={() => {
         void copy();
       }}
-      size={size}
+      size={buttonSize}
       variant={variant}
       {...props}
     >
-      <SwapIcon aria-hidden value={copied ? "copied" : "copy"}>
+      <SwapIcon
+        aria-hidden
+        data-icon={labelled ? "inline-start" : undefined}
+        value={copied ? "copied" : "copy"}
+      >
         <SwapIconItem value="copied">
           <HugeiconsIcon
             icon={Tick02Icon}
-            size={sizes.icon}
+            size={iconSize}
             strokeWidth={Number(strokes.icon)}
           />
         </SwapIconItem>
         <SwapIconItem value="copy">
           <HugeiconsIcon
             icon={Copy01Icon}
-            size={sizes.icon}
+            size={iconSize}
             strokeWidth={Number(strokes.icon)}
           />
         </SwapIconItem>
       </SwapIcon>
+      {children}
     </Button>
   );
 }

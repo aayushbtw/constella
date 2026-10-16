@@ -58,6 +58,16 @@ function CopyButtonVariantDemo() {
   );
 }
 
+function CopyButtonLabelDemo() {
+  return (
+    <DemoRow>
+      <CopyButton value="Hello" variant="outline">
+        Copy
+      </CopyButton>
+    </DemoRow>
+  );
+}
+
 function SwapIconDemo() {
   const [playing, setPlaying] = useState(false);
   return (
@@ -107,4 +117,10 @@ function SwapTextDemo() {
   );
 }
 
-export { CopyButtonDemo, CopyButtonVariantDemo, SwapIconDemo, SwapTextDemo };
+export {
+  CopyButtonDemo,
+  CopyButtonLabelDemo,
+  CopyButtonVariantDemo,
+  SwapIconDemo,
+  SwapTextDemo,
+};

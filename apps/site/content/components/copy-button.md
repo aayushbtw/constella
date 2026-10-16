@@ -35,8 +35,20 @@ The icon swaps to a tick with a [Swap Icon](/docs/components/swap-icon), holds f
 <CopyButton value="Hello" variant="outline" />
 ```
 
+## Label
+
+Pass `children` for a visible label after the icon. It names the button, and the size defaults to `sm`.
+
+<!-- ::demo name="copy-button-label" -->
+
+```tsx
+<CopyButton value="Hello" variant="outline">
+  Copy
+</CopyButton>
+```
+
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
-| `CopyButton` | `value`: the text to copy, or a function that returns it at the press; a `Button`'s props but `children` and `onClick` |
+| `CopyButton` | `value`: the text to copy, or a function that returns it at the press; a `Button`'s props but `onClick` |

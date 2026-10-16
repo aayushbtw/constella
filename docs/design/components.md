@@ -89,7 +89,7 @@ Reads as a page with the user's words set off: a user's message is a `fillOpaque
 
 ## Copy button
 
-A button that swaps its copy icon for a tick for `durations.confirm` and back.
+A button that swaps its copy icon for a tick for `durations.confirm` and back. With a label it's an `sm` button, icon first at the size's icon size, and the label names it.
 
 ## Data table
 
