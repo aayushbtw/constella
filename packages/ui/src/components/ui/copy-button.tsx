@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
-import { visuallyHidden } from "@/lib/styles";
 import { durations, sizes, strokes } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/visually-hidden";
 
 type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
@@ -32,7 +32,8 @@ function CopyButton({
   variant = "ghost",
   ...props
 }: CopyButtonProps) {
-  const [copied, setCopied] = useState(false);
+  const [copies, setCopies] = useState(0);
+  const copied = copies > 0;
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(
@@ -47,10 +48,10 @@ function CopyButton({
       // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `value` is a documented union of text or its getter
       typeof value === "string" ? value : value()
     );
-    setCopied(true);
+    setCopies((count) => count + 1);
     clearTimeout(timeout.current ?? undefined);
     timeout.current = setTimeout(() => {
-      setCopied(false);
+      setCopies(0);
     }, confirmFor);
   }
 
@@ -96,7 +97,8 @@ function CopyButton({
       </Button>
       {/* Outside the button, or its text would join the button's name. */}
       <output aria-live="polite" {...stylex.props(visuallyHidden.base)}>
-        {copied ? "Copied" : ""}
+        {/* A fresh node per press, so a repeat press is announced again. */}
+        {copied && <span key={copies}>Copied</span>}
       </output>
     </>
   );
