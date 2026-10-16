@@ -1104,53 +1104,6 @@
       ]
     },
     {
-      "name": "tool-steps",
-      "type": "registry:ui",
-      "title": "Tool Steps",
-      "description": "The tool calls a run makes, each with a status and what it returned.",
-      "dependencies": [
-        "@base-ui/react",
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
-        "@stylexjs/stylex"
-      ],
-      "registryDependencies": [
-        "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/collapsible.json",
-        "https://constella.aayush.cv/r/shimmer.json",
-        "https://constella.aayush.cv/r/spinner.json",
-        "https://constella.aayush.cv/r/swap-icon.json"
-      ],
-      "files": [
-        {
-          "path": "src/components/ui/tool-steps.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "reasoning",
-      "type": "registry:ui",
-      "title": "Reasoning",
-      "description": "The model's thinking before it answers, closed to one line.",
-      "dependencies": [
-        "@base-ui/react",
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
-        "@stylexjs/stylex"
-      ],
-      "registryDependencies": [
-        "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/collapsible.json"
-      ],
-      "files": [
-        {
-          "path": "src/components/ui/reasoning.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "citation",
       "type": "registry:ui",
       "title": "Citation",

@@ -42,7 +42,6 @@ const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
 const failed = "[data-status='error']";
-// Copied from reasoning.tsx and tool-steps.tsx until they're rebuilt on Trace; change all three.
 // Under the line's icon, stopping `space.xxs` short of it.
 const reach = `calc((${sizes.controlSm} - ${sizes.icon}) / 2 - ${space.xxs})`;
 const rail = {

@@ -269,10 +269,6 @@ import {
   RadioGroupSizeDemo,
 } from "~/components/demos/radio-group";
 import {
-  ReasoningControlledDemo,
-  ReasoningDemo,
-} from "~/components/demos/reasoning";
-import {
   ScrollAreaBothDemo,
   ScrollAreaDemo,
   ScrollAreaHorizontalDemo,
@@ -377,10 +373,6 @@ import {
   ToggleSizeDemo,
 } from "~/components/demos/toggle";
 import {
-  ToolStepsDemo,
-  ToolStepsStatusDemo,
-} from "~/components/demos/tool-steps";
-import {
   TooltipDemo,
   TooltipDisabledDemo,
   TooltipKbdDemo,
@@ -388,7 +380,7 @@ import {
 } from "~/components/demos/tooltip";
 import {
   TraceCollapsibleDemo,
-  TraceControlledDemo,
+  TraceReasoningDemo,
   TraceDemo,
   TraceDescriptionDemo,
   TraceDialogDemo,
@@ -397,6 +389,7 @@ import {
   TraceLinkDemo,
   TraceSheetDemo,
   TraceStatusDemo,
+  TraceToolDemo,
 } from "~/components/demos/trace";
 import { TypographyDemo } from "~/components/demos/typography";
 
@@ -617,8 +610,6 @@ const demos = {
   "radio-group-fieldset": RadioGroupFieldsetDemo,
   "radio-group-invalid": RadioGroupInvalidDemo,
   "radio-group-size": RadioGroupSizeDemo,
-  reasoning: ReasoningDemo,
-  "reasoning-controlled": ReasoningControlledDemo,
   "scroll-area": ScrollAreaDemo,
   "scroll-area-both": ScrollAreaBothDemo,
   "scroll-area-horizontal": ScrollAreaHorizontalDemo,
@@ -660,11 +651,9 @@ const demos = {
   "toast-dismiss": ToastDismissDemo,
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
-  "tool-steps": ToolStepsDemo,
-  "tool-steps-status": ToolStepsStatusDemo,
   trace: TraceDemo,
   "trace-collapsible": TraceCollapsibleDemo,
-  "trace-controlled": TraceControlledDemo,
+  "trace-reasoning": TraceReasoningDemo,
   "trace-description": TraceDescriptionDemo,
   "trace-dialog": TraceDialogDemo,
   "trace-group": TraceGroupDemo,
@@ -672,6 +661,7 @@ const demos = {
   "trace-link": TraceLinkDemo,
   "trace-sheet": TraceSheetDemo,
   "trace-status": TraceStatusDemo,
+  "trace-tool": TraceToolDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
   switch: SwitchDemo,

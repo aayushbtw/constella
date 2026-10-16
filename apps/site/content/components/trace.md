@@ -142,23 +142,13 @@ Wrap the line in a `TraceCollapsible` to show more when it opens. Put the `Trace
 
 ### Controlled
 
-Use `open` with `onOpenChange`. To open a line while it runs and let the reader's click win, pass `open ?? running`.
-
-<!-- ::demo name="trace-controlled" -->
+Use `open` with `onOpenChange`. To open a line while it runs and let the reader's click win, pass `open ?? running`, as [Reasoning](#reasoning) does.
 
 ```tsx
 const [open, setOpen] = useState<boolean>();
 
 <TraceCollapsible onOpenChange={setOpen} open={open ?? running}>
-  <TraceCollapsibleTrigger>
-    <TraceLine status={running ? "running" : undefined}>
-      <TraceIcon>
-        <BrainIcon />
-      </TraceIcon>
-      <TraceTitle>{running ? "Thinking" : "Thought for 5s"}</TraceTitle>
-    </TraceLine>
-  </TraceCollapsibleTrigger>
-  <TraceCollapsibleContent>{reasoning}</TraceCollapsibleContent>
+  …
 </TraceCollapsible>;
 ```
 
@@ -198,6 +188,66 @@ Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab,
     </TraceIcon>
   </TraceLine>
 </a>
+```
+
+## Reasoning
+
+Use a [controlled](#controlled) `TraceCollapsible` for the model's thinking, so it opens while the model thinks and closes once the answer starts.
+
+<!-- ::demo name="trace-reasoning" -->
+
+```tsx
+<TraceCollapsible onOpenChange={setOpen} open={open ?? running}>
+  <TraceCollapsibleTrigger>
+    <TraceLine status={running ? "running" : undefined}>
+      <TraceIcon>
+        <BrainIcon />
+      </TraceIcon>
+      <TraceTitle>{running ? "Thinking" : "Thought for 5s"}</TraceTitle>
+    </TraceLine>
+  </TraceCollapsibleTrigger>
+  <TraceCollapsibleContent>{reasoning}</TraceCollapsibleContent>
+</TraceCollapsible>
+```
+
+## Tool
+
+Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `status` as its call starts and ends, and swap its icon with a [Swap Icon](/docs/components/swap-icon). A finished call has no status.
+
+<!-- ::demo name="trace-tool" -->
+
+```tsx
+<TraceCollapsible defaultOpen>
+  <TraceCollapsibleTrigger>
+    <TraceLine status={running ? "running" : undefined}>
+      <TraceIcon>
+        <WrenchIcon />
+      </TraceIcon>
+      <TraceTitle>{running ? "Using 3 tools" : "Used 3 tools"}</TraceTitle>
+    </TraceLine>
+  </TraceCollapsibleTrigger>
+  <TraceCollapsibleContent>
+    <Trace>
+      <TraceLine status={status === "done" ? undefined : status}>
+        <TraceIcon>
+          <SwapIcon value={status}>
+            <SwapIconItem value="running">
+              <Spinner aria-hidden aria-label={undefined} />
+            </SwapIconItem>
+            <SwapIconItem value="done">
+              <CalendarIcon />
+            </SwapIconItem>
+            <SwapIconItem value="error">
+              <AlertIcon />
+            </SwapIconItem>
+          </SwapIcon>
+        </TraceIcon>
+        <TraceTitle>{titles[status]}</TraceTitle>
+        <TraceDescription>March 2027</TraceDescription>
+      </TraceLine>
+    </Trace>
+  </TraceCollapsibleContent>
+</TraceCollapsible>
 ```
 
 ## Dialog

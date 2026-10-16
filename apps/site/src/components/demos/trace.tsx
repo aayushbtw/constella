@@ -3,10 +3,14 @@ import {
   Alert02Icon,
   ArrowUpRight01Icon,
   CheckmarkCircle02Icon,
+  DatabaseIcon,
   FileEditIcon,
   Globe02Icon,
   PlayIcon,
+  RepeatIcon,
+  Search01Icon,
   TerminalIcon,
+  WrenchIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
@@ -39,6 +43,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
+import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import {
   Trace,
   traceActionStyles,
@@ -240,7 +245,7 @@ function TraceCollapsibleDemo() {
 const words = thought.split(" ");
 const wordEvery = 60;
 
-function TraceControlledDemo() {
+function TraceReasoningDemo() {
   const [shown, setShown] = useState(0);
   const [open, setOpen] = useState<boolean>();
   const running = shown < words.length;
@@ -293,6 +298,132 @@ function TraceControlledDemo() {
         </TraceCollapsibleTrigger>
         <TraceCollapsibleContent>
           {words.slice(0, shown).join(" ")}
+        </TraceCollapsibleContent>
+      </TraceCollapsible>
+    </DemoRow>
+  );
+}
+
+const run = [
+  {
+    description: "flights to Lisbon in March",
+    icon: Search01Icon,
+    title: {
+      done: "Searched the web",
+      error: "Failed to search the web",
+      running: "Searching the web",
+    },
+  },
+  {
+    description: "acme.com/flights",
+    icon: Globe02Icon,
+    title: {
+      done: "Read the page",
+      error: "Failed to read the page",
+      running: "Reading the page",
+    },
+  },
+  {
+    description: "March 2027",
+    icon: DatabaseIcon,
+    title: {
+      done: "Checked the calendar",
+      error: "Failed to check the calendar",
+      running: "Checking the calendar",
+    },
+  },
+] as const;
+
+const tick = 1200;
+
+function statusAt(index: number, elapsed: number) {
+  if (elapsed < index) {
+    return null;
+  }
+  if (elapsed === index) {
+    return "running";
+  }
+  return index === run.length - 1 ? "error" : "done";
+}
+
+function TraceToolDemo() {
+  const [elapsed, setElapsed] = useState(0);
+  const running = elapsed < run.length;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setElapsed(Math.min(elapsed + 1, run.length));
+    }, tick);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [elapsed]);
+
+  return (
+    <DemoRow
+      sx={styles.stage}
+      controls={
+        <div>
+          <Button
+            disabled={running}
+            onClick={() => {
+              setElapsed(0);
+            }}
+            size="sm"
+            variant="outline"
+          >
+            <Icon icon={RepeatIcon} />
+            Run again
+          </Button>
+        </div>
+      }
+    >
+      <TraceCollapsible defaultOpen sx={styles.width}>
+        <TraceCollapsibleTrigger>
+          <TraceLine status={running ? "running" : undefined}>
+            <TraceIcon>
+              <SwapIcon value={running ? "running" : "done"}>
+                <SwapIconItem value="running">
+                  <Spinner aria-hidden aria-label={undefined} />
+                </SwapIconItem>
+                <SwapIconItem value="done">
+                  <Icon icon={WrenchIcon} />
+                </SwapIconItem>
+              </SwapIcon>
+            </TraceIcon>
+            <TraceTitle>
+              {running ? "Using 3 tools" : "Used 3 tools"}
+            </TraceTitle>
+          </TraceLine>
+        </TraceCollapsibleTrigger>
+        <TraceCollapsibleContent>
+          <Trace>
+            {run.map((step, index) => {
+              const status = statusAt(index, elapsed);
+              return status === null ? null : (
+                <TraceLine
+                  key={step.description}
+                  status={status === "done" ? undefined : status}
+                >
+                  <TraceIcon>
+                    <SwapIcon value={status}>
+                      <SwapIconItem value="running">
+                        <Spinner aria-hidden aria-label={undefined} />
+                      </SwapIconItem>
+                      <SwapIconItem value="done">
+                        <Icon icon={step.icon} />
+                      </SwapIconItem>
+                      <SwapIconItem value="error">
+                        <Icon icon={Alert02Icon} />
+                      </SwapIconItem>
+                    </SwapIcon>
+                  </TraceIcon>
+                  <TraceTitle>{step.title[status]}</TraceTitle>
+                  <TraceDescription>{step.description}</TraceDescription>
+                </TraceLine>
+              );
+            })}
+          </Trace>
         </TraceCollapsibleContent>
       </TraceCollapsible>
     </DemoRow>
@@ -431,7 +562,7 @@ function TraceGroupDemo() {
 
 export {
   TraceCollapsibleDemo,
-  TraceControlledDemo,
+  TraceReasoningDemo,
   TraceDemo,
   TraceDescriptionDemo,
   TraceDialogDemo,
@@ -440,4 +571,5 @@ export {
   TraceLinkDemo,
   TraceSheetDemo,
   TraceStatusDemo,
+  TraceToolDemo,
 };

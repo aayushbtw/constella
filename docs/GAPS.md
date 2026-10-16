@@ -33,7 +33,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Disclosure
 
-- [x] **Collapsible**: tool steps, reasoning.
+- [x] **Collapsible**: Trace's open lines.
 - [x] **HoverCard**: a citation's preview on hover.
 - [x] **Command**: a searchable palette and list, for chat search and the model picker.
 - [x] **ScrollArea**.
@@ -62,7 +62,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 netigen builds these today. Each could become a Constella part once the components above exist. Built so far for them: Marker, Shimmer, Scroll Fade.
 
-- [x] **Tool steps**: a collapsible list of steps, each with a status and a live label, and **Reasoning** beside it.
+- [x] **Trace**: tool steps and reasoning, as lines with a status that open, link or show a dialog.
 - [x] **Suggestions**: starter prompts as a scrolling row of pills.
 - [x] **Attachment**: a file tile with upload progress.
 - [x] **Citation**: a source's pill (Badge + Avatar as a HoverCard trigger) opening one shared card: publication, headline, date.

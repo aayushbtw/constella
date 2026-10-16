@@ -12,7 +12,7 @@ Wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), s
 
 ## Approval
 
-An `sm` card that names itself by its title. The title leads with a `fill` media tile `sizes.iconLg` square, shared with Tool steps. Arguments are a `dl` grid, labels in `textSecondary`. A full-bleed separator splits the arguments from a long body. Once answered, the footer goes and a Badge in the action says what happened.
+An `sm` card that names itself by its title. The title leads with a `fill` media tile `sizes.iconLg` square. Arguments are a `dl` grid, labels in `textSecondary`. A full-bleed separator splits the arguments from a long body. Once answered, the footer goes and a Badge in the action says what happened.
 
 ## Attachment
 
@@ -151,10 +151,6 @@ One question at a time, each answer a choice card. The card is Field's: `edge`, 
 
 A round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`.
 
-## Reasoning
-
-A quiet text button in `textSecondary` at `sm`, with no fill. It turns `textPrimary` on hover, with a chevron that turns a quarter on `move` + `out`. The thinking sits under it in `textSecondary`, lined up with the label, beside a 1px `edge` rail that starts under the trigger's icon. The app decides when it opens and closes.
-
 ## Scroll area
 
 Its scrollbar is an overlay: a 10px rail with an `edge` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. Where a scroll fade already shows there's more, like the docs sidebar, `hideScrollbar` drops the scrollbar.
@@ -227,10 +223,6 @@ An input's surface, two control heights tall, growing with its content and resiz
 
 A ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one segmented control.
 
-## Tool steps
-
-Reasoning's trigger over a list of steps. Each step is a row a control tall: a status mark in an icon's column under the trigger's icon, the tool's icon on an `iconLg` `fill` tile, a medium title and a `textMuted` description cut short. The mark is a spinner, a tick or an alert in `danger`, cross-fading as the status changes, with its status named for screen readers; a failure also says why in words. A running title shimmers. A 1px `edge` rail threads the marks and the trigger's icon, stopping `space.xxs` short of each, and runs unbroken past an open step's results.
-
 ## Trace
 
-A Trace line is Reasoning's trigger as a part. It's a control tall, `textSecondary` at `sm`: an icon's column, a title cut short and a `textMuted` description that never truncates. It turns `textPrimary` on hover only inside a link or trigger. `error` is `danger`, hover included; `pending` dims to `opacities.disabled`; a running title shimmers. A trailing icon sits `space.xxs` closer, as the indicator. Lines stack `space.xs` apart. An open line's detail sits on Reasoning's rail, lined up with the title, so a nested trace lines up its icons there too. A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.
+The one shape for an agent's steps: reasoning, tool calls and sources are all Trace lines, not components of their own. A line is a quiet text row a control tall with no fill, `textSecondary` at `sm`: an icon's column, a title cut short and a `textMuted` description that never truncates. It turns `textPrimary` on hover only inside a link or trigger, and a collapsible's chevron turns a quarter on `move` + `out`. `error` is `danger`, hover included; `pending` dims to `opacities.disabled`; a running title shimmers. A trailing icon sits `space.xxs` closer, as the indicator. Lines stack `space.xs` apart. An open line's detail sits in `textSecondary` beside a 1px `edge` rail that starts `space.xxs` under the line's icon, lined up with the title, so a nested trace lines up its icons there too. A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.

@@ -26,7 +26,6 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
   },
-  // Copied in tool-steps.tsx and approval.tsx, so each installs alone; change both.
   media: {
     alignItems: "center",
     backgroundColor: colors.fill,
