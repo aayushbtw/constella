@@ -189,7 +189,7 @@ function TraceStatusDemo() {
         </TraceLine>
         <TraceLine status="running">
           <TraceIcon>
-            <Spinner aria-hidden aria-label={undefined} />
+            <Spinner aria-hidden />
           </TraceIcon>
           <TraceTitle>Running pnpm build</TraceTitle>
         </TraceLine>
@@ -384,7 +384,7 @@ function TraceToolDemo() {
             <TraceIcon>
               <SwapIcon value={running ? "running" : "done"}>
                 <SwapIconItem value="running">
-                  <Spinner aria-hidden aria-label={undefined} />
+                  <Spinner aria-hidden />
                 </SwapIconItem>
                 <SwapIconItem value="done">
                   <Icon icon={WrenchIcon} />
@@ -408,7 +408,7 @@ function TraceToolDemo() {
                   <TraceIcon>
                     <SwapIcon value={status}>
                       <SwapIconItem value="running">
-                        <Spinner aria-hidden aria-label={undefined} />
+                        <Spinner aria-hidden />
                       </SwapIconItem>
                       <SwapIconItem value="done">
                         <Icon icon={step.icon} />

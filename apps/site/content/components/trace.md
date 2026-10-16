@@ -98,7 +98,7 @@ Set `status` on `TraceLine` when a step is running, has failed or hasn't started
 ```tsx
 <TraceLine status="running">
   <TraceIcon>
-    <Spinner aria-hidden aria-label={undefined} />
+    <Spinner aria-hidden />
   </TraceIcon>
   <TraceTitle>Running pnpm build</TraceTitle>
 </TraceLine>
@@ -232,7 +232,7 @@ Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `status` as
         <TraceIcon>
           <SwapIcon value={status}>
             <SwapIconItem value="running">
-              <Spinner aria-hidden aria-label={undefined} />
+              <Spinner aria-hidden />
             </SwapIconItem>
             <SwapIconItem value="done">
               <CalendarIcon />
