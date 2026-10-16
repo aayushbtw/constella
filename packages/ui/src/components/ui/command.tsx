@@ -27,6 +27,7 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/visually-hidden";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
@@ -140,15 +141,6 @@ const styles = stylex.create({
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
   },
-  // Named for screen readers, hidden from sight.
-  hidden: {
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    whiteSpace: "nowrap",
-    width: 1,
-  },
 });
 
 /** A searchable list, always open, built on Base UI's inline Autocomplete. Pass `items`. */
@@ -183,8 +175,10 @@ function CommandDialog({
   return (
     <Dialog {...props}>
       <DialogContent sx={styles.dialog}>
-        <DialogTitle sx={styles.hidden}>{title}</DialogTitle>
-        <DialogDescription sx={styles.hidden}>{description}</DialogDescription>
+        <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
+        <DialogDescription sx={visuallyHidden.base}>
+          {description}
+        </DialogDescription>
         {children}
       </DialogContent>
     </Dialog>

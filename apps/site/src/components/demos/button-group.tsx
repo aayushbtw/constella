@@ -78,6 +78,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { colors, sizes, space, strokes, fonts } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/visually-hidden";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -89,14 +90,6 @@ const styles = stylex.create({
   narrow: { maxWidth: 384, width: "100%" },
   fill: { flexGrow: 1 },
   noResize: { resize: "none" },
-  srOnly: {
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    whiteSpace: "nowrap",
-    width: 1,
-  },
   mono: { fontFamily: fonts.mono },
   muted: { color: colors.textMuted },
 });
@@ -268,7 +261,7 @@ function ButtonGroupPopoverDemo() {
               </PopoverDescription>
             </PopoverHeader>
             <Field>
-              <FieldLabel sx={styles.srOnly}>Task Description</FieldLabel>
+              <FieldLabel sx={visuallyHidden.base}>Task Description</FieldLabel>
               <Textarea placeholder="I need to..." sx={styles.noResize} />
               <FieldDescription>
                 Copilot will open a pull request for review.

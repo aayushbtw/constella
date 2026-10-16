@@ -32,6 +32,10 @@
           "type": "registry:lib"
         },
         {
+          "path": "src/lib/visually-hidden.ts",
+          "type": "registry:lib"
+        },
+        {
           "path": "src/lib/reset.css",
           "type": "registry:lib"
         }

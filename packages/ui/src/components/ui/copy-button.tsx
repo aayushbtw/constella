@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import { durations, sizes, strokes } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/visually-hidden";
 
 type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
@@ -21,17 +22,6 @@ const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
 const labelledIconSizes: Partial<
   Record<NonNullable<ButtonProps["size"]>, string>
 > = { sm: sizes.iconSm, xs: sizes.iconXs };
-
-const styles = stylex.create({
-  hidden: {
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    whiteSpace: "nowrap",
-    width: 1,
-  },
-});
 
 /** Copies `value`, and shows a tick for a moment after. */
 function CopyButton({
@@ -105,7 +95,7 @@ function CopyButton({
         {children}
       </Button>
       {/* Outside the button, or its text would join the button's name. */}
-      <output aria-live="polite" {...stylex.props(styles.hidden)}>
+      <output aria-live="polite" {...stylex.props(visuallyHidden.base)}>
         {copied ? "Copied" : ""}
       </output>
     </>

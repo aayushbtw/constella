@@ -55,6 +55,7 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/visually-hidden";
 
 const sidebarSides = ["left", "right"] as const;
 const sidebarCollapsibles = ["offcanvas", "icon", "none"] as const;
@@ -303,14 +304,6 @@ const styles = stylex.create({
   sheet: {
     backgroundColor: colors.sidebar,
     width: sizes.sidebar,
-  },
-  hidden: {
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    whiteSpace: "nowrap",
-    width: 1,
   },
   main: {
     backgroundColor: colors.background,
@@ -1009,8 +1002,8 @@ function Sidebar({
           side={side}
           sx={[styles.sheet, sx]}
         >
-          <SheetTitle sx={styles.hidden}>Sidebar</SheetTitle>
-          <SheetDescription sx={styles.hidden}>
+          <SheetTitle sx={visuallyHidden.base}>Sidebar</SheetTitle>
+          <SheetDescription sx={visuallyHidden.base}>
             Displays the mobile sidebar.
           </SheetDescription>
           <InSheetContext value>{children}</InSheetContext>
