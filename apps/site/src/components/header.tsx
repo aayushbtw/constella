@@ -47,19 +47,17 @@ const styles = stylex.create({
     display: "flex",
     gap: space.md,
   },
-  name: {
-    color: colors.textPrimary,
-    display: "flex",
-  },
   brand: {
     alignItems: "center",
+    color: colors.textPrimary,
     display: "flex",
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.semibold,
     gap: space.xs,
+    textDecoration: "none",
   },
-  beta: {
-    color: colors.textMuted,
-    fontSize: fontSizes.xxs,
-    fontWeight: fontWeights.medium,
+  logo: {
+    display: "flex",
   },
   nav: {
     display: "flex",
@@ -93,16 +91,14 @@ function Header() {
     <header {...stylex.props(styles.header)}>
       <div {...stylex.props(styles.inner)}>
         <div {...stylex.props(styles.start)}>
-          <div {...stylex.props(styles.brand)}>
-            <Link
-              aria-label={`${config.name} home`}
-              to="/"
-              {...stylex.props(styles.name, pathname === "/" && entrance.spin)}
+          <Link to="/" {...stylex.props(styles.brand)}>
+            <span
+              {...stylex.props(styles.logo, pathname === "/" && entrance.spin)}
             >
               <Logo />
-            </Link>
-            <span {...stylex.props(styles.beta)}>Beta</span>
-          </div>
+            </span>
+            {config.name}
+          </Link>
           <nav aria-label="Main" {...stylex.props(styles.nav)}>
             {sections.map(({ label, to }) => (
               <Link

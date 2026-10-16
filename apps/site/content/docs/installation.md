@@ -3,6 +3,8 @@ title: Installation
 description: Add components with the shadcn CLI, then let your framework compile StyleX.
 ---
 
+**Constella is in beta.** Components may change before 1.0; ones you've added stay as they are until you add them again.
+
 ## Choose your framework
 
 <!-- ::frameworks -->
