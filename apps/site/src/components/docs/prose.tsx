@@ -178,7 +178,7 @@ function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
   const pre = useRef<HTMLPreElement>(null);
 
   return (
-    <div data-slot="code-block" {...stylex.props(styles.codeBlock)}>
+    <div data-slot="docs-code-block" {...stylex.props(styles.codeBlock)}>
       {/* Replacing the class keeps `data-lang`, which the highlight theme keys on. */}
       <pre ref={pre} {...props} {...stylex.props(styles.pre)} />
       <CopyButton
