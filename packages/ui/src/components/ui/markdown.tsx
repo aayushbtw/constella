@@ -10,6 +10,11 @@ import type {
 } from "@tanstack/markdown/react";
 import { useRef } from "react";
 
+import {
+  CodeBlock as CodeBlockRoot,
+  CodeBlockActions,
+  CodeBlockContent,
+} from "@/components/ui/code-block";
 import { CopyButton } from "@/components/ui/copy-button";
 import {
   Table,
@@ -26,7 +31,6 @@ import {
   fontWeights,
   lineHeights,
   radii,
-  sizes,
   space,
   strokes,
 } from "@/lib/tokens.stylex";
@@ -91,38 +95,6 @@ const styles = stylex.create({
     paddingInlineStart: space.xxs,
     paddingInlineEnd: space.xxs,
   },
-  codeBlock: {
-    backgroundColor: colors.fillSubtle,
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    position: "relative",
-  },
-  pre: {
-    fontFamily: fonts.mono,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.text,
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
-    overflowX: "auto",
-    paddingBlockStart: space.sm,
-    paddingBlockEnd: space.sm,
-    paddingInlineEnd: `calc(${space.xs} + ${sizes.controlSm} + ${space.xs})`,
-    paddingInlineStart: space.md,
-    tabSize: 2,
-  },
-  preCode: {
-    display: "inline-block",
-    fontVariantLigatures: "none",
-    minWidth: "100%",
-  },
-  // Centered on the first line.
-  copy: {
-    insetBlockStart: `calc(${space.sm} + (${lineHeights.text} - ${sizes.controlSm}) / 2)`,
-    insetInlineEnd: space.xs,
-    position: "absolute",
-  },
   quote: {
     borderInlineStartColor: colors.edge,
     borderInlineStartStyle: "solid",
@@ -167,26 +139,27 @@ function alignOf(style: Props<"td">["style"]) {
     : undefined;
 }
 
-// Only a fenced block's `code` carries a `language-*` class.
+// Only a fenced block's `code` carries a `language-*` class. CodeBlockContent renders that `code`, so the highlighted markup goes in a span.
 function Code({ className, ...props }: Props<"code">) {
-  const inPre = className?.startsWith("language-") ?? false;
-  return (
-    <code {...props} {...stylex.props(inPre ? styles.preCode : styles.code)} />
-  );
+  if (className?.startsWith("language-") ?? false) {
+    return <span {...props} />;
+  }
+  return <code {...props} {...stylex.props(styles.code)} />;
 }
 
-function CodeBlock(props: Props<"pre">) {
+function CodeBlock({ className: _className, ...props }: Props<"pre">) {
   const pre = useRef<HTMLPreElement>(null);
   return (
-    <div data-slot="markdown-code-block" {...stylex.props(styles.codeBlock)}>
-      {/* Replacing the class keeps `data-lang`, which a highlight theme keys on. */}
-      <pre ref={pre} {...props} {...stylex.props(styles.pre)} />
-      <CopyButton
-        aria-label="Copy code"
-        sx={styles.copy}
-        value={() => pre.current?.textContent?.trimEnd() ?? ""}
-      />
-    </div>
+    <CodeBlockRoot>
+      {/* Dropping the class keeps `data-lang`, which a highlight theme keys on. */}
+      <CodeBlockContent ref={pre} {...props} />
+      <CodeBlockActions>
+        <CopyButton
+          aria-label="Copy code"
+          value={() => pre.current?.textContent?.trimEnd() ?? ""}
+        />
+      </CodeBlockActions>
+    </CodeBlockRoot>
   );
 }
 

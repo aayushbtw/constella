@@ -63,6 +63,10 @@ The axis takes its final scale at the click, and the marks move to it from where
 
 A pill capped at `sizes.citation` (160px), its publication name truncating, with the logo as the badge's leading avatar. Every citation opens one shared card, so hovering the next moves it there: the logo and publication in `textSecondary`, the headline in medium `md` clamped to 2 lines, the date in `textMuted`.
 
+## Code Block
+
+A `fillSubtle` tray on `radii.md`, `xs` mono (`xxs` at `sm`) on `lineHeights.text`, read left to right. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks are `textMuted` (marks `success` and `danger`) and never copy; a highlighted line takes `fill`, an added one `successFillSubtle`, a removed one `dangerFillSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerFillSubtle` and its text `danger`.
+
 ## Collapsible
 
 The one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
@@ -73,7 +77,7 @@ A menu that stays open under a search field: the menu's rows on a `raised` surfa
 
 ## Markdown
 
-An answer reads as the page: `md` text on `lineHeights.prose`, blocks `space.md` apart, headings in semibold a step down (`lg`, then `md`) and two levels down in the outline, so they sit under the page's own. Inline code is a `fill` chip in mono at 0.875em; a code block is a `fillSubtle` tray on `radii.md`, `xs` mono, with a ghost copy button centered on its first line. A quote is `textSecondary` behind a 2px `edge` rule. Tables are the Table component, taking GFM's column alignment. Links keep the text color, underlined in `textMuted`, and open in a new tab.
+An answer reads as the page: `md` text on `lineHeights.prose`, blocks `space.md` apart, headings in semibold a step down (`lg`, then `md`) and two levels down in the outline, so they sit under the page's own. Inline code is a `fill` chip in mono at 0.875em; a fenced block is a Code Block. A quote is `textSecondary` behind a 2px `edge` rule. Tables are the Table component, taking GFM's column alignment. Links keep the text color, underlined in `textMuted`, and open in a new tab.
 
 ## Marker
 

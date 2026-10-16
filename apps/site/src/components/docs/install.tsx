@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
 import { colors, fontSizes, radii, space, fonts } from "@/lib/tokens.stylex";
+import { CodeTokens } from "~/components/docs/code-tokens";
 import { CopyButton } from "~/components/docs/copy-button";
 import { config } from "~/lib/config";
 import { shellTokens } from "~/lib/highlight";
@@ -38,18 +39,6 @@ const styles = stylex.create({
   },
 });
 
-// Keyed by offset, not index: two identical words would collide.
-function keyedTokens(command: string) {
-  let offset = 0;
-
-  return shellTokens(command).map((token) => {
-    const key = offset;
-    offset += token.value.length;
-
-    return { className: token.className, key, value: token.value };
-  });
-}
-
 function Install({ name }: { name?: string }) {
   const command = `npx shadcn@latest add ${config.registry}/${name}`;
 
@@ -57,14 +46,7 @@ function Install({ name }: { name?: string }) {
     <div {...stylex.props(styles.command)}>
       <code translate="no" {...stylex.props(styles.code)}>
         <span {...stylex.props(styles.prompt)}>$ </span>
-        {keyedTokens(command).map((token) => (
-          <span
-            className={token.className && `th-token th-${token.className}`}
-            key={token.key}
-          >
-            {token.value}
-          </span>
-        ))}
+        <CodeTokens tokens={shellTokens(command)} />
       </code>
       <CopyButton label="Copy command" text={() => command} />
     </div>

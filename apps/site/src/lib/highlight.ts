@@ -1,4 +1,5 @@
 import { createHighlighter } from "@tanstack/highlight/core";
+import type { HighlightToken } from "@tanstack/highlight/core";
 import { html } from "@tanstack/highlight/languages/html";
 import { json } from "@tanstack/highlight/languages/json";
 import { shell } from "@tanstack/highlight/languages/shell";
@@ -33,4 +34,19 @@ function shellTokens(code: string) {
   return highlighter.tokenize(code, { lang: "shell" }).tokens;
 }
 
-export { highlightCode, shellTokens };
+function codeLines(code: string, lang: string) {
+  const lines: HighlightToken[][] = [[]];
+  for (const token of highlighter.tokenize(code.trimEnd(), { lang }).tokens) {
+    for (const [index, value] of token.value.split("\n").entries()) {
+      if (index > 0) {
+        lines.push([]);
+      }
+      if (value !== "") {
+        lines.at(-1)?.push({ className: token.className, value });
+      }
+    }
+  }
+  return lines;
+}
+
+export { codeLines, highlightCode, shellTokens };

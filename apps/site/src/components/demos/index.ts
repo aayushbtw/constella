@@ -98,6 +98,16 @@ import {
 } from "~/components/demos/checkbox";
 import { CitationDemo } from "~/components/demos/citation";
 import {
+  CodeBlockActionsDemo,
+  CodeBlockDangerDemo,
+  CodeBlockDemo,
+  CodeBlockDiffDemo,
+  CodeBlockHighlightedDemo,
+  CodeBlockLineNumbersDemo,
+  CodeBlockSizeDemo,
+  CodeBlockWrapDemo,
+} from "~/components/demos/code-block";
+import {
   CollapsibleControlledDemo,
   CollapsibleDemo,
   CollapsibleDisabledDemo,
@@ -459,6 +469,14 @@ const demos = {
   "collapsible-tree": CollapsibleTreeDemo,
   command: CommandDemo,
   "command-dialog": CommandDialogDemo,
+  "code-block": CodeBlockDemo,
+  "code-block-actions": CodeBlockActionsDemo,
+  "code-block-danger": CodeBlockDangerDemo,
+  "code-block-diff": CodeBlockDiffDemo,
+  "code-block-highlighted": CodeBlockHighlightedDemo,
+  "code-block-line-numbers": CodeBlockLineNumbersDemo,
+  "code-block-size": CodeBlockSizeDemo,
+  "code-block-wrap": CodeBlockWrapDemo,
   "copy-button": CopyButtonDemo,
   "copy-button-variant": CopyButtonVariantDemo,
   "data-table": DataTableDemo,
