@@ -123,8 +123,7 @@ function Home() {
         </h1>
 
         <p {...stylex.props(styles.lead, entrance.item(0, items))}>
-          React components styled with StyleX, not Tailwind. Installed with the
-          shadcn CLI.
+          React components styled with StyleX.
         </p>
 
         <ul {...stylex.props(styles.inline, entrance.item(1, items))}>

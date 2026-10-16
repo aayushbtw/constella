@@ -21,7 +21,7 @@ The stage is the page's own `background`, so a demo looks as it will in an app; 
 
 ## Home page
 
-The tagline set large, one `textSecondary` line under it saying what Constella is and how it differs (StyleX, not Tailwind), then Get started, GitHub and X links, then a bento of live components, then the index of every component. No other prose.
+The tagline set large, one `textSecondary` line under it saying what Constella is, then Get started, GitHub and X links, then a bento of live components, then the index of every component. No other prose.
 
 | Part | Rule |
 | --- | --- |
