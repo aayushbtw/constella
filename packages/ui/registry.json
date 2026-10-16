@@ -24,15 +24,11 @@
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/join.ts",
+          "path": "src/lib/styles.ts",
           "type": "registry:lib"
         },
         {
           "path": "src/lib/motion.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "src/lib/visually-hidden.ts",
           "type": "registry:lib"
         },
         {

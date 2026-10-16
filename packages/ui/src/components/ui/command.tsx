@@ -17,6 +17,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { visuallyHidden } from "@/lib/styles";
 import {
   colors,
   fontSizes,
@@ -27,7 +28,6 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
-import { visuallyHidden } from "@/lib/visually-hidden";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

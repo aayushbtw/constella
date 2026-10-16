@@ -40,6 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { visuallyHidden } from "@/lib/styles";
 import {
   colors,
   durations,
@@ -55,7 +56,6 @@ import {
   space,
   strokes,
 } from "@/lib/tokens.stylex";
-import { visuallyHidden } from "@/lib/visually-hidden";
 
 const sidebarSides = ["left", "right"] as const;
 const sidebarCollapsibles = ["offcanvas", "icon", "none"] as const;

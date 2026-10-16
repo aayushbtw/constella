@@ -7,7 +7,7 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import type { SeparatorProps } from "@/components/ui/separator";
-import { joinStyles } from "@/lib/join";
+import { joinStyles } from "@/lib/styles";
 import {
   colors,
   fontSizes,

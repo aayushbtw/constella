@@ -3,7 +3,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/join";
+import { joinStyles } from "@/lib/styles";
 import {
   colors,
   durations,

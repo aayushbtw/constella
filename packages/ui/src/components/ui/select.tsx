@@ -11,8 +11,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useContext } from "react";
 
-import { joinStyles } from "@/lib/join";
 import { useSkipMotion } from "@/lib/motion";
+import { joinStyles } from "@/lib/styles";
 import {
   colors,
   durations,

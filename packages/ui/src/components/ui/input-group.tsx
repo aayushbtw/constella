@@ -10,7 +10,7 @@ import { Input, inputStyles } from "@/components/ui/input";
 import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
-import { joinStyles } from "@/lib/join";
+import { joinStyles } from "@/lib/styles";
 import {
   colors,
   durations,
