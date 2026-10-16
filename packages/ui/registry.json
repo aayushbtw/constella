@@ -1101,7 +1101,8 @@
           "path": "src/components/ui/trace.tsx",
           "type": "registry:ui"
         }
-      ]
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/trace/index.md"
     },
     {
       "name": "citation",

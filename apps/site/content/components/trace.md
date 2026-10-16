@@ -2,7 +2,6 @@
 title: Trace
 description: The steps an agent takes, one line each, that open, link or show a status.
 section: AI
-draft: true
 ---
 
 <!-- ::demo name="trace" -->
