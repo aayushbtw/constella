@@ -2,6 +2,7 @@
 
 import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,17 @@ const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
 const labelledIconSizes: Partial<
   Record<NonNullable<ButtonProps["size"]>, string>
 > = { sm: sizes.iconSm, xs: sizes.iconXs };
+
+const styles = stylex.create({
+  hidden: {
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    whiteSpace: "nowrap",
+    width: 1,
+  },
+});
 
 /** Copies `value`, and shows a tick for a moment after. */
 function CopyButton({
@@ -59,40 +71,44 @@ function CopyButton({
     : sizes.icon;
 
   return (
-    <Button
-      aria-label={
-        copied ? "Copied" : (label ?? (labelled ? undefined : "Copy"))
-      }
-      data-slot="copy-button"
-      onClick={() => {
-        void copy();
-      }}
-      size={buttonSize}
-      variant={variant}
-      {...props}
-    >
-      <SwapIcon
-        aria-hidden
-        data-icon={labelled ? "inline-start" : undefined}
-        value={copied ? "copied" : "copy"}
+    <>
+      <Button
+        aria-label={label ?? (labelled ? undefined : "Copy")}
+        data-slot="copy-button"
+        onClick={() => {
+          void copy();
+        }}
+        size={buttonSize}
+        variant={variant}
+        {...props}
       >
-        <SwapIconItem value="copied">
-          <HugeiconsIcon
-            icon={Tick02Icon}
-            size={iconSize}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-        <SwapIconItem value="copy">
-          <HugeiconsIcon
-            icon={Copy01Icon}
-            size={iconSize}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-      </SwapIcon>
-      {children}
-    </Button>
+        <SwapIcon
+          aria-hidden
+          data-icon={labelled ? "inline-start" : undefined}
+          value={copied ? "copied" : "copy"}
+        >
+          <SwapIconItem value="copied">
+            <HugeiconsIcon
+              icon={Tick02Icon}
+              size={iconSize}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </SwapIconItem>
+          <SwapIconItem value="copy">
+            <HugeiconsIcon
+              icon={Copy01Icon}
+              size={iconSize}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </SwapIconItem>
+        </SwapIcon>
+        {children}
+      </Button>
+      {/* Outside the button, or its text would join the button's name. */}
+      <output aria-live="polite" {...stylex.props(styles.hidden)}>
+        {copied ? "Copied" : ""}
+      </output>
+    </>
   );
 }
 

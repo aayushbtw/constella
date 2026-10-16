@@ -39,7 +39,7 @@ Alert
 └── AlertAction
 ```
 
-- **One part, one element.** Each part wraps a single element or Base UI part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part.
+- **One part, one element.** Each part wraps a single element or Base UI part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part. A part that announces (Copy Button's "Copied") renders its live region as a slot-less sibling, since inside the control its text would join the control's name and a slot would make it a group's last part.
 - **Every part has a `data-slot`.** Even unstyled Base UI wrappers, so a parent can style around a child (`:has(> [data-slot="alert-action"])`) without a prop. Variants and sizes are mirrored as `data-variant`, `data-size`.
 - **A part reused unchanged keeps its parent's slot.** `ApprovalHeader` is `CardHeader` re-exported, with `card-header`, because Card's selectors read those slots (`[data-slot='card'][data-size='sm']` sizes the title). Only a part that adds styles gets its own slot.
 - **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.

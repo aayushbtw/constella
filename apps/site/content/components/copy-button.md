@@ -23,7 +23,7 @@ import { CopyButton } from "@/components/ui/copy-button";
 <CopyButton value={code} />
 ```
 
-The icon swaps to a tick with a [Swap Icon](/docs/components/swap-icon), holds for 1.5s, and swaps back. Its label says "Copied" meanwhile.
+The icon swaps to a tick with a [Swap Icon](/docs/components/swap-icon), holds for 1.5s, and swaps back. Its accessible name doesn't change, and a status region announces "Copied" to screen readers.
 
 ## Variant
 
