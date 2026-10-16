@@ -19,7 +19,6 @@ export const fontSizes = stylex.defineConsts({
 });
 
 export const lineHeights = stylex.defineConsts({
-  code: "20px",
   display: "38px",
   specimen: "96px",
   prose: "24px",

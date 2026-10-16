@@ -5,6 +5,12 @@ import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  CodeBlock,
+  CodeBlockActions,
+  CodeBlockContent,
+} from "@/components/ui/code-block";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,16 +29,8 @@ import {
 } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  colors,
-  fontSizes,
-  radii,
-  sizes,
-  space,
-  fonts,
-} from "@/lib/tokens.stylex";
+import { radii, sizes, space } from "@/lib/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
-import { CopyButton } from "~/components/docs/copy-button";
 import {
   accents,
   defaultTheme,
@@ -48,7 +46,7 @@ import type {
   ScalingPreset,
   ThemeName,
 } from "~/lib/theme-css";
-import { lineHeights, shadows } from "~/lib/tokens.stylex";
+import { shadows } from "~/lib/tokens.stylex";
 
 const radiusLabels = {
   large: "Large",
@@ -94,33 +92,9 @@ const styles = stylex.create({
     width: sizes.iconSm,
   }),
   output: {
-    backgroundColor: colors.fillSubtle,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
-    boxShadow: shadows.inset,
-    position: "relative",
-  },
-  pre: {
-    color: colors.textSecondary,
-    fontFamily: fonts.mono,
-    fontSize: fontSizes.xs,
-    fontVariantLigatures: "none",
-    lineHeight: lineHeights.code,
-    marginBlock: 0,
-    marginInline: 0,
     maxHeight: 240,
-    overflow: "auto",
-    paddingBlock: space.sm,
-    paddingInlineEnd: `calc(${space.xs} * 2 + ${sizes.controlXs})`,
-    paddingInlineStart: space.md,
-    scrollbarWidth: "thin",
-  },
-  copy: {
-    insetBlockStart: space.xs,
-    insetInlineEnd: space.xs,
-    position: "absolute",
+    overflowY: "auto",
+    scrollbarWidth: "none",
   },
 });
 
@@ -321,16 +295,12 @@ function ThemeBuilderDemo() {
           <Input placeholder="Email" />
         </div>
       </Stage>
-      <div {...stylex.props(styles.output)}>
-        <pre {...stylex.props(styles.pre)}>
-          <code>{file}</code>
-        </pre>
-        <CopyButton
-          label="Copy theme.stylex.ts"
-          sx={styles.copy}
-          text={() => file}
-        />
-      </div>
+      <CodeBlock>
+        <CodeBlockContent sx={styles.output}>{file}</CodeBlockContent>
+        <CodeBlockActions>
+          <CopyButton aria-label="Copy theme.stylex.ts" value={file} />
+        </CodeBlockActions>
+      </CodeBlock>
     </>
   );
 }
