@@ -125,7 +125,10 @@
       "title": "Code Block",
       "description": "Code in a tray, with a title, actions, line numbers and diffs. The app highlights it.",
       "dependencies": ["@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/scroll-fade.json"
+      ],
       "files": [
         {
           "path": "src/components/ui/code-block.tsx",

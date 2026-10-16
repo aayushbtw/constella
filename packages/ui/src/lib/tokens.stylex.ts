@@ -83,6 +83,11 @@ export const cardVars = stylex.defineVars({
   spacing: "0px",
 });
 
+export const codeBlockVars = stylex.defineVars({
+  padBlock: "0px",
+  padInline: "0px",
+});
+
 export const shadows = stylex.defineConsts({
   // The ladder under a bordered control: the border is its edge, these its height. It
   // rises a step on hover and settles flat while pressed.

@@ -1,7 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
+import { scrollFade } from "@/lib/scroll-fade";
 import {
+  codeBlockVars,
   colors,
   fonts,
   fontSizes,
@@ -29,30 +31,31 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-const small = ":is([data-slot='code-block'][data-size='sm'] *)";
 const danger = ":is([data-slot='code-block'][data-variant='danger'] *)";
 const numbered = ":is([data-numbered] *)";
+const numberedSelf = ":is([data-numbered])";
+const marks =
+  "pre:not([data-numbered]):has([data-variant='added'], [data-variant='removed'])";
+const marked = `:is(${marks} *)`;
+const markedSelf = `:is(${marks})`;
 const wrapped = ":is([data-wrap] *)";
 const onBlock = ":is([data-slot='code-block'] > *)";
 const besideFloating =
-  ":is([data-slot='code-block']:has(> [data-slot='code-block-actions']) > *)";
+  ":is([data-slot='code-block']:has(> [data-slot='code-block-actions']) > * > *)";
 const underHeader =
   ":is([data-slot='code-block']:has(> [data-slot='code-block-header']) > *)";
 const overFooter =
   ":is([data-slot='code-block']:has(> [data-slot='code-block-footer']) > *)";
 
-const padInline = { default: space.md, [small]: space.sm };
-const padBlock = { default: space.sm, [small]: space.xs };
-const centerOnFirstLine = (pad: string) =>
-  `calc(${pad} + (${lineHeights.text} - ${sizes.controlSm}) / 2)`;
+const pad = codeBlockVars.padInline;
+// The header icon's column: line numbers and diff marks sit in it, so code starts under the title.
+const gutter = `calc(${pad} + ${sizes.icon} + ${space.xs})`;
 const clearActions = `calc(${space.xs} + ${sizes.controlSm} + ${space.xs})`;
-const bleed = {
-  default: `calc(-1 * ${space.md})`,
-  [small]: `calc(-1 * ${space.sm})`,
-};
 
 const styles = stylex.create({
   block: {
+    [codeBlockVars.padBlock]: space.sm,
+    [codeBlockVars.padInline]: space.md,
     backgroundColor: colors.fillSubtle,
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
@@ -67,7 +70,11 @@ const styles = stylex.create({
     position: "relative",
     width: "100%",
   },
-  sm: { fontSize: fontSizes.xxs },
+  sm: {
+    [codeBlockVars.padBlock]: space.xs,
+    [codeBlockVars.padInline]: space.sm,
+    fontSize: fontSizes.xxs,
+  },
   danger: { backgroundColor: colors.dangerFillSubtle, color: colors.danger },
   header: {
     alignItems: "center",
@@ -77,9 +84,9 @@ const styles = stylex.create({
     gap: space.xs,
     minHeight: sizes.controlSm,
     minWidth: 0,
-    paddingBlockStart: { default: space.xs, [small]: space.xxs },
+    paddingBlockStart: `calc(${codeBlockVars.padBlock} - ${space.xxs})`,
     paddingInlineEnd: space.xs,
-    paddingInlineStart: padInline,
+    paddingInlineStart: pad,
   },
   title: {
     color: { default: colors.textPrimary, [danger]: colors.danger },
@@ -96,44 +103,51 @@ const styles = stylex.create({
     flexShrink: 0,
     gap: space.xxs,
     marginInlineStart: "auto",
+    // Centered on the first line.
     insetBlockStart: {
       default: null,
-      [onBlock]: centerOnFirstLine(space.sm),
-      [`${onBlock}${small}`]: centerOnFirstLine(space.xs),
+      [onBlock]: `calc(${codeBlockVars.padBlock} + (${lineHeights.text} - ${sizes.controlSm}) / 2)`,
     },
     // Physical, since the code under it is always left to right.
     right: { default: null, [onBlock]: space.xs },
     position: { default: null, [onBlock]: "absolute" },
   },
+  // The numbers' containing block, outside the scroller.
   content: {
     flexGrow: 1,
     fontFamily: fonts.mono,
-    fontSize: "inherit",
     fontVariantLigatures: "none",
     lineHeight: lineHeights.text,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
     minHeight: 0,
     minWidth: 0,
-    overflow: "auto",
-    // Paired with `small`, so each outranks it; alone they'd tie and lose.
     paddingBlockEnd: {
-      ...padBlock,
+      default: codeBlockVars.padBlock,
       [overFooter]: space.xxs,
-      [`${overFooter}${small}`]: space.xxs,
     },
     paddingBlockStart: {
-      ...padBlock,
+      default: codeBlockVars.padBlock,
       [underHeader]: space.xxs,
-      [`${underHeader}${small}`]: space.xxs,
     },
-    paddingInlineEnd: {
-      default: space.md,
-      [small]: space.sm,
-      [besideFloating]: clearActions,
-      [`${besideFloating}${small}`]: clearActions,
+    position: "relative",
+  },
+  // Never a containing block (no position, transform, filter, contain, container-type or will-change), or it would scroll and clip the numbers.
+  pre: {
+    fontFamily: "inherit",
+    fontSize: "inherit",
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
+    // The numbers' column sits beside the scroller, never over it: code under a cover shows through at fractional scroll offsets.
+    marginInlineStart: {
+      default: 0,
+      [numberedSelf]: gutter,
+      [markedSelf]: gutter,
     },
-    paddingInlineStart: padInline,
+    minWidth: 0,
+    overflow: "auto",
+    // The scroll fade shows there's more, as in Suggestions.
+    scrollbarWidth: "none",
+    paddingInlineEnd: { default: pad, [besideFloating]: clearActions },
+    paddingInlineStart: { default: pad, [numberedSelf]: 0, [markedSelf]: 0 },
     tabSize: 2,
     textAlign: "start",
   },
@@ -143,49 +157,71 @@ const styles = stylex.create({
     whiteSpace: "pre-wrap",
   },
   code: {
-    // A grid only when numbered: it would split highlighted tokens into rows.
-    display: { default: "block", [numbered]: "grid" },
+    display: "block",
     fontFamily: "inherit",
-    gridTemplateColumns: { default: null, [numbered]: "auto 1fr" },
     minWidth: "100%",
     width: { default: "max-content", [wrapped]: "auto" },
   },
+  // Not positioned, so its number and mark place against the content, outside the scroller.
   line: {
     counterIncrement: { default: null, [numbered]: "line" },
-    display: { default: "block", [numbered]: "grid" },
-    columnGap: space.sm,
-    gridColumn: { default: null, [numbered]: "span 2" },
-    gridTemplateColumns: { default: null, [numbered]: "subgrid" },
-    marginInlineEnd: bleed,
-    marginInlineStart: bleed,
+    display: "block",
+    marginInlineEnd: `calc(-1 * ${pad})`,
+    marginInlineStart: {
+      default: `calc(-1 * ${pad})`,
+      [numbered]: 0,
+      [marked]: 0,
+    },
     minHeight: lineHeights.text,
-    paddingInlineEnd: padInline,
-    paddingInlineStart: padInline,
-    position: "relative",
+    paddingInlineEnd: pad,
+    paddingInlineStart: { default: pad, [numbered]: 0, [marked]: 0 },
+    // Its block position is the line's own; only its inline position is set.
     "::before": {
+      boxSizing: "border-box",
       color: colors.textMuted,
       content: { default: null, [numbered]: "counter(line) / ''" },
-      minWidth: space.lg,
+      insetInlineStart: 0,
+      paddingInlineEnd: space.xs,
+      paddingInlineStart: pad,
+      position: "absolute",
       textAlign: "end",
       userSelect: "none",
+      width: gutter,
     },
+    // The diff mark: beside a number, or alone in the gutter, filled like its line.
     "::after": {
-      insetBlockStart: 0,
-      insetInlineStart: space.xxs,
+      boxSizing: "border-box",
+      insetInlineStart: { default: space.xxs, [marked]: 0 },
+      paddingInlineEnd: { default: null, [marked]: space.xs },
+      paddingInlineStart: { default: null, [marked]: pad },
       position: "absolute",
+      textAlign: "end",
       userSelect: "none",
+      width: { default: null, [marked]: gutter },
     },
   },
-  lineContent: { minWidth: 0 },
   added: {
     backgroundColor: colors.successFillSubtle,
-    "::after": { color: colors.success, content: "'+'" },
+    "::after": {
+      backgroundColor: colors.successFillSubtle,
+      color: colors.success,
+      content: "'+'",
+    },
+    "::before": { backgroundColor: colors.successFillSubtle },
   },
   removed: {
     backgroundColor: colors.dangerFillSubtle,
-    "::after": { color: colors.danger, content: "'−'" },
+    "::after": {
+      backgroundColor: colors.dangerFillSubtle,
+      color: colors.danger,
+      content: "'−'",
+    },
+    "::before": { backgroundColor: colors.dangerFillSubtle },
   },
-  highlighted: { backgroundColor: colors.fill },
+  highlighted: {
+    backgroundColor: colors.fill,
+    "::before": { backgroundColor: colors.fill },
+  },
   footer: {
     alignItems: "center",
     color: { default: colors.textSecondary, [danger]: colors.danger },
@@ -194,9 +230,9 @@ const styles = stylex.create({
     fontFamily: fonts.sans,
     gap: space.xs,
     minWidth: 0,
-    paddingBlockEnd: padBlock,
-    paddingInlineEnd: padInline,
-    paddingInlineStart: padInline,
+    paddingBlockEnd: codeBlockVars.padBlock,
+    paddingInlineEnd: pad,
+    paddingInlineStart: pad,
   },
 });
 
@@ -270,7 +306,7 @@ function CodeBlockActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** The code, scrolling on its own and always left to right. A string with `lineNumbers` splits into lines. */
+/** The code, scrolling sideways on its own (never down) and always left to right. A string with `lineNumbers` splits into lines; `sx` styles the wrapper, `ref` and the rest reach the `pre`. */
 function CodeBlockContent({
   children,
   lineNumbers = false,
@@ -278,38 +314,43 @@ function CodeBlockContent({
   sx,
   wrap = false,
   ...props
-}: Styled<ComponentProps<"pre">> & {
+}: Omit<ComponentProps<"pre">, "className" | "style"> & {
   lineNumbers?: boolean;
   startLine?: number;
+  sx?: stylex.StyleXStyles;
   wrap?: boolean;
 }) {
   return (
-    <pre
-      data-numbered={lineNumbers || undefined}
+    <div
       data-slot="code-block-content"
-      data-wrap={wrap || undefined}
       dir="ltr"
-      {...props}
-      {...stylex.props(
-        styles.content,
-        styles.start(startLine - 1),
-        wrap && styles.wrap,
-        sx
-      )}
+      {...stylex.props(styles.content, scrollFade.xEndAround, sx)}
     >
-      <code data-slot="code-block-code" {...stylex.props(styles.code)}>
-        {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
-        {lineNumbers && typeof children === "string"
-          ? children
-              .replace(/\n$/u, "")
-              .split("\n")
-              .map((line, index) => (
-                // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
-                <CodeBlockLine key={index}>{line}</CodeBlockLine>
-              ))
-          : children}
-      </code>
-    </pre>
+      <pre
+        data-numbered={lineNumbers || undefined}
+        data-wrap={wrap || undefined}
+        {...props}
+        {...stylex.props(
+          styles.pre,
+          scrollFade.source,
+          styles.start(startLine - 1),
+          wrap && styles.wrap
+        )}
+      >
+        <code data-slot="code-block-code" {...stylex.props(styles.code)}>
+          {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
+          {lineNumbers && typeof children === "string"
+            ? children
+                .replace(/\n$/u, "")
+                .split("\n")
+                .map((line, index) => (
+                  // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
+                  <CodeBlockLine key={index}>{line}</CodeBlockLine>
+                ))
+            : children}
+        </code>
+      </pre>
+    </div>
   );
 }
 
@@ -337,9 +378,7 @@ function CodeBlockLine({
       {...props}
       {...stylex.props(styles.line, lineVariantStyles[variant], sx)}
     >
-      <span {...stylex.props(styles.lineContent)}>
-        {empty ? "\n" : children}
-      </span>
+      <span>{empty ? "\n" : children}</span>
     </span>
   );
 }

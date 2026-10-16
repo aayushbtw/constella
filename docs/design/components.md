@@ -65,7 +65,7 @@ A pill capped at `sizes.citation` (160px), its publication name truncating, with
 
 ## Code Block
 
-A `fillSubtle` tray on `radii.md`, `xs` mono (`xxs` at `sm`) on `lineHeights.text`, read left to right. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks are `textMuted` (marks `success` and `danger`) and never copy; a highlighted line takes `fill`, an added one `successFillSubtle`, a removed one `dangerFillSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerFillSubtle` and its text `danger`.
+A `fillSubtle` tray on `radii.md`, `xs` mono (`xxs` at `sm`) on `lineHeights.text`, read left to right. Long lines scroll sideways with no scrollbar. The end fades while there's more, drawn around the scroller so the numbers stay clear. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks sit in the header icon's column, so the code starts under the title. Line numbers stay put beside the code, never over it. With `wrap`, a marked line's gutter fill covers only its first row. Numbers and marks are `textMuted` (marks `success` and `danger`) and never copy. A highlighted line takes `fill`, an added one `successFillSubtle` and a removed one `dangerFillSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerFillSubtle` and its text `danger`.
 
 ## Collapsible
 

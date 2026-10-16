@@ -25,10 +25,11 @@ import { scrollFade } from "@/lib/scroll-fade";
 
 Pass it to the element that scrolls. An edge fades in as content scrolls past it and is gone at either end, so a list at rest is never dimmed. Browsers without scroll-driven animations fade both edges all the time.
 
-| Style          | Fades                    |
-| -------------- | ------------------------ |
+| Style | Fades |
+| --- | --- |
 | `scrollFade.y` | The top and bottom edges |
-| `scrollFade.x` | The start and end edges  |
+| `scrollFade.x` | The start and end edges |
+| `scrollFade.source` + `scrollFade.xEndAround` | The right edge, drawn by an ancestor of a left-to-right scroller: `source` on the scroller, `xEndAround` on the ancestor, so what the ancestor places beside the scroller stays unmasked |
 
 ## Scroll Area
 
