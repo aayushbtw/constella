@@ -23,7 +23,7 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { Toggle } from "@/components/ui/toggle";
 import { sizes, strokes } from "@/lib/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
-import { CodeTokens } from "~/components/docs/code-tokens";
+import { CodeLines, CodeTokens } from "~/components/docs/code-tokens";
 import { codeLines } from "~/lib/highlight";
 
 const styles = stylex.create({
@@ -40,23 +40,6 @@ function Icon({ icon }: { icon: IconSvgElement }) {
       strokeWidth={Number(strokes.icon)}
     />
   );
-}
-
-function Lines({
-  code,
-  lang,
-  variantOf,
-}: {
-  code: string;
-  lang: string;
-  variantOf?: (index: number) => CodeBlockLineVariant;
-}) {
-  return codeLines(code, lang).map((tokens, index) => (
-    // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
-    <CodeBlockLine key={index} variant={variantOf?.(index)}>
-      {tokens.length > 0 ? <CodeTokens tokens={tokens} /> : undefined}
-    </CodeBlockLine>
-  ));
 }
 
 const route = `import { streamText } from "ai";
@@ -79,7 +62,7 @@ function CodeBlockDemo() {
           </CodeBlockActions>
         </CodeBlockHeader>
         <CodeBlockContent lineNumbers>
-          <Lines code={route} lang="ts" />
+          <CodeLines code={route} lang="ts" />
         </CodeBlockContent>
       </CodeBlock>
     </DemoRow>
@@ -147,7 +130,7 @@ function CodeBlockLineNumbersDemo() {
     <DemoRow>
       <CodeBlock sx={styles.width}>
         <CodeBlockContent lineNumbers startLine={18}>
-          <Lines code={handler} lang="ts" />
+          <CodeLines code={handler} lang="ts" />
         </CodeBlockContent>
       </CodeBlock>
     </DemoRow>
@@ -159,7 +142,7 @@ function CodeBlockHighlightedDemo() {
     <DemoRow>
       <CodeBlock sx={styles.width}>
         <CodeBlockContent lineNumbers>
-          <Lines
+          <CodeLines
             code={handler}
             lang="ts"
             variantOf={(index) =>

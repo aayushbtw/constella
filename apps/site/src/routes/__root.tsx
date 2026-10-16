@@ -23,12 +23,10 @@ import { fontSizes, lineHeights } from "~/lib/tokens.stylex";
 
 import appCss from "~/styles/styles.css?url";
 
-// Prose replaces the highlighter's `pre` class but keeps `data-lang`.
 const highlightCss = createThemeCss({
   dark: githubDarkTheme,
   darkSelector: ".dark",
   light: githubLightTheme,
-  lineNumbersSelector: "pre[data-lang]",
 });
 
 export const Route = createRootRoute({

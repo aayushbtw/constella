@@ -19,7 +19,7 @@ Pages read like shadcn's, written for someone using the component, not for us:
 - **Use the native term** (React, Base UI, CSS, shadcn) over a plain-English stand-in: "Controlled", not "Open from Code".
 - **One or two plain sentences per section**, starting with what to do: "Use the `size` prop to…", "Add `data-icon` to…". No design reasoning; that lives in `docs/design/`.
 - **Show a variant matrix once.** All variants in Variant, all sizes in Size; every other example shows one representative.
-- **Previews:** place one with `<!-- ::demo name="…" -->`, and its code block right below it. Every code block gets a copy button; blocks of more than one line get line numbers.
+- **Previews:** place one with `<!-- ::demo name="…" -->`, and its code block right below it. Fences render as the Code Block component: every one gets a copy button, blocks of more than one line get line numbers, and `text` fences wrap.
 - **Values go in a table**, not a sentence: a row per option (size, token, variant) with its values in columns.
 - **Example data is generic.** People are Alex Smith, Sam Lee, Jordan Kim and Taylor Brown (`@alex`, `alex@acme.com`), or plain first names in a long list. The company is Acme and the domain `acme.com`. Use no real names, handles or companies.
 - **Avatar photos are the exception.** They are shadcn, emilkowalski, evilrabbit and aayushbtw, saved by handle in `apps/site/public/avatars`, and keep their own handle. A company shows its initials. Break fixtures keep their long and non-Latin names, on `acme.com`.

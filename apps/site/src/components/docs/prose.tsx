@@ -4,9 +4,14 @@ import type {
   MarkdownComponents,
   MarkdownProps,
 } from "@tanstack/markdown/react";
-import { useRef } from "react";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
+import {
+  CodeBlock,
+  CodeBlockActions,
+  CodeBlockContent,
+} from "@/components/ui/code-block";
+import { CopyButton } from "@/components/ui/copy-button";
 import {
   colors,
   fontSizes,
@@ -14,19 +19,13 @@ import {
   lineHeights,
   media,
   radii,
-  sizes,
   space,
 } from "@/lib/tokens.stylex";
 import { demos, isDemo } from "~/components/demos";
-import { CopyButton } from "~/components/docs/copy-button";
+import { CodeLines } from "~/components/docs/code-tokens";
 import { Frameworks } from "~/components/docs/frameworks";
 import { Install } from "~/components/docs/install";
-import { highlightCode } from "~/lib/highlight";
-import {
-  layout,
-  lineHeights as siteLineHeights,
-  shadows,
-} from "~/lib/tokens.stylex";
+import { layout, shadows } from "~/lib/tokens.stylex";
 
 const flow = {
   marginBlockEnd: { default: space.md, ":last-child": 0 },
@@ -85,39 +84,6 @@ const styles = stylex.create({
     paddingInlineEnd: 3,
     paddingInlineStart: 3,
   },
-  codeBlock: {
-    ...flow,
-    backgroundColor: colors.fillSubtle,
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    boxShadow: shadows.card,
-    position: "relative",
-  },
-  pre: {
-    color: colors.textPrimary,
-    fontSize: fontSizes.xs,
-    lineHeight: siteLineHeights.code,
-    overflowX: "auto",
-    paddingBlock: space.sm,
-    paddingInlineEnd: `calc(${space.xs} + ${sizes.controlXs} + ${space.xs})`,
-    // Numbered lines carry this padding themselves (code.css).
-    paddingInlineStart: { default: space.md, ":has(.th-line)": 0 },
-    scrollbarWidth: "none",
-    tabSize: 2,
-  },
-  // Centered on the first line.
-  copy: {
-    insetBlockStart: `calc(${space.sm} + (${siteLineHeights.code} - ${sizes.controlXs}) / 2)`,
-    insetInlineEnd: space.xs,
-    position: "absolute",
-  },
-  preCode: {
-    display: "inline-block",
-    fontVariantLigatures: "none",
-    minWidth: "100%",
-  },
   table: {
     ...flow,
     borderCollapse: "collapse",
@@ -151,12 +117,37 @@ const styles = stylex.create({
   },
 });
 
-// Only a fenced block's `code` carries a `language-*` class.
-function Code({ className, ...props }: ComponentPropsWithoutRef<"code">) {
-  const inPre = className?.startsWith("language-") ?? false;
-
+// Only a fenced block's `code` carries a `language-*` class; it renders the whole Code Block, so `pre` passes through.
+// No highlighter: its HTML can't hold CodeBlockLines, which keep line numbers beside the code.
+function Code({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"code">) {
+  const lang =
+    className?.startsWith("language-") === true
+      ? className.slice("language-".length)
+      : undefined;
+  // oxlint-disable-next-line anti-slop/no-runtime-typeof -- the renderer passes a fence's source as a string
+  if (lang === undefined || typeof children !== "string") {
+    return (
+      <code {...props} {...stylex.props(styles.code)}>
+        {children}
+      </code>
+    );
+  }
   return (
-    <code {...props} {...stylex.props(inPre ? styles.preCode : styles.code)} />
+    <CodeBlock sx={styles.p}>
+      <CodeBlockContent
+        lineNumbers={lang !== "text" && children.trimEnd().includes("\n")}
+        wrap={lang === "text"}
+      >
+        <CodeLines code={children} lang={lang} />
+      </CodeBlockContent>
+      <CodeBlockActions>
+        <CopyButton aria-label="Copy code" value={children.trimEnd()} />
+      </CodeBlockActions>
+    </CodeBlock>
   );
 }
 
@@ -170,23 +161,6 @@ function Demo({ name }: { name?: string }) {
   return (
     <div data-slot="demo" {...stylex.props(styles.demo)}>
       <Component />
-    </div>
-  );
-}
-
-function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
-  const pre = useRef<HTMLPreElement>(null);
-
-  return (
-    <div data-slot="docs-code-block" {...stylex.props(styles.codeBlock)}>
-      {/* Replacing the class keeps `data-lang`, which the highlight theme keys on. */}
-      <pre ref={pre} {...props} {...stylex.props(styles.pre)} />
-      <CopyButton
-        label="Copy code"
-        sx={styles.copy}
-        // Line numbers are pseudo-elements, so the text holds only the code.
-        text={() => pre.current?.textContent?.trimEnd() ?? ""}
-      />
     </div>
   );
 }
@@ -228,7 +202,7 @@ const components = {
   "md-frameworks": MarkdownFrameworks,
   "md-install": MarkdownInstall,
   p: (props) => <p {...props} {...stylex.props(styles.p)} />,
-  pre: CodeBlock,
+  pre: ({ children }: ComponentPropsWithoutRef<"pre">): ReactNode => children,
   strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
   table: (props) => <table {...props} {...stylex.props(styles.table)} />,
   td: (props) => <td {...props} {...stylex.props(styles.cell)} />,
@@ -238,9 +212,7 @@ const components = {
 function Prose({ body }: { body: MarkdownProps["children"] }) {
   return (
     <div {...stylex.props(styles.prose)}>
-      <Markdown components={components} highlighter={highlightCode}>
-        {body}
-      </Markdown>
+      <Markdown components={components}>{body}</Markdown>
     </div>
   );
 }
