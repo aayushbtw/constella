@@ -10,7 +10,7 @@ import {
   radii,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const cardSizes = ["sm", "default", "flush"] as const;
 const cardVariants = ["default", "well"] as const;

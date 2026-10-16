@@ -17,7 +17,7 @@ import {
   lineHeights,
   sizes,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 interface Source {
   /** When it was published, as it should read: "August 3, 2026". */

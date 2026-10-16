@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { colors, space } from "@/lib/tokens.stylex";
+import { colors, space } from "@/lib/constella/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
 import type { Heading } from "~/components/docs/outline";
 import { PageActions } from "~/components/docs/page-actions";

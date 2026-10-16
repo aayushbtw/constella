@@ -12,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 
 // What the column visibility feature adds to a column and a table.
 interface HidingColumn {

@@ -12,27 +12,27 @@
       "devDependencies": ["@stylexjs/unplugin"],
       "files": [
         {
-          "path": "src/lib/tokens.stylex.ts",
+          "path": "src/lib/constella/tokens.stylex.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/theme.stylex.ts",
+          "path": "src/lib/constella/theme.stylex.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/base.css",
+          "path": "src/lib/constella/base.css",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/styles.ts",
+          "path": "src/lib/constella/styles.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/motion.ts",
+          "path": "src/lib/constella/motion.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/reset.css",
+          "path": "src/lib/constella/reset.css",
           "type": "registry:lib"
         }
       ],
@@ -1050,11 +1050,11 @@
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
-          "path": "src/lib/scroll-fade.stylex.ts",
+          "path": "src/lib/constella/scroll-fade.stylex.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/scroll-fade.ts",
+          "path": "src/lib/constella/scroll-fade.ts",
           "type": "registry:lib"
         }
       ],

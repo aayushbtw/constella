@@ -23,7 +23,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const dialogSizes = ["sm", "default", "lg", "full"] as const;
 

@@ -7,7 +7,7 @@ import { createContext, use, useMemo } from "react";
 
 import { toggleStyles } from "@/components/ui/toggle";
 import type { ToggleSize, ToggleVariant } from "@/components/ui/toggle";
-import { joins, space } from "@/lib/tokens.stylex";
+import { joins, space } from "@/lib/constella/tokens.stylex";
 
 const toggleGroupSpacings = [0, 1, 2] as const;
 

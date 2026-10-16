@@ -10,7 +10,7 @@ import {
   lineHeights,
   media,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
 const reducedMotion = media.reducedMotion.slice("@media ".length);

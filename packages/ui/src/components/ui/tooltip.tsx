@@ -17,7 +17,7 @@ import {
   radii,
   sizes,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

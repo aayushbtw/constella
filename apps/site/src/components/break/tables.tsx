@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fontWeights, sizes } from "@/lib/tokens.stylex";
+import { fontWeights, sizes } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";
 

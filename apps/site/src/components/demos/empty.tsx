@@ -23,7 +23,13 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { colors, radii, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  radii,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

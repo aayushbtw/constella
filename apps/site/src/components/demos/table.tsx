@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { TableSize } from "@/components/ui/table";
-import { fontWeights, sizes, strokes } from "@/lib/tokens.stylex";
+import { fontWeights, sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

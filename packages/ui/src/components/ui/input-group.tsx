@@ -10,7 +10,7 @@ import { Input, inputStyles } from "@/components/ui/input";
 import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
-import { joinStyles } from "@/lib/styles";
+import { joinStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -23,7 +23,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const inputGroupAddonAligns = [
   "inline-start",

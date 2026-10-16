@@ -48,7 +48,7 @@ Add `registries` to your `components.json`. If you don't have one, create it:
 
 ## Add components
 
-The first one also adds StyleX and `src/lib`: the tokens, the CSS they read, and `theme.stylex.ts`, the file you edit to [theme](/docs/theming) Constella.
+The first one also adds StyleX and `src/lib/constella`: the tokens, the CSS they read, and `theme.stylex.ts`, the file you edit to [theme](/docs/theming) Constella.
 
 <!-- ::install name="button" -->
 

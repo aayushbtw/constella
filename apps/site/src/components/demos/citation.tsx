@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Citation, CitationCard } from "@/components/ui/citation";
 import type { Source } from "@/components/ui/citation";
-import { colors, fontSizes, lineHeights } from "@/lib/tokens.stylex";
+import { colors, fontSizes, lineHeights } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

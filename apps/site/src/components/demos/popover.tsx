@@ -12,7 +12,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { space } from "@/lib/tokens.stylex";
+import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

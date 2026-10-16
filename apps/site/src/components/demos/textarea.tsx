@@ -3,7 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Textarea, textareaSizes } from "@/components/ui/textarea";
-import { space } from "@/lib/tokens.stylex";
+import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

@@ -5,8 +5,8 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { scrollFade } from "@/lib/scroll-fade";
-import { space } from "@/lib/tokens.stylex";
+import { scrollFade } from "@/lib/constella/scroll-fade";
+import { space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

@@ -16,7 +16,7 @@ description: Fades a scroller's edges while there's more content past them.
 ## Usage
 
 ```tsx
-import { scrollFade } from "@/lib/scroll-fade";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 ```
 
 ```tsx

@@ -22,7 +22,7 @@ import {
   space,
   strokes,
   fonts,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { Stage, Well } from "~/components/demos/frame";
 
 const dot = "12px";

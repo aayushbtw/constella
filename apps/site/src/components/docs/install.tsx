@@ -6,7 +6,7 @@ import {
   CodeBlockContent,
 } from "@/components/ui/code-block";
 import { CopyButton } from "@/components/ui/copy-button";
-import { colors } from "@/lib/tokens.stylex";
+import { colors } from "@/lib/constella/tokens.stylex";
 import { CodeTokens } from "~/components/docs/code-tokens";
 import { config } from "~/lib/config";
 import { shellTokens } from "~/lib/highlight";

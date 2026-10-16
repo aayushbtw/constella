@@ -22,7 +22,7 @@ import type {
   BadgeVariant,
 } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

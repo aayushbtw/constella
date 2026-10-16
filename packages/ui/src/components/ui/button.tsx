@@ -3,7 +3,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/styles";
+import { joinStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -17,7 +17,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const buttonVariants = [
   "primary",

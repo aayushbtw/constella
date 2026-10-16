@@ -16,7 +16,7 @@ import {
   RadioGroupItem,
   radioGroupItemSizes,
 } from "@/components/ui/radio-group";
-import { fontWeights } from "@/lib/tokens.stylex";
+import { fontWeights } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

@@ -33,7 +33,7 @@ import {
   radii,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 type MarkdownProps = Omit<MarkdownPrimitiveProps, "extensions"> & {
   extensions?: MarkdownPrimitiveProps["extensions"];

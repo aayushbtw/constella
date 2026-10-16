@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
-import { colors, durations, media } from "@/lib/tokens.stylex";
+import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 type ShimmerProps = Omit<ComponentProps<"span">, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

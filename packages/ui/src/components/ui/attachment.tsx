@@ -9,7 +9,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { Shimmer } from "@/components/ui/shimmer";
-import { scrollFade } from "@/lib/scroll-fade";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import {
   colors,
   durations,
@@ -22,7 +22,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const attachmentStates = [
   "idle",

@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { scrollFade } from "@/lib/scroll-fade";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import {
   colors,
   fontSizes,
@@ -11,7 +11,7 @@ import {
   radii,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const box = {

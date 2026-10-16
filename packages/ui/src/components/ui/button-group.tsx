@@ -7,7 +7,7 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import type { SeparatorProps } from "@/components/ui/separator";
-import { joinStyles } from "@/lib/styles";
+import { joinStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontSizes,
@@ -15,7 +15,7 @@ import {
   joins,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const buttonGroupOrientations = ["horizontal", "vertical"] as const;
 

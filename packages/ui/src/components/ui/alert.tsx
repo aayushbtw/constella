@@ -9,7 +9,7 @@ import {
   radii,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const alertStatuses = ["success", "info", "warning", "danger"] as const;
 

@@ -4,7 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 import type { ComponentProps } from "react";
 
-import { durations, easings, motion } from "@/lib/tokens.stylex";
+import { durations, easings, motion } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

@@ -21,7 +21,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const months = Array.from({ length: 13 }, (_, month) => month);

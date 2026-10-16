@@ -7,7 +7,7 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { dialogStyles } from "@/components/ui/dialog";
-import { colors, radii, sizes, space } from "@/lib/tokens.stylex";
+import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
 

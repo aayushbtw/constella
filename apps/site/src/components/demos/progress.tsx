@@ -8,7 +8,7 @@ import {
   ProgressLabel,
   ProgressValue,
 } from "@/components/ui/progress";
-import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

@@ -32,7 +32,7 @@ import {
   useChartTween,
 } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
-import { colors, space } from "@/lib/tokens.stylex";
+import { colors, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

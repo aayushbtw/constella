@@ -27,7 +27,13 @@ import {
   itemVariants,
 } from "@/components/ui/item";
 import type { ItemSize, ItemVariant } from "@/components/ui/item";
-import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

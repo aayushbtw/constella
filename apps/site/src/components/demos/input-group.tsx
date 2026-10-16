@@ -62,7 +62,7 @@ import {
   space,
   strokes,
   fonts,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

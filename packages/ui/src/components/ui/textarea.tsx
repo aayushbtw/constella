@@ -17,7 +17,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const textareaSizes = ["sm", "default", "lg"] as const;
 

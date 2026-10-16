@@ -10,7 +10,13 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { colors, media, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  media,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { frameworks } from "~/lib/frameworks";
 
 const styles = stylex.create({

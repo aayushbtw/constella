@@ -9,7 +9,7 @@ import {
   radii,
   sizes,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const emptyMediaVariants = ["default", "icon"] as const;
 

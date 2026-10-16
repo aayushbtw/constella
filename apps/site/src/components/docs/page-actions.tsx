@@ -5,7 +5,7 @@ import { useRouterState } from "@tanstack/react-router";
 
 import { buttonStyles } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
-import { colors, sizes, space, strokes } from "@/lib/tokens.stylex";
+import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { markdownPath } from "~/lib/markdown";
 
 const styles = stylex.create({

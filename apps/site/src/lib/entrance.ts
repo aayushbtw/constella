@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { AnyRouter } from "@tanstack/react-router";
 
-import { easings, media, motion, space } from "@/lib/tokens.stylex";
+import { easings, media, motion, space } from "@/lib/constella/tokens.stylex";
 
 // One gesture: the tagline and the page stagger in inside the logo's spin, and the
 // last item lands as it settles. In ms.

@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const sides = ["left", "top", "bottom", "right"] as const;

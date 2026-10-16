@@ -21,7 +21,7 @@ import {
 import type { CodeBlockLineVariant } from "@/components/ui/code-block";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Toggle } from "@/components/ui/toggle";
-import { sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 import { CodeLines, CodeTokens } from "~/components/docs/code-tokens";
 import { codeLines } from "~/lib/highlight";

@@ -29,7 +29,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const promptInputStatuses = ["ready", "submitted", "streaming"] as const;
 

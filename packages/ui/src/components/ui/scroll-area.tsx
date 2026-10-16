@@ -4,7 +4,13 @@ import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import * as stylex from "@stylexjs/stylex";
 import type { Ref } from "react";
 
-import { colors, durations, radii, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  durations,
+  radii,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

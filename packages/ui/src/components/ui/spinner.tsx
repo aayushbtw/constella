@@ -10,7 +10,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 type SpinnerProps = Omit<ComponentProps<"output">, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

@@ -17,7 +17,7 @@ import {
   shadows,
   sizes,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const checkboxSizes = ["sm", "default", "lg"] as const;
 

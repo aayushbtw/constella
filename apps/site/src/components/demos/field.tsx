@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { fontWeights, space } from "@/lib/tokens.stylex";
+import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const items = [

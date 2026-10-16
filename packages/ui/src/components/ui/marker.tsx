@@ -12,7 +12,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const markerVariants = ["default", "border", "separator"] as const;
 

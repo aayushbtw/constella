@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { radii, sizes, space } from "@/lib/tokens.stylex";
+import { radii, sizes, space } from "@/lib/constella/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
 import {
   accents,

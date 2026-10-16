@@ -42,7 +42,13 @@ import {
   SidebarMenuLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { colors, radii, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  radii,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";
 import { PersonAvatar } from "~/components/break/people";

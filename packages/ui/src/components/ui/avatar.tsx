@@ -16,7 +16,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const avatarSizes = ["sm", "default", "lg"] as const;
 const avatarCorners = ["pill", "rounded"] as const;

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Markdown } from "@/components/ui/markdown";
 import { Message, MessageContent } from "@/components/ui/message";
-import { sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 import { highlightCode } from "~/lib/highlight";
 

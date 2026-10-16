@@ -24,7 +24,7 @@ Then `npx shadcn@latest add @constella/<name>`. The first component also adds St
 ## Rules
 
 - **Style with `sx`, never `className` or `style`.** Parts take `sx?: StyleXStyles`, from `stylex.create`, and apply it last.
-- **No Tailwind classes, no raw values.** Import tokens from `@/lib/tokens.stylex` (`colors`, `space`, `radii`, `sizes`, `durations`) and use them inside `stylex.create`.
+- **No Tailwind classes, no raw values.** Import tokens from `@/lib/constella/tokens.stylex` (`colors`, `space`, `radii`, `sizes`, `durations`) and use them inside `stylex.create`.
 - **Compose parts, as shadcn does.** One part per element (`Card`, `CardHeader`, `CardTitle`); no config-object props. The page's Composition tree lists them.
 - **A link that looks like a button spreads `stylex.props(buttonStyles({ variant, size }))`** onto the link. Don't wrap a component to restyle it.
 - **Theme in `theme.stylex.ts`**, the one file you own: accent, grays, radius, sizing. https://constella.aayush.cv/docs/theming/index.md

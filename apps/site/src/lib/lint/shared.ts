@@ -56,7 +56,7 @@ function parts(title: string) {
     existsSync(ui)
       ? ui
       : new URL(
-          `../../../../../packages/ui/src/lib/${slug}.ts`,
+          `../../../../../packages/ui/src/lib/constella/${slug}.ts`,
           import.meta.url
         ),
     "utf-8"

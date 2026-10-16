@@ -11,8 +11,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useContext } from "react";
 
-import { useSkipMotion } from "@/lib/motion";
-import { joinStyles } from "@/lib/styles";
+import { useSkipMotion } from "@/lib/constella/motion";
+import { joinStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -29,7 +29,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const selectSizes = ["sm", "default", "lg"] as const;
 

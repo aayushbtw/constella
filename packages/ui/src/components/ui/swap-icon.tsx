@@ -2,7 +2,12 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
-import { durations, easings, media, motion } from "@/lib/tokens.stylex";
+import {
+  durations,
+  easings,
+  media,
+  motion,
+} from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

@@ -3,7 +3,7 @@ import { Link, useMatchRoute } from "@tanstack/react-router";
 
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { scrollFade } from "@/lib/scroll-fade";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import {
   colors,
   durations,
@@ -15,7 +15,7 @@ import {
   radii,
   sizes,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({

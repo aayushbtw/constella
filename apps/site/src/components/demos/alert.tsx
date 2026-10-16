@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert";
 import type { AlertStatus } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

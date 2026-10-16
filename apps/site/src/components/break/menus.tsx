@@ -41,7 +41,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
-import { sizes, space, strokes } from "@/lib/tokens.stylex";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";
 

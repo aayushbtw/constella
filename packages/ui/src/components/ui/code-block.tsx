@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
-import { scrollFade } from "@/lib/scroll-fade";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import {
   codeBlockVars,
   colors,
@@ -12,7 +12,7 @@ import {
   radii,
   sizes,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const codeBlockVariants = ["default", "danger"] as const;
 const codeBlockSizes = ["sm", "default"] as const;

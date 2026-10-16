@@ -77,8 +77,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { visuallyHidden } from "@/lib/styles";
-import { colors, sizes, space, strokes, fonts } from "@/lib/tokens.stylex";
+import { visuallyHidden } from "@/lib/constella/styles";
+import {
+  colors,
+  sizes,
+  space,
+  strokes,
+  fonts,
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

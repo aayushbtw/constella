@@ -4,7 +4,7 @@ import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import * as stylex from "@stylexjs/stylex";
 
 import { buttonStyles } from "@/components/ui/button";
-import { colors, media } from "@/lib/tokens.stylex";
+import { colors, media } from "@/lib/constella/tokens.stylex";
 
 const toggleVariants = ["default", "outline"] as const;
 const toggleSizes = [

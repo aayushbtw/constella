@@ -8,7 +8,7 @@ import {
   fontWeights,
   radii,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { ChartBreak, MessageBreak, SidebarBreak } from "~/components/break/app";
 import { datasetLabels, datasets } from "~/components/break/fixtures";
 import {

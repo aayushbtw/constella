@@ -3,7 +3,7 @@
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, strokes } from "@/lib/tokens.stylex";
+import { colors, strokes } from "@/lib/constella/tokens.stylex";
 
 type SeparatorProps = Omit<SeparatorPrimitive.Props, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

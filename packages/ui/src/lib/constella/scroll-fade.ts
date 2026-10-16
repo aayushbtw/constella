@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { scrollFadeVars as fade } from "@/lib/scroll-fade.stylex";
-import { space } from "@/lib/tokens.stylex";
+import { scrollFadeVars as fade } from "@/lib/constella/scroll-fade.stylex";
+import { space } from "@/lib/constella/tokens.stylex";
 
 const timeline = "@supports (animation-timeline: scroll())";
 const noTimeline = "@supports not (animation-timeline: scroll())";

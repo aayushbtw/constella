@@ -7,7 +7,7 @@ import {
   lineHeights,
   radii,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const messageRoles = ["user", "assistant"] as const;
 

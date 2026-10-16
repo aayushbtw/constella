@@ -14,7 +14,7 @@ import {
 import { useEffect } from "react";
 
 import { Toaster } from "@/components/ui/toast";
-import { colors } from "@/lib/tokens.stylex";
+import { colors } from "@/lib/constella/tokens.stylex";
 import { Header } from "~/components/header";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";

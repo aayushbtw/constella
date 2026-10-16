@@ -28,10 +28,10 @@ Polaris is the `theme.stylex.ts` Constella installs.
 
 ## Usage
 
-Constella installs `lib/theme.stylex.ts` with Polaris in it. To theme your app, replace it with the builder's file, or edit it by hand: it's yours, and nothing else in the system needs changing.
+Constella installs `lib/constella/theme.stylex.ts` with Polaris in it. To theme your app, replace it with the builder's file, or edit it by hand: it's yours, and nothing else in the system needs changing.
 
 ```ts
-// lib/theme.stylex.ts
+// lib/constella/theme.stylex.ts
 import "@radix-ui/colors/indigo.css";
 import "@radix-ui/colors/indigo-dark.css";
 import "@radix-ui/colors/indigo-alpha.css";
@@ -53,7 +53,7 @@ To let people switch themes at runtime, keep your default in `theme.stylex.ts` a
 
 ```tsx
 import * as stylex from "@stylexjs/stylex";
-import { theme } from "@/lib/theme.stylex";
+import { theme } from "@/lib/constella/theme.stylex";
 
 const vega = stylex.createTheme(theme, {
   "--accent-9": "var(--indigo-9)",

@@ -4,8 +4,8 @@ import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible"
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useState } from "react";
 
-import { useSkipMotion } from "@/lib/motion";
-import { durations, easings, media } from "@/lib/tokens.stylex";
+import { useSkipMotion } from "@/lib/constella/motion";
+import { durations, easings, media } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

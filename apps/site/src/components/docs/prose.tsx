@@ -28,7 +28,7 @@ import {
   media,
   radii,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { demos, isDemo } from "~/components/demos";
 import { CodeLines } from "~/components/docs/code-tokens";
 import { Frameworks } from "~/components/docs/frameworks";

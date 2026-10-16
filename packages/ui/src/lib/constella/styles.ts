@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { joins, radii, strokes } from "@/lib/tokens.stylex";
+import { joins, radii, strokes } from "@/lib/constella/tokens.stylex";
 
 // A group's own parts, not the focus guards Base UI drops beside an open popup's trigger.
 const notFirst = ":not(:nth-child(1 of [data-slot]))";

@@ -27,7 +27,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const panelOpen = ":is([data-panel-open] *)";
@@ -237,7 +237,12 @@ const tree: Node[] = [
     name: "components",
   },
   {
-    children: [{ name: "tokens.stylex.ts" }, { name: "theme.stylex.ts" }],
+    children: [
+      {
+        children: [{ name: "tokens.stylex.ts" }, { name: "theme.stylex.ts" }],
+        name: "constella",
+      },
+    ],
     name: "lib",
   },
   { name: "package.json" },

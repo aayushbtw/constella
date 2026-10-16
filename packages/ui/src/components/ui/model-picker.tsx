@@ -35,7 +35,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const modelPickerDetailsSides = ["inline-start", "inline-end"] as const;
 

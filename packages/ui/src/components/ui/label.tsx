@@ -7,7 +7,7 @@ import {
   fontWeights,
   lineHeights,
   space,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 type LabelProps = Omit<ComponentProps<"label">, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

@@ -23,7 +23,7 @@ import {
   ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item";
-import { colors, fontSizes, space } from "@/lib/tokens.stylex";
+import { colors, fontSizes, space } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset, Person } from "~/components/break/fixtures";
 

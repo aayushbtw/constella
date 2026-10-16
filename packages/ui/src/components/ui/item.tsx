@@ -18,7 +18,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const itemVariants = ["default", "outline", "muted"] as const;
 const itemSizes = ["xs", "sm", "default"] as const;

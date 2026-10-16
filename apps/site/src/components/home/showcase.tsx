@@ -41,7 +41,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { Chat } from "~/components/demos/chat";
 import { groups, Palette } from "~/components/demos/command";
 import { Formatting } from "~/components/demos/toggle";

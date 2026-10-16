@@ -16,7 +16,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { useSkipMotion } from "@/lib/motion";
+import { useSkipMotion } from "@/lib/constella/motion";
 import {
   colors,
   durations,
@@ -33,7 +33,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;

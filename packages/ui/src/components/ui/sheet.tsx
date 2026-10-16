@@ -22,7 +22,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const sheetSides = ["top", "right", "bottom", "left"] as const;
 

@@ -55,7 +55,7 @@ import {
   TraceLine,
   TraceTitle,
 } from "@/components/ui/trace";
-import { sizes, strokes } from "@/lib/tokens.stylex";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

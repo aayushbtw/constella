@@ -52,7 +52,13 @@ import {
   PromptInputWell,
 } from "@/components/ui/prompt-input";
 import type { PromptInputStatus } from "@/components/ui/prompt-input";
-import { colors, radii, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  radii,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 // Concentric with the composer: its corner plus the inset and border around it.

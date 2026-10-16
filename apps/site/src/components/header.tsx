@@ -11,7 +11,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { Logo } from "~/components/logo";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";

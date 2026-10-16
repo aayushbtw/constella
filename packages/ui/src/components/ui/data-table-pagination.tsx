@@ -18,7 +18,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { colors, fontSizes, sizes, space, strokes } from "@/lib/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 
 // What the pagination feature adds to a table.
 interface PaginatedTable {

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import type { SelectSize } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { space } from "@/lib/tokens.stylex";
+import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

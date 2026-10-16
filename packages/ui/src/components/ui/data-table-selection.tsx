@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import type { PointerEvent } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { colors, durations, media } from "@/lib/tokens.stylex";
+import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 // What the row selection feature adds to a row and a table.
 interface SelectableRow {

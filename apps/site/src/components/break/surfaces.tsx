@@ -47,7 +47,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 import { text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";
 

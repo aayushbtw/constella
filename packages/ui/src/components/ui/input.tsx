@@ -3,7 +3,7 @@
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/styles";
+import { joinStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -18,7 +18,7 @@ import {
   sizes,
   space,
   strokes,
-} from "@/lib/tokens.stylex";
+} from "@/lib/constella/tokens.stylex";
 
 const inputSizes = ["sm", "default", "lg"] as const;
 

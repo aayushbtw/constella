@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fontWeights, space } from "@/lib/tokens.stylex";
+import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const fruits = ["Apples", "Oranges", "Pears"];
