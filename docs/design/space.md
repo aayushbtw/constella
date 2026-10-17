@@ -1,8 +1,21 @@
 # Space and corners
 
+## Units
+
+Every px value in these docs is at the default 16px root. Interfere puts spacing, sizes and corners on Tailwind's `--spacing` (`0.25rem`), so when a reader raises their browser font size, controls, padding and corners grow with the text.
+
+| Group | Unit | Why |
+| --- | --- | --- |
+| `space`, `sizes`, theme control heights and spacing | rem | A control grows with its label, and a dialog or sidebar keeps its line length. |
+| `radii` (but `full`) | rem | Corners stay concentric with the `space` padding between them. |
+| `strokes.track` | rem | A bar sized beside its thumb, not a line. |
+| `strokes.border`, `indicator`, `spinner` | px | A hairline stays one crisp device pixel; at 1.25px it blurs. |
+| `strokes.icon` | unitless | In the icon's own units, so it already scales with the icon. |
+| `shadows`, `blurs`, `motion` distances, `offsets` | px | Effects and the gap to a trigger don't need to grow; Base UI takes offsets in px. |
+
 ## Spacing
 
-`space.xxxs` (2) and `space.xxs` (4) are fixed hairline gaps; `xs` and up come from the theme's sizing preset.
+`space.xxxs` (2) and `space.xxs` (4) are hairline gaps that stay the same in every theme; `xs` and up come from the theme's sizing preset.
 
 | Gap | Step |
 | --- | --- |

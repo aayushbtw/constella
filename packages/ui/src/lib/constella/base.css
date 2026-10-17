@@ -92,13 +92,13 @@
     --success-solid: var(--green-9);
     /* Corners climb from the one radius a `space.xxs` step at a time, so each nests
        concentrically in the next; the step shrinks with a small radius so all reach 0 together. */
-    --radius-step: min(var(--radius), 4px);
+    --radius-step: min(var(--radius), 0.25rem);
     --radius-xs: calc(var(--radius) - var(--radius-step));
     --radius-sm: var(--radius);
     --radius-md: calc(var(--radius) + var(--radius-step));
     --radius-lg: calc(var(--radius) + 2 * var(--radius-step));
     --radius-xl: calc(var(--radius) + 3 * var(--radius-step));
-    --radius-chip: max(0px, var(--radius) - 2px);
+    --radius-chip: max(0px, var(--radius) - 0.125rem);
   }
 
   /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.

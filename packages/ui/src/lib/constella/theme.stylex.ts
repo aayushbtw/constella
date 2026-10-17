@@ -4,7 +4,8 @@
 //   one, import its four files and point the steps at it (the theme builder writes this).
 // - Roles: what components ask for (`--border`, `--fill`…), each a scale step; change one alone.
 //   The ones that differ between light and dark live in base.css.
-// - Shape and density: one radius (the rest derive from it), control heights, spacing.
+// - Shape and density: one radius (the rest derive from it), control heights, spacing. In rem
+//   (1rem is 16px at the default root), so they grow with the reader's browser font size.
 // - Fonts: `--font-sans` for text, `--font-mono` for code and figures. Named, not shipped: load
 //   them or put yours first. base.css sets them on the page and reset.css on controls and code; components inherit.
 //
@@ -86,15 +87,15 @@ export const theme = stylex.defineVars({
   "--accent-on-solid": "var(--neutral-1)",
   "--focus-ring": "var(--neutral-8)",
   "--selection": "var(--neutral-a5)",
-  "--radius": "8px",
-  "--size-control-xxs": "20px",
-  "--size-control-xs": "24px",
-  "--size-control-sm": "28px",
-  "--size-control-md": "32px",
-  "--size-control-lg": "36px",
-  "--space-xs": "8px",
-  "--space-sm": "12px",
-  "--space-md": "16px",
-  "--space-lg": "24px",
-  "--space-xl": "48px",
+  "--radius": "0.5rem",
+  "--size-control-xxs": "1.25rem",
+  "--size-control-xs": "1.5rem",
+  "--size-control-sm": "1.75rem",
+  "--size-control-md": "2rem",
+  "--size-control-lg": "2.25rem",
+  "--space-xs": "0.5rem",
+  "--space-sm": "0.75rem",
+  "--space-md": "1rem",
+  "--space-lg": "1.5rem",
+  "--space-xl": "3rem",
 });

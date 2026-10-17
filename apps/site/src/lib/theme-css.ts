@@ -97,6 +97,9 @@ const scalingPresets = {
   },
 } as const;
 
+/** A preset's px at the default 16px root, in rem, so it grows with the reader's font size. */
+const rem = (px: number) => `${px / 16}rem`;
+
 type ThemeName = keyof typeof themes;
 type RadiusPreset = keyof typeof radiusPresets;
 type ScalingPreset = keyof typeof scalingPresets;
@@ -177,14 +180,14 @@ function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
     ["--accent-on-solid", ink ? "var(--neutral-1)" : "var(--accent-contrast)"],
     ["--focus-ring", ink ? "var(--neutral-8)" : "var(--accent-8)"],
     ["--selection", ink ? "var(--neutral-a5)" : "var(--accent-a5)"],
-    ["--radius", `${radiusPresets[radius]}px`],
+    ["--radius", rem(radiusPresets[radius])],
     ...(["xxs", "xs", "sm", "md", "lg"] as const).map((size): Entry => [
       `--size-control-${size}`,
-      `${controls[size]}px`,
+      rem(controls[size]),
     ]),
     ...(["xs", "sm", "md", "lg", "xl"] as const).map((size): Entry => [
       `--space-${size}`,
-      `${space[size]}px`,
+      rem(space[size]),
     ]),
   ] satisfies Entry[];
 }

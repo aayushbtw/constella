@@ -185,11 +185,15 @@ export const fontWeights = stylex.defineConsts({
   semibold: "600",
 });
 
+// The base space, sizes and the theme's radius multiply, 4px at a 16px root, as Tailwind's
+// `--spacing`. In rem, so controls and their padding grow with the text.
+const spaceUnit = "0.25rem";
+
 // Values a theme can change point at variables `base.css` defaults and a theme overrides.
-// `xxxs` and `xxs` stay fixed: they're hairline gaps, and JS reads `xxs` as a popup offset.
+// `xxxs` and `xxs` stay fixed across themes: they're hairline gaps.
 export const space = stylex.defineConsts({
-  xxxs: "2px",
-  xxs: "4px",
+  xxxs: `calc(${spaceUnit} * 0.5)`,
+  xxs: spaceUnit,
   xs: "var(--space-xs)",
   sm: "var(--space-sm)",
   md: "var(--space-md)",
@@ -215,48 +219,51 @@ export const sizes = stylex.defineConsts({
   controlXs: "var(--size-control-xs)",
   controlXxs: "var(--size-control-xxs)",
   // A citation pill's widest; a longer publication name truncates.
-  citation: "160px",
-  dialog: "384px",
-  dialogLg: "512px",
-  dialogSm: "320px",
+  citation: `calc(${spaceUnit} * 40)`,
+  dialog: `calc(${spaceUnit} * 96)`,
+  dialogLg: `calc(${spaceUnit} * 128)`,
+  dialogSm: `calc(${spaceUnit} * 80)`,
   // The top row the sidebar and the page share, so their headers line up.
-  header: "48px",
-  hitArea: "40px",
-  icon: "16px",
-  iconLg: "20px",
-  iconSm: "14px",
-  iconXs: "12px",
-  iconXxs: "8px",
-  kbd: "20px",
+  header: `calc(${spaceUnit} * 12)`,
+  hitArea: `calc(${spaceUnit} * 10)`,
+  icon: `calc(${spaceUnit} * 4)`,
+  iconLg: `calc(${spaceUnit} * 5)`,
+  iconSm: `calc(${spaceUnit} * 3.5)`,
+  iconXs: `calc(${spaceUnit} * 3)`,
+  iconXxs: `calc(${spaceUnit} * 2)`,
+  kbd: `calc(${spaceUnit} * 5)`,
   // An item's image or avatar, beside a title and description.
-  media: "40px",
+  media: `calc(${spaceUnit} * 10)`,
   // The least an item's text keeps beside its actions before they drop under it.
-  itemText: "160px",
-  menu: "144px",
-  menuHeight: "320px",
+  itemText: `calc(${spaceUnit} * 40)`,
+  menu: `calc(${spaceUnit} * 36)`,
+  menuHeight: `calc(${spaceUnit} * 80)`,
   // A model picker's list: short names beside a search field.
-  modelPicker: "240px",
+  modelPicker: `calc(${spaceUnit} * 60)`,
   // A centered block of short text, like an empty state's.
-  measure: "384px",
-  popover: "288px",
+  measure: `calc(${spaceUnit} * 96)`,
+  popover: `calc(${spaceUnit} * 72)`,
   // A side panel beside the content.
-  sidePanel: "400px",
+  sidePanel: `calc(${spaceUnit} * 100)`,
   // A sidebar open, and collapsed to its icons (a control and its group padding).
-  sidebar: "256px",
-  sidebarIcon: "48px",
-  thumb: "12px",
-  toast: "356px",
-  tooltip: "320px",
+  sidebar: `calc(${spaceUnit} * 64)`,
+  sidebarIcon: `calc(${spaceUnit} * 12)`,
+  thumb: `calc(${spaceUnit} * 3)`,
+  toast: `calc(${spaceUnit} * 89)`,
+  tooltip: `calc(${spaceUnit} * 80)`,
 });
 
+// Lines stay in px, so a hairline stays one crisp device pixel at any text size.
 export const strokes = stylex.defineConsts({
   border: "1px",
-  // Hugeicons' weight beside medium text; read in JS, so a bare number.
+  // Hugeicons' weight beside medium text; read in JS, so a bare number. In the icon's own
+  // units, so it scales with the icon.
   icon: "1.75",
   // The line under a `line` tab, and the bar beside a vertical one.
   indicator: "2px",
   spinner: "1.5px",
-  track: "4px",
+  // A slider or progress bar: a size, not a line, so it grows with its thumb.
+  track: spaceUnit,
 });
 
 // Popup distances from their trigger, read in JS by Base UI, so bare numbers.
