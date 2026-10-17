@@ -42,6 +42,7 @@ Alert
 ```
 
 - **One part, one element.** Each part wraps a single element or Base UI part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part. A part that announces (Copy Button's "Copied") renders its live region as a slot-less sibling, since inside the control its text would join the control's name and a slot would make it a group's last part.
+- **A text input is three elements.** `Input` is an `InputGroup` box around `InputGroupInput`, a slot holding a bare `<input>`, after Interfere's. On a touch screen the input renders at 16px, so iOS doesn't zoom on focus, and scales by `inputVars.scale` back to the box's text size. It outgrows its slot in layout, and the slot keeps that from pushing the addons. `sx` styles the box; every other prop goes to the `<input>`.
 - **Every part has a `data-slot`.** Even unstyled Base UI wrappers, so a parent can style around a child (`:has(> [data-slot="alert-action"])`) without a prop. Variants and sizes are mirrored as `data-variant`, `data-size`.
 - **A part reused unchanged keeps its parent's slot.** `ApprovalHeader` is `CardHeader` re-exported, with `card-header`, because Card's selectors read those slots (`[data-slot='card'][data-size='sm']` sizes the title). Only a part that adds styles gets its own slot.
 - **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.

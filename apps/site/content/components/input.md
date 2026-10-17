@@ -35,11 +35,11 @@ Use the `size` prop to match the input to the buttons beside it.
 
 | Size      | Height | Text |
 | --------- | ------ | ---- |
-| `sm`      | 28px   | 13px |
-| `default` | 32px   | 14px |
-| `lg`      | 36px   | 14px |
+| `sm`      | 28px   | 12px |
+| `default` | 32px   | 13px |
+| `lg`      | 36px   | 13px |
 
-Under 640px every size uses 16px text, so iOS doesn't zoom on focus.
+On a touch screen the input renders at 16px, scaled down to that size, so iOS doesn't zoom on focus.
 
 <!-- ::demo name="input-size" -->
 
@@ -284,4 +284,4 @@ Use [Input Group](/docs/components/input-group) to put icons, text or buttons in
 
 ## API Reference
 
-`Input` renders Base UI's input, so inside a `Field` it takes the field's name, state and validation. It takes `size` (`sm`, `default`, `lg`) in place of the native `size` attribute, and `sx`, applied last. For the rest, see [Base UI Input](https://base-ui.com/react/components/input).
+`Input` is an [Input Group](/docs/components/input-group) box around Base UI's input, so inside a `Field` it takes the field's name, state and validation. It takes `size` in place of the native `size` attribute. `sx` styles the box, applied last. Every other prop, `ref` included, goes to the `<input>`. For the rest, see [Base UI Input](https://base-ui.com/react/components/input).

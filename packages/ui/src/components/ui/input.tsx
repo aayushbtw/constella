@@ -1,157 +1,35 @@
 "use client";
 
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import * as stylex from "@stylexjs/stylex";
+import type * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/constella/styles";
 import {
-  colors,
-  durations,
-  easings,
-  fontSizes,
-  fontWeights,
-  media,
-  opacities,
-  presses,
-  radii,
-  shadows,
-  sizes,
-  space,
-  strokes,
-  lineHeights,
-} from "@/lib/constella/tokens.stylex";
+  InputGroup,
+  InputGroupInput,
+  inputGroupSizes,
+} from "@/components/ui/input-group";
+import type {
+  InputGroupInputProps,
+  InputGroupSize,
+} from "@/components/ui/input-group";
 
-const inputSizes = ["sm", "default", "lg"] as const;
+const inputSizes = inputGroupSizes;
 
-type InputSize = (typeof inputSizes)[number];
+type InputSize = InputGroupSize;
 
-// Native `size` counts characters; width comes from layout here.
-type InputProps = Omit<InputPrimitive.Props, "className" | "size" | "style"> & {
+// `sx` styles the box; every other prop goes to the input inside it.
+type InputProps = Omit<InputGroupInputProps, "sx"> & {
   size?: InputSize;
   sx?: stylex.StyleXStyles;
 };
 
-const invalid = ":is([aria-invalid='true'], [data-invalid])";
-const disabled = ":is(:disabled, [data-disabled])";
-
-// shadcn's inline padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-const chipInset = `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2 - ${strokes.border})`;
-
-const styles = stylex.create({
-  input: {
-    backgroundClip: "padding-box",
-    backgroundColor: colors.background,
-    borderBlockColor: {
-      default: colors.border,
-      [invalid]: colors.dangerBorder,
-    },
-    borderInlineColor: {
-      default: colors.border,
-      [invalid]: colors.dangerBorder,
-    },
-    borderBlockEndWidth: strokes.border,
-    borderBlockStartWidth: strokes.border,
-    borderInlineEndWidth: strokes.border,
-    borderInlineStartWidth: strokes.border,
-    borderBlockStyle: "solid",
-    borderInlineStyle: "solid",
-    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
-    caretColor: colors.accentSolid,
-    color: colors.textPrimary,
-    cursor: { default: null, [disabled]: "not-allowed" },
-    // Under 16px, iOS Safari zooms the page on focus.
-    fontSize: { default: fontSizes.textLg, [media.sm]: fontSizes.textSm },
-    height: sizes.controlMd,
-    marginBlock: 0,
-    marginInlineEnd: 0,
-    marginInlineStart: 0,
-    minWidth: 0,
-    opacity: { default: 1, [disabled]: opacities.disabled },
-    paddingBlock: 0,
-    paddingInlineEnd: px10,
-    paddingInlineStart: px10,
-    transitionDuration: durations.hover,
-    transitionProperty: "border-color, box-shadow",
-    transitionTimingFunction: "ease",
-    width: "100%",
-    // In a ButtonGroup, the focused item's ring stays above its neighbors.
-    zIndex: { default: null, ":focus-visible": 1 },
-    "::placeholder": { color: colors.textMuted },
-    "::file-selector-button": {
-      backgroundColor: {
-        default: colors.fill,
-        [media.hover]: {
-          default: colors.fill,
-          ":hover:not(:disabled)": colors.fillStrong,
-        },
-        ":active:not(:disabled)": colors.fillStrong,
-      },
-      borderBlockEndWidth: 0,
-      borderBlockStartWidth: 0,
-      borderInlineEndWidth: 0,
-      borderInlineStartWidth: 0,
-      borderStartStartRadius: radii.xs,
-      borderStartEndRadius: radii.xs,
-      borderEndStartRadius: radii.xs,
-      borderEndEndRadius: radii.xs,
-      color: colors.textPrimary,
-      cursor: "inherit",
-      fontSize: fontSizes.textSm,
-      lineHeight: lineHeights.textSm,
-      fontWeight: fontWeights.medium,
-      height: "100%",
-      marginInlineEnd: space.xs,
-      paddingBlock: 0,
-      paddingInlineEnd: space.xs,
-      paddingInlineStart: space.xs,
-      transform: { default: null, ":active": presses.link },
-      transitionDuration: `${durations.hover}, ${durations.press}`,
-      transitionProperty: "background-color, transform",
-      transitionTimingFunction: `ease, ${easings.out}`,
-    },
-  },
-  sm: {
-    height: sizes.controlSm,
-  },
-  lg: {
-    height: sizes.controlLg,
-  },
-  // The chip sits in the box with an even inset on three sides, its corner concentric with the box's.
-  file: {
-    color: colors.textSecondary,
-    cursor: { default: "pointer", [disabled]: "not-allowed" },
-    paddingBlock: chipInset,
-    paddingInlineStart: chipInset,
-  },
-});
-
-const sizeStyles = {
-  default: null,
-  lg: styles.lg,
-  sm: styles.sm,
-} satisfies Record<InputSize, stylex.StyleXStyles | null>;
-
-/** An input's styles for another element, like a third-party masked input. */
-function inputStyles({ size = "default" }: Pick<InputProps, "size"> = {}) {
-  return [styles.input, joinStyles.sm, joinStyles.edges, sizeStyles[size]];
-}
-
-function Input({ size = "default", sx, type, ...props }: InputProps) {
+function Input({ size = "default", sx, ...props }: InputProps) {
   return (
-    <InputPrimitive
-      data-size={size}
-      data-slot="input"
-      type={type}
-      {...props}
-      {...stylex.props(
-        inputStyles({ size }),
-        type === "file" && styles.file,
-        sx
-      )}
-    />
+    // A lone input is no group of controls.
+    <InputGroup role="none" size={size} sx={sx}>
+      <InputGroupInput {...props} />
+    </InputGroup>
   );
 }
 
-export { Input, inputSizes, inputStyles };
+export { Input, inputSizes };
 export type { InputProps, InputSize };

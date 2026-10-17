@@ -1,23 +1,27 @@
 "use client";
 
+import { Input as InputPrimitive } from "@base-ui/react/input";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
-import { Input, inputStyles } from "@/components/ui/input";
-import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
+  easings,
+  fontSizes,
   fontWeights,
+  inputVars,
   joins,
   lineHeights,
+  media,
   opacities,
+  presses,
+  radii,
   shadows,
   sizes,
   space,
@@ -55,9 +59,21 @@ type InputGroupButtonProps = Omit<ButtonProps, "size"> & {
   size?: InputGroupButtonSize;
 };
 
+// Native `size` counts characters; width comes from layout here.
+type InputGroupInputProps = Omit<
+  InputPrimitive.Props,
+  "className" | "size" | "style"
+> & {
+  sx?: stylex.StyleXStyles;
+};
+
 const control = "[data-slot='input-group-control']";
-const invalid = `:has(> ${control}:is([aria-invalid='true'], [data-invalid]))`;
-const disabled = `:has(> ${control}:is(:disabled, [data-disabled]))`;
+const invalid = `:has(${control}:is([aria-invalid='true'], [data-invalid]))`;
+const disabled = `:has(${control}:is(:disabled, [data-disabled]))`;
+const controlDisabled = ":is(:disabled, [data-disabled])";
+const sm = ":is([data-size='sm'])";
+// Not `:dir(rtl)`: Lightning CSS lowers it to a `:lang()` list that ignores `dir`.
+const rtl = ":is([dir='rtl'] *)";
 // The first button in a run, inside a block addon.
 const leadingBlockButton =
   ":where([data-slot='input-group-addon'][data-align^='block'] > :not([data-slot='button'] + *))";
@@ -91,6 +107,8 @@ const px6 = `calc(${space.xs} - ${space.xxxs})`;
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
 const stackedInput = `calc(${lineHeights.textSm} + ${space.xs} + ${space.xxs})`;
+const chipInset = `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2 - ${strokes.border})`;
+const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 // An xs button or a keycap sits in the box with an even inset on three sides.
 const insetEdge = {
   default: null,
@@ -139,12 +157,18 @@ const styles = stylex.create({
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "flex",
     flexDirection: { default: "row", [stacked]: "column" },
+    fontSize: { default: fontSizes.textSm, [sm]: fontSizes.captionLg },
     height: {
       default: sizes.controlMd,
-      ":is([data-size='sm'])": sizes.controlSm,
+      [sm]: sizes.controlSm,
       ":is([data-size='lg'])": sizes.controlLg,
       [stacked]: "auto",
     },
+    [inputVars.scale]: {
+      default: null,
+      [media.coarse]: { default: "calc(13 / 16)", [sm]: "calc(12 / 16)" },
+    },
+    lineHeight: { default: lineHeights.textSm, [sm]: lineHeights.captionLg },
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     position: "relative",
@@ -232,33 +256,112 @@ const styles = stylex.create({
     flexGrow: 1,
     opacity: 1,
   },
-  input: {
+  // The input can outgrow this slot at 16px, then scale back to fit.
+  inputSlot: {
+    alignSelf: "stretch",
+    display: "flex",
+    flexGrow: 1,
     height: {
-      default: "100%",
+      default: null,
       // One line, the outer edge's gap, and a step to the addon so the two lines space evenly.
       [inGroupWith("block-start")]: stackedInput,
       [inGroupWith("block-end")]: stackedInput,
     },
+    minWidth: 0,
+  },
+  input: {
+    backgroundColor: "transparent",
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
+    caretColor: colors.accentSolid,
+    color: colors.textPrimary,
+    cursor: { default: null, [controlDisabled]: "not-allowed" },
+    flexShrink: 0,
+    // Under 16px, iOS Safari zooms the page on focus.
+    fontSize: {
+      default: unscaled("1em"),
+      // A smaller root or text step than the scale assumes would drop it under again.
+      [media.coarse]: `max(16px, ${unscaled("1em")})`,
+    },
+    height: unscaled("100%"),
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
+    marginInlineEnd: 0,
+    marginInlineStart: 0,
+    minWidth: 0,
     paddingBlockEnd: {
       default: 0,
-      [inGroupWith("block-start")]: space.xs,
-      [inGroupWith("block-end")]: space.xxs,
+      [inGroupWith("block-start")]: unscaled(space.xs),
+      [inGroupWith("block-end")]: unscaled(space.xxs),
     },
     paddingBlockStart: {
       default: 0,
-      [inGroupWith("block-start")]: space.xxs,
-      [inGroupWith("block-end")]: space.xs,
+      [inGroupWith("block-start")]: unscaled(space.xxs),
+      [inGroupWith("block-end")]: unscaled(space.xs),
     },
     paddingInlineEnd: {
-      default: px10,
-      [inGroupWith("inline-end")]: px6,
-      [beforeSuffix]: space.xxxs,
+      default: unscaled(px10),
+      [inGroupWith("inline-end")]: unscaled(px6),
+      [beforeSuffix]: unscaled(space.xxxs),
     },
     paddingInlineStart: {
-      default: px10,
-      [inGroupWith("inline-start")]: px6,
-      [afterPrefix]: space.xxxs,
+      default: unscaled(px10),
+      [inGroupWith("inline-start")]: unscaled(px6),
+      [afterPrefix]: unscaled(space.xxxs),
     },
+    scale: { default: null, [media.coarse]: inputVars.scale },
+    transformOrigin: {
+      default: null,
+      [media.coarse]: { default: "left top", [rtl]: "right top" },
+    },
+    width: unscaled("100%"),
+    "::placeholder": { color: colors.textMuted },
+    "::file-selector-button": {
+      backgroundColor: {
+        default: colors.fill,
+        [media.hover]: {
+          default: colors.fill,
+          ":hover:not(:disabled)": colors.fillStrong,
+        },
+        ":active:not(:disabled)": colors.fillStrong,
+      },
+      borderBlockEndWidth: 0,
+      borderBlockStartWidth: 0,
+      borderInlineEndWidth: 0,
+      borderInlineStartWidth: 0,
+      borderStartStartRadius: radii.xs,
+      borderStartEndRadius: radii.xs,
+      borderEndStartRadius: radii.xs,
+      borderEndEndRadius: radii.xs,
+      color: colors.textPrimary,
+      cursor: "inherit",
+      fontSize: fontSizes.textSm,
+      lineHeight: lineHeights.textSm,
+      fontWeight: fontWeights.medium,
+      height: "100%",
+      marginInlineEnd: space.xs,
+      paddingBlockEnd: 0,
+      paddingBlockStart: 0,
+      paddingInlineEnd: space.xs,
+      paddingInlineStart: space.xs,
+      transform: { default: null, ":active": presses.link },
+      transitionDuration: `${durations.hover}, ${durations.press}`,
+      transitionProperty: "background-color, transform",
+      transitionTimingFunction: `ease, ${easings.out}`,
+    },
+  },
+  // The chip sits in the box with an even inset on three sides, its corner concentric with the box's.
+  file: {
+    // A file input opens a picker, so iOS never zooms it.
+    [inputVars.scale]: "1",
+    color: colors.textSecondary,
+    fontSize: "inherit",
+    cursor: { default: "pointer", [controlDisabled]: "not-allowed" },
+    paddingBlockEnd: chipInset,
+    paddingBlockStart: chipInset,
+    paddingInlineStart: chipInset,
   },
   textarea: {
     resize: "none",
@@ -298,20 +401,16 @@ const buttonSizeStyles = {
   xs: [[typeStyles.textSm, styles.buttonXs], joinStyles.xs],
 } satisfies Record<InputGroupButtonSize, stylex.StyleXStyles | null>;
 
-const InputGroupSizeContext = createContext<InputGroupSize>("default");
-
 function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
   return (
-    <InputGroupSizeContext value={size}>
-      <div
-        data-size={size}
-        data-slot="input-group"
-        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
-        role="group"
-        {...props}
-        {...stylex.props(styles.group, joinStyles.sm, joinStyles.edges, sx)}
-      />
-    </InputGroupSizeContext>
+    <div
+      data-size={size}
+      data-slot="input-group"
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
+      role="group"
+      {...props}
+      {...stylex.props(styles.group, joinStyles.sm, joinStyles.edges, sx)}
+    />
   );
 }
 
@@ -376,27 +475,21 @@ function InputGroupText({ sx, ...props }: Styled<ComponentProps<"span">>) {
   );
 }
 
-/** The control's styles for your own input; pair them with `data-slot="input-group-control"`. */
-function inputGroupInputStyles({
-  size = "default",
-}: { size?: InputSize } = {}) {
-  return [...inputStyles({ size }), styles.control, styles.input];
-}
-
 /** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */
 function inputGroupTextareaStyles() {
   return [...textareaStyles(), styles.control, styles.textarea];
 }
 
-function InputGroupInput({ sx, ...props }: InputProps) {
-  const size = use(InputGroupSizeContext);
+function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
   return (
-    <Input
-      data-slot="input-group-control"
-      size={size}
-      {...props}
-      sx={[styles.control, styles.input, sx]}
-    />
+    <span data-slot="input-group-input" {...stylex.props(styles.inputSlot)}>
+      <InputPrimitive
+        type={type}
+        {...props}
+        data-slot="input-group-control"
+        {...stylex.props(styles.input, type === "file" && styles.file, sx)}
+      />
+    </span>
   );
 }
 
@@ -417,7 +510,6 @@ export {
   InputGroupButton,
   inputGroupButtonSizes,
   InputGroupInput,
-  inputGroupInputStyles,
   inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,
@@ -428,6 +520,7 @@ export type {
   InputGroupAddonProps,
   InputGroupButtonProps,
   InputGroupButtonSize,
+  InputGroupInputProps,
   InputGroupProps,
   InputGroupSize,
 };

@@ -8,7 +8,7 @@ import type { ComponentProps } from "react";
 
 import { buttonStyles } from "@/components/ui/button";
 import type { ButtonStyleOptions } from "@/components/ui/button";
-import { inputStyles } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -402,13 +402,7 @@ function QuestionnaireInput({
   sx,
   ...props
 }: Styled<ComponentProps<typeof QuestionnairePrimitive.Input>>) {
-  return (
-    <QuestionnairePrimitive.Input
-      data-slot="questionnaire-input"
-      {...props}
-      {...stylex.props(inputStyles(), sx)}
-    />
-  );
+  return <QuestionnairePrimitive.Input {...props} render={<Input sx={sx} />} />;
 }
 
 function QuestionnaireError({
