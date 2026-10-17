@@ -294,6 +294,7 @@ export const opacities = stylex.defineConsts({
 });
 
 export const media = stylex.defineConsts({
+  coarse: "@media (pointer: coarse)",
   hover: "@media (hover: hover)",
   reducedMotion: "@media (prefers-reduced-motion: reduce)",
   sm: "@media (min-width: 640px)",
@@ -301,7 +302,6 @@ export const media = stylex.defineConsts({
   md: "@media (min-width: 768px)",
 });
 
-  coarse: "@media (pointer: coarse)",
 export const presses = stylex.defineConsts({
   icon: "scale(0.95)",
   link: "scale(0.97)",
