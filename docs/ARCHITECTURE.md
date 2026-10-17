@@ -25,6 +25,8 @@ Every `registry:lib` file lives in `src/lib/constella/`, so an install keeps it 
 
 `registryDependencies` reference this registry by URL. A bare name like `base` means shadcn's official registry.
 
+`vpr check` runs `packages/ui/scripts/check-registry.ts`: an item's direct imports must equal its `dependencies` (React aside, which the app provides) and its `registryDependencies`, even ones another dependency already brings, and every file in `src` belongs to exactly one item. `devDependencies` aren't checked.
+
 ## Composition
 
 Components compose like shadcn: one file per component, made of small parts the consumer assembles. Data Table is the exception. Past 1,000 lines, it splits into parts (`data-table-pagination`, `-selection`, `-view-options`) and hooks (`use-data-table-keys`, `-virtualizer`), all files of one registry item. `data-table.tsx` re-exports the parts, so imports stay `@/components/ui/data-table`.

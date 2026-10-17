@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vp run -t site#build",
-    "check": "vp check",
+    "check": "vp check && node packages/ui/scripts/check-registry.ts",
     "deploy": "vp run -t site#build && vp run site#deploy",
     "dev": "vp dev",
     "fix": "vp check --fix"
