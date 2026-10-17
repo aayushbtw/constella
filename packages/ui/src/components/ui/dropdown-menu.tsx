@@ -141,8 +141,15 @@ const styles = stylex.create({
     paddingBlockStart: { default: space.lg, ":empty": 0 },
     textAlign: "center",
   },
+  // Its first item level with the trigger, or its last when it flips to `end`. A translate,
+  // not Base UI's px `alignOffset`, so it follows the padding in rem.
   submenu: {
     transform: "none",
+    translate: {
+      default: null,
+      ":is([data-align='start'])": `0 calc(-1 * ${space.xxs})`,
+      ":is([data-align='end'])": `0 ${space.xxs}`,
+    },
     transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
     transitionProperty: "opacity",
   },
@@ -443,8 +450,6 @@ function DropdownMenuSubTrigger({
 /** A submenu's popup: opens beside its trigger, with its first item level with it. */
 function DropdownMenuSubContent({
   align = "start",
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("4px")` is NaN
-  alignOffset = -Number.parseFloat(space.xxs),
   side = "inline-end",
   sideOffset = 0,
   sx,
@@ -453,7 +458,6 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuContent
       align={align}
-      alignOffset={alignOffset}
       data-slot="dropdown-menu-sub-content"
       side={side}
       sideOffset={sideOffset}
