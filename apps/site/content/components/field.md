@@ -184,7 +184,11 @@ Put the control and a `FieldContent` inside the `FieldLabel` to turn the whole l
 
 ## Error
 
-Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails.
+Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails. With a form library, pass its errors to `errors` instead: each message shows once, several as a list, and nothing renders when there are none.
+
+```tsx
+<FieldError errors={field.state.meta.errors} />
+```
 
 <!-- ::demo name="field-error" -->
 
@@ -306,4 +310,4 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 
 ## API Reference
 
-`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) and `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`). `FieldGroup`, `FieldContent`, `FieldTitle` and `FieldSetDescription` are plain elements. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [Base UI Field](https://base-ui.com/react/components/field) and [Fieldset](https://base-ui.com/react/components/fieldset).
+`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`) and `FieldError` adds `errors` (an array of `{ message }`, in place of `match`). `FieldGroup`, `FieldContent`, `FieldTitle` and `FieldSetDescription` are plain elements. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [Base UI Field](https://base-ui.com/react/components/field) and [Fieldset](https://base-ui.com/react/components/fieldset).

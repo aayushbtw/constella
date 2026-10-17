@@ -161,6 +161,14 @@ const styles = stylex.create({
     lineHeight: lineHeights.row,
     overflowWrap: "anywhere",
   },
+  errorList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxxs,
+    listStylePosition: "inside",
+    marginBlock: 0,
+    paddingInline: 0,
+  },
 });
 
 const orientationStyles = {
@@ -278,13 +286,48 @@ function FieldSetDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   );
 }
 
-function FieldError({ sx, ...props }: Styled<FieldPrimitive.Error.Props>) {
+type FieldErrorProps = Styled<FieldPrimitive.Error.Props> &
+  (
+    | { errors: readonly ({ message?: string } | undefined)[]; match?: never }
+    | { errors?: undefined }
+  );
+
+function FieldError({ errors, sx, ...props }: FieldErrorProps) {
+  if (errors === undefined) {
+    return (
+      <FieldPrimitive.Error
+        data-slot="field-error"
+        {...props}
+        {...stylex.props(styles.error, sx)}
+      />
+    );
+  }
+  const messages = [
+    ...new Set(errors.flatMap((issue) => issue?.message ?? [])),
+  ];
+  const children =
+    props.children ??
+    (messages.length > 1 ? (
+      <ul {...stylex.props(styles.errorList)}>
+        {messages.map((message) => (
+          <li key={message}>{message}</li>
+        ))}
+      </ul>
+    ) : (
+      messages[0]
+    ));
+  if (children === undefined) {
+    return null;
+  }
   return (
     <FieldPrimitive.Error
       data-slot="field-error"
+      match
       {...props}
       {...stylex.props(styles.error, sx)}
-    />
+    >
+      {children}
+    </FieldPrimitive.Error>
   );
 }
 
