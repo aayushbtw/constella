@@ -15,10 +15,10 @@ import {
 import { DemoRow } from "~/components/demos/frame";
 
 const box = {
-  borderBlockEndColor: colors.edge,
-  borderBlockStartColor: colors.edge,
-  borderInlineEndColor: colors.edge,
-  borderInlineStartColor: colors.edge,
+  borderBlockEndColor: colors.border,
+  borderBlockStartColor: colors.border,
+  borderInlineEndColor: colors.border,
+  borderInlineStartColor: colors.border,
   borderBlockEndStyle: "solid",
   borderBlockStartStyle: "solid",
   borderInlineEndStyle: "solid",
@@ -66,7 +66,7 @@ const styles = stylex.create({
     fontVariantNumeric: "tabular-nums",
   },
   cell: {
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     paddingBlockEnd: space.xs,

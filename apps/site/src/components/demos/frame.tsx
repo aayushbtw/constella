@@ -1,7 +1,14 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
-import { colors, media, radii, space } from "@/lib/constella/tokens.stylex";
+import {
+  colors,
+  fontSizes,
+  fonts,
+  media,
+  radii,
+  space,
+} from "@/lib/constella/tokens.stylex";
 import { shadows, surfaces } from "~/lib/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -61,6 +68,37 @@ const styles = stylex.create({
     paddingBlock: space.xxs,
     paddingInline: space.xxs,
   },
+  tiles: {
+    display: "grid",
+    gap: space.md,
+    gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+  },
+  tile: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xs,
+    minWidth: 0,
+  },
+  sample: {
+    alignItems: "center",
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
+    boxShadow: shadows.inset,
+    display: "flex",
+    height: 72,
+    justifyContent: "center",
+  },
+  token: {
+    color: colors.textSecondary,
+    fontFamily: fonts.mono,
+    fontSize: fontSizes.xxs,
+    fontVariantLigatures: "none",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
 });
 
 /** The demo's surface; `controls` are the demo's own knobs and actions, kept apart from the component. */
@@ -103,4 +141,32 @@ function Well({
   return <div {...stylex.props(styles.well, sx)}>{children}</div>;
 }
 
-export { DemoRow, Stage, Well };
+function Tiles({
+  children,
+  sx,
+}: {
+  children: ReactNode;
+  sx?: stylex.StyleXStyles;
+}) {
+  return <div {...stylex.props(styles.tiles, sx)}>{children}</div>;
+}
+
+/** A token shown on its own sample, named under it. */
+function Tile({
+  children,
+  sx,
+  token,
+}: {
+  children?: ReactNode;
+  sx?: stylex.StyleXStyles;
+  token: string;
+}) {
+  return (
+    <div {...stylex.props(styles.tile)}>
+      <div {...stylex.props(styles.sample, sx)}>{children}</div>
+      <p {...stylex.props(styles.token)}>{token}</p>
+    </div>
+  );
+}
+
+export { DemoRow, Stage, Tile, Tiles, Well };

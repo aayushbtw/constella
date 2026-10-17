@@ -61,8 +61,8 @@ const styles = stylex.create({
     backgroundColor: colors.fill,
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     borderInlineEndWidth: strokes.border,
     borderInlineStartWidth: strokes.border,
     borderBlockStyle: "solid",
@@ -76,10 +76,10 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   separatorHorizontal: {
-    backgroundColor: colors.edge,
+    backgroundColor: colors.border,
     width: "auto",
   },
-  separatorVertical: { backgroundColor: colors.edge },
+  separatorVertical: { backgroundColor: colors.border },
 });
 
 const orientationStyles = {

@@ -60,7 +60,7 @@ const styles = stylex.create({
   },
   // Rows are divided by the faint edge; the last row of a body or footer needs none.
   divider: {
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: { default: strokes.border, [lastRow]: 0 },
   },
@@ -114,7 +114,7 @@ const styles = stylex.create({
   },
   cell: {
     // The footer's top edge; a row group can't draw a border in the separate model.
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: {
       default: 0,

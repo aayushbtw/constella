@@ -61,7 +61,7 @@ const styles = stylex.create({
     translate: "-50% 0",
   }),
   tick: {
-    backgroundColor: colors.edge,
+    backgroundColor: colors.border,
     height: space.xxs,
     width: strokes.border,
   },

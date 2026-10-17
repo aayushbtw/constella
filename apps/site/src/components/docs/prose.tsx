@@ -29,7 +29,7 @@ import {
   radii,
   space,
 } from "@/lib/constella/tokens.stylex";
-import { demos, isDemo } from "~/components/demos";
+import { demos, isDemo, plain } from "~/components/demos";
 import { CodeLines } from "~/components/docs/code-tokens";
 import { Frameworks } from "~/components/docs/frameworks";
 import { Install } from "~/components/docs/install";
@@ -68,9 +68,9 @@ const styles = stylex.create({
   a: {
     color: colors.textPrimary,
     textDecorationColor: {
-      default: colors.edge,
+      default: colors.border,
       [media.hover]: {
-        default: colors.edge,
+        default: colors.border,
         ":hover": colors.textPrimary,
       },
       ":active": colors.textPrimary,
@@ -118,6 +118,12 @@ const styles = stylex.create({
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
   },
+  plain: {
+    boxShadow: "none",
+    paddingBlock: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
+  },
 });
 
 // Only a fenced block's `code` carries a `language-*` class; it renders the whole Code Block, so `pre` passes through.
@@ -162,7 +168,10 @@ function Demo({ name }: { name?: string }) {
   const Component = demos[name];
 
   return (
-    <div data-slot="demo" {...stylex.props(styles.demo)}>
+    <div
+      data-slot="demo"
+      {...stylex.props(styles.demo, plain.has(name) && styles.plain)}
+    >
       <Component />
     </div>
   );

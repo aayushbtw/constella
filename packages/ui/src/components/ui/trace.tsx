@@ -45,7 +45,7 @@ const failed = "[data-status='error']";
 // Under the line's icon, stopping `space.xxs` short of it.
 const reach = `calc((${sizes.controlSm} - ${sizes.icon}) / 2 - ${space.xxs})`;
 const rail = {
-  backgroundColor: colors.edge,
+  backgroundColor: colors.border,
   content: "''",
   insetInlineStart: `calc(${sizes.icon} / 2 - ${strokes.border} / 2)`,
   position: "absolute",
@@ -101,7 +101,7 @@ const styles = stylex.create({
     width: "fit-content",
   },
   error: {
-    color: colors.danger,
+    color: colors.dangerText,
   },
   pending: {
     opacity: opacities.disabled,
@@ -153,7 +153,7 @@ const styles = stylex.create({
         [`:is(:hover:not(:has(> ${failed})) > *)`]: colors.textPrimary,
       },
       [`:is(:active:not(:has(> ${failed})) > *)`]: colors.textPrimary,
-      [`:is(:has(> ${failed}) > *)`]: colors.danger,
+      [`:is(:has(> ${failed}) > *)`]: colors.dangerText,
     },
     display: "flex",
     flexShrink: 0,

@@ -174,12 +174,12 @@ const styles = stylex.create({
   iconLg: square(sizes.controlLg),
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     boxShadow: {
       default: shadows.primary,
       ":active:not(:disabled)": shadows.primaryPressed,
     },
-    color: colors.onAccent,
+    color: colors.accentOnSolid,
     opacity: {
       ...interactive<number | string>(1, opacities.hover),
       ":disabled": opacities.disabled,
@@ -194,8 +194,8 @@ const styles = stylex.create({
   outline: {
     backgroundClip: "padding-box",
     backgroundColor: interactive(colors.background, colors.fillSubtle),
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     boxShadow: lift,
     color: colors.textPrimary,
   },
@@ -205,9 +205,9 @@ const styles = stylex.create({
   },
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
-    backgroundColor: interactive(colors.dangerFillSubtle, colors.dangerFill),
+    backgroundColor: interactive(colors.dangerSubtle, colors.dangerSubtleHover),
     boxShadow: lift,
-    color: colors.danger,
+    color: colors.dangerText,
   },
   // Reads as text, so it answers with an underline instead of a fill or a press.
   link: {

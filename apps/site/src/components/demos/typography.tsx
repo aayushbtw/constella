@@ -1,228 +1,137 @@
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   colors,
   fontSizes,
   fontWeights,
-  lineHeights,
   radii,
   space,
   strokes,
   fonts,
 } from "@/lib/constella/tokens.stylex";
-import { Stage, Well } from "~/components/demos/frame";
-import {
-  fontSizes as siteFontSizes,
-  lineHeights as siteLineHeights,
-} from "~/lib/tokens.stylex";
+import { shadows } from "~/lib/tokens.stylex";
 
-const sample = "Quiet, crisp, and finished.";
+const sample = "The quick brown fox jumps over the lazy dog";
+
+const weights = [
+  { name: "regular", value: fontWeights.regular },
+  { name: "medium", value: fontWeights.medium },
+  { name: "semibold", value: fontWeights.semibold },
+] as const;
 
 const sizes = [
+  { name: "xl", value: fontSizes.xl },
+  { name: "lg", value: fontSizes.lg },
+  { name: "md", value: fontSizes.md },
   { name: "sm", value: fontSizes.sm },
   { name: "xs", value: fontSizes.xs },
   { name: "xxs", value: fontSizes.xxs },
 ] as const;
 
-const weights = [
-  { label: "Regular", name: "regular", value: fontWeights.regular },
-  { label: "Medium", name: "medium", value: fontWeights.medium },
-  { label: "Semibold", name: "semibold", value: fontWeights.semibold },
-] as const;
+interface Row {
+  fontFamily: string;
+  fontSize: string;
+  fontWeight: string;
+  token: string;
+}
 
-type Weight = (typeof weights)[number]["name"];
+const families: Row[] = [
+  { fontFamily: fonts.sans, token: "fonts.sans" },
+  { fontFamily: fonts.mono, token: "fonts.mono" },
+].map((row) => ({
+  ...row,
+  fontSize: fontSizes.md,
+  fontWeight: fontWeights.regular,
+}));
 
-const families = [
-  { label: "Inter", name: "sans", value: fonts.sans },
-  { label: "Geist Mono", name: "mono", value: fonts.mono },
-] as const;
+const sizeRows: Row[] = sizes.map(({ name, value }) => ({
+  fontFamily: fonts.sans,
+  fontSize: value,
+  fontWeight: fontWeights.regular,
+  token: `fontSizes.${name}`,
+}));
 
-type Family = (typeof families)[number]["name"];
-
-const glyphs = [
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  "abcdefghijklmnopqrstuvwxyz",
-  "0123456789 !?&@#%",
-];
+const weightRows: Row[] = weights.map(({ name, value }) => ({
+  fontFamily: fonts.sans,
+  fontSize: fontSizes.md,
+  fontWeight: value,
+  token: `fontWeights.${name}`,
+}));
 
 const styles = stylex.create({
-  well: {
+  card: {
+    backgroundColor: colors.raised,
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    maxWidth: 520,
-    width: "100%",
-  },
-  panel: {
-    backgroundColor: colors.background,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  specimen: {
-    alignItems: "center",
-    display: "grid",
-    gap: space.lg,
-    gridTemplateColumns: "auto minmax(0, 1fr)",
-    paddingBlock: space.lg,
-    paddingInline: space.lg,
-  },
-  glyph: {
-    color: colors.textPrimary,
-    fontSize: siteFontSizes.specimen,
-    letterSpacing: "-0.04em",
-    lineHeight: siteLineHeights.specimen,
-  },
-  about: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.sm,
-    minWidth: 0,
-  },
-  family: {
-    color: colors.textPrimary,
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.medium,
-  },
-  set: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    letterSpacing: "0.04em",
-    overflowWrap: "anywhere",
+    boxShadow: shadows.inset,
   },
   row: {
-    alignItems: "baseline",
-    borderBlockStartColor: colors.edgeSubtle,
+    alignItems: "center",
+    borderBlockStartColor: {
+      default: colors.borderSubtle,
+      ":first-child": "transparent",
+    },
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
-    display: "grid",
+    display: "flex",
     gap: space.md,
-    gridTemplateColumns: "40px minmax(0, 1fr) auto",
-    paddingBlock: space.md,
-    paddingInline: space.lg,
-  },
-  label: {
-    color: colors.textMuted,
-    fontFamily: fonts.mono,
-    fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
-    fontVariantNumeric: "tabular-nums",
-    // The tabs set the sample's weight, not the labels'.
-    fontWeight: fontWeights.regular,
+    justifyContent: "space-between",
+    paddingBlock: space.sm,
+    paddingInline: space.md,
   },
   text: {
     color: colors.textPrimary,
-    lineHeight: lineHeights.row,
     minWidth: 0,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
   },
-  size: (fontSize: string) => ({
-    fontSize,
-  }),
-  font: (fontFamily: string) => ({
+  token: {
+    color: colors.textMuted,
+    flexShrink: 0,
+    fontFamily: fonts.mono,
+    fontSize: fontSizes.xxs,
+    fontVariantLigatures: "none",
+  },
+  font: (fontFamily: string, fontSize: string, fontWeight: string) => ({
     fontFamily,
-  }),
-  weight: (fontWeight: string) => ({
+    fontSize,
     fontWeight,
   }),
-  span: {
-    gridColumn: "1 / -1",
-    width: "100%",
-  },
 });
 
-function TypographyDemo() {
-  const [family, setFamily] = useState<Family>("sans");
-  const [weight, setWeight] = useState<Weight>("regular");
-  const { label: familyLabel, value: fontFamily } =
-    families.find(({ name }) => name === family) ?? families[0];
-  const fontWeight =
-    weights.find(({ name }) => name === weight)?.value ?? fontWeights.regular;
-
+function Specimen({ rows }: { rows: Row[] }) {
   return (
-    <Stage
-      controls={
-        <>
-          <Tabs
-            onValueChange={(value: Family) => {
-              setFamily(value);
-            }}
-            sx={styles.span}
-            value={family}
+    <div {...stylex.props(styles.card)}>
+      {rows.map(({ fontFamily, fontSize, fontWeight, token }) => (
+        <div key={token} {...stylex.props(styles.row)}>
+          <span
+            {...stylex.props(
+              styles.text,
+              styles.font(fontFamily, fontSize, fontWeight)
+            )}
           >
-            <TabsList sx={styles.span}>
-              {families.map(({ label, name }) => (
-                <TabsTrigger key={name} value={name}>
-                  {label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-          <Tabs
-            onValueChange={(value: Weight) => {
-              setWeight(value);
-            }}
-            sx={styles.span}
-            value={weight}
-          >
-            <TabsList sx={styles.span}>
-              {weights.map(({ label, name, value }) => (
-                <TabsTrigger key={name} value={name}>
-                  {label} {value}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </>
-      }
-    >
-      <Well sx={styles.well}>
-        <div
-          {...stylex.props(
-            styles.panel,
-            styles.font(fontFamily),
-            styles.weight(fontWeight)
-          )}
-        >
-          <div {...stylex.props(styles.specimen)}>
-            <span aria-hidden {...stylex.props(styles.glyph)}>
-              Aa
-            </span>
-            <div {...stylex.props(styles.about)}>
-              <p {...stylex.props(styles.family)}>{familyLabel}</p>
-              <div>
-                {glyphs.map((line) => (
-                  <p key={line} {...stylex.props(styles.set)}>
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
-          {sizes.map(({ name, value }) => (
-            <div key={name} {...stylex.props(styles.row)}>
-              <span {...stylex.props(styles.label)}>{name}</span>
-              <span {...stylex.props(styles.text, styles.size(value))}>
-                {sample}
-              </span>
-              <span {...stylex.props(styles.label)}>
-                {value} / {lineHeights.row}
-              </span>
-            </div>
-          ))}
+            {sample}
+          </span>
+          <span {...stylex.props(styles.token)}>{token}</span>
         </div>
-      </Well>
-    </Stage>
+      ))}
+    </div>
   );
 }
 
-export { TypographyDemo };
+function FontFamiliesDemo() {
+  return <Specimen rows={families} />;
+}
+
+function FontSizesDemo() {
+  return <Specimen rows={sizeRows} />;
+}
+
+function FontWeightsDemo() {
+  return <Specimen rows={weightRows} />;
+}
+
+export { FontFamiliesDemo, FontSizesDemo, FontWeightsDemo };

@@ -105,7 +105,7 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
   },
   nested: {
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     display: "flex",

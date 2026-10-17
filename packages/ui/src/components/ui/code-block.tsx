@@ -75,10 +75,10 @@ const styles = stylex.create({
     [codeBlockVars.padInline]: space.sm,
     fontSize: fontSizes.xxs,
   },
-  danger: { backgroundColor: colors.dangerFillSubtle, color: colors.danger },
+  danger: { backgroundColor: colors.dangerSubtle, color: colors.dangerText },
   header: {
     alignItems: "center",
-    color: { default: colors.textSecondary, [danger]: colors.danger },
+    color: { default: colors.textSecondary, [danger]: colors.dangerText },
     display: "flex",
     flexShrink: 0,
     gap: space.xs,
@@ -89,7 +89,7 @@ const styles = stylex.create({
     paddingInlineStart: pad,
   },
   title: {
-    color: { default: colors.textPrimary, [danger]: colors.danger },
+    color: { default: colors.textPrimary, [danger]: colors.dangerText },
     fontFamily: fonts.sans,
     fontWeight: fontWeights.medium,
     minWidth: 0,
@@ -201,22 +201,22 @@ const styles = stylex.create({
     },
   },
   added: {
-    backgroundColor: colors.successFillSubtle,
+    backgroundColor: colors.successSubtle,
     "::after": {
-      backgroundColor: colors.successFillSubtle,
-      color: colors.success,
+      backgroundColor: colors.successSubtle,
+      color: colors.successText,
       content: "'+'",
     },
-    "::before": { backgroundColor: colors.successFillSubtle },
+    "::before": { backgroundColor: colors.successSubtle },
   },
   removed: {
-    backgroundColor: colors.dangerFillSubtle,
+    backgroundColor: colors.dangerSubtle,
     "::after": {
-      backgroundColor: colors.dangerFillSubtle,
-      color: colors.danger,
+      backgroundColor: colors.dangerSubtle,
+      color: colors.dangerText,
       content: "'−'",
     },
-    "::before": { backgroundColor: colors.dangerFillSubtle },
+    "::before": { backgroundColor: colors.dangerSubtle },
   },
   highlighted: {
     backgroundColor: colors.fill,
@@ -224,7 +224,7 @@ const styles = stylex.create({
   },
   footer: {
     alignItems: "center",
-    color: { default: colors.textSecondary, [danger]: colors.danger },
+    color: { default: colors.textSecondary, [danger]: colors.dangerText },
     display: "flex",
     flexShrink: 0,
     fontFamily: fonts.sans,

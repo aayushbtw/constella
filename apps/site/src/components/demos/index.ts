@@ -113,7 +113,15 @@ import {
   CollapsibleDisabledDemo,
   CollapsibleTreeDemo,
 } from "~/components/demos/collapsible";
-import { ColorRolesDemo, ColorScalesDemo } from "~/components/demos/color";
+import {
+  ColorAccentDemo,
+  ColorBorderDemo,
+  ColorFillDemo,
+  ColorInvertedDemo,
+  ColorStatusDemo,
+  ColorSurfacesDemo,
+  ColorTextDemo,
+} from "~/components/demos/color";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
   DataTableDemo,
@@ -290,6 +298,7 @@ import {
   SeparatorMenuDemo,
   SeparatorVerticalDemo,
 } from "~/components/demos/separator";
+import { ShadowsDemo } from "~/components/demos/shadow";
 import { SheetDemo, SheetSideDemo } from "~/components/demos/sheet";
 import { SidePanelDemo } from "~/components/demos/side-panel";
 import {
@@ -392,7 +401,11 @@ import {
   TraceStatusDemo,
   TraceToolDemo,
 } from "~/components/demos/trace";
-import { TypographyDemo } from "~/components/demos/typography";
+import {
+  FontFamiliesDemo,
+  FontSizesDemo,
+  FontWeightsDemo,
+} from "~/components/demos/typography";
 
 const demos = {
   alert: AlertDemo,
@@ -467,8 +480,13 @@ const demos = {
   "checkbox-invalid": CheckboxInvalidDemo,
   "checkbox-size": CheckboxSizeDemo,
   "checkbox-table": CheckboxTableDemo,
-  "color-roles": ColorRolesDemo,
-  "color-scales": ColorScalesDemo,
+  "color-accent": ColorAccentDemo,
+  "color-border": ColorBorderDemo,
+  "color-fill": ColorFillDemo,
+  "color-inverted": ColorInvertedDemo,
+  "color-status": ColorStatusDemo,
+  "color-surfaces": ColorSurfacesDemo,
+  "color-text": ColorTextDemo,
   collapsible: CollapsibleDemo,
   "collapsible-controlled": CollapsibleControlledDemo,
   "collapsible-disabled": CollapsibleDisabledDemo,
@@ -520,6 +538,9 @@ const demos = {
   "field-textarea": FieldTextareaDemo,
   "field-error": FieldErrorDemo,
   "field-set": FieldSetDemo,
+  "font-families": FontFamiliesDemo,
+  "font-sizes": FontSizesDemo,
+  "font-weights": FontWeightsDemo,
   input: InputDemo,
   "input-badge": InputBadgeDemo,
   "input-button-group": InputButtonGroupDemo,
@@ -574,6 +595,7 @@ const demos = {
   "model-picker-side": ModelPickerSideDemo,
   "motion-easing": MotionEasingDemo,
   separator: SeparatorDemo,
+  shadows: ShadowsDemo,
   shimmer: ShimmerDemo,
   meter: MeterDemo,
   "meter-status": MeterStatusDemo,
@@ -703,11 +725,25 @@ const demos = {
   "tooltip-disabled": TooltipDisabledDemo,
   "tooltip-kbd": TooltipKbdDemo,
   "tooltip-side": TooltipSideDemo,
-  typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
+
+// Shown straight on the page, like the swatches in a style guide, not in a preview frame.
+const plain = new Set<string>([
+  "color-accent",
+  "color-border",
+  "color-fill",
+  "color-inverted",
+  "color-status",
+  "color-surfaces",
+  "color-text",
+  "shadows",
+  "font-families",
+  "font-sizes",
+  "font-weights",
+]);
 
 function isDemo(name: string): name is keyof typeof demos {
   return Object.hasOwn(demos, name);
 }
 
-export { demos, isDemo };
+export { demos, isDemo, plain };

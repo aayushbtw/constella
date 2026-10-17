@@ -245,7 +245,7 @@ const styles = stylex.create({
   // In the flow and sticky, so it sits beside the content and fills the window's height.
   sidebar: {
     // On the column, not its full-width inside, so the edge stays drawn while the width moves.
-    borderInlineEndColor: colors.edgeSubtle,
+    borderInlineEndColor: colors.borderSubtle,
     borderInlineEndStyle: "solid",
     borderInlineEndWidth: strokes.border,
     color: colors.textPrimary,
@@ -274,7 +274,7 @@ const styles = stylex.create({
   offcanvas: { borderInlineEndWidth: 0, borderInlineStartWidth: 0, width: 0 },
   sidebarRight: {
     borderInlineEndWidth: 0,
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
   },
@@ -341,7 +341,7 @@ const styles = stylex.create({
     "::after": {
       backgroundColor: {
         default: "transparent",
-        [media.hover]: { default: "transparent", ":hover": colors.edge },
+        [media.hover]: { default: "transparent", ":hover": colors.border },
       },
       content: "''",
       insetBlockEnd: 0,
@@ -572,7 +572,7 @@ const styles = stylex.create({
   },
   buttonOutline: {
     backgroundColor: colors.background,
-    boxShadow: `0 0 0 ${strokes.border} ${colors.edge}`,
+    boxShadow: `0 0 0 ${strokes.border} ${colors.border}`,
   },
   buttonSm: { fontSize: fontSizes.xs, height: sizes.controlSm },
   buttonLg: {
@@ -683,7 +683,7 @@ const styles = stylex.create({
     height: sizes.icon,
   },
   sub: {
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     display: "flex",

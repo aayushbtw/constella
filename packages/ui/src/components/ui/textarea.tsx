@@ -39,8 +39,14 @@ const styles = stylex.create({
   textarea: {
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
@@ -50,7 +56,7 @@ const styles = stylex.create({
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    caretColor: colors.accent,
+    caretColor: colors.accentSolid,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "block",

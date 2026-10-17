@@ -117,8 +117,8 @@ const styles = stylex.create({
     width: avatarVars.size,
     // A photo's edge is drawn inside it, so a light or dark image keeps its shape.
     "::after": {
-      borderBlockColor: colors.edge,
-      borderInlineColor: colors.edge,
+      borderBlockColor: colors.border,
+      borderInlineColor: colors.border,
       borderStartStartRadius: avatarVars.corner,
       borderStartEndRadius: avatarVars.corner,
       borderEndStartRadius: avatarVars.corner,
@@ -194,12 +194,12 @@ const styles = stylex.create({
   },
   badge: {
     alignItems: "center",
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    color: colors.onAccent,
+    color: colors.accentOnSolid,
     display: "inline-flex",
     height: avatarVars.badge,
     insetBlockEnd: 0,

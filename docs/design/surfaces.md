@@ -15,17 +15,17 @@ A slider thumb rides above its track, so it does the same: `shadows.thumb` is a 
 
 ## Edges
 
-Every control and box draws its border in `edge`: a button, an input, a tabs list and a choice card match, so a row of them reads as one family. `edgeSubtle` is too faint for that: an input's fill sits inside its edge, and with the faint one it reads 30px tall beside a 32px button on the dark page. `edgeSubtle` is for dividers that group content without bounding a control: a separator, table rows, the hairline beside a side panel or sidebar. Every edge is a solid step: `edge` is `neutral-6` and `edgeSubtle` `neutral-4`. The rings of floating surfaces and slider thumbs are too. A translucent edge shows what's behind it, such as text under a popover or an avatar's photo. Shadows and the primary bevel stay translucent.
+Every control and box draws its border in `border`: a button, an input, a tabs list and a choice card match, so a row of them reads as one family. `borderSubtle` is too faint for that: an input's fill sits inside its edge, and with the faint one it reads 30px tall beside a 32px button on the dark page. `borderSubtle` is for dividers that group content without bounding a control: a separator, table rows, the hairline beside a side panel or sidebar. Every edge is a solid step: `border` is `neutral-6` and `borderSubtle` `neutral-4`. The rings of floating surfaces and slider thumbs are too. A translucent edge shows what's behind it, such as text under a popover or an avatar's photo. Shadows and the primary bevel stay translucent.
 
 A surface set into a tinted frame draws its edge inside itself. An outer edge would stack on the frame's tint and leave a light halo around the inner surface.
 
 ## Layout boxes
 
-A box in the layout (a card, an alert) takes a real `edge` border, not a shadow, and the `raised` fill: white on the off-white page, a step lighter in dark.
+A box in the layout (a card, an alert) takes a real `border` border, not a shadow, and the `raised` fill: white on the off-white page, a step lighter in dark.
 
 ## Composer
 
-The prompt input is a surface, not a control: no border, and its edge is a 0.5px `edgeSubtle` ring inside `shadows.composer`, over a soft drop, so the biggest box on the page reads lighter than a field. It never sits in a button group, so the ring's drawing outside the box costs nothing. Invalid swaps in `composerInvalid`, a 1px `danger` ring and its halo. In a well the ring stays outside, a step darker than the well in both themes. Its fill is `raised`, like a layout box.
+The prompt input is a surface, not a control: no border, and its edge is a 0.5px `borderSubtle` ring inside `shadows.composer`, over a soft drop, so the biggest box on the page reads lighter than a field. It never sits in a button group, so the ring's drawing outside the box costs nothing. Invalid swaps in `composerInvalid`, a 1px `danger` ring and its halo. In a well the ring stays outside, a step darker than the well in both themes. Its fill is `raised`, like a layout box.
 
 ## Floating
 

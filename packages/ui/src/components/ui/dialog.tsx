@@ -121,7 +121,7 @@ const styles = stylex.create({
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
     backgroundColor: colors.fillSubtle,
-    borderTopColor: colors.edgeSubtle,
+    borderTopColor: colors.borderSubtle,
     borderTopStyle: "solid",
     borderTopWidth: strokes.border,
     display: "flex",

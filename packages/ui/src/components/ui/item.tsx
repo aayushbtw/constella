@@ -94,10 +94,10 @@ const styles = stylex.create({
     width: "100%",
   },
   outline: {
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
   },
   muted: {
     backgroundColor: {

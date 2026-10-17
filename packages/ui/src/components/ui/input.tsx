@@ -41,8 +41,14 @@ const styles = stylex.create({
   input: {
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
@@ -50,7 +56,7 @@ const styles = stylex.create({
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
     boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    caretColor: colors.accent,
+    caretColor: colors.accentSolid,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },
     // Under 16px, iOS Safari zooms the page on focus.

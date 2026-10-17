@@ -81,7 +81,7 @@ const styles = stylex.create({
     height: { default: "100%", [vertical]: null },
     width: { default: null, [vertical]: "100%" },
     "::before": {
-      backgroundColor: colors.accent,
+      backgroundColor: colors.accentSolid,
       borderStartStartRadius: radii.full,
       borderStartEndRadius: radii.full,
       borderEndStartRadius: radii.full,
@@ -95,7 +95,7 @@ const styles = stylex.create({
     },
   },
   thumb: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

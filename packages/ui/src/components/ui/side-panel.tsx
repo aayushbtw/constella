@@ -47,7 +47,7 @@ const styles = stylex.create({
   // Part of the layout, split from the content by a hairline, not floating over it.
   popup: {
     backgroundColor: colors.background,
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     color: colors.textPrimary,
@@ -78,7 +78,7 @@ const styles = stylex.create({
   // The page's header height, so the two line up across the edge.
   header: {
     alignItems: "center",
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     display: "flex",

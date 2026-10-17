@@ -48,10 +48,10 @@ Use the `variant` prop on `TabsList` to choose between a pill sliding in a track
 </TabsList>
 ```
 
-| Variant   | Indicator                             |
-| --------- | ------------------------------------- |
-| `default` | A `fill` pill inside a bordered track |
-| `line`    | An `accent` line on a faint baseline  |
+| Variant   | Indicator                                 |
+| --------- | ----------------------------------------- |
+| `default` | A `fill` pill inside a bordered track     |
+| `line`    | An `accentSolid` line on a faint baseline |
 
 ## Size
 

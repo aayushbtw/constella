@@ -136,7 +136,7 @@ const styles = stylex.create({
   // The dialog's footer bar, pinned to the bottom.
   footer: {
     backgroundColor: colors.fillSubtle,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     display: "flex",

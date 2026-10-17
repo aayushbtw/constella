@@ -45,7 +45,7 @@ const styles = stylex.create({
     width: "100%",
   },
   indicator: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

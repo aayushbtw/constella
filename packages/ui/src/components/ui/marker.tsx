@@ -29,7 +29,7 @@ type MarkerProps = Styled<useRender.ComponentProps<"div">> & {
 const inSeparator = ":is([data-slot='marker'][data-variant='separator'] > *)";
 
 const rule = {
-  backgroundColor: colors.edge,
+  backgroundColor: colors.border,
   content: "''",
   flex: 1,
   height: strokes.border,
@@ -58,7 +58,7 @@ const styles = stylex.create({
     width: "100%",
   },
   ruled: {
-    borderBlockEndColor: colors.edge,
+    borderBlockEndColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     paddingBlockEnd: space.xs,

@@ -121,7 +121,7 @@ const styles = stylex.create({
     userSelect: "none",
   },
   separator: {
-    backgroundColor: colors.edgeSubtle,
+    backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlockEnd: space.xxs,
     marginInlineEnd: `calc(-1 * ${space.xxs})`,

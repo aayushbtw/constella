@@ -71,16 +71,16 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    borderBlockEndColor: colors.edge,
+    borderBlockEndColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
-    borderBlockStartColor: colors.edge,
+    borderBlockStartColor: colors.border,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
-    borderInlineEndColor: colors.edge,
+    borderInlineEndColor: colors.border,
     borderInlineEndStyle: "solid",
     borderInlineEndWidth: strokes.border,
-    borderInlineStartColor: colors.edge,
+    borderInlineStartColor: colors.border,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     // With the border, the tabs sit `space.xxs` in, so the corners stay concentric.
@@ -93,11 +93,11 @@ const styles = stylex.create({
   // doesn't clip the indicator that covers it.
   listLine: {
     boxShadow: {
-      default: `inset 0 calc(-1 * ${strokes.border}) ${colors.edgeSubtle}`,
+      default: `inset 0 calc(-1 * ${strokes.border}) ${colors.borderSubtle}`,
       [vertical]: "none",
     },
     paddingBlockEnd: { default: strokes.border, [vertical]: 0 },
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: { default: "none", [vertical]: "solid" },
     borderInlineStartWidth: { default: 0, [vertical]: strokes.border },
   },
@@ -183,7 +183,7 @@ const styles = stylex.create({
   },
   // Over the baseline, so the active tab's line replaces it.
   indicatorLine: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     height: {
       default: strokes.indicator,
       [vertical]: "var(--active-tab-height)",

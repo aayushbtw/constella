@@ -37,10 +37,10 @@ const px10 = `calc(${space.sm} - ${space.xxxs})`;
 const styles = stylex.create({
   alert: {
     backgroundColor: colors.raised,
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockStartStyle: "solid",
     borderInlineEndStyle: "solid",

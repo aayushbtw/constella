@@ -31,10 +31,10 @@ Use the `variant` prop for an outline toggle. Pressed, both fill.
 
 <!-- ::demo name="toggle-outline" -->
 
-| Variant   | At rest          |
-| --------- | ---------------- |
-| `default` | No fill          |
-| `outline` | An `edge` border |
+| Variant   | At rest         |
+| --------- | --------------- |
+| `default` | No fill         |
+| `outline` | A `border` edge |
 
 ```tsx
 <Toggle variant="outline">Underline</Toggle>

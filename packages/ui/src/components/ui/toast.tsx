@@ -209,10 +209,10 @@ const styles = stylex.create({
     opacity: 1,
     transform: "scale(1)",
   },
-  error: { color: colors.danger },
-  info: { color: colors.info },
-  success: { color: colors.success },
-  warning: { color: colors.warning },
+  error: { color: colors.dangerText },
+  info: { color: colors.infoText },
+  success: { color: colors.successText },
+  warning: { color: colors.warningText },
   // The text and its action share a row while both fit, and the action drops under the text
   // when its label is too long, so it never pushes the close button out.
   main: {

@@ -3,9 +3,57 @@ import "./base.css";
 import "./theme.stylex";
 import * as stylex from "@stylexjs/stylex";
 
+// Grouped by family; each family's tokens share its slots, so `<family><Slot>` names one.
 export const colors = stylex.defineVars({
-  accent: "var(--accent-solid)",
+  // Surfaces.
   background: "var(--background)",
+  overlay: "var(--overlay)",
+  // Floating surfaces: popovers, menus, dialogs, toasts.
+  raised: "var(--raised)",
+  sidebar: "var(--sidebar)",
+  well: "var(--well)",
+
+  textPrimary: "var(--text-primary)",
+  textSecondary: "var(--text-secondary)",
+  textMuted: "var(--text-muted)",
+
+  border: "var(--border)",
+  borderSubtle: "var(--border-subtle)",
+
+  // Translucent, so they read the same on any surface; `fillOpaque` hides what's under it.
+  fillSubtle: "var(--fill-subtle)",
+  fill: "var(--fill)",
+  fillStrong: "var(--fill-strong)",
+  fillOpaque: "var(--fill-opaque)",
+  fillOnStrong: "var(--fill-on-strong)",
+
+  accentSolid: "var(--accent-solid)",
+  accentOnSolid: "var(--accent-on-solid)",
+
+  invertedSolid: "var(--inverted-solid)",
+  invertedOnSolid: "var(--inverted-on-solid)",
+  invertedFill: "var(--inverted-fill)",
+
+  // Status: `Text` for icons and short labels, `Subtle` tints with their hover, `Solid`
+  // fills a shape that carries the status alone, like a dot.
+  dangerText: "var(--danger-text)",
+  dangerSubtle: "var(--danger-subtle)",
+  dangerSubtleHover: "var(--danger-subtle-hover)",
+  dangerSolid: "var(--danger-solid)",
+  dangerBorder: "var(--danger-border)",
+  infoText: "var(--info-text)",
+  infoSubtle: "var(--info-subtle)",
+  infoSubtleHover: "var(--info-subtle-hover)",
+  infoSolid: "var(--info-solid)",
+  successText: "var(--success-text)",
+  successSubtle: "var(--success-subtle)",
+  successSubtleHover: "var(--success-subtle-hover)",
+  successSolid: "var(--success-solid)",
+  warningText: "var(--warning-text)",
+  warningSubtle: "var(--warning-subtle)",
+  warningSubtleHover: "var(--warning-subtle-hover)",
+  warningSolid: "var(--warning-solid)",
+
   // Chart series, in order; a legend or a tooltip's swatch reads them too.
   chart1: "var(--chart-1)",
   chart2: "var(--chart-2)",
@@ -13,45 +61,6 @@ export const colors = stylex.defineVars({
   chart4: "var(--chart-4)",
   chart5: "var(--chart-5)",
   chart6: "var(--chart-6)",
-  edge: "var(--edge)",
-  edgeSubtle: "var(--edge-subtle)",
-  fill: "var(--fill)",
-  fillOpaque: "var(--fill-opaque)",
-  fillStrong: "var(--fill-strong)",
-  fillSubtle: "var(--fill-subtle)",
-  inverted: "var(--inverted)",
-  onAccent: "var(--on-accent)",
-  onFillStrong: "var(--on-fill-strong)",
-  onInverted: "var(--on-inverted)",
-  onInvertedFill: "var(--on-inverted-fill)",
-  overlay: "var(--overlay)",
-  // Floating surfaces: popovers, menus, dialogs, toasts.
-  raised: "var(--raised)",
-  sidebar: "var(--sidebar)",
-  textMuted: "var(--text-muted)",
-  well: "var(--well)",
-  textPrimary: "var(--text-primary)",
-  textSecondary: "var(--text-secondary)",
-
-  // Status: the base is the foreground step, for icons and short labels; the
-  // fills mirror the neutral ones as tints, `Solid` fills a shape that
-  // carries the status alone, like a dot.
-  danger: "var(--danger)",
-  dangerFill: "var(--danger-fill)",
-  dangerFillSubtle: "var(--danger-fill-subtle)",
-  dangerSolid: "var(--danger-solid)",
-  info: "var(--info)",
-  infoFill: "var(--info-fill)",
-  infoFillSubtle: "var(--info-fill-subtle)",
-  infoSolid: "var(--info-solid)",
-  success: "var(--success)",
-  successFill: "var(--success-fill)",
-  successFillSubtle: "var(--success-fill-subtle)",
-  successSolid: "var(--success-solid)",
-  warning: "var(--warning)",
-  warningFill: "var(--warning-fill)",
-  warningFillSubtle: "var(--warning-fill-subtle)",
-  warningSolid: "var(--warning-solid)",
 });
 
 // Multipliers for the corners and edge where an item meets its neighbor: 1 keeps them,
@@ -96,19 +105,19 @@ export const shadows = stylex.defineConsts({
   controlPressed: "0 1px 1px -1px var(--black-a2)",
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   dialog:
-    "0 0 0 1px var(--edge-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
+    "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
   invalid: "0 0 0 2px var(--red-a4)",
   composer:
-    "0 0 0 0.5px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
-  composerInvalid: "0 0 0 1px var(--danger), 0 0 0 3px var(--red-a4)",
+    "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+  composerInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
   popover:
-    "0 0 0 1px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+    "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
   primary:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
   primaryPressed:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 1px -1px var(--black-a3)",
-  thumb: "0 0 0 1px var(--edge), 0 1px 3px var(--black-a5)",
+  thumb: "0 0 0 1px var(--border), 0 1px 3px var(--black-a5)",
 });
 
 // The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.

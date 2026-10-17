@@ -78,8 +78,14 @@ const styles = stylex.create({
       },
       ":active:not(:disabled)": colors.fillSubtle,
     },
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
@@ -229,7 +235,7 @@ const styles = stylex.create({
     paddingInlineStart: px6,
   },
   separator: {
-    backgroundColor: colors.edgeSubtle,
+    backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
     marginInline: `calc(-1 * ${space.xxs})`,

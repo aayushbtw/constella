@@ -96,7 +96,7 @@ const styles = stylex.create({
     paddingInlineEnd: space.xxs,
   },
   quote: {
-    borderInlineStartColor: colors.edge,
+    borderInlineStartColor: colors.border,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: `calc(2 * ${strokes.border})`,
     color: colors.textSecondary,
@@ -111,7 +111,7 @@ const styles = stylex.create({
   },
   rule: {
     borderBlockEndWidth: 0,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     borderInlineStartWidth: 0,

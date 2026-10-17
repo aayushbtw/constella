@@ -39,7 +39,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     fontWeight: fontWeights.medium,
     textDecorationLine: "underline",
-    textDecorationColor: colors.edge,
+    textDecorationColor: colors.border,
     textUnderlineOffset: space.xxs,
   },
 });

@@ -101,15 +101,15 @@ const styles = stylex.create({
     borderBlockColor: {
       default: null,
       [card]: {
-        default: colors.edge,
-        ":has([data-checked])": colors.accent,
+        default: colors.border,
+        ":has([data-checked])": colors.accentSolid,
       },
     },
     borderInlineColor: {
       default: null,
       [card]: {
-        default: colors.edge,
-        ":has([data-checked])": colors.accent,
+        default: colors.border,
+        ":has([data-checked])": colors.accentSolid,
       },
     },
     borderStartStartRadius: { default: null, [card]: radii.md },
@@ -156,7 +156,7 @@ const styles = stylex.create({
   separatorLine: { flex: 1 },
   // The only red in an invalid field besides the control's edge, a step under the label.
   error: {
-    color: colors.danger,
+    color: colors.dangerText,
     fontSize: fontSizes.xs,
     lineHeight: lineHeights.row,
     overflowWrap: "anywhere",

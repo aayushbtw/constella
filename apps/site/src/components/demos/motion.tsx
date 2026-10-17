@@ -80,11 +80,11 @@ const styles = stylex.create({
     position: "absolute",
   },
   axis: {
-    stroke: colors.edge,
+    stroke: colors.border,
   },
   // Linear, for reference: how far each curve bends away from it.
   linear: {
-    stroke: colors.edgeSubtle,
+    stroke: colors.borderSubtle,
     strokeDasharray: "4 4",
   },
   curve: {
@@ -123,7 +123,7 @@ const styles = stylex.create({
     transform: `translate(0, -${graph})`,
   },
   dot: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

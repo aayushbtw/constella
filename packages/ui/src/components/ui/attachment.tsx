@@ -101,20 +101,20 @@ const styles = stylex.create({
       },
     },
     borderBlockEndColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderBlockStartColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderInlineEndColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderInlineStartColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderBlockEndStyle: {
       default: "solid",
@@ -182,13 +182,16 @@ const styles = stylex.create({
     aspectRatio: "1",
     backgroundColor: {
       default: colors.fill,
-      [inState("error")]: colors.dangerFillSubtle,
+      [inState("error")]: colors.dangerSubtle,
     },
     borderStartStartRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderStartEndRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderEndStartRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderEndEndRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
-    color: { default: colors.textPrimary, [inState("error")]: colors.danger },
+    color: {
+      default: colors.textPrimary,
+      [inState("error")]: colors.dangerText,
+    },
     display: "flex",
     flexShrink: 0,
     justifyContent: "center",
@@ -232,7 +235,10 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   description: {
-    color: { default: colors.textSecondary, [inState("error")]: colors.danger },
+    color: {
+      default: colors.textSecondary,
+      [inState("error")]: colors.dangerText,
+    },
     display: "block",
     fontSize: fontSizes.xs,
     marginBlockStart: space.xxxs,

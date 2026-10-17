@@ -38,10 +38,10 @@ const corner = { default: radii.lg, [inWell]: radii.md };
 const styles = stylex.create({
   card: {
     backgroundColor: colors.raised,
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
@@ -126,7 +126,7 @@ const styles = stylex.create({
   footer: {
     alignItems: "center",
     backgroundColor: colors.fillSubtle,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     display: "flex",

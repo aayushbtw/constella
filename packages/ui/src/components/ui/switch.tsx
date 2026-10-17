@@ -68,10 +68,16 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: colors.fillStrong,
-      ":is([data-checked])": colors.accent,
+      ":is([data-checked])": colors.accentSolid,
     },
-    borderBlockColor: { default: "transparent", [invalid]: colors.danger },
-    borderInlineColor: { default: "transparent", [invalid]: colors.danger },
+    borderBlockColor: {
+      default: "transparent",
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: "transparent",
+      [invalid]: colors.dangerBorder,
+    },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -101,8 +107,8 @@ const styles = stylex.create({
   lg: track(sizes.iconLg),
   thumb: {
     backgroundColor: {
-      default: colors.onFillStrong,
-      ":is([data-checked])": colors.onAccent,
+      default: colors.fillOnStrong,
+      ":is([data-checked])": colors.accentOnSolid,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,

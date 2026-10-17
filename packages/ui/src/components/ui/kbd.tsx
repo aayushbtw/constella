@@ -29,7 +29,7 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: colors.fill,
-      [inTooltip]: colors.onInvertedFill,
+      [inTooltip]: colors.invertedFill,
     },
     borderStartStartRadius: {
       default: radii.chip,
@@ -63,7 +63,10 @@ const styles = stylex.create({
       [inInputGroup("default")]: nested(sizes.controlMd),
       [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
     },
-    color: { default: colors.textSecondary, [inTooltip]: colors.onInverted },
+    color: {
+      default: colors.textSecondary,
+      [inTooltip]: colors.invertedOnSolid,
+    },
     display: "inline-flex",
     // Keycaps read as labels, not code, so they take the text around them over `<kbd>`'s mono.
     fontFamily: "inherit",

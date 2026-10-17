@@ -72,10 +72,10 @@ import { Logo } from "~/components/logo";
 const styles = stylex.create({
   stage: { width: "100%" },
   frame: {
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockStartStyle: "solid",
     borderInlineEndStyle: "solid",
@@ -107,7 +107,7 @@ const styles = stylex.create({
   },
   topbar: {
     alignItems: "center",
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     color: colors.textPrimary,

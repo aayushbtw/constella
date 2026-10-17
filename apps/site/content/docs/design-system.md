@@ -6,53 +6,55 @@ order: 1
 
 ## Color
 
-### Scales
+Every color is a step on a [Radix Colors](https://www.radix-ui.com/colors) scale. Components ask for a role, never a step, so every role flips with the theme. A role is a family and a slot: `accentSolid`, `accentOnSolid`, `dangerSubtle`.
 
-Every color comes from a [Radix Colors](https://www.radix-ui.com/colors) scale of 12 steps. Text and edges use the solid steps, so nothing shows through an edge; fills use the translucent alpha versions, so they read the same on any surface.
+### Surfaces
 
-<!-- ::demo name="color-scales" -->
+<!-- ::demo name="color-surfaces" -->
 
-### Roles
+### Text
 
-Components ask for a role, never a step, so every role flips with the theme. Each status has a base for icons and short labels, `FillSubtle` and `Fill` tints, and a `Solid`: `dangerFillSubtle`, `successSolid` and so on.
+<!-- ::demo name="color-text" -->
 
-<!-- ::demo name="color-roles" -->
+### Border
 
-| Token | For |
-| --- | --- |
-| `textPrimary` | Content |
-| `textSecondary` | Supporting copy |
-| `textMuted` | Labels and hints |
-| `fillSubtle` | Hover |
-| `fill` | Selected |
-| `fillStrong` | Pressed |
-| `edgeSubtle` | Dividers, the composer's ring |
-| `edge` | Control and box borders |
-| `accent` | The one solid fill, with `onAccent` text; the theme's brand color |
-| `inverted` | Tooltips: the ink surface, with `onInverted` text |
-| `background` | The page |
-| `raised` | Popovers, menus, dialogs and toasts |
-| `danger` | Errors and destructive actions |
-| `success` | Completed actions |
-| `warning` | Something needs attention |
-| `info` | Neutral news that isn't an error |
+<!-- ::demo name="color-border" -->
 
-**Keep body text neutral on a status tint.** The base color marks the icon or label that carries the meaning.
+### Fill
+
+Translucent, so they read the same on any surface; `fillOpaque` hides what's under it.
+
+<!-- ::demo name="color-fill" -->
+
+### Accent
+
+<!-- ::demo name="color-accent" -->
+
+### Inverted
+
+<!-- ::demo name="color-inverted" -->
+
+### Status
+
+<!-- ::demo name="color-status" -->
+
+**Keep body text neutral on a status tint.** The `Text` color marks the icon or label that carries the meaning.
 
 ## Typography
 
 Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Every size shares one line height, `lineHeights.row`, so a row of mixed sizes still centers in a control.
 
-<!-- ::demo name="typography" -->
+### Font Families
 
-| Token                  | Value | For                          |
-| ---------------------- | ----- | ---------------------------- |
-| `fontSizes.sm`         | 14px  | Controls and body copy       |
-| `fontSizes.xs`         | 13px  | Secondary text               |
-| `fontSizes.xxs`        | 12px  | The smallest labels          |
-| `fontWeights.regular`  | 400   | Body                         |
-| `fontWeights.medium`   | 500   | Labels and titles            |
-| `fontWeights.semibold` | 600   | Emphasis; nothing is heavier |
+<!-- ::demo name="font-families" -->
+
+### Sizes
+
+<!-- ::demo name="font-sizes" -->
+
+### Weights
+
+<!-- ::demo name="font-weights" -->
 
 Anything that changes in place (counts, timers, prices, table columns) sets `fontVariantNumeric: "tabular-nums"`, so digits don't shift.
 
@@ -94,12 +96,7 @@ Controls take a fixed height, so a button and an input in one row line up.
 
 ### Shadow
 
-| Token | For |
-| --- | --- |
-| `control` | Under a bordered control at rest; `controlHover` and `controlPressed` for a pressable |
-| `popover` | Floating surfaces; it draws their edge, so they need no border |
-| `dialog` | A dialog: the same edge, and a farther shadow |
-| `primary` | The primary button: a lit top edge, a shaded bottom one |
+<!-- ::demo name="shadows" -->
 
 ## Motion
 

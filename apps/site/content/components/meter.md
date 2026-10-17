@@ -43,7 +43,7 @@ Meter
 
 ## Meter Status
 
-The fill is `accent` until you give it a `status`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
+The fill is `accentSolid` until you give it a `status`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
 
 <!-- ::demo name="meter-status" -->
 

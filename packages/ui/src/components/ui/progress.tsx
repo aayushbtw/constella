@@ -59,7 +59,7 @@ const styles = stylex.create({
       [unknown]: { default: sweep, [media.reducedMotion]: breathe },
     },
     animationTimingFunction: { default: null, [unknown]: easings.inOut },
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
