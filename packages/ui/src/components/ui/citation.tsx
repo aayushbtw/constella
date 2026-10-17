@@ -10,11 +10,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
-  lineHeights,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -53,9 +52,7 @@ const styles = stylex.create({
   },
   title: {
     display: "-webkit-box",
-    fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.prose,
     overflow: "hidden",
     WebkitBoxOrient: "vertical",
     WebkitLineClamp: 2,
@@ -90,7 +87,9 @@ function CitationCard({ sx }: { sx?: stylex.StyleXStyles }) {
                 <Logo size="sm" source={payload} />
                 {payload.name}
               </div>
-              <div {...stylex.props(styles.title)}>{payload.title}</div>
+              <div {...stylex.props([typeStyles.textBase, styles.title])}>
+                {payload.title}
+              </div>
               {payload.date === undefined ? null : (
                 <div {...stylex.props(styles.date)}>{payload.date}</div>
               )}

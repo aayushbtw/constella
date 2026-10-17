@@ -78,10 +78,10 @@ import {
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
+import { Text } from "@/components/ui/text";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   colors,
-  fontSizes,
   radii,
   sizes,
   space,
@@ -116,14 +116,13 @@ const styles = stylex.create({
     justifyContent: "space-between",
   },
   search: { maxWidth: "100%", width: 256 },
-  count: { color: colors.textSecondary, fontSize: fontSizes.sm },
   status: { width: 128 },
   amount: { fontVariantNumeric: "tabular-nums", textAlign: "end", width: 128 },
   frame: {
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockStartStyle: "solid",
     borderInlineEndStyle: "solid",
@@ -471,9 +470,9 @@ function DataTableFilterDemo() {
           sx={styles.wide}
           table={table}
         />
-        <div {...stylex.props(styles.count)}>
+        <Text color="secondary" size="sm">
           {selected} of {ledger.length} selected
-        </div>
+        </Text>
       </div>
     </DemoRow>
   );

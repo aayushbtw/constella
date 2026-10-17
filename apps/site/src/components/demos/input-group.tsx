@@ -52,10 +52,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   durations,
   easings,
-  fontSizes,
   media,
   motion,
   sizes,
@@ -70,10 +70,8 @@ const styles = stylex.create({
   stack: { display: "grid", gap: space.lg, width: "100%" },
   code: {
     fontFamily: fonts.mono,
-    fontSize: fontSizes.xs,
     fontVariantLigatures: "none",
   },
-  hint: { fontSize: fontSizes.xs },
   editor: { minHeight: 200 },
   // Both icons share one cell, so the swap is a crossfade in place.
   swap: { display: "grid" },
@@ -203,11 +201,13 @@ function InputGroupBlockStartDemo() {
           <InputGroup>
             <InputGroupTextarea
               placeholder="console.log('Hello, world!');"
-              sx={styles.code}
+              sx={[typeStyles.textSm, styles.code]}
             />
             <InputGroupAddon align="block-start">
               <Glyph icon={FileScriptIcon} />
-              <InputGroupText sx={styles.code}>script.js</InputGroupText>
+              <InputGroupText sx={[typeStyles.textSm, styles.code]}>
+                script.js
+              </InputGroupText>
               <InputGroupButton aria-label="Copy" size="icon-xs">
                 <Glyph icon={Copy01Icon} />
               </InputGroupButton>
@@ -336,7 +336,7 @@ function InputGroupTextDemo() {
             placeholder="Enter your message"
           />
           <InputGroupAddon align="block-end">
-            <InputGroupText sx={styles.hint}>
+            <InputGroupText sx={typeStyles.textSm}>
               120 characters left
             </InputGroupText>
           </InputGroupAddon>
@@ -576,7 +576,7 @@ function InputGroupTextareaDemo() {
         <InputGroupTextarea
           aria-label="Code"
           placeholder="console.log('Hello, world!');"
-          sx={[styles.code, styles.editor]}
+          sx={[[typeStyles.textSm, styles.code], styles.editor]}
         />
         <InputGroupAddon align="block-end" separated>
           <InputGroupText>Line 1, Column 1</InputGroupText>
@@ -585,7 +585,7 @@ function InputGroupTextareaDemo() {
           </InputGroupButton>
         </InputGroupAddon>
         <InputGroupAddon align="block-start" separated>
-          <InputGroupText sx={styles.code}>
+          <InputGroupText sx={[typeStyles.textSm, styles.code]}>
             <Glyph icon={JavaScriptIcon} />
             script.js
           </InputGroupText>

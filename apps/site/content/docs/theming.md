@@ -85,10 +85,10 @@ What components ask for. Each is a scale step, so changing one changes only that
 | `--text-secondary` | `--neutral-11` | Supporting copy |
 | `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected (a row, the current nav item), pressed |
 | `--fill-opaque` | `--neutral-3` | A fill nothing shows through: avatars, tracks, user messages |
-| `--edge-subtle`, `--edge` | `--neutral-4`, `-6` | Dividers and the composer's ring, control borders |
+| `--border-subtle`, `--border` | `--neutral-4`, `-6` | Dividers and the composer's ring, control borders |
 | `--accent-solid` | `--neutral-12` | Primary buttons, checked controls |
-| `--on-accent` | `--neutral-1` | Text and icons on the accent |
-| `--inverted`, `--on-inverted` | `--neutral-12`, `--neutral-1` | Tooltips |
+| `--accent-on-solid` | `--neutral-1` | Text and icons on the accent |
+| `--inverted-solid`, `--inverted-on-solid` | `--neutral-12`, `--neutral-1` | Tooltips |
 | `--focus-ring` | `--neutral-8` | The focus outline |
 | `--selection` | `--neutral-a5` | Selected text |
 | `--overlay` | `--black-a5` | Behind a dialog |

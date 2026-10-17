@@ -8,13 +8,8 @@ import * as stylex from "@stylexjs/stylex";
 import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
 import { Shimmer } from "@/components/ui/shimmer";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  colors,
-  fontSizes,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -28,7 +23,6 @@ const styles = stylex.create({
   },
   thinking: {
     color: colors.textMuted,
-    fontSize: fontSizes.md,
   },
 });
 
@@ -113,7 +107,7 @@ function MarkerLinkDemo() {
 function ShimmerDemo() {
   return (
     <DemoRow>
-      <Shimmer sx={styles.thinking}>Thinking…</Shimmer>
+      <Shimmer sx={[typeStyles.textLg, styles.thinking]}>Thinking…</Shimmer>
     </DemoRow>
   );
 }

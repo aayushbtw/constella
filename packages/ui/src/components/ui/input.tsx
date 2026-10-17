@@ -18,6 +18,7 @@ import {
   sizes,
   space,
   strokes,
+  lineHeights,
 } from "@/lib/constella/tokens.stylex";
 
 const inputSizes = ["sm", "default", "lg"] as const;
@@ -41,20 +42,26 @@ const styles = stylex.create({
   input: {
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
     borderInlineStartWidth: strokes.border,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    caretColor: colors.accent,
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
+    caretColor: colors.accentSolid,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },
     // Under 16px, iOS Safari zooms the page on focus.
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.sm },
+    fontSize: { default: fontSizes.textLg, [media.sm]: fontSizes.textSm },
     height: sizes.controlMd,
     marginBlock: 0,
     marginInlineEnd: 0,
@@ -90,7 +97,8 @@ const styles = stylex.create({
       borderEndEndRadius: radii.xs,
       color: colors.textPrimary,
       cursor: "inherit",
-      fontSize: fontSizes.sm,
+      fontSize: fontSizes.textSm,
+      lineHeight: lineHeights.textSm,
       fontWeight: fontWeights.medium,
       height: "100%",
       marginInlineEnd: space.xs,
@@ -103,11 +111,8 @@ const styles = stylex.create({
       transitionTimingFunction: `ease, ${easings.out}`,
     },
   },
-  // Text steps down with the height like Button's, but stays 16px under `sm` so iOS doesn't zoom.
   sm: {
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.xs },
     height: sizes.controlSm,
-    "::file-selector-button": { fontSize: fontSizes.xs },
   },
   lg: {
     height: sizes.controlLg,

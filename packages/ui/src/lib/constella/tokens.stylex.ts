@@ -3,9 +3,57 @@ import "./base.css";
 import "./theme.stylex";
 import * as stylex from "@stylexjs/stylex";
 
+// Grouped by family; each family's tokens share its slots, so `<family><Slot>` names one.
 export const colors = stylex.defineVars({
-  accent: "var(--accent-solid)",
+  // Surfaces.
   background: "var(--background)",
+  overlay: "var(--overlay)",
+  // Floating surfaces: popovers, menus, dialogs, toasts.
+  raised: "var(--raised)",
+  sidebar: "var(--sidebar)",
+  well: "var(--well)",
+
+  textPrimary: "var(--text-primary)",
+  textSecondary: "var(--text-secondary)",
+  textMuted: "var(--text-muted)",
+
+  border: "var(--border)",
+  borderSubtle: "var(--border-subtle)",
+
+  // Translucent, so they read the same on any surface; `fillOpaque` hides what's under it.
+  fillSubtle: "var(--fill-subtle)",
+  fill: "var(--fill)",
+  fillStrong: "var(--fill-strong)",
+  fillOpaque: "var(--fill-opaque)",
+  fillOnStrong: "var(--fill-on-strong)",
+
+  accentSolid: "var(--accent-solid)",
+  accentOnSolid: "var(--accent-on-solid)",
+
+  invertedSolid: "var(--inverted-solid)",
+  invertedOnSolid: "var(--inverted-on-solid)",
+  invertedFill: "var(--inverted-fill)",
+
+  // Status: `Text` for icons and short labels, `Subtle` tints with their hover, `Solid`
+  // fills a shape that carries the status alone, like a dot.
+  dangerText: "var(--danger-text)",
+  dangerSubtle: "var(--danger-subtle)",
+  dangerSubtleHover: "var(--danger-subtle-hover)",
+  dangerSolid: "var(--danger-solid)",
+  dangerBorder: "var(--danger-border)",
+  infoText: "var(--info-text)",
+  infoSubtle: "var(--info-subtle)",
+  infoSubtleHover: "var(--info-subtle-hover)",
+  infoSolid: "var(--info-solid)",
+  successText: "var(--success-text)",
+  successSubtle: "var(--success-subtle)",
+  successSubtleHover: "var(--success-subtle-hover)",
+  successSolid: "var(--success-solid)",
+  warningText: "var(--warning-text)",
+  warningSubtle: "var(--warning-subtle)",
+  warningSubtleHover: "var(--warning-subtle-hover)",
+  warningSolid: "var(--warning-solid)",
+
   // Chart series, in order; a legend or a tooltip's swatch reads them too.
   chart1: "var(--chart-1)",
   chart2: "var(--chart-2)",
@@ -13,45 +61,6 @@ export const colors = stylex.defineVars({
   chart4: "var(--chart-4)",
   chart5: "var(--chart-5)",
   chart6: "var(--chart-6)",
-  edge: "var(--edge)",
-  edgeSubtle: "var(--edge-subtle)",
-  fill: "var(--fill)",
-  fillOpaque: "var(--fill-opaque)",
-  fillStrong: "var(--fill-strong)",
-  fillSubtle: "var(--fill-subtle)",
-  inverted: "var(--inverted)",
-  onAccent: "var(--on-accent)",
-  onFillStrong: "var(--on-fill-strong)",
-  onInverted: "var(--on-inverted)",
-  onInvertedFill: "var(--on-inverted-fill)",
-  overlay: "var(--overlay)",
-  // Floating surfaces: popovers, menus, dialogs, toasts.
-  raised: "var(--raised)",
-  sidebar: "var(--sidebar)",
-  textMuted: "var(--text-muted)",
-  well: "var(--well)",
-  textPrimary: "var(--text-primary)",
-  textSecondary: "var(--text-secondary)",
-
-  // Status: the base is the foreground step, for icons and short labels; the
-  // fills mirror the neutral ones as tints, `Solid` fills a shape that
-  // carries the status alone, like a dot.
-  danger: "var(--danger)",
-  dangerFill: "var(--danger-fill)",
-  dangerFillSubtle: "var(--danger-fill-subtle)",
-  dangerSolid: "var(--danger-solid)",
-  info: "var(--info)",
-  infoFill: "var(--info-fill)",
-  infoFillSubtle: "var(--info-fill-subtle)",
-  infoSolid: "var(--info-solid)",
-  success: "var(--success)",
-  successFill: "var(--success-fill)",
-  successFillSubtle: "var(--success-fill-subtle)",
-  successSolid: "var(--success-solid)",
-  warning: "var(--warning)",
-  warningFill: "var(--warning-fill)",
-  warningFillSubtle: "var(--warning-fill-subtle)",
-  warningSolid: "var(--warning-solid)",
 });
 
 // Multipliers for the corners and edge where an item meets its neighbor: 1 keeps them,
@@ -88,27 +97,28 @@ export const codeBlockVars = stylex.defineVars({
   padInline: "0px",
 });
 
+// Steps by height, after Interfere's: `default` under a control, `lg` under a popup, `xl`
+// under a dialog. A step's slots follow it: `Hover`, `Pressed`, `Invalid`, `Ring` (draws its
+// own edge, `Subtle` in `borderSubtle`), `solid` for a solid fill's bevel.
 export const shadows = stylex.defineConsts({
-  // The ladder under a bordered control: the border is its edge, these its height. It
-  // rises a step on hover and settles flat while pressed.
-  control: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
-  controlHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
-  controlPressed: "0 1px 1px -1px var(--black-a2)",
-  // A near shadow for contact and a far one for height, so a surface sits at a distance.
-  dialog:
-    "0 0 0 1px var(--edge-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
-  invalid: "0 0 0 2px var(--red-a4)",
-  composer:
-    "0 0 0 0.5px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
-  composerInvalid: "0 0 0 1px var(--danger), 0 0 0 3px var(--red-a4)",
-  popover:
-    "0 0 0 1px var(--edge-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+  // The border is the control's edge, these its height. It rises a step on hover and
+  // settles flat while pressed.
+  default: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
+  defaultHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
+  defaultPressed: "0 1px 1px -1px var(--black-a2)",
+  defaultInvalid: "0 0 0 2px var(--red-a4)",
+  defaultRing: "0 0 0 1px var(--border), 0 1px 3px var(--black-a5)",
+  defaultRingSubtle:
+    "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+  defaultRingInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
-  primary:
+  solid:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
-  primaryPressed:
+  solidPressed:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 1px -1px var(--black-a3)",
-  thumb: "0 0 0 1px var(--edge), 0 1px 3px var(--black-a5)",
+  // A near shadow for contact and a far one for height, so a surface sits at a distance.
+  lg: "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+  xl: "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
 });
 
 // The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.
@@ -117,34 +127,73 @@ export const fonts = stylex.defineConsts({
   sans: "var(--font-sans)",
 });
 
+// The bases the type scale multiplies, 4px at a 16px root. In rem, so text follows the
+// reader's browser font size; apart, so leading can change without the sizes.
+const typeUnit = "0.25rem";
+const leadingUnit = "0.25rem";
+
+// The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
+// `textBase`. Each size has a line height of the same name; set them together. 15, 13 and
+// 11 add 1px to a step, as Interfere's do.
 export const fontSizes = stylex.defineConsts({
-  // Headings and figures, above the reading size.
-  xl: "24px",
-  lg: "20px",
-  md: "16px",
-  sm: "14px",
-  xs: "13px",
-  xxs: "12px",
+  heading1: `calc(${typeUnit} * 14)`,
+  heading2: `calc(${typeUnit} * 11)`,
+  heading3: `calc(${typeUnit} * 9)`,
+  heading4: `calc(${typeUnit} * 7)`,
+  heading5: `calc(${typeUnit} * 6)`,
+  heading6: `calc(${typeUnit} * 5)`,
+  textLg: `calc(${typeUnit} * 4.5)`,
+  // Reading copy.
+  textBase: `calc(${typeUnit} * 3.5 + 1px)`,
+  // Controls and the text inside components.
+  textSm: `calc(${typeUnit} * 3 + 1px)`,
+  // Badges, shortcuts, group labels.
+  captionLg: `calc(${typeUnit} * 3)`,
+  captionBase: `calc(${typeUnit} * 2.5 + 1px)`,
+  captionSm: `calc(${typeUnit} * 2.5)`,
+  captionXs: `calc(${typeUnit} * 2)`,
 });
 
 export const lineHeights = stylex.defineConsts({
-  // Reading copy at `md`, like a chat message.
-  prose: "24px",
-  row: "18px",
-  text: "20px",
+  heading1: `calc(${leadingUnit} * 14)`,
+  heading2: `calc(${leadingUnit} * 14)`,
+  heading3: `calc(${leadingUnit} * 11)`,
+  heading4: `calc(${leadingUnit} * 9)`,
+  heading5: `calc(${leadingUnit} * 8)`,
+  heading6: `calc(${leadingUnit} * 6)`,
+  textLg: `calc(${leadingUnit} * 6)`,
+  textBase: `calc(${leadingUnit} * 6)`,
+  textSm: `calc(${leadingUnit} * 5)`,
+  captionLg: `calc(${leadingUnit} * 4)`,
+  captionBase: `calc(${leadingUnit} * 4)`,
+  captionSm: `calc(${leadingUnit} * 4)`,
+  captionXs: `calc(${leadingUnit} * 3)`,
+});
+
+// Large type tightens a little, so a heading doesn't read as spaced out.
+export const letterSpacings = stylex.defineConsts({
+  heading: "-0.01em",
+  // Uppercase reads cramped at its own spacing.
+  caps: "0.05em",
 });
 
 export const fontWeights = stylex.defineConsts({
   medium: "500",
   regular: "400",
+  // Between body and label; needs a variable font, or it rounds to 400 or 500.
+  semimedium: "450",
   semibold: "600",
 });
 
+// The base space, sizes and the theme's radius multiply, 4px at a 16px root, as Tailwind's
+// `--spacing`. In rem, so controls and their padding grow with the text.
+const spaceUnit = "0.25rem";
+
 // Values a theme can change point at variables `base.css` defaults and a theme overrides.
-// `xxxs` and `xxs` stay fixed: they're hairline gaps, and JS reads `xxs` as a popup offset.
+// `xxxs` and `xxs` stay fixed across themes: they're hairline gaps.
 export const space = stylex.defineConsts({
-  xxxs: "2px",
-  xxs: "4px",
+  xxxs: `calc(${spaceUnit} * 0.5)`,
+  xxs: spaceUnit,
   xs: "var(--space-xs)",
   sm: "var(--space-sm)",
   md: "var(--space-md)",
@@ -170,48 +219,51 @@ export const sizes = stylex.defineConsts({
   controlXs: "var(--size-control-xs)",
   controlXxs: "var(--size-control-xxs)",
   // A citation pill's widest; a longer publication name truncates.
-  citation: "160px",
-  dialog: "384px",
-  dialogLg: "512px",
-  dialogSm: "320px",
+  citation: `calc(${spaceUnit} * 40)`,
+  dialog: `calc(${spaceUnit} * 96)`,
+  dialogLg: `calc(${spaceUnit} * 128)`,
+  dialogSm: `calc(${spaceUnit} * 80)`,
   // The top row the sidebar and the page share, so their headers line up.
-  header: "48px",
-  hitArea: "40px",
-  icon: "16px",
-  iconLg: "20px",
-  iconSm: "14px",
-  iconXs: "12px",
-  iconXxs: "8px",
-  kbd: "20px",
+  header: `calc(${spaceUnit} * 12)`,
+  hitArea: `calc(${spaceUnit} * 10)`,
+  icon: `calc(${spaceUnit} * 4)`,
+  iconLg: `calc(${spaceUnit} * 5)`,
+  iconSm: `calc(${spaceUnit} * 3.5)`,
+  iconXs: `calc(${spaceUnit} * 3)`,
+  iconXxs: `calc(${spaceUnit} * 2)`,
+  kbd: `calc(${spaceUnit} * 5)`,
   // An item's image or avatar, beside a title and description.
-  media: "40px",
+  media: `calc(${spaceUnit} * 10)`,
   // The least an item's text keeps beside its actions before they drop under it.
-  itemText: "160px",
-  menu: "144px",
-  menuHeight: "320px",
+  itemText: `calc(${spaceUnit} * 40)`,
+  menu: `calc(${spaceUnit} * 36)`,
+  menuHeight: `calc(${spaceUnit} * 80)`,
   // A model picker's list: short names beside a search field.
-  modelPicker: "240px",
+  modelPicker: `calc(${spaceUnit} * 60)`,
   // A centered block of short text, like an empty state's.
-  measure: "384px",
-  popover: "288px",
+  measure: `calc(${spaceUnit} * 96)`,
+  popover: `calc(${spaceUnit} * 72)`,
   // A side panel beside the content.
-  sidePanel: "400px",
+  sidePanel: `calc(${spaceUnit} * 100)`,
   // A sidebar open, and collapsed to its icons (a control and its group padding).
-  sidebar: "256px",
-  sidebarIcon: "48px",
-  thumb: "12px",
-  toast: "356px",
-  tooltip: "320px",
+  sidebar: `calc(${spaceUnit} * 64)`,
+  sidebarIcon: `calc(${spaceUnit} * 12)`,
+  thumb: `calc(${spaceUnit} * 3)`,
+  toast: `calc(${spaceUnit} * 89)`,
+  tooltip: `calc(${spaceUnit} * 80)`,
 });
 
+// Lines stay in px, so a hairline stays one crisp device pixel at any text size.
 export const strokes = stylex.defineConsts({
   border: "1px",
-  // Hugeicons' weight beside medium text; read in JS, so a bare number.
+  // Hugeicons' weight beside medium text; read in JS, so a bare number. In the icon's own
+  // units, so it scales with the icon.
   icon: "1.75",
   // The line under a `line` tab, and the bar beside a vertical one.
   indicator: "2px",
   spinner: "1.5px",
-  track: "4px",
+  // A slider or progress bar: a size, not a line, so it grows with its thumb.
+  track: spaceUnit,
 });
 
 // Popup distances from their trigger, read in JS by Base UI, so bare numbers.

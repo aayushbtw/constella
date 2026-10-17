@@ -12,6 +12,7 @@ import {
   easings,
   fontSizes,
   fontWeights,
+  lineHeights,
   radii,
   sizes,
   space,
@@ -117,8 +118,8 @@ const styles = stylex.create({
     width: avatarVars.size,
     // A photo's edge is drawn inside it, so a light or dark image keeps its shape.
     "::after": {
-      borderBlockColor: colors.edge,
-      borderInlineColor: colors.edge,
+      borderBlockColor: colors.border,
+      borderInlineColor: colors.border,
       borderStartStartRadius: avatarVars.corner,
       borderStartEndRadius: avatarVars.corner,
       borderEndStartRadius: avatarVars.corner,
@@ -182,9 +183,14 @@ const styles = stylex.create({
     color: colors.textSecondary,
     display: "flex",
     fontSize: {
-      default: fontSizes.sm,
-      ":is([data-size='sm'] *)": fontSizes.xxs,
-      ":is([data-slot='badge'] > :first-child > *)": fontSizes.xxs,
+      default: fontSizes.textSm,
+      ":is([data-size='sm'] *)": fontSizes.captionLg,
+      ":is([data-slot='badge'] > :first-child > *)": fontSizes.captionLg,
+    },
+    lineHeight: {
+      default: lineHeights.textSm,
+      ":is([data-size='sm'] *)": lineHeights.captionLg,
+      ":is([data-slot='badge'] > :first-child > *)": lineHeights.captionLg,
     },
     fontWeight: fontWeights.medium,
     height: "100%",
@@ -194,12 +200,12 @@ const styles = stylex.create({
   },
   badge: {
     alignItems: "center",
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    color: colors.onAccent,
+    color: colors.accentOnSolid,
     display: "inline-flex",
     height: avatarVars.badge,
     insetBlockEnd: 0,
@@ -229,7 +235,10 @@ const styles = stylex.create({
     color: colors.textSecondary,
     display: "flex",
     flexShrink: 0,
-    fontSize: { default: fontSizes.sm, [groupOf("sm")]: fontSizes.xxs },
+    fontSize: {
+      default: fontSizes.textSm,
+      [groupOf("sm")]: fontSizes.captionLg,
+    },
     fontWeight: fontWeights.medium,
     height: {
       default: sizes.controlMd,

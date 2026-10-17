@@ -24,12 +24,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fonts,
-  fontSizes,
   fontWeights,
-  lineHeights,
   radii,
   space,
   strokes,
@@ -50,22 +49,17 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.md,
     gap: space.md,
-    lineHeight: lineHeights.prose,
     minWidth: 0,
     overflowWrap: "break-word",
   },
   p: { marginBlockEnd: 0, marginBlockStart: 0 },
   heading: {
     fontWeight: fontWeights.semibold,
-    lineHeight: lineHeights.prose,
     marginBlockEnd: 0,
     marginBlockStart: { default: space.xs, ":first-child": 0 },
     textWrap: "balance",
   },
-  h1: { fontSize: fontSizes.lg },
-  h2: { fontSize: fontSizes.md },
   strong: { fontWeight: fontWeights.semibold },
   list: {
     display: "flex",
@@ -96,7 +90,7 @@ const styles = stylex.create({
     paddingInlineEnd: space.xxs,
   },
   quote: {
-    borderInlineStartColor: colors.edge,
+    borderInlineStartColor: colors.border,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: `calc(2 * ${strokes.border})`,
     color: colors.textSecondary,
@@ -111,7 +105,7 @@ const styles = stylex.create({
   },
   rule: {
     borderBlockEndWidth: 0,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     borderInlineStartWidth: 0,
@@ -180,22 +174,22 @@ const components = {
   ),
   code: Code,
   h1: ({ children, ...props }: Props<"h1">) => (
-    <h3 {...props} {...stylex.props(styles.heading, styles.h1)}>
+    <h3 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
       {children}
     </h3>
   ),
   h2: ({ children, ...props }: Props<"h2">) => (
-    <h4 {...props} {...stylex.props(styles.heading, styles.h2)}>
+    <h4 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h4>
   ),
   h3: ({ children, ...props }: Props<"h3">) => (
-    <h5 {...props} {...stylex.props(styles.heading, styles.h2)}>
+    <h5 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h5>
   ),
   h4: ({ children, ...props }: Props<"h4">) => (
-    <h6 {...props} {...stylex.props(styles.heading, styles.h2)}>
+    <h6 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h6>
   ),
@@ -231,7 +225,10 @@ function Markdown({
   ...props
 }: MarkdownProps) {
   return (
-    <div data-slot="markdown" {...stylex.props(styles.root, sx)}>
+    <div
+      data-slot="markdown"
+      {...stylex.props([typeStyles.textLg, styles.root], sx)}
+    >
       <MarkdownPrimitive
         components={{ ...components, ...own }}
         extensions={

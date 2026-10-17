@@ -19,9 +19,9 @@ import {
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   radii,
   sizes,
   space,
@@ -33,10 +33,10 @@ const styles = stylex.create({
   stage: { width: "100%" },
   frame: {
     backgroundColor: colors.background,
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockStartStyle: "solid",
     borderInlineEndStyle: "solid",
@@ -62,12 +62,11 @@ const styles = stylex.create({
   },
   topbar: {
     alignItems: "center",
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
     height: sizes.header,
     paddingInlineStart: space.md,
   },
@@ -130,7 +129,9 @@ function SidePanelDemo() {
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
         <div {...stylex.props(styles.page)}>
-          <header {...stylex.props(styles.topbar)}>Activity</header>
+          <header {...stylex.props([typeStyles.textSm, styles.topbar])}>
+            Activity
+          </header>
           <div {...stylex.props(styles.list)}>
             {events.map((item, index) => (
               <Item

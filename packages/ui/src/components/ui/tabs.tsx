@@ -4,11 +4,11 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useMemo } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -71,16 +71,16 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    borderBlockEndColor: colors.edge,
+    borderBlockEndColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
-    borderBlockStartColor: colors.edge,
+    borderBlockStartColor: colors.border,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
-    borderInlineEndColor: colors.edge,
+    borderInlineEndColor: colors.border,
     borderInlineEndStyle: "solid",
     borderInlineEndWidth: strokes.border,
-    borderInlineStartColor: colors.edge,
+    borderInlineStartColor: colors.border,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     // With the border, the tabs sit `space.xxs` in, so the corners stay concentric.
@@ -93,11 +93,11 @@ const styles = stylex.create({
   // doesn't clip the indicator that covers it.
   listLine: {
     boxShadow: {
-      default: `inset 0 calc(-1 * ${strokes.border}) ${colors.edgeSubtle}`,
+      default: `inset 0 calc(-1 * ${strokes.border}) ${colors.borderSubtle}`,
       [vertical]: "none",
     },
     paddingBlockEnd: { default: strokes.border, [vertical]: 0 },
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: { default: "none", [vertical]: "solid" },
     borderInlineStartWidth: { default: 0, [vertical]: strokes.border },
   },
@@ -125,7 +125,6 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexGrow: { default: 1, [vertical]: 0 },
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     height: sizes.controlSm,
@@ -142,7 +141,6 @@ const styles = stylex.create({
     zIndex: 1,
   },
   tabSm: {
-    fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlXs,
     paddingInline: px10,
@@ -183,7 +181,7 @@ const styles = stylex.create({
   },
   // Over the baseline, so the active tab's line replaces it.
   indicatorLine: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     height: {
       default: strokes.indicator,
       [vertical]: "var(--active-tab-height)",
@@ -221,7 +219,7 @@ const indicatorVariantStyles = {
 const tabSizeStyles = {
   default: null,
   lg: styles.tabLg,
-  sm: styles.tabSm,
+  sm: [typeStyles.textSm, styles.tabSm],
 } satisfies Record<TabsListSize, stylex.StyleXStyles | null>;
 
 const TabsListContext = createContext<{
@@ -273,7 +271,7 @@ function TabsTrigger({ sx, ...props }: Styled<TabsPrimitive.Tab.Props>) {
       data-slot="tabs-trigger"
       {...props}
       {...stylex.props(
-        styles.tab,
+        [typeStyles.textSm, styles.tab],
         tabSizeStyles[size],
         variant === "line" && styles.tabLine,
         sx

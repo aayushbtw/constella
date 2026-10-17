@@ -57,9 +57,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { SidebarCollapsible, SidebarSide } from "@/components/ui/sidebar";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   radii,
   sizes,
@@ -72,10 +72,10 @@ import { Logo } from "~/components/logo";
 const styles = stylex.create({
   stage: { width: "100%" },
   frame: {
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "solid",
     borderBlockStartStyle: "solid",
     borderInlineEndStyle: "solid",
@@ -97,7 +97,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     minWidth: 0,
@@ -107,13 +106,12 @@ const styles = stylex.create({
   },
   topbar: {
     alignItems: "center",
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     color: colors.textPrimary,
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
     gap: space.xs,
     height: sizes.header,
     paddingInlineEnd: space.sm,
@@ -191,7 +189,7 @@ function Header({ collapsible }: { collapsible: SidebarCollapsible }) {
   return (
     <SidebarHeader>
       <SidebarExpandedOnly>
-        <span {...stylex.props(styles.brand)}>
+        <span {...stylex.props([typeStyles.textSm, styles.brand])}>
           <Logo size={sizes.icon} />
           <SidebarMenuLabel>Constella</SidebarMenuLabel>
         </span>
@@ -476,7 +474,7 @@ function Page({
     <SidebarInset>
       <header
         {...stylex.props(
-          styles.topbar,
+          [typeStyles.textSm, styles.topbar],
           showTrigger && styles.topbarWithTrigger
         )}
       >

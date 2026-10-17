@@ -33,7 +33,7 @@ const styles = stylex.create({
   narrow: { maxWidth: 320, width: "100%" },
   stack: { display: "flex", flexDirection: "column", gap: space.sm },
   grid: { display: "grid", gridTemplateColumns: "1fr 1fr" },
-  required: { color: colors.danger },
+  required: { color: colors.dangerText },
   form: { maxWidth: 384, width: "100%" },
   gridGap: { display: "grid", gap: space.md, gridTemplateColumns: "1fr 1fr" },
   full: { width: "100%" },

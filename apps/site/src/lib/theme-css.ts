@@ -97,6 +97,9 @@ const scalingPresets = {
   },
 } as const;
 
+/** A preset's px at the default 16px root, in rem, so it grows with the reader's font size. */
+const rem = (px: number) => `${px / 16}rem`;
+
 type ThemeName = keyof typeof themes;
 type RadiusPreset = keyof typeof radiusPresets;
 type ScalingPreset = keyof typeof scalingPresets;
@@ -123,10 +126,10 @@ const roles: Entry[] = [
   ["--fill", "var(--neutral-a3)"],
   ["--fill-strong", "var(--neutral-a4)"],
   ["--fill-opaque", "var(--neutral-3)"],
-  ["--edge-subtle", "var(--neutral-4)"],
-  ["--edge", "var(--neutral-6)"],
-  ["--inverted", "var(--neutral-12)"],
-  ["--on-inverted", "var(--neutral-1)"],
+  ["--border-subtle", "var(--neutral-4)"],
+  ["--border", "var(--neutral-6)"],
+  ["--inverted-solid", "var(--neutral-12)"],
+  ["--inverted-on-solid", "var(--neutral-1)"],
   [
     "--font-mono",
     '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace',
@@ -174,17 +177,17 @@ function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
     ],
     ...roles,
     ["--accent-solid", ink ? "var(--neutral-12)" : "var(--accent-9)"],
-    ["--on-accent", ink ? "var(--neutral-1)" : "var(--accent-contrast)"],
+    ["--accent-on-solid", ink ? "var(--neutral-1)" : "var(--accent-contrast)"],
     ["--focus-ring", ink ? "var(--neutral-8)" : "var(--accent-8)"],
     ["--selection", ink ? "var(--neutral-a5)" : "var(--accent-a5)"],
-    ["--radius", `${radiusPresets[radius]}px`],
+    ["--radius", rem(radiusPresets[radius])],
     ...(["xxs", "xs", "sm", "md", "lg"] as const).map((size): Entry => [
       `--size-control-${size}`,
-      `${controls[size]}px`,
+      rem(controls[size]),
     ]),
     ...(["xs", "sm", "md", "lg", "xl"] as const).map((size): Entry => [
       `--space-${size}`,
-      `${space[size]}px`,
+      rem(space[size]),
     ]),
   ] satisfies Entry[];
 }

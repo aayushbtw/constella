@@ -52,14 +52,22 @@
   :root,
   .light,
   .dark {
-    --danger-fill-subtle: color-mix(in oklab, var(--red-9) 14%, transparent);
-    --danger-fill: color-mix(in oklab, var(--red-9) 22%, transparent);
-    --info-fill-subtle: color-mix(in oklab, var(--blue-9) 14%, transparent);
-    --info-fill: color-mix(in oklab, var(--blue-9) 22%, transparent);
-    --success-fill-subtle: color-mix(in oklab, var(--green-9) 14%, transparent);
-    --success-fill: color-mix(in oklab, var(--green-9) 22%, transparent);
-    --warning-fill-subtle: color-mix(in oklab, var(--amber-9) 14%, transparent);
-    --warning-fill: color-mix(in oklab, var(--amber-9) 22%, transparent);
+    --danger-subtle: color-mix(in oklab, var(--red-9) 14%, transparent);
+    --danger-subtle-hover: color-mix(in oklab, var(--red-9) 22%, transparent);
+    --info-subtle: color-mix(in oklab, var(--blue-9) 14%, transparent);
+    --info-subtle-hover: color-mix(in oklab, var(--blue-9) 22%, transparent);
+    --success-subtle: color-mix(in oklab, var(--green-9) 14%, transparent);
+    --success-subtle-hover: color-mix(
+      in oklab,
+      var(--green-9) 22%,
+      transparent
+    );
+    --warning-subtle: color-mix(in oklab, var(--amber-9) 14%, transparent);
+    --warning-subtle-hover: color-mix(
+      in oklab,
+      var(--amber-9) 22%,
+      transparent
+    );
     /* Chart series, in this order: no status hue, and each neighbor stays apart under
        red-green color blindness. TanStack Charts reads its palette by the `--ts-chart-*` names. */
     --chart-1: var(--indigo-9);
@@ -79,17 +87,18 @@
      scales live in theme.stylex.ts. */
   :root {
     --danger-solid: var(--red-9);
+    --danger-border: var(--danger-text);
     --info-solid: var(--blue-9);
     --success-solid: var(--green-9);
     /* Corners climb from the one radius a `space.xxs` step at a time, so each nests
        concentrically in the next; the step shrinks with a small radius so all reach 0 together. */
-    --radius-step: min(var(--radius), 4px);
+    --radius-step: min(var(--radius), 0.25rem);
     --radius-xs: calc(var(--radius) - var(--radius-step));
     --radius-sm: var(--radius);
     --radius-md: calc(var(--radius) + var(--radius-step));
     --radius-lg: calc(var(--radius) + 2 * var(--radius-step));
     --radius-xl: calc(var(--radius) + 3 * var(--radius-step));
-    --radius-chip: max(0px, var(--radius) - 2px);
+    --radius-chip: max(0px, var(--radius) - 0.125rem);
   }
 
   /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.
@@ -98,36 +107,36 @@
   :root,
   .light {
     --text-muted: var(--neutral-10);
-    --on-inverted-fill: var(--white-a4);
+    --inverted-fill: var(--white-a4);
     /* Floating surfaces sit above the page: white on the off-white page, a step lighter in dark. */
     --raised: #fff;
     /* A prompt input's tray: a2 is enough against white; dark needs a3 to part from `raised`. */
     --well: var(--neutral-a2);
     /* A mark on a `fillStrong` track, like a switch's off thumb: white in light; dark takes step 12 to stand off its track. */
-    --on-fill-strong: #fff;
+    --fill-on-strong: #fff;
     /* The primary fill's bevel: dark's near-white fill hides a faint highlight and makes any shade a band. */
     --primary-lit: var(--white-a3);
     --primary-shade: var(--black-a3);
-    --danger: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
-    --info: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
-    --success: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
-    --warning: color-mix(in oklab, var(--amber-11), var(--amber-12) 30%);
+    --danger-text: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
+    --info-text: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
+    --success-text: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
+    --warning-text: color-mix(in oklab, var(--amber-11), var(--amber-12) 30%);
     --warning-solid: var(--amber-11);
     --chart-5: var(--orange-9);
   }
 
   .dark {
     --text-muted: color-mix(in oklab, var(--neutral-10), var(--neutral-11));
-    --on-inverted-fill: var(--black-a2);
+    --inverted-fill: var(--black-a2);
     --raised: var(--neutral-2);
     --well: var(--neutral-a3);
-    --on-fill-strong: var(--neutral-12);
+    --fill-on-strong: var(--neutral-12);
     --primary-lit: var(--white-a11);
     --primary-shade: var(--black-a1);
-    --danger: var(--red-11);
-    --info: var(--blue-11);
-    --success: var(--green-11);
-    --warning: var(--amber-11);
+    --danger-text: var(--red-11);
+    --info-text: var(--blue-11);
+    --success-text: var(--green-11);
+    --warning-text: var(--amber-11);
     --warning-solid: var(--amber-9);
     /* Step 9 is too light for the dark page's chart band. */
     --chart-5: var(--orange-8);
@@ -198,16 +207,16 @@
   /* StyleX can't style a child it didn't render, so an outline badge's icon takes its status here. */
   :where([data-slot="badge"][data-variant="outline"]) {
     &[data-status="success"] > [data-icon] {
-      color: var(--success);
+      color: var(--success-text);
     }
     &[data-status="info"] > [data-icon] {
-      color: var(--info);
+      color: var(--info-text);
     }
     &[data-status="warning"] > [data-icon] {
-      color: var(--warning);
+      color: var(--warning-text);
     }
     &[data-status="danger"] > [data-icon] {
-      color: var(--danger);
+      color: var(--danger-text);
     }
   }
 
@@ -218,16 +227,16 @@
     translate: 0 2px;
   }
   :where([data-slot="alert"][data-status="success"]) > :where(svg) {
-    color: var(--success);
+    color: var(--success-text);
   }
   :where([data-slot="alert"][data-status="info"]) > :where(svg) {
-    color: var(--info);
+    color: var(--info-text);
   }
   :where([data-slot="alert"][data-status="warning"]) > :where(svg) {
-    color: var(--warning);
+    color: var(--warning-text);
   }
   :where([data-slot="alert"][data-status="danger"]) > :where(svg) {
-    color: var(--danger);
+    color: var(--danger-text);
   }
 
   /* StyleX can't style a child it didn't render, so a row's icon keeps its size beside a

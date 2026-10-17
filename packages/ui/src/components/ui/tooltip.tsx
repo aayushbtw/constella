@@ -3,14 +3,13 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 import * as stylex from "@stylexjs/stylex";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
-  lineHeights,
   media,
   motion,
   offsets,
@@ -31,17 +30,15 @@ const styles = stylex.create({
   },
   popup: {
     alignItems: "center",
-    backgroundColor: colors.inverted,
+    backgroundColor: colors.invertedSolid,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    color: colors.onInverted,
+    color: colors.invertedOnSolid,
     display: "flex",
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     gap: space.xs,
-    lineHeight: lineHeights.row,
     maxWidth: sizes.tooltip,
     opacity: { default: 1, [offstage]: 0 },
     paddingBlock: space.xxs,
@@ -111,7 +108,7 @@ function TooltipPopup({ sx, ...props }: Styled<TooltipPrimitive.Popup.Props>) {
     <TooltipPrimitive.Popup
       data-slot="tooltip-popup"
       {...props}
-      {...stylex.props(styles.popup, sx)}
+      {...stylex.props([typeStyles.captionLg, styles.popup], sx)}
     />
   );
 }

@@ -5,11 +5,11 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   badgeVars,
   colors,
   durations,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -131,22 +131,19 @@ const styles = stylex.create({
   // Icons are `sizes.iconXs` up to default and `iconSm` at lg.
   sm: {
     ...sizing(px6, space.xxs, px18),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
   },
   default: {
     ...sizing(space.xs, px6, sizes.controlXxs),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
   },
   lg: {
     ...sizing(px10, space.xs, sizes.controlXs),
-    fontSize: fontSizes.xs,
     gap: px6,
   },
   primary: {
-    backgroundColor: colors.accent,
-    color: colors.onAccent,
+    backgroundColor: colors.accentSolid,
+    color: colors.accentOnSolid,
     opacity: linkHover<number | string>(1, opacities.hover),
   },
   secondary: {
@@ -155,8 +152,8 @@ const styles = stylex.create({
   },
   outline: {
     backgroundColor: linkHover("transparent", colors.fillSubtle),
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     color: colors.textPrimary,
   },
   ghost: {
@@ -165,8 +162,8 @@ const styles = stylex.create({
   },
   // A tint, not a solid, as on a danger button.
   danger: {
-    backgroundColor: linkHover(colors.dangerFillSubtle, colors.dangerFill),
-    color: colors.danger,
+    backgroundColor: linkHover(colors.dangerSubtle, colors.dangerSubtleHover),
+    color: colors.dangerText,
   },
   dot: {
     backgroundColor: {
@@ -195,25 +192,25 @@ const styles = stylex.create({
     textUnderlineOffset: space.xxs,
   },
   successTint: {
-    backgroundColor: linkHover(colors.successFillSubtle, colors.successFill),
-    color: colors.success,
+    backgroundColor: linkHover(colors.successSubtle, colors.successSubtleHover),
+    color: colors.successText,
   },
   infoTint: {
-    backgroundColor: linkHover(colors.infoFillSubtle, colors.infoFill),
-    color: colors.info,
+    backgroundColor: linkHover(colors.infoSubtle, colors.infoSubtleHover),
+    color: colors.infoText,
   },
   warningTint: {
-    backgroundColor: linkHover(colors.warningFillSubtle, colors.warningFill),
-    color: colors.warning,
+    backgroundColor: linkHover(colors.warningSubtle, colors.warningSubtleHover),
+    color: colors.warningText,
   },
   dangerTint: {
-    backgroundColor: linkHover(colors.dangerFillSubtle, colors.dangerFill),
-    color: colors.danger,
+    backgroundColor: linkHover(colors.dangerSubtle, colors.dangerSubtleHover),
+    color: colors.dangerText,
   },
-  successText: { color: colors.success },
-  infoText: { color: colors.info },
-  warningText: { color: colors.warning },
-  dangerText: { color: colors.danger },
+  successText: { color: colors.successText },
+  infoText: { color: colors.infoText },
+  warningText: { color: colors.warningText },
+  dangerText: { color: colors.dangerText },
 });
 
 // A tint on secondary, colored text on ghost and link. Outline keeps its text neutral and
@@ -246,9 +243,9 @@ const statusStyles = {
 >;
 
 const sizeStyles = {
-  default: styles.default,
-  lg: styles.lg,
-  sm: styles.sm,
+  default: [typeStyles.captionLg, styles.default],
+  lg: [typeStyles.textSm, styles.lg],
+  sm: [typeStyles.captionLg, styles.sm],
 } satisfies Record<BadgeSize, stylex.StyleXStyles>;
 
 const variantStyles = {

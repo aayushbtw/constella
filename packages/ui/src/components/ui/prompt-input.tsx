@@ -19,10 +19,9 @@ import type {
 } from "@/components/ui/input-group";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import type { TextareaProps } from "@/components/ui/textarea";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
-  lineHeights,
   media,
   radii,
   shadows,
@@ -65,14 +64,12 @@ const styles = stylex.create({
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
     boxShadow: {
-      default: shadows.composer,
-      [invalid]: shadows.composerInvalid,
+      default: shadows.defaultRingSubtle,
+      [invalid]: shadows.defaultRingInvalid,
     },
     height: "auto",
   },
   textarea: {
-    fontSize: fontSizes.md,
-    lineHeight: lineHeights.prose,
     // Grows with its text up to six control heights, then scrolls.
     maxHeight: `calc(${sizes.controlMd} * 6)`,
     minHeight: sizes.controlLg,
@@ -128,9 +125,7 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textSecondary,
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
-    lineHeight: lineHeights.text,
     minHeight: sizes.controlSm,
     // The well's own padding is the gap on its outer side, so each side reads `space.xxs`.
     paddingBlockEnd: { default: space.xxs, ":last-child": 0 },
@@ -183,7 +178,7 @@ function PromptInputTextarea({
       placeholder={placeholder}
       rows={1}
       {...props}
-      sx={[styles.textarea, sx]}
+      sx={[[typeStyles.textLg, styles.textarea], sx]}
     />
   );
 }
@@ -265,7 +260,7 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="prompt-input-bar"
       {...props}
-      {...stylex.props(styles.bar, sx)}
+      {...stylex.props([typeStyles.textSm, styles.bar], sx)}
     />
   );
 }

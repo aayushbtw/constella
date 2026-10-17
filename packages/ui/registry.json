@@ -382,6 +382,51 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/kbd/index.md"
     },
     {
+      "name": "text",
+      "type": "registry:ui",
+      "title": "Text",
+      "description": "Body copy on the type scale, in three sizes.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/text.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/text/index.md"
+    },
+    {
+      "name": "heading",
+      "type": "registry:ui",
+      "title": "Heading",
+      "description": "A heading whose rank and size are set apart, on the heading scale.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/heading.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/heading/index.md"
+    },
+    {
+      "name": "caption",
+      "type": "registry:ui",
+      "title": "Caption",
+      "description": "Small text for metadata and labels, in four sizes.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/ui/caption.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/caption/index.md"
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",

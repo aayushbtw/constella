@@ -12,12 +12,11 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useContext } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
-import { joinStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
   media,
@@ -78,8 +77,14 @@ const styles = stylex.create({
       },
       ":active:not(:disabled)": colors.fillSubtle,
     },
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
@@ -87,22 +92,21 @@ const styles = stylex.create({
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
     boxShadow: {
-      default: shadows.control,
+      default: shadows.default,
       // Repeated inside the media block, which StyleX ranks above the bare conditions.
       [media.hover]: {
-        default: shadows.control,
+        default: shadows.default,
         [`:hover:not(:disabled, :active):not(${invalid})`]:
-          shadows.controlHover,
-        [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
-        [invalid]: shadows.invalid,
+          shadows.defaultHover,
+        [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
+        [invalid]: shadows.defaultInvalid,
       },
-      [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
-      [invalid]: shadows.invalid,
+      [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
+      [invalid]: shadows.defaultInvalid,
     },
     color: colors.textPrimary,
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: px6,
     height: sizes.controlMd,
     justifyContent: "space-between",
@@ -122,7 +126,9 @@ const styles = stylex.create({
     // In a ButtonGroup, the focused item's ring stays above its neighbors.
     zIndex: { default: null, ":focus-visible": 1 },
   },
-  sm: { fontSize: fontSizes.xs, height: sizes.controlSm },
+  sm: {
+    height: sizes.controlSm,
+  },
   lg: { height: sizes.controlLg },
   // A block, not a flex box: an ellipsis only ends text in a block.
   value: {
@@ -148,7 +154,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     color: colors.textPrimary,
     maxHeight,
     maxWidth: "var(--available-width)",
@@ -193,7 +199,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.xs,
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: px6,
     minHeight: sizes.controlSm,
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
@@ -202,7 +207,9 @@ const styles = stylex.create({
     position: "relative",
     userSelect: "none",
   },
-  itemSm: { fontSize: fontSizes.xs, minHeight: sizes.controlXs },
+  itemSm: {
+    minHeight: sizes.controlXs,
+  },
   itemLg: { minHeight: sizes.controlMd },
   // Wraps rather than truncating, so options that differ only at the end stay apart.
   itemText: {
@@ -222,14 +229,13 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textMuted,
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     paddingBlock: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
   },
   separator: {
-    backgroundColor: colors.edgeSubtle,
+    backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
     marginInline: `calc(-1 * ${space.xxs})`,
@@ -256,7 +262,7 @@ const styles = stylex.create({
 const sizeStyles = {
   default: null,
   lg: styles.lg,
-  sm: styles.sm,
+  sm: [typeStyles.textSm, styles.sm],
 } satisfies Record<SelectSize, stylex.StyleXStyles | null>;
 
 function Glyph({ icon }: { icon: typeof Tick02Icon }) {
@@ -273,7 +279,7 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 const itemSizeStyles = {
   default: null,
   lg: styles.itemLg,
-  sm: styles.itemSm,
+  sm: [typeStyles.textSm, styles.itemSm],
 } satisfies Record<SelectSize, stylex.StyleXStyles | null>;
 
 const SkipMotion = createContext(false);
@@ -317,7 +323,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       {...props}
       {...stylex.props(
-        styles.trigger,
+        [typeStyles.textSm, styles.trigger],
         joinStyles.sm,
         joinStyles.edges,
         sizeStyles[size],
@@ -413,7 +419,7 @@ function SelectLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-label"
       {...props}
-      {...stylex.props(styles.label, sx)}
+      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
     />
   );
 }
@@ -427,7 +433,11 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       {...props}
-      {...stylex.props(styles.item, itemSizeStyles[use(Size)], sx)}
+      {...stylex.props(
+        [typeStyles.textSm, styles.item],
+        itemSizeStyles[use(Size)],
+        sx
+      )}
     >
       <SelectPrimitive.ItemText {...stylex.props(styles.itemText)}>
         {children}

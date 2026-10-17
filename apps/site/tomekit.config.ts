@@ -29,7 +29,7 @@ function pages(path: string, check?: typeof checkComponentPage) {
       // Until a page has had its full pass. Built in dev only.
       draft: z.boolean().default(false),
       // The sidebar section for a page built on a library, or a chat part, in place of Components.
-      section: z.enum(["AI", "TanStack"]).optional(),
+      section: z.enum(["Typography", "AI", "TanStack"]).optional(),
       // Sidebar position within a section; ties sort by title.
       order: z.number().default(0),
       title: z.string(),
@@ -95,7 +95,7 @@ export default defineConfig({
         description: z.string(),
         draft: z.boolean().default(false),
         order: z.number().default(0),
-        section: z.enum(["AI", "TanStack"]).optional(),
+        section: z.enum(["Typography", "AI", "TanStack"]).optional(),
         title: z.string(),
       }),
       transform: ({ body, metadata }, { dev, skip }) =>

@@ -4,11 +4,11 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
 
 import { labelStyles } from "@/components/ui/label";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   opacities,
   presses,
   radii,
@@ -38,7 +38,6 @@ const styles = stylex.create({
   },
   value: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
     gridColumn: 2,
   },
@@ -81,7 +80,7 @@ const styles = stylex.create({
     height: { default: "100%", [vertical]: null },
     width: { default: null, [vertical]: "100%" },
     "::before": {
-      backgroundColor: colors.accent,
+      backgroundColor: colors.accentSolid,
       borderStartStartRadius: radii.full,
       borderStartEndRadius: radii.full,
       borderEndStartRadius: radii.full,
@@ -95,12 +94,12 @@ const styles = stylex.create({
     },
   },
   thumb: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    boxShadow: shadows.thumb,
+    boxShadow: shadows.defaultRing,
     height: sizes.thumb,
     // Base UI positions the thumb with `translate`, so `transform` is free for the press.
     transform: { default: null, ":is([data-dragging])": presses.icon },
@@ -147,7 +146,7 @@ function SliderValue({ sx, ...props }: Styled<SliderPrimitive.Value.Props>) {
     <SliderPrimitive.Value
       data-slot="slider-value"
       {...props}
-      {...stylex.props(styles.value, sx)}
+      {...stylex.props([typeStyles.textSm, styles.value], sx)}
     />
   );
 }

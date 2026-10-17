@@ -4,10 +4,10 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
   fontWeights,
   media,
   sizes,
@@ -51,7 +51,6 @@ const styles = stylex.create({
     borderSpacing: 0,
     captionSide: "bottom",
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     width: "100%",
   },
   footer: {
@@ -60,7 +59,7 @@ const styles = stylex.create({
   },
   // Rows are divided by the faint edge; the last row of a body or footer needs none.
   divider: {
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: { default: strokes.border, [lastRow]: 0 },
   },
@@ -114,7 +113,7 @@ const styles = stylex.create({
   },
   cell: {
     // The footer's top edge; a row group can't draw a border in the separate model.
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: {
       default: 0,
@@ -135,7 +134,6 @@ const styles = stylex.create({
   },
   caption: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
     marginBlockStart: space.md,
   },
 });
@@ -157,7 +155,7 @@ function Table({
             data-size={size}
             data-slot="table"
             {...props}
-            {...stylex.props(styles.table, sx)}
+            {...stylex.props([typeStyles.textSm, styles.table], sx)}
           />
         </div>
       </TableSizeContext>
@@ -231,7 +229,7 @@ function TableCaption({ sx, ...props }: Styled<ComponentProps<"caption">>) {
     <caption
       data-slot="table-caption"
       {...props}
-      {...stylex.props(styles.caption, sx)}
+      {...stylex.props([typeStyles.textSm, styles.caption], sx)}
     />
   );
 }

@@ -1,344 +1,189 @@
-// oxlint-disable constella/no-raw-colors -- each panel sets its own theme, and a `colors` token resolves at the root.
 import * as stylex from "@stylexjs/stylex";
-import { useState, useSyncExternalStore } from "react";
-import type { ReactNode } from "react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  colors,
-  fontSizes,
-  radii,
-  sizes,
-  space,
-  strokes,
-  fonts,
-} from "@/lib/constella/tokens.stylex";
-import { Stage, Well } from "~/components/demos/frame";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, radii, sizes } from "@/lib/constella/tokens.stylex";
+import { Tile, Tiles } from "~/components/demos/frame";
 
-const steps = Array.from({ length: 12 }, (_, index) => index + 1);
-const hues = ["gray", "red", "amber", "green", "blue"] as const;
+type Kind = "border" | "fill" | "text";
 
-type Kind = "edge" | "fill" | "text";
-type Theme = "dark" | "light";
+interface Swatch {
+  color: string;
+  kind: Kind;
+  // The surface the token is drawn on, for tokens that only sit on one.
+  on?: string;
+  token: string;
+}
 
-// Each token's Radix step, as tokens.stylex.ts sets it. The panel paints steps, not
-// tokens: tokens resolve on <html>, steps resolve under the panel's own theme class.
-const neutrals = [
-  { kind: "text", name: "textPrimary", step: "gray-12" },
-  { kind: "text", name: "textSecondary", step: "gray-11" },
-  { kind: "text", name: "textMuted", step: "text-muted" },
-  { kind: "fill", name: "fillSubtle", step: "gray-a2" },
-  { kind: "fill", name: "fill", step: "gray-a3" },
-  { kind: "fill", name: "fillStrong", step: "gray-a4" },
-  { kind: "edge", name: "edgeSubtle", step: "gray-4" },
-  { kind: "edge", name: "edge", step: "gray-6" },
-  { kind: "fill", name: "accent", step: "gray-12" },
-] as const satisfies readonly { kind: Kind; name: string; step: string }[];
+const surfaces: Swatch[] = [
+  { color: colors.background, kind: "fill", token: "background" },
+  { color: colors.sidebar, kind: "fill", token: "sidebar" },
+  { color: colors.raised, kind: "fill", token: "raised" },
+  { color: colors.well, kind: "fill", token: "well" },
+];
 
-const statuses = [
-  { hue: "red", name: "danger" },
-  { hue: "green", name: "success" },
-  { hue: "amber", name: "warning" },
-  { hue: "blue", name: "info" },
-] as const;
+const text: Swatch[] = [
+  { color: colors.textPrimary, kind: "text", token: "textPrimary" },
+  { color: colors.textSecondary, kind: "text", token: "textSecondary" },
+  { color: colors.textMuted, kind: "text", token: "textMuted" },
+];
 
-const statusParts = [
-  { kind: "fill", step: "a2" },
-  { kind: "fill", step: "a3" },
-  // Last, so it lines up with the neutral text swatches above.
-  { kind: "text", step: "11" },
-] as const satisfies readonly { kind: Kind; step: string }[];
+const border: Swatch[] = [
+  { color: colors.border, kind: "border", token: "border" },
+  { color: colors.borderSubtle, kind: "border", token: "borderSubtle" },
+  { color: colors.dangerBorder, kind: "border", token: "dangerBorder" },
+];
+
+const fill: Swatch[] = [
+  { color: colors.fillSubtle, kind: "fill", token: "fillSubtle" },
+  { color: colors.fill, kind: "fill", token: "fill" },
+  { color: colors.fillStrong, kind: "fill", token: "fillStrong" },
+  { color: colors.fillOpaque, kind: "fill", token: "fillOpaque" },
+  {
+    color: colors.fillOnStrong,
+    kind: "fill",
+    on: colors.fillStrong,
+    token: "fillOnStrong",
+  },
+];
+
+const accent: Swatch[] = [
+  { color: colors.accentSolid, kind: "fill", token: "accentSolid" },
+  {
+    color: colors.accentOnSolid,
+    kind: "text",
+    on: colors.accentSolid,
+    token: "accentOnSolid",
+  },
+];
+
+const inverted: Swatch[] = [
+  { color: colors.invertedSolid, kind: "fill", token: "invertedSolid" },
+  {
+    color: colors.invertedOnSolid,
+    kind: "text",
+    on: colors.invertedSolid,
+    token: "invertedOnSolid",
+  },
+  {
+    color: colors.invertedFill,
+    kind: "fill",
+    on: colors.invertedSolid,
+    token: "invertedFill",
+  },
+];
+
+// A row per status: its text, its tint and the tint's hover, then its solid.
+const status: Swatch[] = [
+  { color: colors.dangerText, kind: "text", token: "dangerText" },
+  { color: colors.dangerSubtle, kind: "fill", token: "dangerSubtle" },
+  { color: colors.dangerSubtleHover, kind: "fill", token: "dangerSubtleHover" },
+  { color: colors.dangerSolid, kind: "fill", token: "dangerSolid" },
+  { color: colors.successText, kind: "text", token: "successText" },
+  { color: colors.successSubtle, kind: "fill", token: "successSubtle" },
+  {
+    color: colors.successSubtleHover,
+    kind: "fill",
+    token: "successSubtleHover",
+  },
+  { color: colors.successSolid, kind: "fill", token: "successSolid" },
+  { color: colors.warningText, kind: "text", token: "warningText" },
+  { color: colors.warningSubtle, kind: "fill", token: "warningSubtle" },
+  {
+    color: colors.warningSubtleHover,
+    kind: "fill",
+    token: "warningSubtleHover",
+  },
+  { color: colors.warningSolid, kind: "fill", token: "warningSolid" },
+  { color: colors.infoText, kind: "text", token: "infoText" },
+  { color: colors.infoSubtle, kind: "fill", token: "infoSubtle" },
+  { color: colors.infoSubtleHover, kind: "fill", token: "infoSubtleHover" },
+  { color: colors.infoSolid, kind: "fill", token: "infoSolid" },
+];
 
 const styles = stylex.create({
-  column: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.sm,
-    maxWidth: 480,
-    width: "100%",
-  },
-  scale: {
-    alignItems: "center",
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    gap: space.xxs,
-    width: "100%",
-  },
-  hue: {
-    backgroundColor: colors.fill,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    color: colors.textSecondary,
-    flexShrink: 0,
-    fontFamily: fonts.mono,
-    fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
-    lineHeight: sizes.controlXs,
-    textAlign: "center",
-    width: 56,
-  },
-  step: {
-    aspectRatio: "1",
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    flexBasis: 0,
-    flexGrow: 1,
-    maxWidth: sizes.controlSm,
-  },
   paint: (color: string) => ({
     backgroundColor: color,
   }),
-  panelWell: {
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    flexDirection: "column",
-    maxWidth: 400,
-    width: "100%",
-  },
-  panel: {
-    backgroundColor: "var(--gray-1)",
+  // In place of the tile's own ring, so the edge shown is the token's.
+  border: (color: string) => ({
+    boxShadow: `inset 0 0 0 1px ${color}`,
+  }),
+  text: (color: string) => ({
+    color,
+  }),
+  chip: {
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    display: "flex",
-    flexDirection: "column",
-    paddingBlockEnd: space.xs,
-    paddingBlockStart: space.xs,
-    paddingInline: space.md,
-    width: "100%",
-  },
-  // A rule between neutrals and status, in the panel's own theme.
-  group: {
-    borderBlockStartColor: "var(--gray-4)",
-    borderBlockStartStyle: "solid",
-    borderBlockStartWidth: strokes.border,
-    marginBlockStart: space.xs,
-    paddingBlockStart: space.xs,
-  },
-  row: {
-    alignItems: "center",
-    display: "flex",
-    gap: space.md,
-    height: sizes.controlLg,
-    justifyContent: "space-between",
-  },
-  name: {
-    color: "var(--gray-12)",
-    display: "flex",
-    fontFamily: fonts.mono,
-    fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
-    gap: space.xs,
-  },
-  value: {
-    color: "var(--text-muted)",
-  },
-  swatches: {
-    alignItems: "center",
-    display: "flex",
-    gap: space.xxs,
-  },
-  swatch: {
-    alignItems: "center",
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    display: "flex",
-    fontSize: fontSizes.sm,
-    height: sizes.controlXs,
-    justifyContent: "center",
-    width: 48,
-  },
-  dot: {
-    width: sizes.controlXs,
-  },
-  text: (color: string) => ({
-    color,
-  }),
-  edge: (color: string) => ({
-    borderBlockEndColor: color,
-    borderBlockEndStyle: "solid",
-    borderBlockEndWidth: strokes.border,
-    borderBlockStartColor: color,
-    borderBlockStartStyle: "solid",
-    borderBlockStartWidth: strokes.border,
-    borderInlineEndColor: color,
-    borderInlineEndStyle: "solid",
-    borderInlineEndWidth: strokes.border,
-    borderInlineStartColor: color,
-    borderInlineStartStyle: "solid",
-    borderInlineStartWidth: strokes.border,
-  }),
-  fullWidth: {
-    width: "100%",
+    height: sizes.controlMd,
+    width: sizes.controlMd,
   },
 });
 
-function subscribeToTheme(onChange: () => void) {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributeFilter: ["class"] });
-  return () => {
-    observer.disconnect();
-  };
-}
-
-function readTheme(): Theme {
-  return document.documentElement.classList.contains("dark") ? "dark" : "light";
-}
-
-// The server can't know the visitor's theme; light until hydrated.
-function readServerTheme(): Theme {
-  return "light";
-}
-
-/** The theme a visitor picked in the demo, else the site's own. */
-function useDemoTheme() {
-  const site = useSyncExternalStore(
-    subscribeToTheme,
-    readTheme,
-    readServerTheme
-  );
-  const [picked, setPicked] = useState<Theme | null>(null);
-
-  return [picked ?? site, setPicked] as const;
-}
-
-function Swatch({
-  color,
-  kind,
-  sx,
-}: {
-  color: string;
-  kind: Kind;
-  sx?: stylex.StyleXStyles;
-}) {
-  if (kind === "text") {
-    return (
-      <span {...stylex.props(styles.swatch, styles.text(color), sx)}>Aa</span>
-    );
-  }
-
+function Swatches({ swatches }: { swatches: Swatch[] }) {
   return (
-    <span
-      {...stylex.props(
-        styles.swatch,
-        kind === "edge" ? styles.edge(color) : styles.paint(color),
-        sx
-      )}
-    />
+    <Tiles>
+      {swatches.map(({ color, kind, on, token }) => {
+        // On its surface, a fill is a chip so the surface shows around it.
+        const chip = kind === "fill" && on !== undefined;
+
+        return (
+          <Tile
+            key={token}
+            sx={[
+              on !== undefined && styles.paint(on),
+              kind === "border" && styles.border(color),
+              kind === "text" && [typeStyles.heading5, styles.text(color)],
+              kind === "fill" && !chip && styles.paint(color),
+            ]}
+            token={token}
+          >
+            {kind === "text" ? "Aa" : null}
+            {chip ? (
+              <span {...stylex.props(styles.chip, styles.paint(color))} />
+            ) : null}
+          </Tile>
+        );
+      })}
+    </Tiles>
   );
 }
 
-interface Row {
-  label: string;
-  swatches: ReactNode;
-  value: string;
+function ColorSurfacesDemo() {
+  return <Swatches swatches={surfaces} />;
 }
 
-function ThemedTokens({ groups }: { groups: Row[][] }) {
-  const [theme, setTheme] = useDemoTheme();
-
-  return (
-    <Stage
-      controls={
-        <Tabs
-          onValueChange={(value: Theme) => {
-            setTheme(value);
-          }}
-          value={theme}
-        >
-          <TabsList sx={styles.fullWidth}>
-            <TabsTrigger value="light">Light</TabsTrigger>
-            <TabsTrigger value="dark">Dark</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      }
-    >
-      <Well sx={styles.panelWell}>
-        {/* The class swaps the Radix scale under this panel. */}
-        <div className={theme}>
-          <div {...stylex.props(styles.panel)}>
-            {groups.map((rows, index) => (
-              <div
-                key={rows[0]?.label}
-                {...stylex.props(index > 0 && styles.group)}
-              >
-                {rows.map(({ label, swatches, value }) => (
-                  <div key={label} {...stylex.props(styles.row)}>
-                    <span {...stylex.props(styles.name)}>
-                      {label}
-                      <span {...stylex.props(styles.value)}>{value}</span>
-                    </span>
-                    <span {...stylex.props(styles.swatches)}>{swatches}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </Well>
-    </Stage>
-  );
+function ColorTextDemo() {
+  return <Swatches swatches={text} />;
 }
 
-function ColorScalesDemo() {
-  return (
-    <Stage>
-      <div {...stylex.props(styles.column)}>
-        {hues.map((hue) => (
-          <Well key={hue} sx={styles.scale}>
-            <span {...stylex.props(styles.hue)}>{hue}</span>
-            {steps.map((step) => (
-              <span
-                key={step}
-                title={`${hue}-${step}`}
-                {...stylex.props(
-                  styles.step,
-                  styles.paint(`var(--${hue}-${step})`)
-                )}
-              />
-            ))}
-          </Well>
-        ))}
-      </div>
-    </Stage>
-  );
+function ColorBorderDemo() {
+  return <Swatches swatches={border} />;
 }
 
-function ColorRolesDemo() {
-  return (
-    <ThemedTokens
-      groups={[
-        neutrals.map(({ kind, name, step }) => ({
-          label: name,
-          swatches: <Swatch color={`var(--${step})`} kind={kind} />,
-          value: step === "text-muted" ? "gray-10, dark 10–11" : step,
-        })),
-        statuses.map(({ hue, name }) => ({
-          label: name,
-          swatches: statusParts.map(({ kind, step }) => (
-            <Swatch
-              color={`var(--${hue}-${step})`}
-              key={step}
-              kind={kind}
-              sx={kind === "text" ? null : styles.dot}
-            />
-          )),
-          value: hue,
-        })),
-      ]}
-    />
-  );
+function ColorFillDemo() {
+  return <Swatches swatches={fill} />;
 }
 
-export { ColorRolesDemo, ColorScalesDemo };
+function ColorAccentDemo() {
+  return <Swatches swatches={accent} />;
+}
+
+function ColorInvertedDemo() {
+  return <Swatches swatches={inverted} />;
+}
+
+function ColorStatusDemo() {
+  return <Swatches swatches={status} />;
+}
+
+export {
+  ColorAccentDemo,
+  ColorBorderDemo,
+  ColorFillDemo,
+  ColorInvertedDemo,
+  ColorStatusDemo,
+  ColorSurfacesDemo,
+  ColorTextDemo,
+};

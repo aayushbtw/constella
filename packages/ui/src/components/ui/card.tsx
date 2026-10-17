@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   cardVars,
   colors,
@@ -38,10 +39,10 @@ const corner = { default: radii.lg, [inWell]: radii.md };
 const styles = stylex.create({
   card: {
     backgroundColor: colors.raised,
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndWidth: strokes.border,
     borderBlockStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
@@ -57,9 +58,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: cardVars.spacing,
-    lineHeight: lineHeights.text,
     overflow: "hidden",
     paddingBlockEnd: { default: cardVars.spacing, [hasFooter]: 0 },
     paddingBlockStart: cardVars.spacing,
@@ -91,19 +90,20 @@ const styles = stylex.create({
   },
   title: {
     fontSize: {
-      default: fontSizes.md,
-      ":is([data-slot='card'][data-size='sm'] *)": fontSizes.sm,
+      default: fontSizes.textBase,
+      ":is([data-slot='card'][data-size='sm'] *)": fontSizes.textSm,
     },
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
+    lineHeight: {
+      default: lineHeights.textBase,
+      ":is([data-slot='card'][data-size='sm'] *)": lineHeights.textSm,
+    },
     marginBlock: 0,
     overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     overflowWrap: "anywhere",
     textWrap: "pretty",
   },
@@ -126,7 +126,7 @@ const styles = stylex.create({
   footer: {
     alignItems: "center",
     backgroundColor: colors.fillSubtle,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     display: "flex",
@@ -157,7 +157,7 @@ function Card({
       data-variant={variant}
       {...props}
       {...stylex.props(
-        styles.card,
+        [typeStyles.textSm, styles.card],
         sizeStyles[size],
         variant === "well" && styles.well,
         sx
@@ -194,7 +194,7 @@ function CardDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="card-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }

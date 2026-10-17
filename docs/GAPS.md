@@ -11,7 +11,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 - [x] **`radii.lg`** (16px, cards) and **`radii.xl`** (20px, the composer), derived from `--radius` like the others.
 - [x] **Surface roles:** `sidebar` (gray-2); `track` is `fillOpaque` and `selected` is `fill`.
-- [x] **Chart roles:** a categorical set for data series, added with the first chart. Meter needed none: `fill` track, `accent` fill, `dangerSolid` at the cap.
+- [x] **Chart roles:** a categorical set for data series, added with the first chart. Meter needed none: `fill` track, `accentSolid` fill, `dangerSolid` at the cap.
 
 ## Components
 
@@ -52,7 +52,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Text
 
-- [x] **Text**, **Heading** and **Icon**: not components. Type is set with `fontSizes`, `fontWeights` and `lineHeights`, with `fontSizes.lg` (20) and `xl` (24) for headings and figures; an icon wrapper is the app's, since the icon set is its choice.
+- [x] **Text**, **Heading** and **Caption**: components over the type scale (Typography). **Icon** isn't one: an icon wrapper is the app's, since the icon set is its choice.
 
 ### Data
 

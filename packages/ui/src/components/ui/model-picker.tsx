@@ -62,7 +62,7 @@ const styles = stylex.create({
     transitionDuration: "0s",
   },
   command: {
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     maxWidth: "100%",
     width: sizes.modelPicker,
   },
@@ -89,11 +89,11 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: rowGap,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
   },
   description: {
     color: colors.textSecondary,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
     marginBlockEnd: 0,
     marginBlockStart: 0,
   },

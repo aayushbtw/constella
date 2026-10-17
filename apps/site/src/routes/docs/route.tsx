@@ -27,8 +27,13 @@ function Docs() {
       groups={[
         { items: docs, label: "Getting started", to: "/docs/$slug" },
         {
+          items: sectionItems(components, "Typography"),
+          label: "Typography",
+          to: "/docs/components/$slug",
+        },
+        {
           items: sectionItems(components),
-          label: "Components",
+          label: "Primitives",
           to: "/docs/components/$slug",
         },
         {

@@ -10,11 +10,11 @@ import { buttonStyles } from "@/components/ui/button";
 import type { ButtonStyleOptions } from "@/components/ui/button";
 import { inputStyles } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -40,7 +40,7 @@ const checked = ":is([data-checked] *)";
 const radio = ":is([data-type='radio'] *)";
 const invalid = ":is([data-invalid])";
 const disabled = ":is([data-disabled])";
-const firstLineInset = `calc((${lineHeights.text} - ${sizes.icon}) / 2)`;
+const firstLineInset = `calc((${lineHeights.textSm} - ${sizes.icon}) / 2)`;
 const noDescription = ":not(:has(~ [data-slot='questionnaire-description']))";
 
 const styles = stylex.create({
@@ -57,11 +57,9 @@ const styles = stylex.create({
   },
   progress: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
     fontVariantNumeric: "tabular-nums",
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.row,
-    minHeight: lineHeights.row,
+    minHeight: lineHeights.textSm,
   },
   item: {
     borderBlockWidth: 0,
@@ -80,9 +78,7 @@ const styles = stylex.create({
   // A legend sits outside the fieldset's flex gap, so it spaces itself.
   title: {
     color: colors.textPrimary,
-    fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
     marginBlockEnd: { default: space.xxs, [noDescription]: space.md },
     paddingBlock: 0,
     paddingInline: 0,
@@ -90,8 +86,6 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInlineEnd: 0,
@@ -116,14 +110,14 @@ const styles = stylex.create({
       ":active:not([data-disabled])": colors.fillSubtle,
     },
     borderBlockColor: {
-      default: colors.edge,
-      ":is([data-checked]):not([data-invalid])": colors.accent,
-      [invalid]: colors.danger,
+      default: colors.border,
+      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      [invalid]: colors.dangerBorder,
     },
     borderInlineColor: {
-      default: colors.edge,
-      ":is([data-checked]):not([data-invalid])": colors.accent,
-      [invalid]: colors.danger,
+      default: colors.border,
+      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      [invalid]: colors.dangerBorder,
     },
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
@@ -136,9 +130,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.sm,
-    lineHeight: lineHeights.text,
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     paddingBlock: space.sm,
@@ -168,9 +160,15 @@ const styles = stylex.create({
   indicator: {
     alignItems: "center",
     backgroundClip: { default: "padding-box", [checked]: "border-box" },
-    backgroundColor: { default: colors.fillSubtle, [checked]: colors.accent },
-    borderBlockColor: { default: colors.edge, [checked]: colors.accent },
-    borderInlineColor: { default: colors.edge, [checked]: colors.accent },
+    backgroundColor: {
+      default: colors.fillSubtle,
+      [checked]: colors.accentSolid,
+    },
+    borderBlockColor: { default: colors.border, [checked]: colors.accentSolid },
+    borderInlineColor: {
+      default: colors.border,
+      [checked]: colors.accentSolid,
+    },
     borderStartStartRadius: { default: radii.xs, [radio]: radii.full },
     borderStartEndRadius: { default: radii.xs, [radio]: radii.full },
     borderEndStartRadius: { default: radii.xs, [radio]: radii.full },
@@ -179,8 +177,8 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: shadows.control,
-    color: colors.onAccent,
+    boxShadow: shadows.default,
+    color: colors.accentOnSolid,
     display: "flex",
     flexShrink: 0,
     height: sizes.icon,
@@ -205,7 +203,7 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
   },
   dot: {
-    backgroundColor: colors.onAccent,
+    backgroundColor: colors.accentOnSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -241,9 +239,7 @@ const styles = stylex.create({
     marginInlineStart: "auto",
   },
   error: {
-    color: colors.danger,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
+    color: colors.dangerText,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInlineEnd: 0,
@@ -289,7 +285,7 @@ function QuestionnaireProgress({
     <QuestionnairePrimitive.Progress
       data-slot="questionnaire-progress"
       {...props}
-      {...stylex.props(styles.progress, sx)}
+      {...stylex.props([typeStyles.textSm, styles.progress], sx)}
     />
   );
 }
@@ -315,7 +311,7 @@ function QuestionnaireTitle({
     <QuestionnairePrimitive.Title
       data-slot="questionnaire-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textBase, styles.title], sx)}
     />
   );
 }
@@ -328,7 +324,7 @@ function QuestionnaireDescription({
     <QuestionnairePrimitive.Description
       data-slot="questionnaire-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -355,7 +351,7 @@ function QuestionnaireChoice({
     <QuestionnairePrimitive.Choice
       data-slot="questionnaire-choice"
       {...props}
-      {...stylex.props(styles.choice, sx)}
+      {...stylex.props([typeStyles.textSm, styles.choice], sx)}
     >
       <QuestionnairePrimitive.ChoiceInput
         data-slot="questionnaire-choice-input"
@@ -423,7 +419,7 @@ function QuestionnaireError({
     <QuestionnairePrimitive.Error
       data-slot="questionnaire-error"
       {...props}
-      {...stylex.props(styles.error, sx)}
+      {...stylex.props([typeStyles.textSm, styles.error], sx)}
     />
   );
 }

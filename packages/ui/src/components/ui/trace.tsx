@@ -12,12 +12,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Shimmer } from "@/components/ui/shimmer";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
-  lineHeights,
   media,
   opacities,
   sizes,
@@ -45,7 +44,7 @@ const failed = "[data-status='error']";
 // Under the line's icon, stopping `space.xxs` short of it.
 const reach = `calc((${sizes.controlSm} - ${sizes.icon}) / 2 - ${space.xxs})`;
 const rail = {
-  backgroundColor: colors.edge,
+  backgroundColor: colors.border,
   content: "''",
   insetInlineStart: `calc(${sizes.icon} / 2 - ${strokes.border} / 2)`,
   position: "absolute",
@@ -90,7 +89,6 @@ const styles = stylex.create({
     },
     cursor: { default: null, [inAction]: "pointer" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
     height: sizes.controlSm,
     maxWidth: "100%",
@@ -101,7 +99,7 @@ const styles = stylex.create({
     width: "fit-content",
   },
   error: {
-    color: colors.danger,
+    color: colors.dangerText,
   },
   pending: {
     opacity: opacities.disabled,
@@ -153,7 +151,7 @@ const styles = stylex.create({
         [`:is(:hover:not(:has(> ${failed})) > *)`]: colors.textPrimary,
       },
       [`:is(:active:not(:has(> ${failed})) > *)`]: colors.textPrimary,
-      [`:is(:has(> ${failed}) > *)`]: colors.danger,
+      [`:is(:has(> ${failed}) > *)`]: colors.dangerText,
     },
     display: "flex",
     flexShrink: 0,
@@ -173,8 +171,6 @@ const styles = stylex.create({
   },
   content: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     minWidth: 0,
     overflowWrap: "break-word",
     paddingBlockStart: space.xxs,
@@ -209,7 +205,7 @@ function TraceLine({
         data-status={status}
         {...props}
         {...stylex.props(
-          styles.line,
+          [typeStyles.textSm, styles.line],
           status === "error" && styles.error,
           status === "pending" && styles.pending,
           sx
@@ -315,7 +311,9 @@ function TraceCollapsibleContent({
 }: Styled<ComponentProps<typeof CollapsibleContent>>) {
   return (
     <CollapsibleContent data-slot="trace-collapsible-content" {...props}>
-      <div {...stylex.props(styles.content, sx)}>{children}</div>
+      <div {...stylex.props([typeStyles.textSm, styles.content], sx)}>
+        {children}
+      </div>
     </CollapsibleContent>
   );
 }

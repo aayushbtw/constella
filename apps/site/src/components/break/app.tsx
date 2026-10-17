@@ -62,8 +62,8 @@ const styles = stylex.create({
     width: 512,
   },
   frame: {
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,

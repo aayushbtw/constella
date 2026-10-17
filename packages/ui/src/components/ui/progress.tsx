@@ -3,13 +3,12 @@
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import * as stylex from "@stylexjs/stylex";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
-  lineHeights,
   media,
   opacities,
   radii,
@@ -59,7 +58,7 @@ const styles = stylex.create({
       [unknown]: { default: sweep, [media.reducedMotion]: breathe },
     },
     animationTimingFunction: { default: null, [unknown]: easings.inOut },
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -75,15 +74,11 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
   },
   value: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
-    lineHeight: lineHeights.text,
     marginInlineStart: "auto",
   },
 });
@@ -142,7 +137,7 @@ function ProgressLabel({
     <ProgressPrimitive.Label
       data-slot="progress-label"
       {...props}
-      {...stylex.props(styles.label, sx)}
+      {...stylex.props([typeStyles.textSm, styles.label], sx)}
     />
   );
 }
@@ -155,7 +150,7 @@ function ProgressValue({
     <ProgressPrimitive.Value
       data-slot="progress-value"
       {...props}
-      {...stylex.props(styles.value, sx)}
+      {...stylex.props([typeStyles.textSm, styles.value], sx)}
     />
   );
 }

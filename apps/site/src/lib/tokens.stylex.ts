@@ -12,16 +12,11 @@ export const surfaces = stylex.defineConsts({
 });
 
 export const fontSizes = stylex.defineConsts({
-  base: "15px",
   display: "32px",
-  // The large glyph a font specimen opens with.
-  specimen: "96px",
 });
 
 export const lineHeights = stylex.defineConsts({
   display: "38px",
-  specimen: "96px",
-  prose: "24px",
 });
 
 export const layout = stylex.defineConsts({

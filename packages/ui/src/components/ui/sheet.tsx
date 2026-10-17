@@ -11,11 +11,11 @@ import {
   DialogPortal,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   layers,
   media,
   shadows,
@@ -43,11 +43,10 @@ const styles = stylex.create({
   // Slides the whole way in from its edge and back out the same way.
   popup: {
     backgroundColor: colors.raised,
-    boxShadow: shadows.dialog,
+    boxShadow: shadows.xl,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     opacity: {
       default: 1,
       [media.reducedMotion]: { default: 1, [offstage]: 0 },
@@ -136,7 +135,7 @@ const styles = stylex.create({
   // The dialog's footer bar, pinned to the bottom.
   footer: {
     backgroundColor: colors.fillSubtle,
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     display: "flex",
@@ -178,7 +177,7 @@ function SheetContent({
         data-side={side}
         data-slot="sheet-content"
         {...props}
-        {...stylex.props(styles.popup, styles[side], sx)}
+        {...stylex.props([typeStyles.textSm, styles.popup], styles[side], sx)}
       >
         {children}
         {showCloseButton && <DialogCloseButton />}

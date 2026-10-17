@@ -39,8 +39,14 @@ const styles = stylex.create({
   textarea: {
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderBlockColor: { default: colors.edge, [invalid]: colors.danger },
-    borderInlineColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
@@ -49,15 +55,15 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    caretColor: colors.accent,
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
+    caretColor: colors.accentSolid,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "block",
     fieldSizing: "content",
     // Under 16px, iOS Safari zooms the page on focus.
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.sm },
-    lineHeight: lineHeights.text,
+    fontSize: { default: fontSizes.textLg, [media.sm]: fontSizes.textSm },
+    lineHeight: { default: lineHeights.textLg, [media.sm]: lineHeights.textSm },
     marginBlock: 0,
     marginInline: 0,
     minHeight: `calc(${sizes.controlMd} * 2)`,
@@ -72,9 +78,7 @@ const styles = stylex.create({
     width: "100%",
     "::placeholder": { color: colors.textMuted },
   },
-  // Text steps down with the height like Input's, but stays 16px under `sm` so iOS doesn't zoom.
   sm: {
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.xs },
     minHeight: `calc(${sizes.controlSm} * 2)`,
     paddingBlock: px6,
   },

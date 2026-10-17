@@ -11,11 +11,11 @@ import {
   SliderValue,
 } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   media,
   radii,
   sizes,
@@ -80,11 +80,11 @@ const styles = stylex.create({
     position: "absolute",
   },
   axis: {
-    stroke: colors.edge,
+    stroke: colors.border,
   },
   // Linear, for reference: how far each curve bends away from it.
   linear: {
-    stroke: colors.edgeSubtle,
+    stroke: colors.borderSubtle,
     strokeDasharray: "4 4",
   },
   curve: {
@@ -95,7 +95,6 @@ const styles = stylex.create({
     display: "flex",
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     gap: space.md,
     gridColumn: "1 / -1",
@@ -123,7 +122,7 @@ const styles = stylex.create({
     transform: `translate(0, -${graph})`,
   },
   dot: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -188,7 +187,7 @@ function MotionEasingDemo() {
     <Stage
       controls={
         <>
-          <p {...stylex.props(styles.readout)}>
+          <p {...stylex.props([typeStyles.captionLg, styles.readout])}>
             <span {...stylex.props(styles.readoutValue)}>{easing}</span>
             <span>
               {durations.move} × {slow} = {moveMs * slow}ms

@@ -15,7 +15,14 @@ function markdownResponse(slug: string) {
 
 type Page = ReturnType<typeof markdown.documents>[number];
 
-const labels = ["Getting started", "Components", "AI", "TanStack", "Blocks"];
+const labels = [
+  "Getting started",
+  "Typography",
+  "Primitives",
+  "AI",
+  "TanStack",
+  "Blocks",
+];
 
 function labelOf({ metadata, slug }: Page) {
   if (slug.startsWith("blocks/")) {
@@ -23,7 +30,7 @@ function labelOf({ metadata, slug }: Page) {
   }
 
   return slug.startsWith("docs/components/")
-    ? (metadata.section ?? "Components")
+    ? (metadata.section ?? "Primitives")
     : "Getting started";
 }
 

@@ -10,11 +10,10 @@ import { Input, inputStyles } from "@/components/ui/input";
 import type { InputProps, InputSize } from "@/components/ui/input";
 import { Textarea, textareaStyles } from "@/components/ui/textarea";
 import type { TextareaProps } from "@/components/ui/textarea";
-import { joinStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
   fontWeights,
   joins,
   lineHeights,
@@ -91,7 +90,7 @@ const insetMargin = (group: string, item: string) =>
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
 
-const stackedInput = `calc(${lineHeights.text} + ${space.xs} + ${space.xxs})`;
+const stackedInput = `calc(${lineHeights.textSm} + ${space.xs} + ${space.xxs})`;
 // An xs button or a keycap sits in the box with an even inset on three sides.
 const insetEdge = {
   default: null,
@@ -106,30 +105,37 @@ const insetEdge = {
     sm: insetMargin(sizes.controlSm, sizes.kbd),
   }),
 };
-const textSize = bySize({
-  lg: fontSizes.sm,
-  default: fontSizes.sm,
-  sm: fontSizes.xs,
-});
 
 const styles = stylex.create({
   group: {
     alignItems: { default: "center", [stacked]: "stretch" },
     backgroundClip: "padding-box",
     backgroundColor: colors.background,
-    borderBlockEndColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockEndColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
-    borderBlockStartColor: { default: colors.edge, [invalid]: colors.danger },
+    borderBlockStartColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
-    borderInlineEndColor: { default: colors.edge, [invalid]: colors.danger },
+    borderInlineEndColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderInlineEndStyle: "solid",
     borderInlineEndWidth: strokes.border,
-    borderInlineStartColor: { default: colors.edge, [invalid]: colors.danger },
+    borderInlineStartColor: {
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+    },
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "flex",
     flexDirection: { default: "row", [stacked]: "column" },
@@ -159,12 +165,10 @@ const styles = stylex.create({
     cursor: "text",
     display: "flex",
     flexShrink: 0,
-    fontSize: textSize,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     justifyContent: "center",
     // The control's line, so text above or below it sits the same distance from the edge.
-    lineHeight: lineHeights.text,
     paddingBlockEnd: px6,
     paddingBlockStart: px6,
     userSelect: "none",
@@ -196,13 +200,13 @@ const styles = stylex.create({
     paddingInlineStart: px10,
   },
   separatedStart: {
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     paddingBlockEnd: space.xs,
   },
   separatedEnd: {
-    borderBlockStartColor: colors.edgeSubtle,
+    borderBlockStartColor: colors.borderSubtle,
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     paddingBlockStart: space.xs,
@@ -211,7 +215,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textMuted,
     display: "flex",
-    fontSize: textSize,
     gap: space.xs,
   },
   // The group draws the surface, edge, ring and fade, so the control drops its own.
@@ -267,7 +270,6 @@ const styles = stylex.create({
   },
   // Concentric with the group's corner at the even inset.
   buttonXs: {
-    fontSize: textSize,
     gap: space.xxs,
     paddingInlineEnd: px6,
     paddingInlineStart: px6,
@@ -293,7 +295,7 @@ const buttonSizeStyles = {
   "icon-sm": null,
   "icon-xs": joinStyles.xs,
   sm: null,
-  xs: [styles.buttonXs, joinStyles.xs],
+  xs: [[typeStyles.textSm, styles.buttonXs], joinStyles.xs],
 } satisfies Record<InputGroupButtonSize, stylex.StyleXStyles | null>;
 
 const InputGroupSizeContext = createContext<InputGroupSize>("default");
@@ -337,7 +339,7 @@ function InputGroupAddon({
       }}
       {...props}
       {...stylex.props(
-        styles.addon,
+        [typeStyles.textSm, styles.addon],
         alignStyles[align],
         separated && separatedStyles[align],
         sx
@@ -369,7 +371,7 @@ function InputGroupText({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       data-slot="input-group-text"
       {...props}
-      {...stylex.props(styles.text, sx)}
+      {...stylex.props([typeStyles.textSm, styles.text], sx)}
     />
   );
 }

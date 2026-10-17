@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/collapsible";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import { SwapText } from "@/components/ui/swap-text";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   media,
   radii,
   fontWeights,
@@ -45,7 +45,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.md,
     justifyContent: "space-between",
@@ -55,7 +54,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     maxWidth: "100%",
     width: 256,
   },
@@ -105,7 +103,7 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
   },
   nested: {
-    borderInlineStartColor: colors.edgeSubtle,
+    borderInlineStartColor: colors.borderSubtle,
     borderInlineStartStyle: "solid",
     borderInlineStartWidth: strokes.border,
     display: "flex",
@@ -148,7 +146,7 @@ function CollapsibleDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <Collapsible {...stylex.props(styles.root)}>
-        <div {...stylex.props(styles.header)}>
+        <div {...stylex.props([typeStyles.textSm, styles.header])}>
           @alex starred 3 repositories
           <CollapsibleTrigger
             render={
@@ -187,7 +185,7 @@ function CollapsibleControlledDemo() {
         open={open}
         {...stylex.props(styles.root)}
       >
-        <div {...stylex.props(styles.header)}>
+        <div {...stylex.props([typeStyles.textSm, styles.header])}>
           Order #4189
           <CollapsibleTrigger render={<Button size="sm" variant="outline" />}>
             <SwapText>{open ? "Hide details" : "Show details"}</SwapText>
@@ -208,7 +206,7 @@ function CollapsibleDisabledDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <Collapsible disabled {...stylex.props(styles.root)}>
-        <div {...stylex.props(styles.header)}>
+        <div {...stylex.props([typeStyles.textSm, styles.header])}>
           Archived repositories
           <CollapsibleTrigger
             render={
@@ -280,7 +278,7 @@ function TreeNode({ node }: { node: Node }) {
 function CollapsibleTreeDemo() {
   return (
     <DemoRow sx={styles.stage}>
-      <div {...stylex.props(styles.tree)}>
+      <div {...stylex.props([typeStyles.textSm, styles.tree])}>
         {tree.map((node) => (
           <TreeNode key={node.name} node={node} />
         ))}

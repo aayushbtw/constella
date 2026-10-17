@@ -17,10 +17,9 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   opacities,
   radii,
@@ -81,7 +80,6 @@ const styles = stylex.create({
   },
   empty: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
     paddingBlockEnd: { default: space.lg, ":empty": 0 },
     paddingBlockStart: { default: space.lg, ":empty": 0 },
     textAlign: "center",
@@ -91,7 +89,6 @@ const styles = stylex.create({
   },
   groupLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
@@ -111,7 +108,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.xs,
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: px6,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
@@ -121,7 +117,7 @@ const styles = stylex.create({
     userSelect: "none",
   },
   separator: {
-    backgroundColor: colors.edgeSubtle,
+    backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlockEnd: space.xxs,
     marginInlineEnd: `calc(-1 * ${space.xxs})`,
@@ -130,7 +126,6 @@ const styles = stylex.create({
   shortcut: {
     color: colors.textMuted,
     flexShrink: 0,
-    fontSize: fontSizes.xxs,
     marginInlineStart: "auto",
     whiteSpace: "nowrap",
   },
@@ -231,7 +226,7 @@ function CommandEmpty({
     <AutocompletePrimitive.Empty
       data-slot="command-empty"
       {...props}
-      {...stylex.props(styles.empty, sx)}
+      {...stylex.props([typeStyles.textSm, styles.empty], sx)}
     />
   );
 }
@@ -257,7 +252,7 @@ function CommandGroupLabel({
     <AutocompletePrimitive.GroupLabel
       data-slot="command-group-label"
       {...props}
-      {...stylex.props(styles.groupLabel, sx)}
+      {...stylex.props([typeStyles.captionLg, styles.groupLabel], sx)}
     />
   );
 }
@@ -274,7 +269,7 @@ function CommandItem({
     <AutocompletePrimitive.Item
       data-slot="command-item"
       {...props}
-      {...stylex.props(styles.item, sx)}
+      {...stylex.props([typeStyles.textSm, styles.item], sx)}
     />
   );
 }
@@ -297,7 +292,7 @@ function CommandShortcut({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       data-slot="command-shortcut"
       {...props}
-      {...stylex.props(styles.shortcut, sx)}
+      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
     />
   );
 }
