@@ -36,7 +36,7 @@ const track = (thumb: string) => ({
   // Beside top-aligned text, the track centers on the label's first line.
   marginBlock: {
     default: null,
-    [beside]: `calc((${lineHeights.text} - ${thumb} - 2 * ${strokes.border}) / 2)`,
+    [beside]: `calc((${lineHeights.textSm} - ${thumb} - 2 * ${strokes.border}) / 2)`,
   },
   width: `calc(2 * ${thumb})`,
   "::before": {
@@ -68,10 +68,16 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: colors.fillStrong,
-      ":is([data-checked])": colors.accent,
+      ":is([data-checked])": colors.accentSolid,
     },
-    borderBlockColor: { default: "transparent", [invalid]: colors.danger },
-    borderInlineColor: { default: "transparent", [invalid]: colors.danger },
+    borderBlockColor: {
+      default: "transparent",
+      [invalid]: colors.dangerBorder,
+    },
+    borderInlineColor: {
+      default: "transparent",
+      [invalid]: colors.dangerBorder,
+    },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -80,7 +86,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: { default: null, [invalid]: shadows.invalid },
+    boxShadow: { default: null, [invalid]: shadows.defaultInvalid },
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
@@ -101,14 +107,14 @@ const styles = stylex.create({
   lg: track(sizes.iconLg),
   thumb: {
     backgroundColor: {
-      default: colors.onFillStrong,
-      ":is([data-checked])": colors.onAccent,
+      default: colors.fillOnStrong,
+      ":is([data-checked])": colors.accentOnSolid,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    boxShadow: shadows.control,
+    boxShadow: shadows.default,
     display: "block",
     pointerEvents: "none",
     // The thumb lands with a little give; the stretch answers the press at once.

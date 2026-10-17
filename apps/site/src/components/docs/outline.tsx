@@ -3,14 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { MouseEvent } from "react";
 
-import {
-  colors,
-  durations,
-  fontSizes,
-  lineHeights,
-  media,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, durations, media, space } from "@/lib/constella/tokens.stylex";
 import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
 const reducedMotion = media.reducedMotion.slice("@media ".length);
@@ -28,7 +22,6 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
     paddingBlockEnd: space.xs,
   },
   list: {
@@ -47,8 +40,6 @@ const styles = stylex.create({
       ":active": colors.textPrimary,
     },
     display: "block",
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
     transitionDuration: durations.hover,
     transitionProperty: "color",
     transitionTimingFunction: "ease",
@@ -127,7 +118,7 @@ function Outline({ headings }: { headings: Heading[] }) {
 
   return (
     <nav aria-label="On this page" {...stylex.props(styles.outline)}>
-      <p {...stylex.props(styles.label)}>On this page</p>
+      <p {...stylex.props([typeStyles.textSm, styles.label])}>On this page</p>
       <ul {...stylex.props(styles.list)}>
         {headings.map(({ id, level, text }) => (
           <li key={id}>
@@ -138,7 +129,7 @@ function Outline({ headings }: { headings: Heading[] }) {
                 jump(event, id);
               }}
               {...stylex.props(
-                styles.link,
+                [typeStyles.textSm, styles.link],
                 level === 3 && styles.nested,
                 id === current && styles.active
               )}

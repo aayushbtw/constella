@@ -40,7 +40,7 @@ const circle = (size: string) => ({
   height: size,
   marginBlock: {
     default: null,
-    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${size}) / 2)`,
+    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.textSm} - ${size}) / 2)`,
   },
   width: size,
   "::before": {
@@ -65,16 +65,16 @@ const styles = stylex.create({
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
     backgroundClip: { default: "padding-box", [on]: "border-box" },
-    backgroundColor: { default: colors.fillSubtle, [on]: colors.accent },
+    backgroundColor: { default: colors.fillSubtle, [on]: colors.accentSolid },
     borderBlockColor: {
-      default: colors.edge,
-      [invalid]: colors.danger,
-      [on]: colors.accent,
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+      [on]: colors.accentSolid,
     },
     borderInlineColor: {
-      default: colors.edge,
-      [invalid]: colors.danger,
-      [on]: colors.accent,
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+      [on]: colors.accentSolid,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
@@ -84,7 +84,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
@@ -110,7 +110,7 @@ const styles = stylex.create({
   lg: circle(sizes.iconLg),
   // The dot grows from the center and fades out; unchecking is the system answering, so it's quick.
   indicator: {
-    backgroundColor: colors.onAccent,
+    backgroundColor: colors.accentOnSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

@@ -4,9 +4,9 @@ import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { Button, buttonStyles } from "@/components/ui/button";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   sizes,
   space,
@@ -51,7 +51,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.semibold,
     gap: space.xs,
     textDecoration: "none",
@@ -91,7 +90,7 @@ function Header() {
     <header {...stylex.props(styles.header)}>
       <div {...stylex.props(styles.inner)}>
         <div {...stylex.props(styles.start)}>
-          <Link to="/" {...stylex.props(styles.brand)}>
+          <Link to="/" {...stylex.props([typeStyles.textSm, styles.brand])}>
             <span
               {...stylex.props(styles.logo, pathname === "/" && entrance.spin)}
             >

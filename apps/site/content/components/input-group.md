@@ -105,7 +105,8 @@ Use `align="block-start"` to place the addon above the input.
 const styles = stylex.create({
   code: {
     fontFamily: fonts.mono,
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.textSm,
+    lineHeight: lineHeights.textSm,
     fontVariantLigatures: "none",
   },
 });

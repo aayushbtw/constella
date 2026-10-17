@@ -31,11 +31,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/toast";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   media,
   radii,
   sizes,
@@ -97,7 +97,6 @@ const styles = stylex.create({
       default: colors.textMuted,
       [media.hover]: { default: null, ":hover": colors.textPrimary },
     },
-    fontSize: fontSizes.sm,
     textDecoration: "none",
     transitionDuration: durations.hover,
     transitionProperty: "color",
@@ -334,7 +333,7 @@ function Showcase({ count, order }: { count: number; order: number }) {
             <Link
               params={{ slug }}
               to="/docs/components/$slug"
-              {...stylex.props(styles.name)}
+              {...stylex.props([typeStyles.textSm, styles.name])}
             >
               {title}
             </Link>

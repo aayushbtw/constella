@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
 import { SwapText } from "@/components/ui/swap-text";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   radii,
   sizes,
   space,
@@ -29,7 +29,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     fontFamily: fonts.mono,
-    fontSize: fontSizes.sm,
     gap: space.xs,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
@@ -41,7 +40,7 @@ const styles = stylex.create({
 function CopyButtonDemo() {
   return (
     <DemoRow>
-      <div {...stylex.props(styles.command)}>
+      <div {...stylex.props([typeStyles.textSm, styles.command])}>
         pnpm dlx shadcn add card
         <CopyButton value="pnpm dlx shadcn add card" />
       </div>

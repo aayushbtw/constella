@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { ButtonSize } from "@/components/ui/button";
+import { Caption } from "@/components/ui/caption";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   radii,
   sizes,
   space,
@@ -34,10 +35,8 @@ const controls = [
 
 const styles = stylex.create({
   value: {
-    color: colors.textMuted,
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     textAlign: "end",
   },
@@ -60,15 +59,14 @@ const styles = stylex.create({
     flexDirection: "column",
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
   },
   labelName: {
     color: colors.textPrimary,
   },
   // A quarter of a large square, so the curve of each radius reads at its true size.
   corner: (borderRadius: string) => ({
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     borderStartStartRadius: borderRadius,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
@@ -117,9 +115,11 @@ const readHeight = (element: HTMLElement) => `${element.offsetHeight}px`;
 
 function Label({ name, value }: { name: string; value: string }) {
   return (
-    <span {...stylex.props(styles.label)}>
+    <span {...stylex.props([typeStyles.captionLg, styles.label])}>
       <span {...stylex.props(styles.labelName)}>{name}</span>
-      <span {...stylex.props(styles.value)}>{value}</span>
+      <Caption render={<span />} size="lg" sx={styles.value}>
+        {value}
+      </Caption>
     </span>
   );
 }

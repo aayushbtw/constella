@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   radii,
   sizes,
@@ -29,7 +29,7 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: colors.fill,
-      [inTooltip]: colors.onInvertedFill,
+      [inTooltip]: colors.invertedFill,
     },
     borderStartStartRadius: {
       default: radii.chip,
@@ -63,16 +63,17 @@ const styles = stylex.create({
       [inInputGroup("default")]: nested(sizes.controlMd),
       [inTooltip]: `calc(${radii.sm} - ${space.xxs})`,
     },
-    color: { default: colors.textSecondary, [inTooltip]: colors.onInverted },
+    color: {
+      default: colors.textSecondary,
+      [inTooltip]: colors.invertedOnSolid,
+    },
     display: "inline-flex",
     // Keycaps read as labels, not code, so they take the text around them over `<kbd>`'s mono.
     fontFamily: "inherit",
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     gap: space.xxs,
     height: sizes.kbd,
     justifyContent: "center",
-    lineHeight: 1,
     minWidth: sizes.kbd,
     paddingInline: space.xxs,
     pointerEvents: "none",
@@ -86,7 +87,13 @@ const styles = stylex.create({
 });
 
 function Kbd({ sx, ...props }: Styled<ComponentProps<"kbd">>) {
-  return <kbd data-slot="kbd" {...props} {...stylex.props(styles.kbd, sx)} />;
+  return (
+    <kbd
+      data-slot="kbd"
+      {...props}
+      {...stylex.props([typeStyles.captionLg, styles.kbd], sx)}
+    />
+  );
 }
 
 function KbdGroup({ sx, ...props }: Styled<ComponentProps<"kbd">>) {

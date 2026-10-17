@@ -2,7 +2,7 @@
 //
 // - Scales: `--neutral-*` and `--accent-*` point at Radix Colors scales by name. To change
 //   one, import its four files and point the steps at it (the theme builder writes this).
-// - Roles: what components ask for (`--edge`, `--fill`…), each a scale step; change one alone.
+// - Roles: what components ask for (`--border`, `--fill`…), each a scale step; change one alone.
 //   The ones that differ between light and dark live in base.css.
 // - Shape and density: one radius (the rest derive from it), control heights, spacing.
 // - Fonts: `--font-sans` for text, `--font-mono` for code and figures. Named, not shipped: load
@@ -73,17 +73,17 @@ export const theme = stylex.defineVars({
   "--fill-strong": "var(--neutral-a4)",
   "--fill-opaque": "var(--neutral-3)",
   // Edges are solid steps: a translucent one shows whatever it crosses.
-  "--edge-subtle": "var(--neutral-4)",
-  "--edge": "var(--neutral-6)",
-  "--inverted": "var(--neutral-12)",
-  "--on-inverted": "var(--neutral-1)",
+  "--border-subtle": "var(--neutral-4)",
+  "--border": "var(--neutral-6)",
+  "--inverted-solid": "var(--neutral-12)",
+  "--inverted-on-solid": "var(--neutral-1)",
   "--font-mono":
     '"Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace',
   "--font-sans":
     '"Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
   "--overlay": "var(--black-a5)",
   "--accent-solid": "var(--neutral-12)",
-  "--on-accent": "var(--neutral-1)",
+  "--accent-on-solid": "var(--neutral-1)",
   "--focus-ring": "var(--neutral-8)",
   "--selection": "var(--neutral-a5)",
   "--radius": "8px",

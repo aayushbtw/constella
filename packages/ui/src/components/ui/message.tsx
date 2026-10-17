@@ -1,13 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
-import {
-  colors,
-  fontSizes,
-  lineHeights,
-  radii,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, radii, space } from "@/lib/constella/tokens.stylex";
 
 const messageRoles = ["user", "assistant"] as const;
 
@@ -39,8 +34,6 @@ const styles = stylex.create({
     borderEndStartRadius: { default: 0, [fromUser]: radii.lg },
     borderEndEndRadius: { default: 0, [fromUser]: radii.lg },
     color: colors.textPrimary,
-    fontSize: fontSizes.md,
-    lineHeight: lineHeights.prose,
     maxWidth: { default: "100%", [fromUser]: "80%" },
     overflowWrap: "break-word",
     // A user's line breaks are part of what they wrote.
@@ -81,7 +74,7 @@ function MessageContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="message-content"
       {...props}
-      {...stylex.props(styles.content, sx)}
+      {...stylex.props([typeStyles.textLg, styles.content], sx)}
     />
   );
 }

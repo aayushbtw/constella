@@ -39,7 +39,7 @@ const box = (size: string) => ({
   height: size,
   marginBlock: {
     default: null,
-    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${size}) / 2)`,
+    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.textSm} - ${size}) / 2)`,
   },
   width: size,
   "::before": {
@@ -53,16 +53,16 @@ const styles = stylex.create({
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
     backgroundClip: { default: "padding-box", [on]: "border-box" },
-    backgroundColor: { default: colors.fillSubtle, [on]: colors.accent },
+    backgroundColor: { default: colors.fillSubtle, [on]: colors.accentSolid },
     borderBlockColor: {
-      default: colors.edge,
-      [invalid]: colors.danger,
-      [on]: colors.accent,
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+      [on]: colors.accentSolid,
     },
     borderInlineColor: {
-      default: colors.edge,
-      [invalid]: colors.danger,
-      [on]: colors.accent,
+      default: colors.border,
+      [invalid]: colors.dangerBorder,
+      [on]: colors.accentSolid,
     },
     borderStartStartRadius: radii.xs,
     borderStartEndRadius: radii.xs,
@@ -72,8 +72,8 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
-    color: colors.onAccent,
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
+    color: colors.accentOnSolid,
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,

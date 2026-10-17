@@ -3,13 +3,12 @@
 import { Meter as MeterPrimitive } from "@base-ui/react/meter";
 import * as stylex from "@stylexjs/stylex";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
-  lineHeights,
   media,
   radii,
   space,
@@ -45,7 +44,7 @@ const styles = stylex.create({
     width: "100%",
   },
   indicator: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
@@ -72,15 +71,11 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
   },
   value: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
-    lineHeight: lineHeights.text,
     marginInlineStart: "auto",
   },
 });
@@ -142,7 +137,7 @@ function MeterLabel({ sx, ...props }: Styled<MeterPrimitive.Label.Props>) {
     <MeterPrimitive.Label
       data-slot="meter-label"
       {...props}
-      {...stylex.props(styles.label, sx)}
+      {...stylex.props([typeStyles.textSm, styles.label], sx)}
     />
   );
 }
@@ -152,7 +147,7 @@ function MeterValue({ sx, ...props }: Styled<MeterPrimitive.Value.Props>) {
     <MeterPrimitive.Value
       data-slot="meter-value"
       {...props}
-      {...stylex.props(styles.value, sx)}
+      {...stylex.props([typeStyles.textSm, styles.value], sx)}
     />
   );
 }

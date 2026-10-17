@@ -18,13 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  colors,
-  fontSizes,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 
 // What the pagination feature adds to a table.
 interface PaginatedTable {
@@ -52,7 +47,6 @@ const styles = stylex.create({
   },
   range: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
   },
   pageControls: {
@@ -66,7 +60,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textSecondary,
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
   },
   pageButtons: {
@@ -129,11 +122,14 @@ function DataTablePagination({
       data-slot="data-table-pagination"
       {...stylex.props(styles.pagination, sx)}
     >
-      <div aria-live="polite" {...stylex.props(styles.range)}>
+      <div
+        aria-live="polite"
+        {...stylex.props([typeStyles.textSm, styles.range])}
+      >
         {first}–{last} of {count}
       </div>
       <div {...stylex.props(styles.pageControls)}>
-        <div {...stylex.props(styles.pageSize)}>
+        <div {...stylex.props([typeStyles.textSm, styles.pageSize])}>
           <span id={rowsLabel}>Rows per page</span>
           <Select
             onValueChange={(value) => {

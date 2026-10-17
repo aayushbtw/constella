@@ -3,12 +3,11 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -68,14 +67,14 @@ const interactive = <T,>(rest: T, active: T) => ({
 // Every surface that can be pressed climbs the ladder. The press repeats inside the media
 // block, which StyleX ranks above a bare `:active`.
 const lift = {
-  default: shadows.control,
-  ":is([data-popup-open])": shadows.controlHover,
+  default: shadows.default,
+  ":is([data-popup-open])": shadows.defaultHover,
   [media.hover]: {
-    default: shadows.control,
-    ":hover:not(:disabled, :active)": shadows.controlHover,
-    ":active:not(:disabled)": shadows.controlPressed,
+    default: shadows.default,
+    ":hover:not(:disabled, :active)": shadows.defaultHover,
+    ":active:not(:disabled)": shadows.defaultPressed,
   },
-  ":active:not(:disabled)": shadows.controlPressed,
+  ":active:not(:disabled)": shadows.defaultPressed,
 };
 
 const kbdInset = (height: string) =>
@@ -127,7 +126,6 @@ const styles = stylex.create({
     },
     display: "inline-flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: px6,
     justifyContent: "center",
@@ -153,13 +151,11 @@ const styles = stylex.create({
   // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
     ...inset(space.xs, px6, sizes.controlXs),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
     height: sizes.controlXs,
   },
   sm: {
     ...inset(px10, px6, sizes.controlSm),
-    fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlSm,
   },
@@ -174,12 +170,12 @@ const styles = stylex.create({
   iconLg: square(sizes.controlLg),
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
-    backgroundColor: colors.accent,
+    backgroundColor: colors.accentSolid,
     boxShadow: {
-      default: shadows.primary,
-      ":active:not(:disabled)": shadows.primaryPressed,
+      default: shadows.solid,
+      ":active:not(:disabled)": shadows.solidPressed,
     },
-    color: colors.onAccent,
+    color: colors.accentOnSolid,
     opacity: {
       ...interactive<number | string>(1, opacities.hover),
       ":disabled": opacities.disabled,
@@ -194,8 +190,8 @@ const styles = stylex.create({
   outline: {
     backgroundClip: "padding-box",
     backgroundColor: interactive(colors.background, colors.fillSubtle),
-    borderBlockColor: colors.edge,
-    borderInlineColor: colors.edge,
+    borderBlockColor: colors.border,
+    borderInlineColor: colors.border,
     boxShadow: lift,
     color: colors.textPrimary,
   },
@@ -205,9 +201,9 @@ const styles = stylex.create({
   },
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
-    backgroundColor: interactive(colors.dangerFillSubtle, colors.dangerFill),
+    backgroundColor: interactive(colors.dangerSubtle, colors.dangerSubtleHover),
     boxShadow: lift,
-    color: colors.danger,
+    color: colors.dangerText,
   },
   // Reads as text, so it answers with an underline instead of a fill or a press.
   link: {
@@ -235,8 +231,8 @@ const sizeStyles = {
   "icon-sm": styles.iconSm,
   "icon-xs": styles.iconXs,
   lg: styles.lg,
-  sm: styles.sm,
-  xs: styles.xs,
+  sm: [typeStyles.textSm, styles.sm],
+  xs: [typeStyles.captionLg, styles.xs],
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
 
 const cornerStyles = {
@@ -253,7 +249,7 @@ function buttonStyles({
   variant = "secondary",
 }: ButtonStyleOptions = {}) {
   return [
-    styles.base,
+    [typeStyles.textSm, styles.base],
     joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],

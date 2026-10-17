@@ -299,7 +299,7 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger, rendered as
 | Part | Adds |
 | --- | --- |
 | `Trace` | A column of lines |
-| `TraceLine` | `status`: `running` shimmers the title, `error` turns it `danger`, `pending` dims it |
+| `TraceLine` | `status`: `running` shimmers the title, `error` turns it `dangerText`, `pending` dims it |
 | `TraceIcon` | A 16px slot hidden from screen readers; after the title it's the indicator |
 | `TraceTitle` | One line, cut short |
 | `TraceDescription` | Muted, tabular numbers; doesn't truncate |

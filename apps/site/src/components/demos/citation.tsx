@@ -2,14 +2,11 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Citation, CitationCard } from "@/components/ui/citation";
 import type { Source } from "@/components/ui/citation";
-import { colors, fontSizes, lineHeights } from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/ui/text";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   answer: {
-    color: colors.textPrimary,
-    fontSize: fontSizes.md,
-    lineHeight: lineHeights.prose,
     maxWidth: 448,
   },
 });
@@ -33,11 +30,11 @@ const sources = {
 function CitationDemo() {
   return (
     <DemoRow>
-      <p {...stylex.props(styles.answer)}>
+      <Text color="primary" size="lg" sx={styles.answer}>
         Acme’s revenue grew 12% last quarter, ahead of forecasts{" "}
         <Citation source={sources.acme} />. Its new dashboard is built on open
         components <Citation source={sources.shadcn} />.
-      </p>
+      </Text>
       <CitationCard />
     </DemoRow>
   );

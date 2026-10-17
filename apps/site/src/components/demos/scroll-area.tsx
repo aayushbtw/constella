@@ -4,9 +4,9 @@ import { Fragment } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   radii,
   space,
@@ -15,10 +15,10 @@ import {
 import { DemoRow } from "~/components/demos/frame";
 
 const box = {
-  borderBlockEndColor: colors.edge,
-  borderBlockStartColor: colors.edge,
-  borderInlineEndColor: colors.edge,
-  borderInlineStartColor: colors.edge,
+  borderBlockEndColor: colors.border,
+  borderBlockStartColor: colors.border,
+  borderInlineEndColor: colors.border,
+  borderInlineStartColor: colors.border,
   borderBlockEndStyle: "solid",
   borderBlockStartStyle: "solid",
   borderInlineEndStyle: "solid",
@@ -37,7 +37,6 @@ const styles = stylex.create({
   tags: { ...box, height: 288, width: 192 },
   list: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     paddingBlockEnd: space.md,
     paddingBlockStart: space.md,
     paddingInlineEnd: space.md,
@@ -62,11 +61,10 @@ const styles = stylex.create({
   grid: {
     borderCollapse: "collapse",
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
   },
   cell: {
-    borderBlockEndColor: colors.edgeSubtle,
+    borderBlockEndColor: colors.borderSubtle,
     borderBlockEndStyle: "solid",
     borderBlockEndWidth: strokes.border,
     paddingBlockEnd: space.xs,
@@ -98,7 +96,7 @@ function ScrollAreaDemo() {
   return (
     <DemoRow>
       <ScrollArea sx={styles.tags}>
-        <div {...stylex.props(styles.list)}>
+        <div {...stylex.props([typeStyles.textSm, styles.list])}>
           <div {...stylex.props(styles.heading)}>Tags</div>
           {tags.map((tag, index) => (
             <Fragment key={tag}>
@@ -158,7 +156,7 @@ function ScrollAreaBothDemo() {
   return (
     <DemoRow>
       <ScrollArea sx={styles.sheet}>
-        <table {...stylex.props(styles.grid)}>
+        <table {...stylex.props([typeStyles.textSm, styles.grid])}>
           <thead>
             <tr>
               <th {...stylex.props(styles.cell, styles.head)}>Region</th>
@@ -192,7 +190,7 @@ function ScrollFadeDemo() {
   return (
     <DemoRow>
       <ScrollArea sx={styles.tags} viewportSx={scrollFade.y}>
-        <div {...stylex.props(styles.list)}>
+        <div {...stylex.props([typeStyles.textSm, styles.list])}>
           <div {...stylex.props(styles.heading)}>Tags</div>
           {tags.map((tag, index) => (
             <Fragment key={tag}>

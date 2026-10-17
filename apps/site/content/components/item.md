@@ -75,7 +75,7 @@ Use the `variant` prop on `Item` to set its surface.
 | Variant   | Surface             |
 | --------- | ------------------- |
 | `default` | None                |
-| `outline` | An `edge` border    |
+| `outline` | A `border` edge     |
 | `muted`   | A `fillSubtle` fill |
 
 ```tsx

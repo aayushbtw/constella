@@ -171,7 +171,7 @@ Use the `required` prop, and mark the label so the requirement is visible.
 
 ```tsx
 const styles = stylex.create({
-  required: { color: colors.danger },
+  required: { color: colors.dangerText },
 });
 
 <Field>

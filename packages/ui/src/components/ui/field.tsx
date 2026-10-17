@@ -7,10 +7,10 @@ import type { ComponentProps } from "react";
 
 import { labelStyles } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -47,12 +47,10 @@ const styles = stylex.create({
   legend: {
     color: colors.textPrimary,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
     paddingBlock: 0,
     paddingInline: 0,
   },
-  legendLegend: { fontSize: fontSizes.md },
-  legendLabel: { fontSize: fontSizes.sm },
   group: {
     display: "flex",
     flexDirection: "column",
@@ -101,15 +99,15 @@ const styles = stylex.create({
     borderBlockColor: {
       default: null,
       [card]: {
-        default: colors.edge,
-        ":has([data-checked])": colors.accent,
+        default: colors.border,
+        ":has([data-checked])": colors.accentSolid,
       },
     },
     borderInlineColor: {
       default: null,
       [card]: {
-        default: colors.edge,
-        ":has([data-checked])": colors.accent,
+        default: colors.border,
+        ":has([data-checked])": colors.accentSolid,
       },
     },
     borderStartStartRadius: { default: null, [card]: radii.md },
@@ -134,9 +132,7 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
     fontWeight: fontWeights.regular,
-    lineHeight: lineHeights.row,
     marginBlock: 0,
     marginInline: 0,
     overflowWrap: "anywhere",
@@ -147,18 +143,14 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textMuted,
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
-    lineHeight: lineHeights.text,
     marginBlock: `calc(-1 * ${space.xs})`,
-    minHeight: lineHeights.text,
+    minHeight: lineHeights.textSm,
   },
   separatorLine: { flex: 1 },
   // The only red in an invalid field besides the control's edge, a step under the label.
   error: {
-    color: colors.danger,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
+    color: colors.dangerText,
     overflowWrap: "anywhere",
   },
   errorList: {
@@ -177,8 +169,8 @@ const orientationStyles = {
 } satisfies Record<FieldOrientation, stylex.StyleXStyles>;
 
 const legendStyles = {
-  label: styles.legendLabel,
-  legend: styles.legendLegend,
+  label: typeStyles.textSm,
+  legend: typeStyles.textBase,
 } satisfies Record<LegendVariant, stylex.StyleXStyles>;
 
 function FieldSet({ sx, ...props }: Styled<FieldsetPrimitive.Root.Props>) {
@@ -270,7 +262,7 @@ function FieldDescription({
     <FieldPrimitive.Description
       data-slot="field-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -281,7 +273,7 @@ function FieldSetDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
     <p
       data-slot="field-set-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -298,7 +290,7 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
       <FieldPrimitive.Error
         data-slot="field-error"
         {...props}
-        {...stylex.props(styles.error, sx)}
+        {...stylex.props([typeStyles.textSm, styles.error], sx)}
       />
     );
   }
@@ -324,7 +316,7 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
       data-slot="field-error"
       match
       {...props}
-      {...stylex.props(styles.error, sx)}
+      {...stylex.props([typeStyles.textSm, styles.error], sx)}
     >
       {children}
     </FieldPrimitive.Error>
@@ -341,7 +333,7 @@ function FieldSeparator({
       data-content={children !== undefined}
       data-slot="field-separator"
       {...props}
-      {...stylex.props(styles.separator, sx)}
+      {...stylex.props([typeStyles.textSm, styles.separator], sx)}
     >
       <Separator sx={styles.separatorLine} />
       {children !== undefined && (

@@ -2,7 +2,12 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
-import { colors, media as uiMedia, space } from "@/lib/constella/tokens.stylex";
+import {
+  colors,
+  lineHeights as uiLineHeights,
+  media as uiMedia,
+  space,
+} from "@/lib/constella/tokens.stylex";
 import { Showcase, showcaseSize } from "~/components/home/showcase";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
@@ -69,7 +74,7 @@ const styles = stylex.create({
   },
   lead: {
     color: colors.textSecondary,
-    lineHeight: lineHeights.prose,
+    lineHeight: uiLineHeights.textBase,
     maxWidth: "48ch",
     textWrap: "pretty",
   },

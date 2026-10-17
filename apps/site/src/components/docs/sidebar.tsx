@@ -4,11 +4,11 @@ import { Link, useMatchRoute } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   media,
   presses,
@@ -45,7 +45,6 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
     paddingBlockEnd: space.xs,
   },
   list: {
@@ -68,7 +67,6 @@ const styles = stylex.create({
     // Every row reads at full strength; the fill alone marks hover and the current page.
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     height: sizes.controlMd,
     // The label's text lines up with the heading above, not the row's fill.
     marginInlineStart: `calc(-1 * ${space.xs})`,
@@ -108,7 +106,9 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
             .filter(({ items }) => items.length > 0)
             .map(({ items, label, to }) => (
               <section key={label} {...stylex.props(styles.group)}>
-                <h2 {...stylex.props(styles.label)}>{label}</h2>
+                <h2 {...stylex.props([typeStyles.textSm, styles.label])}>
+                  {label}
+                </h2>
                 <ul {...stylex.props(styles.list)}>
                   {items.map(({ draft = false, slug, title }) => (
                     <li key={slug}>
@@ -116,7 +116,7 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
                         params={{ slug }}
                         to={to}
                         {...stylex.props(
-                          styles.link,
+                          [typeStyles.textSm, styles.link],
                           Boolean(
                             matchRoute({ fuzzy: true, params: { slug }, to })
                           ) && styles.active

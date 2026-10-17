@@ -52,10 +52,10 @@ const styles = stylex.create({
   },
   // A dashed edge marks a place that's waiting for content.
   dashed: {
-    borderBlockEndColor: colors.edge,
-    borderBlockStartColor: colors.edge,
-    borderInlineEndColor: colors.edge,
-    borderInlineStartColor: colors.edge,
+    borderBlockEndColor: colors.border,
+    borderBlockStartColor: colors.border,
+    borderInlineEndColor: colors.border,
+    borderInlineStartColor: colors.border,
     borderBlockEndStyle: "dashed",
     borderBlockStartStyle: "dashed",
     borderInlineEndStyle: "dashed",

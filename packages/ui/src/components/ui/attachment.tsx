@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { Shimmer } from "@/components/ui/shimmer";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -101,20 +101,20 @@ const styles = stylex.create({
       },
     },
     borderBlockEndColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderBlockStartColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderInlineEndColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderInlineStartColor: {
-      default: colors.edge,
-      ":is([data-state='error'])": colors.danger,
+      default: colors.border,
+      ":is([data-state='error'])": colors.dangerText,
     },
     borderBlockEndStyle: {
       default: "solid",
@@ -148,10 +148,6 @@ const styles = stylex.create({
     },
     flexShrink: 0,
     flexWrap: "wrap",
-    fontSize: {
-      default: fontSizes.sm,
-      ":is([data-size='sm'], [data-size='xs'])": fontSizes.xs,
-    },
     gap: {
       default: space.xs,
       ":is([data-size='sm'])": px10,
@@ -182,13 +178,16 @@ const styles = stylex.create({
     aspectRatio: "1",
     backgroundColor: {
       default: colors.fill,
-      [inState("error")]: colors.dangerFillSubtle,
+      [inState("error")]: colors.dangerSubtle,
     },
     borderStartStartRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderStartEndRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderEndStartRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
     borderEndEndRadius: { default: radii.sm, [inSize("xs")]: radii.xs },
-    color: { default: colors.textPrimary, [inState("error")]: colors.danger },
+    color: {
+      default: colors.textPrimary,
+      [inState("error")]: colors.dangerText,
+    },
     display: "flex",
     flexShrink: 0,
     justifyContent: "center",
@@ -211,7 +210,7 @@ const styles = stylex.create({
   },
   content: {
     flex: "1",
-    lineHeight: lineHeights.row,
+    lineHeight: lineHeights.textSm,
     maxWidth: "100%",
     minWidth: 0,
     paddingInlineEnd: { default: null, [vertical]: space.xxs },
@@ -232,9 +231,11 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   description: {
-    color: { default: colors.textSecondary, [inState("error")]: colors.danger },
+    color: {
+      default: colors.textSecondary,
+      [inState("error")]: colors.dangerText,
+    },
     display: "block",
-    fontSize: fontSizes.xs,
     marginBlockStart: space.xxxs,
     maxWidth: "100%",
     minWidth: 0,
@@ -318,7 +319,7 @@ function Attachment({
         data-slot="attachment"
         data-state={state}
         {...props}
-        {...stylex.props(styles.attachment, sx)}
+        {...stylex.props([typeStyles.textSm, styles.attachment], sx)}
       />
     </State>
   );
@@ -376,7 +377,7 @@ function AttachmentDescription({
     <span
       data-slot="attachment-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }

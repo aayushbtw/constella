@@ -1,4 +1,4 @@
-// box-edge: a box's border is `edge`; `edgeSubtle` is for dividers.
+// box-edge: a box's border is `border`; `borderSubtle` is for dividers.
 
 import { defineRule } from "vite-plus/lint/plugins";
 
@@ -13,7 +13,7 @@ const boxColors = new Set([
 export const boxEdge = defineRule({
   meta: {
     messages: {
-      edge: "A box's edge is `colors.edge`. `edgeSubtle` is for dividers.",
+      edge: "A box's edge is `colors.border`. `borderSubtle` is for dividers.",
     },
     type: "problem",
   },
@@ -23,7 +23,7 @@ export const boxEdge = defineRule({
         node.object.type === "Identifier" &&
         node.object.name === "colors" &&
         node.property.type === "Identifier" &&
-        node.property.name === "edgeSubtle" &&
+        node.property.name === "borderSubtle" &&
         styleKeys(node).some((key) => boxColors.has(key))
       ) {
         context.report({ messageId: "edge", node });

@@ -37,7 +37,7 @@ A rule that holds for several components goes in its topic file; one that holds 
 - A saturated status fill behind text, or status color on body copy.
 - Color as the only signal.
 - A hue on the default accent, or the accent on a tooltip.
-- A shadow ring as a control's edge, or `edgeSubtle` around a control.
+- A shadow ring as a control's edge, or `borderSubtle` around a control.
 - Focus styled by a component, or an offset ring.
 - A per-control disabled look.
 - `ease-in`; an entrance from `scale(0)` or full transparency; bounce on a surface.

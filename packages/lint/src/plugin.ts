@@ -8,6 +8,7 @@ import { noRawColors } from "./rules/no-raw-colors.ts";
 import { noShorthandMix } from "./rules/no-shorthand-mix.ts";
 import { noShorthand } from "./rules/no-shorthand.ts";
 import { sxLast } from "./rules/sx-last.ts";
+import { typeScale } from "./rules/type-scale.ts";
 
 export const rules = {
   "box-edge": boxEdge,
@@ -16,6 +17,7 @@ export const rules = {
   "no-shorthand": noShorthand,
   "no-shorthand-mix": noShorthandMix,
   "sx-last": sxLast,
+  "type-scale": typeScale,
 };
 
 export const plugin = definePlugin({

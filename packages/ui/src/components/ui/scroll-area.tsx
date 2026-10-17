@@ -52,7 +52,7 @@ const styles = stylex.create({
     width: { default: px10, [horizontal]: "100%" },
   },
   thumb: {
-    backgroundColor: colors.edge,
+    backgroundColor: colors.border,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

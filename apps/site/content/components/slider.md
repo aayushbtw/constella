@@ -126,12 +126,16 @@ const styles = stylex.create({
     translate: "-50% 0",
   }),
   tick: {
-    backgroundColor: colors.edge,
+    backgroundColor: colors.border,
     height: space.xxs,
     width: strokes.border,
   },
   tickMajor: { backgroundColor: colors.textMuted },
-  label: { color: colors.textMuted, fontSize: fontSizes.xs },
+  label: {
+    color: colors.textMuted,
+    fontSize: fontSizes.textSm,
+    lineHeight: lineHeights.textSm,
+  },
 });
 
 <Slider defaultValue={3} max={12}>
@@ -166,7 +170,8 @@ const styles = stylex.create({
   references: {
     color: colors.textMuted,
     display: "grid",
-    fontSize: fontSizes.xs,
+    fontSize: fontSizes.textSm,
+    lineHeight: lineHeights.textSm,
     gridColumn: "1 / -1",
     gridTemplateColumns: "1fr auto 1fr",
   },
