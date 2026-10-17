@@ -264,7 +264,7 @@ function CodeBlock({
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.block],
-        size === "sm" && [typeStyles.caption, styles.sm],
+        size === "sm" && [typeStyles.captionLg, styles.sm],
         variantStyles[variant],
         sx
       )}

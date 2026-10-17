@@ -11,18 +11,18 @@ const styles = stylex.create({
     backgroundColor: colors.raised,
     height: 120,
   },
-  control: {
-    boxShadow: shadows.control,
+  default: {
+    boxShadow: shadows.default,
   },
-  popover: {
-    boxShadow: shadows.popover,
+  lg: {
+    boxShadow: shadows.lg,
   },
-  dialog: {
-    boxShadow: shadows.dialog,
+  xl: {
+    boxShadow: shadows.xl,
   },
 });
 
-const tiles = ["control", "popover", "dialog"] as const;
+const tiles = ["default", "lg", "xl"] as const;
 
 function ShadowsDemo() {
   return (

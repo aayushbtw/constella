@@ -42,7 +42,7 @@ Translucent, so they read the same on any surface; `fillOpaque` hides what's und
 
 ## Typography
 
-Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Each size is a step with its own line height of the same name (`fontSizes.textSm`, `lineHeights.textSm`), set together; [Typography](/docs/components/typography) sets them for you.
+Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Each size is a step with its own line height of the same name (`fontSizes.textSm`, `lineHeights.textSm`), set together; [Text](/docs/components/text), [Heading](/docs/components/heading) and [Caption](/docs/components/caption) set them for you.
 
 ### Font Families
 

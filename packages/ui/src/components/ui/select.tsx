@@ -92,17 +92,17 @@ const styles = stylex.create({
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
     boxShadow: {
-      default: shadows.control,
+      default: shadows.default,
       // Repeated inside the media block, which StyleX ranks above the bare conditions.
       [media.hover]: {
-        default: shadows.control,
+        default: shadows.default,
         [`:hover:not(:disabled, :active):not(${invalid})`]:
-          shadows.controlHover,
-        [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
-        [invalid]: shadows.invalid,
+          shadows.defaultHover,
+        [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
+        [invalid]: shadows.defaultInvalid,
       },
-      [`:active:not(:disabled):not(${invalid})`]: shadows.controlPressed,
-      [invalid]: shadows.invalid,
+      [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
+      [invalid]: shadows.defaultInvalid,
     },
     color: colors.textPrimary,
     cursor: { default: "pointer", [disabled]: "not-allowed" },
@@ -154,7 +154,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     color: colors.textPrimary,
     maxHeight,
     maxWidth: "var(--available-width)",
@@ -419,7 +419,7 @@ function SelectLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-label"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.label], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
     />
   );
 }

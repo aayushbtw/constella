@@ -43,7 +43,7 @@ const styles = stylex.create({
   // Slides the whole way in from its edge and back out the same way.
   popup: {
     backgroundColor: colors.raised,
-    boxShadow: shadows.dialog,
+    boxShadow: shadows.xl,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",

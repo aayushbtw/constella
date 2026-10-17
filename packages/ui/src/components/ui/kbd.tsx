@@ -91,7 +91,7 @@ function Kbd({ sx, ...props }: Styled<ComponentProps<"kbd">>) {
     <kbd
       data-slot="kbd"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.kbd], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.kbd], sx)}
     />
   );
 }

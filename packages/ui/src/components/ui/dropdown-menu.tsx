@@ -84,7 +84,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     color: colors.textPrimary,
     // A filtered popup keeps its field in place and scrolls the list instead.
     display: { default: null, [filtering]: "flex" },
@@ -379,7 +379,7 @@ function DropdownMenuLabel({
       data-inset={isInset}
       data-slot="dropdown-menu-label"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.label], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
     />
   );
 }
@@ -545,7 +545,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.shortcut], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
     />
   );
 }

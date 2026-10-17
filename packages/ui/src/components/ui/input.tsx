@@ -56,7 +56,7 @@ const styles = stylex.create({
     borderInlineStartWidth: strokes.border,
     borderBlockStyle: "solid",
     borderInlineStyle: "solid",
-    boxShadow: { default: shadows.control, [invalid]: shadows.invalid },
+    boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
     caretColor: colors.accentSolid,
     color: colors.textPrimary,
     cursor: { default: null, [disabled]: "not-allowed" },

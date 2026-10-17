@@ -139,7 +139,7 @@ const styles = stylex.create({
       borderStartEndRadius: radii.md,
       borderEndStartRadius: radii.md,
       borderEndEndRadius: radii.md,
-      boxShadow: shadows.popover,
+      boxShadow: shadows.lg,
       content: "''",
       insetBlockEnd: 0,
       insetBlockStart: 0,

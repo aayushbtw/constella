@@ -134,7 +134,7 @@ function Swatches({ swatches }: { swatches: Swatch[] }) {
             sx={[
               on !== undefined && styles.paint(on),
               kind === "border" && styles.border(color),
-              kind === "text" && [typeStyles.heading3, styles.text(color)],
+              kind === "text" && [typeStyles.heading5, styles.text(color)],
               kind === "fill" && !chip && styles.paint(color),
             ]}
             token={token}

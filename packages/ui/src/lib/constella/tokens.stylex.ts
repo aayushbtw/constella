@@ -97,27 +97,28 @@ export const codeBlockVars = stylex.defineVars({
   padInline: "0px",
 });
 
+// Steps by height, after Interfere's: `default` under a control, `lg` under a popup, `xl`
+// under a dialog. A step's slots follow it: `Hover`, `Pressed`, `Invalid`, `Ring` (draws its
+// own edge, `Subtle` in `borderSubtle`), `solid` for a solid fill's bevel.
 export const shadows = stylex.defineConsts({
-  // The ladder under a bordered control: the border is its edge, these its height. It
-  // rises a step on hover and settles flat while pressed.
-  control: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
-  controlHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
-  controlPressed: "0 1px 1px -1px var(--black-a2)",
-  // A near shadow for contact and a far one for height, so a surface sits at a distance.
-  dialog:
-    "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
-  invalid: "0 0 0 2px var(--red-a4)",
-  composer:
+  // The border is the control's edge, these its height. It rises a step on hover and
+  // settles flat while pressed.
+  default: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
+  defaultHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
+  defaultPressed: "0 1px 1px -1px var(--black-a2)",
+  defaultInvalid: "0 0 0 2px var(--red-a4)",
+  defaultRing: "0 0 0 1px var(--border), 0 1px 3px var(--black-a5)",
+  defaultRingSubtle:
     "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
-  composerInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
-  popover:
-    "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+  defaultRingInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
   // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
-  primary:
+  solid:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
-  primaryPressed:
+  solidPressed:
     "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 1px -1px var(--black-a3)",
-  thumb: "0 0 0 1px var(--border), 0 1px 3px var(--black-a5)",
+  // A near shadow for contact and a far one for height, so a surface sits at a distance.
+  lg: "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
+  xl: "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
 });
 
 // The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.
@@ -126,40 +127,54 @@ export const fonts = stylex.defineConsts({
   sans: "var(--font-sans)",
 });
 
+// The bases the type scale multiplies, 4px at a 16px root. In rem, so text follows the
+// reader's browser font size; apart, so leading can change without the sizes.
+const typeUnit = "0.25rem";
+const leadingUnit = "0.25rem";
+
 // The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
-// `textBase`. Each size has a line height of the same name; set them together.
+// `textBase`. Each size has a line height of the same name; set them together. 15, 13 and
+// 11 add 1px to a step, as Interfere's do.
 export const fontSizes = stylex.defineConsts({
-  heading1: "36px",
-  heading2: "28px",
-  heading3: "24px",
-  heading4: "20px",
-  heading5: "18px",
-  heading6: "16px",
-  textLg: "16px",
+  heading1: `calc(${typeUnit} * 14)`,
+  heading2: `calc(${typeUnit} * 11)`,
+  heading3: `calc(${typeUnit} * 9)`,
+  heading4: `calc(${typeUnit} * 7)`,
+  heading5: `calc(${typeUnit} * 6)`,
+  heading6: `calc(${typeUnit} * 5)`,
+  textLg: `calc(${typeUnit} * 4.5)`,
   // Reading copy.
-  textBase: "15px",
+  textBase: `calc(${typeUnit} * 3.5 + 1px)`,
   // Controls and the text inside components.
-  textSm: "13px",
+  textSm: `calc(${typeUnit} * 3 + 1px)`,
   // Badges, shortcuts, group labels.
-  caption: "12px",
+  captionLg: `calc(${typeUnit} * 3)`,
+  captionBase: `calc(${typeUnit} * 2.5 + 1px)`,
+  captionSm: `calc(${typeUnit} * 2.5)`,
+  captionXs: `calc(${typeUnit} * 2)`,
 });
 
 export const lineHeights = stylex.defineConsts({
-  heading1: "44px",
-  heading2: "36px",
-  heading3: "32px",
-  heading4: "28px",
-  heading5: "26px",
-  heading6: "24px",
-  textLg: "24px",
-  textBase: "24px",
-  textSm: "20px",
-  caption: "16px",
+  heading1: `calc(${leadingUnit} * 14)`,
+  heading2: `calc(${leadingUnit} * 14)`,
+  heading3: `calc(${leadingUnit} * 11)`,
+  heading4: `calc(${leadingUnit} * 9)`,
+  heading5: `calc(${leadingUnit} * 8)`,
+  heading6: `calc(${leadingUnit} * 6)`,
+  textLg: `calc(${leadingUnit} * 6)`,
+  textBase: `calc(${leadingUnit} * 6)`,
+  textSm: `calc(${leadingUnit} * 5)`,
+  captionLg: `calc(${leadingUnit} * 4)`,
+  captionBase: `calc(${leadingUnit} * 4)`,
+  captionSm: `calc(${leadingUnit} * 4)`,
+  captionXs: `calc(${leadingUnit} * 3)`,
 });
 
 // Large type tightens a little, so a heading doesn't read as spaced out.
 export const letterSpacings = stylex.defineConsts({
   heading: "-0.01em",
+  // Uppercase reads cramped at its own spacing.
+  caps: "0.05em",
 });
 
 export const fontWeights = stylex.defineConsts({

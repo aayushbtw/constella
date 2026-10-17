@@ -252,7 +252,7 @@ function CommandGroupLabel({
     <AutocompletePrimitive.GroupLabel
       data-slot="command-group-label"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.groupLabel], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.groupLabel], sx)}
     />
   );
 }
@@ -292,7 +292,7 @@ function CommandShortcut({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       data-slot="command-shortcut"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.shortcut], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
     />
   );
 }

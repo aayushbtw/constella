@@ -243,9 +243,9 @@ const statusStyles = {
 >;
 
 const sizeStyles = {
-  default: [typeStyles.caption, styles.default],
+  default: [typeStyles.captionLg, styles.default],
   lg: [typeStyles.textSm, styles.lg],
-  sm: [typeStyles.caption, styles.sm],
+  sm: [typeStyles.captionLg, styles.sm],
 } satisfies Record<BadgeSize, stylex.StyleXStyles>;
 
 const variantStyles = {

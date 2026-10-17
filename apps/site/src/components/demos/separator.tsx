@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
 import { Separator } from "@/components/ui/separator";
-import { Text } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";

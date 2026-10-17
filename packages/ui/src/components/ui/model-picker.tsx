@@ -62,7 +62,7 @@ const styles = stylex.create({
     transitionDuration: "0s",
   },
   command: {
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     maxWidth: "100%",
     width: sizes.modelPicker,
   },

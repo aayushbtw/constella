@@ -90,12 +90,12 @@ const styles = stylex.create({
   },
   title: {
     fontSize: {
-      default: fontSizes.textLg,
+      default: fontSizes.textBase,
       ":is([data-slot='card'][data-size='sm'] *)": fontSizes.textSm,
     },
     fontWeight: fontWeights.medium,
     lineHeight: {
-      default: lineHeights.textLg,
+      default: lineHeights.textBase,
       ":is([data-slot='card'][data-size='sm'] *)": lineHeights.textSm,
     },
     marginBlock: 0,

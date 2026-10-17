@@ -108,7 +108,7 @@ function TooltipPopup({ sx, ...props }: Styled<TooltipPrimitive.Popup.Props>) {
     <TooltipPrimitive.Popup
       data-slot="tooltip-popup"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.popup], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.popup], sx)}
     />
   );
 }

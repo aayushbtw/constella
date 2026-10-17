@@ -27,7 +27,7 @@ import {
   itemVariants,
 } from "@/components/ui/item";
 import type { ItemSize, ItemVariant } from "@/components/ui/item";
-import { Text } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

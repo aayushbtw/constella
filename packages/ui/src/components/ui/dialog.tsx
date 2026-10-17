@@ -73,7 +73,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    boxShadow: shadows.dialog,
+    boxShadow: shadows.xl,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
@@ -257,7 +257,7 @@ function DialogTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       {...props}
-      {...stylex.props([typeStyles.textLg, styles.title], sx)}
+      {...stylex.props([typeStyles.textBase, styles.title], sx)}
     />
   );
 }

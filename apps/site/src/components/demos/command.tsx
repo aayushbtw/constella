@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/command";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { SwapText } from "@/components/ui/swap-text";
-import { Text } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

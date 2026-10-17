@@ -87,7 +87,7 @@ function CitationCard({ sx }: { sx?: stylex.StyleXStyles }) {
                 <Logo size="sm" source={payload} />
                 {payload.name}
               </div>
-              <div {...stylex.props([typeStyles.textLg, styles.title])}>
+              <div {...stylex.props([typeStyles.textBase, styles.title])}>
                 {payload.title}
               </div>
               {payload.date === undefined ? null : (

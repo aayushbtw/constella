@@ -354,12 +354,15 @@ import {
   TabsVerticalDemo,
 } from "~/components/demos/tabs";
 import {
+  CaptionCaseDemo,
   CaptionDemo,
+  CaptionSizeDemo,
+  HeadingDemo,
   HeadingSizeDemo,
   TextColorDemo,
+  TextDemo,
   TextSizeDemo,
   TextWeightDemo,
-  TypographyDemo,
 } from "~/components/demos/text";
 import {
   TextareaButtonDemo,
@@ -459,6 +462,8 @@ const demos = {
   "button-disabled": ButtonDisabledDemo,
   "button-variants": ButtonVariantsDemo,
   caption: CaptionDemo,
+  "caption-case": CaptionCaseDemo,
+  "caption-size": CaptionSizeDemo,
   card: CardDemo,
   "card-action": CardActionDemo,
   "card-stats": CardStatsDemo,
@@ -550,6 +555,7 @@ const demos = {
   "font-families": FontFamiliesDemo,
   "font-sizes": FontSizesDemo,
   "font-weights": FontWeightsDemo,
+  heading: HeadingDemo,
   "heading-size": HeadingSizeDemo,
   input: InputDemo,
   "input-badge": InputBadgeDemo,
@@ -680,6 +686,7 @@ const demos = {
   "slider-vertical": SliderVerticalDemo,
   spinner: SpinnerDemo,
   suggestions: SuggestionsDemo,
+  text: TextDemo,
   "text-color": TextColorDemo,
   "text-size": TextSizeDemo,
   "text-weight": TextWeightDemo,
@@ -738,7 +745,6 @@ const demos = {
   "tooltip-disabled": TooltipDisabledDemo,
   "tooltip-kbd": TooltipKbdDemo,
   "tooltip-side": TooltipSideDemo,
-  typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
 
 // Shown straight on the page, like the swatches in a style guide, not in a preview frame.

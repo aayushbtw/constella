@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { ButtonSize } from "@/components/ui/button";
-import { Caption } from "@/components/ui/typography";
+import { Caption } from "@/components/ui/caption";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -115,9 +115,9 @@ const readHeight = (element: HTMLElement) => `${element.offsetHeight}px`;
 
 function Label({ name, value }: { name: string; value: string }) {
   return (
-    <span {...stylex.props([typeStyles.caption, styles.label])}>
+    <span {...stylex.props([typeStyles.captionLg, styles.label])}>
       <span {...stylex.props(styles.labelName)}>{name}</span>
-      <Caption render={<span />} sx={styles.value}>
+      <Caption render={<span />} size="lg" sx={styles.value}>
         {value}
       </Caption>
     </span>

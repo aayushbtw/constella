@@ -177,7 +177,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: shadows.control,
+    boxShadow: shadows.default,
     color: colors.accentOnSolid,
     display: "flex",
     flexShrink: 0,
@@ -311,7 +311,7 @@ function QuestionnaireTitle({
     <QuestionnairePrimitive.Title
       data-slot="questionnaire-title"
       {...props}
-      {...stylex.props([typeStyles.textLg, styles.title], sx)}
+      {...stylex.props([typeStyles.textBase, styles.title], sx)}
     />
   );
 }

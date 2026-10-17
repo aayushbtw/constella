@@ -8,7 +8,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Text } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import {
   colors,
   fontWeights,

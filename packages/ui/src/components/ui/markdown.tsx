@@ -174,22 +174,22 @@ const components = {
   ),
   code: Code,
   h1: ({ children, ...props }: Props<"h1">) => (
-    <h3 {...props} {...stylex.props(styles.heading, typeStyles.heading4)}>
+    <h3 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
       {children}
     </h3>
   ),
   h2: ({ children, ...props }: Props<"h2">) => (
-    <h4 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
+    <h4 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h4>
   ),
   h3: ({ children, ...props }: Props<"h3">) => (
-    <h5 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
+    <h5 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h5>
   ),
   h4: ({ children, ...props }: Props<"h4">) => (
-    <h6 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
+    <h6 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
     </h6>
   ),

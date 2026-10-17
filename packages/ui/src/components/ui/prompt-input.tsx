@@ -64,8 +64,8 @@ const styles = stylex.create({
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
     boxShadow: {
-      default: shadows.composer,
-      [invalid]: shadows.composerInvalid,
+      default: shadows.defaultRingSubtle,
+      [invalid]: shadows.defaultRingInvalid,
     },
     height: "auto",
   },

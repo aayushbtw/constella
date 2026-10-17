@@ -184,13 +184,13 @@ const styles = stylex.create({
     display: "flex",
     fontSize: {
       default: fontSizes.textSm,
-      ":is([data-size='sm'] *)": fontSizes.caption,
-      ":is([data-slot='badge'] > :first-child > *)": fontSizes.caption,
+      ":is([data-size='sm'] *)": fontSizes.captionLg,
+      ":is([data-slot='badge'] > :first-child > *)": fontSizes.captionLg,
     },
     lineHeight: {
       default: lineHeights.textSm,
-      ":is([data-size='sm'] *)": lineHeights.caption,
-      ":is([data-slot='badge'] > :first-child > *)": lineHeights.caption,
+      ":is([data-size='sm'] *)": lineHeights.captionLg,
+      ":is([data-slot='badge'] > :first-child > *)": lineHeights.captionLg,
     },
     fontWeight: fontWeights.medium,
     height: "100%",
@@ -235,7 +235,10 @@ const styles = stylex.create({
     color: colors.textSecondary,
     display: "flex",
     flexShrink: 0,
-    fontSize: { default: fontSizes.textSm, [groupOf("sm")]: fontSizes.caption },
+    fontSize: {
+      default: fontSizes.textSm,
+      [groupOf("sm")]: fontSizes.captionLg,
+    },
     fontWeight: fontWeights.medium,
     height: {
       default: sizes.controlMd,

@@ -170,7 +170,7 @@ const orientationStyles = {
 
 const legendStyles = {
   label: typeStyles.textSm,
-  legend: typeStyles.textLg,
+  legend: typeStyles.textBase,
 } satisfies Record<LegendVariant, stylex.StyleXStyles>;
 
 function FieldSet({ sx, ...props }: Styled<FieldsetPrimitive.Root.Props>) {

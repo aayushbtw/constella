@@ -187,7 +187,7 @@ function MotionEasingDemo() {
     <Stage
       controls={
         <>
-          <p {...stylex.props([typeStyles.caption, styles.readout])}>
+          <p {...stylex.props([typeStyles.captionLg, styles.readout])}>
             <span {...stylex.props(styles.readoutValue)}>{easing}</span>
             <span>
               {durations.move} × {slow} = {moveMs * slow}ms

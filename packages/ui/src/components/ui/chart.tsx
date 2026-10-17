@@ -148,7 +148,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    boxShadow: shadows.popover,
+    boxShadow: shadows.lg,
     color: colors.textPrimary,
     columnGap: space.xs,
     display: "grid",
@@ -525,7 +525,7 @@ function Chart<
   return (
     <div
       data-slot="chart"
-      {...stylex.props([typeStyles.caption, styles.root], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.root], sx)}
     >
       <ChartPrimitive
         onRender={fadeLabels}

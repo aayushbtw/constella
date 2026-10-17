@@ -67,14 +67,14 @@ const interactive = <T,>(rest: T, active: T) => ({
 // Every surface that can be pressed climbs the ladder. The press repeats inside the media
 // block, which StyleX ranks above a bare `:active`.
 const lift = {
-  default: shadows.control,
-  ":is([data-popup-open])": shadows.controlHover,
+  default: shadows.default,
+  ":is([data-popup-open])": shadows.defaultHover,
   [media.hover]: {
-    default: shadows.control,
-    ":hover:not(:disabled, :active)": shadows.controlHover,
-    ":active:not(:disabled)": shadows.controlPressed,
+    default: shadows.default,
+    ":hover:not(:disabled, :active)": shadows.defaultHover,
+    ":active:not(:disabled)": shadows.defaultPressed,
   },
-  ":active:not(:disabled)": shadows.controlPressed,
+  ":active:not(:disabled)": shadows.defaultPressed,
 };
 
 const kbdInset = (height: string) =>
@@ -172,8 +172,8 @@ const styles = stylex.create({
   primary: {
     backgroundColor: colors.accentSolid,
     boxShadow: {
-      default: shadows.primary,
-      ":active:not(:disabled)": shadows.primaryPressed,
+      default: shadows.solid,
+      ":active:not(:disabled)": shadows.solidPressed,
     },
     color: colors.accentOnSolid,
     opacity: {
@@ -232,7 +232,7 @@ const sizeStyles = {
   "icon-xs": styles.iconXs,
   lg: styles.lg,
   sm: [typeStyles.textSm, styles.sm],
-  xs: [typeStyles.caption, styles.xs],
+  xs: [typeStyles.captionLg, styles.xs],
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
 
 const cornerStyles = {

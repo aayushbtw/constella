@@ -78,8 +78,8 @@ import {
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
+import { Text } from "@/components/ui/text";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Text } from "@/components/ui/typography";
 import {
   colors,
   radii,

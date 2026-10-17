@@ -1,12 +1,13 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { Caption, Heading, Text } from "@/components/ui/typography";
-import type {
-  HeadingSize,
-  TextSize,
-  TypeWeight,
-} from "@/components/ui/typography";
+import { Caption } from "@/components/ui/caption";
+import type { CaptionSize } from "@/components/ui/caption";
+import { Heading } from "@/components/ui/heading";
+import type { HeadingSize } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
+import type { TextSize } from "@/components/ui/text";
+import type { TextWeight } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -21,7 +22,8 @@ const sample = "The quick brown fox jumps over the lazy dog";
 
 const headingSizes: HeadingSize[] = [1, 2, 3, 4, 5, 6];
 const textSizes: TextSize[] = ["lg", "base", "sm"];
-const weights: TypeWeight[] = ["regular", "semimedium", "medium", "semibold"];
+const captionSizes: CaptionSize[] = ["lg", "base", "sm", "xs"];
+const weights: TextWeight[] = ["regular", "semimedium", "medium", "semibold"];
 
 interface Row {
   label: string;
@@ -103,14 +105,14 @@ const sizes: Row[] = [
       </Text>
     ),
   })),
-  {
-    label: "<Caption>",
+  ...captionSizes.map((size) => ({
+    label: `<Caption size="${size}">`,
     sample: (
-      <Caption color="primary" sx={styles.sample}>
+      <Caption color="primary" size={size} sx={styles.sample}>
         {sample}
       </Caption>
     ),
-  },
+  })),
 ];
 
 const weightRows: Row[] = weights.map((weight) => ({
@@ -128,7 +130,7 @@ function Specimen({ rows }: { rows: Row[] }) {
       {rows.map(({ label, sample: content }) => (
         <div key={label} {...stylex.props(styles.row)}>
           {content}
-          <Caption render={<span />} sx={styles.label}>
+          <Caption render={<span />} size="lg" sx={styles.label}>
             {label}
           </Caption>
         </div>

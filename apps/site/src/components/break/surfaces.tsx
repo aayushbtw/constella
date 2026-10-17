@@ -211,7 +211,7 @@ function CardBreak({ data }: { data: Dataset }) {
               </CardAction>
             </CardHeader>
             <CardContent>
-              <div {...stylex.props([typeStyles.heading3, styles.stat])}>
+              <div {...stylex.props([typeStyles.heading5, styles.stat])}>
                 {stat.value}
               </div>
               <div {...stylex.props([typeStyles.textSm, styles.trend])}>

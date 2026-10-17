@@ -1449,7 +1449,7 @@ function SidebarMenuBadge({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="sidebar-menu-badge"
       {...props}
-      {...stylex.props([typeStyles.caption, styles.badge], sx)}
+      {...stylex.props([typeStyles.captionLg, styles.badge], sx)}
     />
   );
 }

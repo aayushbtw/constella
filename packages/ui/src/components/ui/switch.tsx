@@ -86,7 +86,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
-    boxShadow: { default: null, [invalid]: shadows.invalid },
+    boxShadow: { default: null, [invalid]: shadows.defaultInvalid },
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,
@@ -114,7 +114,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    boxShadow: shadows.control,
+    boxShadow: shadows.default,
     display: "block",
     pointerEvents: "none",
     // The thumb lands with a little give; the stretch answers the press at once.

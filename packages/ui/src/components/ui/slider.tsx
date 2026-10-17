@@ -99,7 +99,7 @@ const styles = stylex.create({
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    boxShadow: shadows.thumb,
+    boxShadow: shadows.defaultRing,
     height: sizes.thumb,
     // Base UI positions the thumb with `translate`, so `transform` is free for the press.
     transform: { default: null, ":is([data-dragging])": presses.icon },

@@ -1,7 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
 import {
+  colors,
   fontSizes,
+  fontWeights,
   joins,
   letterSpacings,
   lineHeights,
@@ -101,11 +103,52 @@ const typeStyles = stylex.create({
     letterSpacing: letterSpacings.heading,
     lineHeight: lineHeights.heading5,
   },
-  heading6: { fontSize: fontSizes.heading6, lineHeight: lineHeights.heading6 },
+  heading6: {
+    fontSize: fontSizes.heading6,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading6,
+  },
   textLg: { fontSize: fontSizes.textLg, lineHeight: lineHeights.textLg },
   textBase: { fontSize: fontSizes.textBase, lineHeight: lineHeights.textBase },
   textSm: { fontSize: fontSizes.textSm, lineHeight: lineHeights.textSm },
-  caption: { fontSize: fontSizes.caption, lineHeight: lineHeights.caption },
+  captionLg: {
+    fontSize: fontSizes.captionLg,
+    lineHeight: lineHeights.captionLg,
+  },
+  captionBase: {
+    fontSize: fontSizes.captionBase,
+    lineHeight: lineHeights.captionBase,
+  },
+  captionSm: {
+    fontSize: fontSizes.captionSm,
+    lineHeight: lineHeights.captionSm,
+  },
+  captionXs: {
+    fontSize: fontSizes.captionXs,
+    lineHeight: lineHeights.captionXs,
+  },
 });
 
-export { joinStyles, typeStyles, visuallyHidden };
+// The weights and colors Text, Heading and Caption take as props.
+const textWeights = stylex.create({
+  regular: { fontWeight: fontWeights.regular },
+  semimedium: { fontWeight: fontWeights.semimedium },
+  medium: { fontWeight: fontWeights.medium },
+  semibold: { fontWeight: fontWeights.semibold },
+});
+
+const textColors = stylex.create({
+  primary: { color: colors.textPrimary },
+  secondary: { color: colors.textSecondary },
+  muted: { color: colors.textMuted },
+  danger: { color: colors.dangerText },
+  success: { color: colors.successText },
+  warning: { color: colors.warningText },
+  info: { color: colors.infoText },
+});
+
+type TextColor = keyof typeof textColors;
+type TextWeight = keyof typeof textWeights;
+
+export { joinStyles, textColors, textWeights, typeStyles, visuallyHidden };
+export type { TextColor, TextWeight };

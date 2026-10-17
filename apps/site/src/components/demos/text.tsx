@@ -1,17 +1,19 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Caption, Heading, Text } from "@/components/ui/typography";
-import type {
-  HeadingSize,
-  TextSize,
-  TypeColor,
-} from "@/components/ui/typography";
+import { Caption } from "@/components/ui/caption";
+import type { CaptionSize } from "@/components/ui/caption";
+import { Heading } from "@/components/ui/heading";
+import type { HeadingSize } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
+import type { TextSize } from "@/components/ui/text";
+import type { TextColor } from "@/lib/constella/styles";
 import { space } from "@/lib/constella/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
 
 const headingSizes: HeadingSize[] = [1, 2, 3, 4, 5, 6];
 const textSizes: TextSize[] = ["lg", "base", "sm"];
-const textColors: TypeColor[] = [
+const captionSizes: CaptionSize[] = ["lg", "base", "sm", "xs"];
+const textColors: TextColor[] = [
   "primary",
   "secondary",
   "muted",
@@ -34,7 +36,7 @@ const styles = stylex.create({
   },
 });
 
-function TypographyDemo() {
+function HeadingDemo() {
   return (
     <Stage>
       <div {...stylex.props(styles.stack, styles.tight)}>
@@ -44,6 +46,19 @@ function TypographyDemo() {
         </Heading>
         <Text color="secondary">
           Unlimited projects, priority support and a 30-day history.
+        </Text>
+      </div>
+    </Stage>
+  );
+}
+
+function TextDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack, styles.tight)}>
+        <Text weight="medium">Weekly digest</Text>
+        <Text color="secondary">
+          A summary of what changed in your projects, sent every Monday.
         </Text>
       </div>
     </Stage>
@@ -116,11 +131,39 @@ function CaptionDemo() {
   );
 }
 
+function CaptionSizeDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack)}>
+        {captionSizes.map((size) => (
+          <Caption key={size} size={size}>
+            Paid on March 3 by Alex Smith
+          </Caption>
+        ))}
+      </div>
+    </Stage>
+  );
+}
+
+function CaptionCaseDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack)}>
+        <Caption>Billing</Caption>
+        <Caption uppercase>Billing</Caption>
+      </div>
+    </Stage>
+  );
+}
+
 export {
+  CaptionCaseDemo,
   CaptionDemo,
+  CaptionSizeDemo,
+  HeadingDemo,
   HeadingSizeDemo,
   TextColorDemo,
+  TextDemo,
   TextSizeDemo,
   TextWeightDemo,
-  TypographyDemo,
 };

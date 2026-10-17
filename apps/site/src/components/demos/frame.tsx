@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
-import { Caption } from "@/components/ui/typography";
+import { Caption } from "@/components/ui/caption";
 import {
   colors,
   fonts,
@@ -162,7 +162,7 @@ function Tile({
   return (
     <div {...stylex.props(styles.tile)}>
       <div {...stylex.props(styles.sample, sx)}>{children}</div>
-      <Caption color="secondary" sx={styles.token}>
+      <Caption color="secondary" size="lg" sx={styles.token}>
         {token}
       </Caption>
     </div>
