@@ -818,8 +818,10 @@
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/input-group.json",
-        "https://constella.aayush.cv/r/swap-icon.json"
+        "https://constella.aayush.cv/r/swap-icon.json",
+        "https://constella.aayush.cv/r/textarea.json"
       ],
       "files": [
         {
@@ -1086,7 +1088,6 @@
       "title": "Trace",
       "description": "The steps an agent takes, one line each, that open, link or show a status.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex"
