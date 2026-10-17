@@ -34,6 +34,9 @@ const disabled = ":is(:disabled, [data-disabled])";
 // shadcn's padding, off our 4px grid.
 const px6 = `calc(${space.xs} - ${space.xxxs})`;
 const px10 = `calc(${space.sm} - ${space.xxxs})`;
+// Under 16px, iOS Safari zooms the page on focus. A growing textarea can't scale its type
+// down the way Input does: its layout height would stay at 16px's.
+const touchType = "16px";
 
 const styles = stylex.create({
   textarea: {
@@ -61,9 +64,11 @@ const styles = stylex.create({
     cursor: { default: null, [disabled]: "not-allowed" },
     display: "block",
     fieldSizing: "content",
-    // Under 16px, iOS Safari zooms the page on focus.
-    fontSize: { default: fontSizes.textLg, [media.sm]: fontSizes.textSm },
-    lineHeight: { default: lineHeights.textLg, [media.sm]: lineHeights.textSm },
+    fontSize: { default: fontSizes.textSm, [media.coarse]: touchType },
+    lineHeight: {
+      default: lineHeights.textSm,
+      [media.coarse]: lineHeights.textLg,
+    },
     marginBlock: 0,
     marginInline: 0,
     minHeight: `calc(${sizes.controlMd} * 2)`,
@@ -79,6 +84,11 @@ const styles = stylex.create({
     "::placeholder": { color: colors.textMuted },
   },
   sm: {
+    fontSize: { default: fontSizes.captionLg, [media.coarse]: touchType },
+    lineHeight: {
+      default: lineHeights.captionLg,
+      [media.coarse]: lineHeights.textLg,
+    },
     minHeight: `calc(${sizes.controlSm} * 2)`,
     paddingBlock: px6,
   },

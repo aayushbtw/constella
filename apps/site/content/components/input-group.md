@@ -318,7 +318,7 @@ Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header 
 
 ## Custom Input
 
-Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` (or `inputGroupInputStyles()`) on it for the control's look. Here, a textarea from `react-textarea-autosize`:
+Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` on it for the control's look. Here, a textarea from `react-textarea-autosize`:
 
 <!-- ::demo name="input-group-custom" -->
 
@@ -401,10 +401,10 @@ Put a [Spinner](/docs/components/spinner) in an addon while something loads.
 
 ## API Reference
 
-`InputGroup` is a `<div role="group">` that takes `size`: `"sm"`, `"default"` or `"lg"`. It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
+`InputGroup` is a `<div role="group">` that takes `size`: `"sm"` (12px text), `"default"` or `"lg"` (13px). It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
 
 `InputGroupAddon` takes `align`: `"inline-start"` (default), `"inline-end"`, `"block-start"` or `"block-end"`. Use the inline ones with an input and the block ones with a textarea. In a block addon, buttons sit at the end, after any text; `separated` draws an edge between it and the control. Clicking an addon focuses the control, unless the click lands on a button.
 
 `InputGroupButton` takes `size`: `"xs"` (default), `"sm"`, `"icon-xs"` or `"icon-sm"`, and every other [Button](/docs/components/button) prop; `variant` defaults to `"ghost"`.
 
-`InputGroupInput` and `InputGroupTextarea` take every [Input](/docs/components/input) and [Textarea](/docs/components/textarea) prop. Every part takes `sx`, applied last.
+`InputGroupInput` renders Base UI's input in a slot. On a touch screen the input renders at 16px and scales down into the slot to the group's text size, so iOS doesn't zoom on focus. It takes every [Base UI Input](https://base-ui.com/react/components/input) prop, and its `sx` goes to the `<input>`; set text size on `InputGroup` instead, since a size there keeps the scaling. `InputGroupTextarea` takes every [Textarea](/docs/components/textarea) prop. Every part takes `sx`, applied last.

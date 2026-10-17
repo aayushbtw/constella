@@ -92,6 +92,11 @@ export const cardVars = stylex.defineVars({
   spacing: "0px",
 });
 
+// A text field's type size over 16px, below which iOS zooms on focus. InputGroup sets it on touch screens.
+export const inputVars = stylex.defineVars({
+  scale: "1",
+});
+
 export const codeBlockVars = stylex.defineVars({
   padBlock: "0px",
   padInline: "0px",
@@ -289,6 +294,7 @@ export const opacities = stylex.defineConsts({
 });
 
 export const media = stylex.defineConsts({
+  coarse: "@media (pointer: coarse)",
   hover: "@media (hover: hover)",
   reducedMotion: "@media (prefers-reduced-motion: reduce)",
   sm: "@media (min-width: 640px)",

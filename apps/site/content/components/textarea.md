@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 ## Size
 
-Use the `size` prop to match the controls beside it. The text stays 16px on small screens, so iOS doesn't zoom on focus.
+Use the `size` prop to match the controls beside it. The text is 12px at `sm` and 13px otherwise, and 16px on a touch screen, so iOS doesn't zoom on focus.
 
 <!-- ::demo name="textarea-size" -->
 
@@ -99,4 +99,4 @@ Use `Field`, `FieldLabel` and `FieldDescription` to give the textarea a label an
 
 ## API Reference
 
-`Textarea` renders Base UI's `Field.Control` as a `<textarea>`, so inside a `Field` it takes the field's name, state and validation. It starts two rows tall and grows with its content; set `rows` for a taller start. It takes `sx`, applied last.
+`Textarea` renders Base UI's `Field.Control` as a `<textarea>`, so inside a `Field` it takes the field's name, state and validation. It starts two rows tall and grows with its content; set `rows` for a taller start. It takes `size` and `sx`, applied last.

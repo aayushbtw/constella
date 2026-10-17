@@ -151,7 +151,7 @@
   :where(
     :focus-visible,
     [data-slot="input-group"]:has(
-      > [data-slot="input-group-control"]:focus-visible
+      [data-slot="input-group-control"]:focus-visible
     ),
     [data-slot="questionnaire-choice"]:has(
       > [data-slot="questionnaire-choice-input"]:focus-visible
@@ -165,14 +165,14 @@
     [aria-invalid="true"],
     [data-invalid],
     [data-slot="input-group"]:has(
-      > [data-slot="input-group-control"]:is(
+      [data-slot="input-group-control"]:is(
         [aria-invalid="true"],
         [data-invalid]
       )
     )
   ):where(
     :focus-visible,
-    :has(> [data-slot="input-group-control"]:focus-visible),
+    :has([data-slot="input-group-control"]:focus-visible),
     :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
   ) {
     outline-color: var(--red-11);

@@ -201,7 +201,7 @@ function InputGroupBlockStartDemo() {
           <InputGroup>
             <InputGroupTextarea
               placeholder="console.log('Hello, world!');"
-              sx={[typeStyles.textSm, styles.code]}
+              sx={styles.code}
             />
             <InputGroupAddon align="block-start">
               <Glyph icon={FileScriptIcon} />
@@ -576,7 +576,7 @@ function InputGroupTextareaDemo() {
         <InputGroupTextarea
           aria-label="Code"
           placeholder="console.log('Hello, world!');"
-          sx={[[typeStyles.textSm, styles.code], styles.editor]}
+          sx={[styles.code, styles.editor]}
         />
         <InputGroupAddon align="block-end" separated>
           <InputGroupText>Line 1, Column 1</InputGroupText>
