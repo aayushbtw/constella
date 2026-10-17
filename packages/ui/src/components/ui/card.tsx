@@ -1,3 +1,5 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
@@ -94,6 +96,7 @@ const styles = stylex.create({
     },
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.text,
+    marginBlock: 0,
     overflowWrap: "anywhere",
     textWrap: "balance",
   },
@@ -173,14 +176,17 @@ function CardHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function CardTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="card-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
-    />
-  );
+function CardTitle({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
+    render,
+    state: { slot: "card-title" },
+  });
 }
 
 function CardDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {

@@ -227,7 +227,7 @@
       "type": "registry:ui",
       "title": "Card",
       "description": "A bordered surface that groups related content, with a header, content and footer.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
