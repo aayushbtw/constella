@@ -14,12 +14,12 @@ import {
 import { useEffect } from "react";
 
 import { Toaster } from "@/components/ui/toast";
+import { typeStyles } from "@/lib/constella/styles";
 import { colors } from "@/lib/constella/tokens.stylex";
 import { Header } from "~/components/header";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";
 import { themeScript } from "~/lib/theme";
-import { fontSizes, lineHeights } from "~/lib/tokens.stylex";
 
 import appCss from "~/styles/styles.css?url";
 
@@ -82,8 +82,6 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     color: colors.textPrimary,
     fontFeatureSettings: '"cv01", "ss03"',
-    fontSize: fontSizes.base,
-    lineHeight: lineHeights.prose,
   },
 });
 
@@ -101,7 +99,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
         <DevStyleX />
       </head>
-      <body {...stylex.props(styles.body)}>
+      <body {...stylex.props([typeStyles.textBase, styles.body])}>
         <Toaster>
           <Header />
           {children}

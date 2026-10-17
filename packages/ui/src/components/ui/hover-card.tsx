@@ -3,11 +3,11 @@
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card";
 import * as stylex from "@stylexjs/stylex";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   layers,
   media,
   motion,
@@ -56,7 +56,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.md,
     boxShadow: shadows.popover,
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     // Base UI measures each trigger's content, so the card can grow to the next one's height.
     height: "var(--popup-height, auto)",
     maxWidth: "var(--available-width)",
@@ -135,7 +134,7 @@ function HoverCardContent({
         <PreviewCardPrimitive.Popup
           data-slot="hover-card-content"
           {...props}
-          {...stylex.props(styles.popup, sx)}
+          {...stylex.props([typeStyles.textSm, styles.popup], sx)}
         >
           <PreviewCardPrimitive.Viewport
             data-slot="hover-card-viewport"

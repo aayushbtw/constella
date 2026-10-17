@@ -2,13 +2,9 @@ import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
 import { Separator } from "@/components/ui/separator";
-import {
-  colors,
-  fontSizes,
-  fontWeights,
-  lineHeights,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/ui/typography";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -16,9 +12,7 @@ const styles = stylex.create({
     alignItems: "stretch",
     color: colors.textPrimary,
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: space.md,
-    lineHeight: lineHeights.text,
     maxWidth: 384,
     width: "100%",
   },
@@ -33,25 +27,14 @@ const styles = stylex.create({
   title: {
     fontWeight: fontWeights.medium,
   },
-  muted: {
-    color: colors.textSecondary,
-  },
-  small: {
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
-  },
   inline: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     gap: space.md,
     height: 20,
-    lineHeight: lineHeights.text,
   },
   menu: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
     gap: space.md,
-    lineHeight: lineHeights.text,
   },
   row: {
     display: "flex",
@@ -68,12 +51,12 @@ const styles = stylex.create({
 
 function SeparatorDemo() {
   return (
-    <DemoRow sx={styles.stack}>
+    <DemoRow sx={[typeStyles.textSm, styles.stack]}>
       <div {...stylex.props(styles.heading)}>
         <div {...stylex.props(styles.title)}>Constella</div>
-        <div {...stylex.props(styles.muted)}>
+        <Text color="secondary" size="sm">
           Components with the details done
-        </div>
+        </Text>
       </div>
       <Separator />
       <div>
@@ -86,7 +69,7 @@ function SeparatorDemo() {
 
 function SeparatorVerticalDemo() {
   return (
-    <DemoRow sx={styles.inline}>
+    <DemoRow sx={[typeStyles.textSm, styles.inline]}>
       <div>Blog</div>
       <Separator orientation="vertical" />
       <div>Docs</div>
@@ -104,15 +87,15 @@ const menuItems = [
 
 function SeparatorMenuDemo() {
   return (
-    <DemoRow sx={styles.menu}>
+    <DemoRow sx={[typeStyles.textSm, styles.menu]}>
       {menuItems.map((item, index) => (
         <Fragment key={item.title}>
           {index > 0 && <Separator orientation="vertical" />}
           <div {...stylex.props(styles.heading)}>
             <span {...stylex.props(styles.title)}>{item.title}</span>
-            <span {...stylex.props(styles.muted, styles.small)}>
+            <Text color="secondary" render={<span />} size="sm">
               {item.description}
-            </span>
+            </Text>
           </div>
         </Fragment>
       ))}
@@ -124,7 +107,7 @@ const listItems = ["Item 1", "Item 2", "Item 3"];
 
 function SeparatorListDemo() {
   return (
-    <DemoRow sx={[styles.stack, styles.list]}>
+    <DemoRow sx={[[typeStyles.textSm, styles.stack], styles.list]}>
       {listItems.map((item, index) => (
         <Fragment key={item}>
           {index > 0 && <Separator />}

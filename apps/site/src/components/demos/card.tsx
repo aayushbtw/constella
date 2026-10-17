@@ -27,9 +27,9 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   sizes,
   space,
@@ -61,7 +61,6 @@ const styles = stylex.create({
   },
   stat: {
     color: colors.textPrimary,
-    fontSize: fontSizes.xl,
     fontVariantNumeric: "tabular-nums",
     fontWeight: fontWeights.semibold,
   },
@@ -69,7 +68,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textSecondary,
     display: "flex",
-    fontSize: fontSizes.xs,
     gap: space.xxs,
   },
 });
@@ -236,8 +234,10 @@ function CardStatsDemo() {
               </CardAction>
             </CardHeader>
             <CardContent>
-              <div {...stylex.props(styles.stat)}>{stat.value}</div>
-              <div {...stylex.props(styles.trend)}>
+              <div {...stylex.props([typeStyles.heading3, styles.stat])}>
+                {stat.value}
+              </div>
+              <div {...stylex.props([typeStyles.textSm, styles.trend])}>
                 <Glyph icon={stat.up ? ArrowUp01Icon : ArrowDown01Icon} />
                 vs. last month
               </div>

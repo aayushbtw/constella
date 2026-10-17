@@ -17,11 +17,11 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useSkipMotion } from "@/lib/constella/motion";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
   media,
@@ -137,7 +137,6 @@ const styles = stylex.create({
   },
   empty: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
     paddingBlockEnd: { default: space.lg, ":empty": 0 },
     paddingBlockStart: { default: space.lg, ":empty": 0 },
     textAlign: "center",
@@ -162,7 +161,6 @@ const styles = stylex.create({
     color: { default: colors.textPrimary, [danger]: colors.dangerText },
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: px6,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
@@ -172,7 +170,9 @@ const styles = stylex.create({
     position: "relative",
     userSelect: "none",
   },
-  itemSm: { fontSize: fontSizes.xs, minHeight: sizes.controlXs },
+  itemSm: {
+    minHeight: sizes.controlXs,
+  },
   itemLg: { minHeight: sizes.controlMd },
   // Room on the end for the tick, as in a select.
   checkable: {
@@ -209,7 +209,6 @@ const styles = stylex.create({
   },
   label: {
     color: colors.textMuted,
-    fontSize: fontSizes.xxs,
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
@@ -226,7 +225,6 @@ const styles = stylex.create({
   shortcut: {
     color: colors.textMuted,
     flexShrink: 0,
-    fontSize: fontSizes.xxs,
     marginInlineStart: "auto",
     whiteSpace: "nowrap",
   },
@@ -246,7 +244,7 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 const itemSizeStyles = {
   default: null,
   lg: styles.itemLg,
-  sm: styles.itemSm,
+  sm: [typeStyles.textSm, styles.itemSm],
 } satisfies Record<DropdownMenuSize, stylex.StyleXStyles | null>;
 
 const SkipMotion = createContext(false);
@@ -362,7 +360,7 @@ function DropdownMenuEmpty({
     <MenuPrimitive.Empty
       data-slot="dropdown-menu-empty"
       {...props}
-      {...stylex.props(styles.empty, sx)}
+      {...stylex.props([typeStyles.textSm, styles.empty], sx)}
     />
   );
 }
@@ -381,7 +379,7 @@ function DropdownMenuLabel({
       data-inset={isInset}
       data-slot="dropdown-menu-label"
       {...props}
-      {...stylex.props(styles.label, sx)}
+      {...stylex.props([typeStyles.caption, styles.label], sx)}
     />
   );
 }
@@ -399,7 +397,7 @@ function DropdownMenuItem({
       data-slot="dropdown-menu-item"
       data-variant={variant}
       {...props}
-      {...stylex.props(styles.item, useItemSize(), sx)}
+      {...stylex.props([typeStyles.textSm, styles.item], useItemSize(), sx)}
     />
   );
 }
@@ -432,7 +430,7 @@ function DropdownMenuSubTrigger({
       data-inset={isInset}
       data-slot="dropdown-menu-sub-trigger"
       {...props}
-      {...stylex.props(styles.item, useItemSize(), sx)}
+      {...stylex.props([typeStyles.textSm, styles.item], useItemSize(), sx)}
     >
       {children}
       <span {...stylex.props(styles.chevron)}>
@@ -476,7 +474,12 @@ function DropdownMenuCheckboxItem({
       data-inset={isInset}
       data-slot="dropdown-menu-checkbox-item"
       {...props}
-      {...stylex.props(styles.item, useItemSize(), styles.checkable, sx)}
+      {...stylex.props(
+        [typeStyles.textSm, styles.item],
+        useItemSize(),
+        styles.checkable,
+        sx
+      )}
     >
       {children}
       <MenuPrimitive.CheckboxItemIndicator {...stylex.props(styles.indicator)}>
@@ -506,7 +509,12 @@ function DropdownMenuRadioItem({
       data-inset={isInset}
       data-slot="dropdown-menu-radio-item"
       {...props}
-      {...stylex.props(styles.item, useItemSize(), styles.checkable, sx)}
+      {...stylex.props(
+        [typeStyles.textSm, styles.item],
+        useItemSize(),
+        styles.checkable,
+        sx
+      )}
     >
       {children}
       <MenuPrimitive.RadioItemIndicator {...stylex.props(styles.indicator)}>
@@ -537,7 +545,7 @@ function DropdownMenuShortcut({
     <span
       data-slot="dropdown-menu-shortcut"
       {...props}
-      {...stylex.props(styles.shortcut, sx)}
+      {...stylex.props([typeStyles.caption, styles.shortcut], sx)}
     />
   );
 }

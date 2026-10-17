@@ -1,62 +1,32 @@
 import * as stylex from "@stylexjs/stylex";
+import type { ReactNode } from "react";
 
+import { Caption, Heading, Text } from "@/components/ui/typography";
+import type {
+  HeadingSize,
+  TextSize,
+  TypeWeight,
+} from "@/components/ui/typography";
 import {
   colors,
-  fontSizes,
   fontWeights,
+  fonts,
   radii,
   space,
   strokes,
-  fonts,
 } from "@/lib/constella/tokens.stylex";
 import { shadows } from "~/lib/tokens.stylex";
 
 const sample = "The quick brown fox jumps over the lazy dog";
 
-const weights = [
-  { name: "regular", value: fontWeights.regular },
-  { name: "medium", value: fontWeights.medium },
-  { name: "semibold", value: fontWeights.semibold },
-] as const;
-
-const sizes = [
-  { name: "xl", value: fontSizes.xl },
-  { name: "lg", value: fontSizes.lg },
-  { name: "md", value: fontSizes.md },
-  { name: "sm", value: fontSizes.sm },
-  { name: "xs", value: fontSizes.xs },
-  { name: "xxs", value: fontSizes.xxs },
-] as const;
+const headingSizes: HeadingSize[] = [1, 2, 3, 4, 5, 6];
+const textSizes: TextSize[] = ["lg", "base", "sm"];
+const weights: TypeWeight[] = ["regular", "semimedium", "medium", "semibold"];
 
 interface Row {
-  fontFamily: string;
-  fontSize: string;
-  fontWeight: string;
-  token: string;
+  label: string;
+  sample: ReactNode;
 }
-
-const families: Row[] = [
-  { fontFamily: fonts.sans, token: "fonts.sans" },
-  { fontFamily: fonts.mono, token: "fonts.mono" },
-].map((row) => ({
-  ...row,
-  fontSize: fontSizes.md,
-  fontWeight: fontWeights.regular,
-}));
-
-const sizeRows: Row[] = sizes.map(({ name, value }) => ({
-  fontFamily: fonts.sans,
-  fontSize: value,
-  fontWeight: fontWeights.regular,
-  token: `fontSizes.${name}`,
-}));
-
-const weightRows: Row[] = weights.map(({ name, value }) => ({
-  fontFamily: fonts.sans,
-  fontSize: fontSizes.md,
-  fontWeight: value,
-  token: `fontWeights.${name}`,
-}));
 
 const styles = stylex.create({
   card: {
@@ -81,41 +51,86 @@ const styles = stylex.create({
     paddingBlock: space.sm,
     paddingInline: space.md,
   },
-  text: {
-    color: colors.textPrimary,
+  sample: {
     minWidth: 0,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
   },
-  token: {
-    color: colors.textMuted,
+  label: {
     flexShrink: 0,
     fontFamily: fonts.mono,
-    fontSize: fontSizes.xxs,
     fontVariantLigatures: "none",
   },
-  font: (fontFamily: string, fontSize: string, fontWeight: string) => ({
-    fontFamily,
-    fontSize,
-    fontWeight,
-  }),
+  mono: {
+    fontFamily: fonts.mono,
+  },
 });
+
+const families: Row[] = [
+  {
+    label: "fonts.sans",
+    sample: (
+      <Text color="primary" sx={styles.sample}>
+        {sample}
+      </Text>
+    ),
+  },
+  {
+    label: "fonts.mono",
+    sample: (
+      <Text color="primary" sx={[styles.sample, styles.mono]}>
+        {sample}
+      </Text>
+    ),
+  },
+];
+
+const sizes: Row[] = [
+  ...headingSizes.map((size) => ({
+    label: `<Heading size={${size}}>`,
+    sample: (
+      <Heading level={3} size={size} sx={styles.sample}>
+        Heading {size}
+      </Heading>
+    ),
+  })),
+  ...textSizes.map((size) => ({
+    label: `<Text color="primary" size="${size}">`,
+    sample: (
+      <Text color="primary" size={size} sx={styles.sample}>
+        {sample}
+      </Text>
+    ),
+  })),
+  {
+    label: "<Caption>",
+    sample: (
+      <Caption color="primary" sx={styles.sample}>
+        {sample}
+      </Caption>
+    ),
+  },
+];
+
+const weightRows: Row[] = weights.map((weight) => ({
+  label: `weight="${weight}"`,
+  sample: (
+    <Text color="primary" size="lg" sx={styles.sample} weight={weight}>
+      {weight.charAt(0).toUpperCase() + weight.slice(1)} {fontWeights[weight]}
+    </Text>
+  ),
+}));
 
 function Specimen({ rows }: { rows: Row[] }) {
   return (
     <div {...stylex.props(styles.card)}>
-      {rows.map(({ fontFamily, fontSize, fontWeight, token }) => (
-        <div key={token} {...stylex.props(styles.row)}>
-          <span
-            {...stylex.props(
-              styles.text,
-              styles.font(fontFamily, fontSize, fontWeight)
-            )}
-          >
-            {sample}
-          </span>
-          <span {...stylex.props(styles.token)}>{token}</span>
+      {rows.map(({ label, sample: content }) => (
+        <div key={label} {...stylex.props(styles.row)}>
+          {content}
+          <Caption render={<span />} sx={styles.label}>
+            {label}
+          </Caption>
         </div>
       ))}
     </div>
@@ -127,7 +142,7 @@ function FontFamiliesDemo() {
 }
 
 function FontSizesDemo() {
-  return <Specimen rows={sizeRows} />;
+  return <Specimen rows={sizes} />;
 }
 
 function FontWeightsDemo() {

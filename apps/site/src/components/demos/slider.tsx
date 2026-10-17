@@ -21,13 +21,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  colors,
-  fontSizes,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const months = Array.from({ length: 13 }, (_, month) => month);
@@ -70,14 +65,12 @@ const styles = stylex.create({
   },
   scaleLabel: {
     color: colors.textMuted,
-    fontSize: fontSizes.xs,
     fontVariantNumeric: "tabular-nums",
   },
   // The middle column sizes to its label, so the 1fr columns either side keep it centered.
   references: {
     color: colors.textMuted,
     display: "grid",
-    fontSize: fontSizes.xs,
     fontVariantNumeric: "tabular-nums",
     gridColumn: "1 / -1",
     gridTemplateColumns: "1fr auto 1fr",
@@ -204,7 +197,11 @@ function SliderStepsDemo() {
                   {...stylex.props(styles.tick, major && styles.tickMajor)}
                 />
                 {major && (
-                  <span {...stylex.props(styles.scaleLabel)}>{month}</span>
+                  <span
+                    {...stylex.props([typeStyles.textSm, styles.scaleLabel])}
+                  >
+                    {month}
+                  </span>
                 )}
               </span>
             );
@@ -222,7 +219,10 @@ function SliderReferencesDemo() {
         <SliderLabel>Storage</SliderLabel>
         <SliderValue>{(formatted) => `${formatted[0] ?? ""} GB`}</SliderValue>
         <SliderControl />
-        <div aria-hidden {...stylex.props(styles.references)}>
+        <div
+          aria-hidden
+          {...stylex.props([typeStyles.textSm, styles.references])}
+        >
           <span>5 GB</span>
           <span>20 GB</span>
           <span {...stylex.props(styles.referenceEnd)}>35 GB</span>

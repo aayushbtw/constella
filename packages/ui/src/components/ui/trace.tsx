@@ -12,12 +12,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Shimmer } from "@/components/ui/shimmer";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
-  lineHeights,
   media,
   opacities,
   sizes,
@@ -90,7 +89,6 @@ const styles = stylex.create({
     },
     cursor: { default: null, [inAction]: "pointer" },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
     height: sizes.controlSm,
     maxWidth: "100%",
@@ -173,8 +171,6 @@ const styles = stylex.create({
   },
   content: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     minWidth: 0,
     overflowWrap: "break-word",
     paddingBlockStart: space.xxs,
@@ -209,7 +205,7 @@ function TraceLine({
         data-status={status}
         {...props}
         {...stylex.props(
-          styles.line,
+          [typeStyles.textSm, styles.line],
           status === "error" && styles.error,
           status === "pending" && styles.pending,
           sx
@@ -315,7 +311,9 @@ function TraceCollapsibleContent({
 }: Styled<ComponentProps<typeof CollapsibleContent>>) {
   return (
     <CollapsibleContent data-slot="trace-collapsible-content" {...props}>
-      <div {...stylex.props(styles.content, sx)}>{children}</div>
+      <div {...stylex.props([typeStyles.textSm, styles.content], sx)}>
+        {children}
+      </div>
     </CollapsibleContent>
   );
 }

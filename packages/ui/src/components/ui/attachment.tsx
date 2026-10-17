@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import type { ButtonProps } from "@/components/ui/button";
 import { Shimmer } from "@/components/ui/shimmer";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -148,10 +148,6 @@ const styles = stylex.create({
     },
     flexShrink: 0,
     flexWrap: "wrap",
-    fontSize: {
-      default: fontSizes.sm,
-      ":is([data-size='sm'], [data-size='xs'])": fontSizes.xs,
-    },
     gap: {
       default: space.xs,
       ":is([data-size='sm'])": px10,
@@ -214,7 +210,7 @@ const styles = stylex.create({
   },
   content: {
     flex: "1",
-    lineHeight: lineHeights.row,
+    lineHeight: lineHeights.textSm,
     maxWidth: "100%",
     minWidth: 0,
     paddingInlineEnd: { default: null, [vertical]: space.xxs },
@@ -240,7 +236,6 @@ const styles = stylex.create({
       [inState("error")]: colors.dangerText,
     },
     display: "block",
-    fontSize: fontSizes.xs,
     marginBlockStart: space.xxxs,
     maxWidth: "100%",
     minWidth: 0,
@@ -324,7 +319,7 @@ function Attachment({
         data-slot="attachment"
         data-state={state}
         {...props}
-        {...stylex.props(styles.attachment, sx)}
+        {...stylex.props([typeStyles.textSm, styles.attachment], sx)}
       />
     </State>
   );
@@ -382,7 +377,7 @@ function AttachmentDescription({
     <span
       data-slot="attachment-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }

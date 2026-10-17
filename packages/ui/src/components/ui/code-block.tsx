@@ -2,11 +2,11 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   codeBlockVars,
   colors,
   fonts,
-  fontSizes,
   fontWeights,
   lineHeights,
   radii,
@@ -64,7 +64,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.xs,
     minWidth: 0,
     overflow: "hidden",
     position: "relative",
@@ -73,7 +72,6 @@ const styles = stylex.create({
   sm: {
     [codeBlockVars.padBlock]: space.xs,
     [codeBlockVars.padInline]: space.sm,
-    fontSize: fontSizes.xxs,
   },
   danger: { backgroundColor: colors.dangerSubtle, color: colors.dangerText },
   header: {
@@ -106,7 +104,7 @@ const styles = stylex.create({
     // Centered on the first line.
     insetBlockStart: {
       default: null,
-      [onBlock]: `calc(${codeBlockVars.padBlock} + (${lineHeights.text} - ${sizes.controlSm}) / 2)`,
+      [onBlock]: `calc(${codeBlockVars.padBlock} + (${lineHeights.textSm} - ${sizes.controlSm}) / 2)`,
     },
     // Physical, since the code under it is always left to right.
     right: { default: null, [onBlock]: space.xs },
@@ -117,7 +115,7 @@ const styles = stylex.create({
     flexGrow: 1,
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
     minHeight: 0,
     minWidth: 0,
     paddingBlockEnd: {
@@ -172,7 +170,7 @@ const styles = stylex.create({
       [numbered]: 0,
       [marked]: 0,
     },
-    minHeight: lineHeights.text,
+    minHeight: lineHeights.textSm,
     paddingInlineEnd: pad,
     paddingInlineStart: { default: pad, [numbered]: 0, [marked]: 0 },
     // Its block position is the line's own; only its inline position is set.
@@ -265,8 +263,8 @@ function CodeBlock({
       data-variant={variant}
       {...props}
       {...stylex.props(
-        styles.block,
-        size === "sm" && styles.sm,
+        [typeStyles.textSm, styles.block],
+        size === "sm" && [typeStyles.caption, styles.sm],
         variantStyles[variant],
         sx
       )}

@@ -27,19 +27,13 @@ import {
 } from "@/components/ui/command";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { SwapText } from "@/components/ui/swap-text";
-import {
-  colors,
-  fontSizes,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/ui/typography";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   command: { maxWidth: "100%", width: 384 },
   stack: { flexDirection: "column", gap: space.md },
-  ran: { color: colors.textSecondary, fontSize: fontSizes.sm },
 });
 
 interface Entry {
@@ -140,9 +134,9 @@ function CommandDemo() {
           }}
         />
       </Command>
-      <div {...stylex.props(styles.ran)}>
+      <Text color="secondary" size="sm">
         Ran: <SwapText>{ran}</SwapText>
-      </div>
+      </Text>
     </DemoRow>
   );
 }

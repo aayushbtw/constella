@@ -3,11 +3,10 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  fontSizes,
-  lineHeights,
   media,
   sizes,
   space,
@@ -44,9 +43,7 @@ const styles = stylex.create({
       [media.hover]: { default: null, ":is(a):hover": colors.textPrimary },
     },
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
-    lineHeight: lineHeights.text,
     minHeight: sizes.icon,
     position: "relative",
     textAlign: "start",
@@ -88,7 +85,7 @@ function Marker({ render, sx, variant = "default", ...props }: MarkerProps) {
     props: mergeProps<"div">(
       props,
       stylex.props(
-        styles.marker,
+        [typeStyles.textSm, styles.marker],
         variant === "border" && styles.ruled,
         variant === "separator" && styles.separator,
         sx

@@ -42,13 +42,15 @@ Translucent, so they read the same on any surface; `fillOpaque` hides what's und
 
 ## Typography
 
-Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Every size shares one line height, `lineHeights.row`, so a row of mixed sizes still centers in a control.
+Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Each size is a step with its own line height of the same name (`fontSizes.textSm`, `lineHeights.textSm`), set together; [Typography](/docs/components/typography) sets them for you.
 
 ### Font Families
 
 <!-- ::demo name="font-families" -->
 
 ### Sizes
+
+Headings rank 1 (largest) to 6; text steps around `base`, the reading size. Controls use `sm`.
 
 <!-- ::demo name="font-sizes" -->
 

@@ -36,7 +36,7 @@ const track = (thumb: string) => ({
   // Beside top-aligned text, the track centers on the label's first line.
   marginBlock: {
     default: null,
-    [beside]: `calc((${lineHeights.text} - ${thumb} - 2 * ${strokes.border}) / 2)`,
+    [beside]: `calc((${lineHeights.textSm} - ${thumb} - 2 * ${strokes.border}) / 2)`,
   },
   width: `calc(2 * ${thumb})`,
   "::before": {

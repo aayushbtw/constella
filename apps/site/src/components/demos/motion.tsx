@@ -11,11 +11,11 @@ import {
   SliderValue,
 } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   media,
   radii,
   sizes,
@@ -95,7 +95,6 @@ const styles = stylex.create({
     display: "flex",
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
-    fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     gap: space.md,
     gridColumn: "1 / -1",
@@ -188,7 +187,7 @@ function MotionEasingDemo() {
     <Stage
       controls={
         <>
-          <p {...stylex.props(styles.readout)}>
+          <p {...stylex.props([typeStyles.caption, styles.readout])}>
             <span {...stylex.props(styles.readoutValue)}>{easing}</span>
             <span>
               {durations.move} × {slow} = {moveMs * slow}ms

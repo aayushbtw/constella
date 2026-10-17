@@ -7,10 +7,9 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import type { SeparatorProps } from "@/components/ui/separator";
-import { joinStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   joins,
   space,
@@ -69,7 +68,6 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     paddingInline: px10,
@@ -109,7 +107,12 @@ function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
     defaultTagName: "div",
     props: mergeProps<"div">(
       props,
-      stylex.props(styles.text, joinStyles.sm, joinStyles.edges, sx)
+      stylex.props(
+        [typeStyles.textSm, styles.text],
+        joinStyles.sm,
+        joinStyles.edges,
+        sx
+      )
     ),
     render,
     // Base UI writes state as data attributes: `data-slot="button-group-text"`.

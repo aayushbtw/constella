@@ -11,11 +11,11 @@ import {
   DialogPortal,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   layers,
   media,
   shadows,
@@ -47,7 +47,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     opacity: {
       default: 1,
       [media.reducedMotion]: { default: 1, [offstage]: 0 },
@@ -178,7 +177,7 @@ function SheetContent({
         data-side={side}
         data-slot="sheet-content"
         {...props}
-        {...stylex.props(styles.popup, styles[side], sx)}
+        {...stylex.props([typeStyles.textSm, styles.popup], styles[side], sx)}
       >
         {children}
         {showCloseButton && <DialogCloseButton />}

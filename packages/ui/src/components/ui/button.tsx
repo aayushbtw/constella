@@ -3,12 +3,11 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
-import { joinStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -127,7 +126,6 @@ const styles = stylex.create({
     },
     display: "inline-flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: px6,
     justifyContent: "center",
@@ -153,13 +151,11 @@ const styles = stylex.create({
   // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
     ...inset(space.xs, px6, sizes.controlXs),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
     height: sizes.controlXs,
   },
   sm: {
     ...inset(px10, px6, sizes.controlSm),
-    fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlSm,
   },
@@ -235,8 +231,8 @@ const sizeStyles = {
   "icon-sm": styles.iconSm,
   "icon-xs": styles.iconXs,
   lg: styles.lg,
-  sm: styles.sm,
-  xs: styles.xs,
+  sm: [typeStyles.textSm, styles.sm],
+  xs: [typeStyles.caption, styles.xs],
 } satisfies Record<ButtonSize, stylex.StyleXStyles>;
 
 const cornerStyles = {
@@ -253,7 +249,7 @@ function buttonStyles({
   variant = "secondary",
 }: ButtonStyleOptions = {}) {
   return [
-    styles.base,
+    [typeStyles.textSm, styles.base],
     joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],

@@ -2,9 +2,9 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { z } from "zod";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   radii,
   space,
@@ -89,13 +89,14 @@ const styles = stylex.create({
   nav: {
     display: "flex",
     flexWrap: "wrap",
-    fontSize: fontSizes.xs,
     gap: space.xs,
   },
   navLink: { color: colors.textMuted },
   current: { color: colors.textPrimary, textDecorationLine: "underline" },
   section: { display: "flex", flexDirection: "column", gap: space.xs },
-  heading: { fontSize: fontSizes.xs, fontWeight: fontWeights.semibold },
+  heading: {
+    fontWeight: fontWeights.semibold,
+  },
   toggle: {
     ...pill,
     // Opaque: it floats over whatever the component renders.
@@ -103,7 +104,6 @@ const styles = stylex.create({
     bottom: space.md,
     display: "flex",
     fontFamily: "system-ui, sans-serif",
-    fontSize: fontSizes.xs,
     gap: space.xxxs,
     insetInlineStart: "50%",
     maxWidth: `calc(100vw - 2 * ${space.md})`,
@@ -141,7 +141,7 @@ function BreakPage() {
   );
   return (
     <main {...stylex.props(styles.main)}>
-      <nav {...stylex.props(styles.nav)}>
+      <nav {...stylex.props([typeStyles.textSm, styles.nav])}>
         {nav.map(([slug, title]) => (
           <Link
             key={slug}
@@ -163,13 +163,18 @@ function BreakPage() {
           key={slug}
           {...stylex.props(styles.section)}
         >
-          <h2 {...stylex.props(styles.heading)}>{title}</h2>
+          <h2 {...stylex.props([typeStyles.textSm, styles.heading])}>
+            {title}
+          </h2>
           <Stage>
             <Break data={data} open={c === slug} />
           </Stage>
         </section>
       ))}
-      <nav aria-label="Dataset" {...stylex.props(styles.toggle)}>
+      <nav
+        aria-label="Dataset"
+        {...stylex.props([typeStyles.textSm, styles.toggle])}
+      >
         {datasets.map((option) => (
           <Link
             key={option}

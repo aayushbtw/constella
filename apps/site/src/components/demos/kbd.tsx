@@ -7,25 +7,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  colors,
-  fontSizes,
-  lineHeights,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/ui/typography";
+import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   column: {
     flexDirection: "column",
     gap: space.md,
-  },
-  text: {
-    color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
-    marginBlock: 0,
-    marginInline: 0,
   },
 });
 
@@ -50,14 +39,14 @@ function KbdDemo() {
 function KbdGroupDemo() {
   return (
     <DemoRow>
-      <p {...stylex.props(styles.text)}>
+      <Text color="secondary" size="sm">
         Use{" "}
         <KbdGroup>
           <Kbd>Ctrl + B</Kbd>
           <Kbd>Ctrl + K</Kbd>
         </KbdGroup>{" "}
         to open the command palette
-      </p>
+      </Text>
     </DemoRow>
   );
 }

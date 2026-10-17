@@ -15,14 +15,13 @@ import { useLayoutEffect, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fonts,
-  fontSizes,
   fontWeights,
-  lineHeights,
   media,
   radii,
   shadows,
@@ -138,7 +137,6 @@ const styles = stylex.create({
   root: {
     // Axis labels, ticks and grid lines are drawn in `currentColor`.
     color: colors.textMuted,
-    fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     minWidth: 0,
   },
@@ -154,10 +152,8 @@ const styles = stylex.create({
     color: colors.textPrimary,
     columnGap: space.xs,
     display: "grid",
-    fontSize: fontSizes.xs,
     fontWeight: fontWeights.regular,
     gridTemplateColumns: "auto minmax(0, 1fr) auto",
-    lineHeight: lineHeights.text,
     maxWidth: sizes.tooltip,
     paddingBlock: px10,
     paddingInlineEnd: px10,
@@ -275,7 +271,7 @@ function ChartTooltip({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="chart-tooltip"
       {...props}
-      {...stylex.props(styles.tooltip, sx)}
+      {...stylex.props([typeStyles.textSm, styles.tooltip], sx)}
     />
   );
 }
@@ -527,7 +523,10 @@ function Chart<
     onRender?.(context);
   };
   return (
-    <div data-slot="chart" {...stylex.props(styles.root, sx)}>
+    <div
+      data-slot="chart"
+      {...stylex.props([typeStyles.caption, styles.root], sx)}
+    >
       <ChartPrimitive
         onRender={fadeLabels}
         renderTooltipBody={renderTooltipBody ?? renderConfigTooltip}

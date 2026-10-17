@@ -4,11 +4,11 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useMemo } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -125,7 +125,6 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexGrow: { default: 1, [vertical]: 0 },
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
     gap: space.xs,
     height: sizes.controlSm,
@@ -142,7 +141,6 @@ const styles = stylex.create({
     zIndex: 1,
   },
   tabSm: {
-    fontSize: fontSizes.xs,
     gap: space.xxs,
     height: sizes.controlXs,
     paddingInline: px10,
@@ -221,7 +219,7 @@ const indicatorVariantStyles = {
 const tabSizeStyles = {
   default: null,
   lg: styles.tabLg,
-  sm: styles.tabSm,
+  sm: [typeStyles.textSm, styles.tabSm],
 } satisfies Record<TabsListSize, stylex.StyleXStyles | null>;
 
 const TabsListContext = createContext<{
@@ -273,7 +271,7 @@ function TabsTrigger({ sx, ...props }: Styled<TabsPrimitive.Tab.Props>) {
       data-slot="tabs-trigger"
       {...props}
       {...stylex.props(
-        styles.tab,
+        [typeStyles.textSm, styles.tab],
         tabSizeStyles[size],
         variant === "line" && styles.tabLine,
         sx

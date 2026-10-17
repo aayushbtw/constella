@@ -12,13 +12,11 @@ export const surfaces = stylex.defineConsts({
 });
 
 export const fontSizes = stylex.defineConsts({
-  base: "15px",
   display: "32px",
 });
 
 export const lineHeights = stylex.defineConsts({
   display: "38px",
-  prose: "24px",
 });
 
 export const layout = stylex.defineConsts({

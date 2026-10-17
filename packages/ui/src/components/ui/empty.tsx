@@ -1,11 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
-  lineHeights,
   radii,
   sizes,
   space,
@@ -69,21 +68,16 @@ const styles = stylex.create({
     width: sizes.controlMd,
   },
   title: {
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     textWrap: "pretty",
   },
   content: {
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: px10,
     maxWidth: sizes.measure,
     minWidth: 0,
@@ -132,7 +126,7 @@ function EmptyTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="empty-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textSm, styles.title], sx)}
     />
   );
 }
@@ -142,7 +136,7 @@ function EmptyDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="empty-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -152,7 +146,7 @@ function EmptyContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="empty-content"
       {...props}
-      {...stylex.props(styles.content, sx)}
+      {...stylex.props([typeStyles.textSm, styles.content], sx)}
     />
   );
 }

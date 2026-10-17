@@ -62,8 +62,8 @@ const styles = stylex.create({
     display: "block",
     fieldSizing: "content",
     // Under 16px, iOS Safari zooms the page on focus.
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.sm },
-    lineHeight: lineHeights.text,
+    fontSize: { default: fontSizes.textLg, [media.sm]: fontSizes.textSm },
+    lineHeight: { default: lineHeights.textLg, [media.sm]: lineHeights.textSm },
     marginBlock: 0,
     marginInline: 0,
     minHeight: `calc(${sizes.controlMd} * 2)`,
@@ -78,9 +78,7 @@ const styles = stylex.create({
     width: "100%",
     "::placeholder": { color: colors.textMuted },
   },
-  // Text steps down with the height like Input's, but stays 16px under `sm` so iOS doesn't zoom.
   sm: {
-    fontSize: { default: fontSizes.md, [media.sm]: fontSizes.xs },
     minHeight: `calc(${sizes.controlSm} * 2)`,
     paddingBlock: px6,
   },

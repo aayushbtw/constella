@@ -40,14 +40,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
-  lineHeights,
   media,
   motion,
   opacities,
@@ -415,7 +413,6 @@ const styles = stylex.create({
     color: colors.textSecondary,
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.xs,
     height: sizes.controlXs,
     marginBlockStart: {
       default: 0,
@@ -477,7 +474,6 @@ const styles = stylex.create({
     insetBlockStart: 0,
   },
   groupContent: {
-    fontSize: fontSizes.sm,
     width: "100%",
   },
   menu: {
@@ -538,11 +534,9 @@ const styles = stylex.create({
     color: colors.textPrimary,
     cursor: "pointer",
     display: "flex",
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.regular,
     gap: space.xs,
     height: sizes.controlMd,
-    lineHeight: lineHeights.row,
     opacity: {
       default: 1,
       ":is(:disabled, [aria-disabled='true'])": opacities.disabled,
@@ -574,7 +568,9 @@ const styles = stylex.create({
     backgroundColor: colors.background,
     boxShadow: `0 0 0 ${strokes.border} ${colors.border}`,
   },
-  buttonSm: { fontSize: fontSizes.xs, height: sizes.controlSm },
+  buttonSm: {
+    height: sizes.controlSm,
+  },
   buttonLg: {
     height: { default: sizes.media, [inRail]: sizes.controlMd },
     paddingInlineEnd: { default: space.xs, [inRail]: 0 },
@@ -651,7 +647,6 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textSecondary,
     display: { default: "flex", [inRail]: "none" },
-    fontSize: fontSizes.xxs,
     fontVariantNumeric: "tabular-nums",
     fontWeight: fontWeights.medium,
     height: sizes.controlXs,
@@ -733,7 +728,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
     display: "flex",
-    fontSize: fontSizes.sm,
     gap: space.xs,
     height: sizes.controlSm,
     overflow: "hidden",
@@ -745,7 +739,6 @@ const styles = stylex.create({
     transitionTimingFunction: "ease",
     whiteSpace: "nowrap",
   },
-  subButtonSm: { fontSize: fontSizes.xs },
   // The rail's mark and the icon share one cell, and cross-fade as the trigger is pointed at.
   markStack: {
     display: "inline-grid",
@@ -1276,7 +1269,10 @@ function SidebarGroupLabel({
   const { ref, truncated } = useTruncated(true);
   return useRender({
     defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.groupLabel, sx)),
+    props: mergeProps<"div">(
+      props,
+      stylex.props([typeStyles.textSm, styles.groupLabel], sx)
+    ),
     ref,
     render,
     // Written as `data-truncated` while its text runs past its box.
@@ -1306,7 +1302,7 @@ function SidebarGroupContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="sidebar-group-content"
       {...props}
-      {...stylex.props(styles.groupContent, sx)}
+      {...stylex.props([typeStyles.textSm, styles.groupContent], sx)}
     />
   );
 }
@@ -1334,7 +1330,7 @@ function SidebarMenuItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
 const buttonSizeStyles = {
   default: null,
   lg: styles.buttonLg,
-  sm: styles.buttonSm,
+  sm: [typeStyles.textSm, styles.buttonSm],
 } satisfies Record<SidebarMenuButtonSize, stylex.StyleXStyles | null>;
 
 /**
@@ -1365,7 +1361,7 @@ function SidebarMenuButton({
     props: mergeProps<"button">(
       props,
       stylex.props(
-        styles.button,
+        [typeStyles.textSm, styles.button],
         variant === "outline" && styles.buttonOutline,
         buttonSizeStyles[size],
         withEnd && styles.buttonWithEnd,
@@ -1453,7 +1449,7 @@ function SidebarMenuBadge({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="sidebar-menu-badge"
       {...props}
-      {...stylex.props(styles.badge, sx)}
+      {...stylex.props([typeStyles.caption, styles.badge], sx)}
     />
   );
 }
@@ -1511,7 +1507,11 @@ function SidebarMenuSubButton({
     defaultTagName: "a",
     props: mergeProps<"a">(
       props,
-      stylex.props(styles.subButton, size === "sm" && styles.subButtonSm, sx)
+      stylex.props(
+        [typeStyles.textSm, styles.subButton],
+        size === "sm" && typeStyles.textSm,
+        sx
+      )
     ),
     render,
     state: { active: isActive, size, slot: "sidebar-menu-sub-button" },

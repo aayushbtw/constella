@@ -19,9 +19,9 @@ import {
   SidePanelSlot,
   SidePanelTitle,
 } from "@/components/ui/side-panel";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   radii,
   sizes,
   space,
@@ -67,7 +67,6 @@ const styles = stylex.create({
     borderBlockEndWidth: strokes.border,
     display: "flex",
     flexShrink: 0,
-    fontSize: fontSizes.sm,
     height: sizes.header,
     paddingInlineStart: space.md,
   },
@@ -130,7 +129,9 @@ function SidePanelDemo() {
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
         <div {...stylex.props(styles.page)}>
-          <header {...stylex.props(styles.topbar)}>Activity</header>
+          <header {...stylex.props([typeStyles.textSm, styles.topbar])}>
+            Activity
+          </header>
           <div {...stylex.props(styles.list)}>
             {events.map((item, index) => (
               <Item

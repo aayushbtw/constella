@@ -5,11 +5,11 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import type { SeparatorProps } from "@/components/ui/separator";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -79,7 +79,6 @@ const styles = stylex.create({
     columnGap: px10,
     display: "flex",
     flexWrap: "wrap",
-    fontSize: fontSizes.sm,
     paddingBlockEnd: px10,
     paddingBlockStart: px10,
     paddingInlineEnd: space.sm,
@@ -166,7 +165,7 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: space.xs,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
     overflow: "hidden",
     overflowWrap: "anywhere",
     width: "fit-content",
@@ -174,8 +173,6 @@ const styles = stylex.create({
   description: {
     color: colors.textSecondary,
     display: "-webkit-box",
-    fontSize: { default: fontSizes.sm, [inSize("xs")]: fontSizes.xs },
-    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     overflow: "hidden",
@@ -257,7 +254,7 @@ function Item({
     props: mergeProps<"div">(
       props,
       stylex.props(
-        styles.item,
+        [typeStyles.textSm, styles.item],
         variantStyles[variant],
         size === "xs" && styles.xs,
         sx
@@ -309,7 +306,7 @@ function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
     <p
       data-slot="item-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }

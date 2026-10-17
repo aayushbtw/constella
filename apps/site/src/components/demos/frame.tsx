@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
+import { Caption } from "@/components/ui/typography";
 import {
   colors,
-  fontSizes,
   fonts,
   media,
   radii,
@@ -91,9 +91,7 @@ const styles = stylex.create({
     justifyContent: "center",
   },
   token: {
-    color: colors.textSecondary,
     fontFamily: fonts.mono,
-    fontSize: fontSizes.xxs,
     fontVariantLigatures: "none",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -164,7 +162,9 @@ function Tile({
   return (
     <div {...stylex.props(styles.tile)}>
       <div {...stylex.props(styles.sample, sx)}>{children}</div>
-      <p {...stylex.props(styles.token)}>{token}</p>
+      <Caption color="secondary" sx={styles.token}>
+        {token}
+      </Caption>
     </div>
   );
 }

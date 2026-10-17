@@ -7,13 +7,12 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, RefObject } from "react";
 
 import { Button } from "@/components/ui/button";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
-  lineHeights,
   media,
   sizes,
   space,
@@ -54,7 +53,6 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
-    fontSize: fontSizes.sm,
     maxWidth: "100vw",
     minHeight: 0,
     opacity: { default: 1, [entering]: 0 },
@@ -90,9 +88,7 @@ const styles = stylex.create({
   },
   title: {
     flexGrow: 1,
-    fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     minWidth: 0,
@@ -148,7 +144,7 @@ function SidePanelContent({ container, sx, ...props }: SidePanelContentProps) {
       <DialogPrimitive.Popup
         data-slot="side-panel"
         {...props}
-        {...stylex.props(styles.popup, sx)}
+        {...stylex.props([typeStyles.textSm, styles.popup], sx)}
       />
     </DialogPrimitive.Portal>
   );
@@ -187,7 +183,7 @@ function SidePanelTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
     <DialogPrimitive.Title
       data-slot="side-panel-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textLg, styles.title], sx)}
     />
   );
 }

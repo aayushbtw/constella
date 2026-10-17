@@ -4,14 +4,13 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
-  lineHeights,
   media,
   motion,
   offsets,
@@ -53,7 +52,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: px10,
     maxWidth: "var(--available-width)",
     paddingBlock: px10,
@@ -81,17 +79,13 @@ const styles = stylex.create({
     gap: space.xxxs,
   },
   title: {
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
     marginBlock: 0,
     marginInline: 0,
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     marginBlock: 0,
     marginInline: 0,
     textWrap: "pretty",
@@ -127,7 +121,11 @@ function PopoverContent({
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           {...props}
-          {...stylex.props(styles.surface, styles.motion, sx)}
+          {...stylex.props(
+            [typeStyles.textSm, styles.surface],
+            styles.motion,
+            sx
+          )}
         />
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
@@ -149,7 +147,7 @@ function PopoverTitle({ sx, ...props }: Styled<PopoverPrimitive.Title.Props>) {
     <PopoverPrimitive.Title
       data-slot="popover-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textSm, styles.title], sx)}
     />
   );
 }
@@ -162,7 +160,7 @@ function PopoverDescription({
     <PopoverPrimitive.Description
       data-slot="popover-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -171,7 +169,7 @@ function PopoverDescription({
 const popoverStyles = {
   motion: styles.motion,
   positioner: styles.positioner,
-  surface: styles.surface,
+  surface: [typeStyles.textSm, styles.surface],
 };
 
 export {

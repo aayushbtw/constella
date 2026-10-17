@@ -4,11 +4,11 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
 
 import { labelStyles } from "@/components/ui/label";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   opacities,
   presses,
   radii,
@@ -38,7 +38,6 @@ const styles = stylex.create({
   },
   value: {
     color: colors.textMuted,
-    fontSize: fontSizes.sm,
     fontVariantNumeric: "tabular-nums",
     gridColumn: 2,
   },
@@ -147,7 +146,7 @@ function SliderValue({ sx, ...props }: Styled<SliderPrimitive.Value.Props>) {
     <SliderPrimitive.Value
       data-slot="slider-value"
       {...props}
-      {...stylex.props(styles.value, sx)}
+      {...stylex.props([typeStyles.textSm, styles.value], sx)}
     />
   );
 }

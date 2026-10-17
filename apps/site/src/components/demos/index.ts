@@ -354,6 +354,14 @@ import {
   TabsVerticalDemo,
 } from "~/components/demos/tabs";
 import {
+  CaptionDemo,
+  HeadingSizeDemo,
+  TextColorDemo,
+  TextSizeDemo,
+  TextWeightDemo,
+  TypographyDemo,
+} from "~/components/demos/text";
+import {
   TextareaButtonDemo,
   TextareaDemo,
   TextareaDisabledDemo,
@@ -450,6 +458,7 @@ const demos = {
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
   "button-variants": ButtonVariantsDemo,
+  caption: CaptionDemo,
   card: CardDemo,
   "card-action": CardActionDemo,
   "card-stats": CardStatsDemo,
@@ -541,6 +550,7 @@ const demos = {
   "font-families": FontFamiliesDemo,
   "font-sizes": FontSizesDemo,
   "font-weights": FontWeightsDemo,
+  "heading-size": HeadingSizeDemo,
   input: InputDemo,
   "input-badge": InputBadgeDemo,
   "input-button-group": InputButtonGroupDemo,
@@ -670,6 +680,9 @@ const demos = {
   "slider-vertical": SliderVerticalDemo,
   spinner: SpinnerDemo,
   suggestions: SuggestionsDemo,
+  "text-color": TextColorDemo,
+  "text-size": TextSizeDemo,
+  "text-weight": TextWeightDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,
   "toast-dismiss": ToastDismissDemo,
@@ -725,6 +738,7 @@ const demos = {
   "tooltip-disabled": TooltipDisabledDemo,
   "tooltip-kbd": TooltipKbdDemo,
   "tooltip-side": TooltipSideDemo,
+  typography: TypographyDemo,
 } satisfies Record<string, ComponentType>;
 
 // Shown straight on the page, like the swatches in a style guide, not in a preview frame.

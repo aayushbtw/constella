@@ -1,6 +1,13 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { joins, radii, strokes } from "@/lib/constella/tokens.stylex";
+import {
+  fontSizes,
+  joins,
+  letterSpacings,
+  lineHeights,
+  radii,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
 
 // A group's own parts, not the focus guards Base UI drops beside an open popup's trigger.
 const notFirst = ":not(:nth-child(1 of [data-slot]))";
@@ -66,4 +73,39 @@ const visuallyHidden = stylex.create({
   },
 });
 
-export { joinStyles, visuallyHidden };
+// The type scale's steps, each a size with its line height. Put one before a part's own
+// styles: `stylex.props(typeStyles.textSm, styles.label)`.
+const typeStyles = stylex.create({
+  heading1: {
+    fontSize: fontSizes.heading1,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading1,
+  },
+  heading2: {
+    fontSize: fontSizes.heading2,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading2,
+  },
+  heading3: {
+    fontSize: fontSizes.heading3,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading3,
+  },
+  heading4: {
+    fontSize: fontSizes.heading4,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading4,
+  },
+  heading5: {
+    fontSize: fontSizes.heading5,
+    letterSpacing: letterSpacings.heading,
+    lineHeight: lineHeights.heading5,
+  },
+  heading6: { fontSize: fontSizes.heading6, lineHeight: lineHeights.heading6 },
+  textLg: { fontSize: fontSizes.textLg, lineHeight: lineHeights.textLg },
+  textBase: { fontSize: fontSizes.textBase, lineHeight: lineHeights.textBase },
+  textSm: { fontSize: fontSizes.textSm, lineHeight: lineHeights.textSm },
+  caption: { fontSize: fontSizes.caption, lineHeight: lineHeights.caption },
+});
+
+export { joinStyles, typeStyles, visuallyHidden };

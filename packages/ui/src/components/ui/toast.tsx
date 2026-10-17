@@ -16,11 +16,11 @@ import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
   lineHeights,
@@ -181,7 +181,7 @@ const styles = stylex.create({
     flexShrink: 0,
     height: sizes.icon,
     // Centers the icon on the title's first line.
-    marginBlockStart: `calc((${lineHeights.row} - ${sizes.icon}) / 2)`,
+    marginBlockStart: `calc((${lineHeights.textSm} - ${sizes.icon}) / 2)`,
     position: "relative",
     width: sizes.icon,
   },
@@ -251,16 +251,12 @@ const styles = stylex.create({
     position: "absolute",
   },
   title: {
-    fontSize: fontSizes.sm,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.row,
     overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.xs,
-    lineHeight: lineHeights.row,
     overflowWrap: "anywhere",
     textWrap: "pretty",
   },
@@ -415,7 +411,7 @@ function ToastTitle({ sx, ...props }: Styled<ToastPrimitive.Title.Props>) {
     <ToastPrimitive.Title
       data-slot="toast-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textSm, styles.title], sx)}
     />
   );
 }
@@ -428,7 +424,7 @@ function ToastDescription({
     <ToastPrimitive.Description
       data-slot="toast-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
@@ -556,9 +552,13 @@ function ToastItem({ item }: { item: ToastPrimitive.Root.ToastObject }) {
                 }}
                 {...stylex.props(styles.body, styles.leaving)}
               >
-                <span {...stylex.props(styles.title)}>{previous.title}</span>
+                <span {...stylex.props([typeStyles.textSm, styles.title])}>
+                  {previous.title}
+                </span>
                 {previous.description === undefined ? null : (
-                  <span {...stylex.props(styles.description)}>
+                  <span
+                    {...stylex.props([typeStyles.textSm, styles.description])}
+                  >
                     {previous.description}
                   </span>
                 )}

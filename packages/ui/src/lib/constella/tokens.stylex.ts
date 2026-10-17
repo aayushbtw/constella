@@ -126,26 +126,47 @@ export const fonts = stylex.defineConsts({
   sans: "var(--font-sans)",
 });
 
+// The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
+// `textBase`. Each size has a line height of the same name; set them together.
 export const fontSizes = stylex.defineConsts({
-  // Headings and figures, above the reading size.
-  xl: "24px",
-  lg: "20px",
-  md: "16px",
-  sm: "14px",
-  xs: "13px",
-  xxs: "12px",
+  heading1: "36px",
+  heading2: "28px",
+  heading3: "24px",
+  heading4: "20px",
+  heading5: "18px",
+  heading6: "16px",
+  textLg: "16px",
+  // Reading copy.
+  textBase: "15px",
+  // Controls and the text inside components.
+  textSm: "13px",
+  // Badges, shortcuts, group labels.
+  caption: "12px",
 });
 
 export const lineHeights = stylex.defineConsts({
-  // Reading copy at `md`, like a chat message.
-  prose: "24px",
-  row: "18px",
-  text: "20px",
+  heading1: "44px",
+  heading2: "36px",
+  heading3: "32px",
+  heading4: "28px",
+  heading5: "26px",
+  heading6: "24px",
+  textLg: "24px",
+  textBase: "24px",
+  textSm: "20px",
+  caption: "16px",
+});
+
+// Large type tightens a little, so a heading doesn't read as spaced out.
+export const letterSpacings = stylex.defineConsts({
+  heading: "-0.01em",
 });
 
 export const fontWeights = stylex.defineConsts({
   medium: "500",
   regular: "400",
+  // Between body and label; needs a variable font, or it rounds to 400 or 500.
+  semimedium: "450",
   semibold: "600",
 });
 

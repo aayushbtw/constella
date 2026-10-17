@@ -89,11 +89,11 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: rowGap,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
   },
   description: {
     color: colors.textSecondary,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
     marginBlockEnd: 0,
     marginBlockStart: 0,
   },

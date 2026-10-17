@@ -20,9 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -48,7 +48,7 @@ const styles = stylex.create({
   p: flow,
   h2: {
     color: colors.textPrimary,
-    lineHeight: lineHeights.row,
+    lineHeight: lineHeights.textSm,
     marginBlockEnd: space.sm,
     marginBlockStart: {
       default: `calc(${space.xl} + ${space.md})`,
@@ -58,8 +58,6 @@ const styles = stylex.create({
   },
   h3: {
     color: colors.textPrimary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.row,
     marginBlockEnd: space.xs,
     // Room enough that a subsection reads as a break after a table.
     marginBlockStart: `calc(${space.lg} + ${space.sm})`,
@@ -87,7 +85,6 @@ const styles = stylex.create({
     boxShadow: shadows.card,
     color: colors.textPrimary,
     fontVariantLigatures: "none",
-    fontSize: fontSizes.xs,
     paddingBlock: 1,
     paddingInlineEnd: 3,
     paddingInlineStart: 3,
@@ -140,7 +137,7 @@ function Code({
   // oxlint-disable-next-line anti-slop/no-runtime-typeof -- the renderer passes a fence's source as a string
   if (lang === undefined || typeof children !== "string") {
     return (
-      <code {...props} {...stylex.props(styles.code)}>
+      <code {...props} {...stylex.props([typeStyles.textSm, styles.code])}>
         {children}
       </code>
     );
@@ -206,7 +203,7 @@ const components = {
     </h2>
   ),
   h3: ({ children, ...props }) => (
-    <h3 {...props} {...stylex.props(styles.h3)}>
+    <h3 {...props} {...stylex.props([typeStyles.textSm, styles.h3])}>
       {children}
     </h3>
   ),

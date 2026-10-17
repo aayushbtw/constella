@@ -39,7 +39,7 @@ const box = (size: string) => ({
   height: size,
   marginBlock: {
     default: null,
-    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.text} - ${size}) / 2)`,
+    ":is([data-orientation='horizontal'] > *, [data-slot='field-label'] > *)": `calc((${lineHeights.textSm} - ${size}) / 2)`,
   },
   width: size,
   "::before": {

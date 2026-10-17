@@ -1,11 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fontSizes,
   fontWeights,
-  lineHeights,
   radii,
   space,
   strokes,
@@ -58,14 +57,12 @@ const styles = stylex.create({
     // The action reads the alert's width, to drop under the text when they can't share a row.
     containerType: "inline-size",
     display: "grid",
-    fontSize: fontSizes.sm,
     gridTemplateColumns: {
       default: "minmax(0, 1fr)",
       [hasIcon]: "auto minmax(0, 1fr)",
       [hasAction]: "minmax(0, 1fr) auto",
       [`${hasIcon}${hasAction}`]: "auto minmax(0, 1fr) auto",
     },
-    lineHeight: lineHeights.text,
     paddingBlockEnd: space.xs,
     paddingBlockStart: space.xs,
     paddingInlineEnd: px10,
@@ -103,7 +100,7 @@ function Alert({ status, sx, ...props }: AlertProps) {
       data-status={status}
       role="alert"
       {...props}
-      {...stylex.props(styles.alert, sx)}
+      {...stylex.props([typeStyles.textSm, styles.alert], sx)}
     />
   );
 }

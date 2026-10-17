@@ -5,11 +5,11 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   badgeVars,
   colors,
   durations,
-  fontSizes,
   fontWeights,
   media,
   opacities,
@@ -131,17 +131,14 @@ const styles = stylex.create({
   // Icons are `sizes.iconXs` up to default and `iconSm` at lg.
   sm: {
     ...sizing(px6, space.xxs, px18),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
   },
   default: {
     ...sizing(space.xs, px6, sizes.controlXxs),
-    fontSize: fontSizes.xxs,
     gap: space.xxs,
   },
   lg: {
     ...sizing(px10, space.xs, sizes.controlXs),
-    fontSize: fontSizes.xs,
     gap: px6,
   },
   primary: {
@@ -246,9 +243,9 @@ const statusStyles = {
 >;
 
 const sizeStyles = {
-  default: styles.default,
-  lg: styles.lg,
-  sm: styles.sm,
+  default: [typeStyles.caption, styles.default],
+  lg: [typeStyles.textSm, styles.lg],
+  sm: [typeStyles.caption, styles.sm],
 } satisfies Record<BadgeSize, stylex.StyleXStyles>;
 
 const variantStyles = {

@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { colors, fontSizes, radii, sizes } from "@/lib/constella/tokens.stylex";
+import { typeStyles } from "@/lib/constella/styles";
+import { colors, radii, sizes } from "@/lib/constella/tokens.stylex";
 import { Tile, Tiles } from "~/components/demos/frame";
 
 type Kind = "border" | "fill" | "text";
@@ -109,7 +110,6 @@ const styles = stylex.create({
   }),
   text: (color: string) => ({
     color,
-    fontSize: fontSizes.xl,
   }),
   chip: {
     borderStartStartRadius: radii.sm,
@@ -134,7 +134,7 @@ function Swatches({ swatches }: { swatches: Swatch[] }) {
             sx={[
               on !== undefined && styles.paint(on),
               kind === "border" && styles.border(color),
-              kind === "text" && styles.text(color),
+              kind === "text" && [typeStyles.heading3, styles.text(color)],
               kind === "fill" && !chip && styles.paint(color),
             ]}
             token={token}

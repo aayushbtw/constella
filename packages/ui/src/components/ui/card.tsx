@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import { typeStyles } from "@/lib/constella/styles";
 import {
   cardVars,
   colors,
@@ -57,9 +58,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: cardVars.spacing,
-    lineHeight: lineHeights.text,
     overflow: "hidden",
     paddingBlockEnd: { default: cardVars.spacing, [hasFooter]: 0 },
     paddingBlockStart: cardVars.spacing,
@@ -91,19 +90,20 @@ const styles = stylex.create({
   },
   title: {
     fontSize: {
-      default: fontSizes.md,
-      ":is([data-slot='card'][data-size='sm'] *)": fontSizes.sm,
+      default: fontSizes.textLg,
+      ":is([data-slot='card'][data-size='sm'] *)": fontSizes.textSm,
     },
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
+    lineHeight: {
+      default: lineHeights.textLg,
+      ":is([data-slot='card'][data-size='sm'] *)": lineHeights.textSm,
+    },
     marginBlock: 0,
     overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     overflowWrap: "anywhere",
     textWrap: "pretty",
   },
@@ -157,7 +157,7 @@ function Card({
       data-variant={variant}
       {...props}
       {...stylex.props(
-        styles.card,
+        [typeStyles.textSm, styles.card],
         sizeStyles[size],
         variant === "well" && styles.well,
         sx
@@ -194,7 +194,7 @@ function CardDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="card-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }

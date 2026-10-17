@@ -8,9 +8,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Text } from "@/components/ui/typography";
 import {
   colors,
-  fontSizes,
   fontWeights,
   lineHeights,
   space,
@@ -23,14 +23,10 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     gap: space.xxs,
-    lineHeight: lineHeights.text,
+    lineHeight: lineHeights.textSm,
   },
   name: { fontWeight: fontWeights.medium },
-  muted: { color: colors.textMuted, fontSize: fontSizes.xs },
   sentence: {
-    color: colors.textPrimary,
-    fontSize: fontSizes.md,
-    lineHeight: lineHeights.prose,
     maxWidth: 448,
     textAlign: "center",
   },
@@ -91,7 +87,9 @@ function ProfileCard({ profile }: { profile: Profile }) {
       <div {...stylex.props(styles.text)}>
         <div {...stylex.props(styles.name)}>{profile.handle}</div>
         <div>{profile.bio}</div>
-        <div {...stylex.props(styles.muted)}>{profile.joined}</div>
+        <Text color="muted" size="sm">
+          {profile.joined}
+        </Text>
       </div>
     </div>
   );
@@ -133,10 +131,10 @@ function Mention({ id }: { id: keyof typeof profiles }) {
 function HoverCardTriggersDemo() {
   return (
     <DemoRow>
-      <p {...stylex.props(styles.sentence)}>
+      <Text color="primary" size="lg" sx={styles.sentence}>
         Follow <Mention id="shadcn" />, <Mention id="emilkowalski" /> and{" "}
         <Mention id="acme" /> for updates.
-      </p>
+      </Text>
       <HoverCard handle={mentions}>
         {({ payload }) => (
           <HoverCardContent>

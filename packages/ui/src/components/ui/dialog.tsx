@@ -7,15 +7,14 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   blurs,
   colors,
   durations,
   easings,
-  fontSizes,
   fontWeights,
   layers,
-  lineHeights,
   media,
   motion,
   radii,
@@ -78,7 +77,6 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    fontSize: fontSizes.sm,
     gap: space.md,
     maxHeight: "100%",
     opacity: { default: 1, [offstage]: 0 },
@@ -137,9 +135,7 @@ const styles = stylex.create({
     paddingInline: space.md,
   },
   title: {
-    fontSize: fontSizes.md,
     fontWeight: fontWeights.medium,
-    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInline: 0,
@@ -147,8 +143,6 @@ const styles = stylex.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: fontSizes.sm,
-    lineHeight: lineHeights.text,
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInline: 0,
@@ -212,7 +206,7 @@ function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
       data-size={size}
       data-slot="dialog-popup"
       {...props}
-      {...stylex.props(styles.popup, sizeStyles[size], sx)}
+      {...stylex.props([typeStyles.textSm, styles.popup], sizeStyles[size], sx)}
     />
   );
 }
@@ -263,7 +257,7 @@ function DialogTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       {...props}
-      {...stylex.props(styles.title, sx)}
+      {...stylex.props([typeStyles.textLg, styles.title], sx)}
     />
   );
 }
@@ -276,7 +270,7 @@ function DialogDescription({
     <DialogPrimitive.Description
       data-slot="dialog-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
