@@ -96,8 +96,17 @@ function Popover(props: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 
-function PopoverTrigger(props: PopoverPrimitive.Trigger.Props) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+function PopoverTrigger({
+  sx,
+  ...props
+}: Styled<PopoverPrimitive.Trigger.Props>) {
+  return (
+    <PopoverPrimitive.Trigger
+      data-slot="popover-trigger"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 /** Renders the portal, the positioner and the popup. Placement props go to the positioner. */

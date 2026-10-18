@@ -100,14 +100,16 @@ const closeAfter = Number(durations.hoverCardCloseDelay.slice(0, -"ms".length));
 function HoverCardTrigger<Payload>({
   closeDelay = closeAfter,
   delay = openDelay,
+  sx,
   ...props
-}: PreviewCardPrimitive.Trigger.Props<Payload>) {
+}: Styled<PreviewCardPrimitive.Trigger.Props<Payload>>) {
   return (
     <PreviewCardPrimitive.Trigger
       closeDelay={closeDelay}
       data-slot="hover-card-trigger"
       delay={delay}
       {...props}
+      {...stylex.props(sx)}
     />
   );
 }

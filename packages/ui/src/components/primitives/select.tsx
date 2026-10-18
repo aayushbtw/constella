@@ -297,8 +297,14 @@ function Select<Value, Multiple extends boolean | undefined = false>({
   );
 }
 
-function SelectGroup(props: SelectPrimitive.Group.Props) {
-  return <SelectPrimitive.Group data-slot="select-group" {...props} />;
+function SelectGroup({ sx, ...props }: Styled<SelectPrimitive.Group.Props>) {
+  return (
+    <SelectPrimitive.Group
+      data-slot="select-group"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 function SelectValue({ sx, ...props }: Styled<SelectPrimitive.Value.Props>) {

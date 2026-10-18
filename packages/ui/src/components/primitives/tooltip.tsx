@@ -73,19 +73,30 @@ function Tooltip(props: TooltipPrimitive.Root.Props) {
 function TooltipTrigger({
   // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("300ms")` is NaN
   delay = Number.parseFloat(durations.tooltipDelay),
+  sx,
   ...props
-}: TooltipPrimitive.Trigger.Props) {
+}: Styled<TooltipPrimitive.Trigger.Props>) {
   return (
     <TooltipPrimitive.Trigger
       data-slot="tooltip-trigger"
       delay={delay}
       {...props}
+      {...stylex.props(sx)}
     />
   );
 }
 
-function TooltipPortal(props: TooltipPrimitive.Portal.Props) {
-  return <TooltipPrimitive.Portal data-slot="tooltip-portal" {...props} />;
+function TooltipPortal({
+  sx,
+  ...props
+}: Styled<TooltipPrimitive.Portal.Props>) {
+  return (
+    <TooltipPrimitive.Portal
+      data-slot="tooltip-portal"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 function TooltipPositioner({

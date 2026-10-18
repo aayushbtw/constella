@@ -53,15 +53,29 @@ function AlertDialog(props: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root {...props} />;
 }
 
-function AlertDialogTrigger(props: AlertDialogPrimitive.Trigger.Props) {
+function AlertDialogTrigger({
+  sx,
+  ...props
+}: Styled<AlertDialogPrimitive.Trigger.Props>) {
   return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />
+    <AlertDialogPrimitive.Trigger
+      data-slot="alert-dialog-trigger"
+      {...props}
+      {...stylex.props(sx)}
+    />
   );
 }
 
-function AlertDialogPortal(props: AlertDialogPrimitive.Portal.Props) {
+function AlertDialogPortal({
+  sx,
+  ...props
+}: Styled<AlertDialogPrimitive.Portal.Props>) {
   return (
-    <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
+    <AlertDialogPrimitive.Portal
+      data-slot="alert-dialog-portal"
+      {...props}
+      {...stylex.props(sx)}
+    />
   );
 }
 

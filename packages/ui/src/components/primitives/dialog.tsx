@@ -159,12 +159,27 @@ function Dialog(props: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root {...props} />;
 }
 
-function DialogTrigger(props: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+function DialogTrigger({
+  sx,
+  ...props
+}: Styled<DialogPrimitive.Trigger.Props>) {
+  return (
+    <DialogPrimitive.Trigger
+      data-slot="dialog-trigger"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
-function DialogPortal(props: DialogPrimitive.Portal.Props) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+function DialogPortal({ sx, ...props }: Styled<DialogPrimitive.Portal.Props>) {
+  return (
+    <DialogPrimitive.Portal
+      data-slot="dialog-portal"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 function DialogBackdrop({
@@ -275,8 +290,14 @@ function DialogDescription({
   );
 }
 
-function DialogClose(props: DialogPrimitive.Close.Props) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+function DialogClose({ sx, ...props }: Styled<DialogPrimitive.Close.Props>) {
+  return (
+    <DialogPrimitive.Close
+      data-slot="dialog-close"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 // The styles ride on the Button: it applies its own last, over anything Base UI merges in.

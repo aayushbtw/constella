@@ -154,12 +154,24 @@ function Sheet(props: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root {...props} />;
 }
 
-function SheetTrigger(props: SheetPrimitive.Trigger.Props) {
-  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
+function SheetTrigger({ sx, ...props }: Styled<SheetPrimitive.Trigger.Props>) {
+  return (
+    <SheetPrimitive.Trigger
+      data-slot="sheet-trigger"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
-function SheetClose(props: SheetPrimitive.Close.Props) {
-  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
+function SheetClose({ sx, ...props }: Styled<SheetPrimitive.Close.Props>) {
+  return (
+    <SheetPrimitive.Close
+      data-slot="sheet-close"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 /** Renders the portal, backdrop and popup at the `side` edge, with a close button unless `showCloseButton={false}`. */

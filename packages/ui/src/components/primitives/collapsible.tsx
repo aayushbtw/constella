@@ -38,8 +38,9 @@ const Instant = createContext(false);
 function Collapsible({
   onOpenChange,
   open,
+  sx,
   ...props
-}: CollapsiblePrimitive.Root.Props) {
+}: Styled<CollapsiblePrimitive.Root.Props>) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [toggledTo, setToggledTo] = useState<boolean>();
   // A later change from the app's `open` isn't the keyboard's, so it animates.
@@ -54,18 +55,23 @@ function Collapsible({
         }}
         open={open}
         {...props}
+        {...stylex.props(sx)}
       />
     </Instant>
   );
 }
 
 /** Carries `data-collapsible-instant` after a keyboard toggle, so its own icons can snap too. */
-function CollapsibleTrigger(props: CollapsiblePrimitive.Trigger.Props) {
+function CollapsibleTrigger({
+  sx,
+  ...props
+}: Styled<CollapsiblePrimitive.Trigger.Props>) {
   return (
     <CollapsiblePrimitive.Trigger
       data-collapsible-instant={use(Instant) || undefined}
       data-slot="collapsible-trigger"
       {...props}
+      {...stylex.props(sx)}
     />
   );
 }

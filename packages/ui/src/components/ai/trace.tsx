@@ -274,7 +274,7 @@ function TraceCollapsible({
     <Collapsible
       data-slot="trace-collapsible"
       {...props}
-      {...stylex.props(styles.collapsible, sx)}
+      sx={[styles.collapsible, sx]}
     />
   );
 }
@@ -284,12 +284,17 @@ function TraceCollapsibleTrigger({
   children,
   sx,
   ...props
-}: Styled<ComponentProps<typeof CollapsibleTrigger>>) {
+}: Omit<Styled<ComponentProps<typeof CollapsibleTrigger>>, "render">) {
   return (
     <CollapsibleTrigger
       data-slot="trace-collapsible-trigger"
+      render={
+        <button
+          type="button"
+          {...stylex.props(styles.action, styles.trigger, sx)}
+        />
+      }
       {...props}
-      {...stylex.props(styles.action, styles.trigger, sx)}
     >
       {children}
       <span {...stylex.props(styles.chevron)}>

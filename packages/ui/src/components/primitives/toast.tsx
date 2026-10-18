@@ -318,8 +318,14 @@ function ToastProvider(props: ToastPrimitive.Provider.Props) {
   return <ToastPrimitive.Provider {...props} />;
 }
 
-function ToastPortal(props: ToastPrimitive.Portal.Props) {
-  return <ToastPrimitive.Portal data-slot="toast-portal" {...props} />;
+function ToastPortal({ sx, ...props }: Styled<ToastPrimitive.Portal.Props>) {
+  return (
+    <ToastPrimitive.Portal
+      data-slot="toast-portal"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 function ToastViewport({

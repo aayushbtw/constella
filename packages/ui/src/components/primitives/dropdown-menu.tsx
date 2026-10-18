@@ -274,12 +274,30 @@ function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
   );
 }
 
-function DropdownMenuPortal(props: MenuPrimitive.Portal.Props) {
-  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
+function DropdownMenuPortal({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Portal.Props>) {
+  return (
+    <MenuPrimitive.Portal
+      data-slot="dropdown-menu-portal"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
-function DropdownMenuTrigger(props: MenuPrimitive.Trigger.Props) {
-  return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
+function DropdownMenuTrigger({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Trigger.Props>) {
+  return (
+    <MenuPrimitive.Trigger
+      data-slot="dropdown-menu-trigger"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 /** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
@@ -372,8 +390,17 @@ function DropdownMenuEmpty({
   );
 }
 
-function DropdownMenuGroup(props: MenuPrimitive.Group.Props) {
-  return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />;
+function DropdownMenuGroup({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Group.Props>) {
+  return (
+    <MenuPrimitive.Group
+      data-slot="dropdown-menu-group"
+      {...props}
+      {...stylex.props(sx)}
+    />
+  );
 }
 
 function DropdownMenuLabel({
@@ -493,11 +520,15 @@ function DropdownMenuCheckboxItem({
   );
 }
 
-function DropdownMenuRadioGroup(props: MenuPrimitive.RadioGroup.Props) {
+function DropdownMenuRadioGroup({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.RadioGroup.Props>) {
   return (
     <MenuPrimitive.RadioGroup
       data-slot="dropdown-menu-radio-group"
       {...props}
+      {...stylex.props(sx)}
     />
   );
 }
