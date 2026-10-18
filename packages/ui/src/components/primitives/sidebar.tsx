@@ -1375,8 +1375,8 @@ function SidebarMenuButton({
       )
     ),
     render: tooltip === undefined ? render : <TooltipTrigger render={render} />,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-active`.
-    state: { active: isActive, size, slot: "sidebar-menu-button" },
+    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-active`.
+    state: { active: isActive, size, slot: "sidebar-menu-button", variant },
   });
 
   if (tooltip === undefined) {
@@ -1502,25 +1502,19 @@ function SidebarMenuSubItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
 function SidebarMenuSubButton({
   isActive = false,
   render,
-  size = "default",
   sx,
   ...props
 }: Styled<useRender.ComponentProps<"a">> & {
   isActive?: boolean;
-  size?: "sm" | "default";
 }) {
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
       props,
-      stylex.props(
-        [typeStyles.textSm, styles.subButton],
-        size === "sm" && typeStyles.textSm,
-        sx
-      )
+      stylex.props([typeStyles.textSm, styles.subButton], sx)
     ),
     render,
-    state: { active: isActive, size, slot: "sidebar-menu-sub-button" },
+    state: { active: isActive, slot: "sidebar-menu-sub-button" },
   });
 }
 

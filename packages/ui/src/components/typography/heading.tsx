@@ -2,10 +2,16 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
-import { textColors, textWeights, typeStyles } from "@/lib/constella/styles";
+import {
+  textColorStyles,
+  textWeightStyles,
+  typeStyles,
+} from "@/lib/constella/styles";
 import type { TextColor, TextWeight } from "@/lib/constella/styles";
 
-type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6;
+const headingSizes = [1, 2, 3, 4, 5, 6] as const;
+
+type HeadingSize = (typeof headingSizes)[number];
 
 type HeadingProps = Omit<
   useRender.ComponentProps<"h2">,
@@ -51,15 +57,15 @@ function Heading({
       stylex.props(
         styles.base,
         sizeStyles[size],
-        textWeights[weight],
-        textColors[color],
+        textWeightStyles[weight],
+        textColorStyles[color],
         sx
       )
     ),
     render,
-    state: { size, slot: "heading" },
+    state: { color, size, slot: "heading", weight },
   });
 }
 
-export { Heading };
+export { Heading, headingSizes };
 export type { HeadingProps, HeadingSize };

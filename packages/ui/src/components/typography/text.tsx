@@ -2,10 +2,16 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
-import { textColors, textWeights, typeStyles } from "@/lib/constella/styles";
+import {
+  textColorStyles,
+  textWeightStyles,
+  typeStyles,
+} from "@/lib/constella/styles";
 import type { TextColor, TextWeight } from "@/lib/constella/styles";
 
-type TextSize = "sm" | "base" | "lg";
+const textSizes = ["sm", "base", "lg"] as const;
+
+type TextSize = (typeof textSizes)[number];
 
 type TextProps = Omit<useRender.ComponentProps<"p">, "className" | "style"> & {
   color?: TextColor;
@@ -38,15 +44,15 @@ function Text({ color, render, size, sx, weight, ...props }: TextProps) {
       stylex.props(
         styles.base,
         size && sizeStyles[size],
-        weight && textWeights[weight],
-        color && textColors[color],
+        weight && textWeightStyles[weight],
+        color && textColorStyles[color],
         sx
       )
     ),
     render,
-    state: { size, slot: "text" },
+    state: { color, size, slot: "text", weight },
   });
 }
 
-export { Text };
+export { Text, textSizes };
 export type { TextProps, TextSize };

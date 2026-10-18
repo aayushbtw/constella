@@ -62,19 +62,20 @@ const layoutAnimation = {
   easing: easings.layout,
 };
 
+// `error`, not `danger`: Base UI's `toast.promise` sets it.
+const toastTypes = ["error", "info", "success", "warning", "loading"] as const;
+
+type ToastType = (typeof toastTypes)[number];
+
 const icons = {
   error: AlertCircleIcon,
   info: InformationCircleIcon,
   success: CheckmarkCircle02Icon,
   warning: Alert02Icon,
-} satisfies Record<string, IconSvgElement>;
-
-type ToastType = keyof typeof icons | "loading";
+} satisfies Record<Exclude<ToastType, "loading">, IconSvgElement>;
 
 function isToastType(type: string | undefined): type is ToastType {
-  return (
-    type !== undefined && (type === "loading" || Object.hasOwn(icons, type))
-  );
+  return toastTypes.some((name) => name === type);
 }
 
 const styles = stylex.create({
@@ -380,6 +381,7 @@ function ToastIcon({
     <span
       aria-hidden
       data-slot="toast-icon"
+      data-type={type}
       {...props}
       {...stylex.props(styles.icon, sx)}
     >
@@ -627,5 +629,7 @@ export {
   ToastTitle,
   ToastViewport,
   toast,
+  toastTypes,
   useToastManager,
 };
+export type { ToastType };

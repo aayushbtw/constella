@@ -130,14 +130,28 @@ const typeStyles = stylex.create({
 });
 
 // The weights and colors Text, Heading and Caption take as props.
-const textWeights = stylex.create({
+const textWeights = ["regular", "semimedium", "medium", "semibold"] as const;
+const textColors = [
+  "primary",
+  "secondary",
+  "muted",
+  "danger",
+  "success",
+  "warning",
+  "info",
+] as const;
+
+type TextWeight = (typeof textWeights)[number];
+type TextColor = (typeof textColors)[number];
+
+const textWeightStyles = stylex.create({
   regular: { fontWeight: fontWeights.regular },
   semimedium: { fontWeight: fontWeights.semimedium },
   medium: { fontWeight: fontWeights.medium },
   semibold: { fontWeight: fontWeights.semibold },
 });
 
-const textColors = stylex.create({
+const textColorStyles = stylex.create({
   primary: { color: colors.textPrimary },
   secondary: { color: colors.textSecondary },
   muted: { color: colors.textMuted },
@@ -147,8 +161,13 @@ const textColors = stylex.create({
   info: { color: colors.infoText },
 });
 
-type TextColor = keyof typeof textColors;
-type TextWeight = keyof typeof textWeights;
-
-export { joinStyles, textColors, textWeights, typeStyles, visuallyHidden };
+export {
+  joinStyles,
+  textColors,
+  textColorStyles,
+  textWeights,
+  textWeightStyles,
+  typeStyles,
+  visuallyHidden,
+};
 export type { TextColor, TextWeight };

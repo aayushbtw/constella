@@ -2,11 +2,17 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
-import { textColors, textWeights, typeStyles } from "@/lib/constella/styles";
+import {
+  textColorStyles,
+  textWeightStyles,
+  typeStyles,
+} from "@/lib/constella/styles";
 import type { TextColor, TextWeight } from "@/lib/constella/styles";
 import { letterSpacings } from "@/lib/constella/tokens.stylex";
 
-type CaptionSize = "xs" | "sm" | "base" | "lg";
+const captionSizes = ["xs", "sm", "base", "lg"] as const;
+
+type CaptionSize = (typeof captionSizes)[number];
 
 type CaptionProps = Omit<
   useRender.ComponentProps<"p">,
@@ -53,15 +59,15 @@ function Caption({
         styles.base,
         sizeStyles[size],
         uppercase && styles.uppercase,
-        textWeights[weight],
-        textColors[color],
+        textWeightStyles[weight],
+        textColorStyles[color],
         sx
       )
     ),
     render,
-    state: { size, slot: "caption" },
+    state: { color, size, slot: "caption", weight },
   });
 }
 
-export { Caption };
+export { Caption, captionSizes };
 export type { CaptionProps, CaptionSize };
