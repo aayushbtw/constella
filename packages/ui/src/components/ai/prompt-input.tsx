@@ -30,9 +30,9 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-const promptInputStatuses = ["ready", "submitted", "streaming"] as const;
+const promptInputStates = ["ready", "submitted", "streaming"] as const;
 
-type PromptInputStatus = (typeof promptInputStatuses)[number];
+type PromptInputState = (typeof promptInputStates)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
@@ -269,19 +269,20 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
 function PromptInputSubmit({
   disabled,
   onStop,
-  status = "ready",
+  state = "ready",
   ...props
 }: Omit<InputGroupButtonProps, "children" | "onClick" | "type"> & {
   onStop?: () => void;
-  status?: PromptInputStatus;
+  state?: PromptInputState;
 }) {
-  const streaming = status === "streaming";
+  const streaming = state === "streaming";
   return (
     <InputGroupButton
-      aria-busy={status === "submitted" || undefined}
+      aria-busy={state === "submitted" || undefined}
       aria-label={streaming ? "Stop" : "Send"}
       corners="pill"
       data-slot="prompt-input-submit"
+      data-state={state}
       disabled={streaming ? false : disabled}
       onClick={streaming ? onStop : undefined}
       size="icon-sm"
@@ -315,10 +316,10 @@ export {
   PromptInputBarButton,
   PromptInputFooter,
   PromptInputHeader,
-  promptInputStatuses,
+  promptInputStates,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
   PromptInputWell,
 };
-export type { PromptInputStatus };
+export type { PromptInputState };

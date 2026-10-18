@@ -162,12 +162,12 @@ Use the `size` prop on `CodeBlock`: `sm` or `default`.
 
 ## Variant
 
-Use `variant="danger"` for an error's output. `CodeBlockFooter` holds a line under the code.
+Use `status="danger"` for an error's output. `CodeBlockFooter` holds a line under the code.
 
 <!-- ::demo name="code-block-danger" -->
 
 ```tsx
-<CodeBlock variant="danger">
+<CodeBlock status="danger">
   <CodeBlockHeader>
     <HugeiconsIcon icon={Alert02Icon} />
     <CodeBlockTitle>Build failed</CodeBlockTitle>
@@ -187,7 +187,7 @@ Every part takes `sx`, applied last.
 
 | Part | Adds |
 | --- | --- |
-| `CodeBlock` | `variant`: `default` or `danger`; `size`: `sm` or `default` |
+| `CodeBlock` | `status`: `danger`; `size`: `sm` or `default` |
 | `CodeBlockContent` | `lineNumbers`; `startLine` (default `1`); `wrap` |
 | `CodeBlockLine` | `variant`: `default`, `highlighted`, `added` or `removed` |
 | `CodeBlockHeader`, `CodeBlockTitle`, `CodeBlockActions`, `CodeBlockFooter` | Nothing; a `div` each |

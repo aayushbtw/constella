@@ -35,12 +35,12 @@ type AvatarProps = Styled<AvatarPrimitive.Root.Props> & {
   size?: AvatarSize;
 };
 
-const avatarStatuses = ["online", "away", "busy", "offline"] as const;
+const avatarPresences = ["online", "away", "busy", "offline"] as const;
 
-type AvatarStatus = (typeof avatarStatuses)[number];
+type AvatarPresence = (typeof avatarPresences)[number];
 
 type AvatarBadgeProps = Styled<ComponentProps<"span">> & {
-  status?: AvatarStatus;
+  presence?: AvatarPresence;
 };
 
 const inGroup = ":is([data-slot='avatar-group'] > *)";
@@ -307,29 +307,29 @@ function AvatarFallback({
   );
 }
 
-const statusStyles = {
+const presenceStyles = {
   away: styles.away,
   busy: styles.busy,
   offline: styles.offline,
   online: styles.online,
-} satisfies Record<AvatarStatus, stylex.StyleXStyles>;
+} satisfies Record<AvatarPresence, stylex.StyleXStyles>;
 
-const statusLabels = {
+const presenceLabels = {
   away: "Away",
   busy: "Busy",
   offline: "Offline",
   online: "Online",
-} satisfies Record<AvatarStatus, string>;
+} satisfies Record<AvatarPresence, string>;
 
-function AvatarBadge({ status, sx, ...props }: AvatarBadgeProps) {
+function AvatarBadge({ presence, sx, ...props }: AvatarBadgeProps) {
   return (
     <span
-      aria-label={status && statusLabels[status]}
+      aria-label={presence && presenceLabels[presence]}
       data-slot="avatar-badge"
-      data-status={status}
-      role={status && "img"}
+      data-presence={presence}
+      role={presence && "img"}
       {...props}
-      {...stylex.props(styles.badge, status && statusStyles[status], sx)}
+      {...stylex.props(styles.badge, presence && presenceStyles[presence], sx)}
     />
   );
 }
@@ -363,12 +363,12 @@ export {
   AvatarImage,
   avatarCorners,
   avatarSizes,
-  avatarStatuses,
+  avatarPresences,
 };
 export type {
   AvatarBadgeProps,
   AvatarProps,
   AvatarCorners,
   AvatarSize,
-  AvatarStatus,
+  AvatarPresence,
 };

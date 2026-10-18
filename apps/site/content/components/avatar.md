@@ -90,7 +90,7 @@ Use `corners="rounded"` for a logo or an app icon. Avatar groups take the defaul
 
 ## Badge
 
-Use `AvatarBadge` for a dot on the avatar's corner. Its `status` prop colors it and names it for screen readers; pass `aria-label` to rename it.
+Use `AvatarBadge` for a dot on the avatar's corner. Its `presence` prop colors it and names it for screen readers; pass `aria-label` to rename it.
 
 <!-- ::demo name="avatar-badge" -->
 
@@ -105,13 +105,13 @@ Use `AvatarBadge` for a dot on the avatar's corner. Its `status` prop colors it 
 <Avatar>
   <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
-  <AvatarBadge status="busy" />
+  <AvatarBadge presence="busy" />
 </Avatar>
 ```
 
 ### With Icon
 
-Put an icon inside `AvatarBadge`, with or without a `status`.
+Put an icon inside `AvatarBadge`, with or without a `presence`.
 
 <!-- ::demo name="avatar-badge-icon" -->
 
@@ -119,7 +119,7 @@ Put an icon inside `AvatarBadge`, with or without a `status`.
 <Avatar>
   <AvatarImage alt="@aayushbtw" src="/avatars/aayushbtw.png" />
   <AvatarFallback>AY</AvatarFallback>
-  <AvatarBadge status="online">
+  <AvatarBadge presence="online">
     <HugeiconsIcon icon={Tick02Icon} size={sizes.iconXxs} />
   </AvatarBadge>
 </Avatar>
@@ -207,4 +207,4 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
 
 ## API Reference
 
-`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `status`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).
+`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `presence`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).

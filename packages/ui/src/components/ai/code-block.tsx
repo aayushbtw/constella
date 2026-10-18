@@ -14,7 +14,7 @@ import {
   space,
 } from "@/lib/constella/tokens.stylex";
 
-const codeBlockVariants = ["default", "danger"] as const;
+const codeBlockStatuses = ["danger"] as const;
 const codeBlockSizes = ["sm", "default"] as const;
 const codeBlockLineVariants = [
   "default",
@@ -23,7 +23,7 @@ const codeBlockLineVariants = [
   "highlighted",
 ] as const;
 
-type CodeBlockVariant = (typeof codeBlockVariants)[number];
+type CodeBlockStatus = (typeof codeBlockStatuses)[number];
 type CodeBlockSize = (typeof codeBlockSizes)[number];
 type CodeBlockLineVariant = (typeof codeBlockLineVariants)[number];
 
@@ -31,7 +31,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-const danger = ":is([data-slot='code-block'][data-variant='danger'] *)";
+const danger = ":is([data-slot='code-block'][data-status='danger'] *)";
 const numbered = ":is([data-numbered] *)";
 const numberedSelf = ":is([data-numbered])";
 const marks =
@@ -234,10 +234,9 @@ const styles = stylex.create({
   },
 });
 
-const variantStyles = {
+const statusStyles = {
   danger: styles.danger,
-  default: null,
-} satisfies Record<CodeBlockVariant, stylex.StyleXStyles>;
+} satisfies Record<CodeBlockStatus, stylex.StyleXStyles>;
 
 const lineVariantStyles = {
   added: styles.added,
@@ -249,23 +248,23 @@ const lineVariantStyles = {
 /** A tray of code. The app highlights it; the block lays it out. */
 function CodeBlock({
   size = "default",
+  status,
   sx,
-  variant = "default",
   ...props
 }: Styled<ComponentProps<"div">> & {
   size?: CodeBlockSize;
-  variant?: CodeBlockVariant;
+  status?: CodeBlockStatus;
 }) {
   return (
     <div
       data-size={size}
       data-slot="code-block"
-      data-variant={variant}
+      data-status={status}
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.block],
         size === "sm" && [typeStyles.captionLg, styles.sm],
-        variantStyles[variant],
+        status && statusStyles[status],
         sx
       )}
     />
@@ -401,6 +400,6 @@ export {
   codeBlockLineVariants,
   codeBlockSizes,
   CodeBlockTitle,
-  codeBlockVariants,
+  codeBlockStatuses,
 };
-export type { CodeBlockLineVariant, CodeBlockSize, CodeBlockVariant };
+export type { CodeBlockLineVariant, CodeBlockSize, CodeBlockStatus };

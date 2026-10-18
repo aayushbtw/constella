@@ -1,6 +1,6 @@
 ---
 title: Trace
-description: The steps an agent takes, one line each, that open, link or show a status.
+description: The steps an agent takes, one line each, that open, link or show a state.
 section: AI
 ---
 
@@ -81,11 +81,11 @@ Use a `TraceLine` on its own for a step with nothing more to show. It reads as p
 </TraceLine>
 ```
 
-## Status
+## State
 
-Set `status` on `TraceLine` when a step is running, has failed or hasn't started. Status shows as color and motion, so say it in the title too.
+Set `state` on `TraceLine` when a step is running, has failed or hasn't started. State shows as color and motion, so say it in the title too.
 
-| Status    | Use for                                                        |
+| State     | Use for                                                        |
 | --------- | -------------------------------------------------------------- |
 | none      | Work that is done: "Ran pnpm install"                          |
 | `running` | Work in progress, in the present tense: "Running pnpm build"   |
@@ -95,7 +95,7 @@ Set `status` on `TraceLine` when a step is running, has failed or hasn't started
 <!-- ::demo name="trace-status" -->
 
 ```tsx
-<TraceLine status="running">
+<TraceLine state="running">
   <TraceIcon>
     <Spinner aria-hidden />
   </TraceIcon>
@@ -198,7 +198,7 @@ Use a [controlled](#controlled) `TraceCollapsible` for the model's thinking, so 
 ```tsx
 <TraceCollapsible onOpenChange={setOpen} open={open ?? running}>
   <TraceCollapsibleTrigger>
-    <TraceLine status={running ? "running" : undefined}>
+    <TraceLine state={running ? "running" : undefined}>
       <TraceIcon>
         <BrainIcon />
       </TraceIcon>
@@ -211,14 +211,14 @@ Use a [controlled](#controlled) `TraceCollapsible` for the model's thinking, so 
 
 ## Tool
 
-Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `status` as its call starts and ends, and swap its icon with a [Swap Icon](/docs/components/swap-icon). A finished call has no status.
+Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `state` as its call starts and ends, and swap its icon with a [Swap Icon](/docs/components/swap-icon). A finished call has no state.
 
 <!-- ::demo name="trace-tool" -->
 
 ```tsx
 <TraceCollapsible defaultOpen>
   <TraceCollapsibleTrigger>
-    <TraceLine status={running ? "running" : undefined}>
+    <TraceLine state={running ? "running" : undefined}>
       <TraceIcon>
         <WrenchIcon />
       </TraceIcon>
@@ -227,7 +227,7 @@ Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `status` as
   </TraceCollapsibleTrigger>
   <TraceCollapsibleContent>
     <Trace>
-      <TraceLine status={status === "done" ? undefined : status}>
+      <TraceLine state={status === "done" ? undefined : status}>
         <TraceIcon>
           <SwapIcon value={status}>
             <SwapIconItem value="running">
@@ -299,7 +299,7 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger, rendered as
 | Part | Adds |
 | --- | --- |
 | `Trace` | A column of lines |
-| `TraceLine` | `status`: `running` shimmers the title, `error` turns it `dangerText`, `pending` dims it |
+| `TraceLine` | `state`: `running` shimmers the title, `error` turns it `dangerText`, `pending` dims it |
 | `TraceIcon` | A 16px slot hidden from screen readers; after the title it's the indicator |
 | `TraceTitle` | One line, cut short |
 | `TraceDescription` | Muted, tabular numbers; doesn't truncate |

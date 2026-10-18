@@ -227,7 +227,7 @@ const failure = `Error: Cannot find module '@/lib/ai'
 function CodeBlockDangerDemo() {
   return (
     <DemoRow>
-      <CodeBlock sx={styles.width} variant="danger">
+      <CodeBlock status="danger" sx={styles.width}>
         <CodeBlockHeader>
           <Icon icon={Alert02Icon} />
           <CodeBlockTitle>Build failed</CodeBlockTitle>

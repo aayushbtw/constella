@@ -18,7 +18,7 @@ section: AI
         <HugeiconsIcon icon={Attachment01Icon} />
       </InputGroupButton>
     </PromptInputTools>
-    <PromptInputSubmit onStop={stop} status={status} />
+    <PromptInputSubmit onStop={stop} state={status} />
   </PromptInputFooter>
 </PromptInput>
 ```
@@ -97,16 +97,16 @@ Put the prompt input in a `PromptInputWell`, a tinted tray, when it needs contex
 
 ## Prompt Input Submit
 
-Pass the answer's `status`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.
+Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.
 
-| Status      | Button     |
+| State       | Button     |
 | ----------- | ---------- |
 | `ready`     | Send       |
 | `submitted` | Send, busy |
 | `streaming` | Stop       |
 
 ```tsx
-<PromptInputSubmit onStop={stop} status={status} />
+<PromptInputSubmit onStop={stop} state={status} />
 ```
 
 ## API Reference
@@ -118,6 +118,6 @@ Pass the answer's `status`. While it's `streaming`, the arrow swaps to a stop sq
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |
 | `PromptInputBarButton` | A ghost `sm` pill in secondary text |
-| `PromptInputSubmit` | `status`: `"ready"`, `"submitted"` or `"streaming"`; `onStop` |
+| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop` |
 
 Every part takes `sx`, applied last.

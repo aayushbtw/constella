@@ -17,9 +17,9 @@ import {
   AvatarGroupCount,
   AvatarImage,
   avatarSizes,
-  avatarStatuses,
+  avatarPresences,
 } from "@/components/primitives/avatar";
-import type { AvatarStatus } from "@/components/primitives/avatar";
+import type { AvatarPresence } from "@/components/primitives/avatar";
 import { Button } from "@/components/primitives/button";
 import {
   DropdownMenu,
@@ -58,12 +58,12 @@ function Person({ fallback, handle }: { fallback: string; handle: string }) {
   );
 }
 
-const statusIcons = {
+const presenceIcons = {
   away: Clock01Icon,
   busy: MinusSignIcon,
   offline: Cancel01Icon,
   online: Tick02Icon,
-} satisfies Record<AvatarStatus, typeof Add01Icon>;
+} satisfies Record<AvatarPresence, typeof Add01Icon>;
 
 function Glyph({
   icon = Add01Icon,
@@ -103,7 +103,7 @@ function AvatarDemo() {
       </Avatar>
       <Avatar>
         <Person fallback="ER" handle="evilrabbit" />
-        <AvatarBadge status="online" />
+        <AvatarBadge presence="online" />
       </Avatar>
       <Group count="+3" />
     </DemoRow>
@@ -123,10 +123,10 @@ function AvatarFallbackDemo() {
 function AvatarBadgeDemo() {
   return (
     <DemoRow>
-      {avatarStatuses.map((status) => (
-        <Avatar key={status}>
+      {avatarPresences.map((presence) => (
+        <Avatar key={presence}>
           <Person {...me} />
-          <AvatarBadge status={status} />
+          <AvatarBadge presence={presence} />
         </Avatar>
       ))}
     </DemoRow>
@@ -136,11 +136,11 @@ function AvatarBadgeDemo() {
 function AvatarBadgeIconDemo() {
   return (
     <DemoRow>
-      {avatarStatuses.map((status) => (
-        <Avatar key={status}>
+      {avatarPresences.map((presence) => (
+        <Avatar key={presence}>
           <Person {...me} />
-          <AvatarBadge status={status}>
-            <Glyph icon={statusIcons[status]} size={sizes.iconXxs} />
+          <AvatarBadge presence={presence}>
+            <Glyph icon={presenceIcons[presence]} size={sizes.iconXxs} />
           </AvatarBadge>
         </Avatar>
       ))}

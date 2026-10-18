@@ -24,15 +24,15 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-const traceStatuses = ["running", "error", "pending"] as const;
+const traceStates = ["running", "error", "pending"] as const;
 
-type TraceStatus = (typeof traceStatuses)[number];
+type TraceState = (typeof traceStates)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-const Status = createContext<TraceStatus | undefined>(undefined);
+const State = createContext<TraceState | undefined>(undefined);
 
 const open = ":is([data-panel-open] > *)";
 const instant = ":is([data-collapsible-instant] > *)";
@@ -40,7 +40,7 @@ const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
-const failed = "[data-status='error']";
+const failed = "[data-state='error']";
 // Under the line's icon, stopping `space.xxs` short of it.
 const reach = `calc((${sizes.controlSm} - ${sizes.icon}) / 2 - ${space.xxs})`;
 const rail = {
@@ -194,24 +194,24 @@ function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
 
 /** One step: an icon and a title. Wrap it in a trigger or a link to make it do something. */
 function TraceLine({
-  status,
+  state,
   sx,
   ...props
-}: Styled<ComponentProps<"span">> & { status?: TraceStatus }) {
+}: Styled<ComponentProps<"span">> & { state?: TraceState }) {
   return (
-    <Status value={status}>
+    <State value={state}>
       <span
         data-slot="trace-line"
-        data-status={status}
+        data-state={state}
         {...props}
         {...stylex.props(
           [typeStyles.textSm, styles.line],
-          status === "error" && styles.error,
-          status === "pending" && styles.pending,
+          state === "error" && styles.error,
+          state === "pending" && styles.pending,
           sx
         )}
       />
-    </Status>
+    </State>
   );
 }
 
@@ -233,7 +233,7 @@ function TraceTitle({
   sx,
   ...props
 }: Styled<ComponentProps<"span">>) {
-  const running = use(Status) === "running";
+  const running = use(State) === "running";
   return (
     <span
       data-slot="trace-title"
@@ -332,7 +332,7 @@ export {
   TraceDescription,
   TraceIcon,
   TraceLine,
-  traceStatuses,
+  traceStates,
   TraceTitle,
 };
-export type { TraceStatus };
+export type { TraceState };

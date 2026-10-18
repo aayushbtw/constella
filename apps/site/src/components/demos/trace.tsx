@@ -111,7 +111,7 @@ function TraceDemo() {
         </TraceLine>
         <TraceCollapsible defaultOpen>
           <TraceCollapsibleTrigger>
-            <TraceLine status="error">
+            <TraceLine state="error">
               <TraceIcon>
                 <Icon icon={Alert02Icon} />
               </TraceIcon>
@@ -121,7 +121,7 @@ function TraceDemo() {
             </TraceLine>
           </TraceCollapsibleTrigger>
           <TraceCollapsibleContent>
-            <CodeBlock size="sm" variant="danger">
+            <CodeBlock size="sm" status="danger">
               <CodeBlockContent wrap>{failure}</CodeBlockContent>
             </CodeBlock>
           </TraceCollapsibleContent>
@@ -187,19 +187,19 @@ function TraceStatusDemo() {
           </TraceIcon>
           <TraceTitle>Ran pnpm install</TraceTitle>
         </TraceLine>
-        <TraceLine status="running">
+        <TraceLine state="running">
           <TraceIcon>
             <Spinner aria-hidden />
           </TraceIcon>
           <TraceTitle>Running pnpm build</TraceTitle>
         </TraceLine>
-        <TraceLine status="error">
+        <TraceLine state="error">
           <TraceIcon>
             <Icon icon={Alert02Icon} />
           </TraceIcon>
           <TraceTitle>Failed to run pnpm lint</TraceTitle>
         </TraceLine>
-        <TraceLine status="pending">
+        <TraceLine state="pending">
           <TraceIcon>
             <Icon icon={TerminalIcon} />
           </TraceIcon>
@@ -287,7 +287,7 @@ function TraceReasoningDemo() {
         sx={styles.width}
       >
         <TraceCollapsibleTrigger>
-          <TraceLine status={running ? "running" : undefined}>
+          <TraceLine state={running ? "running" : undefined}>
             <TraceIcon>
               <Icon icon={AiBrain01Icon} />
             </TraceIcon>
@@ -380,7 +380,7 @@ function TraceToolDemo() {
     >
       <TraceCollapsible defaultOpen sx={styles.width}>
         <TraceCollapsibleTrigger>
-          <TraceLine status={running ? "running" : undefined}>
+          <TraceLine state={running ? "running" : undefined}>
             <TraceIcon>
               <SwapIcon value={running ? "running" : "done"}>
                 <SwapIconItem value="running">
@@ -403,7 +403,7 @@ function TraceToolDemo() {
               return status === null ? null : (
                 <TraceLine
                   key={step.description}
-                  status={status === "done" ? undefined : status}
+                  state={status === "done" ? undefined : status}
                 >
                   <TraceIcon>
                     <SwapIcon value={status}>

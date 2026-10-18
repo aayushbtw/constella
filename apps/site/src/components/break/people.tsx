@@ -155,7 +155,7 @@ function AvatarBreak({ data }: { data: Dataset }) {
             <AvatarImage alt="" src={people[0].src} />
           )}
           <AvatarFallback>{people[0].initials}</AvatarFallback>
-          <AvatarBadge status="online" />
+          <AvatarBadge presence="online" />
         </Avatar>
       )}
       <AvatarGroup>

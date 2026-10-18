@@ -48,7 +48,7 @@ import {
   PromptInputTools,
   PromptInputWell,
 } from "@/components/ai/prompt-input";
-import type { PromptInputStatus } from "@/components/ai/prompt-input";
+import type { PromptInputState } from "@/components/ai/prompt-input";
 import { Button } from "@/components/primitives/button";
 import { CopyButton } from "@/components/primitives/copy-button";
 import { InputGroupButton } from "@/components/primitives/input-group";
@@ -172,7 +172,7 @@ function Composer({
 }: {
   onStop?: () => void;
   onSubmit?: (text: string) => void;
-  status: PromptInputStatus;
+  status: PromptInputState;
 }) {
   const [text, setText] = useState("");
   return (
@@ -202,7 +202,7 @@ function Composer({
         <PromptInputSubmit
           disabled={text.trim() === ""}
           onStop={onStop}
-          status={status}
+          state={status}
         />
       </PromptInputFooter>
     </PromptInput>
