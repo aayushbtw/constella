@@ -2,6 +2,7 @@
 
 ## Contents
 
+- Check the project first
 - Install
 - Configure StyleX
 - Verify
@@ -10,11 +11,31 @@
 
 ---
 
+## Check the project first
+
+Constella does nothing until a StyleX compiler runs on the app's source. Before adding a component, look for it:
+
+| Signal | Where |
+| --- | --- |
+| `@stylexjs/*` in dependencies | `package.json` |
+| `@stylexjs/babel-plugin` and `@stylexjs/postcss-plugin` | `babel.config.js`, `postcss.config.js` (Next.js) |
+| `@stylexjs/unplugin` | `vite.config.ts` (Vite, TanStack Start) |
+| `@stylex;` | the global stylesheet (Next.js) |
+
+- **Missing:** the project isn't set up. Ask the user before changing their build: Constella needs StyleX's compiler in the config. If they agree, do [Configure StyleX](#configure-stylex) after the first `add`. If not, stop; the components won't render styled without it.
+- **Present:** skip it, and still verify.
+
+A new project with neither StyleX nor Tailwind is the plain case: ask once, then set it up.
+
+**Tailwind already there?** Look for `tailwindcss` in `package.json` or a `tailwind` block with a `css` file in `components.json`. Constella doesn't use Tailwind, so running both means two styling systems in one app: Tailwind classes on the app's own code, `sx` on Constella's parts. Tell the user before adding anything, and let them decide. Don't touch the Tailwind setup, and don't rewrite their existing shadcn components.
+
+---
+
 ## Install
 
 Follow the page for the project's framework, not the shadcn default: https://constella.aayush.cv/docs/installation/index.md lists them (Next.js, TanStack Start). Another Vite or Babel setup follows the closest page.
 
-**Never run `shadcn init`.** It sets up Tailwind, which these components don't use. Write `components.json` by hand:
+**Never run `shadcn init`.** It writes a setup these components do not use. Write `components.json` by hand:
 
 ```json
 {

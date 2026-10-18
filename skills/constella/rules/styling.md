@@ -1,11 +1,11 @@
 # Styling
 
-StyleX, not Tailwind. A style is a value from `stylex.create`, built from tokens, passed to a part as `sx`.
+A style is a value from `stylex.create`, built from tokens, passed to a part as `sx`.
 
 ## Contents
 
 - `sx`, never `className` or `style`
-- No Tailwind classes
+- No utility classes
 - Tokens, not raw values
 - Longhands only
 - Hover behind `media.hover`
@@ -47,7 +47,7 @@ A wrapper you write passes `sx` through, never drops it, and applies it last in 
 
 ---
 
-## No Tailwind classes
+## No utility classes
 
 There is no Tailwind in the project, so `flex`, `gap-4`, `bg-muted`, `text-sm` do nothing. Lay out with a `stylex.create` style.
 

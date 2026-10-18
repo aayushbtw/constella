@@ -1,11 +1,11 @@
 ---
 name: constella
-description: Install and build with Constella, React components on Base UI styled with StyleX (not Tailwind), added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/{primitives,typography,ai,tanstack}/* or @/lib/constella/*, uses stylex, or the user asks to set up, theme, add or fix a Constella component, or to build UI, forms or a chat screen with it.
+description: Install and build with Constella, React components on Base UI styled with StyleX, added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/{primitives,typography,ai,tanstack}/* or @/lib/constella/*, uses stylex, or the user asks to set up, theme, add or fix a Constella component, or to build UI, forms or a chat screen with it.
 ---
 
 # Constella
 
-React components on Base UI, styled with StyleX, copied into the project with the shadcn CLI. They look like shadcn's, but the API differs: Base UI underneath, `sx` instead of `className`, tokens instead of Tailwind. **What you remember about shadcn is a starting point; the component's page wins.**
+React components on Base UI, styled with StyleX, copied into the project with the shadcn CLI. They look like shadcn's, but the API differs: Base UI underneath, `sx` instead of `className`, tokens instead of utility classes. **What you remember about shadcn is a starting point; the component's page wins.**
 
 ## Docs
 
@@ -32,7 +32,7 @@ Each links to a file with Incorrect/Correct pairs.
 ### Styling → [styling.md](./rules/styling.md)
 
 - **`sx`, never `className` or `style`.** Parts take `sx?: StyleXStyles` from `stylex.create` and apply it last.
-- **No Tailwind classes.** Not `flex gap-4`, not `bg-primary`. There is no Tailwind in the project.
+- **No utility classes.** Not `flex gap-4`, not `bg-primary`.
 - **No raw values.** Not `#fff`, `16px`, `200ms`, `z-index: 50`. Use `colors`, `space`, `radii`, `sizes`, `durations`, `layers`.
 - **Longhands only.** `paddingBlock`, `paddingInline`, `borderTopWidth`. Not `padding`, `margin`, `border`, `borderRadius`: a shorthand loses to any longhand merged in through `sx`.
 - **Hover is behind `media.hover`.** Otherwise touch sticks.
@@ -70,7 +70,7 @@ Each links to a file with Incorrect/Correct pairs.
 
 ### Setup → [setup.md](./setup.md)
 
-- **Never run `shadcn init`.** It sets up Tailwind. Write `components.json` by hand.
+- **Never run `shadcn init`.** It writes a setup these components do not use. Write `components.json` by hand.
 - **Theme in `theme.stylex.ts`,** the one file you own. Dark mode is a `dark` class on `<html>`.
 - **Keep the `@/*` alias** in `tsconfig.json` and StyleX's config in step.
 
@@ -94,7 +94,7 @@ Each links to a file with Incorrect/Correct pairs.
 
 ## Workflow
 
-1. **Check what's installed.** `npx shadcn@latest info --json` lists the config and components. Don't import one that isn't added, and don't re-add one that is.
+1. **Check the project.** Is a StyleX compiler set up? Is Tailwind there too? See [setup.md](./setup.md#check-the-project-first); warn the user about Tailwind before adding. `npx shadcn@latest info --json` lists the config and components. Don't import one that isn't added, and don't re-add one that is.
 2. **Read the page** for every component you'll use, plus any it names as a dependency.
 3. **Add:** `npx shadcn@latest add @constella/<name>`. The first adds StyleX, the tokens and `theme.stylex.ts`. Preview an update with `--dry-run` and `--diff`; never `--overwrite` without the user's approval.
 4. **Build** with the rules above.
