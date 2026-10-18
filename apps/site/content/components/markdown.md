@@ -21,7 +21,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Markdown } from "@/components/ui/markdown";
+import { Markdown } from "@/components/ai/markdown";
 ```
 
 ```tsx

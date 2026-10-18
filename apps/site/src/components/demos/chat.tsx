@@ -23,15 +23,12 @@ import {
   AttachmentGroup,
   AttachmentMedia,
   AttachmentTitle,
-} from "@/components/ui/attachment";
-import { Button } from "@/components/ui/button";
-import { CopyButton } from "@/components/ui/copy-button";
-import { InputGroupButton } from "@/components/ui/input-group";
+} from "@/components/ai/attachment";
 import {
   Message,
   MessageActions,
   MessageContent,
-} from "@/components/ui/message";
+} from "@/components/ai/message";
 import {
   MessageScroller,
   MessageScrollerButton,
@@ -39,7 +36,7 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "@/components/ui/message-scroller";
+} from "@/components/ai/message-scroller";
 import {
   PromptInput,
   PromptInputBar,
@@ -50,8 +47,11 @@ import {
   PromptInputTextarea,
   PromptInputTools,
   PromptInputWell,
-} from "@/components/ui/prompt-input";
-import type { PromptInputStatus } from "@/components/ui/prompt-input";
+} from "@/components/ai/prompt-input";
+import type { PromptInputStatus } from "@/components/ai/prompt-input";
+import { Button } from "@/components/primitives/button";
+import { CopyButton } from "@/components/primitives/copy-button";
+import { InputGroupButton } from "@/components/primitives/input-group";
 import {
   colors,
   radii,

@@ -47,29 +47,21 @@ import {
   useState,
 } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DataTable,
-  DataTableColumnHeader,
-  DataTablePagination,
-  DataTableSelectAll,
-  DataTableSelectRow,
-  DataTableViewOptions,
-} from "@/components/ui/data-table";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/primitives/dropdown-menu";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/components/primitives/input-group";
+import { ScrollArea } from "@/components/primitives/scroll-area";
 import {
   SidePanel,
   SidePanelBody,
@@ -77,9 +69,20 @@ import {
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
-} from "@/components/ui/side-panel";
-import { Text } from "@/components/ui/text";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+} from "@/components/primitives/side-panel";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTablePagination,
+  DataTableSelectAll,
+  DataTableSelectRow,
+  DataTableViewOptions,
+} from "@/components/tanstack/data-table";
+import { Text } from "@/components/typography/text";
 import {
   colors,
   radii,

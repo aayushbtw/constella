@@ -10,8 +10,8 @@ import {
   CodeBlock,
   CodeBlockActions,
   CodeBlockContent,
-} from "@/components/ui/code-block";
-import { CopyButton } from "@/components/ui/copy-button";
+} from "@/components/ai/code-block";
+import { CopyButton } from "@/components/primitives/copy-button";
 import {
   Table,
   TableBody,
@@ -19,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/primitives/table";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

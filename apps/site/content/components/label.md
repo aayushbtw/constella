@@ -17,7 +17,7 @@ description: Names a control.
 ## Usage
 
 ```tsx
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/primitives/label";
 ```
 
 ```tsx

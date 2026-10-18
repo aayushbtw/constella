@@ -8,20 +8,24 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
 import {
   Badge,
   BadgeDot,
   badgeSizes,
   badgeStatuses,
   badgeVariants,
-} from "@/components/ui/badge";
+} from "@/components/primitives/badge";
 import type {
   BadgeSize,
   BadgeStatus,
   BadgeVariant,
-} from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/primitives/badge";
+import { Spinner } from "@/components/primitives/spinner";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

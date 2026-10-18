@@ -4,8 +4,8 @@ import {
   CodeBlock,
   CodeBlockActions,
   CodeBlockContent,
-} from "@/components/ui/code-block";
-import { CopyButton } from "@/components/ui/copy-button";
+} from "@/components/ai/code-block";
+import { CopyButton } from "@/components/primitives/copy-button";
 import { colors } from "@/lib/constella/tokens.stylex";
 import { CodeTokens } from "~/components/docs/code-tokens";
 import { config } from "~/lib/config";

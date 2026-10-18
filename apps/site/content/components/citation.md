@@ -20,7 +20,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Citation, CitationCard } from "@/components/ui/citation";
+import { Citation, CitationCard } from "@/components/ai/citation";
 ```
 
 ```tsx

@@ -17,7 +17,7 @@ import {
   SliderControl,
   SliderLabel,
   SliderValue,
-} from "@/components/ui/slider";
+} from "@/components/primitives/slider";
 ```
 
 ```tsx

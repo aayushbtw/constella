@@ -1,7 +1,7 @@
 import type { HighlightToken } from "@tanstack/highlight/core";
 
-import { CodeBlockLine } from "@/components/ui/code-block";
-import type { CodeBlockLineVariant } from "@/components/ui/code-block";
+import { CodeBlockLine } from "@/components/ai/code-block";
+import type { CodeBlockLineVariant } from "@/components/ai/code-block";
 import { codeLines } from "~/lib/highlight";
 
 /** Highlighted tokens, colored by the highlighter's theme CSS. */

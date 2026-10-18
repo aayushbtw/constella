@@ -13,9 +13,9 @@ import {
   AlertAction,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
-import type { AlertStatus } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+} from "@/components/primitives/alert";
+import type { AlertStatus } from "@/components/primitives/alert";
+import { Button } from "@/components/primitives/button";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

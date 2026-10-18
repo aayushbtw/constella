@@ -26,7 +26,7 @@ description: Shows a key or a shortcut.
 ## Usage
 
 ```tsx
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Kbd, KbdGroup } from "@/components/primitives/kbd";
 ```
 
 ```tsx

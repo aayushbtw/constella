@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/primitives/badge";
+import { ScrollArea } from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles } from "@/lib/constella/styles";
 import {

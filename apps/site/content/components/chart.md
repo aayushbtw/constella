@@ -58,8 +58,8 @@ const definition = useMemo(
 ## Usage
 
 ```tsx
-import { Chart, chartColor } from "@/components/ui/chart";
-import type { ChartConfig } from "@/components/ui/chart";
+import { Chart, chartColor } from "@/components/tanstack/chart";
+import type { ChartConfig } from "@/components/tanstack/chart";
 ```
 
 Build the chart with [TanStack Charts](https://tanstack.com/charts)' `defineChart` and pass it to `Chart` with an `ariaLabel` that names the metric and period. Marks, scales, focus and the tooltip's behavior stay in the definition; `Chart` draws it in the theme's palette, with axes, ticks and grid lines in `textMuted`.

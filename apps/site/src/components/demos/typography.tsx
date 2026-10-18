@@ -1,12 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { Caption } from "@/components/ui/caption";
-import type { CaptionSize } from "@/components/ui/caption";
-import { Heading } from "@/components/ui/heading";
-import type { HeadingSize } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import type { TextSize } from "@/components/ui/text";
+import { Caption } from "@/components/typography/caption";
+import type { CaptionSize } from "@/components/typography/caption";
+import { Heading } from "@/components/typography/heading";
+import type { HeadingSize } from "@/components/typography/heading";
+import { Text } from "@/components/typography/text";
+import type { TextSize } from "@/components/typography/text";
 import type { TextWeight } from "@/lib/constella/styles";
 import {
   colors,

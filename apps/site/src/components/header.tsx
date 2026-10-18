@@ -3,7 +3,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
 
-import { Button, buttonStyles } from "@/components/ui/button";
+import { Button, buttonStyles } from "@/components/primitives/button";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

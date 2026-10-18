@@ -35,7 +35,7 @@ function pages(path: string, check?: typeof checkComponentPage) {
       title: z.string(),
     }),
     transform: ({ body, metadata }, { dev, skip }) => {
-      check?.(body, metadata.title);
+      check?.(body, metadata.title, metadata.section);
 
       if (metadata.draft && !dev) {
         return skip("draft");

@@ -18,7 +18,7 @@ description: Cross-fades one label into another in place.
 ## Usage
 
 ```tsx
-import { SwapText } from "@/components/ui/swap-text";
+import { SwapText } from "@/components/primitives/swap-text";
 ```
 
 ```tsx

@@ -7,7 +7,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
+} from "@/components/primitives/field";
 import {
   Select,
   SelectContent,
@@ -18,9 +18,9 @@ import {
   selectSizes,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import type { SelectSize } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from "@/components/primitives/select";
+import type { SelectSize } from "@/components/primitives/select";
+import { Switch } from "@/components/primitives/switch";
 import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

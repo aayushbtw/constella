@@ -13,20 +13,11 @@ import { tooltip } from "@tanstack/charts/tooltip";
 import { useMemo, useState } from "react";
 
 import {
-  Chart,
-  ChartLegendContent,
-  chartColor,
-  chartFold,
-  chartGroupScale,
-  chartTickFormat,
-} from "@/components/ui/chart";
-import type { ChartConfig } from "@/components/ui/chart";
-import { CopyButton } from "@/components/ui/copy-button";
-import {
   Message,
   MessageActions,
   MessageContent,
-} from "@/components/ui/message";
+} from "@/components/ai/message";
+import { CopyButton } from "@/components/primitives/copy-button";
 import {
   Sidebar,
   SidebarContent,
@@ -41,7 +32,16 @@ import {
   SidebarMenuItem,
   SidebarMenuLabel,
   SidebarProvider,
-} from "@/components/ui/sidebar";
+} from "@/components/primitives/sidebar";
+import {
+  Chart,
+  ChartLegendContent,
+  chartColor,
+  chartFold,
+  chartGroupScale,
+  chartTickFormat,
+} from "@/components/tanstack/chart";
+import type { ChartConfig } from "@/components/tanstack/chart";
 import {
   colors,
   radii,

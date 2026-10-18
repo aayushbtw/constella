@@ -10,8 +10,8 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Command } from "@/components/ui/command";
+import { Button } from "@/components/primitives/button";
+import { Command } from "@/components/primitives/command";
 import {
   Field,
   FieldContent,
@@ -19,18 +19,24 @@ import {
   FieldGroup,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from "@/components/primitives/field";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/primitives/radio-group";
 import {
   Slider,
   SliderControl,
   SliderLabel,
   SliderValue,
-} from "@/components/ui/slider";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "@/components/ui/toast";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+} from "@/components/primitives/slider";
+import { Spinner } from "@/components/primitives/spinner";
+import { Switch } from "@/components/primitives/switch";
+import { toast } from "@/components/primitives/toast";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

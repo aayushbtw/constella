@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/primitives/button";
+import { Field, FieldGroup, FieldLabel } from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
+import { Label } from "@/components/primitives/label";
 import {
   Popover,
   PopoverContent,
@@ -11,7 +11,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/primitives/popover";
 import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

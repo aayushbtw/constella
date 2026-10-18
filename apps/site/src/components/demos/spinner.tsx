@@ -1,4 +1,4 @@
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/primitives/spinner";
 import { DemoRow } from "~/components/demos/frame";
 
 function SpinnerDemo() {

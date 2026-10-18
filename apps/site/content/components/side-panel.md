@@ -41,7 +41,7 @@ import {
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
-} from "@/components/ui/side-panel";
+} from "@/components/primitives/side-panel";
 ```
 
 Put a `SidePanelSlot` after the whole page, header included, in a flex row, so the panel runs the full height of it. Pass its ref to `SidePanelContent` as `container`.

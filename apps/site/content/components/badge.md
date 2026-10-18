@@ -16,7 +16,7 @@ description: Displays a badge or a component that looks like a badge.
 ## Usage
 
 ```tsx
-import { Badge, BadgeDot } from "@/components/ui/badge";
+import { Badge, BadgeDot } from "@/components/primitives/badge";
 ```
 
 ```tsx

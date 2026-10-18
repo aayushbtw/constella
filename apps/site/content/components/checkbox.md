@@ -19,8 +19,8 @@ description: Turns an option on or off.
 ## Usage
 
 ```tsx
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/primitives/checkbox";
+import { Label } from "@/components/primitives/label";
 ```
 
 ```tsx

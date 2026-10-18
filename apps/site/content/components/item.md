@@ -33,7 +33,7 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle,
-} from "@/components/ui/item";
+} from "@/components/primitives/item";
 ```
 
 ```tsx

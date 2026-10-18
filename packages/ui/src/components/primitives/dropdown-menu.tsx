@@ -1,0 +1,584 @@
+"use client";
+
+import { Menu as MenuPrimitive } from "@base-ui/react/menu";
+import {
+  ArrowRight01Icon,
+  Search01Icon,
+  Tick02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import * as stylex from "@stylexjs/stylex";
+import { createContext, use, useContext } from "react";
+import type { ComponentProps } from "react";
+
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/primitives/input-group";
+import { useSkipMotion } from "@/lib/constella/motion";
+import { typeStyles } from "@/lib/constella/styles";
+import {
+  colors,
+  durations,
+  easings,
+  fontWeights,
+  layers,
+  media,
+  motion,
+  offsets,
+  opacities,
+  radii,
+  shadows,
+  sizes,
+  space,
+  strokes,
+} from "@/lib/constella/tokens.stylex";
+
+type Styled<T> = Omit<T, "className" | "style"> & {
+  sx?: stylex.StyleXStyles;
+};
+
+interface Inset {
+  inset?: boolean;
+}
+
+const dropdownMenuSizes = ["sm", "default", "lg"] as const;
+
+type DropdownMenuSize = (typeof dropdownMenuSizes)[number];
+
+type DropdownMenuContentProps = Styled<MenuPrimitive.Popup.Props> &
+  Pick<
+    MenuPrimitive.Positioner.Props,
+    "align" | "alignOffset" | "side" | "sideOffset"
+  > & { size?: DropdownMenuSize };
+
+const dropdownMenuItemVariants = ["default", "danger"] as const;
+
+type DropdownMenuItemVariant = (typeof dropdownMenuItemVariants)[number];
+
+const offstage = ":is([data-starting-style], [data-ending-style])";
+const closing =
+  ":is([data-ending-style]):not([data-instant], [data-skip-motion])";
+const instant = ":is([data-instant], [data-skip-motion])";
+const highlighted = ":is([data-highlighted], [data-popup-open])";
+const danger = ":is([data-variant='danger'])";
+const off = ":is([data-disabled])";
+const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
+const inset = ":is([data-inset])";
+const filtering = ":has(> [data-slot='dropdown-menu-list'])";
+
+// shadcn's padding, off our 4px grid.
+const px6 = `calc(${space.xs} - ${space.xxxs})`;
+// An inset row starts where the text of a row with an icon does.
+const insetStart = `calc(${px6} * 2 + ${sizes.icon})`;
+
+const styles = stylex.create({
+  positioner: {
+    zIndex: layers.popover,
+  },
+  // Select's surface and motion, so every popup opens the same way.
+  popup: {
+    backgroundColor: colors.raised,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
+    boxShadow: shadows.lg,
+    color: colors.textPrimary,
+    // A filtered popup keeps its field in place and scrolls the list instead.
+    display: { default: null, [filtering]: "flex" },
+    flexDirection: { default: null, [filtering]: "column" },
+    maxHeight: "var(--available-height)",
+    maxWidth: "var(--available-width)",
+    minWidth: `max(var(--anchor-width), ${sizes.menu})`,
+    opacity: { default: 1, [offstage]: 0 },
+    overflowY: { default: "auto", [filtering]: "hidden" },
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
+    transformOrigin: "var(--transform-origin)",
+    transitionDuration: {
+      default: durations.popover,
+      [closing]: durations.popoverExit,
+      [instant]: "0s",
+    },
+    transitionProperty: {
+      default: "opacity, transform",
+      [media.reducedMotion]: "opacity",
+    },
+    transitionTimingFunction: easings.out,
+  },
+  // Inside the popup's padding, so its corner nests in the popup's.
+  input: {
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
+    flexShrink: 0,
+  },
+  searchIcon: {
+    color: colors.textMuted,
+    display: "flex",
+  },
+  list: {
+    maxHeight: sizes.menuHeight,
+    minHeight: 0,
+    overflowX: "hidden",
+    overflowY: "auto",
+    // Filtered-out groups stay mounted with `hidden`.
+    paddingBlockStart: {
+      default: space.xxs,
+      ":not(:has(> :not([hidden])))": 0,
+    },
+    scrollPaddingBlock: space.xxs,
+  },
+  empty: {
+    color: colors.textSecondary,
+    paddingBlockEnd: { default: space.lg, ":empty": 0 },
+    paddingBlockStart: { default: space.lg, ":empty": 0 },
+    textAlign: "center",
+  },
+  // Its first item level with the trigger, or its last when it flips to `end`. A translate,
+  // not Base UI's px `alignOffset`, so it follows the padding in rem.
+  submenu: {
+    transform: "none",
+    translate: {
+      default: null,
+      ":is([data-align='start'])": `0 calc(-1 * ${space.xxs})`,
+      ":is([data-align='end'])": `0 ${space.xxs}`,
+    },
+    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
+    transitionProperty: "opacity",
+  },
+  // Select's item, so a menu and a select read as one family.
+  item: {
+    alignItems: "center",
+    backgroundColor: {
+      default: "transparent",
+      [highlighted]: colors.fillSubtle,
+      [`${danger}${highlighted}`]: colors.dangerSubtle,
+    },
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
+    color: { default: colors.textPrimary, [danger]: colors.dangerText },
+    cursor: { default: "pointer", [off]: "not-allowed" },
+    display: "flex",
+    gap: px6,
+    minHeight: sizes.controlSm,
+    opacity: { default: 1, [off]: opacities.disabled },
+    overflowWrap: "anywhere",
+    paddingInlineEnd: px6,
+    paddingInlineStart: { default: px6, [inset]: insetStart },
+    position: "relative",
+    userSelect: "none",
+  },
+  itemSm: {
+    minHeight: sizes.controlXs,
+  },
+  itemLg: { minHeight: sizes.controlMd },
+  // Room on the end for the tick, as in a select.
+  checkable: {
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
+  },
+  // Checkbox's tick: draws in from its start, fades out quickly.
+  indicator: {
+    alignItems: "center",
+    clipPath: {
+      default: "inset(0)",
+      ":is([data-starting-style])": "inset(0 100% 0 0)",
+    },
+    display: "flex",
+    insetInlineEnd: space.xs,
+    justifyContent: "center",
+    opacity: { default: 1, ":is([data-ending-style])": 0 },
+    pointerEvents: "none",
+    position: "absolute",
+    transitionDuration: {
+      default: durations.move,
+      ":is([data-ending-style])": durations.hover,
+    },
+    transitionProperty: {
+      default: "clip-path, opacity",
+      [media.reducedMotion]: "opacity",
+    },
+    transitionTimingFunction: easings.out,
+  },
+  chevron: {
+    color: colors.textMuted,
+    display: "flex",
+    marginInlineStart: "auto",
+    transform: { default: null, [rtl]: "scaleX(-1)" },
+  },
+  label: {
+    color: colors.textMuted,
+    fontWeight: fontWeights.medium,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingInlineEnd: px6,
+    paddingInlineStart: { default: px6, [inset]: insetStart },
+  },
+  separator: {
+    backgroundColor: colors.borderSubtle,
+    height: strokes.border,
+    marginBlock: space.xxs,
+    marginInlineEnd: `calc(-1 * ${space.xxs})`,
+    marginInlineStart: `calc(-1 * ${space.xxs})`,
+  },
+  shortcut: {
+    color: colors.textMuted,
+    flexShrink: 0,
+    marginInlineStart: "auto",
+    whiteSpace: "nowrap",
+  },
+});
+
+function Glyph({ icon }: { icon: typeof Tick02Icon }) {
+  return (
+    <HugeiconsIcon
+      aria-hidden
+      icon={icon}
+      size={sizes.icon}
+      strokeWidth={Number(strokes.icon)}
+    />
+  );
+}
+
+const itemSizeStyles = {
+  default: null,
+  lg: styles.itemLg,
+  sm: [typeStyles.textSm, styles.itemSm],
+} satisfies Record<DropdownMenuSize, stylex.StyleXStyles | null>;
+
+const SkipMotion = createContext(false);
+const Size = createContext<DropdownMenuSize>("default");
+
+function useItemSize() {
+  return itemSizeStyles[use(Size)];
+}
+
+function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  return (
+    <SkipMotion value={skip}>
+      <MenuPrimitive.Root
+        data-slot="dropdown-menu"
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </SkipMotion>
+  );
+}
+
+function DropdownMenuPortal(props: MenuPrimitive.Portal.Props) {
+  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
+}
+
+function DropdownMenuTrigger(props: MenuPrimitive.Trigger.Props) {
+  return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
+}
+
+/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
+function DropdownMenuContent({
+  align = "start",
+  alignOffset = 0,
+  side = "bottom",
+  sideOffset = Number(offsets.popover),
+  size: ownSize,
+  sx,
+  ...props
+}: DropdownMenuContentProps) {
+  const skip = useContext(SkipMotion);
+  // A submenu takes its parent's size unless it sets its own.
+  const size = ownSize ?? use(Size);
+  return (
+    <Size value={size}>
+      <MenuPrimitive.Portal>
+        <MenuPrimitive.Positioner
+          align={align}
+          alignOffset={alignOffset}
+          side={side}
+          sideOffset={sideOffset}
+          {...stylex.props(styles.positioner)}
+        >
+          <MenuPrimitive.Popup
+            data-size={size}
+            data-skip-motion={skip || undefined}
+            data-slot="dropdown-menu-content"
+            {...props}
+            {...stylex.props(styles.popup, sx)}
+          />
+        </MenuPrimitive.Positioner>
+      </MenuPrimitive.Portal>
+    </Size>
+  );
+}
+
+/** Makes the `DropdownMenu` or `DropdownMenuSub` directly inside it filterable. Highlights the first match while filtering, so Enter runs it. */
+function DropdownMenuFilterProvider({
+  autoHighlight = true,
+  ...props
+}: MenuPrimitive.FilterProvider.Props) {
+  return (
+    <MenuPrimitive.FilterProvider autoHighlight={autoHighlight} {...props} />
+  );
+}
+
+function DropdownMenuInput({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Input.Props>) {
+  return (
+    <InputGroup
+      data-slot="dropdown-menu-input"
+      size={use(Size)}
+      sx={styles.input}
+    >
+      {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
+      <MenuPrimitive.Input render={<InputGroupInput sx={sx} />} {...props} />
+      <InputGroupAddon>
+        <span {...stylex.props(styles.searchIcon)}>
+          <Glyph icon={Search01Icon} />
+        </span>
+      </InputGroupAddon>
+    </InputGroup>
+  );
+}
+
+function DropdownMenuList({ sx, ...props }: Styled<MenuPrimitive.List.Props>) {
+  return (
+    <MenuPrimitive.List
+      data-slot="dropdown-menu-list"
+      {...props}
+      {...stylex.props(styles.list, sx)}
+    />
+  );
+}
+
+function DropdownMenuEmpty({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Empty.Props>) {
+  return (
+    <MenuPrimitive.Empty
+      data-slot="dropdown-menu-empty"
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.empty], sx)}
+    />
+  );
+}
+
+function DropdownMenuGroup(props: MenuPrimitive.Group.Props) {
+  return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />;
+}
+
+function DropdownMenuLabel({
+  inset: isInset,
+  sx,
+  ...props
+}: Styled<MenuPrimitive.GroupLabel.Props> & Inset) {
+  return (
+    <MenuPrimitive.GroupLabel
+      data-inset={isInset}
+      data-slot="dropdown-menu-label"
+      {...props}
+      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
+    />
+  );
+}
+
+function DropdownMenuItem({
+  inset: isInset,
+  sx,
+  variant = "default",
+  ...props
+}: Styled<MenuPrimitive.Item.Props> &
+  Inset & { variant?: DropdownMenuItemVariant }) {
+  return (
+    <MenuPrimitive.Item
+      data-inset={isInset}
+      data-slot="dropdown-menu-item"
+      data-variant={variant}
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.item], useItemSize(), sx)}
+    />
+  );
+}
+
+function DropdownMenuSub({
+  onOpenChange,
+  ...props
+}: MenuPrimitive.SubmenuRoot.Props) {
+  const inherited = useContext(SkipMotion);
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  return (
+    <SkipMotion value={inherited || skip}>
+      <MenuPrimitive.SubmenuRoot
+        data-slot="dropdown-menu-sub"
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </SkipMotion>
+  );
+}
+
+function DropdownMenuSubTrigger({
+  children,
+  inset: isInset,
+  sx,
+  ...props
+}: Styled<MenuPrimitive.SubmenuTrigger.Props> & Inset) {
+  return (
+    <MenuPrimitive.SubmenuTrigger
+      data-inset={isInset}
+      data-slot="dropdown-menu-sub-trigger"
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.item], useItemSize(), sx)}
+    >
+      {children}
+      <span {...stylex.props(styles.chevron)}>
+        <Glyph icon={ArrowRight01Icon} />
+      </span>
+    </MenuPrimitive.SubmenuTrigger>
+  );
+}
+
+/** A submenu's popup: opens beside its trigger, with its first item level with it. */
+function DropdownMenuSubContent({
+  align = "start",
+  side = "inline-end",
+  sideOffset = 0,
+  sx,
+  ...props
+}: DropdownMenuContentProps) {
+  return (
+    <DropdownMenuContent
+      align={align}
+      data-slot="dropdown-menu-sub-content"
+      side={side}
+      sideOffset={sideOffset}
+      sx={[styles.submenu, sx]}
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuCheckboxItem({
+  children,
+  inset: isInset,
+  sx,
+  ...props
+}: Styled<MenuPrimitive.CheckboxItem.Props> & Inset) {
+  return (
+    <MenuPrimitive.CheckboxItem
+      data-inset={isInset}
+      data-slot="dropdown-menu-checkbox-item"
+      {...props}
+      {...stylex.props(
+        [typeStyles.textSm, styles.item],
+        useItemSize(),
+        styles.checkable,
+        sx
+      )}
+    >
+      {children}
+      <MenuPrimitive.CheckboxItemIndicator {...stylex.props(styles.indicator)}>
+        <Glyph icon={Tick02Icon} />
+      </MenuPrimitive.CheckboxItemIndicator>
+    </MenuPrimitive.CheckboxItem>
+  );
+}
+
+function DropdownMenuRadioGroup(props: MenuPrimitive.RadioGroup.Props) {
+  return (
+    <MenuPrimitive.RadioGroup
+      data-slot="dropdown-menu-radio-group"
+      {...props}
+    />
+  );
+}
+
+function DropdownMenuRadioItem({
+  children,
+  inset: isInset,
+  sx,
+  ...props
+}: Styled<MenuPrimitive.RadioItem.Props> & Inset) {
+  return (
+    <MenuPrimitive.RadioItem
+      data-inset={isInset}
+      data-slot="dropdown-menu-radio-item"
+      {...props}
+      {...stylex.props(
+        [typeStyles.textSm, styles.item],
+        useItemSize(),
+        styles.checkable,
+        sx
+      )}
+    >
+      {children}
+      <MenuPrimitive.RadioItemIndicator {...stylex.props(styles.indicator)}>
+        <Glyph icon={Tick02Icon} />
+      </MenuPrimitive.RadioItemIndicator>
+    </MenuPrimitive.RadioItem>
+  );
+}
+
+function DropdownMenuSeparator({
+  sx,
+  ...props
+}: Styled<MenuPrimitive.Separator.Props>) {
+  return (
+    <MenuPrimitive.Separator
+      data-slot="dropdown-menu-separator"
+      {...props}
+      {...stylex.props(styles.separator, sx)}
+    />
+  );
+}
+
+function DropdownMenuShortcut({
+  sx,
+  ...props
+}: Styled<ComponentProps<"span">>) {
+  return (
+    <span
+      data-slot="dropdown-menu-shortcut"
+      {...props}
+      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
+    />
+  );
+}
+
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuEmpty,
+  DropdownMenuFilterProvider,
+  DropdownMenuGroup,
+  DropdownMenuInput,
+  DropdownMenuItem,
+  dropdownMenuItemVariants,
+  dropdownMenuSizes,
+  DropdownMenuLabel,
+  DropdownMenuList,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+};
+export type {
+  DropdownMenuContentProps,
+  DropdownMenuItemVariant,
+  DropdownMenuSize,
+};

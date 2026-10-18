@@ -8,9 +8,9 @@ import {
   AvatarGroup,
   AvatarGroupCount,
   AvatarImage,
-} from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@/components/primitives/avatar";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
 import {
   Item,
   ItemActions,
@@ -22,7 +22,7 @@ import {
   ItemMedia,
   ItemSeparator,
   ItemTitle,
-} from "@/components/ui/item";
+} from "@/components/primitives/item";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, space } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";

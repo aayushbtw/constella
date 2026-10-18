@@ -1,8 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Textarea, textareaSizes } from "@/components/ui/textarea";
+import { Button } from "@/components/primitives/button";
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+} from "@/components/primitives/field";
+import { Textarea, textareaSizes } from "@/components/primitives/textarea";
 import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

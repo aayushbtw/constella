@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { Toaster } from "@/components/ui/toast";
+import { Toaster } from "@/components/primitives/toast";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors } from "@/lib/constella/tokens.stylex";
 import { Header } from "~/components/header";

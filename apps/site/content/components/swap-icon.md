@@ -23,7 +23,7 @@ description: Cross-fades one icon into another in place.
 ## Usage
 
 ```tsx
-import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
+import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 ```
 
 `SwapIcon` shows the item whose `value` matches its own. Every item stays mounted in one cell, so a swap is a crossfade with a little scale and blur, and a quick change back reverses mid-way.

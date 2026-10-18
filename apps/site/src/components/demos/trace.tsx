@@ -17,33 +17,11 @@ import type { IconSvgElement } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   CodeBlock,
   CodeBlockContent,
   CodeBlockLine,
-} from "@/components/ui/code-block";
-import {
-  Dialog,
-  DialogBody,
-  DialogCloseButton,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetBody,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
-import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
+} from "@/components/ai/code-block";
 import {
   Trace,
   traceActionStyles,
@@ -54,7 +32,29 @@ import {
   TraceIcon,
   TraceLine,
   TraceTitle,
-} from "@/components/ui/trace";
+} from "@/components/ai/trace";
+import { Button } from "@/components/primitives/button";
+import {
+  Dialog,
+  DialogBody,
+  DialogCloseButton,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/primitives/dialog";
+import {
+  Sheet,
+  SheetBody,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/primitives/sheet";
+import { Spinner } from "@/components/primitives/spinner";
+import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

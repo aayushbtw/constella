@@ -7,10 +7,10 @@ import {
   FieldGroup,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
-import { Switch, switchSizes } from "@/components/ui/switch";
-import type { SwitchSize } from "@/components/ui/switch";
+} from "@/components/primitives/field";
+import { Label } from "@/components/primitives/label";
+import { Switch, switchSizes } from "@/components/primitives/switch";
+import type { SwitchSize } from "@/components/primitives/switch";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

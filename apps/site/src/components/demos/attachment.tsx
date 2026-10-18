@@ -25,8 +25,8 @@ import {
   AttachmentTitle,
   AttachmentTrigger,
   attachmentSizes,
-} from "@/components/ui/attachment";
-import type { AttachmentState } from "@/components/ui/attachment";
+} from "@/components/ai/attachment";
+import type { AttachmentState } from "@/components/ai/attachment";
 import {
   Dialog,
   DialogContent,
@@ -35,8 +35,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/primitives/dialog";
+import { Spinner } from "@/components/primitives/spinner";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

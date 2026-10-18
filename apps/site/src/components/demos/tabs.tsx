@@ -6,7 +6,7 @@ import {
   TabsList,
   tabsListSizes,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/components/primitives/tabs";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

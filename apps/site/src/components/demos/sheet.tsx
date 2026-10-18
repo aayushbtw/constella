@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/primitives/button";
+import { Field, FieldGroup, FieldLabel } from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
 import {
   Sheet,
   SheetBody,
@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
   sheetSides,
-} from "@/components/ui/sheet";
+} from "@/components/primitives/sheet";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

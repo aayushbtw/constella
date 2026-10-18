@@ -37,7 +37,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@/components/primitives/collapsible";
 ```
 
 ```tsx
@@ -68,7 +68,7 @@ Collapsibles nest, for a tree. Each folder's `CollapsibleTrigger` carries `data-
   <CollapsibleTrigger>components</CollapsibleTrigger>
   <CollapsibleContent>
     <Collapsible>
-      <CollapsibleTrigger>ui</CollapsibleTrigger>
+      <CollapsibleTrigger>primitives</CollapsibleTrigger>
       <CollapsibleContent>…</CollapsibleContent>
     </Collapsible>
   </CollapsibleContent>

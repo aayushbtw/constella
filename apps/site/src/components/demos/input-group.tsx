@@ -26,13 +26,13 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/primitives/dropdown-menu";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
+} from "@/components/primitives/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -41,8 +41,8 @@ import {
   InputGroupText,
   InputGroupTextarea,
   inputGroupTextareaStyles,
-} from "@/components/ui/input-group";
-import { Kbd } from "@/components/ui/kbd";
+} from "@/components/primitives/input-group";
+import { Kbd } from "@/components/primitives/kbd";
 import {
   Popover,
   PopoverContent,
@@ -50,8 +50,8 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/primitives/popover";
+import { Spinner } from "@/components/primitives/spinner";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   durations,

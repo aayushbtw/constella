@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
+import { Button } from "@/components/primitives/button";
+import { toast } from "@/components/primitives/toast";
 import { DemoRow } from "~/components/demos/frame";
 
 async function wait(fails: boolean) {

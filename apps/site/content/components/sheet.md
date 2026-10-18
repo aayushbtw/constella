@@ -38,7 +38,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/primitives/sheet";
 ```
 
 ```tsx

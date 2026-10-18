@@ -9,13 +9,13 @@ import {
   FieldSet,
   FieldSetDescription,
   FieldTitle,
-} from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+} from "@/components/primitives/field";
+import { Label } from "@/components/primitives/label";
 import {
   RadioGroup,
   RadioGroupItem,
   radioGroupItemSizes,
-} from "@/components/ui/radio-group";
+} from "@/components/primitives/radio-group";
 import { fontWeights } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

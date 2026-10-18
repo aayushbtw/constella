@@ -30,8 +30,8 @@ import {
   CodeBlock,
   CodeBlockActions,
   CodeBlockContent,
-} from "@/components/ui/code-block";
-import { CopyButton } from "@/components/ui/copy-button";
+} from "@/components/ai/code-block";
+import { CopyButton } from "@/components/primitives/copy-button";
 ```
 
 ```tsx

@@ -1,13 +1,13 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Button } from "@/components/ui/button";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import { Text } from "@/components/ui/text";
+import { Button } from "@/components/primitives/button";
+import { Kbd, KbdGroup } from "@/components/primitives/kbd";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/primitives/tooltip";
+import { Text } from "@/components/typography/text";
 import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

@@ -12,7 +12,7 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -33,8 +33,8 @@ import {
   DropdownMenuSubTrigger,
   dropdownMenuSizes,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { DropdownMenuSize } from "@/components/ui/dropdown-menu";
+} from "@/components/primitives/dropdown-menu";
+import type { DropdownMenuSize } from "@/components/primitives/dropdown-menu";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

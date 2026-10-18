@@ -25,7 +25,10 @@ description: A set of options where only one can be picked at a time.
 ## Usage
 
 ```tsx
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/primitives/radio-group";
 ```
 
 ```tsx

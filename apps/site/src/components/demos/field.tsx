@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/primitives/button";
+import { Checkbox } from "@/components/primitives/checkbox";
 import {
   Field,
   FieldContent,
@@ -15,9 +15,12 @@ import {
   FieldSet,
   FieldSetDescription,
   FieldTitle,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+} from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/primitives/radio-group";
 import {
   Select,
   SelectContent,
@@ -25,16 +28,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/primitives/select";
 import {
   Slider,
   SliderControl,
   SliderIndicator,
   SliderThumb,
   SliderTrack,
-} from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/primitives/slider";
+import { Switch } from "@/components/primitives/switch";
+import { Textarea } from "@/components/primitives/textarea";
 import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

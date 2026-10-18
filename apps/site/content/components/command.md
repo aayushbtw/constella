@@ -39,7 +39,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/components/primitives/command";
 ```
 
 Pass the entries as `items`, and render each one in `CommandList`. Typing filters them by `label`.

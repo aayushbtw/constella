@@ -67,7 +67,7 @@ import {
   QuestionnaireSkip,
   QuestionnaireSubmit,
   QuestionnaireTitle,
-} from "@/components/ui/questionnaire";
+} from "@/components/ai/questionnaire";
 ```
 
 ```tsx

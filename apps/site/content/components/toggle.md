@@ -18,7 +18,7 @@ description: A two-state button that stays pressed until pressed again.
 ## Usage
 
 ```tsx
-import { Toggle } from "@/components/ui/toggle";
+import { Toggle } from "@/components/primitives/toggle";
 ```
 
 ```tsx

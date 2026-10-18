@@ -124,7 +124,7 @@ Then render `<DevStyleX />` in the root's `<head>`, after `<HeadContent />`.
 ## Import components
 
 ```tsx
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 
 export function App() {
   return <Button>Get started</Button>;

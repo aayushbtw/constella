@@ -6,7 +6,7 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "@/components/primitives/empty";
 import { layout } from "~/lib/tokens.stylex";
 import { getBlocks } from "~/server/blocks";
 

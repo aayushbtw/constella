@@ -35,7 +35,7 @@ import {
   PromptInputFooter,
   PromptInputSubmit,
   PromptInputTextarea,
-} from "@/components/ui/prompt-input";
+} from "@/components/ai/prompt-input";
 ```
 
 `PromptInput` is a form around an [Input Group](/docs/components/input-group). Enter submits it; Shift+Enter, and Enter while an IME is composing, add a line. The text grows to six lines, then scrolls.

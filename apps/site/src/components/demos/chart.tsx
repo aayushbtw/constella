@@ -16,7 +16,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/primitives/card";
 import {
   Chart,
   ChartIndicator,
@@ -30,8 +30,8 @@ import {
   chartGroupScale,
   chartTickFormat,
   useChartTween,
-} from "@/components/ui/chart";
-import type { ChartConfig } from "@/components/ui/chart";
+} from "@/components/tanstack/chart";
+import type { ChartConfig } from "@/components/tanstack/chart";
 import { colors, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

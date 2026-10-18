@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
-import { Caption } from "@/components/ui/caption";
+import { Caption } from "@/components/typography/caption";
 import {
   colors,
   fonts,

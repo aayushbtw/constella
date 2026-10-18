@@ -12,7 +12,7 @@ description: Displays a button or a link that looks like a button.
 ## Usage
 
 ```tsx
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 ```
 
 ```tsx
@@ -98,7 +98,7 @@ Use `buttonStyles` to make a link look like a button.
 ```tsx
 import * as stylex from "@stylexjs/stylex";
 
-import { buttonStyles } from "@/components/ui/button";
+import { buttonStyles } from "@/components/primitives/button";
 
 <a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
   Settings

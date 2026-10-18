@@ -2,33 +2,33 @@ import * as RadixColors from "@radix-ui/colors";
 import * as stylex from "@stylexjs/stylex";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   CodeBlock,
   CodeBlockActions,
   CodeBlockContent,
-} from "@/components/ui/code-block";
-import { CopyButton } from "@/components/ui/copy-button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/ai/code-block";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
+import { Checkbox } from "@/components/primitives/checkbox";
+import { CopyButton } from "@/components/primitives/copy-button";
+import { Field, FieldLabel } from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
+import { Label } from "@/components/primitives/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/primitives/select";
 import {
   Slider,
   SliderControl,
   SliderLabel,
   SliderValue,
-} from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/components/primitives/slider";
+import { Switch } from "@/components/primitives/switch";
+import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
 import { radii, sizes, space } from "@/lib/constella/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
 import {

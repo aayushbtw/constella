@@ -28,13 +28,13 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import type { ButtonSize } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
+import type { ButtonSize } from "@/components/primitives/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
   ButtonGroupText,
-} from "@/components/ui/button-group";
+} from "@/components/primitives/button-group";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,15 +47,19 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@/components/primitives/dropdown-menu";
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+} from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group";
+} from "@/components/primitives/input-group";
 import {
   Popover,
   PopoverContent,
@@ -63,20 +67,20 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/primitives/popover";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/primitives/select";
+import { Textarea } from "@/components/primitives/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/primitives/tooltip";
 import { visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,

@@ -18,7 +18,7 @@ section: Typography
 ## Usage
 
 ```tsx
-import { Caption } from "@/components/ui/caption";
+import { Caption } from "@/components/typography/caption";
 ```
 
 ```tsx

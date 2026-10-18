@@ -46,7 +46,7 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
   ButtonGroupText,
-} from "@/components/ui/button-group";
+} from "@/components/primitives/button-group";
 ```
 
 ```tsx

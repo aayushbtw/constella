@@ -23,7 +23,7 @@ section: Typography
 ## Usage
 
 ```tsx
-import { Heading } from "@/components/ui/heading";
+import { Heading } from "@/components/typography/heading";
 ```
 
 ```tsx

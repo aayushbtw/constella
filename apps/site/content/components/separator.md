@@ -24,7 +24,7 @@ description: Divides content, across or down.
 ## Usage
 
 ```tsx
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/primitives/separator";
 ```
 
 ```tsx

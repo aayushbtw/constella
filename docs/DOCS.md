@@ -4,7 +4,7 @@ Pages are Markdown in `apps/site/content`: guides in `docs` (served at `/docs/<s
 
 Every page is also Markdown for agents, at its URL plus `/index.md`, or at its URL with `Accept: text/markdown`; `/llms.txt` lists them and `/llms-full.txt` joins them. The `markdown` collection in `tomekit.config.ts` builds them from the same files with `agentMarkdown` in `src/lib/markdown.ts`: previews are dropped (the code block under each stays), `::install` becomes the shadcn command, and page links become absolute `/index.md` URLs on the production origin. A new comment component needs a rewrite there too. Each component page also becomes a `<name>-demo` registry example of its tsx snippets, one file per section, for shadcn's MCP server.
 
-A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page whose component or demos use a draft is a draft too. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components; chat parts take `section: AI`.
+A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page whose component or demos use a draft is a draft too. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components; chat parts take `section: AI`. The section matches the component's folder in `packages/ui/src/components`; a component without one lives in `primitives`.
 
 ## Writing a page
 

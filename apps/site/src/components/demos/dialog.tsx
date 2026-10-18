@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 import {
   Dialog,
   DialogBody,
@@ -14,11 +14,11 @@ import {
   DialogTitle,
   DialogTrigger,
   dialogSizes,
-} from "@/components/ui/dialog";
-import type { DialogSize } from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/toast";
+} from "@/components/primitives/dialog";
+import type { DialogSize } from "@/components/primitives/dialog";
+import { Field, FieldGroup, FieldLabel } from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
+import { toast } from "@/components/primitives/toast";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

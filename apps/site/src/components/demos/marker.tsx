@@ -5,9 +5,9 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
-import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
-import { Shimmer } from "@/components/ui/shimmer";
-import { Spinner } from "@/components/ui/spinner";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ai/marker";
+import { Shimmer } from "@/components/ai/shimmer";
+import { Spinner } from "@/components/primitives/spinner";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";

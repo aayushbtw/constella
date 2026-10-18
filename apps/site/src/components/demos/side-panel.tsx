@@ -1,15 +1,15 @@
 import * as stylex from "@stylexjs/stylex";
 import { useRef, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
 import {
   Item,
   ItemActions,
   ItemContent,
   ItemDescription,
   ItemTitle,
-} from "@/components/ui/item";
+} from "@/components/primitives/item";
 import {
   SidePanel,
   SidePanelBody,
@@ -18,7 +18,7 @@ import {
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
-} from "@/components/ui/side-panel";
+} from "@/components/primitives/side-panel";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

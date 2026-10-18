@@ -20,15 +20,19 @@ import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Kbd } from "@/components/ui/kbd";
+} from "@/components/primitives/dropdown-menu";
+import { Kbd } from "@/components/primitives/kbd";
 import {
   Sidebar,
   SidebarContent,
@@ -55,8 +59,11 @@ import {
   SidebarTrigger,
   SidebarTriggerMark,
   useSidebar,
-} from "@/components/ui/sidebar";
-import type { SidebarCollapsible, SidebarSide } from "@/components/ui/sidebar";
+} from "@/components/primitives/sidebar";
+import type {
+  SidebarCollapsible,
+  SidebarSide,
+} from "@/components/primitives/sidebar";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

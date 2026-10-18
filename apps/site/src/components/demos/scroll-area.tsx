@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { ScrollArea, ScrollBar } from "@/components/primitives/scroll-area";
+import { Separator } from "@/components/primitives/separator";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles } from "@/lib/constella/styles";
 import {

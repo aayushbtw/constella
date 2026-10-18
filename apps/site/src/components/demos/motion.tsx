@@ -3,14 +3,14 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 import {
   Slider,
   SliderControl,
   SliderLabel,
   SliderValue,
-} from "@/components/ui/slider";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/components/primitives/slider";
+import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

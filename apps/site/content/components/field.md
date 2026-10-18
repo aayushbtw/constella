@@ -64,7 +64,7 @@ import {
   FieldSet,
   FieldSetDescription,
   FieldTitle,
-} from "@/components/ui/field";
+} from "@/components/primitives/field";
 ```
 
 ```tsx

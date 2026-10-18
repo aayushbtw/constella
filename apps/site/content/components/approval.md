@@ -66,7 +66,7 @@ import {
   ApprovalHeader,
   ApprovalMedia,
   ApprovalTitle,
-} from "@/components/ui/approval";
+} from "@/components/ai/approval";
 ```
 
 ```tsx

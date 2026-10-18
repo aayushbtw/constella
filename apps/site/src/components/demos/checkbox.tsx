@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Checkbox, checkboxSizes } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox, checkboxSizes } from "@/components/primitives/checkbox";
+import { Label } from "@/components/primitives/label";
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/primitives/table";
 import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

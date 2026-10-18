@@ -48,7 +48,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+} from "@/components/primitives/sidebar";
 ```
 
 `SidebarProvider` holds the open state and toggles it on ⌘B or Ctrl+B with no animation. Put the `Sidebar` and a `SidebarInset` for the page inside it. Below 768px the sidebar opens as a [Sheet](/docs/components/sheet) instead.

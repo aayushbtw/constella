@@ -1,14 +1,14 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Meter, MeterLabel, MeterValue } from "@/components/ui/meter";
+import { Button } from "@/components/primitives/button";
+import { Meter, MeterLabel, MeterValue } from "@/components/primitives/meter";
 import {
   Progress,
   ProgressLabel,
   ProgressValue,
-} from "@/components/ui/progress";
-import { Text } from "@/components/ui/text";
+} from "@/components/primitives/progress";
+import { Text } from "@/components/typography/text";
 import { space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

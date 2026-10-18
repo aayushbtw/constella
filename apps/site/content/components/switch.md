@@ -19,7 +19,7 @@ description: A control that turns a setting on or off.
 ## Usage
 
 ```tsx
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/primitives/switch";
 ```
 
 ```tsx

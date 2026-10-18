@@ -43,7 +43,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/primitives/alert-dialog";
 ```
 
 `AlertDialogAction` doesn't close the dialog, so you can close it once the action is done. `AlertDialogCancel` does.

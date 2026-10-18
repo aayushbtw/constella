@@ -11,7 +11,7 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Fragment, useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 import {
   Command,
   CommandCollection,
@@ -24,10 +24,10 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import { SwapText } from "@/components/ui/swap-text";
-import { Text } from "@/components/ui/text";
+} from "@/components/primitives/command";
+import { Kbd, KbdGroup } from "@/components/primitives/kbd";
+import { SwapText } from "@/components/primitives/swap-text";
+import { Text } from "@/components/typography/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

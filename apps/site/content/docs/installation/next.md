@@ -124,7 +124,7 @@ End `src/app/globals.css` with the directive StyleX replaces with its CSS. The r
 ## Import components
 
 ```tsx
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 
 export default function Page() {
   return <Button>Get started</Button>;

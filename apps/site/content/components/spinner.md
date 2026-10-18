@@ -12,7 +12,7 @@ description: Shows that something is loading.
 ## Usage
 
 ```tsx
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/primitives/spinner";
 ```
 
 ```tsx

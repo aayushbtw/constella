@@ -1,17 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { Fragment, useState } from "react";
 
-import {
-  CommandCollection,
-  CommandEmpty,
-  CommandGroup,
-  CommandGroupLabel,
-  CommandInput,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { Meter, MeterLabel } from "@/components/ui/meter";
-import type { modelPickerDetailsSides } from "@/components/ui/model-picker";
+import type { modelPickerDetailsSides } from "@/components/ai/model-picker";
 import {
   ModelPicker,
   ModelPickerCommand,
@@ -22,7 +12,17 @@ import {
   ModelPickerLogo,
   ModelPickerTitle,
   ModelPickerTrigger,
-} from "@/components/ui/model-picker";
+} from "@/components/ai/model-picker";
+import {
+  CommandCollection,
+  CommandEmpty,
+  CommandGroup,
+  CommandGroupLabel,
+  CommandInput,
+  CommandList,
+  CommandSeparator,
+} from "@/components/primitives/command";
+import { Meter, MeterLabel } from "@/components/primitives/meter";
 import {
   colors,
   radii,

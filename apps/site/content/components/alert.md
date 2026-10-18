@@ -23,7 +23,11 @@ description: Calls out something the reader should know, inline with the page.
 ## Usage
 
 ```tsx
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/primitives/alert";
 ```
 
 ```tsx

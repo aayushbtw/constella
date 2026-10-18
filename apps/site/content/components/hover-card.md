@@ -25,7 +25,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
+} from "@/components/primitives/hover-card";
 ```
 
 The trigger is a link, so keyboard and touch users reach the same page without the preview. Keep what matters out of the card alone.

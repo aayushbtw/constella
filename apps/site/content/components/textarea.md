@@ -16,7 +16,7 @@ description: A multi-line text box that grows with what's typed.
 ## Usage
 
 ```tsx
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/components/primitives/textarea";
 ```
 
 ```tsx

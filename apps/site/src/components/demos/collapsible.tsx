@@ -8,14 +8,14 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/primitives/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
-import { SwapText } from "@/components/ui/swap-text";
+} from "@/components/primitives/collapsible";
+import { Item, ItemContent, ItemTitle } from "@/components/primitives/item";
+import { SwapText } from "@/components/primitives/swap-text";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -229,7 +229,10 @@ interface Node {
 const tree: Node[] = [
   {
     children: [
-      { children: [{ name: "button.tsx" }, { name: "card.tsx" }], name: "ui" },
+      {
+        children: [{ name: "button.tsx" }, { name: "card.tsx" }],
+        name: "primitives",
+      },
       { name: "app-sidebar.tsx" },
     ],
     name: "components",

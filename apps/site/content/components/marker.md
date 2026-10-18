@@ -22,7 +22,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker";
+import { Marker, MarkerContent, MarkerIcon } from "@/components/ai/marker";
 ```
 
 ```tsx

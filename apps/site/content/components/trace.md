@@ -35,7 +35,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Trace, TraceIcon, TraceLine, TraceTitle } from "@/components/ui/trace";
+import { Trace, TraceIcon, TraceLine, TraceTitle } from "@/components/ai/trace";
 ```
 
 ```tsx

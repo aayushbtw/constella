@@ -7,6 +7,10 @@ interface Page {
   parts: string[];
   /** The h2s a writer chooses, between the fixed ones. */
   sections: string[];
+  /** The component's folder in `packages/ui/src/components`. Unset on a guide or a lib page. */
+  folder?: Folder;
+  /** The frontmatter `section`. */
+  section?: string;
   body: string;
   title: string;
 }
@@ -45,16 +49,37 @@ function headings(body: string) {
   return found;
 }
 
-function parts(title: string) {
-  const slug = title.toLowerCase().replaceAll(" ", "-");
-  const ui = new URL(
-    `../../../../../packages/ui/src/components/ui/${slug}.tsx`,
+const folders = ["primitives", "typography", "ai", "tanstack"] as const;
+
+type Folder = (typeof folders)[number];
+
+const folderSections = {
+  primitives: undefined,
+  typography: "Typography",
+  ai: "AI",
+  tanstack: "TanStack",
+} satisfies Record<Folder, string | undefined>;
+
+const slugOf = (title: string) => title.toLowerCase().replaceAll(" ", "-");
+
+const componentUrl = (folder: Folder, slug: string) =>
+  new URL(
+    `../../../../../packages/ui/src/components/${folder}/${slug}.tsx`,
     import.meta.url
   );
+
+function componentFolder(title: string) {
+  return folders.find((folder) =>
+    existsSync(componentUrl(folder, slugOf(title)))
+  );
+}
+
+function parts(title: string, folder: Folder | undefined) {
+  const slug = slugOf(title);
   // A page can document a lib file, like Scroll Fade, which has no parts.
   const source = readFileSync(
-    existsSync(ui)
-      ? ui
+    folder
+      ? componentUrl(folder, slug)
       : new URL(
           `../../../../../packages/ui/src/lib/constella/${slug}.ts`,
           import.meta.url
@@ -80,5 +105,13 @@ function startsWith(heading: string, name: string) {
   return name !== "" && (heading === name || heading.startsWith(`${name} `));
 }
 
-export { components, definePageRule, headings, parts, startsWith };
-export type { Page, PageRule };
+export {
+  componentFolder,
+  components,
+  definePageRule,
+  folderSections,
+  headings,
+  parts,
+  startsWith,
+};
+export type { Folder, Page, PageRule };

@@ -16,7 +16,7 @@ description: Copies text, and shows a tick for a moment after.
 ## Usage
 
 ```tsx
-import { CopyButton } from "@/components/ui/copy-button";
+import { CopyButton } from "@/components/primitives/copy-button";
 ```
 
 ```tsx

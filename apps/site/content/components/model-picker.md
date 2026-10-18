@@ -54,7 +54,6 @@ section: AI
 ## Usage
 
 ```tsx
-import { CommandInput, CommandList } from "@/components/ui/command";
 import {
   ModelPicker,
   ModelPickerCommand,
@@ -62,7 +61,8 @@ import {
   ModelPickerDetails,
   ModelPickerItem,
   ModelPickerTrigger,
-} from "@/components/ui/model-picker";
+} from "@/components/ai/model-picker";
+import { CommandInput, CommandList } from "@/components/primitives/command";
 ```
 
 The list is a [Command](/docs/components/command). Pass the models as `items`, and group them as Command shows. Picking a model calls the item's `onClick` and closes the picker.

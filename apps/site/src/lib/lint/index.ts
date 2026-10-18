@@ -5,8 +5,9 @@ import { headingNames } from "./rules/heading-names.ts";
 import { nestByTopic } from "./rules/nest-by-topic.ts";
 import { requireComposition } from "./rules/require-composition.ts";
 import { requireSkeleton } from "./rules/require-skeleton.ts";
+import { sectionFolder } from "./rules/section-folder.ts";
 import { sectionOrder } from "./rules/section-order.ts";
-import { headings, parts } from "./shared.ts";
+import { componentFolder, headings, parts } from "./shared.ts";
 import type { Page, PageRule } from "./shared.ts";
 
 const componentRules = {
@@ -14,6 +15,7 @@ const componentRules = {
   "nest-by-topic": nestByTopic,
   "require-composition": requireComposition,
   "require-skeleton": requireSkeleton,
+  "section-folder": sectionFolder,
   "section-order": sectionOrder,
 } satisfies Record<string, PageRule>;
 
@@ -38,14 +40,17 @@ function run(rules: Record<string, PageRule>, page: Page) {
   }
 }
 
-function checkComponentPage(body: string, title: string) {
+function checkComponentPage(body: string, title: string, section?: string) {
   const found = headings(body);
   const end = found.at(-1) === "Pending" ? -2 : -1;
+  const folder = componentFolder(title);
 
   run(componentRules, {
     body,
+    folder,
     headings: found,
-    parts: parts(title),
+    parts: parts(title, folder),
+    section,
     sections: found.slice(found[2] === "Composition" ? 3 : 2, end),
     title,
   });

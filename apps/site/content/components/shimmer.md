@@ -17,7 +17,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Shimmer } from "@/components/ui/shimmer";
+import { Shimmer } from "@/components/ai/shimmer";
 ```
 
 ```tsx

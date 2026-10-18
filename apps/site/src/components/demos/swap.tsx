@@ -3,10 +3,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { CopyButton } from "@/components/ui/copy-button";
-import { SwapIcon, SwapIconItem } from "@/components/ui/swap-icon";
-import { SwapText } from "@/components/ui/swap-text";
+import { Button } from "@/components/primitives/button";
+import { CopyButton } from "@/components/primitives/copy-button";
+import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
+import { SwapText } from "@/components/primitives/swap-text";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

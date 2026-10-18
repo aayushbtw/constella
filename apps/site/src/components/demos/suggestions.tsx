@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Suggestion, Suggestions } from "@/components/ui/suggestions";
-import { toast } from "@/components/ui/toast";
+import { Suggestion, Suggestions } from "@/components/ai/suggestions";
+import { toast } from "@/components/primitives/toast";
 import { Stage } from "~/components/demos/frame";
 
 const styles = stylex.create({

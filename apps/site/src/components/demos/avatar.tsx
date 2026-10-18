@@ -18,9 +18,9 @@ import {
   AvatarImage,
   avatarSizes,
   avatarStatuses,
-} from "@/components/ui/avatar";
-import type { AvatarStatus } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+} from "@/components/primitives/avatar";
+import type { AvatarStatus } from "@/components/primitives/avatar";
+import { Button } from "@/components/primitives/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/primitives/dropdown-menu";
 import { radii, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

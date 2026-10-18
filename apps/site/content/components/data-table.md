@@ -43,7 +43,7 @@ const table = useTable({ columns, data, features });
 ## Usage
 
 ```tsx
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/components/tanstack/data-table";
 ```
 
 Build the table with [TanStack Table](https://tanstack.com/table)'s `useTable`, with the features you need, and pass it to `DataTable`. It renders the headers and rows as a [Table](/docs/components/table), and only the rows on screen, against the window's scroll.

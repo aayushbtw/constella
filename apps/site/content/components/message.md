@@ -29,7 +29,7 @@ import {
   Message,
   MessageActions,
   MessageContent,
-} from "@/components/ui/message";
+} from "@/components/ai/message";
 ```
 
 A user's message sits at the end, in a bubble; an answer reads as the page. Put the answer's actions in `MessageActions`, like a [Copy Button](/docs/components/copy-button).

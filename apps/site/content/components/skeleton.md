@@ -19,7 +19,7 @@ description: Holds the place of content that's still loading.
 ## Usage
 
 ```tsx
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/primitives/skeleton";
 ```
 
 Give it the size and shape of what it stands in for with `sx`.

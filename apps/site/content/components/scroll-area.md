@@ -22,7 +22,7 @@ description: A scrolling region with a slim scrollbar that shows while it's in u
 ## Usage
 
 ```tsx
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/primitives/scroll-area";
 ```
 
 Give it a height with `sx`; its content scrolls inside.

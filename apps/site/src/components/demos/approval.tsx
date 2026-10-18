@@ -15,11 +15,11 @@ import {
   ApprovalHeader,
   ApprovalMedia,
   ApprovalTitle,
-} from "@/components/ui/approval";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/ai/approval";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
+import { Separator } from "@/components/primitives/separator";
+import { Spinner } from "@/components/primitives/spinner";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

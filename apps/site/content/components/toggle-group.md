@@ -23,7 +23,10 @@ description: A set of toggles where one or several can be on.
 ## Usage
 
 ```tsx
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
 ```
 
 ```tsx

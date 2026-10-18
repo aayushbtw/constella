@@ -9,9 +9,13 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Fragment, useEffect, useState } from "react";
 
-import { Button, buttonStyles, buttonVariants } from "@/components/ui/button";
-import type { ButtonSize, ButtonVariant } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import {
+  Button,
+  buttonStyles,
+  buttonVariants,
+} from "@/components/primitives/button";
+import type { ButtonSize, ButtonVariant } from "@/components/primitives/button";
+import { Spinner } from "@/components/primitives/spinner";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

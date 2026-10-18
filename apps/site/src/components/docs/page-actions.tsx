@@ -3,8 +3,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useRouterState } from "@tanstack/react-router";
 
-import { buttonStyles } from "@/components/ui/button";
-import { CopyButton } from "@/components/ui/copy-button";
+import { buttonStyles } from "@/components/primitives/button";
+import { CopyButton } from "@/components/primitives/copy-button";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { markdownPath } from "~/lib/markdown";
 

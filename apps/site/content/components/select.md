@@ -40,7 +40,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/primitives/select";
 ```
 
 Pass `items` to `Select`, so `SelectValue` shows the picked item's label. An item with `value: null` is the placeholder.

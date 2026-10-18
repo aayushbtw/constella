@@ -40,7 +40,7 @@ import {
   AttachmentMedia,
   AttachmentTitle,
   AttachmentTrigger,
-} from "@/components/ui/attachment";
+} from "@/components/ai/attachment";
 ```
 
 ```tsx

@@ -13,9 +13,9 @@ import {
   AlertAction,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
-import { Badge, BadgeDot } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@/components/primitives/alert";
+import { Badge, BadgeDot } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
 import {
   Card,
   CardAction,
@@ -24,8 +24,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/primitives/card";
+import { Checkbox } from "@/components/primitives/checkbox";
 import {
   Field,
   FieldContent,
@@ -36,10 +36,15 @@ import {
   FieldLegend,
   FieldSet,
   FieldTitle,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/components/primitives/field";
+import { Input } from "@/components/primitives/input";
+import { Switch } from "@/components/primitives/switch";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/primitives/tabs";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

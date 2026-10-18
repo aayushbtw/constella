@@ -11,13 +11,7 @@ import {
 } from "@tanstack/react-table";
 import { useMemo } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  DataTable,
-  DataTableColumnHeader,
-  DataTableSelectAll,
-  DataTableSelectRow,
-} from "@/components/ui/data-table";
+import { Badge } from "@/components/primitives/badge";
 import {
   Table,
   TableBody,
@@ -27,7 +21,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/primitives/table";
+import {
+  DataTable,
+  DataTableColumnHeader,
+  DataTableSelectAll,
+  DataTableSelectRow,
+} from "@/components/tanstack/data-table";
 import { fontWeights, sizes } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";

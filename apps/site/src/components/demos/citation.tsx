@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Citation, CitationCard } from "@/components/ui/citation";
-import type { Source } from "@/components/ui/citation";
-import { Text } from "@/components/ui/text";
+import { Citation, CitationCard } from "@/components/ai/citation";
+import type { Source } from "@/components/ai/citation";
+import { Text } from "@/components/typography/text";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({

@@ -1,8 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
-import { Separator } from "@/components/ui/separator";
-import { Text } from "@/components/ui/text";
+import { Separator } from "@/components/primitives/separator";
+import { Text } from "@/components/typography/text";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";

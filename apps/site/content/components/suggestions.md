@@ -21,7 +21,7 @@ section: AI
 ## Usage
 
 ```tsx
-import { Suggestion, Suggestions } from "@/components/ui/suggestions";
+import { Suggestion, Suggestions } from "@/components/ai/suggestions";
 ```
 
 ```tsx

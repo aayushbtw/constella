@@ -9,9 +9,13 @@ import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Fragment } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
+import { Badge } from "@/components/primitives/badge";
+import { Button } from "@/components/primitives/button";
 import {
   Item,
   ItemActions,
@@ -25,9 +29,9 @@ import {
   ItemTitle,
   itemSizes,
   itemVariants,
-} from "@/components/ui/item";
-import type { ItemSize, ItemVariant } from "@/components/ui/item";
-import { Text } from "@/components/ui/text";
+} from "@/components/primitives/item";
+import type { ItemSize, ItemVariant } from "@/components/primitives/item";
+import { Text } from "@/components/typography/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

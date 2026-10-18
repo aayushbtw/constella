@@ -6,7 +6,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
-} from "@/components/ui/input-group";
+} from "@/components/primitives/input-group";
 import {
   Slider,
   SliderControl,
@@ -15,12 +15,12 @@ import {
   SliderThumb,
   SliderTrack,
   SliderValue,
-} from "@/components/ui/slider";
+} from "@/components/primitives/slider";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/primitives/tooltip";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";

@@ -29,7 +29,7 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-} from "@/components/ui/input-group";
+} from "@/components/primitives/input-group";
 ```
 
 ```tsx

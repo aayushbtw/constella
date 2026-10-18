@@ -1,9 +1,13 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/primitives/avatar";
+import { Button } from "@/components/primitives/button";
+import { Card, CardContent, CardHeader } from "@/components/primitives/card";
 import {
   Item,
   ItemContent,
@@ -11,8 +15,8 @@ import {
   ItemGroup,
   ItemMedia,
   ItemTitle,
-} from "@/components/ui/item";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/components/primitives/item";
+import { Skeleton } from "@/components/primitives/skeleton";
 import { radii, sizes, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

@@ -3,23 +3,6 @@ import { useId, useMemo, useState } from "react";
 import type { ComponentProps, SubmitEvent } from "react";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Progress, ProgressLabel } from "@/components/ui/progress";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -36,13 +19,33 @@ import {
   QuestionnaireSkip,
   QuestionnaireSubmit,
   QuestionnaireTitle,
-} from "@/components/ui/questionnaire";
+} from "@/components/ai/questionnaire";
 import type {
   QuestionnaireItemStatus,
   QuestionnaireShortcutMode,
-} from "@/components/ui/questionnaire";
-import { toast } from "@/components/ui/toast";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+} from "@/components/ai/questionnaire";
+import { Button } from "@/components/primitives/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/primitives/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/primitives/dialog";
+import { Progress, ProgressLabel } from "@/components/primitives/progress";
+import { toast } from "@/components/primitives/toast";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
 import { DemoRow } from "~/components/demos/frame";
 import {
   action,

@@ -22,7 +22,7 @@ description: A single-line text box for forms and user data entry.
 ## Usage
 
 ```tsx
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/primitives/input";
 ```
 
 ```tsx

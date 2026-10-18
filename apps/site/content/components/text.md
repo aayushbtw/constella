@@ -20,7 +20,7 @@ section: Typography
 ## Usage
 
 ```tsx
-import { Text } from "@/components/ui/text";
+import { Text } from "@/components/typography/text";
 ```
 
 ```tsx

@@ -14,7 +14,7 @@ description: Shows a brief message that stacks, follows a promise and swipes awa
 Render `Toaster` once, around your app.
 
 ```tsx
-import { Toaster } from "@/components/ui/toast";
+import { Toaster } from "@/components/primitives/toast";
 
 <Toaster>
   <App />
@@ -24,7 +24,7 @@ import { Toaster } from "@/components/ui/toast";
 Then call `toast.add` from anywhere, even outside React.
 
 ```tsx
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/components/primitives/toast";
 
 toast.add({ title: "Saved", type: "success" });
 ```

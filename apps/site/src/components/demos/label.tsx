@@ -1,7 +1,7 @@
 import { useId } from "react";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/primitives/checkbox";
+import { Label } from "@/components/primitives/label";
 import { DemoRow } from "~/components/demos/frame";
 
 function LabelDemo() {

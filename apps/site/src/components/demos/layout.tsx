@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import type { ButtonSize } from "@/components/ui/button";
-import { Caption } from "@/components/ui/caption";
+import { Button } from "@/components/primitives/button";
+import type { ButtonSize } from "@/components/primitives/button";
+import { Caption } from "@/components/typography/caption";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,

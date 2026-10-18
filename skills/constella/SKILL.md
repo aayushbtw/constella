@@ -1,6 +1,6 @@
 ---
 name: constella
-description: Install and build with Constella, React components on Base UI styled with StyleX (not Tailwind), added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/ui/* with StyleX, or the user asks to set up or use Constella.
+description: Install and build with Constella, React components on Base UI styled with StyleX (not Tailwind), added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/{primitives,typography,ai,tanstack}/* with StyleX, or the user asks to set up or use Constella.
 ---
 
 # Constella

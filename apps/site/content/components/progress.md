@@ -16,7 +16,7 @@ description: Shows how far along a task is.
 ## Usage
 
 ```tsx
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@/components/primitives/progress";
 ```
 
 ```tsx

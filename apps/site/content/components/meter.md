@@ -19,7 +19,7 @@ description: Shows a measurement against a limit, like usage against a quota.
 ## Usage
 
 ```tsx
-import { Meter, MeterLabel, MeterValue } from "@/components/ui/meter";
+import { Meter, MeterLabel, MeterValue } from "@/components/primitives/meter";
 ```
 
 ```tsx
