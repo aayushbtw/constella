@@ -49,6 +49,7 @@ Put it in a [Marker](/docs/components/marker) for a status line in a conversatio
 
 Takes every prop of `<span>`, plus:
 
-| Prop | Type                         |
-| ---- | ---------------------------- |
+| Prop | Type |
+| --- | --- |
+| `render` | `ReactElement \| function`; see [Base UI useRender](https://base-ui.com/react/utils/use-render) |
 | `sx` | `StyleXStyles`, applied last |

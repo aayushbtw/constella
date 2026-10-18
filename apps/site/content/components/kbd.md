@@ -92,4 +92,4 @@ Inside a [Tooltip](/docs/components/tooltip), the key inverts with the popup.
 
 ## API Reference
 
-`Kbd` and `KbdGroup` take every prop of `<kbd>`, plus `sx`, applied last.
+`Kbd` and `KbdGroup` take every prop of `<kbd>`, plus `sx`, applied last. `Kbd` also takes `render`; see [Base UI useRender](https://base-ui.com/react/utils/use-render).

@@ -2,6 +2,8 @@
 
 import { Field as FieldPrimitive } from "@base-ui/react/field";
 import { Fieldset as FieldsetPrimitive } from "@base-ui/react/fieldset";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
@@ -244,14 +246,17 @@ function FieldLabel({ sx, ...props }: Styled<FieldPrimitive.Label.Props>) {
 }
 
 /** A label's look without the `<label>`, for a card's heading inside a `FieldLabel`. */
-function FieldTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="field-title"
-      {...props}
-      {...stylex.props(labelStyles(), sx)}
-    />
-  );
+function FieldTitle({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(labelStyles(), sx)),
+    render,
+    state: { slot: "field-title" },
+  });
 }
 
 function FieldDescription({

@@ -1,3 +1,5 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
@@ -282,14 +284,17 @@ function CodeBlockHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
 }
 
 /** The file name or language, cut short on one line. */
-function CodeBlockTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="code-block-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
-    />
-  );
+function CodeBlockTitle({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
+    render,
+    state: { slot: "code-block-title" },
+  });
 }
 
 /** Buttons for the code: at the header's end, or floating on the first line when the block holds them itself. */

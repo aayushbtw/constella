@@ -190,4 +190,5 @@ Every part takes `sx`, applied last.
 | `CodeBlock` | `status`: `danger`; `size`: `sm` or `default` |
 | `CodeBlockContent` | `lineNumbers`; `startLine` (default `1`); `wrap` |
 | `CodeBlockLine` | `variant`: `default`, `highlighted`, `added` or `removed` |
-| `CodeBlockHeader`, `CodeBlockTitle`, `CodeBlockActions`, `CodeBlockFooter` | Nothing; a `div` each |
+| `CodeBlockTitle` | `render`, to make it a heading: `render={<h3 />}` |
+| `CodeBlockHeader`, `CodeBlockActions`, `CodeBlockFooter` | Nothing; a `div` each |

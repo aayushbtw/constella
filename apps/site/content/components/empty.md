@@ -125,8 +125,9 @@ Put an [Avatar](/docs/components/avatar) in `EmptyMedia`.
 
 ## API Reference
 
-| Part         | Adds                               |
-| ------------ | ---------------------------------- |
-| `EmptyMedia` | `variant`: `"default"` or `"icon"` |
+| Part         | Adds                                              |
+| ------------ | ------------------------------------------------- |
+| `EmptyMedia` | `variant`: `"default"` or `"icon"`                |
+| `EmptyTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last, and renders a `div`.
+Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

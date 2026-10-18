@@ -183,5 +183,6 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 | --- | --- |
 | `Item` | `variant`: `"default"`, `"outline"` or `"muted"`; `size`: `"default"`, `"sm"` or `"xs"`; `render` |
 | `ItemMedia` | `variant`: `"default"`, `"icon"` or `"image"` |
+| `ItemTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
 Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

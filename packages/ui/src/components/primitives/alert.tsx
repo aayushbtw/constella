@@ -1,3 +1,5 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
@@ -105,14 +107,17 @@ function Alert({ status, sx, ...props }: AlertProps) {
   );
 }
 
-function AlertTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="alert-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
-    />
-  );
+function AlertTitle({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
+    render,
+    state: { slot: "alert-title" },
+  });
 }
 
 function AlertDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {

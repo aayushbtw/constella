@@ -112,6 +112,6 @@ The card opens at the list's `inline-end` by default. A picker at the end of a r
 | `ModelPickerItem` | A `CommandItem` that closes the picker at once on pick; `selected` adds a tick and `aria-checked` |
 | `ModelPickerLogo` | A one-color logo from `src`, painted in the text color |
 | `ModelPickerDetails` | The highlighted model's card, hidden until reached |
-| `ModelPickerTitle`, `ModelPickerDescription` | The card's name row and muted text |
+| `ModelPickerTitle`, `ModelPickerDescription` | The card's name row and muted text; the title takes `render` |
 
-Every part takes `sx`, applied last.
+Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

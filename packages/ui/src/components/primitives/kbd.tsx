@@ -1,3 +1,5 @@
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
@@ -86,14 +88,20 @@ const styles = stylex.create({
   },
 });
 
-function Kbd({ sx, ...props }: Styled<ComponentProps<"kbd">>) {
-  return (
-    <kbd
-      data-slot="kbd"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.kbd], sx)}
-    />
-  );
+function Kbd({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"kbd">>) {
+  return useRender({
+    defaultTagName: "kbd",
+    props: mergeProps<"kbd">(
+      props,
+      stylex.props([typeStyles.captionLg, styles.kbd], sx)
+    ),
+    render,
+    state: { slot: "kbd" },
+  });
 }
 
 function KbdGroup({ sx, ...props }: Styled<ComponentProps<"kbd">>) {

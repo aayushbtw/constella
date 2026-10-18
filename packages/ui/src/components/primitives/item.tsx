@@ -291,14 +291,17 @@ function ItemContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function ItemTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="item-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
-    />
-  );
+function ItemTitle({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
+    render,
+    state: { slot: "item-title" },
+  });
 }
 
 function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
