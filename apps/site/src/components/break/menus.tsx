@@ -245,7 +245,7 @@ function DropdownMenuBreak({ data, open }: { data: Dataset; open: boolean }) {
           </DropdownMenuGroup>
         ))}
         {groups.length > 0 && <DropdownMenuSeparator />}
-        <DropdownMenuItem variant="danger">
+        <DropdownMenuItem status="danger">
           {data === "worst" ? `Remove ${text.file}` : "Log out"}
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -188,7 +188,7 @@ function CardActionDemo() {
                 <DropdownMenuItem>Edit recipients</DropdownMenuItem>
                 <DropdownMenuItem>Send now</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="danger">Turn off</DropdownMenuItem>
+                <DropdownMenuItem status="danger">Turn off</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </CardAction>

@@ -351,7 +351,7 @@ function RowActions({ payment }: { payment: Payment }) {
           View customer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="danger">
+        <DropdownMenuItem status="danger">
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>

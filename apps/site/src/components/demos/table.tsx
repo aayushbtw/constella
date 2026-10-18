@@ -166,7 +166,7 @@ function TableActionsDemo() {
                     <DropdownMenuItem>Edit</DropdownMenuItem>
                     <DropdownMenuItem>Duplicate</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+                    <DropdownMenuItem status="danger">Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

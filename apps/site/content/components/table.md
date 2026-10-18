@@ -135,7 +135,7 @@ Put a [Dropdown Menu](/docs/components/dropdown-menu) in the last cell for row a
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>Edit</DropdownMenuItem>
-      <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+      <DropdownMenuItem status="danger">Delete</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </TableCell>

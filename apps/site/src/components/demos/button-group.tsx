@@ -195,7 +195,7 @@ function MoreMenu() {
           </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="danger">
+        <DropdownMenuItem status="danger">
           <Glyph icon={Delete02Icon} />
           Trash
         </DropdownMenuItem>
@@ -236,7 +236,7 @@ function ButtonGroupDropdownDemo() {
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="danger">
+            <DropdownMenuItem status="danger">
               <Glyph icon={Delete02Icon} />
               Delete Conversation
             </DropdownMenuItem>

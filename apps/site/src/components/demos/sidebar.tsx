@@ -248,7 +248,7 @@ function ChatActions() {
           Rename
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="danger">
+        <DropdownMenuItem status="danger">
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>

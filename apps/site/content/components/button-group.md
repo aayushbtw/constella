@@ -257,7 +257,7 @@ Render the last button as a [Dropdown Menu](/docs/components/dropdown-menu) trig
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>Mute Conversation</DropdownMenuItem>
-      <DropdownMenuItem variant="danger">Delete Conversation</DropdownMenuItem>
+      <DropdownMenuItem status="danger">Delete Conversation</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </ButtonGroup>

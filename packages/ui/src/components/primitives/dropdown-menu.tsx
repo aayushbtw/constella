@@ -53,16 +53,16 @@ type DropdownMenuContentProps = Styled<MenuPrimitive.Popup.Props> &
     "align" | "alignOffset" | "side" | "sideOffset"
   > & { size?: DropdownMenuSize };
 
-const dropdownMenuItemVariants = ["default", "danger"] as const;
+const dropdownMenuItemStatuses = ["danger"] as const;
 
-type DropdownMenuItemVariant = (typeof dropdownMenuItemVariants)[number];
+type DropdownMenuItemStatus = (typeof dropdownMenuItemStatuses)[number];
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 const closing =
   ":is([data-ending-style]):not([data-instant], [data-skip-motion])";
 const instant = ":is([data-instant], [data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-popup-open])";
-const danger = ":is([data-variant='danger'])";
+const danger = ":is([data-status='danger'])";
 const off = ":is([data-disabled])";
 const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
@@ -420,16 +420,16 @@ function DropdownMenuLabel({
 
 function DropdownMenuItem({
   inset: isInset,
+  status,
   sx,
-  variant = "default",
   ...props
 }: Styled<MenuPrimitive.Item.Props> &
-  Inset & { variant?: DropdownMenuItemVariant }) {
+  Inset & { status?: DropdownMenuItemStatus }) {
   return (
     <MenuPrimitive.Item
       data-inset={isInset}
       data-slot="dropdown-menu-item"
-      data-variant={variant}
+      data-status={status}
       {...props}
       {...stylex.props([typeStyles.textSm, styles.item], useItemSize(), sx)}
     />
@@ -594,7 +594,7 @@ export {
   DropdownMenuGroup,
   DropdownMenuInput,
   DropdownMenuItem,
-  dropdownMenuItemVariants,
+  dropdownMenuItemStatuses,
   dropdownMenuSizes,
   DropdownMenuLabel,
   DropdownMenuList,
@@ -610,6 +610,6 @@ export {
 };
 export type {
   DropdownMenuContentProps,
-  DropdownMenuItemVariant,
+  DropdownMenuItemStatus,
   DropdownMenuSize,
 };
