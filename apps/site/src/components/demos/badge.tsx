@@ -54,7 +54,6 @@ const statusLabels = {
 } satisfies Record<BadgeStatus, string>;
 
 const labels = {
-  danger: "Danger",
   ghost: "Ghost",
   link: "Link",
   outline: "Outline",

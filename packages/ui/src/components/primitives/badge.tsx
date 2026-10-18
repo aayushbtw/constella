@@ -24,7 +24,6 @@ const badgeVariants = [
   "secondary",
   "outline",
   "ghost",
-  "danger",
   "link",
 ] as const;
 
@@ -57,10 +56,7 @@ const linkHover = <T,>(rest: T, active: T) => ({
   [`${link}:active`]: active,
 });
 
-// A dot takes its badge's status, but on primary and danger it follows the text, which
-// already carries their color.
-const dotIn = (status: BadgeStatus) =>
-  `:is([data-status='${status}']:not([data-variant='primary'], [data-variant='danger']) > *)`;
+const dotIn = (status: BadgeStatus) => `:is([data-status='${status}'] > *)`;
 
 const withAvatar = ":has(> [data-slot='avatar']:first-child)";
 
@@ -160,16 +156,11 @@ const styles = stylex.create({
     backgroundColor: linkHover("transparent", colors.fillSubtle),
     color: colors.textPrimary,
   },
-  // A tint, not a solid, as on a danger button.
-  danger: {
-    backgroundColor: linkHover(colors.dangerSubtle, colors.dangerSubtleHover),
-    color: colors.dangerText,
-  },
   dot: {
     backgroundColor: {
       default: colors.textMuted,
-      ":is([data-variant='primary'] > *, [data-variant='danger'] > *)":
-        "currentColor",
+      // With no status, the dot on a solid follows its text.
+      ":is([data-variant='primary']:not([data-status]) > *)": "currentColor",
       [dotIn("success")]: colors.successSolid,
       [dotIn("info")]: colors.infoSolid,
       [dotIn("warning")]: colors.warningSolid,
@@ -211,12 +202,13 @@ const styles = stylex.create({
   infoText: { color: colors.infoText },
   warningText: { color: colors.warningText },
   dangerText: { color: colors.dangerText },
+  // The tint answers hover with its own color, so the solid's fade is undone.
+  solidTint: { opacity: 1 },
 });
 
-// A tint on secondary, colored text on ghost and link. Outline keeps its text neutral and
-// colors only its dot; primary stays the accent, and danger already carries a status.
+// A tint on secondary and primary, colored text on ghost and link. Outline keeps its text
+// neutral and colors only its dot, so a row of them stays quiet.
 const statusStyles = {
-  danger: null,
   ghost: {
     danger: styles.dangerText,
     info: styles.infoText,
@@ -230,7 +222,12 @@ const statusStyles = {
     warning: styles.warningText,
   },
   outline: null,
-  primary: null,
+  primary: {
+    danger: [styles.dangerTint, styles.solidTint],
+    info: [styles.infoTint, styles.solidTint],
+    success: [styles.successTint, styles.solidTint],
+    warning: [styles.warningTint, styles.solidTint],
+  },
   secondary: {
     danger: styles.dangerTint,
     info: styles.infoTint,
@@ -249,7 +246,6 @@ const sizeStyles = {
 } satisfies Record<BadgeSize, stylex.StyleXStyles>;
 
 const variantStyles = {
-  danger: styles.danger,
   ghost: styles.ghost,
   link: styles.link,
   outline: styles.outline,

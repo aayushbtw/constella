@@ -41,7 +41,6 @@ Use the `variant` prop to change the badge's emphasis. The variants match [Butto
 <Badge variant="secondary">Secondary</Badge>
 <Badge variant="outline">Outline</Badge>
 <Badge variant="ghost">Ghost</Badge>
-<Badge variant="danger">Danger</Badge>
 <Badge variant="link">Link</Badge>
 ```
 
@@ -70,16 +69,15 @@ Use the `size` prop. Pass icons at the size below.
 
 ## Status
 
-Use the `status` prop to color a badge. What it colors depends on the variant. Add `BadgeDot` for a status dot.
+Use the `status` prop to color a badge. Every variant takes it; what it colors depends on the variant. Add `BadgeDot` for a status dot.
 
 <!-- ::demo name="badge-status" -->
 
-| Variant             | Colors                 |
-| ------------------- | ---------------------- |
-| `secondary`         | Background and text    |
-| `ghost`, `link`     | Text                   |
-| `outline`           | Dot, spinner and icons |
-| `primary`, `danger` | Nothing                |
+| Variant                | Colors                         |
+| ---------------------- | ------------------------------ |
+| `secondary`, `primary` | Background and text, as a tint |
+| `ghost`, `link`        | Text                           |
+| `outline`              | Dot, spinner and icons         |
 
 ```tsx
 <Badge status="success">Paid</Badge>
@@ -149,7 +147,7 @@ Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`.
 | --- | --- | --- |
 | `size` | `"sm" \| "default" \| "lg"` | `"default"` |
 | `status` | `"success" \| "info" \| "warning" \| "danger"` | - |
-| `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "danger" \| "link"` | `"secondary"` |
+| `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"secondary"` |
 | `render` | `ReactElement \| function` | `<span>` |
 | `sx` | `StyleXStyles`, applied last | - |
 
