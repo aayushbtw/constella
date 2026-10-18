@@ -13,6 +13,7 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 import { Logo } from "~/components/logo";
+import { NavMenu } from "~/components/nav-menu";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
 import { toggleTheme } from "~/lib/theme";
@@ -32,11 +33,9 @@ const styles = stylex.create({
     display: "flex",
     height: "100%",
     justifyContent: "space-between",
-    marginInline: "auto",
-    maxWidth: {
-      default: `calc(${layout.content} + 2 * ${layout.gutter})`,
-      [media.sidebar]: layout.shell,
-    },
+    marginInlineEnd: "auto",
+    marginInlineStart: "auto",
+    maxWidth: layout.shell,
     paddingInline: {
       default: layout.gutter,
       [media.sidebar]: layout.gutterWide,
@@ -59,6 +58,10 @@ const styles = stylex.create({
     display: "flex",
   },
   nav: {
+    display: { default: "none", [media.sidebar]: "flex" },
+  },
+  end: {
+    alignItems: "center",
     display: "flex",
   },
   link: {
@@ -116,18 +119,21 @@ function Header() {
             ))}
           </nav>
         </div>
-        <Button
-          aria-label="Toggle theme"
-          onClick={toggleTheme}
-          size="icon"
-          variant="ghost"
-        >
-          <HugeiconsIcon
-            icon={ContrastIcon}
-            size={sizes.icon}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </Button>
+        <div {...stylex.props(styles.end)}>
+          <Button
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+            size="icon"
+            variant="ghost"
+          >
+            <HugeiconsIcon
+              icon={ContrastIcon}
+              size={sizes.icon}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </Button>
+          <NavMenu />
+        </div>
       </div>
     </header>
   );

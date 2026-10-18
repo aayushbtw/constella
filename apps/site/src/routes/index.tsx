@@ -49,10 +49,7 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: layout.sectionGap,
     marginInline: "auto",
-    maxWidth: {
-      default: `calc(${layout.content} + 2 * ${layout.gutter})`,
-      [uiMedia.md]: layout.shell,
-    },
+    maxWidth: layout.shell,
     paddingBottom: layout.pageBottom,
     paddingInline: {
       default: layout.gutter,

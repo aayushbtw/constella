@@ -10,16 +10,13 @@ const styles = stylex.create({
     columnGap: layout.sectionGap,
     display: "grid",
     gridTemplateColumns: {
-      default: `minmax(0, ${layout.content})`,
+      default: "minmax(0, 1fr)",
       [media.sidebar]: `${layout.sidebar} minmax(0, 1fr)`,
       [media.outline]: `${layout.sidebar} minmax(0, 1fr) ${layout.outline}`,
     },
     justifyContent: "center",
     marginInline: "auto",
-    maxWidth: {
-      default: `calc(${layout.content} + 2 * ${layout.gutter})`,
-      [media.sidebar]: layout.shell,
-    },
+    maxWidth: layout.shell,
     paddingInline: {
       default: layout.gutter,
       [media.sidebar]: layout.gutterWide,

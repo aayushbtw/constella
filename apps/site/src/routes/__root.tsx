@@ -20,6 +20,8 @@ import { Header } from "~/components/header";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";
 import { themeScript } from "~/lib/theme";
+import { getComponents } from "~/server/components";
+import { getDocs } from "~/server/docs";
 
 import appCss from "~/styles/styles.css?url";
 
@@ -30,6 +32,13 @@ const highlightCss = createThemeCss({
 });
 
 export const Route = createRootRoute({
+  // The docs sidebar and the mobile menu both list these, on every page.
+  loader: async () => {
+    const [docs, components] = await Promise.all([getDocs(), getComponents()]);
+
+    return { components, docs };
+  },
+  staleTime: Number.POSITIVE_INFINITY,
   head: () => ({
     styles: [{ children: highlightCss }],
     meta: [

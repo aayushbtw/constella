@@ -5,16 +5,16 @@ import { colors, space } from "@/lib/constella/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
 import type { Heading } from "~/components/docs/outline";
 import { PageActions } from "~/components/docs/page-actions";
-import { layout } from "~/lib/tokens.stylex";
+import { layout, media } from "~/lib/tokens.stylex";
 
 const styles = stylex.create({
   page: {
     display: "flex",
     flexDirection: "column",
     gap: layout.sectionGap,
-    // Centered in the space between sidebar and outline.
+    // Centered in the space between sidebar and outline; full width without them.
     marginInline: "auto",
-    maxWidth: layout.content,
+    maxWidth: { default: "none", [media.sidebar]: layout.content },
     minWidth: 0,
     width: "100%",
     paddingBottom: layout.pageBottom,

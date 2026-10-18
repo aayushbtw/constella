@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DocsLayout } from "~/components/docs/layout";
+import { blocksGroups } from "~/lib/nav";
 import { getBlocks } from "~/server/blocks";
 
 export const Route = createFileRoute("/blocks")({
@@ -9,12 +10,7 @@ export const Route = createFileRoute("/blocks")({
 });
 
 function Blocks() {
-  const blocks = Route.useLoaderData();
-
   return (
-    <DocsLayout
-      name="Blocks"
-      groups={[{ items: blocks, label: "Blocks", to: "/blocks/$slug" }]}
-    />
+    <DocsLayout name="Blocks" groups={blocksGroups(Route.useLoaderData())} />
   );
 }
