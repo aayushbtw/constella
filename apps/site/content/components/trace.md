@@ -165,30 +165,6 @@ Put lines that sit together in a `Trace`.
 </Trace>
 ```
 
-## Link
-
-Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab, end the line with an arrow icon.
-
-<!-- ::demo name="trace-link" -->
-
-```tsx
-<a
-  href="https://acme.com/docs/ci"
-  target="_blank"
-  {...stylex.props(traceActionStyles())}
->
-  <TraceLine>
-    <TraceIcon>
-      <GlobeIcon />
-    </TraceIcon>
-    <TraceTitle>Continuous integration</TraceTitle>
-    <TraceIcon>
-      <ArrowUpRightIcon />
-    </TraceIcon>
-  </TraceLine>
-</a>
-```
-
 ## Reasoning
 
 Use a [controlled](#controlled) `TraceCollapsible` for the model's thinking, so it opens while the model thinks and closes once the answer starts.
@@ -247,6 +223,30 @@ Put a `Trace` of tool calls in a `TraceCollapsible`, set each line's `state` as 
     </Trace>
   </TraceCollapsibleContent>
 </TraceCollapsible>
+```
+
+## Link
+
+Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab, end the line with an arrow icon.
+
+<!-- ::demo name="trace-link" -->
+
+```tsx
+<a
+  href="https://acme.com/docs/ci"
+  target="_blank"
+  {...stylex.props(traceActionStyles())}
+>
+  <TraceLine>
+    <TraceIcon>
+      <GlobeIcon />
+    </TraceIcon>
+    <TraceTitle>Continuous integration</TraceTitle>
+    <TraceIcon>
+      <ArrowUpRightIcon />
+    </TraceIcon>
+  </TraceLine>
+</a>
 ```
 
 ## Dialog
