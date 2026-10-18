@@ -7,13 +7,8 @@ import {
   tabsListSizes,
   TabsTrigger,
 } from "@/components/primitives/tabs";
-import { typeStyles } from "@/lib/constella/styles";
-import {
-  colors,
-  lineHeights,
-  sizes,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/typography/text";
+import { lineHeights, sizes, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -24,7 +19,6 @@ const styles = stylex.create({
     gap: space.md,
   },
   panel: {
-    color: colors.textSecondary,
     // Level with the first tab's label: half the tab's height around one line.
     paddingBlock: `calc((${sizes.controlSm} - ${lineHeights.textSm}) / 2)`,
   },
@@ -85,14 +79,20 @@ function TabsVerticalDemo() {
           <TabsTrigger value="models">Models</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
         </TabsList>
-        <TabsContent sx={[typeStyles.textSm, styles.panel]} value="general">
-          Name, avatar and language.
+        <TabsContent sx={styles.panel} value="general">
+          <Text color="secondary" size="sm">
+            Name, avatar and language.
+          </Text>
         </TabsContent>
-        <TabsContent sx={[typeStyles.textSm, styles.panel]} value="models">
-          The default model and its settings.
+        <TabsContent sx={styles.panel} value="models">
+          <Text color="secondary" size="sm">
+            The default model and its settings.
+          </Text>
         </TabsContent>
-        <TabsContent sx={[typeStyles.textSm, styles.panel]} value="billing">
-          Plan, usage and invoices.
+        <TabsContent sx={styles.panel} value="billing">
+          <Text color="secondary" size="sm">
+            Plan, usage and invoices.
+          </Text>
         </TabsContent>
       </Tabs>
     </DemoRow>

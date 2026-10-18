@@ -15,7 +15,11 @@ type TextProps = Omit<useRender.ComponentProps<"p">, "className" | "style"> & {
 };
 
 const styles = stylex.create({
+  // Inherit, not the user agent's, when rendered as a heading.
   base: {
+    fontSize: "inherit",
+    fontWeight: "inherit",
+    lineHeight: "inherit",
     marginBlock: 0,
   },
 });
@@ -26,22 +30,15 @@ const sizeStyles = {
   lg: typeStyles.textLg,
 } satisfies Record<TextSize, stylex.StyleXStyles>;
 
-function Text({
-  color,
-  render,
-  size = "base",
-  sx,
-  weight = "regular",
-  ...props
-}: TextProps) {
+function Text({ color, render, size, sx, weight, ...props }: TextProps) {
   return useRender({
     defaultTagName: "p",
     props: mergeProps<"p">(
       props,
       stylex.props(
         styles.base,
-        sizeStyles[size],
-        textWeights[weight],
+        size && sizeStyles[size],
+        weight && textWeights[weight],
         color && textColors[color],
         sx
       )
