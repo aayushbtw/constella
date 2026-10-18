@@ -242,14 +242,14 @@ function DataTableSelectRow({
           target: { checked },
         });
       }}
-      sx={[numbered && [styles.stacked, styles.revealed], sx]}
+      sx={numbered ? [styles.stacked, styles.revealed] : sx}
     />
   );
   if (!numbered) {
     return checkbox;
   }
   return (
-    <span data-slot="data-table-select" {...stylex.props(styles.numbered)}>
+    <span data-slot="data-table-select" {...stylex.props(styles.numbered, sx)}>
       <span aria-hidden {...stylex.props(styles.stacked, styles.number)}>
         {row.getDisplayIndex() + 1}
       </span>

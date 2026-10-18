@@ -160,7 +160,7 @@ Use the `size` prop on `CodeBlock`: `sm` or `default`.
 </CodeBlock>
 ```
 
-## Variant
+## Status
 
 Use `status="danger"` for an error's output. `CodeBlockFooter` holds a line under the code.
 

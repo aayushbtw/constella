@@ -7,7 +7,6 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
-import { typeStyles } from "@/lib/constella/styles";
 import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
@@ -111,7 +110,7 @@ function AlertDialogContent({
           data-slot="alert-dialog-content"
           {...props}
           {...stylex.props(
-            [typeStyles.textSm, dialogStyles.popup],
+            dialogStyles.popup,
             size === "sm" && dialogStyles.sm,
             sx
           )}
@@ -159,7 +158,7 @@ function AlertDialogTitle({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       {...props}
-      {...stylex.props([typeStyles.textBase, dialogStyles.title], sx)}
+      {...stylex.props(dialogStyles.title, sx)}
     />
   );
 }
@@ -172,7 +171,7 @@ function AlertDialogDescription({
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
       {...props}
-      {...stylex.props([typeStyles.textSm, dialogStyles.description], sx)}
+      {...stylex.props(dialogStyles.description, sx)}
     />
   );
 }

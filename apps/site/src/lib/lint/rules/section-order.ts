@@ -20,17 +20,13 @@ export const sectionOrder = definePageRule({
 
     for (const heading of sections) {
       let group = 0;
-      // The longest name wins, so "Code Block Actions" is Code Block's and not Code's.
-      const [component] = components
+      const [owner] = components
         .filter((name) => startsWith(heading, name))
         .toSorted((a, b) => b.length - a.length);
-      if (
-        component !== title &&
-        !parts.some((part) => startsWith(heading, part))
-      ) {
+      if (owner !== title && !parts.some((part) => startsWith(heading, part))) {
         if (states.has(heading)) {
           group = 1;
-        } else if (component !== undefined) {
+        } else if (owner !== undefined) {
           group = 2;
         }
       }

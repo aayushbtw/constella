@@ -63,7 +63,8 @@ const layoutAnimation = {
 };
 
 // `error`, not `danger`: Base UI's `toast.promise` sets it.
-const toastTypes = ["error", "info", "success", "warning", "loading"] as const;
+const statuses = ["error", "info", "success", "warning"] as const;
+const toastTypes = [...statuses, "loading"] as const;
 
 type ToastType = (typeof toastTypes)[number];
 
@@ -72,7 +73,7 @@ const icons = {
   info: InformationCircleIcon,
   success: CheckmarkCircle02Icon,
   warning: Alert02Icon,
-} satisfies Record<Exclude<ToastType, "loading">, IconSvgElement>;
+} satisfies Record<(typeof statuses)[number], IconSvgElement>;
 
 function isToastType(type: string | undefined): type is ToastType {
   return toastTypes.some((name) => name === type);
@@ -361,8 +362,6 @@ function ToastContent({ sx, ...props }: Styled<ToastPrimitive.Content.Props>) {
     />
   );
 }
-
-const statuses = ["error", "info", "success", "warning"] as const;
 
 // Hue only on the icon: the shape and title still say it without color.
 const tones = {

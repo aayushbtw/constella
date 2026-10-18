@@ -1375,7 +1375,7 @@ function SidebarMenuButton({
       )
     ),
     render: tooltip === undefined ? render : <TooltipTrigger render={render} />,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-active`.
+    // Base UI writes each state key as a `data-*` attribute.
     state: { active: isActive, size, slot: "sidebar-menu-button", variant },
   });
 

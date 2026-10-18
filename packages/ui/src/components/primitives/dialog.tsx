@@ -38,7 +38,6 @@ type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 
-// Exported as `dialogStyles`, so an alert dialog wears the same surface.
 const styles = stylex.create({
   backdrop: {
     backdropFilter: `blur(${blurs.backdrop})`,
@@ -208,6 +207,14 @@ function DialogViewport({
   );
 }
 
+// Shared with Alert Dialog, type included, so the two never drift apart.
+const dialogStyles = {
+  ...styles,
+  description: [typeStyles.textSm, styles.description],
+  popup: [typeStyles.textSm, styles.popup],
+  title: [typeStyles.textBase, styles.title],
+};
+
 const sizeStyles = {
   default: null,
   full: styles.full,
@@ -221,7 +228,7 @@ function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
       data-size={size}
       data-slot="dialog-popup"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.popup], sizeStyles[size], sx)}
+      {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
     />
   );
 }
@@ -272,7 +279,7 @@ function DialogTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       {...props}
-      {...stylex.props([typeStyles.textBase, styles.title], sx)}
+      {...stylex.props(dialogStyles.title, sx)}
     />
   );
 }
@@ -285,7 +292,7 @@ function DialogDescription({
     <DialogPrimitive.Description
       data-slot="dialog-description"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...stylex.props(dialogStyles.description, sx)}
     />
   );
 }
@@ -343,6 +350,6 @@ export {
   DialogTrigger,
   DialogViewport,
   dialogSizes,
-  styles as dialogStyles,
+  dialogStyles,
 };
 export type { DialogPopupProps, DialogSize };
