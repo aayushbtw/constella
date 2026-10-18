@@ -66,35 +66,35 @@ function AlertDemo() {
   );
 }
 
-const statuses = [
+const colors = [
   {
     description: "Your changes have been saved.",
     icon: CheckmarkCircle02Icon,
-    status: "success",
+    color: "success",
     title: "Saved",
   },
   {
     description: "Maintenance is scheduled for Sunday at 2am.",
     icon: InformationCircleIcon,
-    status: "info",
+    color: "info",
     title: "Heads up",
   },
   {
     description: "You've used 90% of your monthly quota.",
     icon: Alert02Icon,
-    status: "warning",
+    color: "warning",
     title: "Almost out",
   },
   {
     description: "We couldn't charge your card. Update it to keep access.",
     icon: AlertCircleIcon,
-    status: "danger",
+    color: "danger",
     title: "Payment failed",
   },
 ] satisfies {
   description: string;
   icon: HugeiconsIconProps["icon"];
-  status: AlertColor;
+  color: AlertColor;
   title: string;
 }[];
 
@@ -102,8 +102,8 @@ function AlertColorDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        {statuses.map((item) => (
-          <Alert key={item.status} color={item.status}>
+        {colors.map((item) => (
+          <Alert color={item.color} key={item.color}>
             <Glyph icon={item.icon} />
             <AlertTitle>{item.title}</AlertTitle>
             <AlertDescription>{item.description}</AlertDescription>

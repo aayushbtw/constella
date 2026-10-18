@@ -46,7 +46,7 @@ const people = [
   { handle: "evilrabbit", initial: "E", size: "lg" },
 ] as const;
 
-const statusLabels = {
+const colorLabels = {
   danger: "Failed",
   info: "Syncing",
   success: "Paid",
@@ -145,17 +145,17 @@ function BadgeLinkDemo() {
   );
 }
 
-const statusVariants = ["secondary", "outline"] as const;
+const colorVariants = ["secondary", "outline"] as const;
 
 function BadgeColorDemo() {
   return (
     <DemoRow sx={styles.rows}>
-      {statusVariants.map((variant) => (
+      {colorVariants.map((variant) => (
         <div key={variant} {...stylex.props(styles.row)}>
-          {badgeColors.map((status) => (
-            <Badge key={status} color={status} variant={variant}>
+          {badgeColors.map((color) => (
+            <Badge key={color} color={color} variant={variant}>
               {variant === "outline" && <BadgeDot />}
-              {statusLabels[status]}
+              {colorLabels[color]}
             </Badge>
           ))}
         </div>

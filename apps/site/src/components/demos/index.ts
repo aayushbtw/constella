@@ -463,7 +463,7 @@ const demos = {
   "button-sizes": ButtonSizesDemo,
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
-  "button-status": ButtonColorDemo,
+  "button-color": ButtonColorDemo,
   "button-variants": ButtonVariantsDemo,
   caption: CaptionDemo,
   "caption-case": CaptionCaseDemo,

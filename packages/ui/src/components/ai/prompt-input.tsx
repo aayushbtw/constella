@@ -241,7 +241,7 @@ function PromptInputBarButton({
   sx,
   variant = "ghost",
   ...props
-}: ButtonProps) {
+}: Omit<ButtonProps, "color">) {
   return (
     <Button
       corners={corners}

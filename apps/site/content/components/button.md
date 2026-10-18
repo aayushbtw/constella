@@ -35,9 +35,9 @@ Use the `variant` prop to set how much the button stands out. Use one `primary` 
 
 ## Color
 
-Use `color="danger"` for an action that deletes or destroys. It turns any variant red without changing its shape; a `primary` takes the tint too, since destruction is marked, never shouted.
+Use `color="danger"` for an action that deletes or destroys. Every variant takes it without changing its shape; `primary` draws the same tint as `secondary`.
 
-<!-- ::demo name="button-status" -->
+<!-- ::demo name="button-color" -->
 
 ```tsx
 <Button color="danger">Delete</Button>
@@ -161,4 +161,4 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 
 ### buttonStyles
 
-Returns the button's styles for `stylex.props`. Takes `variant`, `size` and `corners`, with the same defaults.
+Returns the button's styles for `stylex.props`. Takes `variant`, `color`, `size` and `corners`, with the same defaults.

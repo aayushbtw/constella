@@ -247,14 +247,12 @@ const variantStyles = {
 
 // A solid takes the tint too: destruction is marked, never shouted.
 const colorStyles = {
-  danger: {
-    ghost: styles.dangerGhost,
-    link: styles.dangerLink,
-    outline: styles.dangerOutline,
-    primary: [styles.secondary, styles.danger, styles.dangerSolid],
-    secondary: styles.danger,
-  },
-} satisfies Record<ButtonColor, Record<ButtonVariant, stylex.StyleXStyles>>;
+  ghost: { danger: styles.dangerGhost },
+  link: { danger: styles.dangerLink },
+  outline: { danger: styles.dangerOutline },
+  primary: { danger: [styles.secondary, styles.danger, styles.dangerSolid] },
+  secondary: { danger: styles.danger },
+} satisfies Record<ButtonVariant, Record<ButtonColor, stylex.StyleXStyles>>;
 
 const sizeStyles = {
   "icon-lg": styles.iconLg,
@@ -284,7 +282,7 @@ function buttonStyles({
     joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],
-    color && colorStyles[color][variant],
+    color && colorStyles[variant][color],
     cornerStyles[corners],
   ];
 }
