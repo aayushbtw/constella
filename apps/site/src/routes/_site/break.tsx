@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { Text } from "@/components/typography/text";
@@ -23,6 +23,7 @@ import {
 } from "~/components/break/surfaces";
 import { DataTableBreak, TableBreak } from "~/components/break/tables";
 import { Stage } from "~/components/demos/frame";
+import { devOnly } from "~/lib/dev-only";
 
 // Each component fed worst-case data through its demo's props, per the break-ui skill.
 const sections = {
@@ -50,13 +51,9 @@ const search = z.object({
   dir: z.enum(["ltr", "rtl"]).optional(),
 });
 
-export const Route = createFileRoute("/break")({
-  // Dev only: never linked, so never prerendered, and a 404 if reached in a build.
-  beforeLoad: () => {
-    if (!import.meta.env.DEV) {
-      throw notFound();
-    }
-  },
+export const Route = createFileRoute("/_site/break")({
+  // Dev only, but under _site rather than _dev: it needs the header and the Toaster.
+  beforeLoad: devOnly,
   component: BreakPage,
   // A hand-edited URL falls back to every default rather than an error page.
   validateSearch: (raw) => search.safeParse(raw).data ?? {},

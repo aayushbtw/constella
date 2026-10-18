@@ -15,7 +15,7 @@ const styles = stylex.create({
 });
 
 // Until blocks have an index page, it opens the first block.
-export const Route = createFileRoute("/blocks/")({
+export const Route = createFileRoute("/_site/blocks/")({
   beforeLoad: async () => {
     const [first] = await getBlocks();
 

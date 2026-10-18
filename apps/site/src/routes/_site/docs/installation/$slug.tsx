@@ -5,18 +5,19 @@ import { Prose } from "~/components/docs/prose";
 import { seo } from "~/lib/seo";
 import { getDoc } from "~/server/docs";
 
-export const Route = createFileRoute("/docs/$slug")({
-  loader: async ({ params }) => await getDoc({ data: params.slug }),
+export const Route = createFileRoute("/_site/docs/installation/$slug")({
+  loader: async ({ params }) =>
+    await getDoc({ data: `installation/${params.slug}` }),
   head: ({ loaderData }) => ({
     meta: seo({
       title: loaderData?.metadata.title,
       description: loaderData?.metadata.description,
     }),
   }),
-  component: DocPage,
+  component: InstallationPage,
 });
 
-function DocPage() {
+function InstallationPage() {
   const { body, markdown, metadata } = Route.useLoaderData();
 
   return (

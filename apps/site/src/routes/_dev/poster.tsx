@@ -1,17 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { colors, space } from "@/lib/constella/tokens.stylex";
 import { demos } from "~/components/demos";
 import { CompactStage } from "~/components/demos/frame";
 
-export const Route = createFileRoute("/poster")({
-  // Dev only, like /break. A tilted mosaic of real demos for social posts.
-  beforeLoad: () => {
-    if (!import.meta.env.DEV) {
-      throw notFound();
-    }
-  },
+export const Route = createFileRoute("/_dev/poster")({
   component: PosterPage,
 });
 
@@ -120,8 +114,7 @@ const styles = stylex.create({
 
 const shifts = [null, styles.shift1, styles.shift3];
 
-// Off-screen padding: neighbours' tiles above and below, and wrapped columns at the sides,
-// so the tilted grid overruns the frame at any window size.
+// Off-screen tiles on every side, so the tilted grid overruns the frame at any window size.
 const padded = [...columns.slice(-2), ...columns, ...columns.slice(0, 2)].map(
   (names, i, all) => [
     ...new Set([
@@ -138,8 +131,10 @@ function PosterPage() {
       <main {...stylex.props(styles.main)}>
         <div {...stylex.props(styles.mosaic)}>
           {padded.map((names, i) => (
-            // oxlint-disable-next-line no-array-index-key -- columns repeat, so names aren't unique
-            <div key={i} {...stylex.props(styles.column, shifts[i % 3])}>
+            <div
+              key={names.join(",")}
+              {...stylex.props(styles.column, shifts[i % 3])}
+            >
               {names.map((name) => {
                 const Demo = demos[name];
                 return <Demo key={name} />;

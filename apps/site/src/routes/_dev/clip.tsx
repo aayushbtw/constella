@@ -1,17 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { toast, Toaster } from "@/components/primitives/toast";
 import { colors, sizes } from "@/lib/constella/tokens.stylex";
 
-export const Route = createFileRoute("/clip")({
-  // Dev only, like /break. A promise toast on a guide-lined canvas, for scripted video clips.
-  beforeLoad: () => {
-    if (!import.meta.env.DEV) {
-      throw notFound();
-    }
-  },
+export const Route = createFileRoute("/_dev/clip")({
   component: ClipPage,
 });
 

@@ -4,7 +4,7 @@ import { llmsTxt } from "~/server/markdown";
 
 // Its own route: /blocks/$slug would take `index.md` as a slug. The blocks
 // index lists pages, so its Markdown is the page index.
-export const Route = createFileRoute("/blocks_/index.md")({
+export const Route = createFileRoute("/(text)/blocks_/index.md")({
   server: {
     handlers: {
       GET: () =>

@@ -26,7 +26,7 @@ const structuredData = {
   url: config.url,
 };
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_site/")({
   loader: async () => await getComponents(),
   head: () => ({
     scripts: [

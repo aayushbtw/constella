@@ -6,6 +6,7 @@ import { githubDarkTheme } from "@tanstack/highlight/themes/github-dark";
 import { githubLightTheme } from "@tanstack/highlight/themes/github-light";
 import {
   createRootRoute,
+  DefaultGlobalNotFound,
   HeadContent,
   ScriptOnce,
   Scripts,
@@ -13,10 +14,9 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { Toaster } from "@/components/primitives/toast";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors } from "@/lib/constella/tokens.stylex";
-import { Header } from "~/components/header";
+import { SiteChrome } from "~/components/site-chrome";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";
 import { themeScript } from "~/lib/theme";
@@ -83,6 +83,12 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
   }),
+  // notFoundMode is "root", so every miss renders here, outside _site's layout.
+  notFoundComponent: () => (
+    <SiteChrome>
+      <DefaultGlobalNotFound />
+    </SiteChrome>
+  ),
   shellComponent: RootDocument,
 });
 
@@ -109,15 +115,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <DevStyleX />
       </head>
       <body {...stylex.props([typeStyles.textBase, styles.body])}>
-        {/* /clip renders its own Toaster, centred for recording. */}
-        {pathname === "/clip" ? (
-          children
-        ) : (
-          <Toaster>
-            {pathname === "/poster" ? null : <Header />}
-            {children}
-          </Toaster>
-        )}
+        {children}
         <Scripts />
       </body>
     </html>

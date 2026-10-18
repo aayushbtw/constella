@@ -5,7 +5,7 @@ import { Prose } from "~/components/docs/prose";
 import { seo } from "~/lib/seo";
 import { getBlock } from "~/server/blocks";
 
-export const Route = createFileRoute("/blocks/$slug")({
+export const Route = createFileRoute("/_site/blocks/$slug")({
   loader: async ({ params }) => await getBlock({ data: params.slug }),
   head: ({ loaderData }) => ({
     meta: seo({
