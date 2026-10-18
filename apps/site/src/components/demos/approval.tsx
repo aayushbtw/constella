@@ -144,7 +144,7 @@ function ApprovalDemo() {
             {decided ? (
               <ApprovalAction>
                 <Badge
-                  status={answer === "sent" ? "success" : undefined}
+                  color={answer === "sent" ? "success" : undefined}
                   variant="secondary"
                 >
                   {answer === "sent" ? "Sent" : "Cancelled"}
@@ -198,7 +198,7 @@ function ApprovalDecidedDemo() {
               Send mail
             </ApprovalTitle>
             <ApprovalAction>
-              <Badge status="success" variant="secondary">
+              <Badge color="success" variant="secondary">
                 Sent
               </Badge>
             </ApprovalAction>

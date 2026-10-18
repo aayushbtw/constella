@@ -15,9 +15,9 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-const meterStatuses = ["success", "info", "warning", "danger"] as const;
+const meterColors = ["success", "info", "warning", "danger"] as const;
 
-type MeterStatus = (typeof meterStatuses)[number];
+type MeterColor = (typeof meterColors)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
@@ -80,30 +80,30 @@ const styles = stylex.create({
   },
 });
 
-const statusStyles = {
+const colorStyles = {
   danger: styles.danger,
   info: styles.info,
   success: styles.success,
   warning: styles.warning,
-} satisfies Record<MeterStatus, stylex.StyleXStyles>;
+} satisfies Record<MeterColor, stylex.StyleXStyles>;
 
 /** Renders the track and indicator after its children, so a label and value sit above. */
 function Meter({
   children,
-  status,
+  color,
   sx,
   ...props
-}: Styled<MeterPrimitive.Root.Props> & { status?: MeterStatus }) {
+}: Styled<MeterPrimitive.Root.Props> & { color?: MeterColor }) {
   return (
     <MeterPrimitive.Root
       data-slot="meter"
-      data-status={status}
+      data-color={color}
       {...props}
       {...stylex.props(styles.root, sx)}
     >
       {children}
       <MeterTrack>
-        <MeterIndicator sx={status && statusStyles[status]} />
+        <MeterIndicator sx={color && colorStyles[color]} />
       </MeterTrack>
     </MeterPrimitive.Root>
   );
@@ -156,8 +156,8 @@ export {
   Meter,
   MeterIndicator,
   MeterLabel,
-  meterStatuses,
+  meterColors,
   MeterTrack,
   MeterValue,
 };
-export type { MeterStatus };
+export type { MeterColor };

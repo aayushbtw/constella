@@ -74,11 +74,11 @@ function ButtonVariantsDemo() {
   );
 }
 
-function ButtonStatusDemo() {
+function ButtonColorDemo() {
   return (
     <DemoRow>
       {buttonVariants.map((variant) => (
-        <Button key={variant} status="danger" variant={variant}>
+        <Button key={variant} color="danger" variant={variant}>
           {labels[variant]}
         </Button>
       ))}
@@ -215,6 +215,6 @@ export {
   ButtonLinkDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
-  ButtonStatusDemo,
+  ButtonColorDemo,
   ButtonVariantsDemo,
 };

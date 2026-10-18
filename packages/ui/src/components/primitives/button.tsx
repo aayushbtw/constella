@@ -25,7 +25,7 @@ const buttonVariants = [
   "ghost",
   "link",
 ] as const;
-const buttonStatuses = ["danger"] as const;
+const buttonColors = ["danger"] as const;
 const buttonSizes = [
   "xs",
   "sm",
@@ -39,14 +39,14 @@ const buttonSizes = [
 const buttonCorners = ["rounded", "pill"] as const;
 
 type ButtonVariant = (typeof buttonVariants)[number];
-type ButtonStatus = (typeof buttonStatuses)[number];
+type ButtonColor = (typeof buttonColors)[number];
 type ButtonSize = (typeof buttonSizes)[number];
 type ButtonCorners = (typeof buttonCorners)[number];
 
 interface ButtonStyleOptions {
   corners?: ButtonCorners;
   size?: ButtonSize;
-  status?: ButtonStatus;
+  color?: ButtonColor;
   variant?: ButtonVariant;
 }
 
@@ -246,7 +246,7 @@ const variantStyles = {
 } satisfies Record<ButtonVariant, stylex.StyleXStyles>;
 
 // A solid takes the tint too: destruction is marked, never shouted.
-const statusStyles = {
+const colorStyles = {
   danger: {
     ghost: styles.dangerGhost,
     link: styles.dangerLink,
@@ -254,7 +254,7 @@ const statusStyles = {
     primary: [styles.secondary, styles.danger, styles.dangerSolid],
     secondary: styles.danger,
   },
-} satisfies Record<ButtonStatus, Record<ButtonVariant, stylex.StyleXStyles>>;
+} satisfies Record<ButtonColor, Record<ButtonVariant, stylex.StyleXStyles>>;
 
 const sizeStyles = {
   "icon-lg": styles.iconLg,
@@ -276,7 +276,7 @@ const cornerStyles = {
 function buttonStyles({
   corners = "rounded",
   size = "default",
-  status,
+  color,
   variant = "secondary",
 }: ButtonStyleOptions = {}) {
   return [
@@ -284,7 +284,7 @@ function buttonStyles({
     joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],
-    status && statusStyles[status][variant],
+    color && colorStyles[color][variant],
     cornerStyles[corners],
   ];
 }
@@ -292,7 +292,7 @@ function buttonStyles({
 function Button({
   corners = "rounded",
   size = "default",
-  status,
+  color,
   sx,
   variant = "secondary",
   ...props
@@ -302,10 +302,10 @@ function Button({
       data-corners={corners}
       data-size={size}
       data-slot="button"
-      data-status={status}
+      data-color={color}
       data-variant={variant}
       {...props}
-      {...stylex.props(buttonStyles({ corners, size, status, variant }), sx)}
+      {...stylex.props(buttonStyles({ corners, size, color, variant }), sx)}
     />
   );
 }
@@ -314,7 +314,7 @@ export {
   Button,
   buttonCorners,
   buttonSizes,
-  buttonStatuses,
+  buttonColors,
   buttonStyles,
   buttonVariants,
 };
@@ -322,7 +322,7 @@ export type {
   ButtonCorners,
   ButtonProps,
   ButtonSize,
-  ButtonStatus,
+  ButtonColor,
   ButtonStyleOptions,
   ButtonVariant,
 };

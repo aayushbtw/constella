@@ -67,9 +67,9 @@ Use the `size` prop. Pass icons at the size below.
 </Badge>
 ```
 
-## Status
+## Color
 
-Use the `status` prop to color a badge. Every variant takes it; what it colors depends on the variant. Add `BadgeDot` for a status dot.
+Use the `color` prop to color a badge. Every variant takes it; what it colors depends on the variant. Add `BadgeDot` for a colored dot.
 
 <!-- ::demo name="badge-status" -->
 
@@ -80,8 +80,8 @@ Use the `status` prop to color a badge. Every variant takes it; what it colors d
 | `outline`              | Dot, spinner and icons         |
 
 ```tsx
-<Badge status="success">Paid</Badge>
-<Badge status="success" variant="outline">
+<Badge color="success">Paid</Badge>
+<Badge color="success" variant="outline">
   <BadgeDot />
   Paid
 </Badge>
@@ -146,9 +146,9 @@ Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`.
 | Prop | Type | Default |
 | --- | --- | --- |
 | `size` | `"sm" \| "default" \| "lg"` | `"default"` |
-| `status` | `"success" \| "info" \| "warning" \| "danger"` | - |
+| `color` | `"success" \| "info" \| "warning" \| "danger"` | - |
 | `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"secondary"` |
 | `render` | `ReactElement \| function` | `<span>` |
 | `sx` | `StyleXStyles`, applied last | - |
 
-`BadgeDot` takes `sx`. `badgeStyles({ size, status, variant })` returns the badge's styles for another element.
+`BadgeDot` takes `sx`. `badgeStyles({ color, size, variant })` returns the badge's styles for another element.

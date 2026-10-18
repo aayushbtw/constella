@@ -78,7 +78,7 @@ import {
     <Button size="sm" variant="outline">
       Cancel
     </Button>
-    <Button size="sm" status="danger">
+    <Button size="sm" color="danger">
       Delete file
     </Button>
   </ApprovalFooter>
@@ -119,7 +119,7 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 <ApprovalHeader>
   <ApprovalTitle>Send mail</ApprovalTitle>
   <ApprovalAction>
-    <Badge status="success" variant="secondary">
+    <Badge color="success" variant="secondary">
       Sent
     </Badge>
   </ApprovalAction>

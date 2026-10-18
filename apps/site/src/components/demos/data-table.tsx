@@ -237,7 +237,7 @@ const columns = column.columns([
   }),
   column.accessor("status", {
     cell: ({ getValue }) => (
-      <Badge status={statusBadges[getValue()]} variant="secondary">
+      <Badge color={statusBadges[getValue()]} variant="secondary">
         {getValue()}
       </Badge>
     ),
@@ -351,7 +351,7 @@ function RowActions({ payment }: { payment: Payment }) {
           View customer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem status="danger">
+        <DropdownMenuItem color="danger">
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>
@@ -370,7 +370,7 @@ const fullColumns = full.columns([
   }),
   full.accessor("status", {
     cell: ({ getValue }) => (
-      <Badge status={statusBadges[getValue()]} variant="secondary">
+      <Badge color={statusBadges[getValue()]} variant="secondary">
         {getValue()}
       </Badge>
     ),
@@ -492,7 +492,7 @@ const queried = createColumnHelper<typeof queryFeatures, Payment>();
 const queryColumns = queried.columns([
   queried.accessor("status", {
     cell: ({ getValue }) => (
-      <Badge status={statusBadges[getValue()]} variant="secondary">
+      <Badge color={statusBadges[getValue()]} variant="secondary">
         {getValue()}
       </Badge>
     ),
@@ -588,7 +588,7 @@ const paged = createColumnHelper<typeof pagedFeatures, Payment>();
 const pagedColumns = paged.columns([
   paged.accessor("status", {
     cell: ({ getValue }) => (
-      <Badge status={statusBadges[getValue()]} variant="secondary">
+      <Badge color={statusBadges[getValue()]} variant="secondary">
         {getValue()}
       </Badge>
     ),

@@ -178,14 +178,14 @@ Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes i
 </DropdownMenuContent>
 ```
 
-## Status
+## Color
 
-Use `status="danger"` for an action that can't be undone.
+Use `color="danger"` for an action that can't be undone.
 
 <!-- ::demo name="dropdown-menu-danger" -->
 
 ```tsx
-<DropdownMenuItem status="danger">
+<DropdownMenuItem color="danger">
   <HugeiconsIcon icon={Delete02Icon} />
   Delete
 </DropdownMenuItem>
@@ -209,7 +209,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem status="danger">Log out</DropdownMenuItem>
+    <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 ```
@@ -219,7 +219,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | Part | Adds |
 | --- | --- |
 | `DropdownMenuContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
-| `DropdownMenuItem` | `status`: `"danger"` |
+| `DropdownMenuItem` | `color`: `"danger"` |
 | `DropdownMenuFilterProvider` | `autoHighlight` defaults to `true` |
 | `DropdownMenuInput` | A search field sized with the content's `size`; label it with `aria-label` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |

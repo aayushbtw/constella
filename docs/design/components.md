@@ -4,7 +4,7 @@ What each component does beyond the shared rules in the other files. Alphabetica
 
 ## Alert
 
-A box like a card, a control's radius and padding: `border` border, `raised` fill. Its `status` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text. In an alert under 24rem the action drops under the text instead.
+A box like a card, a control's radius and padding: `border` border, `raised` fill. Its `color` colors only the icon, so the title and description stay neutral; the icon sits on the title's first line, and an action takes its own column at the end, centered on the text. In an alert under 24rem the action drops under the text instead.
 
 ## Alert dialog
 
@@ -24,7 +24,7 @@ Follows the control heights (24, 32, 36), so it lines up with a button of the sa
 
 ## Badge
 
-Takes the button's five variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A status tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the status in its dot, spinner or icons, so a row of them stays quiet. A `primary` takes the status's tint, as a danger button does, since a status is never shouted. A dot is muted with no status, and follows the text on `primary`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
+Takes the button's five variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A `color` tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the color in its dot, spinner or icons, so a row of them stays quiet. A `primary` takes the color's tint, as a danger button does, since a status hue is never shouted. A dot is muted with no color, and follows the text on `primary`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
 
 ## Button group
 
@@ -141,7 +141,7 @@ A filtered menu is a command in a popup: its field is the command's input group,
 
 ## Progress and meter
 
-The slider's track: `strokes.track` tall, `fill` under `accentSolid`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `status` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
+The slider's track: `strokes.track` tall, `fill` under `accentSolid`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `color` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
 
 ## Questionnaire
 

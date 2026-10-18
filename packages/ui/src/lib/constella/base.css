@@ -204,38 +204,38 @@
     outline-offset: -1px;
   }
 
-  /* StyleX can't style a child it didn't render, so an outline badge's icon takes its status here. */
+  /* StyleX can't style a child it didn't render, so an outline badge's icon takes its color here. */
   :where([data-slot="badge"][data-variant="outline"]) {
-    &[data-status="success"] > [data-icon] {
+    &[data-color="success"] > [data-icon] {
       color: var(--success-text);
     }
-    &[data-status="info"] > [data-icon] {
+    &[data-color="info"] > [data-icon] {
       color: var(--info-text);
     }
-    &[data-status="warning"] > [data-icon] {
+    &[data-color="warning"] > [data-icon] {
       color: var(--warning-text);
     }
-    &[data-status="danger"] > [data-icon] {
+    &[data-color="danger"] > [data-icon] {
       color: var(--danger-text);
     }
   }
 
   /* StyleX can't style a child it didn't render, so an alert's icon sits beside its title,
-     centered on the title's 20px line, and takes its status here. */
+     centered on the title's 20px line, and takes its color here. */
   :where([data-slot="alert"]) > :where(svg) {
     grid-row: span 2;
     translate: 0 2px;
   }
-  :where([data-slot="alert"][data-status="success"]) > :where(svg) {
+  :where([data-slot="alert"][data-color="success"]) > :where(svg) {
     color: var(--success-text);
   }
-  :where([data-slot="alert"][data-status="info"]) > :where(svg) {
+  :where([data-slot="alert"][data-color="info"]) > :where(svg) {
     color: var(--info-text);
   }
-  :where([data-slot="alert"][data-status="warning"]) > :where(svg) {
+  :where([data-slot="alert"][data-color="warning"]) > :where(svg) {
     color: var(--warning-text);
   }
-  :where([data-slot="alert"][data-status="danger"]) > :where(svg) {
+  :where([data-slot="alert"][data-color="danger"]) > :where(svg) {
     color: var(--danger-text);
   }
 

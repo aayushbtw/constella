@@ -12,15 +12,15 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-const alertStatuses = ["success", "info", "warning", "danger"] as const;
+const alertColors = ["success", "info", "warning", "danger"] as const;
 
-type AlertStatus = (typeof alertStatuses)[number];
+type AlertColor = (typeof alertColors)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-type AlertProps = Styled<ComponentProps<"div">> & { status?: AlertStatus };
+type AlertProps = Styled<ComponentProps<"div">> & { color?: AlertColor };
 
 const hasIcon = ":has(> svg)";
 const hasAction = ":has(> [data-slot='alert-action'])";
@@ -95,11 +95,11 @@ const styles = stylex.create({
   },
 });
 
-function Alert({ status, sx, ...props }: AlertProps) {
+function Alert({ color, sx, ...props }: AlertProps) {
   return (
     <div
       data-slot="alert"
-      data-status={status}
+      data-color={color}
       role="alert"
       {...props}
       {...stylex.props([typeStyles.textSm, styles.alert], sx)}
@@ -140,5 +140,5 @@ function AlertAction({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-export { Alert, AlertAction, AlertDescription, alertStatuses, AlertTitle };
-export type { AlertProps, AlertStatus };
+export { Alert, AlertAction, AlertDescription, alertColors, AlertTitle };
+export type { AlertProps, AlertColor };

@@ -16,7 +16,7 @@ import {
   space,
 } from "@/lib/constella/tokens.stylex";
 
-const codeBlockStatuses = ["danger"] as const;
+const codeBlockColors = ["danger"] as const;
 const codeBlockSizes = ["sm", "default"] as const;
 const codeBlockLineVariants = [
   "default",
@@ -25,7 +25,7 @@ const codeBlockLineVariants = [
   "highlighted",
 ] as const;
 
-type CodeBlockStatus = (typeof codeBlockStatuses)[number];
+type CodeBlockColor = (typeof codeBlockColors)[number];
 type CodeBlockSize = (typeof codeBlockSizes)[number];
 type CodeBlockLineVariant = (typeof codeBlockLineVariants)[number];
 
@@ -33,7 +33,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
 };
 
-const danger = ":is([data-slot='code-block'][data-status='danger'] *)";
+const danger = ":is([data-slot='code-block'][data-color='danger'] *)";
 const numbered = ":is([data-numbered] *)";
 const numberedSelf = ":is([data-numbered])";
 const marks =
@@ -236,9 +236,9 @@ const styles = stylex.create({
   },
 });
 
-const statusStyles = {
+const colorStyles = {
   danger: styles.danger,
-} satisfies Record<CodeBlockStatus, stylex.StyleXStyles>;
+} satisfies Record<CodeBlockColor, stylex.StyleXStyles>;
 
 const lineVariantStyles = {
   added: styles.added,
@@ -250,23 +250,23 @@ const lineVariantStyles = {
 /** A tray of code. The app highlights it; the block lays it out. */
 function CodeBlock({
   size = "default",
-  status,
+  color,
   sx,
   ...props
 }: Styled<ComponentProps<"div">> & {
   size?: CodeBlockSize;
-  status?: CodeBlockStatus;
+  color?: CodeBlockColor;
 }) {
   return (
     <div
       data-size={size}
       data-slot="code-block"
-      data-status={status}
+      data-color={color}
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.block],
         size === "sm" && [typeStyles.captionLg, styles.sm],
-        status && statusStyles[status],
+        color && colorStyles[color],
         sx
       )}
     />
@@ -405,6 +405,6 @@ export {
   codeBlockLineVariants,
   codeBlockSizes,
   CodeBlockTitle,
-  codeBlockStatuses,
+  codeBlockColors,
 };
-export type { CodeBlockLineVariant, CodeBlockSize, CodeBlockStatus };
+export type { CodeBlockLineVariant, CodeBlockSize, CodeBlockColor };

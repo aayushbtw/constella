@@ -306,7 +306,7 @@ function DropdownMenuFilterDemo() {
                 <DropdownMenuItem>Publish to web</DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuGroup>
-                <DropdownMenuItem status="danger">Delete</DropdownMenuItem>
+                <DropdownMenuItem color="danger">Delete</DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuList>
           </DropdownMenuContent>
@@ -331,7 +331,7 @@ function DropdownMenuDangerDemo() {
             Share
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem status="danger">
+          <DropdownMenuItem color="danger">
             <Glyph icon={Delete02Icon} />
             Delete
           </DropdownMenuItem>

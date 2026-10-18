@@ -22,9 +22,9 @@ const inLgBadge = ":where([data-slot='badge'][data-size='lg'] *)";
 const badgeSpinner = `calc(${sizes.iconXs} - ${space.xxxs})`;
 const lgBadgeSpinner = `calc(${sizes.iconSm} - ${space.xxxs})`;
 
-// An outline badge keeps its text neutral, so its spinner carries the status.
-const inStatus = (status: string) =>
-  `:where([data-slot='badge'][data-variant='outline'][data-status='${status}'] *)`;
+// An outline badge keeps its text neutral, so its spinner carries the color.
+const inColor = (color: string) =>
+  `:where([data-slot='badge'][data-variant='outline'][data-color='${color}'] *)`;
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 
@@ -49,10 +49,10 @@ const styles = stylex.create({
     borderInlineWidth: strokes.spinner,
     color: {
       default: null,
-      [inStatus("success")]: colors.successText,
-      [inStatus("info")]: colors.infoText,
-      [inStatus("warning")]: colors.warningText,
-      [inStatus("danger")]: colors.dangerText,
+      [inColor("success")]: colors.successText,
+      [inColor("info")]: colors.infoText,
+      [inColor("warning")]: colors.warningText,
+      [inColor("danger")]: colors.dangerText,
     },
     display: "inline-block",
     flexShrink: 0,

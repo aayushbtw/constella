@@ -121,7 +121,7 @@ function TraceDemo() {
             </TraceLine>
           </TraceCollapsibleTrigger>
           <TraceCollapsibleContent>
-            <CodeBlock size="sm" status="danger">
+            <CodeBlock size="sm" color="danger">
               <CodeBlockContent wrap>{failure}</CodeBlockContent>
             </CodeBlock>
           </TraceCollapsibleContent>

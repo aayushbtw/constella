@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 import {
   AlertActionDemo,
   AlertDemo,
-  AlertStatusDemo,
+  AlertColorDemo,
   AlertTitleDemo,
 } from "~/components/demos/alert";
 import {
@@ -39,7 +39,7 @@ import {
   BadgeIconDemo,
   BadgeLinkDemo,
   BadgeSizeDemo,
-  BadgeStatusDemo,
+  BadgeColorDemo,
   BadgeVariantsDemo,
 } from "~/components/demos/badge";
 import {
@@ -51,7 +51,7 @@ import {
   ButtonSizesDemo,
   ButtonBusyDemo,
   ButtonDisabledDemo,
-  ButtonStatusDemo,
+  ButtonColorDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import {
@@ -246,7 +246,7 @@ import {
 } from "~/components/demos/popover";
 import {
   MeterDemo,
-  MeterStatusDemo,
+  MeterColorDemo,
   MeterValueDemo,
   ProgressDemo,
   ProgressIndeterminateDemo,
@@ -424,7 +424,7 @@ import {
 const demos = {
   alert: AlertDemo,
   "alert-action": AlertActionDemo,
-  "alert-status": AlertStatusDemo,
+  "alert-status": AlertColorDemo,
   "alert-title": AlertTitleDemo,
   "alert-dialog": AlertDialogDemo,
   "alert-dialog-async": AlertDialogAsyncDemo,
@@ -453,7 +453,7 @@ const demos = {
   "badge-icon": BadgeIconDemo,
   "badge-link": BadgeLinkDemo,
   "badge-size": BadgeSizeDemo,
-  "badge-status": BadgeStatusDemo,
+  "badge-status": BadgeColorDemo,
   "badge-variants": BadgeVariantsDemo,
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
@@ -463,7 +463,7 @@ const demos = {
   "button-sizes": ButtonSizesDemo,
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
-  "button-status": ButtonStatusDemo,
+  "button-status": ButtonColorDemo,
   "button-variants": ButtonVariantsDemo,
   caption: CaptionDemo,
   "caption-case": CaptionCaseDemo,
@@ -620,7 +620,7 @@ const demos = {
   shadows: ShadowsDemo,
   shimmer: ShimmerDemo,
   meter: MeterDemo,
-  "meter-status": MeterStatusDemo,
+  "meter-status": MeterColorDemo,
   "meter-value": MeterValueDemo,
   message: MessageDemo,
   popover: PopoverDemo,

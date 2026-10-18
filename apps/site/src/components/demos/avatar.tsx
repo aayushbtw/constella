@@ -227,7 +227,7 @@ function AvatarDropdownDemo() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem status="danger">Log out</DropdownMenuItem>
+          <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>

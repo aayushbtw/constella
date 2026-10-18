@@ -175,7 +175,7 @@ function SidePanelDemo() {
                 <dt {...stylex.props(styles.term)}>Status</dt>
                 <dd {...stylex.props(styles.value)}>
                   <Badge
-                    status={event?.status === "Denied" ? "danger" : "success"}
+                    color={event?.status === "Denied" ? "danger" : "success"}
                     variant="secondary"
                   >
                     {event?.status}

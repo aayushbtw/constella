@@ -17,12 +17,12 @@ import {
   Badge,
   BadgeDot,
   badgeSizes,
-  badgeStatuses,
+  badgeColors,
   badgeVariants,
 } from "@/components/primitives/badge";
 import type {
   BadgeSize,
-  BadgeStatus,
+  BadgeColor,
   BadgeVariant,
 } from "@/components/primitives/badge";
 import { Spinner } from "@/components/primitives/spinner";
@@ -51,7 +51,7 @@ const statusLabels = {
   info: "Syncing",
   success: "Paid",
   warning: "Pending",
-} satisfies Record<BadgeStatus, string>;
+} satisfies Record<BadgeColor, string>;
 
 const labels = {
   ghost: "Ghost",
@@ -147,13 +147,13 @@ function BadgeLinkDemo() {
 
 const statusVariants = ["secondary", "outline"] as const;
 
-function BadgeStatusDemo() {
+function BadgeColorDemo() {
   return (
     <DemoRow sx={styles.rows}>
       {statusVariants.map((variant) => (
         <div key={variant} {...stylex.props(styles.row)}>
-          {badgeStatuses.map((status) => (
-            <Badge key={status} status={status} variant={variant}>
+          {badgeColors.map((status) => (
+            <Badge key={status} color={status} variant={variant}>
               {variant === "outline" && <BadgeDot />}
               {statusLabels[status]}
             </Badge>
@@ -187,6 +187,6 @@ export {
   BadgeIconDemo,
   BadgeLinkDemo,
   BadgeSizeDemo,
-  BadgeStatusDemo,
+  BadgeColorDemo,
   BadgeVariantsDemo,
 };

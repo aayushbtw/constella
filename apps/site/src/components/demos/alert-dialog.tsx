@@ -80,7 +80,7 @@ function AlertDialogDangerDemo() {
   return (
     <DemoRow>
       <AlertDialog>
-        <AlertDialogTrigger render={<Button status="danger" />}>
+        <AlertDialogTrigger render={<Button color="danger" />}>
           Delete Chat
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -100,7 +100,7 @@ function AlertDialogDangerDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction status="danger">Delete</AlertDialogAction>
+            <AlertDialogAction color="danger">Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -140,11 +140,7 @@ function AlertDialogAsyncDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              aria-busy={busy}
-              onClick={revoke}
-              status="danger"
-            >
+            <AlertDialogAction aria-busy={busy} onClick={revoke} color="danger">
               {busy && <Spinner data-icon="inline-start" />}
               {busy ? "Revoking" : "Revoke"}
             </AlertDialogAction>

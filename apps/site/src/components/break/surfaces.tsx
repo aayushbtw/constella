@@ -114,7 +114,7 @@ function BadgeBreak({ data }: { data: Dataset }) {
     <div {...stylex.props(styles.column)}>
       <div {...stylex.props(styles.row)}>
         {labels.map((label, index) => (
-          <Badge key={label} status={statuses[index % 4]} variant="secondary">
+          <Badge key={label} color={statuses[index % 4]} variant="secondary">
             {label}
           </Badge>
         ))}
@@ -124,7 +124,7 @@ function BadgeBreak({ data }: { data: Dataset }) {
           <Badge
             key={label}
             size="lg"
-            status={statuses[index % 4]}
+            color={statuses[index % 4]}
             variant="outline"
           >
             <BadgeDot />
@@ -200,7 +200,7 @@ function CardBreak({ data }: { data: Dataset }) {
               <CardDescription>{stat.label}</CardDescription>
               <CardAction>
                 <Badge
-                  status={stat.up ? "success" : "danger"}
+                  color={stat.up ? "success" : "danger"}
                   variant="secondary"
                 >
                   {stat.change}
@@ -254,7 +254,7 @@ function AlertBreak({ data }: { data: Dataset }) {
   return (
     <div {...stylex.props(styles.column)}>
       {rows.map((alert) => (
-        <Alert key={alert.description} status="warning">
+        <Alert key={alert.description} color="warning">
           <Glyph icon={InformationCircleIcon} />
           {alert.title !== "" && <AlertTitle>{alert.title}</AlertTitle>}
           <AlertDescription>{alert.description}</AlertDescription>

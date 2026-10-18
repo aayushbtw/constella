@@ -200,7 +200,7 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem status="danger">Log out</DropdownMenuItem>
+    <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 ```

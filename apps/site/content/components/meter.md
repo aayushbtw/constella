@@ -41,22 +41,22 @@ Meter
     └── MeterIndicator
 ```
 
-## Meter Status
+## Meter Color
 
-The fill is `accentSolid` until you give it a `status`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
+The fill is `accentSolid` until you give it a `color`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
 
 <!-- ::demo name="meter-status" -->
 
 ```tsx
-<Meter status="success" value={100}>
+<Meter color="success" value={100}>
   <MeterLabel>Battery</MeterLabel>
   <MeterValue />
 </Meter>
-<Meter status="warning" value={82}>
+<Meter color="warning" value={82}>
   <MeterLabel>Memory</MeterLabel>
   <MeterValue />
 </Meter>
-<Meter status="danger" value={100}>
+<Meter color="danger" value={100}>
   <MeterLabel>Storage</MeterLabel>
   <MeterValue />
 </Meter>
@@ -81,6 +81,6 @@ Set `max` to measure in the quota's own units, and give `MeterValue` a function 
 
 | Part | Adds |
 | --- | --- |
-| `Meter` | Renders `MeterTrack` and `MeterIndicator` after its children; `status` (`success`, `info`, `warning`, `danger`) colors the fill and sets `data-status` |
+| `Meter` | Renders `MeterTrack` and `MeterIndicator` after its children; `color` (`success`, `info`, `warning`, `danger`) colors the fill and sets `data-color` |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Meter](https://base-ui.com/react/components/meter).

@@ -14,7 +14,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/primitives/alert";
-import type { AlertStatus } from "@/components/primitives/alert";
+import type { AlertColor } from "@/components/primitives/alert";
 import { Button } from "@/components/primitives/button";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
@@ -94,16 +94,16 @@ const statuses = [
 ] satisfies {
   description: string;
   icon: HugeiconsIconProps["icon"];
-  status: AlertStatus;
+  status: AlertColor;
   title: string;
 }[];
 
-function AlertStatusDemo() {
+function AlertColorDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
         {statuses.map((item) => (
-          <Alert key={item.status} status={item.status}>
+          <Alert key={item.status} color={item.status}>
             <Glyph icon={item.icon} />
             <AlertTitle>{item.title}</AlertTitle>
             <AlertDescription>{item.description}</AlertDescription>
@@ -139,7 +139,7 @@ function AlertTitleDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <Alert status="success">
+        <Alert color="success">
           <Glyph icon={CheckmarkCircle02Icon} />
           <AlertTitle>Your changes are live.</AlertTitle>
         </Alert>
@@ -150,7 +150,7 @@ function AlertTitleDemo() {
             when yours is ready, usually before 9am in your time zone.
           </AlertDescription>
         </Alert>
-        <Alert status="warning">
+        <Alert color="warning">
           <AlertTitle>No icon</AlertTitle>
           <AlertDescription>
             Without an icon, the text takes the full width.
@@ -161,4 +161,4 @@ function AlertTitleDemo() {
   );
 }
 
-export { AlertActionDemo, AlertDemo, AlertStatusDemo, AlertTitleDemo };
+export { AlertActionDemo, AlertDemo, AlertColorDemo, AlertTitleDemo };

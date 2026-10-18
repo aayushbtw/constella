@@ -75,19 +75,19 @@ function MeterDemo() {
   );
 }
 
-function MeterStatusDemo() {
+function MeterColorDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <Meter status="success" value={100}>
+        <Meter color="success" value={100}>
           <MeterLabel>Battery</MeterLabel>
           <MeterValue />
         </Meter>
-        <Meter status="warning" value={82}>
+        <Meter color="warning" value={82}>
           <MeterLabel>Memory</MeterLabel>
           <MeterValue />
         </Meter>
-        <Meter status="danger" value={100}>
+        <Meter color="danger" value={100}>
           <MeterLabel>Storage</MeterLabel>
           <MeterValue />
         </Meter>
@@ -220,7 +220,7 @@ function MeterValueDemo() {
 
 export {
   MeterDemo,
-  MeterStatusDemo,
+  MeterColorDemo,
   MeterValueDemo,
   ProgressDemo,
   ProgressIndeterminateDemo,

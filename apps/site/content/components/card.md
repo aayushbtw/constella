@@ -133,7 +133,7 @@ Small cards fit a grid of numbers, each with its change as a status badge.
   <CardHeader>
     <CardDescription>Messages</CardDescription>
     <CardAction>
-      <Badge status="success" variant="secondary">
+      <Badge color="success" variant="secondary">
         +12.5%
       </Badge>
     </CardAction>

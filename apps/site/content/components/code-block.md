@@ -160,14 +160,14 @@ Use the `size` prop on `CodeBlock`: `sm` or `default`.
 </CodeBlock>
 ```
 
-## Status
+## Color
 
-Use `status="danger"` for an error's output. `CodeBlockFooter` holds a line under the code.
+Use `color="danger"` for an error's output. `CodeBlockFooter` holds a line under the code.
 
 <!-- ::demo name="code-block-danger" -->
 
 ```tsx
-<CodeBlock status="danger">
+<CodeBlock color="danger">
   <CodeBlockHeader>
     <HugeiconsIcon icon={Alert02Icon} />
     <CodeBlockTitle>Build failed</CodeBlockTitle>
@@ -187,7 +187,7 @@ Every part takes `sx`, applied last.
 
 | Part | Adds |
 | --- | --- |
-| `CodeBlock` | `status`: `danger`; `size`: `sm` or `default` |
+| `CodeBlock` | `color`: `danger`; `size`: `sm` or `default` |
 | `CodeBlockContent` | `lineNumbers`; `startLine` (default `1`); `wrap` |
 | `CodeBlockLine` | `variant`: `default`, `highlighted`, `added` or `removed` |
 | `CodeBlockTitle` | `render`, to make it a heading: `render={<h3 />}` |

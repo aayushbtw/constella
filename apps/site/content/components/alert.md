@@ -50,13 +50,13 @@ Alert
 └── AlertAction
 ```
 
-## Status
+## Color
 
-Use the `status` prop to color the icon. The title and description stay neutral.
+Use the `color` prop to color the icon. The title and description stay neutral.
 
 <!-- ::demo name="alert-status" -->
 
-| Status    | Icon color |
+| Color     | Icon color |
 | --------- | ---------- |
 | `success` | Green      |
 | `info`    | Blue       |
@@ -64,7 +64,7 @@ Use the `status` prop to color the icon. The title and description stay neutral.
 | `danger`  | Red        |
 
 ```tsx
-<Alert status="danger">
+<Alert color="danger">
   <HugeiconsIcon icon={AlertCircleIcon} />
   <AlertTitle>Payment failed</AlertTitle>
 </Alert>
@@ -77,7 +77,7 @@ An alert can be a title alone, a description alone, or skip the icon; the text t
 <!-- ::demo name="alert-title" -->
 
 ```tsx
-<Alert status="success">
+<Alert color="success">
   <HugeiconsIcon icon={CheckmarkCircle02Icon} />
   <AlertTitle>Your changes are live.</AlertTitle>
 </Alert>
@@ -104,7 +104,7 @@ Use `AlertAction` for a button at the alert's end.
 
 | Part | Adds |
 | --- | --- |
-| `Alert` | `status`: `"success"`, `"info"`, `"warning"` or `"danger"`; `role="alert"` |
+| `Alert` | `color`: `"success"`, `"info"`, `"warning"` or `"danger"`; `role="alert"` |
 | `AlertTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
 Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

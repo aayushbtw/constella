@@ -188,7 +188,7 @@ function CardActionDemo() {
                 <DropdownMenuItem>Edit recipients</DropdownMenuItem>
                 <DropdownMenuItem>Send now</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem status="danger">Turn off</DropdownMenuItem>
+                <DropdownMenuItem color="danger">Turn off</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </CardAction>
@@ -218,7 +218,7 @@ function CardStatsDemo() {
               <CardDescription>{stat.label}</CardDescription>
               <CardAction>
                 <Badge
-                  status={stat.up ? "success" : "danger"}
+                  color={stat.up ? "success" : "danger"}
                   variant="secondary"
                 >
                   {stat.change}

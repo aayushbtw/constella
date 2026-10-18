@@ -29,9 +29,9 @@ const badgeVariants = [
 
 type BadgeVariant = (typeof badgeVariants)[number];
 
-const badgeStatuses = ["success", "info", "warning", "danger"] as const;
+const badgeColors = ["success", "info", "warning", "danger"] as const;
 
-type BadgeStatus = (typeof badgeStatuses)[number];
+type BadgeColor = (typeof badgeColors)[number];
 
 const badgeSizes = ["sm", "default", "lg"] as const;
 
@@ -42,7 +42,7 @@ type BadgeProps = Omit<
   "className" | "style"
 > & {
   size?: BadgeSize;
-  status?: BadgeStatus;
+  color?: BadgeColor;
   sx?: stylex.StyleXStyles;
   variant?: BadgeVariant;
 };
@@ -56,7 +56,7 @@ const linkHover = <T,>(rest: T, active: T) => ({
   [`${link}:active`]: active,
 });
 
-const dotIn = (status: BadgeStatus) => `:is([data-status='${status}'] > *)`;
+const dotIn = (color: BadgeColor) => `:is([data-color='${color}'] > *)`;
 
 const withAvatar = ":has(> [data-slot='avatar']:first-child)";
 
@@ -159,8 +159,8 @@ const styles = stylex.create({
   dot: {
     backgroundColor: {
       default: colors.textMuted,
-      // With no status, the dot on a solid follows its text.
-      ":is([data-variant='primary']:not([data-status]) > *)": "currentColor",
+      // With no color, the dot on a solid follows its text.
+      ":is([data-variant='primary']:not([data-color]) > *)": "currentColor",
       [dotIn("success")]: colors.successSolid,
       [dotIn("info")]: colors.infoSolid,
       [dotIn("warning")]: colors.warningSolid,
@@ -208,7 +208,7 @@ const styles = stylex.create({
 
 // A tint on secondary and primary, colored text on ghost and link. Outline keeps its text
 // neutral and colors only its dot, so a row of them stays quiet.
-const statusStyles = {
+const colorStyles = {
   ghost: {
     danger: styles.dangerText,
     info: styles.infoText,
@@ -236,7 +236,7 @@ const statusStyles = {
   },
 } satisfies Record<
   BadgeVariant,
-  Record<BadgeStatus, stylex.StyleXStyles> | null
+  Record<BadgeColor, stylex.StyleXStyles> | null
 >;
 
 const sizeStyles = {
@@ -256,21 +256,21 @@ const variantStyles = {
 /** A badge's styles for another element. */
 function badgeStyles({
   size = "default",
-  status,
+  color,
   variant = "secondary",
-}: Pick<BadgeProps, "size" | "status" | "variant"> = {}) {
+}: Pick<BadgeProps, "size" | "color" | "variant"> = {}) {
   return [
     styles.base,
     sizeStyles[size],
     variantStyles[variant],
-    status && statusStyles[variant]?.[status],
+    color && colorStyles[variant]?.[color],
   ];
 }
 
 function Badge({
   render,
   size = "default",
-  status,
+  color,
   sx,
   variant = "secondary",
   ...props
@@ -279,11 +279,11 @@ function Badge({
     defaultTagName: "span",
     props: mergeProps<"span">(
       props,
-      stylex.props(badgeStyles({ size, status, variant }), sx)
+      stylex.props(badgeStyles({ size, color, variant }), sx)
     ),
     render,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-status`.
-    state: { size, slot: "badge", status, variant },
+    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-color`.
+    state: { size, slot: "badge", color, variant },
   });
 }
 
@@ -304,12 +304,5 @@ function BadgeDot({
   );
 }
 
-export {
-  Badge,
-  BadgeDot,
-  badgeSizes,
-  badgeStatuses,
-  badgeStyles,
-  badgeVariants,
-};
-export type { BadgeProps, BadgeSize, BadgeStatus, BadgeVariant };
+export { Badge, BadgeDot, badgeSizes, badgeColors, badgeStyles, badgeVariants };
+export type { BadgeProps, BadgeSize, BadgeColor, BadgeVariant };

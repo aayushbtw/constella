@@ -194,7 +194,7 @@ const columns = column.columns([
   }),
   column.accessor("status", {
     cell: ({ getValue }) => (
-      <Badge status={statusBadges[getValue()]} variant="secondary">
+      <Badge color={statusBadges[getValue()]} variant="secondary">
         {getValue()}
       </Badge>
     ),

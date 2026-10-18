@@ -33,15 +33,15 @@ Use the `variant` prop to set how much the button stands out. Use one `primary` 
 | `ghost`     | Repeated actions in toolbars, lists, menus |
 | `link`      | Actions inside a sentence                  |
 
-## Status
+## Color
 
-Use `status="danger"` for an action that deletes or destroys. It turns any variant red without changing its shape; a `primary` takes the tint too, since destruction is marked, never shouted.
+Use `color="danger"` for an action that deletes or destroys. It turns any variant red without changing its shape; a `primary` takes the tint too, since destruction is marked, never shouted.
 
 <!-- ::demo name="button-status" -->
 
 ```tsx
-<Button status="danger">Delete</Button>
-<Button status="danger" variant="ghost">Delete</Button>
+<Button color="danger">Delete</Button>
+<Button color="danger" variant="ghost">Delete</Button>
 ```
 
 ## Size
@@ -154,7 +154,7 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 | Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"secondary"` |
-| `status` | `"danger"` | - |
+| `color` | `"danger"` | - |
 | `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
 | `corners` | `"rounded" \| "pill"` | `"rounded"` |
 | `sx` | `StyleXStyles`, applied last |  |

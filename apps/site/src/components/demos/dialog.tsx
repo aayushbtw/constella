@@ -136,7 +136,7 @@ function DialogControlledDemo() {
               Cancel
             </DialogClose>
             <Button
-              status="danger"
+              color="danger"
               onClick={() => {
                 setOpen(false);
                 toast.add({ title: "Project deleted" });
