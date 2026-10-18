@@ -27,14 +27,9 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@/components/primitives/field";
 import { Input } from "@/components/primitives/input";
 import { Separator } from "@/components/primitives/separator";
-import { typeStyles } from "@/lib/constella/styles";
-import {
-  colors,
-  fontWeights,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { Heading } from "@/components/typography/heading";
+import { Text } from "@/components/typography/text";
+import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -60,13 +55,10 @@ const styles = stylex.create({
     width: 576,
   },
   stat: {
-    color: colors.textPrimary,
     fontVariantNumeric: "tabular-nums",
-    fontWeight: fontWeights.semibold,
   },
   trend: {
     alignItems: "center",
-    color: colors.textSecondary,
     display: "flex",
     gap: space.xxs,
   },
@@ -234,13 +226,18 @@ function CardStatsDemo() {
               </CardAction>
             </CardHeader>
             <CardContent>
-              <div {...stylex.props([typeStyles.heading5, styles.stat])}>
+              <Heading render={<div />} size={5} sx={styles.stat}>
                 {stat.value}
-              </div>
-              <div {...stylex.props([typeStyles.textSm, styles.trend])}>
+              </Heading>
+              <Text
+                color="secondary"
+                render={<div />}
+                size="sm"
+                sx={styles.trend}
+              >
                 <Glyph icon={stat.up ? ArrowUp01Icon : ArrowDown01Icon} />
                 vs. last month
-              </div>
+              </Text>
             </CardContent>
           </Card>
         ))}

@@ -3,6 +3,7 @@ import { Fragment } from "react";
 
 import { ScrollArea, ScrollBar } from "@/components/primitives/scroll-area";
 import { Separator } from "@/components/primitives/separator";
+import { Text } from "@/components/typography/text";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -43,7 +44,6 @@ const styles = stylex.create({
     paddingInlineStart: space.md,
   },
   heading: {
-    fontWeight: fontWeights.medium,
     marginBlockEnd: space.md,
   },
   separator: { marginBlockEnd: space.xs, marginBlockStart: space.xs },
@@ -97,7 +97,9 @@ function ScrollAreaDemo() {
     <DemoRow>
       <ScrollArea sx={styles.tags}>
         <div {...stylex.props([typeStyles.textSm, styles.list])}>
-          <div {...stylex.props(styles.heading)}>Tags</div>
+          <Text render={<div />} size="sm" sx={styles.heading} weight="medium">
+            Tags
+          </Text>
           {tags.map((tag, index) => (
             <Fragment key={tag}>
               {index > 0 && <Separator sx={styles.separator} />}
@@ -191,7 +193,9 @@ function ScrollFadeDemo() {
     <DemoRow>
       <ScrollArea sx={styles.tags} viewportSx={scrollFade.y}>
         <div {...stylex.props([typeStyles.textSm, styles.list])}>
-          <div {...stylex.props(styles.heading)}>Tags</div>
+          <Text render={<div />} size="sm" sx={styles.heading} weight="medium">
+            Tags
+          </Text>
           {tags.map((tag, index) => (
             <Fragment key={tag}>
               {index > 0 && <Separator sx={styles.separator} />}

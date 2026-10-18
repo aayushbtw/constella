@@ -23,8 +23,8 @@ import {
   ItemSeparator,
   ItemTitle,
 } from "@/components/primitives/item";
-import { typeStyles } from "@/lib/constella/styles";
-import { colors, space } from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/typography/text";
+import { space } from "@/lib/constella/tokens.stylex";
 import { peopleFor, text } from "~/components/break/fixtures";
 import type { Dataset, Person } from "~/components/break/fixtures";
 
@@ -35,9 +35,6 @@ const styles = stylex.create({
     gap: space.md,
     maxWidth: "100%",
     width: 448,
-  },
-  meta: {
-    color: colors.textMuted,
   },
   row: {
     alignItems: "center",
@@ -127,9 +124,9 @@ function ItemBreak({ data }: { data: Dataset }) {
               <ItemDescription>{release.notes}</ItemDescription>
             </ItemContent>
             <ItemFooter>
-              <span {...stylex.props([typeStyles.textSm, styles.meta])}>
+              <Text color="muted" render={<span />} size="sm">
                 {release.when}
-              </span>
+              </Text>
               <Button size="sm" variant="ghost">
                 Read notes
               </Button>

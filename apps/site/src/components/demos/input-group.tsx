@@ -52,12 +52,9 @@ import {
   PopoverTrigger,
 } from "@/components/primitives/popover";
 import { Spinner } from "@/components/primitives/spinner";
-import { typeStyles } from "@/lib/constella/styles";
+import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import {
   durations,
-  easings,
-  media,
-  motion,
   sizes,
   space,
   strokes,
@@ -73,23 +70,6 @@ const styles = stylex.create({
     fontVariantLigatures: "none",
   },
   editor: { minHeight: 200 },
-  // Both icons share one cell, so the swap is a crossfade in place.
-  swap: { display: "grid" },
-  swapIcon: {
-    display: "flex",
-    gridArea: "1 / 1",
-    transitionDuration: durations.crossfade,
-    transitionProperty: {
-      default: "opacity, filter, transform",
-      [media.reducedMotion]: "opacity, filter",
-    },
-    transitionTimingFunction: easings.crossfade,
-  },
-  hidden: {
-    filter: `blur(${motion.crossfadeBlur})`,
-    opacity: 0,
-    transform: `scale(${motion.crossfadeScale})`,
-  },
 });
 
 const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
@@ -205,9 +185,7 @@ function InputGroupBlockStartDemo() {
             />
             <InputGroupAddon align="block-start">
               <Glyph icon={FileScriptIcon} />
-              <InputGroupText sx={[typeStyles.textSm, styles.code]}>
-                script.js
-              </InputGroupText>
+              <InputGroupText sx={styles.code}>script.js</InputGroupText>
               <InputGroupButton aria-label="Copy" size="icon-xs">
                 <Glyph icon={Copy01Icon} />
               </InputGroupButton>
@@ -336,9 +314,7 @@ function InputGroupTextDemo() {
             placeholder="Enter your message"
           />
           <InputGroupAddon align="block-end">
-            <InputGroupText sx={typeStyles.textSm}>
-              120 characters left
-            </InputGroupText>
+            <InputGroupText>120 characters left</InputGroupText>
           </InputGroupAddon>
         </InputGroup>
       </div>
@@ -348,14 +324,14 @@ function InputGroupTextDemo() {
 
 function CopyGlyph({ copied }: { copied: boolean }) {
   return (
-    <span aria-hidden {...stylex.props(styles.swap)}>
-      <span {...stylex.props(styles.swapIcon, !copied && styles.hidden)}>
+    <SwapIcon aria-hidden value={copied ? "copied" : "copy"}>
+      <SwapIconItem value="copied">
         <Glyph icon={Tick02Icon} />
-      </span>
-      <span {...stylex.props(styles.swapIcon, copied && styles.hidden)}>
+      </SwapIconItem>
+      <SwapIconItem value="copy">
         <Glyph icon={Copy01Icon} />
-      </span>
-    </span>
+      </SwapIconItem>
+    </SwapIcon>
   );
 }
 
@@ -585,7 +561,7 @@ function InputGroupTextareaDemo() {
           </InputGroupButton>
         </InputGroupAddon>
         <InputGroupAddon align="block-start" separated>
-          <InputGroupText sx={[typeStyles.textSm, styles.code]}>
+          <InputGroupText sx={styles.code}>
             <Glyph icon={JavaScriptIcon} />
             script.js
           </InputGroupText>

@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { Separator } from "@/components/primitives/separator";
 import { Text } from "@/components/typography/text";
 import { typeStyles } from "@/lib/constella/styles";
-import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
+import { colors, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -23,9 +23,6 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     gap: space.xxs,
-  },
-  title: {
-    fontWeight: fontWeights.medium,
   },
   inline: {
     color: colors.textPrimary,
@@ -53,7 +50,9 @@ function SeparatorDemo() {
   return (
     <DemoRow sx={[typeStyles.textSm, styles.stack]}>
       <div {...stylex.props(styles.heading)}>
-        <div {...stylex.props(styles.title)}>Constella</div>
+        <Text render={<div />} size="sm" weight="medium">
+          Constella
+        </Text>
         <Text color="secondary" size="sm">
           Components with the details done
         </Text>
@@ -92,7 +91,9 @@ function SeparatorMenuDemo() {
         <Fragment key={item.title}>
           {index > 0 && <Separator orientation="vertical" />}
           <div {...stylex.props(styles.heading)}>
-            <span {...stylex.props(styles.title)}>{item.title}</span>
+            <Text render={<span />} size="sm" weight="medium">
+              {item.title}
+            </Text>
             <Text color="secondary" render={<span />} size="sm">
               {item.description}
             </Text>

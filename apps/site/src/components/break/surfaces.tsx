@@ -45,14 +45,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/primitives/tabs";
-import { typeStyles } from "@/lib/constella/styles";
-import {
-  colors,
-  fontWeights,
-  sizes,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { Heading } from "@/components/typography/heading";
+import { Text } from "@/components/typography/text";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { text } from "~/components/break/fixtures";
 import type { Dataset } from "~/components/break/fixtures";
 
@@ -81,13 +76,10 @@ const styles = stylex.create({
     width: 576,
   },
   stat: {
-    color: colors.textPrimary,
     fontVariantNumeric: "tabular-nums",
-    fontWeight: fontWeights.semibold,
   },
   trend: {
     alignItems: "center",
-    color: colors.textSecondary,
     display: "flex",
     gap: space.xxs,
   },
@@ -216,13 +208,18 @@ function CardBreak({ data }: { data: Dataset }) {
               </CardAction>
             </CardHeader>
             <CardContent>
-              <div {...stylex.props([typeStyles.heading5, styles.stat])}>
+              <Heading render={<div />} size={5} sx={styles.stat}>
                 {stat.value}
-              </div>
-              <div {...stylex.props([typeStyles.textSm, styles.trend])}>
+              </Heading>
+              <Text
+                color="secondary"
+                render={<div />}
+                size="sm"
+                sx={styles.trend}
+              >
                 <Glyph icon={stat.up ? ArrowUp01Icon : ArrowDown01Icon} />
                 vs. last month
-              </div>
+              </Text>
             </CardContent>
           </Card>
         ))}

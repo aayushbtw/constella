@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
-import { typeStyles } from "@/lib/constella/styles";
+import { Text } from "@/components/typography/text";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -64,12 +64,10 @@ const styles = stylex.create({
     backgroundColor: colors.textMuted,
   },
   scaleLabel: {
-    color: colors.textMuted,
     fontVariantNumeric: "tabular-nums",
   },
   // The middle column sizes to its label, so the 1fr columns either side keep it centered.
   references: {
-    color: colors.textMuted,
     display: "grid",
     fontVariantNumeric: "tabular-nums",
     gridColumn: "1 / -1",
@@ -197,11 +195,14 @@ function SliderStepsDemo() {
                   {...stylex.props(styles.tick, major && styles.tickMajor)}
                 />
                 {major && (
-                  <span
-                    {...stylex.props([typeStyles.textSm, styles.scaleLabel])}
+                  <Text
+                    color="muted"
+                    render={<span />}
+                    size="sm"
+                    sx={styles.scaleLabel}
                   >
                     {month}
-                  </span>
+                  </Text>
                 )}
               </span>
             );
@@ -219,14 +220,17 @@ function SliderReferencesDemo() {
         <SliderLabel>Storage</SliderLabel>
         <SliderValue>{(formatted) => `${formatted[0] ?? ""} GB`}</SliderValue>
         <SliderControl />
-        <div
+        <Text
           aria-hidden
-          {...stylex.props([typeStyles.textSm, styles.references])}
+          color="muted"
+          render={<div />}
+          size="sm"
+          sx={styles.references}
         >
           <span>5 GB</span>
           <span>20 GB</span>
           <span {...stylex.props(styles.referenceEnd)}>35 GB</span>
-        </div>
+        </Text>
       </Slider>
     </DemoRow>
   );

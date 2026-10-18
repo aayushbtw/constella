@@ -11,7 +11,7 @@ import {
   SliderValue,
 } from "@/components/primitives/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
-import { typeStyles } from "@/lib/constella/styles";
+import { Caption } from "@/components/typography/caption";
 import {
   colors,
   durations,
@@ -91,7 +91,6 @@ const styles = stylex.create({
     stroke: colors.textPrimary,
   },
   readout: {
-    color: colors.textMuted,
     display: "flex",
     fontFamily: fonts.mono,
     fontVariantLigatures: "none",
@@ -187,12 +186,12 @@ function MotionEasingDemo() {
     <Stage
       controls={
         <>
-          <p {...stylex.props([typeStyles.captionLg, styles.readout])}>
+          <Caption size="lg" sx={styles.readout}>
             <span {...stylex.props(styles.readoutValue)}>{easing}</span>
             <span>
               {durations.move} × {slow} = {moveMs * slow}ms
             </span>
-          </p>
+          </Caption>
           <Tabs
             onValueChange={(value: EasingName) => {
               setName(value);
