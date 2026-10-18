@@ -7,8 +7,8 @@ After Interfere's: headings rank 1 (largest) to 6, text steps around `textBase`,
 | Step | Size / line height (px at a 16px root) | For |
 | --- | --- | --- |
 | `heading1`–`heading6` | 56/56, 44/56, 36/44, 28/36, 24/32, 20/24, `letterSpacings.heading` | Page and section titles in the app; a Markdown h1 takes `heading6` |
-| `textLg` | 18/24 | Long copy: an answer, a message, the composer; a side panel's title; Markdown h2–h4, in semibold |
-| `textBase` | 15/24 | Reading copy: the docs, an app's pages; a dialog, card or field set's title, in medium |
+| `textLg` | 18/24 | A side panel's title; Markdown h2–h4, in semibold |
+| `textBase` | 15/24 | Reading copy: the docs, an app's pages, a chat's answers, messages and composer; a dialog, card or field set's title, in medium |
 | `textSm` | 13/20 | Every control and the text inside components: labels, descriptions, rows, menus |
 | `captionLg` | 12/16 | Keycaps, `xs` controls, badges, menu labels and shortcuts |
 | `captionBase` | 11/16 | Metadata under a title, timestamps |

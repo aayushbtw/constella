@@ -29,7 +29,7 @@ import { Text } from "@/components/typography/text";
 
 ## Size
 
-Use the `size` prop: `base` for reading, `sm` for text inside controls and dense UI, `lg` for chat and long-form answers. Without it, text takes its parent's size, so it fits the part it sits in.
+Use the `size` prop: `base` for reading and chat, `sm` for text inside controls and dense UI, `lg` for a side panel's title. Without it, text takes its parent's size, so it fits the part it sits in.
 
 <!-- ::demo name="text-size" -->
 

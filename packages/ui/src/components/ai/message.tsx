@@ -74,7 +74,7 @@ function MessageContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-slot="message-content"
       {...props}
-      {...stylex.props([typeStyles.textLg, styles.content], sx)}
+      {...stylex.props([typeStyles.textBase, styles.content], sx)}
     />
   );
 }

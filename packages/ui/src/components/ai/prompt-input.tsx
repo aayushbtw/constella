@@ -22,6 +22,8 @@ import type { TextareaProps } from "@/components/primitives/textarea";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
+  fontSizes,
+  lineHeights,
   media,
   radii,
   shadows,
@@ -69,7 +71,13 @@ const styles = stylex.create({
     },
     height: "auto",
   },
+  // Sets the type itself: typeStyles would override Textarea's touch size, and iOS would zoom.
   textarea: {
+    fontSize: { default: fontSizes.textBase, [media.coarse]: fontSizes.touch },
+    lineHeight: {
+      default: lineHeights.textBase,
+      [media.coarse]: lineHeights.touch,
+    },
     // Grows with its text up to six control heights, then scrolls.
     maxHeight: `calc(${sizes.controlMd} * 6)`,
     minHeight: sizes.controlLg,
@@ -178,7 +186,7 @@ function PromptInputTextarea({
       placeholder={placeholder}
       rows={1}
       {...props}
-      sx={[[typeStyles.textLg, styles.textarea], sx]}
+      sx={[styles.textarea, sx]}
     />
   );
 }

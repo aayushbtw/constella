@@ -202,7 +202,7 @@ function Markdown({
   return (
     <div
       data-slot="markdown"
-      {...stylex.props([typeStyles.textLg, styles.root], sx)}
+      {...stylex.props([typeStyles.textBase, styles.root], sx)}
     >
       <MarkdownPrimitive
         components={{ ...components, ...own }}
