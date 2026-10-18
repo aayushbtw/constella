@@ -9,7 +9,7 @@ A style is a value from `stylex.create`, built from tokens, passed to a part as 
 - Tokens, not raw values
 - Longhands only
 - Hover behind `media.hover`
-- Text uses Text, Heading and Caption
+- Text uses Text, Heading and Caption; inline links and code use Link and Code
 - Don't restyle a part from outside
 - Dark mode
 - Stacking
@@ -180,7 +180,7 @@ Don't style focus. The ring comes from the component; any `outline*` in your sty
 
 ---
 
-## Text uses Text, Heading and Caption
+## Text uses Text, Heading and Caption; inline links and code use Link and Code
 
 App code uses the typography parts, which sit on the type scale.
 
@@ -204,6 +204,7 @@ import { Text } from "@/components/typography/text";
 - `Text`: `size` (`sm`, `base`, `lg`), `weight`, `color` (`primary`, `secondary`, `muted`, `danger`, `success`, `warning`, `info`).
 - `Heading`: `level` sets the tag, `size` (1–6) the look.
 - `Caption`: small supporting text.
+- `Link`: a link inside running text; pass a router link as `render`. `Code`: inline code, sized relative to the text around it.
 - No weight above `semibold` (600). Numbers that change in place take `fontVariantNumeric: "tabular-nums"`.
 
 ---

@@ -52,7 +52,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 
 ### Text
 
-- [x] **Text**, **Heading** and **Caption**: components over the type scale (Typography). **Icon** isn't one: an icon wrapper is the app's, since the icon set is its choice.
+- [x] **Text**, **Heading** and **Caption**: components over the type scale (Typography), with **Link** and **Code** for links and code inside running text. **Icon** isn't one: an icon wrapper is the app's, since the icon set is its choice.
 
 ### Data
 

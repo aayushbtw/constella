@@ -24,12 +24,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/primitives/table";
+import { Code } from "@/components/typography/code";
+import { Link } from "@/components/typography/link";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  fonts,
   fontWeights,
-  radii,
   space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
@@ -68,26 +68,6 @@ const styles = stylex.create({
     marginBlockStart: 0,
     marginBlockEnd: 0,
     paddingInlineStart: space.lg,
-  },
-  link: {
-    color: colors.textPrimary,
-    textDecorationColor: colors.textMuted,
-    textDecorationLine: "underline",
-    textUnderlineOffset: space.xxs,
-  },
-  code: {
-    backgroundColor: colors.fill,
-    borderStartStartRadius: radii.xs,
-    borderStartEndRadius: radii.xs,
-    borderEndStartRadius: radii.xs,
-    borderEndEndRadius: radii.xs,
-    fontFamily: fonts.mono,
-    fontSize: "0.875em",
-    fontVariantLigatures: "none",
-    paddingBlockStart: space.xxxs,
-    paddingBlockEnd: space.xxxs,
-    paddingInlineStart: space.xxs,
-    paddingInlineEnd: space.xxs,
   },
   quote: {
     borderInlineStartColor: colors.border,
@@ -134,11 +114,11 @@ function alignOf(style: Props<"td">["style"]) {
 }
 
 // Only a fenced block's `code` carries a `language-*` class. CodeBlockContent renders that `code`, so the highlighted markup goes in a span.
-function Code({ className, ...props }: Props<"code">) {
+function MarkdownCode({ className, ...props }: Props<"code">) {
   if (className?.startsWith("language-") ?? false) {
     return <span {...props} />;
   }
-  return <code {...props} {...stylex.props(styles.code)} />;
+  return <Code {...props} />;
 }
 
 function CodeBlock({ className: _className, ...props }: Props<"pre">) {
@@ -160,19 +140,14 @@ function CodeBlock({ className: _className, ...props }: Props<"pre">) {
 // An answer sits under the page's own headings, so its outline starts two levels down.
 const components = {
   a: ({ children, ...props }: Props<"a">) => (
-    <a
-      {...props}
-      rel="noopener noreferrer"
-      target="_blank"
-      {...stylex.props(styles.link)}
-    >
+    <Link {...props} rel="noopener noreferrer" target="_blank">
       {children}
-    </a>
+    </Link>
   ),
   blockquote: (props: Props<"blockquote">) => (
     <blockquote {...props} {...stylex.props(styles.quote)} />
   ),
-  code: Code,
+  code: MarkdownCode,
   h1: ({ children, ...props }: Props<"h1">) => (
     <h3 {...props} {...stylex.props(styles.heading, typeStyles.heading6)}>
       {children}

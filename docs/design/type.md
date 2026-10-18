@@ -15,7 +15,7 @@ After Interfere's: headings rank 1 (largest) to 6, text steps around `textBase`,
 | `captionSm` | 10/16 | Fine print |
 | `captionXs` | 8/12 | A mark too small to read as a line, like a count on an icon |
 
-Controls are 13px, as Interfere's are, so a dense UI stays a step under the reading size. Peers share a step: two titles in one row never differ in size because one string is longer. `Text`, `Heading` and `Caption` set a step for an app; `Caption` takes `uppercase`, which adds `letterSpacings.caps`.
+Controls are 13px, as Interfere's are, so a dense UI stays a step under the reading size. Peers share a step: two titles in one row never differ in size because one string is longer. `Text`, `Heading` and `Caption` set a step for an app; `Caption` takes `uppercase`, which adds `letterSpacings.caps`. Inside running text, `Link` underlines in `border` and turns `textPrimary` on hover; `Code` is mono at `0.875em` on `fill`, relative so it sits a step under any text around it.
 
 ## Weight
 

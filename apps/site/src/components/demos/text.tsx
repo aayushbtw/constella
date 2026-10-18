@@ -2,8 +2,10 @@ import * as stylex from "@stylexjs/stylex";
 
 import { Caption } from "@/components/typography/caption";
 import type { CaptionSize } from "@/components/typography/caption";
+import { Code } from "@/components/typography/code";
 import { Heading } from "@/components/typography/heading";
 import type { HeadingSize } from "@/components/typography/heading";
+import { Link } from "@/components/typography/link";
 import { Text } from "@/components/typography/text";
 import type { TextSize } from "@/components/typography/text";
 import type { TextColor } from "@/lib/constella/styles";
@@ -156,12 +158,40 @@ function CaptionCaseDemo() {
   );
 }
 
+function LinkDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack)}>
+        <Text color="secondary">
+          Your trial ends in 3 days. <Link href="#billing">Choose a plan</Link>{" "}
+          to keep your projects.
+        </Text>
+      </div>
+    </Stage>
+  );
+}
+
+function CodeDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack)}>
+        <Text color="secondary">
+          Set <Code>NODE_ENV</Code> to <Code>production</Code> before you run
+          the build.
+        </Text>
+      </div>
+    </Stage>
+  );
+}
+
 export {
   CaptionCaseDemo,
   CaptionDemo,
   CaptionSizeDemo,
+  CodeDemo,
   HeadingDemo,
   HeadingSizeDemo,
+  LinkDemo,
   TextColorDemo,
   TextDemo,
   TextSizeDemo,

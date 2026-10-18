@@ -36,7 +36,7 @@ Each links to a file with Incorrect/Correct pairs.
 - **No raw values.** Not `#fff`, `16px`, `200ms`, `z-index: 50`. Use `colors`, `space`, `radii`, `sizes`, `durations`, `layers`.
 - **Longhands only.** `paddingBlock`, `paddingInline`, `borderTopWidth`. Not `padding`, `margin`, `border`, `borderRadius`: a shorthand loses to any longhand merged in through `sx`.
 - **Hover is behind `media.hover`.** Otherwise touch sticks.
-- **Text is `Text`, `Heading`, `Caption`.** Not a raw `<p>` with a font size.
+- **Text is `Text`, `Heading`, `Caption`; inline links and code are `Link`, `Code`.** Not a raw `<p>` with a font size.
 
 ### Composition → [composition.md](./rules/composition.md)
 
@@ -90,7 +90,7 @@ Each links to a file with Incorrect/Correct pairs.
 | Command palette | `CommandDialog` + `Command` |
 | Empty state | `Empty` |
 | Chat | `MessageScroller`, `Message`, `PromptInput`, `Trace`, `Attachment`, `Markdown`, `CodeBlock` |
-| Text | `Text`, `Heading`, `Caption`, `Kbd` |
+| Text | `Text`, `Heading`, `Caption`, `Link`, `Code`, `Kbd` |
 
 ## Workflow
 

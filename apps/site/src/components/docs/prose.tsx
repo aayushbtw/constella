@@ -20,12 +20,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/primitives/table";
+import { Code } from "@/components/typography/code";
+import { Link } from "@/components/typography/link";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
   lineHeights,
-  media,
   radii,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -63,29 +64,12 @@ const styles = stylex.create({
     marginBlockStart: `calc(${space.lg} + ${space.sm})`,
     scrollMarginTop: layout.pageTop,
   },
-  a: {
-    color: colors.textPrimary,
-    textDecorationColor: {
-      default: colors.border,
-      [media.hover]: {
-        default: colors.border,
-        ":hover": colors.textPrimary,
-      },
-      ":active": colors.textPrimary,
-    },
-    textDecorationLine: "underline",
-    textUnderlineOffset: 3,
-  },
   code: {
     backgroundColor: colors.fillSubtle,
-    borderStartStartRadius: radii.xs,
-    borderStartEndRadius: radii.xs,
-    borderEndStartRadius: radii.xs,
-    borderEndEndRadius: radii.xs,
     boxShadow: shadows.card,
     color: colors.textPrimary,
-    fontVariantLigatures: "none",
-    paddingBlock: 1,
+    paddingBlockEnd: 1,
+    paddingBlockStart: 1,
     paddingInlineEnd: 3,
     paddingInlineStart: 3,
   },
@@ -111,13 +95,15 @@ const styles = stylex.create({
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
     boxShadow: shadows.inset,
-    paddingBlock: space.xxs,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
   },
   plain: {
     boxShadow: "none",
-    paddingBlock: 0,
+    paddingBlockEnd: 0,
+    paddingBlockStart: 0,
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
   },
@@ -125,7 +111,7 @@ const styles = stylex.create({
 
 // Only a fenced block's `code` carries a `language-*` class; it renders the whole Code Block, so `pre` passes through.
 // No highlighter: its HTML can't hold CodeBlockLines, which keep line numbers beside the code.
-function Code({
+function ProseCode({
   children,
   className,
   ...props
@@ -137,9 +123,9 @@ function Code({
   // oxlint-disable-next-line anti-slop/no-runtime-typeof -- the renderer passes a fence's source as a string
   if (lang === undefined || typeof children !== "string") {
     return (
-      <code {...props} {...stylex.props([typeStyles.textSm, styles.code])}>
+      <Code {...props} sx={styles.code}>
         {children}
-      </code>
+      </Code>
     );
   }
   return (
@@ -191,12 +177,8 @@ function MarkdownFrameworks() {
 }
 
 const components = {
-  a: ({ children, ...props }) => (
-    <a {...props} {...stylex.props(styles.a)}>
-      {children}
-    </a>
-  ),
-  code: Code,
+  a: ({ children, ...props }) => <Link {...props}>{children}</Link>,
+  code: ProseCode,
   h2: ({ children, ...props }) => (
     <h2 {...props} {...stylex.props(styles.h2)}>
       {children}

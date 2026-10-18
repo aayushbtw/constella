@@ -427,6 +427,36 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/caption/index.md"
     },
     {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "A link inside running text, underlined.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/typography/link.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/link/index.md"
+    },
+    {
+      "name": "code",
+      "type": "registry:ui",
+      "title": "Code",
+      "description": "Code inside running text, in mono on a fill.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/typography/code.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/code/index.md"
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
@@ -1062,8 +1092,10 @@
       "dependencies": ["@stylexjs/stylex", "@tanstack/markdown"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/code.json",
         "https://constella.aayush.cv/r/code-block.json",
         "https://constella.aayush.cv/r/copy-button.json",
+        "https://constella.aayush.cv/r/link.json",
         "https://constella.aayush.cv/r/table.json"
       ],
       "files": [
