@@ -7,7 +7,9 @@ section: AI
 <!-- ::demo name="shimmer" -->
 
 ```tsx
-<Shimmer>Thinking…</Shimmer>
+<Text color="muted">
+  <Shimmer>Thinking…</Shimmer>
+</Text>
 ```
 
 ## Installation
@@ -18,13 +20,16 @@ section: AI
 
 ```tsx
 import { Shimmer } from "@/components/ai/shimmer";
+import { Text } from "@/components/typography/text";
 ```
 
 ```tsx
-<Shimmer>Generating response…</Shimmer>
+<Text color="muted">
+  <Shimmer>Generating response…</Shimmer>
+</Text>
 ```
 
-It sweeps primary text across the text's own color, so set it on muted text. Under reduced motion the text stays still. Once the work is done, render the text without it.
+It takes the font and color of the text around it. **On primary text the sweep doesn't show**, since the sweep is primary text. Put it in secondary or muted text, such as a [Text](/docs/components/text) with `color="muted"`. Under reduced motion the text stays still. Once the work is done, render the text without it.
 
 ## Marker
 

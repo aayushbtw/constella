@@ -8,8 +8,8 @@ import * as stylex from "@stylexjs/stylex";
 import { Marker, MarkerContent, MarkerIcon } from "@/components/ai/marker";
 import { Shimmer } from "@/components/ai/shimmer";
 import { Spinner } from "@/components/primitives/spinner";
-import { typeStyles } from "@/lib/constella/styles";
-import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/typography/text";
+import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
@@ -20,9 +20,6 @@ const styles = stylex.create({
     gap: space.lg,
     maxWidth: "100%",
     width: 448,
-  },
-  thinking: {
-    color: colors.textMuted,
   },
 });
 
@@ -107,7 +104,9 @@ function MarkerLinkDemo() {
 function ShimmerDemo() {
   return (
     <DemoRow>
-      <Shimmer sx={[typeStyles.textLg, styles.thinking]}>Thinking…</Shimmer>
+      <Text color="muted">
+        <Shimmer>Thinking…</Shimmer>
+      </Text>
     </DemoRow>
   );
 }
