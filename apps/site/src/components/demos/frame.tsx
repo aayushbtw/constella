@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Caption } from "@/components/typography/caption";
@@ -38,6 +39,10 @@ const styles = stylex.create({
     minHeight: 280,
     paddingBlock: space.xl,
     paddingInline: space.md,
+  },
+  compact: {
+    minHeight: 0,
+    paddingBlock: space.md,
   },
   row: {
     alignItems: "center",
@@ -99,6 +104,9 @@ const styles = stylex.create({
   },
 });
 
+/** Set by /poster: demos hug their content and drop their controls. */
+const CompactStage = createContext(false);
+
 /** The demo's surface; `controls` are the demo's own knobs and actions, kept apart from the component. */
 function Stage({
   children,
@@ -107,11 +115,15 @@ function Stage({
   children: ReactNode;
   controls?: ReactNode;
 }) {
+  const compact = use(CompactStage);
+  const shown = compact ? undefined : controls;
   return (
-    <div {...stylex.props(styles.stage, controls !== undefined && styles.bare)}>
-      <div {...stylex.props(styles.view)}>{children}</div>
-      {controls === undefined ? null : (
-        <div {...stylex.props(styles.controls)}>{controls}</div>
+    <div {...stylex.props(styles.stage, shown !== undefined && styles.bare)}>
+      <div {...stylex.props(styles.view, compact && styles.compact)}>
+        {children}
+      </div>
+      {shown === undefined ? null : (
+        <div {...stylex.props(styles.controls)}>{shown}</div>
       )}
     </div>
   );
@@ -169,4 +181,4 @@ function Tile({
   );
 }
 
-export { DemoRow, Stage, Tile, Tiles, Well };
+export { CompactStage, DemoRow, Stage, Tile, Tiles, Well };

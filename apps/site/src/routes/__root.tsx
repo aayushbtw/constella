@@ -109,10 +109,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <DevStyleX />
       </head>
       <body {...stylex.props([typeStyles.textBase, styles.body])}>
-        <Toaster>
-          <Header />
-          {children}
-        </Toaster>
+        {/* /clip renders its own Toaster, centred for recording. */}
+        {pathname === "/clip" ? (
+          children
+        ) : (
+          <Toaster>
+            {pathname === "/poster" ? null : <Header />}
+            {children}
+          </Toaster>
+        )}
         <Scripts />
       </body>
     </html>
