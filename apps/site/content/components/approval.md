@@ -78,7 +78,7 @@ import {
     <Button size="sm" variant="outline">
       Cancel
     </Button>
-    <Button size="sm" variant="danger">
+    <Button size="sm" status="danger">
       Delete file
     </Button>
   </ApprovalFooter>

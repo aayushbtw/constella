@@ -23,9 +23,9 @@ const buttonVariants = [
   "secondary",
   "outline",
   "ghost",
-  "danger",
   "link",
 ] as const;
+const buttonStatuses = ["danger"] as const;
 const buttonSizes = [
   "xs",
   "sm",
@@ -39,15 +39,19 @@ const buttonSizes = [
 const buttonCorners = ["rounded", "pill"] as const;
 
 type ButtonVariant = (typeof buttonVariants)[number];
+type ButtonStatus = (typeof buttonStatuses)[number];
 type ButtonSize = (typeof buttonSizes)[number];
 type ButtonCorners = (typeof buttonCorners)[number];
 
-type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> & {
+interface ButtonStyleOptions {
   corners?: ButtonCorners;
   size?: ButtonSize;
-  sx?: stylex.StyleXStyles;
+  status?: ButtonStatus;
   variant?: ButtonVariant;
-};
+}
+
+type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> &
+  ButtonStyleOptions & { sx?: stylex.StyleXStyles };
 
 // A trigger opens something on press, so it doesn't give.
 const press = ":active:not([aria-haspopup], :disabled)";
@@ -202,8 +206,26 @@ const styles = stylex.create({
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
     backgroundColor: interactive(colors.dangerSubtle, colors.dangerSubtleHover),
-    boxShadow: lift,
     color: colors.dangerText,
+  },
+  dangerGhost: {
+    backgroundColor: interactive("transparent", colors.dangerSubtle),
+    color: colors.dangerText,
+  },
+  dangerOutline: {
+    backgroundColor: interactive(colors.background, colors.dangerSubtle),
+    borderBlockColor: colors.dangerBorder,
+    borderInlineColor: colors.dangerBorder,
+    color: colors.dangerText,
+  },
+  dangerLink: { color: colors.dangerText },
+  // The tint answers hover with its own color, so the solid's fade is undone.
+  dangerSolid: {
+    opacity: {
+      default: 1,
+      ":disabled": opacities.disabled,
+      [loading]: opacities.busy,
+    },
   },
   // Reads as text, so it answers with an underline instead of a fill or a press.
   link: {
@@ -216,13 +238,23 @@ const styles = stylex.create({
 });
 
 const variantStyles = {
-  danger: styles.danger,
   ghost: styles.ghost,
   link: styles.link,
   outline: styles.outline,
   primary: styles.primary,
   secondary: styles.secondary,
 } satisfies Record<ButtonVariant, stylex.StyleXStyles>;
+
+// A solid takes the tint too: destruction is marked, never shouted.
+const statusStyles = {
+  danger: {
+    ghost: styles.dangerGhost,
+    link: styles.dangerLink,
+    outline: styles.dangerOutline,
+    primary: [styles.secondary, styles.danger, styles.dangerSolid],
+    secondary: styles.danger,
+  },
+} satisfies Record<ButtonStatus, Record<ButtonVariant, stylex.StyleXStyles>>;
 
 const sizeStyles = {
   "icon-lg": styles.iconLg,
@@ -240,12 +272,11 @@ const cornerStyles = {
   rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
-type ButtonStyleOptions = Pick<ButtonProps, "corners" | "size" | "variant">;
-
 /** A button's styles for another element, like a plain `<a>` that must keep its link role. */
 function buttonStyles({
   corners = "rounded",
   size = "default",
+  status,
   variant = "secondary",
 }: ButtonStyleOptions = {}) {
   return [
@@ -253,6 +284,7 @@ function buttonStyles({
     joinStyles.edges,
     sizeStyles[size],
     variantStyles[variant],
+    status && statusStyles[status][variant],
     cornerStyles[corners],
   ];
 }
@@ -260,6 +292,7 @@ function buttonStyles({
 function Button({
   corners = "rounded",
   size = "default",
+  status,
   sx,
   variant = "secondary",
   ...props
@@ -269,18 +302,27 @@ function Button({
       data-corners={corners}
       data-size={size}
       data-slot="button"
+      data-status={status}
       data-variant={variant}
       {...props}
-      {...stylex.props(buttonStyles({ corners, size, variant }), sx)}
+      {...stylex.props(buttonStyles({ corners, size, status, variant }), sx)}
     />
   );
 }
 
-export { Button, buttonCorners, buttonSizes, buttonStyles, buttonVariants };
+export {
+  Button,
+  buttonCorners,
+  buttonSizes,
+  buttonStatuses,
+  buttonStyles,
+  buttonVariants,
+};
 export type {
   ButtonCorners,
   ButtonProps,
   ButtonSize,
+  ButtonStatus,
   ButtonStyleOptions,
   ButtonVariant,
 };

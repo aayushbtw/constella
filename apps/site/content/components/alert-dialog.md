@@ -80,7 +80,7 @@ Use `size="sm"` on `AlertDialogContent` for a short confirm: centered text over 
 
 ## Alert Dialog Media
 
-Use `AlertDialogMedia` for an icon above the title. Pass `variant="danger"` to `AlertDialogAction` for an action that can't be undone.
+Use `AlertDialogMedia` for an icon above the title. Pass `status="danger"` to `AlertDialogAction` for an action that can't be undone.
 
 <!-- ::demo name="alert-dialog-danger" -->
 
@@ -93,7 +93,7 @@ Use `AlertDialogMedia` for an icon above the title. Pass `variant="danger"` to `
 </AlertDialogHeader>
 <AlertDialogFooter>
   <AlertDialogCancel>Cancel</AlertDialogCancel>
-  <AlertDialogAction variant="danger">Delete</AlertDialogAction>
+  <AlertDialogAction status="danger">Delete</AlertDialogAction>
 </AlertDialogFooter>
 ```
 
@@ -108,7 +108,7 @@ Use `AlertDialogMedia` for an icon above the title. Pass `variant="danger"` to `
   …
   <AlertDialogFooter>
     <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-    <AlertDialogAction aria-busy={busy} onClick={revoke} variant="danger">
+    <AlertDialogAction aria-busy={busy} onClick={revoke} status="danger">
       {busy && <Spinner data-icon="inline-start" />}
       {busy ? "Revoking" : "Revoke"}
     </AlertDialogAction>

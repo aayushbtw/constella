@@ -20,7 +20,6 @@ import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const labels = {
-  danger: "Danger",
   ghost: "Ghost",
   link: "Link",
   outline: "Outline",
@@ -68,6 +67,18 @@ function ButtonVariantsDemo() {
     <DemoRow>
       {buttonVariants.map((variant) => (
         <Button key={variant} variant={variant}>
+          {labels[variant]}
+        </Button>
+      ))}
+    </DemoRow>
+  );
+}
+
+function ButtonStatusDemo() {
+  return (
+    <DemoRow>
+      {buttonVariants.map((variant) => (
+        <Button key={variant} status="danger" variant={variant}>
           {labels[variant]}
         </Button>
       ))}
@@ -204,5 +215,6 @@ export {
   ButtonLinkDemo,
   ButtonPillDemo,
   ButtonSizesDemo,
+  ButtonStatusDemo,
   ButtonVariantsDemo,
 };

@@ -51,6 +51,7 @@ import {
   ButtonSizesDemo,
   ButtonBusyDemo,
   ButtonDisabledDemo,
+  ButtonStatusDemo,
   ButtonVariantsDemo,
 } from "~/components/demos/button";
 import {
@@ -462,6 +463,7 @@ const demos = {
   "button-sizes": ButtonSizesDemo,
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
+  "button-status": ButtonStatusDemo,
   "button-variants": ButtonVariantsDemo,
   caption: CaptionDemo,
   "caption-case": CaptionCaseDemo,
