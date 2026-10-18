@@ -160,16 +160,18 @@ function Command({
 function CommandDialog({
   children,
   description = "Search for a command to run...",
+  sx,
   title = "Command Palette",
   ...props
 }: Omit<ComponentProps<typeof Dialog>, "children"> & {
   children: ReactNode;
   description?: string;
+  sx?: stylex.StyleXStyles;
   title?: string;
 }) {
   return (
     <Dialog {...props}>
-      <DialogContent sx={styles.dialog}>
+      <DialogContent sx={[styles.dialog, sx]}>
         <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
         <DialogDescription sx={visuallyHidden.base}>
           {description}
@@ -183,14 +185,11 @@ function CommandDialog({
 function CommandInput({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Input.Props>) {
+}: Omit<Styled<AutocompletePrimitive.Input.Props>, "render">) {
   return (
-    <InputGroup data-slot="command-input" sx={styles.input}>
+    <InputGroup data-slot="command-input" sx={[styles.input, sx]}>
       {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
-      <AutocompletePrimitive.Input
-        render={<InputGroupInput sx={sx} />}
-        {...props}
-      />
+      <AutocompletePrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
         <span {...stylex.props(styles.icon)}>
           <HugeiconsIcon

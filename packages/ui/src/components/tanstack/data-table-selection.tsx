@@ -193,7 +193,13 @@ const styles = stylex.create({
 });
 
 /** The header's checkbox: selects every row (needs `rowSelectionFeature`). */
-function DataTableSelectAll({ table }: { table: SelectableTable }) {
+function DataTableSelectAll({
+  sx,
+  table,
+}: {
+  sx?: stylex.StyleXStyles;
+  table: SelectableTable;
+}) {
   return (
     <Checkbox
       aria-label="Select all"
@@ -205,6 +211,7 @@ function DataTableSelectAll({ table }: { table: SelectableTable }) {
       onCheckedChange={(checked) => {
         table.toggleAllRowsSelected(checked);
       }}
+      sx={sx}
     />
   );
 }
@@ -213,9 +220,11 @@ function DataTableSelectAll({ table }: { table: SelectableTable }) {
 function DataTableSelectRow({
   numbered = false,
   row,
+  sx,
 }: {
   numbered?: boolean;
   row: SelectableRow;
+  sx?: stylex.StyleXStyles;
 }) {
   const toggle = row.getToggleSelectedHandler();
   const checkbox = (
@@ -233,7 +242,7 @@ function DataTableSelectRow({
           target: { checked },
         });
       }}
-      sx={numbered ? [styles.stacked, styles.revealed] : undefined}
+      sx={[numbered && [styles.stacked, styles.revealed], sx]}
     />
   );
   if (!numbered) {

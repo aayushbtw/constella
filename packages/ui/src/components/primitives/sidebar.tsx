@@ -1183,14 +1183,20 @@ function SidebarInset({ sx, ...props }: Styled<ComponentProps<"main">>) {
 }
 
 /** Renders its children except in the collapsed icon rail. */
-function SidebarExpandedOnly({ children }: { children: ReactNode }) {
+function SidebarExpandedOnly({
+  children,
+  sx,
+}: {
+  children: ReactNode;
+  sx?: stylex.StyleXStyles;
+}) {
   if (use(RailContext).rail) {
     return null;
   }
   return (
     <div
       data-slot="sidebar-expanded-only"
-      {...stylex.props(styles.expandedOnly)}
+      {...stylex.props(styles.expandedOnly, sx)}
     >
       {children}
     </div>

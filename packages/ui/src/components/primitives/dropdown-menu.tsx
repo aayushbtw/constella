@@ -349,15 +349,15 @@ function DropdownMenuFilterProvider({
 function DropdownMenuInput({
   sx,
   ...props
-}: Styled<MenuPrimitive.Input.Props>) {
+}: Omit<Styled<MenuPrimitive.Input.Props>, "render">) {
   return (
     <InputGroup
       data-slot="dropdown-menu-input"
       size={use(Size)}
-      sx={styles.input}
+      sx={[styles.input, sx]}
     >
       {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
-      <MenuPrimitive.Input render={<InputGroupInput sx={sx} />} {...props} />
+      <MenuPrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
         <span {...stylex.props(styles.searchIcon)}>
           <Glyph icon={Search01Icon} />

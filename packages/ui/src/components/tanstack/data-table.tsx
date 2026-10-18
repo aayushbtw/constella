@@ -303,9 +303,11 @@ const sortIcons = {
 /** A header that sorts its column (needs `rowSortingFeature`); plain text if it can't sort. */
 function DataTableColumnHeader({
   column,
+  sx,
   title,
 }: {
   column: SortableColumn;
+  sx?: stylex.StyleXStyles;
   title: string;
 }) {
   if (!column.getCanSort()) {
@@ -316,7 +318,7 @@ function DataTableColumnHeader({
     <Button
       onClick={column.getToggleSortingHandler()}
       size="sm"
-      sx={styles.sort}
+      sx={[styles.sort, sx]}
       variant="ghost"
     >
       {title}

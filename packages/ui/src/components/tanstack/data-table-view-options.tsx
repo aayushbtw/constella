@@ -2,6 +2,7 @@
 
 import { SlidersHorizontalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import type * as stylex from "@stylexjs/stylex";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -32,10 +33,12 @@ const noLabels = {};
 /** A menu that shows and hides columns (needs `columnVisibilityFeature`); lists the columns with data that can hide. */
 function DataTableViewOptions({
   labels = noLabels,
+  sx,
   table,
 }: {
   /** Keyed by column id: the name to list it by; the id otherwise. */
   labels?: Readonly<Partial<Record<string, string>>>;
+  sx?: stylex.StyleXStyles;
   table: HidingTable;
 }) {
   const columns = table
@@ -43,7 +46,7 @@ function DataTableViewOptions({
     .filter((column) => column.accessorFn !== undefined && column.getCanHide());
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" />}>
+      <DropdownMenuTrigger render={<Button sx={sx} variant="outline" />}>
         <HugeiconsIcon
           aria-hidden
           icon={SlidersHorizontalIcon}

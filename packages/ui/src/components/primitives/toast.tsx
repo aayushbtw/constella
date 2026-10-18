@@ -595,14 +595,15 @@ function ToastList() {
 
 function Toaster({
   children,
+  sx,
   toastManager = toast,
   ...props
-}: ToastPrimitive.Provider.Props) {
+}: ToastPrimitive.Provider.Props & { sx?: stylex.StyleXStyles }) {
   return (
     <ToastProvider toastManager={toastManager} {...props}>
       {children}
       <ToastPortal>
-        <ToastViewport>
+        <ToastViewport sx={sx}>
           <ToastList />
         </ToastViewport>
       </ToastPortal>
