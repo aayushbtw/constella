@@ -3,6 +3,7 @@ import { Link, useMatchRoute } from "@tanstack/react-router";
 
 import { Badge } from "@/components/primitives/badge";
 import { ScrollArea } from "@/components/primitives/scroll-area";
+import { Text } from "@/components/typography/text";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -44,7 +45,6 @@ const styles = stylex.create({
     marginBlockEnd: { default: space.lg, ":last-child": 0 },
   },
   label: {
-    color: colors.textMuted,
     paddingBlockEnd: space.xs,
   },
   list: {
@@ -106,9 +106,12 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
             .filter(({ items }) => items.length > 0)
             .map(({ items, label, to }) => (
               <section key={label} {...stylex.props(styles.group)}>
-                <h2 {...stylex.props([typeStyles.textSm, styles.label])}>
-                  {label}
-                </h2>
+                <Text
+                  color="muted"
+                  render={<h2>{label}</h2>}
+                  size="sm"
+                  sx={styles.label}
+                />
                 <ul {...stylex.props(styles.list)}>
                   {items.map(({ draft = false, slug, title }) => (
                     <li key={slug}>

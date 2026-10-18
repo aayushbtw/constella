@@ -22,11 +22,10 @@ import {
 } from "@/components/primitives/table";
 import { Code } from "@/components/typography/code";
 import { Link } from "@/components/typography/link";
-import { typeStyles } from "@/lib/constella/styles";
+import { Text } from "@/components/typography/text";
 import {
   colors,
   fontWeights,
-  lineHeights,
   radii,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -48,8 +47,6 @@ const styles = stylex.create({
   },
   p: flow,
   h2: {
-    color: colors.textPrimary,
-    lineHeight: lineHeights.textSm,
     marginBlockEnd: space.sm,
     marginBlockStart: {
       default: `calc(${space.xl} + ${space.md})`,
@@ -58,7 +55,6 @@ const styles = stylex.create({
     scrollMarginTop: layout.pageTop,
   },
   h3: {
-    color: colors.textPrimary,
     marginBlockEnd: space.xs,
     // Room enough that a subsection reads as a break after a table.
     marginBlockStart: `calc(${space.lg} + ${space.sm})`,
@@ -180,19 +176,28 @@ const components = {
   a: ({ children, ...props }) => <Link {...props}>{children}</Link>,
   code: ProseCode,
   h2: ({ children, ...props }) => (
-    <h2 {...props} {...stylex.props(styles.h2)}>
-      {children}
-    </h2>
+    <Text
+      {...props}
+      color="primary"
+      render={<h2>{children}</h2>}
+      sx={styles.h2}
+      weight="medium"
+    />
   ),
   h3: ({ children, ...props }) => (
-    <h3 {...props} {...stylex.props([typeStyles.textSm, styles.h3])}>
-      {children}
-    </h3>
+    <Text
+      {...props}
+      color="primary"
+      render={<h3>{children}</h3>}
+      size="sm"
+      sx={styles.h3}
+      weight="medium"
+    />
   ),
   "md-demo": Demo,
   "md-frameworks": MarkdownFrameworks,
   "md-install": MarkdownInstall,
-  p: (props) => <p {...props} {...stylex.props(styles.p)} />,
+  p: ({ children }) => <Text sx={styles.p}>{children}</Text>,
   pre: ({ children }: ComponentPropsWithoutRef<"pre">): ReactNode => children,
   strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
   table: (props) => (

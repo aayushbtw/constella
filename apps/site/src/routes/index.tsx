@@ -2,12 +2,8 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
-import {
-  colors,
-  lineHeights as uiLineHeights,
-  media as uiMedia,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { Text } from "@/components/typography/text";
+import { media as uiMedia, space } from "@/lib/constella/tokens.stylex";
 import { Showcase, showcaseSize } from "~/components/home/showcase";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
@@ -70,8 +66,6 @@ const styles = stylex.create({
     textWrap: "balance",
   },
   lead: {
-    color: colors.textSecondary,
-    lineHeight: uiLineHeights.textBase,
     maxWidth: "48ch",
     textWrap: "pretty",
   },
@@ -82,9 +76,6 @@ const styles = stylex.create({
       default: "1fr",
       [media.sidebar]: `${layout.sidebar} minmax(0, 1fr)`,
     },
-  },
-  label: {
-    color: colors.textMuted,
   },
   list: {
     columnCount: { default: 2, [uiMedia.md]: 3, [media.sidebar]: 4 },
@@ -124,9 +115,14 @@ function Home() {
           ))}
         </h1>
 
-        <p {...stylex.props(styles.lead, entrance.item(0, items))}>
-          React components styled with StyleX.
-        </p>
+        <Text
+          color="secondary"
+          render={
+            <p {...stylex.props(styles.lead, entrance.item(0, items))}>
+              React components styled with StyleX.
+            </p>
+          }
+        />
 
         <ul {...stylex.props(styles.inline, entrance.item(1, items))}>
           <li>
@@ -159,7 +155,7 @@ function Home() {
       <section
         {...stylex.props(styles.section, entrance.item(items - 1, items))}
       >
-        <h2 {...stylex.props(styles.label)}>Components</h2>
+        <Text color="muted" render={<h2>Components</h2>} />
         <ul {...stylex.props(styles.list)}>
           {components.map(({ slug, title }) => (
             <li key={slug} {...stylex.props(styles.item)}>

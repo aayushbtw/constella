@@ -2,13 +2,9 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { z } from "zod";
 
+import { Text } from "@/components/typography/text";
 import { typeStyles } from "@/lib/constella/styles";
-import {
-  colors,
-  fontWeights,
-  radii,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import { colors, radii, space } from "@/lib/constella/tokens.stylex";
 import { ChartBreak, MessageBreak, SidebarBreak } from "~/components/break/app";
 import { datasetLabels, datasets } from "~/components/break/fixtures";
 import {
@@ -94,9 +90,6 @@ const styles = stylex.create({
   navLink: { color: colors.textMuted },
   current: { color: colors.textPrimary, textDecorationLine: "underline" },
   section: { display: "flex", flexDirection: "column", gap: space.xs },
-  heading: {
-    fontWeight: fontWeights.semibold,
-  },
   toggle: {
     ...pill,
     // Opaque: it floats over whatever the component renders.
@@ -163,9 +156,7 @@ function BreakPage() {
           key={slug}
           {...stylex.props(styles.section)}
         >
-          <h2 {...stylex.props([typeStyles.textSm, styles.heading])}>
-            {title}
-          </h2>
+          <Text render={<h2>{title}</h2>} size="sm" weight="semibold" />
           <Stage>
             <Break data={data} open={c === slug} />
           </Stage>

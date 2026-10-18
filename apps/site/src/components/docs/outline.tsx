@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { MouseEvent } from "react";
 
+import { Text } from "@/components/typography/text";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, durations, media, space } from "@/lib/constella/tokens.stylex";
 import { layout, media as siteMedia } from "~/lib/tokens.stylex";
@@ -21,7 +22,6 @@ const styles = stylex.create({
     position: "sticky",
   },
   label: {
-    color: colors.textMuted,
     paddingBlockEnd: space.xs,
   },
   list: {
@@ -118,7 +118,9 @@ function Outline({ headings }: { headings: Heading[] }) {
 
   return (
     <nav aria-label="On this page" {...stylex.props(styles.outline)}>
-      <p {...stylex.props([typeStyles.textSm, styles.label])}>On this page</p>
+      <Text color="muted" size="sm" sx={styles.label}>
+        On this page
+      </Text>
       <ul {...stylex.props(styles.list)}>
         {headings.map(({ id, level, text }) => (
           <li key={id}>

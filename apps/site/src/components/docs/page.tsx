@@ -1,9 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
-import { colors, space } from "@/lib/constella/tokens.stylex";
+import { Heading } from "@/components/typography/heading";
+import { Text } from "@/components/typography/text";
+import { space } from "@/lib/constella/tokens.stylex";
 import { Outline } from "~/components/docs/outline";
-import type { Heading } from "~/components/docs/outline";
+import type { Heading as OutlineHeading } from "~/components/docs/outline";
 import { PageActions } from "~/components/docs/page-actions";
 import { layout, media } from "~/lib/tokens.stylex";
 
@@ -25,9 +27,6 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.xs,
   },
-  description: {
-    color: colors.textSecondary,
-  },
 });
 
 // Two siblings, so each takes its own column of the docs layout's grid.
@@ -40,7 +39,7 @@ function DocsPage({
 }: {
   children: ReactNode;
   description: string;
-  headings: Heading[];
+  headings: OutlineHeading[];
   markdown: string;
   title: string;
 }) {
@@ -48,8 +47,10 @@ function DocsPage({
     <>
       <main {...stylex.props(styles.page)}>
         <header {...stylex.props(styles.header)}>
-          <h1>{title}</h1>
-          <p {...stylex.props(styles.description)}>{description}</p>
+          <Heading level={1} size={6}>
+            {title}
+          </Heading>
+          <Text color="secondary">{description}</Text>
           <PageActions markdown={markdown} />
         </header>
         {children}
