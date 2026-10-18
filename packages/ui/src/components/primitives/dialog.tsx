@@ -284,7 +284,7 @@ function DialogCloseButton({
   children,
   sx,
   ...props
-}: Styled<DialogPrimitive.Close.Props>) {
+}: Omit<Styled<DialogPrimitive.Close.Props>, "render">) {
   return (
     <DialogPrimitive.Close
       aria-label="Close"

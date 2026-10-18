@@ -174,7 +174,7 @@ function AlertDialogCancel({
   sx,
   variant = "outline",
   ...props
-}: Omit<AlertDialogPrimitive.Close.Props, "className" | "style"> &
+}: Omit<AlertDialogPrimitive.Close.Props, "className" | "render" | "style"> &
   Pick<ButtonProps, "size" | "sx" | "variant">) {
   return (
     <AlertDialogPrimitive.Close

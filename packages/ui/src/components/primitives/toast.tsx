@@ -430,7 +430,10 @@ function ToastDescription({
 }
 
 // The styles ride on the Button: it applies its own last, over anything Base UI merges in.
-function ToastAction({ sx, ...props }: Styled<ToastPrimitive.Action.Props>) {
+function ToastAction({
+  sx,
+  ...props
+}: Omit<Styled<ToastPrimitive.Action.Props>, "render">) {
   return (
     <ToastPrimitive.Action
       data-slot="toast-action"
