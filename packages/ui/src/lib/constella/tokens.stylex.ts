@@ -157,6 +157,8 @@ export const fontSizes = stylex.defineConsts({
   captionBase: `calc(${typeUnit} * 2.5 + 1px)`,
   captionSm: `calc(${typeUnit} * 2.5)`,
   captionXs: `calc(${typeUnit} * 2)`,
+  // Under 16px, iOS Safari zooms the page when a field takes focus; fields switch to this on touch.
+  touch: "16px",
 });
 
 export const lineHeights = stylex.defineConsts({
@@ -173,6 +175,7 @@ export const lineHeights = stylex.defineConsts({
   captionBase: `calc(${leadingUnit} * 4)`,
   captionSm: `calc(${leadingUnit} * 4)`,
   captionXs: `calc(${leadingUnit} * 3)`,
+  touch: `calc(${leadingUnit} * 6)`,
 });
 
 // Large type tightens a little, so a heading doesn't read as spaced out.
