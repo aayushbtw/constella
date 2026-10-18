@@ -37,7 +37,7 @@ const styles = stylex.create({
     width: { default: "100%", [vertical]: "auto" },
   },
   value: {
-    color: colors.textMuted,
+    color: colors.textSecondary,
     fontVariantNumeric: "tabular-nums",
     gridColumn: 2,
   },
