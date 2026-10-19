@@ -19,6 +19,7 @@ Read the one that fits before changing things, and record new decisions in it, n
 - **`DESIGN.md`:** how it looks and moves. Personality, conflict order, never-list, review checklist, and an index of `docs/design/*.md` (color, type, space, surfaces, states, motion, components, site). Read the index, then only the topic file the task touches.
 - **`docs/ARCHITECTURE.md`:** how it's built. Stack, workspace, registry items, component API and composition, token rules, theme wiring.
 - **`docs/DOCS.md`:** how to write the docs pages in `apps/site/content`.
+- **`docs/MARKETING.md`:** what we say about it. Positioning, tagline options, each claim with its proof, and the tweet knowledge base. A claim enters only with a path that proves it; adding or removing a lint rule updates its Proof table.
 
 `docs/ARCHITECTURE.md` is long. List its headings with `rg -n '^## ' docs/ARCHITECTURE.md`, then `Read` only the section the task touches, with `offset` and `limit`.
 
