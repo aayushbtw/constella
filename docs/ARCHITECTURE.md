@@ -104,6 +104,7 @@ Two files hold the system's values. `tokens.stylex.ts` is the system: roles as t
 | Rule | Catches |
 | --- | --- |
 | `constella/box-edge` | `borderSubtle` on a whole-box border color (`borderBlockColor`, `borderInlineColor`) |
+| `constella/hover-media` | A `:hover` condition outside `[media.hover]`, so touch never sticks; reads keys built from the file's own top-level consts and templates, not imported ones |
 | `constella/no-focus-style` | Any `outline*` in a component's styles |
 | `constella/no-raw-colors` | A Radix step or hex in styles, not a `colors` token |
 | `constella/no-shorthand` | A four-side shorthand (`margin`, `padding`, `inset`, `border`, `borderRadius`, `borderWidth/Color/Style`) in styles; it loses to any longhand merged in through `sx` |
@@ -112,6 +113,8 @@ Two files hold the system's values. `tokens.stylex.ts` is the system: roles as t
 | `constella/type-scale` | A raw font size, or a plain `fontSizes` step outside `typeStyles`; raw steps are for a size that changes by condition, paired with the same `lineHeights` |
 
 A rule earns its place when a correction comes up twice. Add one there before writing the same note again.
+
+CI (`.github/workflows/ci.yml`) runs `check` and `build` on each push to `main` and each PR, so a broken rule shows up even when no one ran it locally.
 
 ## Gotchas
 

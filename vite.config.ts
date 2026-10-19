@@ -24,6 +24,7 @@ export default defineConfig({
     ],
     rules: {
       "constella/box-edge": "error",
+      "constella/hover-media": "error",
       "constella/no-focus-style": "error",
       "constella/no-raw-colors": "error",
       "constella/no-shorthand": "error",

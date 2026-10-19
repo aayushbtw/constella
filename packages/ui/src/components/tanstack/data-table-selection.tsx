@@ -160,7 +160,10 @@ const styles = stylex.create({
   // Fades only for the pointer; a swap the keyboard causes is instant.
   stacked: {
     gridArea: "1 / 1",
-    transitionDuration: { default: "0s", [rowHovered]: durations.hover },
+    transitionDuration: {
+      default: "0s",
+      [media.hover]: { default: "0s", [rowHovered]: durations.hover },
+    },
     transitionProperty: "opacity",
     transitionTimingFunction: "ease",
   },
