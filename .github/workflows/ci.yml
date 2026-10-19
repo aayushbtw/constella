@@ -15,5 +15,6 @@ jobs:
           node-version: 24
           cache: true
           run-install: true
-      - run: vp run check
+      # Build first: it generates the route tree and content types that check reads.
       - run: vp run build
+      - run: vp run check
