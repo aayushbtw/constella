@@ -311,11 +311,16 @@ function DataTableColumnHeader({
   title: string;
 }) {
   if (!column.getCanSort()) {
-    return title;
+    return (
+      <span data-slot="data-table-column-header" {...stylex.props(sx)}>
+        {title}
+      </span>
+    );
   }
   const sorted = column.getIsSorted();
   return (
     <Button
+      data-slot="data-table-column-header"
       onClick={column.getToggleSortingHandler()}
       size="sm"
       sx={[styles.sort, sx]}
