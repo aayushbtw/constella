@@ -97,6 +97,14 @@ const styles = stylex.create({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
   },
+  // First in the body: the header is one row, with no room under the title.
+  description: {
+    color: colors.textSecondary,
+    marginBlockEnd: space.md,
+    marginBlockStart: 0,
+    marginInline: 0,
+    textWrap: "pretty",
+  },
   body: {
     flexGrow: 1,
     minHeight: 0,
@@ -189,6 +197,19 @@ function SidePanelTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
   );
 }
 
+function SidePanelDescription({
+  sx,
+  ...props
+}: Styled<DialogPrimitive.Description.Props>) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="side-panel-description"
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+    />
+  );
+}
+
 function SidePanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -214,6 +235,7 @@ export {
   SidePanel,
   SidePanelBody,
   SidePanelContent,
+  SidePanelDescription,
   SidePanelFooter,
   SidePanelHeader,
   SidePanelSlot,

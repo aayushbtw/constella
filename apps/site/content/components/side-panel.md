@@ -37,6 +37,7 @@ import {
   SidePanel,
   SidePanelBody,
   SidePanelContent,
+  SidePanelDescription,
   SidePanelFooter,
   SidePanelHeader,
   SidePanelSlot,
@@ -47,6 +48,8 @@ import {
 Put a `SidePanelSlot` after the whole page, header included, in a flex row, so the panel runs the full height of it. Pass its ref to `SidePanelContent` as `container`.
 
 The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
+
+The header is one row, so a `SidePanelDescription` goes first in the body. It names the panel's description for screen readers, as a dialog's does.
 
 On a narrow window, show the same details in a [Sheet](/docs/components/sheet) instead.
 
@@ -59,6 +62,7 @@ SidePanel
     ├── SidePanelHeader
     │   └── SidePanelTitle
     ├── SidePanelBody
+    │   └── SidePanelDescription
     └── SidePanelFooter
 ```
 
@@ -69,6 +73,7 @@ SidePanel
 | `SidePanel` | Base UI Dialog, non-modal, not closed by an outside click |
 | `SidePanelContent` | `container`: the slot's ref; renders the portal and popup |
 | `SidePanelHeader` | A row `sizes.header` tall, pinned: the title, any actions, then Close |
+| `SidePanelDescription` | Muted text first in the body; the panel's accessible description |
 | `SidePanelBody` | Scrolls on its own |
 | `SidePanelFooter` | Pinned below the body |
 
