@@ -18,7 +18,9 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type ToggleGroupProps = Styled<ToggleGroupPrimitive.Props> & {
+type ToggleGroupProps<Value extends string = string> = Styled<
+  ToggleGroupPrimitive.Props<Value>
+> & {
   size?: ToggleSize;
   spacing?: ToggleGroupSpacing;
   variant?: ToggleVariant;
@@ -59,13 +61,13 @@ const ToggleGroupContext = createContext<{
   variant: ToggleVariant;
 }>({ size: "default", variant: "default" });
 
-function ToggleGroup({
+function ToggleGroup<Value extends string>({
   size = "default",
   spacing = 2,
   sx,
   variant = "default",
   ...props
-}: ToggleGroupProps) {
+}: ToggleGroupProps<Value>) {
   const context = useMemo(() => ({ size, variant }), [size, variant]);
   return (
     <ToggleGroupContext value={context}>
