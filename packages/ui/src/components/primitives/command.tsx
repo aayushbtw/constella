@@ -8,9 +8,12 @@ import type { ComponentProps, ReactNode } from "react";
 
 import {
   Dialog,
-  DialogContent,
+  DialogBackdrop,
   DialogDescription,
+  DialogPopup,
+  DialogPortal,
   DialogTitle,
+  DialogViewport,
 } from "@/components/primitives/dialog";
 import {
   InputGroup,
@@ -63,10 +66,12 @@ const styles = stylex.create({
   },
   // Inside the command's padding, so its corner nests in the command's.
   input: {
+    backgroundColor: colors.fill,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
+    boxShadow: "none",
   },
   icon: {
     color: colors.textMuted,
@@ -130,6 +135,28 @@ const styles = stylex.create({
     marginInlineStart: "auto",
     whiteSpace: "nowrap",
   },
+  viewport: {
+    alignItems: "flex-start",
+    paddingBlockStart: `max(${space.md}, 15vh)`,
+  },
+  footer: {
+    alignItems: "center",
+    backgroundColor: colors.fillSubtle,
+    borderTopColor: colors.borderSubtle,
+    borderTopStyle: "solid",
+    borderTopWidth: strokes.border,
+    color: colors.textMuted,
+    display: "flex",
+    gap: space.md,
+    marginBlockEnd: `calc(-1 * ${space.xxs})`,
+    marginBlockStart: space.xxs,
+    marginInlineEnd: `calc(-1 * ${space.xxs})`,
+    marginInlineStart: `calc(-1 * ${space.xxs})`,
+    paddingBlockEnd: space.xs,
+    paddingBlockStart: space.xs,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
+  },
   dialog: {
     gap: 0,
     paddingBlockEnd: 0,
@@ -161,24 +188,36 @@ function Command({
 function CommandDialog({
   children,
   description = "Search for a command to run...",
+  instant = false,
   sx,
   title = "Command Palette",
   ...props
 }: Omit<ComponentProps<typeof Dialog>, "children"> & {
   children: ReactNode;
   description?: string;
+  /** Opens and closes with no motion, for a change the keyboard made. */
+  instant?: boolean;
   sx?: Sx;
   title?: string;
 }) {
   return (
     <Dialog {...props}>
-      <DialogContent sx={[styles.dialog, sx]}>
-        <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
-        <DialogDescription sx={visuallyHidden.base}>
-          {description}
-        </DialogDescription>
-        {children}
-      </DialogContent>
+      <DialogPortal>
+        <DialogBackdrop data-skip-motion={instant || undefined} />
+        <DialogViewport sx={styles.viewport}>
+          <DialogPopup
+            data-skip-motion={instant || undefined}
+            size="lg"
+            sx={[styles.dialog, sx]}
+          >
+            <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
+            <DialogDescription sx={visuallyHidden.base}>
+              {description}
+            </DialogDescription>
+            {children}
+          </DialogPopup>
+        </DialogViewport>
+      </DialogPortal>
     </Dialog>
   );
 }
@@ -297,11 +336,22 @@ function CommandShortcut({ sx, ...props }: Styled<ComponentProps<"span">>) {
   );
 }
 
+function CommandFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="command-footer"
+      {...props}
+      {...stylex.props([typeStyles.captionLg, styles.footer], sx)}
+    />
+  );
+}
+
 export {
   Command,
   CommandCollection,
   CommandDialog,
   CommandEmpty,
+  CommandFooter,
   CommandGroup,
   CommandGroupLabel,
   CommandInput,

@@ -73,7 +73,7 @@ The one surface that animates its height: what sits below it has to make room, s
 
 ## Command
 
-A menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it.
+A menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
 
 ## Markdown
 

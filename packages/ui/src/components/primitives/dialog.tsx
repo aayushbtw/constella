@@ -38,6 +38,7 @@ type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
 };
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
+const instant = ":is([data-skip-motion])";
 
 const styles = stylex.create({
   backdrop: {
@@ -49,7 +50,7 @@ const styles = stylex.create({
     insetInlineStart: 0,
     opacity: { default: 1, [offstage]: 0 },
     position: "fixed",
-    transitionDuration: durations.dialog,
+    transitionDuration: { default: durations.dialog, [instant]: 0 },
     transitionProperty: "opacity",
     transitionTimingFunction: easings.out,
     zIndex: layers.dialog,
@@ -89,7 +90,7 @@ const styles = stylex.create({
       default: `translateY(calc(var(--nested-dialogs, 0) * -1 * ${space.sm})) scale(calc(1 - var(--nested-dialogs, 0) * ${motion.stackScale}))`,
       [offstage]: `scale(${motion.dialogScale})`,
     },
-    transitionDuration: durations.dialog,
+    transitionDuration: { default: durations.dialog, [instant]: 0 },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",
