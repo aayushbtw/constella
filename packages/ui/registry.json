@@ -43,7 +43,7 @@
       "type": "registry:ui",
       "title": "Alert",
       "description": "A callout with an icon, a title, a description and an action, its status on the icon.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -124,7 +124,7 @@
       "type": "registry:ui",
       "title": "Code Block",
       "description": "Code in a tray, with a title, actions, line numbers and diffs. The app highlights it.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/scroll-fade.json"
@@ -371,7 +371,7 @@
       "type": "registry:ui",
       "title": "Kbd",
       "description": "A small keycap for a shortcut, in text, buttons and tooltips.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -942,7 +942,7 @@
       "type": "registry:ui",
       "title": "Empty",
       "description": "An empty state with media, a title, a description and actions.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -1074,7 +1074,7 @@
       "type": "registry:ui",
       "title": "Shimmer",
       "description": "A slow sweep of light across text still being worked on.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
