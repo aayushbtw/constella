@@ -20,7 +20,7 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-const itemVariants = ["default", "outline", "muted"] as const;
+const itemVariants = ["default", "outline", "secondary"] as const;
 const itemSizes = ["xs", "sm", "default"] as const;
 const itemMediaVariants = ["default", "icon", "image"] as const;
 
@@ -98,7 +98,7 @@ const styles = stylex.create({
     borderInlineEndColor: colors.border,
     borderInlineStartColor: colors.border,
   },
-  muted: {
+  secondary: {
     backgroundColor: {
       default: colors.fillSubtle,
       [media.hover]: {
@@ -211,8 +211,8 @@ const styles = stylex.create({
 
 const variantStyles = {
   default: null,
-  muted: styles.muted,
   outline: styles.outline,
+  secondary: styles.secondary,
 } satisfies Record<ItemVariant, stylex.StyleXStyles | null>;
 
 const mediaStyles = {

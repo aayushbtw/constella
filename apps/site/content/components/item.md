@@ -72,11 +72,11 @@ Use the `variant` prop on `Item` to set its surface.
 
 <!-- ::demo name="item-variant" -->
 
-| Variant   | Surface             |
-| --------- | ------------------- |
-| `default` | None                |
-| `outline` | A `border` edge     |
-| `muted`   | A `fillSubtle` fill |
+| Variant     | Surface             |
+| ----------- | ------------------- |
+| `default`   | None                |
+| `outline`   | A `border` edge     |
+| `secondary` | A `fillSubtle` fill |
 
 ```tsx
 <Item variant="outline">…</Item>
@@ -181,7 +181,7 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 
 | Part | Adds |
 | --- | --- |
-| `Item` | `variant`: `"default"`, `"outline"` or `"muted"`; `size`: `"default"`, `"sm"` or `"xs"`; `render` |
+| `Item` | `variant`: `"default"`, `"outline"` or `"secondary"`; `size`: `"default"`, `"sm"` or `"xs"`; `render` |
 | `ItemMedia` | `variant`: `"default"`, `"icon"` or `"image"` |
 | `ItemTitle` | `render`, to make it a heading: `render={<h3 />}` |
 

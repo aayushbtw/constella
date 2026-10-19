@@ -97,8 +97,8 @@ function ItemDemo() {
 
 const variantLabels = {
   default: "Default Variant",
-  muted: "Muted Variant",
   outline: "Outline Variant",
+  secondary: "Secondary Variant",
 } satisfies Record<ItemVariant, string>;
 
 function ItemVariantDemo() {
