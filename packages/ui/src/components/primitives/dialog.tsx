@@ -7,6 +7,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   blurs,
@@ -29,7 +30,7 @@ const dialogSizes = ["sm", "default", "lg", "full"] as const;
 type DialogSize = (typeof dialogSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {

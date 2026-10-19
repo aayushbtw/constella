@@ -7,6 +7,7 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
 import type { SeparatorProps } from "@/components/primitives/separator";
+import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -21,7 +22,7 @@ const buttonGroupOrientations = ["horizontal", "vertical"] as const;
 type ButtonGroupOrientation = (typeof buttonGroupOrientations)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type ButtonGroupProps = Styled<ComponentProps<"div">> & {

@@ -10,6 +10,7 @@ import { buttonStyles } from "@/components/primitives/button";
 import type { ButtonStyleOptions } from "@/components/primitives/button";
 import { Input } from "@/components/primitives/input";
 import { Kbd } from "@/components/primitives/kbd";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -28,7 +29,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type NavigationProps<T> = Styled<T> &

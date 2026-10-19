@@ -58,4 +58,4 @@ Use the `uppercase` prop for a label over a group. It spaces the letters out, si
 | `weight` | `"regular" \| "semimedium" \| "medium" \| "semibold"` | `"regular"` |
 | `color` | as [Text](/docs/components/text) | `"muted"` |
 | `render` | `ReactElement \| function` | `<p>` |
-| `sx` | `StyleXStyles`, applied last | - |
+| `sx` | `Sx`, applied last | - |

@@ -17,6 +17,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/primitives/input-group";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
@@ -29,13 +30,13 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type CommandProps = Omit<
   AutocompletePrimitive.Root.Props<unknown>,
   "inline"
-> & { "data-slot"?: string; sx?: stylex.StyleXStyles };
+> & { "data-slot"?: string; sx?: Sx };
 
 const highlighted = ":is([data-highlighted])";
 const off = ":is([data-disabled])";
@@ -166,7 +167,7 @@ function CommandDialog({
 }: Omit<ComponentProps<typeof Dialog>, "children"> & {
   children: ReactNode;
   description?: string;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   title?: string;
 }) {
   return (

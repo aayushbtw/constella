@@ -30,7 +30,7 @@ Its size is relative, so it sits a step under the text around it at any size. Fo
 
 ## API Reference
 
-| Prop     | Type                         | Default  |
-| -------- | ---------------------------- | -------- |
-| `render` | `ReactElement \| function`   | `<code>` |
-| `sx`     | `StyleXStyles`, applied last | -        |
+| Prop     | Type                       | Default  |
+| -------- | -------------------------- | -------- |
+| `render` | `ReactElement \| function` | `<code>` |
+| `sx`     | `Sx`, applied last         | -        |

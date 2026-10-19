@@ -7,6 +7,7 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
+import type { Sx } from "@/lib/constella/styles";
 import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
@@ -14,7 +15,7 @@ const alertDialogSizes = ["sm", "default"] as const;
 type AlertDialogSize = (typeof alertDialogSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type AlertDialogContentProps = Styled<AlertDialogPrimitive.Popup.Props> & {

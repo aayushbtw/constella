@@ -14,6 +14,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -80,7 +81,7 @@ function Logo({ source, size }: { size?: "sm"; source: Source }) {
 const handle = createHoverCardHandle<Source>();
 
 /** The one card every citation opens, so it moves to each citation as you hover it. Render it once. */
-function CitationCard({ sx }: { sx?: stylex.StyleXStyles }) {
+function CitationCard({ sx }: { sx?: Sx }) {
   return (
     <HoverCard handle={handle}>
       {({ payload }) => (
@@ -106,13 +107,7 @@ function CitationCard({ sx }: { sx?: stylex.StyleXStyles }) {
 }
 
 /** A Badge that opens the `CitationCard`, so it keeps the badge's slot. */
-function Citation({
-  source,
-  sx,
-}: {
-  source: Source;
-  sx?: stylex.StyleXStyles;
-}) {
+function Citation({ source, sx }: { source: Source; sx?: Sx }) {
   return (
     <Badge
       render={

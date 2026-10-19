@@ -41,7 +41,7 @@ For a link that looks like a button, use `buttonStyles` from [Button](/docs/comp
 
 ## API Reference
 
-| Prop     | Type                         | Default |
-| -------- | ---------------------------- | ------- |
-| `render` | `ReactElement \| function`   | `<a>`   |
-| `sx`     | `StyleXStyles`, applied last | -       |
+| Prop     | Type                       | Default |
+| -------- | -------------------------- | ------- |
+| `render` | `ReactElement \| function` | `<a>`   |
+| `sx`     | `Sx`, applied last         | -       |

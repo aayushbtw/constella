@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -20,7 +21,7 @@ const tableSizes = ["sm", "default"] as const;
 type TableSize = (typeof tableSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type TableProps = Styled<ComponentProps<"table">> & {

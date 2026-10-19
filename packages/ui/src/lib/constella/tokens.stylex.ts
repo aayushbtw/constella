@@ -3,6 +3,7 @@ import "./base.css";
 import "./theme.stylex";
 import * as stylex from "@stylexjs/stylex";
 
+// A group `Sx` reads stays `as const`: without it the values widen to `string` and `sx` takes anything.
 // Grouped by family; each family's tokens share its slots, so `<family><Slot>` names one.
 export const colors = stylex.defineVars({
   // Surfaces.
@@ -61,7 +62,7 @@ export const colors = stylex.defineVars({
   chart4: "var(--chart-4)",
   chart5: "var(--chart-5)",
   chart6: "var(--chart-6)",
-});
+} as const);
 
 // Multipliers for the corners and edge where an item meets its neighbor: 1 keeps them,
 // 0 joins them. ButtonGroup sets them, along its row (`inline`), its column (`block`) or
@@ -124,7 +125,7 @@ export const shadows = stylex.defineConsts({
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   lg: "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   xl: "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",
-});
+} as const);
 
 // The theme's fonts, which base.css sets on the page and reset.css on controls and code. Figures to compare take `mono`.
 export const fonts = stylex.defineConsts({
@@ -159,7 +160,7 @@ export const fontSizes = stylex.defineConsts({
   captionXs: `calc(${typeUnit} * 2)`,
   // Under 16px, iOS Safari zooms the page when a field takes focus; fields switch to this on touch.
   touch: "16px",
-});
+} as const);
 
 export const lineHeights = stylex.defineConsts({
   heading1: `calc(${leadingUnit} * 14)`,
@@ -207,7 +208,7 @@ export const space = stylex.defineConsts({
   md: "var(--space-md)",
   lg: "var(--space-lg)",
   xl: "var(--space-xl)",
-});
+} as const);
 
 export const radii = stylex.defineConsts({
   // The 20px pieces, Badge and Kbd; off the 4px grid, as 4 reads square and 8 a pill.
@@ -218,7 +219,7 @@ export const radii = stylex.defineConsts({
   xl: "var(--radius-xl)",
   sm: "var(--radius-sm)",
   xs: "var(--radius-xs)",
-});
+} as const);
 
 export const sizes = stylex.defineConsts({
   controlLg: "var(--size-control-lg)",
@@ -259,7 +260,7 @@ export const sizes = stylex.defineConsts({
   thumb: `calc(${spaceUnit} * 3)`,
   toast: `calc(${spaceUnit} * 89)`,
   tooltip: `calc(${spaceUnit} * 80)`,
-});
+} as const);
 
 // Lines stay in px, so a hairline stays one crisp device pixel at any text size.
 export const strokes = stylex.defineConsts({
@@ -286,7 +287,7 @@ export const layers = stylex.defineConsts({
   popover: "45",
   toast: "50",
   tooltip: "60",
-});
+} as const);
 
 export const opacities = stylex.defineConsts({
   busy: "0.8",
@@ -317,7 +318,7 @@ export const easings = stylex.defineConsts({
   overshoot: "cubic-bezier(0.34, 1.56, 0.64, 1)",
   layout: "cubic-bezier(0.32, 0.72, 0, 1)",
   crossfade: "cubic-bezier(0.2, 0, 0, 1)",
-});
+} as const);
 
 export const durations = stylex.defineConsts({
   hover: "150ms",
@@ -342,7 +343,7 @@ export const durations = stylex.defineConsts({
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",
-});
+} as const);
 
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,
 // how much each surface behind a stack shrinks.

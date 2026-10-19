@@ -102,4 +102,4 @@ Use the `tabularNums` prop for numbers that change in place or line up in a colu
 | `truncate` | `boolean \| 1 \| 2 \| 3` | `false` |
 | `tabularNums` | `boolean` | `false` |
 | `render` | `ReactElement \| function` | `<p>` |
-| `sx` | `StyleXStyles`, applied last | - |
+| `sx` | `Sx`, applied last | - |

@@ -9,6 +9,7 @@ import type { ComponentProps } from "react";
 
 import { labelStyles } from "@/components/primitives/label";
 import { Separator } from "@/components/primitives/separator";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -22,7 +23,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const fieldOrientations = ["vertical", "horizontal"] as const;

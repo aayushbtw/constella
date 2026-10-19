@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -17,7 +18,7 @@ const emptyMediaVariants = ["default", "icon"] as const;
 type EmptyMediaVariant = (typeof emptyMediaVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 // shadcn's gap, off our 4px grid.

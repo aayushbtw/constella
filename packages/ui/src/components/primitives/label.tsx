@@ -1,11 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 
 type LabelProps = Omit<ComponentProps<"label">, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const styles = stylex.create({

@@ -19,6 +19,7 @@ import type {
 } from "@/components/primitives/input-group";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -37,14 +38,15 @@ const promptInputStates = ["ready", "submitted", "streaming"] as const;
 type PromptInputState = (typeof promptInputStates)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 // Pills nest in the composer's corner at any radius (inset = outer radius − pill radius);
 // `sm` attachments match them at the default radius.
-const inset = `max(${space.xxs}, calc(${radii.xl} - ${sizes.controlSm} / 2))`;
+const inset =
+  `max(${space.xxs}, calc(${radii.xl} - ${sizes.controlSm} / 2))` as const;
 // A bar button's leading icon (6px padding past a 1px border) lines up with the composer's text (10px in).
-const barInset = `calc(${space.xxs} - ${strokes.border})`;
+const barInset = `calc(${space.xxs} - ${strokes.border})` as const;
 const invalid =
   ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;

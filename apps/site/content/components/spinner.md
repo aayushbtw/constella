@@ -36,7 +36,7 @@ Render it inside a [Button](/docs/components/button) with `data-icon="inline-sta
 
 Takes every prop of `<output>`, plus:
 
-| Prop         | Type                         | Default     |
-| ------------ | ---------------------------- | ----------- |
-| `aria-label` | `string`                     | `"Loading"` |
-| `sx`         | `StyleXStyles`, applied last |             |
+| Prop         | Type               | Default     |
+| ------------ | ------------------ | ----------- |
+| `aria-label` | `string`           | `"Loading"` |
+| `sx`         | `Sx`, applied last |             |

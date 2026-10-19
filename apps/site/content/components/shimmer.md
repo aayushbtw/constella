@@ -52,4 +52,4 @@ Takes every prop of `<span>`, plus:
 | Prop | Type |
 | --- | --- |
 | `render` | `ReactElement \| function`; see [Base UI useRender](https://base-ui.com/react/utils/use-render) |
-| `sx` | `StyleXStyles`, applied last |
+| `sx` | `Sx`, applied last |

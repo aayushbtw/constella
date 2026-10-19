@@ -5,6 +5,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   badgeVars,
@@ -43,14 +44,14 @@ type BadgeProps = Omit<
 > & {
   size?: BadgeSize;
   color?: BadgeColor;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   variant?: BadgeVariant;
 };
 
 // A badge only answers when it's rendered as a link.
 const link = ":is(a)";
 
-const linkHover = <T,>(rest: T, active: T) => ({
+const linkHover = <R, A>(rest: R, active: A) => ({
   default: rest,
   [media.hover]: { default: rest, [`${link}:hover`]: active },
   [`${link}:active`]: active,
@@ -140,7 +141,7 @@ const styles = stylex.create({
   primary: {
     backgroundColor: colors.accentSolid,
     color: colors.accentOnSolid,
-    opacity: linkHover<number | string>(1, opacities.hover),
+    opacity: linkHover(1, opacities.hover),
   },
   secondary: {
     backgroundColor: linkHover(colors.fill, colors.fillStrong),
@@ -291,7 +292,7 @@ function BadgeDot({
   sx,
   ...props
 }: Omit<ComponentProps<"span">, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 }) {
   return (
     <span

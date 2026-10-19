@@ -3,6 +3,7 @@
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -22,7 +23,7 @@ type SwitchSize = (typeof switchSizes)[number];
 
 type SwitchProps = Omit<SwitchPrimitive.Root.Props, "className" | "style"> & {
   size?: SwitchSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";

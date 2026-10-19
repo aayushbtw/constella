@@ -17,6 +17,7 @@ import {
   InputGroupInput,
 } from "@/components/primitives/input-group";
 import { useSkipMotion } from "@/lib/constella/motion";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -36,7 +37,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 interface Inset {
@@ -103,7 +104,7 @@ const styles = stylex.create({
     transitionDuration: {
       default: durations.popover,
       [closing]: durations.popoverExit,
-      [instant]: "0s",
+      [instant]: 0,
     },
     transitionProperty: {
       default: "opacity, transform",
@@ -150,7 +151,7 @@ const styles = stylex.create({
       ":is([data-align='start'])": `0 calc(-1 * ${space.xxs})`,
       ":is([data-align='end'])": `0 ${space.xxs}`,
     },
-    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
+    transitionDuration: { default: durations.popoverExit, [instant]: 0 },
     transitionProperty: "opacity",
   },
   // Select's item, so a menu and a select read as one family.

@@ -4,6 +4,7 @@ import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import * as stylex from "@stylexjs/stylex";
 import type { Ref } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -13,7 +14,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const horizontal = ":is([data-orientation='horizontal'])";

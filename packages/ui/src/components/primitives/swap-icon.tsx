@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   durations,
   easings,
@@ -10,7 +11,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const styles = stylex.create({

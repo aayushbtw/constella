@@ -10,6 +10,7 @@ import { Shimmer } from "@/components/ai/shimmer";
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -41,7 +42,7 @@ type AttachmentOrientation = (typeof attachmentOrientations)[number];
 type AttachmentMediaVariant = (typeof attachmentMediaVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const State = createContext<AttachmentState>("done");

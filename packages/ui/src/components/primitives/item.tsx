@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
 import type { SeparatorProps } from "@/components/primitives/separator";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -29,7 +30,7 @@ type ItemSize = (typeof itemSizes)[number];
 type ItemMediaVariant = (typeof itemMediaVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type ItemProps = Styled<useRender.ComponentProps<"div">> & {

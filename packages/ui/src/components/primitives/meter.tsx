@@ -3,6 +3,7 @@
 import { Meter as MeterPrimitive } from "@base-ui/react/meter";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -20,7 +21,7 @@ const meterColors = ["success", "info", "warning", "danger"] as const;
 type MeterColor = (typeof meterColors)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const styles = stylex.create({

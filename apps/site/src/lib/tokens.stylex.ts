@@ -5,7 +5,7 @@ export const shadows = stylex.defineConsts({
   // Drawn inside the box, so it never stacks on the surface around it.
   inset: "inset 0 0 0 1px var(--neutral-3)",
   rule: "inset 0 -1px 0 var(--neutral-3)",
-});
+} as const);
 
 export const surfaces = stylex.defineConsts({
   stage: "var(--stage)",

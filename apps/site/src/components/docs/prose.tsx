@@ -64,10 +64,6 @@ const styles = stylex.create({
     backgroundColor: colors.fillSubtle,
     boxShadow: shadows.card,
     color: colors.textPrimary,
-    paddingBlockEnd: 1,
-    paddingBlockStart: 1,
-    paddingInlineEnd: 3,
-    paddingInlineStart: 3,
   },
   // Docs cells hold sentences, so they wrap instead of scrolling the table sideways.
   // Body text reads as the prose around it; headers keep the table's own textPrimary.

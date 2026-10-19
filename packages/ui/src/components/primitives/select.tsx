@@ -12,6 +12,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useContext } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
+import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -35,7 +36,7 @@ const selectSizes = ["sm", "default", "lg"] as const;
 type SelectSize = (typeof selectSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type SelectTriggerProps = Styled<SelectPrimitive.Trigger.Props> & {

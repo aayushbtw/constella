@@ -3,10 +3,11 @@
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import { colors, strokes } from "@/lib/constella/tokens.stylex";
 
 type SeparatorProps = Omit<SeparatorPrimitive.Props, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const styles = stylex.create({

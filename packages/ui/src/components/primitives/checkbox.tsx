@@ -5,6 +5,7 @@ import { MinusSignIcon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -28,7 +29,7 @@ type CheckboxProps = Omit<
   "className" | "style"
 > & {
   size?: CheckboxSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const on = ":is([data-checked], [data-indeterminate])";

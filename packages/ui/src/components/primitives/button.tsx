@@ -3,6 +3,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -51,7 +52,7 @@ interface ButtonStyleOptions {
 }
 
 type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> &
-  ButtonStyleOptions & { sx?: stylex.StyleXStyles };
+  ButtonStyleOptions & { sx?: Sx };
 
 // A trigger opens something on press, so it doesn't give.
 const press = ":active:not([aria-haspopup], :disabled)";
@@ -61,7 +62,7 @@ const busy = "[aria-busy='true']";
 const loading = "[aria-busy='true']:disabled";
 
 // At rest, and while hovered or while its popup is open (Base UI marks the trigger).
-const interactive = <T,>(rest: T, active: T) => ({
+const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
   ":is([data-popup-open])": active,
   [media.hover]: { default: rest, ":hover:not(:disabled)": active },
@@ -181,7 +182,7 @@ const styles = stylex.create({
     },
     color: colors.accentOnSolid,
     opacity: {
-      ...interactive<number | string>(1, opacities.hover),
+      ...interactive(1, opacities.hover),
       ":disabled": opacities.disabled,
       [loading]: opacities.busy,
     },

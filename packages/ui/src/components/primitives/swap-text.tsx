@@ -4,10 +4,11 @@ import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { durations, easings, motion } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const textIn = stylex.keyframes({

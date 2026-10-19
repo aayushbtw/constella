@@ -11,6 +11,7 @@ import {
   DialogPortal,
   DialogTitle,
 } from "@/components/primitives/dialog";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -29,7 +30,7 @@ const sheetSides = ["top", "right", "bottom", "left"] as const;
 type SheetSide = (typeof sheetSides)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type SheetContentProps = Styled<SheetPrimitive.Popup.Props> & {

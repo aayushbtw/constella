@@ -2,12 +2,12 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
 } from "@/lib/constella/styles";
-import type { TextColor, TextWeight } from "@/lib/constella/styles";
 import { letterSpacings } from "@/lib/constella/tokens.stylex";
 
 const captionSizes = ["xs", "sm", "base", "lg"] as const;
@@ -20,7 +20,7 @@ type CaptionProps = Omit<
 > & {
   color?: TextColor;
   size?: CaptionSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   uppercase?: boolean;
   weight?: TextWeight;
 };

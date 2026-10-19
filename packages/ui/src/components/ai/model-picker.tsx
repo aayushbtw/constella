@@ -27,6 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -42,7 +43,7 @@ import {
 const modelPickerDetailsSides = ["inline-start", "inline-end"] as const;
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const hoverDelay = Number(durations.hoverCardDelay.slice(0, -"ms".length));

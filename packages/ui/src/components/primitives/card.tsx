@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   cardVars,
@@ -22,7 +23,7 @@ type CardSize = (typeof cardSizes)[number];
 type CardVariant = (typeof cardVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type CardProps = Styled<ComponentProps<"div">> & {

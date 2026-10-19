@@ -2,13 +2,14 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx } from "@/lib/constella/styles";
 import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 type ShimmerProps = Omit<
   useRender.ComponentProps<"span">,
   "className" | "style"
 > & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const rtl = ":is([dir='rtl'], [dir='rtl'] *)";

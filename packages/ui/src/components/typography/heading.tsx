@@ -2,12 +2,12 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
 } from "@/lib/constella/styles";
-import type { TextColor, TextWeight } from "@/lib/constella/styles";
 
 const headingSizes = [1, 2, 3, 4, 5, 6] as const;
 
@@ -21,7 +21,7 @@ type HeadingProps = Omit<
   /** The heading's rank in the outline: its tag, and its size unless `size` says otherwise. */
   level?: HeadingSize;
   size?: HeadingSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   weight?: TextWeight;
 };
 

@@ -12,10 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/primitives/card";
+import type { Sx } from "@/lib/constella/styles";
 import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const TitleId = createContext<string | undefined>(undefined);

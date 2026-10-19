@@ -12,6 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/primitives/collapsible";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -29,7 +30,7 @@ const traceStates = ["running", "error", "pending"] as const;
 type TraceState = (typeof traceStates)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const State = createContext<TraceState | undefined>(undefined);

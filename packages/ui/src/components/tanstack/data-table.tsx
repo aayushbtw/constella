@@ -36,6 +36,7 @@ import {
 } from "@/components/tanstack/data-table-selection";
 import { useDataTableKeys } from "@/components/tanstack/use-data-table-keys";
 import { useDataTableVirtualizer } from "@/components/tanstack/use-data-table-virtualizer";
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -58,7 +59,7 @@ interface DataTableProps<
   /** The row open elsewhere, like in a Side Panel: marked current and filled a step above a selected one. */
   activeRowId?: string;
   /** Keyed by column id: a column's width or alignment, on its header and cells. */
-  columnSx?: Readonly<Partial<Record<string, stylex.StyleXStyles>>>;
+  columnSx?: Readonly<Partial<Record<string, Sx>>>;
   /** Shown in one full-width row when no row is left. */
   empty: ReactNode;
   /** Shown in place of `empty` when `query` failed and no row is left. */
@@ -74,7 +75,7 @@ interface DataTableProps<
   /** The element the table scrolls in, when it isn't the window, like an app's main area. */
   scrollRef?: RefObject<HTMLElement | null>;
   size?: TableSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   table: ReactTable<TFeatures, TData, TSelected>;
 }
 
@@ -307,7 +308,7 @@ function DataTableColumnHeader({
   title,
 }: {
   column: SortableColumn;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   title: string;
 }) {
   if (!column.getCanSort()) {

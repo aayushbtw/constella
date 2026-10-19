@@ -157,7 +157,7 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 | `color` | `"danger"` | - |
 | `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
 | `corners` | `"rounded" \| "pill"` | `"rounded"` |
-| `sx` | `StyleXStyles`, applied last |  |
+| `sx` | `Sx`, applied last |  |
 
 ### buttonStyles
 

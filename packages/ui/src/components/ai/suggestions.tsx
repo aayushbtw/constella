@@ -6,10 +6,11 @@ import type { ComponentProps } from "react";
 import { Button } from "@/components/primitives/button";
 import { ScrollArea } from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import type { Sx } from "@/lib/constella/styles";
 import { space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const styles = stylex.create({

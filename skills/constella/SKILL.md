@@ -31,7 +31,7 @@ Each links to a file with Incorrect/Correct pairs.
 
 ### Styling → [styling.md](./rules/styling.md)
 
-- **`sx`, never `className` or `style`.** Parts take `sx?: StyleXStyles` from `stylex.create` and apply it last.
+- **`sx`, never `className` or `style`.** Parts take `sx?: Sx` from `stylex.create` and apply it last. Its colors, space, radii, shadows, type sizes, layers and motion must be tokens, so a raw value is a type error.
 - **No utility classes.** Not `flex gap-4`, not `bg-primary`.
 - **No raw values.** Not `#fff`, `16px`, `200ms`, `z-index: 50`. Use `colors`, `space`, `radii`, `sizes`, `durations`, `layers`.
 - **Longhands only.** `paddingBlock`, `paddingInline`, `borderTopWidth`. Not `padding`, `margin`, `border`, `borderRadius`: a shorthand loses to any longhand merged in through `sx`.

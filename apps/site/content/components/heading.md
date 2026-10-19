@@ -50,4 +50,4 @@ Use the `level` prop for the tag. The size follows it unless you set `size`, so 
 | `weight` | `"regular" \| "semimedium" \| "medium" \| "semibold"` | `"semibold"` |
 | `color` | as [Text](/docs/components/text) | `"primary"` |
 | `render` | `ReactElement \| function` | `<h{level}>` |
-| `sx` | `StyleXStyles`, applied last | - |
+| `sx` | `Sx`, applied last | - |

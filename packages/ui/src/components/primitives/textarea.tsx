@@ -5,6 +5,7 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -25,7 +26,7 @@ type TextareaSize = (typeof textareaSizes)[number];
 
 type TextareaProps = Omit<ComponentProps<"textarea">, "className" | "style"> & {
   size?: TextareaSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";

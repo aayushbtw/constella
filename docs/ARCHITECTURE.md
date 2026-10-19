@@ -57,7 +57,7 @@ Alert
 - **Every part has a `data-slot`.** Even unstyled Base UI wrappers, so a parent can style around a child (`:has(> [data-slot="alert-action"])`) without a prop. Variants and sizes are mirrored as `data-variant`, `data-size`.
 - **A part reused unchanged keeps its parent's slot.** `ApprovalHeader` is `CardHeader` re-exported, with `card-header`, because Card's selectors read those slots (`[data-slot='card'][data-size='sm']` sizes the title). Only a part that adds styles gets its own slot.
 - **Convenience parts bundle the boilerplate.** `DialogContent` renders Portal, Backdrop and Popup, as in shadcn. The underlying parts stay exported for when it doesn't fit.
-- **`sx` overrides, not `className`.** Parts omit `className` and `style` and take `sx?: StyleXStyles`, applied last in `stylex.props(...)` so the caller wins. The type is declared in each file, so every component installs alone.
+- **`sx` overrides, not `className`.** Parts omit `className` and `style` and take `sx?: Sx`, applied last in `stylex.props(...)` so the caller wins. `Sx` lives in `lib/constella/styles.ts`, which ships in `base`, so every item has it. It takes only tokens, as longhands, for color, space, radius, `boxShadow`, `fontSize`, `zIndex` and motion; other properties stay open. Past the tokens it takes `null` (unset), `0`, `auto`, `currentColor`, `inherit`, `transparent`, `ease` and `linear`; math (`calc`, `min`, `max`, `clamp`) with a space or size token in it; a radius token times a factor; a shadow built on a variable; and a motion list that starts with a token. Shorthands and pseudo-elements are rejected. A part passing its own styles into another part's `sx` meets the same type. The one wider prop is ScrollArea's `viewportSx`: a scroll fade sets custom properties and a `1ms` scroll-driven animation, which `Sx` can't express. `packages/ui/type-tests/sx.ts` holds what it rejects and its known gaps.
 - **Variants are style keys.** `variant` and `size` index a `satisfies Record<Variant, StyleXStyles>` map, and the allowed values are one exported `as const` list (`buttonVariants`) the type derives from. No cva, no class strings.
 - **The caller picks meaning, not the component.** Never derive a variant or color from the value (a full meter turning red); the same value means different things in different apps, so expose the prop and leave the choice to the caller.
 - **Every control has the size scale.** `xs`, `sm`, `default`, `lg` (and `icon-xs`, `icon-sm`, `icon`, `icon-lg` where it has icon-only sizes), shadcn's names. Text fields skip `xs`: 24px is too short for typed text. The default is a real value, so `size="default"` can be passed, not only implied.
@@ -85,6 +85,8 @@ Learned from Linear's move to StyleX ([Styling Linear for the future](https://li
 
 Components hold no design values. Every size, weight, color, layer, distance, blur, opacity, duration and curve comes from `packages/ui/src/lib/constella/tokens.stylex.ts`; a value a component needs that no token covers becomes a token first. Only structural values stay inline: `0`, `1`, `100%`, flex and position keywords, and `calc()` over tokens.
 
+A group `Sx` reads (colors, space, sizes, radii, shadows, fontSizes, layers, durations, easings) is `as const`; without it its values widen to `string` and `sx` takes anything. A new token-bearing property joins the lists in `Sx`. `Sx` checks only what comes in through `sx`; a component's own `stylex.create` is held by lint and review.
+
 Fixed tokens are constants, so JS reads the same values the styles do: a Web Animations call takes `durations` and `easings`, an icon takes `sizes` and `strokes`, a popup takes `offsets`. Themeable tokens (`radii` but `full`, `sizes.control*`, `space` from `xs`) are `var()` references to variables `base.css` defaults, so JS never reads them.
 
 Layout lengths are rem, so they grow with the reader's browser font size along with the type scale: `space`, `sizes` and `strokes.track` multiply a local `spaceUnit` (`0.25rem`, Tailwind's `--spacing`), and the theme's `--radius`, control heights and spacing are written in rem. Lines, shadows, blurs, motion distances and `offsets` stay px. [space.md](design/space.md#units) has the reasons for each group. Base UI takes its offsets in px, so a distance that has to follow rem is a CSS `translate` (a submenu's alignment), not a prop.
@@ -111,6 +113,8 @@ Two files hold the system's values. `tokens.stylex.ts` is the system: roles as t
 | `constella/no-shorthand-mix` | A two-side shorthand (`marginBlock`, `borderInlineColor`) in a file that also sets one of its longhands; StyleX lets the longhand win whatever the order |
 | `constella/sx-last` | `sx` passed to `stylex.props` or in an `sx` array anywhere but last |
 | `constella/type-scale` | A raw font size, or a plain `fontSizes` step outside `typeStyles`; raw steps are for a size that changes by condition, paired with the same `lineHeights` |
+
+The root `vite.config.ts` turns four of them off for `packages/ui/type-tests/**` only, since those fixtures hold raw values on purpose.
 
 A rule earns its place when a correction comes up twice. Add one there before writing the same note again.
 

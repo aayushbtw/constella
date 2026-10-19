@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -17,7 +18,7 @@ const alertColors = ["success", "info", "warning", "danger"] as const;
 type AlertColor = (typeof alertColors)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type AlertProps = Styled<ComponentProps<"div">> & { color?: AlertColor };

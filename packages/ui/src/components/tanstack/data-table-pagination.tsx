@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 
@@ -106,7 +107,7 @@ function DataTablePagination({
 }: {
   /** The rows per page to offer. */
   pageSizes?: readonly number[];
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   table: PaginatedTable;
 }) {
   const rowsLabel = useId();

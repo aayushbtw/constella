@@ -1,7 +1,5 @@
 "use client";
 
-import type * as stylex from "@stylexjs/stylex";
-
 import {
   InputGroup,
   InputGroupInput,
@@ -11,6 +9,7 @@ import type {
   InputGroupInputProps,
   InputGroupSize,
 } from "@/components/primitives/input-group";
+import type { Sx } from "@/lib/constella/styles";
 
 const inputSizes = inputGroupSizes;
 
@@ -19,7 +18,7 @@ type InputSize = InputGroupSize;
 // `sx` styles the box; every other prop goes to the input inside it.
 type InputProps = Omit<InputGroupInputProps, "sx"> & {
   size?: InputSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 function Input({ size = "default", sx, ...props }: InputProps) {

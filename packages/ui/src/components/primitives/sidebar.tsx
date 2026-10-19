@@ -40,6 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
@@ -68,7 +69,7 @@ type SidebarMenuButtonVariant = (typeof sidebarMenuButtonVariants)[number];
 type SidebarSectionDirection = (typeof sidebarSectionDirections)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 interface SidebarContextValue {
@@ -1188,7 +1189,7 @@ function SidebarExpandedOnly({
   sx,
 }: {
   children: ReactNode;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 }) {
   if (use(RailContext).rail) {
     return null;

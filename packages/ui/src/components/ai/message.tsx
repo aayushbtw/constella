@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, radii, space } from "@/lib/constella/tokens.stylex";
 
@@ -9,7 +10,7 @@ const messageRoles = ["user", "assistant"] as const;
 type MessageRole = (typeof messageRoles)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const fromUser = ":is([data-slot='message'][data-from='user'] > *)";

@@ -3,6 +3,7 @@ import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -18,7 +19,7 @@ const markerVariants = ["default", "border", "separator"] as const;
 type MarkerVariant = (typeof markerVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type MarkerProps = Styled<useRender.ComponentProps<"div">> & {

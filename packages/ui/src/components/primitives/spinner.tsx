@@ -3,6 +3,7 @@
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -13,7 +14,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type SpinnerProps = Omit<ComponentProps<"output">, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 // A badge sets its icons at `iconXs` (`iconSm` at lg), so its spinner steps down with them.

@@ -2,7 +2,6 @@
 
 import { SlidersHorizontalIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type * as stylex from "@stylexjs/stylex";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -13,6 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
+import type { Sx } from "@/lib/constella/styles";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 
 // What the column visibility feature adds to a column and a table.
@@ -38,7 +38,7 @@ function DataTableViewOptions({
 }: {
   /** Keyed by column id: the name to list it by; the id otherwise. */
   labels?: Readonly<Partial<Record<string, string>>>;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   table: HidingTable;
 }) {
   const columns = table

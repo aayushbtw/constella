@@ -4,6 +4,7 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import {
   avatarVars,
   badgeVars,
@@ -26,7 +27,7 @@ type AvatarSize = (typeof avatarSizes)[number];
 type AvatarCorners = (typeof avatarCorners)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type AvatarProps = Styled<AvatarPrimitive.Root.Props> & {

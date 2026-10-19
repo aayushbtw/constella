@@ -149,6 +149,6 @@ Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`.
 | `color` | `"success" \| "info" \| "warning" \| "danger"` | - |
 | `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"secondary"` |
 | `render` | `ReactElement \| function` | `<span>` |
-| `sx` | `StyleXStyles`, applied last | - |
+| `sx` | `Sx`, applied last | - |
 
 `BadgeDot` takes `sx`. `badgeStyles({ color, size, variant })` returns the badge's styles for another element.

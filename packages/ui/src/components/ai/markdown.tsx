@@ -26,6 +26,7 @@ import {
 } from "@/components/primitives/table";
 import { Code } from "@/components/typography/code";
 import { Link } from "@/components/typography/link";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -38,7 +39,7 @@ type MarkdownProps = Omit<MarkdownPrimitiveProps, "extensions"> & {
   extensions?: MarkdownPrimitiveProps["extensions"];
   /** While the answer is still arriving: unclosed fences, lists and emphasis render as if closed. */
   streaming?: boolean;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type Props<T extends keyof React.JSX.IntrinsicElements> =

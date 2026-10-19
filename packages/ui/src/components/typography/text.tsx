@@ -2,12 +2,12 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 
+import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
 } from "@/lib/constella/styles";
-import type { TextColor, TextWeight } from "@/lib/constella/styles";
 
 const textSizes = ["sm", "base", "lg"] as const;
 const textTruncates = [1, 2, 3] as const;
@@ -18,7 +18,7 @@ type TextTruncate = (typeof textTruncates)[number];
 type TextProps = Omit<useRender.ComponentProps<"p">, "className" | "style"> & {
   color?: TextColor;
   size?: TextSize;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   tabularNums?: boolean;
   /** Lines to show before an ellipsis; `true` is one. */
   truncate?: boolean | TextTruncate;

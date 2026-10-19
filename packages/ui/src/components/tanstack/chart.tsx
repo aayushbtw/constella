@@ -18,6 +18,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/primitives/toggle-group";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -34,7 +35,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 /** Each series by its value in the data: its name, and its paint when not the next in the palette. */
@@ -340,7 +341,7 @@ function ChartTooltipContent({
   /** Leaves out the title, the shared x value. */
   hideLabel?: boolean;
   indicator?: ChartIndicatorVariant;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 }) {
   // oxlint-disable-next-line anti-slop/no-runtime-typeof -- TanStack Charts hands plain text when the definition sets `format`
   if (typeof content === "string") {

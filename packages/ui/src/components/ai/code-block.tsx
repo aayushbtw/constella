@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   codeBlockVars,
@@ -30,7 +31,7 @@ type CodeBlockSize = (typeof codeBlockSizes)[number];
 type CodeBlockLineVariant = (typeof codeBlockLineVariants)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const danger = ":is([data-slot='code-block'][data-color='danger'] *)";
@@ -319,7 +320,7 @@ function CodeBlockContent({
 }: Omit<ComponentProps<"pre">, "className" | "style"> & {
   lineNumbers?: boolean;
   startLine?: number;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   wrap?: boolean;
 }) {
   return (

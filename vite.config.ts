@@ -76,6 +76,18 @@ export default defineConfig({
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
     },
+    // Fixtures that must hold raw values, to prove `sx` rejects them.
+    overrides: [
+      {
+        files: ["packages/ui/type-tests/**"],
+        rules: {
+          "constella/hover-media": "off",
+          "constella/no-raw-colors": "off",
+          "constella/no-shorthand-mix": "off",
+          "constella/type-scale": "off",
+        },
+      },
+    ],
     options: { typeAware: true, typeCheck: true },
   },
 });

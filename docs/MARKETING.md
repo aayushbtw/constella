@@ -26,13 +26,14 @@ It's for React apps on the shadcn CLI that want a finished look their agents can
 | Type sizes come from the scale, with their line height | Linear | `constella/type-scale` | Lint |
 | Hover never sticks on touch | Linear (`highlightMixin`) | `constella/hover-media` | Lint |
 | Focus looks the same everywhere | None | `constella/no-focus-style`; one ring in `base.css` | Lint |
+| `sx` takes only tokens for color, space, radius, shadow, type size, layer and motion | Polar (typed token props) | `Sx` in `lib/constella/styles.ts`; rejections pinned in `packages/ui/type-tests/sx.ts` | Types |
 | Variants are closed lists, not strings | Polar (typed props) | `as const` lists (`buttonVariants`, `textSizes`) the prop types derive from | Types |
 | Names say intent, not value | Polar | `colors.textMuted`, `accentSolid`, `space.md` | Convention |
 | Dark mode is not a branch | Polar (`light-dark()`) | Tokens valued by Radix steps; the `.dark` class flips them; no component reads the theme | Architecture |
 | Themes set tokens, never code paths | Linear | `theme.stylex.ts`; builder on the Theming page | Architecture |
 | One escape hatch, each rule explained | Linear (CSS Modules) | `base.css` only; every rule says why StyleX can't reach it | Convention |
 | CI checks every push | Polar (rules in CI, not docs) | `.github/workflows/ci.yml` runs check and build on each push to `main` and each PR | CI |
-| No rule of ours is switched off | Polar (audit `oxlint-disable`) | `rg 'oxlint-disable.*constella/'` returns nothing | Lint |
+| No rule of ours is switched off in code | Polar (audit `oxlint-disable`) | `rg 'oxlint-disable.*constella/'` returns nothing; the only override is `vite.config.ts`'s, for the `sx` type-test fixtures | Lint |
 | Agents read docs, not guesses | Polar (docs alone drift) | `llms.txt`, `/index.md` on every page, `Accept: text/markdown`, `skills/constella`, `<name>-demo` items for shadcn's MCP | Site |
 | Accessibility comes from the primitive | None | Base UI under every interactive part | Architecture |
 
@@ -61,9 +62,8 @@ The one place counts live; drafts below leave them as `<n>`. Recount before you 
 Say these plainly if asked; don't imply otherwise.
 
 - **Lint is ours, not yet yours.** `@constella/lint` runs in this repo and isn't published. An app gets the types (no `className`, closed variant lists) and the agent skill, not the lint rules.
-- **`sx` takes any StyleX value.** It's typed `StyleXStyles`, so `sx` with a raw `#3b82f6` compiles. In this repo lint catches it; in an app nothing does yet.
-- **Motion tokens aren't linted.** `durations` and `easings` exist and components use them, but a raw `"ease"` or `"1ms"` still passes.
-- **Space, radius and shadow aren't linted.** The rule is in `DESIGN.md` ("A hardcoded value where a token exists"); review holds it.
+- **`sx` has gaps.** It rejects a raw value on its own, but math with a token in it (`calc(var(--space-xs) + 13px)`), a motion list after its first token (`150ms, 1ms`), a radius token times any factor, and a raw string equal to a token's value (`"150ms"`) pass. Properties outside its groups (`width`, `inset`, `opacity`, `filter`) take anything. ScrollArea's `viewportSx` takes any StyleX value.
+- **A component's own styles aren't typed.** `Sx` checks what comes in through `sx`. Inside a part's `stylex.create`, raw colors and type sizes are linted; raw motion, space, radius and shadow values are held by review (`DESIGN.md`: "A hardcoded value where a token exists").
 - **App code can still use a raw `<div>` with `className`.** Only Constella's parts are closed.
 - **CI reports after the push.** Commits land on `main` directly; there's no branch protection holding a red one back.
 - **No performance numbers of our own.** Linear's 20 to 35% CPU cut is theirs; StyleX gives us the same build-time CSS, but we haven't measured.
@@ -123,7 +123,7 @@ Fill `<n>` from Numbers. A line per `>` paragraph is a line in the tweet.
 
 ### Don't say
 
-- "Agent-proof" or "impossible to go off-brand". `sx` takes any StyleX value, and app code can still write a `<div>` with `className`.
+- "Agent-proof" or "impossible to go off-brand". `sx` lets token math and properties outside its groups through, and app code can still write a `<div>` with `className`.
 - "Lint included", until `@constella/lint` is published.
 - Any speed number of ours. None is measured.
 - "Used by Linear/Polar". We follow their reasoning; they don't use Constella.

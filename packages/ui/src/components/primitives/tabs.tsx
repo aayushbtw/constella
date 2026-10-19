@@ -4,6 +4,7 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useMemo } from "react";
 
+import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -25,7 +26,7 @@ type TabsListVariant = (typeof tabsListVariants)[number];
 type TabsListSize = (typeof tabsListSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type TabsListProps = Styled<TabsPrimitive.List.Props> & {

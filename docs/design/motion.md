@@ -14,6 +14,7 @@ Restraint is the default. A component used every day gets one motion that explai
 | `inOut` | Things traveling across the screen, and the sidebar morphing in place: leave and arrive gently |
 | `overshoot` | A small mark landing in place: a switch thumb, a radio dot |
 | `ease` | Color and hover changes (the CSS keyword, no token) |
+| `linear` | Constant motion: a spinner's turn, a shimmer's sweep (the CSS keyword, no token) |
 | `crossfade` | One state replacing another in place: icons, text |
 | `layout` | A surface changing size: leaves at once, settles gently |
 

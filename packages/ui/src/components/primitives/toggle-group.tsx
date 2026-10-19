@@ -7,6 +7,7 @@ import { createContext, use, useMemo } from "react";
 
 import { toggleStyles } from "@/components/primitives/toggle";
 import type { ToggleSize, ToggleVariant } from "@/components/primitives/toggle";
+import type { Sx } from "@/lib/constella/styles";
 import { joins, space } from "@/lib/constella/tokens.stylex";
 
 const toggleGroupSpacings = [0, 1, 2] as const;
@@ -14,7 +15,7 @@ const toggleGroupSpacings = [0, 1, 2] as const;
 type ToggleGroupSpacing = (typeof toggleGroupSpacings)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type ToggleGroupProps = Styled<ToggleGroupPrimitive.Props> & {

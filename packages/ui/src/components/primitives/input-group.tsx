@@ -10,6 +10,7 @@ import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { Textarea, textareaStyles } from "@/components/primitives/textarea";
 import type { TextareaProps } from "@/components/primitives/textarea";
+import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -44,7 +45,7 @@ type InputGroupButtonSize = (typeof inputGroupButtonSizes)[number];
 type InputGroupSize = (typeof inputGroupSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 type InputGroupProps = Styled<ComponentProps<"div">> & {
@@ -66,7 +67,7 @@ type InputGroupInputProps = Omit<
   InputPrimitive.Props,
   "className" | "size" | "style"
 > & {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 };
 
 const control = "[data-slot='input-group-control']";
@@ -105,8 +106,8 @@ const insetMargin = (group: string, item: string) =>
   `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
 
 // shadcn's spacing, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
+const px6 = `calc(${space.xs} - ${space.xxxs})` as const;
+const px10 = `calc(${space.sm} - ${space.xxxs})` as const;
 
 const stackedInput = `calc(${lineHeights.textSm} + ${space.xs} + ${space.xxs})`;
 const chipInset = `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2 - ${strokes.border})`;

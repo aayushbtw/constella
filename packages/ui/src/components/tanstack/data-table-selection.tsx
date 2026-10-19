@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import type { PointerEvent } from "react";
 
 import { Checkbox } from "@/components/primitives/checkbox";
+import type { Sx } from "@/lib/constella/styles";
 import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 // What the row selection feature adds to a row and a table.
@@ -161,8 +162,8 @@ const styles = stylex.create({
   stacked: {
     gridArea: "1 / 1",
     transitionDuration: {
-      default: "0s",
-      [media.hover]: { default: "0s", [rowHovered]: durations.hover },
+      default: 0,
+      [media.hover]: { default: 0, [rowHovered]: durations.hover },
     },
     transitionProperty: "opacity",
     transitionTimingFunction: "ease",
@@ -200,7 +201,7 @@ function DataTableSelectAll({
   sx,
   table,
 }: {
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
   table: SelectableTable;
 }) {
   return (
@@ -227,7 +228,7 @@ function DataTableSelectRow({
 }: {
   numbered?: boolean;
   row: SelectableRow;
-  sx?: stylex.StyleXStyles;
+  sx?: Sx;
 }) {
   const toggle = row.getToggleSelectedHandler();
   const checkbox = (

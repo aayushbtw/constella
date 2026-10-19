@@ -56,4 +56,4 @@ Render one `CitationCard` per page. Every citation opens it, so it moves to each
 | Prop | Type |
 | --- | --- |
 | `source` | `{ name, title, url, icon?, date? }`; the name's first letter shows without `icon` |
-| `sx` | `StyleXStyles`, applied last, on both parts |
+| `sx` | `Sx`, applied last, on both parts |
