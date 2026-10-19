@@ -476,8 +476,8 @@
       "type": "registry:ui",
       "title": "Input",
       "description": "A single-line text box that links to its Field.",
-      "dependencies": ["@stylexjs/stylex"],
       "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/input-group.json"
       ],
       "files": [
