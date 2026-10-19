@@ -20,6 +20,7 @@ import { SiteChrome } from "~/components/site-chrome";
 import { config } from "~/lib/config";
 import { seo, siteMeta } from "~/lib/seo";
 import { themeScript } from "~/lib/theme";
+import { getBlocks } from "~/server/blocks";
 import { getComponents } from "~/server/components";
 import { getDocs } from "~/server/docs";
 
@@ -32,11 +33,14 @@ const highlightCss = createThemeCss({
 });
 
 export const Route = createRootRoute({
-  // The docs sidebar and the mobile menu both list these, on every page.
   loader: async () => {
-    const [docs, components] = await Promise.all([getDocs(), getComponents()]);
+    const [docs, components, blocks] = await Promise.all([
+      getDocs(),
+      getComponents(),
+      getBlocks(),
+    ]);
 
-    return { components, docs };
+    return { blocks, components, docs };
   },
   staleTime: Number.POSITIVE_INFINITY,
   head: () => ({

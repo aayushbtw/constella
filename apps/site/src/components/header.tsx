@@ -14,6 +14,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 import { Logo } from "~/components/logo";
 import { NavMenu } from "~/components/nav-menu";
+import { Search } from "~/components/search";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
 import { toggleTheme } from "~/lib/theme";
@@ -120,6 +121,7 @@ function Header() {
           </nav>
         </div>
         <div {...stylex.props(styles.end)}>
+          <Search />
           <Button
             aria-label="Toggle theme"
             onClick={toggleTheme}

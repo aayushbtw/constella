@@ -28,6 +28,7 @@ export const layout = stylex.defineConsts({
   pageBottom: "96px",
   // `header` plus a 32px gap; change with it.
   pageTop: "96px",
+  search: "224px",
   sectionGap: "48px",
   // Past this, the sidebar and outline stop following the window's edges.
   shell: "1536px",
