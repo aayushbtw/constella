@@ -14,7 +14,14 @@ import { durations, sizes, strokes } from "@/lib/constella/tokens.stylex";
 type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
   value: string | (() => string);
+  /** The same content as HTML, for a target that takes it: a spreadsheet pastes a table as cells. */
+  html?: string | (() => string);
 };
+
+function read(content: string | (() => string)) {
+  // oxlint-disable-next-line anti-slop/no-runtime-typeof -- content is a documented union of text or its getter
+  return typeof content === "string" ? content : content();
+}
 
 // The Web clock takes bare milliseconds; the token carries `ms`.
 const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
@@ -27,6 +34,7 @@ const labelledIconSizes: Partial<
 function CopyButton({
   "aria-label": label,
   children,
+  html,
   size,
   value,
   variant = "ghost",
@@ -44,10 +52,15 @@ function CopyButton({
   );
 
   async function copy() {
-    await navigator.clipboard.writeText(
-      // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `value` is a documented union of text or its getter
-      typeof value === "string" ? value : value()
-    );
+    const text = read(value);
+    await (html === undefined
+      ? navigator.clipboard.writeText(text)
+      : navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": new Blob([read(html)], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" }),
+          }),
+        ]));
     setCopies((count) => count + 1);
     clearTimeout(timeout.current ?? undefined);
     timeout.current = setTimeout(() => {
