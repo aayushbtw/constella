@@ -24,6 +24,7 @@ const textColors: TextColor[] = [
   "warning",
   "info",
 ];
+const prices = ["$1,111.11", "$8,048.90", "$406.17"];
 
 const styles = stylex.create({
   stack: {
@@ -35,6 +36,17 @@ const styles = stylex.create({
   },
   tight: {
     gap: space.xxs,
+  },
+  narrow: {
+    maxWidth: 240,
+  },
+  row: {
+    display: "flex",
+    gap: space.xl,
+  },
+  end: {
+    alignItems: "flex-end",
+    width: "auto",
   },
 });
 
@@ -122,6 +134,43 @@ function TextColorDemo() {
   );
 }
 
+function TextTruncateDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.stack, styles.narrow)}>
+        <Text truncate weight="medium">
+          Quarterly planning notes for the design systems team
+        </Text>
+        <Text color="secondary" truncate={2}>
+          Review the token audit, agree on the motion scale and pick the next
+          three components to build, then share the plan with every team.
+        </Text>
+      </div>
+    </Stage>
+  );
+}
+
+function TextTabularNumsDemo() {
+  return (
+    <Stage>
+      <div {...stylex.props(styles.row)}>
+        <div {...stylex.props(styles.stack, styles.tight, styles.end)}>
+          {prices.map((price) => (
+            <Text key={price}>{price}</Text>
+          ))}
+        </div>
+        <div {...stylex.props(styles.stack, styles.tight, styles.end)}>
+          {prices.map((price) => (
+            <Text key={price} tabularNums>
+              {price}
+            </Text>
+          ))}
+        </div>
+      </div>
+    </Stage>
+  );
+}
+
 function CaptionDemo() {
   return (
     <Stage>
@@ -195,5 +244,7 @@ export {
   TextColorDemo,
   TextDemo,
   TextSizeDemo,
+  TextTabularNumsDemo,
+  TextTruncateDemo,
   TextWeightDemo,
 };

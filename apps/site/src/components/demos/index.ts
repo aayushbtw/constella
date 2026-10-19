@@ -365,6 +365,8 @@ import {
   TextColorDemo,
   TextDemo,
   TextSizeDemo,
+  TextTabularNumsDemo,
+  TextTruncateDemo,
   TextWeightDemo,
 } from "~/components/demos/text";
 import {
@@ -695,6 +697,8 @@ const demos = {
   text: TextDemo,
   "text-color": TextColorDemo,
   "text-size": TextSizeDemo,
+  "text-tabular-nums": TextTabularNumsDemo,
+  "text-truncate": TextTruncateDemo,
   "text-weight": TextWeightDemo,
   toast: ToastDemo,
   "toast-action": ToastActionDemo,

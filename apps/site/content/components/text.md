@@ -63,6 +63,35 @@ Use the `color` prop. Without it, text inherits its parent's color.
 <Text color="danger">danger</Text>
 ```
 
+## Truncate
+
+Use the `truncate` prop to keep one line ending in an ellipsis (`true`), or to clamp to `2` or `3` lines.
+
+**Pass `truncate` inside a `nowrap` parent like a table cell.** Text wraps `pretty`, which turns wrapping back on there.
+
+<!-- ::demo name="text-truncate" -->
+
+```tsx
+<Text truncate weight="medium">
+  Quarterly planning notes for the design systems team
+</Text>
+<Text color="secondary" truncate={2}>
+  Review the token audit, agree on the motion scale and pick the next three
+  components to build, then share the plan with every team.
+</Text>
+```
+
+## Tabular Nums
+
+Use the `tabularNums` prop for numbers that change in place or line up in a column, so every digit takes the same width.
+
+<!-- ::demo name="text-tabular-nums" -->
+
+```tsx
+<Text>$1,111.11</Text>
+<Text tabularNums>$1,111.11</Text>
+```
+
 ## API Reference
 
 | Prop | Type | Default |
@@ -70,5 +99,7 @@ Use the `color` prop. Without it, text inherits its parent's color.
 | `size` | `"sm" \| "base" \| "lg"` | inherited |
 | `weight` | `"regular" \| "semimedium" \| "medium" \| "semibold"` | inherited |
 | `color` | `"primary" \| "secondary" \| "muted" \| "danger" \| "success" \| "warning" \| "info"` | inherited |
+| `truncate` | `boolean \| 1 \| 2 \| 3` | `false` |
+| `tabularNums` | `boolean` | `false` |
 | `render` | `ReactElement \| function` | `<p>` |
 | `sx` | `StyleXStyles`, applied last | - |

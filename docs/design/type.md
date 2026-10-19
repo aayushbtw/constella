@@ -26,8 +26,8 @@ Controls are 13px, as Interfere's are, so a dense UI stays a step under the read
 ## Rendering
 
 - **Crisp text.** Grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
-- **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word.
-- **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update.
+- **Wrapping.** Headings and titles `text-wrap: balance`; body and descriptions `pretty`, so no line ends on one word. `Text` is `pretty`, which turns wrapping back on in a `nowrap` parent; pass `truncate` there.
+- **Numbers.** Anything that changes in place (counts, timers, prices, table columns) sets `font-variant-numeric: tabular-nums`, so digits don't shift as they update. `Text` takes `tabularNums`.
 - **Figures to compare take `fonts.mono`** (a chart tooltip's values): Geist Mono, drawn for one width, reads crisper at 13px than proportional digits made tabular. Text stays in `fonts.sans`. Both are theme variables (`--font-sans`, `--font-mono`) naming Inter and Geist Mono, not shipped: an app that loads them gets them, otherwise the system's fonts.
 - **Fields never make iOS zoom.** iOS zooms the page when a field under 16px takes focus. On a touch screen (`pointer: coarse`), an input renders at 16px and scales down by `inputVars.scale` to `textSm` (`captionLg` at `sm`), as Interfere's does. A textarea takes 16px there, since a growing one can't scale without its layout height staying at 16px's.
 
