@@ -17,11 +17,7 @@ export default defineConfig({
   },
   lint: {
     extends: [core, react, tanstack, antiSlop],
-    // The capture script steps a browser frame by frame; its loops must await in order.
-    ignorePatterns: [
-      ...(core.ignorePatterns ?? []),
-      "packages/video/capture/**",
-    ],
+    ignorePatterns: [...(core.ignorePatterns ?? [])],
     jsPlugins: [
       { name: "vite-plus", specifier: "vite-plus/oxlint-plugin" },
       { name: "constella", specifier: "@constella/lint" },

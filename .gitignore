@@ -19,7 +19,3 @@ routeTree.gen.ts
 # Built by `shadcn build`
 apps/site/public/r
 .tomekit
-
-# Video renders and recorded clips
-packages/video/out
-packages/video/public/clips
