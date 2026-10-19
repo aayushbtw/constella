@@ -33,7 +33,7 @@ const attachmentStates = [
 ] as const;
 const attachmentSizes = ["xs", "sm", "default"] as const;
 const attachmentOrientations = ["horizontal", "vertical"] as const;
-const attachmentMediaVariants = ["icon", "image"] as const;
+const attachmentMediaVariants = ["default", "image"] as const;
 
 type AttachmentState = (typeof attachmentStates)[number];
 type AttachmentSize = (typeof attachmentSizes)[number];
@@ -297,6 +297,11 @@ const styles = stylex.create({
   },
 });
 
+const mediaStyles = {
+  default: null,
+  image: styles.image,
+} satisfies Record<AttachmentMediaVariant, stylex.StyleXStyles | null>;
+
 type AttachmentProps = Styled<ComponentProps<"div">> & {
   orientation?: AttachmentOrientation;
   size?: AttachmentSize;
@@ -327,7 +332,7 @@ function Attachment({
 
 function AttachmentMedia({
   sx,
-  variant = "icon",
+  variant = "default",
   ...props
 }: Styled<ComponentProps<"div">> & { variant?: AttachmentMediaVariant }) {
   return (
@@ -335,7 +340,7 @@ function AttachmentMedia({
       data-slot="attachment-media"
       data-variant={variant}
       {...props}
-      {...stylex.props(styles.media, variant === "image" && styles.image, sx)}
+      {...stylex.props(styles.media, mediaStyles[variant], sx)}
     />
   );
 }
