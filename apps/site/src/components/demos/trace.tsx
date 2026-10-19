@@ -177,7 +177,7 @@ function TraceLineDemo() {
   );
 }
 
-function TraceStatusDemo() {
+function TraceStateDemo() {
   return (
     <DemoRow>
       <Trace sx={styles.width}>
@@ -570,6 +570,6 @@ export {
   TraceLineDemo,
   TraceLinkDemo,
   TraceSheetDemo,
-  TraceStatusDemo,
+  TraceStateDemo,
   TraceToolDemo,
 };

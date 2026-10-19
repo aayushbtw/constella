@@ -92,7 +92,7 @@ Set `state` on `TraceLine` when a step is running, has failed or hasn't started.
 | `error`   | Work that failed, said in the title: "Failed to run pnpm lint" |
 | `pending` | Work that hasn't started, such as a plan step: "Run pnpm test" |
 
-<!-- ::demo name="trace-status" -->
+<!-- ::demo name="trace-state" -->
 
 ```tsx
 <TraceLine state="running">

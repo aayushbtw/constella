@@ -412,7 +412,7 @@ import {
   TraceLineDemo,
   TraceLinkDemo,
   TraceSheetDemo,
-  TraceStatusDemo,
+  TraceStateDemo,
   TraceToolDemo,
 } from "~/components/demos/trace";
 import {
@@ -710,7 +710,7 @@ const demos = {
   "trace-line": TraceLineDemo,
   "trace-link": TraceLinkDemo,
   "trace-sheet": TraceSheetDemo,
-  "trace-status": TraceStatusDemo,
+  "trace-state": TraceStateDemo,
   "trace-tool": TraceToolDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
