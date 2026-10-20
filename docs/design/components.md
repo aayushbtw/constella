@@ -61,7 +61,7 @@ The axis takes its final scale at the click, and the marks move to it from where
 
 ## Citation
 
-A pill capped at `sizes.citation` (160px), its publication name truncating, with the logo as the badge's leading avatar. Every citation opens one shared card, so hovering the next moves it there: the logo and publication in `textSecondary`, the headline in medium `textBase` clamped to 2 lines, the date in `textMuted`.
+A pill capped at `sizes.citation` (160px), its first publication's name truncating, with the logo as the badge's leading avatar and the other sources counted after it (`+2`, `textMuted`). Every citation opens one shared card, so hovering the next moves it there. The card lists each source `space.md` apart, each a link: the logo and publication in `textSecondary`, the headline in medium `textBase` clamped to 2 lines and underlined on hover, the description in `textSecondary` clamped to 2 lines, the date in `textMuted`. A logo loads without a referrer, and its letter waits 600ms so it doesn't flash first.
 
 ## Code Block
 

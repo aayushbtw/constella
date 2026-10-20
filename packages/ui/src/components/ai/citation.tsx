@@ -1,6 +1,8 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
+import { createContext, use, useMemo } from "react";
+import type { ReactNode } from "react";
 
 import {
   Avatar,
@@ -19,6 +21,7 @@ import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
+  media,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -26,6 +29,8 @@ import {
 interface Source {
   /** When it was published, as it should read: "August 3, 2026". */
   date?: string;
+  /** A line or two from the page: what it says about the claim. */
+  description?: string;
   /** The publication's logo; its first letter shows without one. */
   icon?: string;
   /** The publication: "Acme Journal". */
@@ -34,6 +39,8 @@ interface Source {
   title: string;
   url: string;
 }
+
+type Sources = readonly [Source, ...Source[]];
 
 const styles = stylex.create({
   pill: {
@@ -44,10 +51,21 @@ const styles = stylex.create({
     overflow: "hidden",
     textOverflow: "ellipsis",
   },
-  card: {
+  more: {
+    color: colors.textMuted,
+    flexShrink: 0,
+  },
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.md,
+  },
+  source: {
+    color: "inherit",
     display: "flex",
     flexDirection: "column",
     gap: space.xs,
+    textDecorationLine: "none",
   },
   publication: {
     alignItems: "center",
@@ -55,12 +73,21 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
   },
-  title: {
+  clamp: {
     display: "-webkit-box",
-    fontWeight: fontWeights.medium,
     overflow: "hidden",
     WebkitBoxOrient: "vertical",
     WebkitLineClamp: 2,
+  },
+  title: {
+    fontWeight: fontWeights.medium,
+    textDecorationLine: {
+      default: "none",
+      [media.hover]: { default: null, ":is(a:hover > *)": "underline" },
+    },
+  },
+  description: {
+    color: colors.textSecondary,
   },
   date: {
     color: colors.textMuted,
@@ -71,61 +98,99 @@ function Logo({ source, size }: { size?: "sm"; source: Source }) {
   return (
     <Avatar aria-hidden corners="rounded" size={size}>
       {source.icon === undefined ? null : (
-        <AvatarImage alt="" src={source.icon} />
+        <AvatarImage alt="" referrerPolicy="no-referrer" src={source.icon} />
       )}
-      <AvatarFallback>{source.name.slice(0, 1).toUpperCase()}</AvatarFallback>
+      {/* Held back while a logo loads, so the pill doesn't flash a letter before it. */}
+      <AvatarFallback delay={source.icon === undefined ? undefined : 600}>
+        {source.name.slice(0, 1).toUpperCase()}
+      </AvatarFallback>
     </Avatar>
   );
 }
 
-const handle = createHoverCardHandle<Source>();
+const CitationsContext = createContext<ReturnType<
+  typeof createHoverCardHandle<Sources>
+> | null>(null);
 
-/** The one card every citation opens, so it moves to each citation as you hover it. Render it once. */
-function CitationCard({ sx }: { sx?: Sx }) {
+/** Holds the one card every `Citation` inside opens, so it moves to each citation as you hover it. */
+function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
+  const handle = useMemo(() => createHoverCardHandle<Sources>(), []);
   return (
-    <HoverCard handle={handle}>
-      {({ payload }) => (
-        <HoverCardContent sx={sx}>
-          {payload === undefined ? null : (
-            <div {...stylex.props(styles.card)}>
-              <div {...stylex.props(styles.publication)}>
-                <Logo size="sm" source={payload} />
-                {payload.name}
+    <CitationsContext value={handle}>
+      {children}
+      <HoverCard handle={handle}>
+        {({ payload }) => (
+          <HoverCardContent sx={sx}>
+            {payload === undefined ? null : (
+              <div {...stylex.props(styles.list)}>
+                {payload.map((source) => (
+                  <a
+                    href={source.url}
+                    key={source.url}
+                    rel="noreferrer"
+                    target="_blank"
+                    {...stylex.props(styles.source)}
+                  >
+                    <span {...stylex.props(styles.publication)}>
+                      <Logo size="sm" source={source} />
+                      {source.name}
+                    </span>
+                    <span
+                      {...stylex.props(
+                        typeStyles.textBase,
+                        styles.clamp,
+                        styles.title
+                      )}
+                    >
+                      {source.title}
+                    </span>
+                    {source.description === undefined ? null : (
+                      <span {...stylex.props(styles.clamp, styles.description)}>
+                        {source.description}
+                      </span>
+                    )}
+                    {source.date === undefined ? null : (
+                      <span {...stylex.props(styles.date)}>{source.date}</span>
+                    )}
+                  </a>
+                ))}
               </div>
-              <div {...stylex.props([typeStyles.textBase, styles.title])}>
-                {payload.title}
-              </div>
-              {payload.date === undefined ? null : (
-                <div {...stylex.props(styles.date)}>{payload.date}</div>
-              )}
-            </div>
-          )}
-        </HoverCardContent>
-      )}
-    </HoverCard>
+            )}
+          </HoverCardContent>
+        )}
+      </HoverCard>
+    </CitationsContext>
   );
 }
 
-/** A Badge that opens the `CitationCard`, so it keeps the badge's slot. */
-function Citation({ source, sx }: { source: Source; sx?: Sx }) {
+/** A Badge linking to the first source, counting the rest; it opens the `Citations` card. */
+function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
+  const handle = use(CitationsContext);
+  if (handle === null) {
+    throw new Error("Citation must be inside Citations.");
+  }
+  const [first] = sources;
   return (
     <Badge
       render={
         <HoverCardTrigger
           handle={handle}
-          href={source.url}
-          payload={source}
+          href={first.url}
+          payload={sources}
           rel="noreferrer"
           target="_blank"
         />
       }
       sx={[styles.pill, sx]}
     >
-      <Logo source={source} />
-      <span {...stylex.props(styles.name)}>{source.name}</span>
+      <Logo source={first} />
+      <span {...stylex.props(styles.name)}>{first.name}</span>
+      {sources.length > 1 && (
+        <span {...stylex.props(styles.more)}>+{sources.length - 1}</span>
+      )}
     </Badge>
   );
 }
 
-export { Citation, CitationCard };
+export { Citation, Citations };
 export type { Source };

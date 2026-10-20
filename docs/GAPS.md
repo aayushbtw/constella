@@ -65,7 +65,7 @@ netigen builds these today. Each could become a Constella part once the componen
 - [x] **Trace**: tool steps and reasoning, as lines with a status that open, link or show a dialog.
 - [x] **Suggestions**: starter prompts as a scrolling row of pills.
 - [x] **Attachment**: a file tile with upload progress.
-- [x] **Citation**: a source's pill (Badge + Avatar as a HoverCard trigger) opening one shared card: publication, headline, date.
+- [x] **Citation**: a claim's pill (Badge + Avatar as a HoverCard trigger, `+N` for more sources) opening one shared card from `Citations`: per source, publication, headline, description, date.
 - [x] **Model picker**: a Command of models with their details.
 - [x] **Approval**: a card asking to allow a tool call.
 - [x] **Questionnaire**: questions the model asks, one at a time.
