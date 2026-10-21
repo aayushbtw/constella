@@ -23,6 +23,19 @@ Controls are 13px, as Interfere's are, so a dense UI stays a step under the read
 - **Stops at 600.** `fontWeights.semibold` is the heaviest, for bold in prose; nothing is 700. Heavier type shouts in a quiet interface.
 - **Medium marks what you act on or name**: control labels, titles, field labels. Body copy is regular.
 
+## Agent process
+
+What an agent did on the way to an answer (a trace, its reasoning, its steps) stays a step back from the answer, so the answer is the only `textPrimary` in a run:
+
+| Part | Color | Weight |
+| --- | --- | --- |
+| A step's verb ("Read", "Searching"), a finished line ("Done thinking") | `textMuted` | regular |
+| What it acted on ("Swedish orders"), a run's title | `textSecondary` | medium |
+| Counts, durations | `textMuted` | regular, tabular |
+| Reasoning text | `textMuted` | regular |
+
+A source's chip keeps its own `textPrimary` name: it's a link out, not narration.
+
 ## Rendering
 
 - **Crisp text.** Grayscale antialiasing on the root; subpixel rendering makes light text on dark look heavy on macOS.
