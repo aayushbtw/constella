@@ -1188,7 +1188,11 @@
       "type": "registry:ui",
       "title": "Citation",
       "description": "A source's pill in an answer, opening a card with its publication, headline and date.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/avatar.json",

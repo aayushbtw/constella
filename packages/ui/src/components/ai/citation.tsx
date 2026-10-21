@@ -1,5 +1,7 @@
 "use client";
 
+import { Globe02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useMemo } from "react";
 import type { ReactNode } from "react";
@@ -24,6 +26,7 @@ import {
   media,
   sizes,
   space,
+  strokes,
 } from "@/lib/constella/tokens.stylex";
 
 interface Source {
@@ -31,7 +34,7 @@ interface Source {
   date?: string;
   /** A line or two from the page: what it says about the claim. */
   description?: string;
-  /** The publication's logo; its first letter shows without one. */
+  /** The publication's logo; a globe shows without one. */
   icon?: string;
   /** The publication: "Acme Journal". */
   name: string;
@@ -100,9 +103,14 @@ function Logo({ source, size }: { size?: "sm"; source: Source }) {
       {source.icon === undefined ? null : (
         <AvatarImage alt="" referrerPolicy="no-referrer" src={source.icon} />
       )}
-      {/* Held back while a logo loads, so the pill doesn't flash a letter before it. */}
+      {/* Held back while a logo loads, so the pill doesn't flash the globe before it. */}
       <AvatarFallback delay={source.icon === undefined ? undefined : 600}>
-        {source.name.slice(0, 1).toUpperCase()}
+        <HugeiconsIcon
+          aria-hidden
+          icon={Globe02Icon}
+          size="1em"
+          strokeWidth={Number(strokes.icon)}
+        />
       </AvatarFallback>
     </Avatar>
   );

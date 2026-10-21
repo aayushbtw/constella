@@ -63,5 +63,5 @@ Pass every source for one claim in `sources`. The pill shows the first and count
 
 | Prop | Part | Type |
 | --- | --- | --- |
-| `sources` | `Citation` | At least one `{ name, title, url, description?, icon?, date? }`; the name's first letter shows without `icon` |
+| `sources` | `Citation` | At least one `{ name, title, url, description?, icon?, date? }`; a globe shows without `icon` |
 | `sx` | both | `Sx`, applied last: on the card for `Citations`, on the pill for `Citation` |
