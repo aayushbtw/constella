@@ -3,8 +3,3 @@
 @import "@fontsource-variable/geist-mono";
 @import "./reset.css";
 @import "./theme.css";
-
-/* Torph puts each letter on its own layer, out of reach of a Shimmer's `background-clip: text`, which blanks it. */
-[data-slot="shimmer"] [torph-item]:not(br) {
-  will-change: auto;
-}

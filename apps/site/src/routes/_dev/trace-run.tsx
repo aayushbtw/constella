@@ -13,7 +13,6 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { TextMorph } from "torph/react";
 
 import { Citation, Citations } from "@/components/ai/citation";
 import type { Source } from "@/components/ai/citation";
@@ -27,6 +26,7 @@ import { Button } from "@/components/primitives/button";
 import { CollapsibleTrigger } from "@/components/primitives/collapsible";
 import { Spinner } from "@/components/primitives/spinner";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
+import { SwapText } from "@/components/primitives/swap-text";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
@@ -456,7 +456,7 @@ function Thought({ children }: { children: string }) {
         lines.length > windowLines && styles.thoughtFull
       )}
     >
-      <Morph>{lines.join("\n")}</Morph>
+      <SwapText>{lines.join("\n")}</SwapText>
     </p>
   );
 }
@@ -511,25 +511,11 @@ const ticks = 10;
 
 type Status = "running" | "done";
 
-const morphFor = Number(durations.crossfade.slice(0, -"ms".length));
-
-/**
- * Text that morphs when it changes: kept letters slide into place, the rest fade, the width
- * eases, and digits roll by place value.
- */
-function Morph({ children }: { children: string }) {
-  return (
-    <TextMorph duration={morphFor} ease={easings.out}>
-      {children}
-    </TextMorph>
-  );
-}
-
 /** Text that shimmers while it runs and morphs when it changes. */
 function Live({ running, children }: { running: boolean; children: string }) {
   return (
     <Shimmer sx={running ? undefined : styles.still}>
-      <Morph>{children}</Morph>
+      <SwapText>{children}</SwapText>
     </Shimmer>
   );
 }
@@ -778,7 +764,8 @@ function Run({ t }: { t: number }) {
           </span>
           <span {...stylex.props(styles.count)}>
             {/* The unit stays outside: Torph rolls a number only when no letter touches it. */}
-            <Morph>{finished ? `for ${seconds}` : String(seconds)}</Morph>s
+            <SwapText>{finished ? `for ${seconds}` : String(seconds)}</SwapText>
+            s
           </span>
         </span>
       </CollapsibleTrigger>
@@ -838,7 +825,7 @@ function Run({ t }: { t: number }) {
             </Verb>
             {chipsShown === 0 ? null : (
               <span {...stylex.props(styles.count)}>
-                <Morph>{`${searching === "running" ? chipsShown * 6 : 46} sources`}</Morph>
+                <SwapText>{`${searching === "running" ? chipsShown * 6 : 46} sources`}</SwapText>
               </span>
             )}
           </Step>

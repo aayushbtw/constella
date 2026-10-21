@@ -4,7 +4,7 @@
 
 Ask how often it's seen. Something used dozens of times a day gets little or no motion. Keyboard-initiated actions never animate.
 
-Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no blur-ins, no timers drawing on screen, and no bounce on a surface or anything that travels far. `overshoot` is only for a small mark landing where it already almost is.
+Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no blur-ins, no bounce on a surface or anything that travels far. A clock counts only where elapsed time is the news, like an agent's run. `overshoot` is only for a small mark landing where it already almost is.
 
 ## Easing
 
@@ -50,9 +50,9 @@ Never from `scale(0)` or full transparency in place. Start close to the final st
 
 ## Crossfades
 
-When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text can't stay mounted (it's the same node), so the old copy is kept as a layer that fades out under the new one, both blurred by `motion.crossfadeTextBlur` so they read as one changing. A status change only fades color, on `ease` + `hover`.
+When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
 
-`SwapIcon` and `SwapText` are these two crossfades as parts. The sidebar trigger's mark is the one crossfade that isn't a state change: it reveals the toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
+`SwapIcon` and `SwapText` are these two as parts. The sidebar trigger's mark is the one crossfade that isn't a state change: it reveals the toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
 
 ## Layout animation
 

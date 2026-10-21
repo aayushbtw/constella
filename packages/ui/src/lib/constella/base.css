@@ -363,3 +363,9 @@
     outline: none;
   }
 }
+
+/* Torph puts each letter of a Swap Text on its own layer, out of reach of a Shimmer's
+   `background-clip: text`, which blanks it. Unlayered, since Torph's own rule is. */
+[data-slot="shimmer"] [torph-item]:not(br) {
+  will-change: auto;
+}

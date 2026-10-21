@@ -690,8 +690,8 @@
       "name": "swap-text",
       "type": "registry:ui",
       "title": "Swap Text",
-      "description": "Cross-fades one label into another in place.",
-      "dependencies": ["@stylexjs/stylex"],
+      "description": "Morphs one label into another in place.",
+      "dependencies": ["@stylexjs/stylex", "torph"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
