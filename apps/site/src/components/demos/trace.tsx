@@ -1,22 +1,32 @@
 import {
-  AiBrain01Icon,
-  Alert02Icon,
   ArrowUpRight01Icon,
-  CheckmarkCircle02Icon,
   DatabaseIcon,
+  File02Icon,
   FileEditIcon,
   Globe02Icon,
-  PlayIcon,
   RepeatIcon,
-  Search01Icon,
   TerminalIcon,
-  WrenchIcon,
+  UserGroupIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
 
+import {
+  Attachment,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from "@/components/ai/attachment";
+import {
+  Citation,
+  CitationGroup,
+  CitationGroupMore,
+  Citations,
+} from "@/components/ai/citation";
+import type { Source } from "@/components/ai/citation";
 import {
   CodeBlock,
   CodeBlockContent,
@@ -31,8 +41,16 @@ import {
   TraceDescription,
   TraceIcon,
   TraceLine,
+  TraceMarker,
+  TraceReasoning,
+  TraceStep,
+  TraceStepContent,
+  TraceSubject,
+  TraceSubstep,
+  TraceSubsteps,
   TraceTitle,
 } from "@/components/ai/trace";
+import type { TraceState } from "@/components/ai/trace";
 import { Button } from "@/components/primitives/button";
 import {
   Dialog,
@@ -53,14 +71,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/primitives/sheet";
-import { Spinner } from "@/components/primitives/spinner";
-import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
+import { SwapText } from "@/components/primitives/swap-text";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   stage: { alignItems: "flex-start", minHeight: 240, width: "100%" },
-  width: { maxWidth: "100%", width: 384 },
+  tall: { minHeight: 440 },
+  width: { maxWidth: "100%", width: 420 },
 });
 
 function Icon({ icon }: { icon: IconSvgElement }) {
@@ -74,105 +92,354 @@ function Icon({ icon }: { icon: IconSvgElement }) {
   );
 }
 
-const thought =
-  "CI installs with a frozen lockfile, so the install stops when package.json and the lockfile disagree. I should check what the last commit changed, then reproduce the install.";
-
-const failure =
-  'ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with package.json';
+const favicon = (domain: string) =>
+  `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
 const sources = [
   {
-    title: "Install with a frozen lockfile",
-    url: "https://acme.com/docs/install",
+    icon: favicon("scb.se"),
+    name: "Statistics Sweden",
+    title: "E-commerce by region, 2026",
+    url: "https://scb.se",
   },
-  { title: "Continuous integration", url: "https://acme.com/docs/ci" },
-];
+  {
+    icon: favicon("postnord.se"),
+    name: "PostNord",
+    title: "E-commerce in the Nordics",
+    url: "https://postnord.se",
+  },
+  {
+    icon: favicon("shopify.com"),
+    name: "Shopify",
+    title: "Selling in Sweden",
+    url: "https://shopify.com",
+  },
+  {
+    icon: favicon("statista.com"),
+    name: "Statista",
+    title: "Online shoppers in Sweden",
+    url: "https://statista.com",
+  },
+] satisfies Source[];
+
+const lastSource = sources.at(-1);
+
+const reasoning =
+  "The goal is a launch plan for Sweden. Start with what the warehouse already knows: who orders from Sweden today, what they buy and how often they come back. Then look outward. Check how local brands price and position themselves, what Swedish shoppers expect on delivery and returns, and how Sweden compares with Norway. Orders first: they set the baseline for everything else.";
+
+const words = reasoning.split(" ");
+
+/** A clock for the scripted demos: tenths of a second since `run` last changed, to `end`. */
+function useClock(end: number) {
+  const [run, setRun] = useState(0);
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTick((value) => Math.min(value + 1, end * 10));
+    }, 100);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [end]);
+  return {
+    t: tick / 10,
+    replay: () => {
+      setTick(0);
+      setRun((value) => value + 1);
+    },
+    run,
+  };
+}
+
+function Replay({
+  disabled,
+  onClick,
+}: {
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <div>
+      <Button disabled={disabled} onClick={onClick} size="sm" variant="outline">
+        <Icon icon={RepeatIcon} />
+        Run again
+      </Button>
+    </div>
+  );
+}
+
+const stateAt = (
+  t: number,
+  [start, end]: readonly [number, number]
+): TraceState | "done" | null => {
+  if (t < start) {
+    return null;
+  }
+  return t < end ? "running" : "done";
+};
+
+const live = (state: TraceState | "done") =>
+  state === "done" ? undefined : state;
+
+const shownWords = (t: number, [start, end]: readonly [number, number]) =>
+  Math.ceil((words.length * (Math.min(t, end) - start)) / (end - start));
+
+function ReadOrders({
+  t,
+  span,
+  tasks,
+}: {
+  t: number;
+  span: readonly [number, number];
+  tasks: readonly [number, number];
+}) {
+  const state = stateAt(t, span);
+  if (state === null) {
+    return null;
+  }
+  return (
+    <TraceStep state={live(state)}>
+      <TraceLine>
+        <TraceMarker />
+        <TraceTitle>
+          <SwapText>{state === "running" ? "Reading" : "Read"}</SwapText>
+        </TraceTitle>
+        <TraceIcon>
+          <Icon icon={DatabaseIcon} />
+        </TraceIcon>
+        <TraceSubject>Swedish orders</TraceSubject>
+      </TraceLine>
+      <TraceStepContent open={state === "running"}>
+        <TraceSubsteps>
+          {(
+            [
+              ["Pulling", "Pulled", "Swedish order history", tasks[0]],
+              ["Spotting", "Spotted", "top sellers in Sweden", tasks[1]],
+            ] as const
+          ).map(([running, done, what, at]) => (
+            <TraceSubstep key={what} state={t < at ? "running" : undefined}>
+              <TraceMarker />
+              <TraceTitle>
+                <SwapText>{`${t < at ? running : done} ${what}`}</SwapText>
+              </TraceTitle>
+            </TraceSubstep>
+          ))}
+        </TraceSubsteps>
+      </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+// Once the search is done, the count of sources left out rides with the last chip.
+function LastSource({ done, source }: { done: boolean; source: Source }) {
+  const chip = <Citation sources={[source]} />;
+  return done ? <CitationGroupMore count={42}>{chip}</CitationGroupMore> : chip;
+}
+
+function SearchSources({
+  t,
+  span,
+  found,
+}: {
+  t: number;
+  span: readonly [number, number];
+  found: readonly number[];
+}) {
+  const state = stateAt(t, span);
+  if (state === null) {
+    return null;
+  }
+  const shown = found.filter((at) => t >= at).length;
+  return (
+    <TraceStep state={live(state)}>
+      <TraceLine>
+        <TraceMarker />
+        <TraceTitle>
+          <SwapText>{state === "running" ? "Searching" : "Searched"}</SwapText>
+        </TraceTitle>
+        {shown === 0 ? null : (
+          <TraceDescription>
+            <SwapText>{`${state === "running" ? shown * 6 : 46} sources`}</SwapText>
+          </TraceDescription>
+        )}
+      </TraceLine>
+      <TraceStepContent open={shown > 0}>
+        <CitationGroup>
+          {sources
+            .slice(0, Math.min(shown, sources.length - 1))
+            .map((source) => (
+              <Citation key={source.url} sources={[source]} />
+            ))}
+          {lastSource === undefined || shown < sources.length ? null : (
+            <LastSource done={state === "done"} source={lastSource} />
+          )}
+        </CitationGroup>
+      </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+const run = {
+  thinking: [0, 3.2],
+  reading: [3.6, 6.2],
+  readTasks: [4.6, 5.8],
+  searching: [6.6, 8.8],
+  found: [7, 7.4, 7.8, 8.2],
+  delegating: [9.2, 12],
+  delegateTasks: [10.4, 11.6],
+  reporting: [12.4, 13.8],
+  end: 14.2,
+} as const;
 
 function TraceDemo() {
+  const { t, replay, run: take } = useClock(run.end);
+  const [open, setOpen] = useState<boolean>();
+  const thinking = stateAt(t, run.thinking);
+  const delegating = stateAt(t, run.delegating);
+  const reporting = stateAt(t, run.reporting);
+  const finished = t >= run.end;
+  const seconds = Math.floor(Math.min(t, run.end));
   return (
-    <DemoRow sx={styles.stage}>
-      <Trace sx={styles.width}>
-        <TraceCollapsible>
+    <DemoRow
+      controls={<Replay disabled={!finished} onClick={replay} />}
+      sx={[styles.stage, styles.tall]}
+    >
+      <Citations>
+        <TraceCollapsible
+          key={take}
+          onOpenChange={setOpen}
+          open={open ?? true}
+          sx={styles.width}
+        >
           <TraceCollapsibleTrigger>
-            <TraceLine>
-              <TraceIcon>
-                <Icon icon={AiBrain01Icon} />
-              </TraceIcon>
-              <TraceTitle>Thought for 5s</TraceTitle>
-            </TraceLine>
-          </TraceCollapsibleTrigger>
-          <TraceCollapsibleContent>{thought}</TraceCollapsibleContent>
-        </TraceCollapsible>
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={CheckmarkCircle02Icon} />
-          </TraceIcon>
-          <TraceTitle>Ran pnpm --version</TraceTitle>
-        </TraceLine>
-        <TraceCollapsible defaultOpen>
-          <TraceCollapsibleTrigger>
-            <TraceLine state="error">
-              <TraceIcon>
-                <Icon icon={Alert02Icon} />
-              </TraceIcon>
-              <TraceTitle>
-                Failed to run pnpm install --frozen-lockfile
-              </TraceTitle>
-            </TraceLine>
-          </TraceCollapsibleTrigger>
-          <TraceCollapsibleContent>
-            <CodeBlock size="sm" color="danger">
-              <CodeBlockContent wrap>{failure}</CodeBlockContent>
-            </CodeBlock>
-          </TraceCollapsibleContent>
-        </TraceCollapsible>
-        <TraceCollapsible>
-          <TraceCollapsibleTrigger>
-            <TraceLine>
-              <TraceIcon>
-                <Icon icon={Globe02Icon} />
-              </TraceIcon>
-              <TraceTitle>Used {sources.length} sources</TraceTitle>
-            </TraceLine>
+            <TraceTitle>
+              <SwapText>{finished ? "Worked" : "Working"}</SwapText>
+            </TraceTitle>
+            <TraceDescription>
+              <SwapText>
+                {finished ? `for ${seconds}` : String(seconds)}
+              </SwapText>
+              s
+            </TraceDescription>
           </TraceCollapsibleTrigger>
           <TraceCollapsibleContent>
             <Trace>
-              {sources.map((source) => (
-                <a
-                  href={source.url}
-                  key={source.url}
-                  rel="noreferrer"
-                  target="_blank"
-                  {...stylex.props(traceActionStyles())}
-                >
+              {thinking === null ? null : (
+                <TraceStep state={live(thinking)}>
                   <TraceLine>
-                    <TraceIcon>
-                      <Icon icon={Globe02Icon} />
-                    </TraceIcon>
-                    <TraceTitle>{source.title}</TraceTitle>
-                    <TraceIcon>
-                      <Icon icon={ArrowUpRight01Icon} />
-                    </TraceIcon>
+                    <TraceMarker />
+                    <TraceTitle>
+                      <SwapText>
+                        {thinking === "running" ? "Thinking" : "Done thinking"}
+                      </SwapText>
+                    </TraceTitle>
                   </TraceLine>
-                </a>
-              ))}
+                  <TraceStepContent open={thinking === "running"}>
+                    <TraceReasoning>
+                      {words.slice(0, shownWords(t, run.thinking)).join(" ")}
+                    </TraceReasoning>
+                  </TraceStepContent>
+                </TraceStep>
+              )}
+              <ReadOrders span={run.reading} t={t} tasks={run.readTasks} />
+              <SearchSources found={run.found} span={run.searching} t={t} />
+              {delegating === null ? null : (
+                <TraceStep state={live(delegating)}>
+                  <TraceLine>
+                    <TraceMarker />
+                    <TraceTitle>
+                      <SwapText>
+                        {delegating === "running"
+                          ? "Delegating to"
+                          : "Delegated to"}
+                      </SwapText>
+                    </TraceTitle>
+                    <TraceIcon>
+                      <Icon icon={UserGroupIcon} />
+                    </TraceIcon>
+                    <TraceSubject>Brand researcher</TraceSubject>
+                  </TraceLine>
+                  <TraceStepContent open={delegating === "running"}>
+                    <TraceSubsteps>
+                      {(
+                        [
+                          ["Scanning", "Scanned", "Swedish competitor brands"],
+                          ["Mapping", "Mapped", "local pricing trends"],
+                        ] as const
+                      ).map(([running, done, what], index) => {
+                        const over = t >= (run.delegateTasks[index] ?? 0);
+                        return (
+                          <TraceSubstep
+                            key={what}
+                            state={over ? undefined : "running"}
+                          >
+                            <TraceMarker />
+                            <TraceTitle>
+                              <SwapText>{`${over ? done : running} ${what}`}</SwapText>
+                            </TraceTitle>
+                          </TraceSubstep>
+                        );
+                      })}
+                    </TraceSubsteps>
+                  </TraceStepContent>
+                </TraceStep>
+              )}
+              {reporting === null ? null : (
+                <TraceStep state={live(reporting)}>
+                  <TraceLine>
+                    <TraceMarker />
+                    <TraceTitle>
+                      <SwapText>
+                        {reporting === "running"
+                          ? "Preparing the report"
+                          : "Report is ready"}
+                      </SwapText>
+                    </TraceTitle>
+                  </TraceLine>
+                  <TraceStepContent>
+                    <Attachment size="xs">
+                      <AttachmentMedia>
+                        <Icon icon={File02Icon} />
+                      </AttachmentMedia>
+                      <AttachmentContent>
+                        <AttachmentTitle>sweden-launch</AttachmentTitle>
+                        <AttachmentDescription>PDF</AttachmentDescription>
+                      </AttachmentContent>
+                    </Attachment>
+                  </TraceStepContent>
+                </TraceStep>
+              )}
+              {finished ? (
+                <TraceStep>
+                  <TraceLine>
+                    <TraceMarker variant="check" />
+                    <TraceTitle>Finished working</TraceTitle>
+                  </TraceLine>
+                </TraceStep>
+              ) : null}
             </Trace>
           </TraceCollapsibleContent>
         </TraceCollapsible>
-      </Trace>
+      </Citations>
     </DemoRow>
   );
 }
 
-function TraceLineDemo() {
+function TraceStepDemo() {
   return (
     <DemoRow>
-      <TraceLine>
-        <TraceIcon>
-          <Icon icon={Globe02Icon} />
-        </TraceIcon>
-        <TraceTitle>Searched the web</TraceTitle>
-      </TraceLine>
+      <Trace sx={styles.width}>
+        <TraceStep>
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Read</TraceTitle>
+            <TraceIcon>
+              <Icon icon={DatabaseIcon} />
+            </TraceIcon>
+            <TraceSubject>Swedish orders</TraceSubject>
+          </TraceLine>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
@@ -181,251 +448,142 @@ function TraceStateDemo() {
   return (
     <DemoRow>
       <Trace sx={styles.width}>
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={CheckmarkCircle02Icon} />
-          </TraceIcon>
-          <TraceTitle>Ran pnpm install</TraceTitle>
-        </TraceLine>
-        <TraceLine state="running">
-          <TraceIcon>
-            <Spinner aria-hidden />
-          </TraceIcon>
-          <TraceTitle>Running pnpm build</TraceTitle>
-        </TraceLine>
-        <TraceLine state="error">
-          <TraceIcon>
-            <Icon icon={Alert02Icon} />
-          </TraceIcon>
-          <TraceTitle>Failed to run pnpm lint</TraceTitle>
-        </TraceLine>
-        <TraceLine state="pending">
-          <TraceIcon>
-            <Icon icon={TerminalIcon} />
-          </TraceIcon>
-          <TraceTitle>Run pnpm test</TraceTitle>
-        </TraceLine>
+        <TraceStep>
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Ran pnpm install</TraceTitle>
+          </TraceLine>
+        </TraceStep>
+        <TraceStep state="running">
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Running pnpm build</TraceTitle>
+          </TraceLine>
+        </TraceStep>
+        <TraceStep state="error">
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Failed to run pnpm lint</TraceTitle>
+          </TraceLine>
+        </TraceStep>
+        <TraceStep state="pending">
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Run pnpm test</TraceTitle>
+          </TraceLine>
+        </TraceStep>
       </Trace>
     </DemoRow>
   );
 }
 
-function TraceDescriptionDemo() {
+function TraceMarkerDemo() {
   return (
     <DemoRow>
-      <TraceLine>
-        <TraceIcon>
-          <Icon icon={FileEditIcon} />
-        </TraceIcon>
-        <TraceTitle>Edited trace.tsx</TraceTitle>
-        <TraceDescription>+42 −8</TraceDescription>
-      </TraceLine>
-    </DemoRow>
-  );
-}
-
-function TraceCollapsibleDemo() {
-  return (
-    <DemoRow sx={styles.stage}>
-      <TraceCollapsible defaultOpen sx={styles.width}>
-        <TraceCollapsibleTrigger>
+      <Trace sx={styles.width}>
+        <TraceStep>
           <TraceLine>
-            <TraceIcon>
-              <Icon icon={AiBrain01Icon} />
-            </TraceIcon>
-            <TraceTitle>Thought for 5s</TraceTitle>
+            <TraceMarker />
+            <TraceTitle>Searched</TraceTitle>
+            <TraceDescription>46 sources</TraceDescription>
           </TraceLine>
-        </TraceCollapsibleTrigger>
-        <TraceCollapsibleContent>{thought}</TraceCollapsibleContent>
-      </TraceCollapsible>
+        </TraceStep>
+        <TraceStep>
+          <TraceLine>
+            <TraceMarker variant="check" />
+            <TraceTitle>Finished working</TraceTitle>
+          </TraceLine>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
 
-const words = thought.split(" ");
-const wordEvery = 60;
+const thinkFor = 3.2;
 
 function TraceReasoningDemo() {
-  const [shown, setShown] = useState(0);
-  const [open, setOpen] = useState<boolean>();
-  const running = shown < words.length;
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setShown((value) => Math.min(value + 1, words.length));
-    }, wordEvery);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  const seconds = Math.ceil((words.length * wordEvery) / 1000);
-
+  const { t, replay } = useClock(thinkFor);
+  const running = t < thinkFor;
   return (
     <DemoRow
+      controls={<Replay disabled={running} onClick={replay} />}
       sx={styles.stage}
-      controls={
-        <div>
-          <Button
-            disabled={running}
-            onClick={() => {
-              setShown(0);
-              setOpen(undefined);
-            }}
-            size="sm"
-            variant="outline"
-          >
-            <Icon icon={PlayIcon} />
-            Think again
-          </Button>
-        </div>
-      }
     >
-      <TraceCollapsible
-        onOpenChange={setOpen}
-        open={open ?? running}
-        sx={styles.width}
-      >
-        <TraceCollapsibleTrigger>
-          <TraceLine state={running ? "running" : undefined}>
-            <TraceIcon>
-              <Icon icon={AiBrain01Icon} />
-            </TraceIcon>
+      <Trace sx={styles.width}>
+        <TraceStep state={running ? "running" : undefined}>
+          <TraceLine>
+            <TraceMarker />
             <TraceTitle>
-              {running ? "Thinking" : `Thought for ${seconds}s`}
+              <SwapText>{running ? "Thinking" : "Thought for 3s"}</SwapText>
             </TraceTitle>
           </TraceLine>
-        </TraceCollapsibleTrigger>
-        <TraceCollapsibleContent>
-          {words.slice(0, shown).join(" ")}
-        </TraceCollapsibleContent>
-      </TraceCollapsible>
+          <TraceStepContent open={running}>
+            <TraceReasoning>
+              {words.slice(0, shownWords(t, [0, thinkFor])).join(" ")}
+            </TraceReasoning>
+          </TraceStepContent>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
 
-const run = [
-  {
-    description: "flights to Lisbon in March",
-    icon: Search01Icon,
-    title: {
-      done: "Searched the web",
-      error: "Failed to search the web",
-      running: "Searching the web",
-    },
-  },
-  {
-    description: "acme.com/flights",
-    icon: Globe02Icon,
-    title: {
-      done: "Read the page",
-      error: "Failed to read the page",
-      running: "Reading the page",
-    },
-  },
-  {
-    description: "March 2027",
-    icon: DatabaseIcon,
-    title: {
-      done: "Checked the calendar",
-      error: "Failed to check the calendar",
-      running: "Checking the calendar",
-    },
-  },
-] as const;
-
-const tick = 1200;
-
-function statusAt(index: number, elapsed: number) {
-  if (elapsed < index) {
-    return null;
-  }
-  if (elapsed === index) {
-    return "running";
-  }
-  return index === run.length - 1 ? "error" : "done";
-}
+const tool = { span: [0, 2.6], tasks: [1.2, 2.4] } as const;
 
 function TraceToolDemo() {
-  const [elapsed, setElapsed] = useState(0);
-  const running = elapsed < run.length;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setElapsed(Math.min(elapsed + 1, run.length));
-    }, tick);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [elapsed]);
-
+  const { t, replay } = useClock(tool.span[1]);
   return (
     <DemoRow
+      controls={<Replay disabled={t < tool.span[1]} onClick={replay} />}
       sx={styles.stage}
-      controls={
-        <div>
-          <Button
-            disabled={running}
-            onClick={() => {
-              setElapsed(0);
-            }}
-            size="sm"
-            variant="outline"
-          >
-            <Icon icon={RepeatIcon} />
-            Run again
-          </Button>
-        </div>
-      }
     >
-      <TraceCollapsible defaultOpen sx={styles.width}>
-        <TraceCollapsibleTrigger>
-          <TraceLine state={running ? "running" : undefined}>
-            <TraceIcon>
-              <SwapIcon value={running ? "running" : "done"}>
-                <SwapIconItem value="running">
-                  <Spinner aria-hidden />
-                </SwapIconItem>
-                <SwapIconItem value="done">
-                  <Icon icon={WrenchIcon} />
-                </SwapIconItem>
-              </SwapIcon>
-            </TraceIcon>
-            <TraceTitle>
-              {running ? "Using 3 tools" : "Used 3 tools"}
-            </TraceTitle>
+      <Trace sx={styles.width}>
+        <ReadOrders span={tool.span} t={t} tasks={tool.tasks} />
+      </Trace>
+    </DemoRow>
+  );
+}
+
+const search = { span: [0, 2], found: [0.3, 0.7, 1.1, 1.5] } as const;
+
+function TraceSourcesDemo() {
+  const { t, replay } = useClock(search.span[1]);
+  return (
+    <DemoRow
+      controls={<Replay disabled={t < search.span[1]} onClick={replay} />}
+      sx={styles.stage}
+    >
+      <Citations>
+        <Trace sx={styles.width}>
+          <SearchSources found={search.found} span={search.span} t={t} />
+        </Trace>
+      </Citations>
+    </DemoRow>
+  );
+}
+
+function TraceFileDemo() {
+  return (
+    <DemoRow>
+      <Trace sx={styles.width}>
+        <TraceStep>
+          <TraceLine>
+            <TraceMarker />
+            <TraceTitle>Report is ready</TraceTitle>
           </TraceLine>
-        </TraceCollapsibleTrigger>
-        <TraceCollapsibleContent>
-          <Trace>
-            {run.map((step, index) => {
-              const status = statusAt(index, elapsed);
-              return status === null ? null : (
-                <TraceLine
-                  key={step.description}
-                  state={status === "done" ? undefined : status}
-                >
-                  <TraceIcon>
-                    <SwapIcon value={status}>
-                      <SwapIconItem value="running">
-                        <Spinner aria-hidden />
-                      </SwapIconItem>
-                      <SwapIconItem value="done">
-                        <Icon icon={step.icon} />
-                      </SwapIconItem>
-                      <SwapIconItem value="error">
-                        <Icon icon={Alert02Icon} />
-                      </SwapIconItem>
-                    </SwapIcon>
-                  </TraceIcon>
-                  <TraceTitle>{step.title[status]}</TraceTitle>
-                  <TraceDescription>{step.description}</TraceDescription>
-                </TraceLine>
-              );
-            })}
-          </Trace>
-        </TraceCollapsibleContent>
-      </TraceCollapsible>
+          <TraceStepContent>
+            <Attachment size="xs">
+              <AttachmentMedia>
+                <Icon icon={File02Icon} />
+              </AttachmentMedia>
+              <AttachmentContent>
+                <AttachmentTitle>sweden-launch</AttachmentTitle>
+                <AttachmentDescription>PDF</AttachmentDescription>
+              </AttachmentContent>
+            </Attachment>
+          </TraceStepContent>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
@@ -433,22 +591,28 @@ function TraceToolDemo() {
 function TraceLinkDemo() {
   return (
     <DemoRow>
-      <a
-        href="https://acme.com/docs/ci"
-        rel="noreferrer"
-        target="_blank"
-        {...stylex.props(traceActionStyles())}
-      >
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={Globe02Icon} />
-          </TraceIcon>
-          <TraceTitle>Continuous integration</TraceTitle>
-          <TraceIcon>
-            <Icon icon={ArrowUpRight01Icon} />
-          </TraceIcon>
-        </TraceLine>
-      </a>
+      <Trace sx={styles.width}>
+        <TraceStep>
+          <a
+            href="https://acme.com/docs/ci"
+            rel="noreferrer"
+            target="_blank"
+            {...stylex.props(traceActionStyles())}
+          >
+            <TraceLine>
+              <TraceMarker />
+              <TraceTitle>Read</TraceTitle>
+              <TraceIcon>
+                <Icon icon={Globe02Icon} />
+              </TraceIcon>
+              <TraceSubject>Continuous integration</TraceSubject>
+              <TraceIcon>
+                <Icon icon={ArrowUpRight01Icon} />
+              </TraceIcon>
+            </TraceLine>
+          </a>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
@@ -456,36 +620,42 @@ function TraceLinkDemo() {
 function TraceDialogDemo() {
   return (
     <DemoRow>
-      <Dialog>
-        <DialogTrigger
-          render={
-            <button type="button" {...stylex.props(traceActionStyles())} />
-          }
-        >
-          <TraceLine>
-            <TraceIcon>
-              <Icon icon={TerminalIcon} />
-            </TraceIcon>
-            <TraceTitle>Ran git diff --stat</TraceTitle>
-          </TraceLine>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogCloseButton />
-          <DialogHeader>
-            <DialogTitle>git diff --stat</DialogTitle>
-            <DialogDescription>Exited with code 0.</DialogDescription>
-          </DialogHeader>
-          <DialogBody>
-            <CodeBlock size="sm">
-              <CodeBlockContent>
-                {
-                  " package.json | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
-                }
-              </CodeBlockContent>
-            </CodeBlock>
-          </DialogBody>
-        </DialogContent>
-      </Dialog>
+      <Trace sx={styles.width}>
+        <TraceStep>
+          <Dialog>
+            <DialogTrigger
+              render={
+                <button type="button" {...stylex.props(traceActionStyles())} />
+              }
+            >
+              <TraceLine>
+                <TraceMarker />
+                <TraceTitle>Ran</TraceTitle>
+                <TraceIcon>
+                  <Icon icon={TerminalIcon} />
+                </TraceIcon>
+                <TraceSubject>git diff --stat</TraceSubject>
+              </TraceLine>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogCloseButton />
+              <DialogHeader>
+                <DialogTitle>git diff --stat</DialogTitle>
+                <DialogDescription>Exited with code 0.</DialogDescription>
+              </DialogHeader>
+              <DialogBody>
+                <CodeBlock size="sm">
+                  <CodeBlockContent>
+                    {
+                      " package.json | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+                    }
+                  </CodeBlockContent>
+                </CodeBlock>
+              </DialogBody>
+            </DialogContent>
+          </Dialog>
+        </TraceStep>
+      </Trace>
     </DemoRow>
   );
 }
@@ -493,83 +663,61 @@ function TraceDialogDemo() {
 function TraceSheetDemo() {
   return (
     <DemoRow>
-      <Sheet>
-        <SheetTrigger
-          render={
-            <button type="button" {...stylex.props(traceActionStyles())} />
-          }
-        >
-          <TraceLine>
-            <TraceIcon>
-              <Icon icon={FileEditIcon} />
-            </TraceIcon>
-            <TraceTitle>Edited package.json</TraceTitle>
-            <TraceDescription>+1 −1</TraceDescription>
-          </TraceLine>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>package.json</SheetTitle>
-            <SheetDescription>1 addition, 1 deletion</SheetDescription>
-          </SheetHeader>
-          <SheetBody>
-            <CodeBlock size="sm">
-              <CodeBlockContent>
-                <CodeBlockLine>{'  "dependencies": {'}</CodeBlockLine>
-                <CodeBlockLine variant="removed">
-                  {'    "zod": "^3.24.0"'}
-                </CodeBlockLine>
-                <CodeBlockLine variant="added">
-                  {'    "zod": "^4.1.0"'}
-                </CodeBlockLine>
-                <CodeBlockLine>{"  }"}</CodeBlockLine>
-              </CodeBlockContent>
-            </CodeBlock>
-          </SheetBody>
-        </SheetContent>
-      </Sheet>
-    </DemoRow>
-  );
-}
-
-function TraceGroupDemo() {
-  return (
-    <DemoRow>
       <Trace sx={styles.width}>
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={Globe02Icon} />
-          </TraceIcon>
-          <TraceTitle>Searched the web</TraceTitle>
-        </TraceLine>
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={FileEditIcon} />
-          </TraceIcon>
-          <TraceTitle>Edited ci.yml</TraceTitle>
-          <TraceDescription>+3 −1</TraceDescription>
-        </TraceLine>
-        <TraceLine>
-          <TraceIcon>
-            <Icon icon={TerminalIcon} />
-          </TraceIcon>
-          <TraceTitle>Ran pnpm install</TraceTitle>
-        </TraceLine>
+        <TraceStep>
+          <Sheet>
+            <SheetTrigger
+              render={
+                <button type="button" {...stylex.props(traceActionStyles())} />
+              }
+            >
+              <TraceLine>
+                <TraceMarker />
+                <TraceTitle>Edited</TraceTitle>
+                <TraceIcon>
+                  <Icon icon={FileEditIcon} />
+                </TraceIcon>
+                <TraceSubject>package.json</TraceSubject>
+                <TraceDescription>+1 −1</TraceDescription>
+              </TraceLine>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>package.json</SheetTitle>
+                <SheetDescription>1 addition, 1 deletion</SheetDescription>
+              </SheetHeader>
+              <SheetBody>
+                <CodeBlock size="sm">
+                  <CodeBlockContent>
+                    <CodeBlockLine>{'  "dependencies": {'}</CodeBlockLine>
+                    <CodeBlockLine variant="removed">
+                      {'    "zod": "^3.24.0"'}
+                    </CodeBlockLine>
+                    <CodeBlockLine variant="added">
+                      {'    "zod": "^4.1.0"'}
+                    </CodeBlockLine>
+                    <CodeBlockLine>{"  }"}</CodeBlockLine>
+                  </CodeBlockContent>
+                </CodeBlock>
+              </SheetBody>
+            </SheetContent>
+          </Sheet>
+        </TraceStep>
       </Trace>
     </DemoRow>
   );
 }
 
 export {
-  TraceCollapsibleDemo,
-  TraceReasoningDemo,
   TraceDemo,
-  TraceDescriptionDemo,
   TraceDialogDemo,
-  TraceGroupDemo,
-  TraceLineDemo,
+  TraceFileDemo,
   TraceLinkDemo,
+  TraceMarkerDemo,
+  TraceReasoningDemo,
   TraceSheetDemo,
+  TraceSourcesDemo,
   TraceStateDemo,
+  TraceStepDemo,
   TraceToolDemo,
 };

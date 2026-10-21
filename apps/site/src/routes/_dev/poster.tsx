@@ -39,7 +39,7 @@ const columns: (keyof typeof demos)[][] = [
   [
     "trace",
     "data-table-pagination",
-    "trace-group",
+    "trace-state",
     "attachment-group",
     "field-radio",
     "badge-status",

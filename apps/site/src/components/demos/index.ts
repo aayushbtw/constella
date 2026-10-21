@@ -97,7 +97,7 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
-import { CitationDemo } from "~/components/demos/citation";
+import { CitationDemo, CitationGroupDemo } from "~/components/demos/citation";
 import {
   CodeBlockActionsDemo,
   CodeBlockDangerDemo,
@@ -405,16 +405,16 @@ import {
   TooltipSideDemo,
 } from "~/components/demos/tooltip";
 import {
-  TraceCollapsibleDemo,
-  TraceReasoningDemo,
   TraceDemo,
-  TraceDescriptionDemo,
   TraceDialogDemo,
-  TraceGroupDemo,
-  TraceLineDemo,
+  TraceFileDemo,
   TraceLinkDemo,
+  TraceMarkerDemo,
+  TraceReasoningDemo,
   TraceSheetDemo,
+  TraceSourcesDemo,
   TraceStateDemo,
+  TraceStepDemo,
   TraceToolDemo,
 } from "~/components/demos/trace";
 import {
@@ -481,6 +481,7 @@ const demos = {
   "chart-pie": ChartPieDemo,
   chat: ChatDemo,
   citation: CitationDemo,
+  "citation-group": CitationGroupDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,
@@ -706,15 +707,15 @@ const demos = {
   "toast-promise": ToastPromiseDemo,
   "toast-types": ToastTypesDemo,
   trace: TraceDemo,
-  "trace-collapsible": TraceCollapsibleDemo,
-  "trace-reasoning": TraceReasoningDemo,
-  "trace-description": TraceDescriptionDemo,
   "trace-dialog": TraceDialogDemo,
-  "trace-group": TraceGroupDemo,
-  "trace-line": TraceLineDemo,
+  "trace-file": TraceFileDemo,
   "trace-link": TraceLinkDemo,
+  "trace-marker": TraceMarkerDemo,
+  "trace-reasoning": TraceReasoningDemo,
   "trace-sheet": TraceSheetDemo,
+  "trace-sources": TraceSourcesDemo,
   "trace-state": TraceStateDemo,
+  "trace-step": TraceStepDemo,
   "trace-tool": TraceToolDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,

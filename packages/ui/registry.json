@@ -1164,7 +1164,7 @@
       "name": "trace",
       "type": "registry:ui",
       "title": "Trace",
-      "description": "The steps an agent takes, one line each, that open, link or show a status.",
+      "description": "The steps an agent takes, on one rail, each with a status, what it acted on and what it found.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
@@ -1173,7 +1173,10 @@
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/collapsible.json",
-        "https://constella.aayush.cv/r/shimmer.json"
+        "https://constella.aayush.cv/r/shimmer.json",
+        "https://constella.aayush.cv/r/spinner.json",
+        "https://constella.aayush.cv/r/swap-icon.json",
+        "https://constella.aayush.cv/r/swap-text.json"
       ],
       "files": [
         {

@@ -4,7 +4,7 @@
 
 Ask how often it's seen. Something used dozens of times a day gets little or no motion. Keyboard-initiated actions never animate.
 
-Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it: no blur-ins, no bounce on a surface or anything that travels far. A clock counts only where elapsed time is the news, like an agent's run. `overshoot` is only for a small mark landing where it already almost is.
+Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it. No blur-ins, no bounce on a surface or anything that travels far. An agent's live run is the exception, since each step arriving is what the reader is watching for. Its steps grow in and fade up from a 2px blur, and its clock counts ([Trace](components.md#trace)). `overshoot` is only for a small mark landing where it already almost is.
 
 ## Easing
 
@@ -56,7 +56,7 @@ When one state replaces another in place, both stay on screen and cross-fade, so
 
 ## Layout animation
 
-When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a shared hover card's height and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a shared hover card's height and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
 
 ## Reduced motion
 

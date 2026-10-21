@@ -225,4 +225,26 @@ A ghost or outline button that stays pressed, with the button's sizes and press.
 
 ## Trace
 
-The one shape for an agent's steps: reasoning, tool calls and sources are all Trace lines, not components of their own. A line is a quiet text row a control tall with no fill, `textSecondary` at `sm`: an icon's column, a title cut short and a `textMuted` description that never truncates. It turns `textPrimary` on hover only inside a link or trigger, and a collapsible's chevron turns a quarter on `move` + `out`. `error` is `dangerText`, hover included; `pending` dims to `opacities.disabled`; a running title shimmers. A trailing icon sits `space.xxs` closer, as the indicator. Lines stack `space.xs` apart. An open line's detail sits in `textSecondary` beside a 1px `border` rail that starts `space.xxs` under the line's icon, lined up with the title, so a nested trace lines up its icons there too. A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.
+The one shape for an agent's run: reasoning, tool calls, sources and files are all steps on one rail, not components of their own. Everything in it stays a step back from the answer ([type](type.md#agent-process)).
+
+| Part | Look |
+| --- | --- |
+| Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops `iconSize / 2` from a dot's center, and 6px further from a spinner, alert or check, which read heavier. It starts under the trigger's chevron and ends on the last step |
+| Marker | A 6px `border` dot when done or pending, a spinner while running, an alert when failed; a substep settles to a check circle; `check` ends a run on an `accentSolid` disc |
+| Line | A control tall, no fill, `textMuted` at `sm`; `textPrimary` on hover inside a link or trigger. `error` is `dangerText`; `pending` dims to `opacities.disabled` |
+| Title | The verb, cut short; shimmers while running. Medium `textSecondary` in a trigger |
+| Subject | Medium `textSecondary` after its icon, `space.xxs` closer; cut short |
+| Description | `textMuted`, tabular; never truncates |
+| Content | `textSecondary` at `sm`, lined up with the title; a ring on its edge stays inside the clip |
+| Reasoning | `textMuted`, a window of four lines, the top one fading under a mask once full |
+| Substeps | A `defaultRingSubtle` card of `controlMd` rows split by `borderSubtle`; running rows `textSecondary`, done rows `textPrimary` |
+
+| Motion | Values |
+| --- | --- |
+| A step arriving | Its space grows from `0fr` on `move` + `out`, then it fades in from 4px down under `motion.crossfadeTextBlur`, 50ms later. Only steps that arrive after the Trace mounts; once each, so a shut panel showing again replays none. Reduced motion: a fade |
+| Content opening | Its rows grow on `move`, then it fades in 50ms later |
+| Content shutting | It fades out on `popoverExit`, then its rows shut on `popover` |
+| Text changing | Titles and counts sit in a Swap Text: tense morphs, numbers roll |
+| The trigger's chevron | Turns a quarter on `move` + `out` |
+
+A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.
