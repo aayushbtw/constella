@@ -1,6 +1,11 @@
 import * as stylex from "@stylexjs/stylex";
 
-import { Citation, Citations } from "@/components/ai/citation";
+import {
+  Citation,
+  CitationGroup,
+  CitationGroupMore,
+  Citations,
+} from "@/components/ai/citation";
 import type { Source } from "@/components/ai/citation";
 import { Text } from "@/components/typography/text";
 import { DemoRow } from "~/components/demos/frame";
@@ -50,4 +55,36 @@ function CitationDemo() {
   );
 }
 
-export { CitationDemo };
+const found = [
+  sources.acme,
+  sources.newsroom,
+  sources.shadcn,
+  {
+    date: "October 2, 2026",
+    name: "Acme Docs",
+    title: "Plans and Pricing",
+    url: "https://docs.acme.com",
+  },
+] satisfies Source[];
+
+function CitationGroupDemo() {
+  const last = found.at(-1);
+  return (
+    <DemoRow>
+      <Citations>
+        <CitationGroup sx={styles.answer}>
+          {found.slice(0, -1).map((source) => (
+            <Citation key={source.url} sources={[source]} />
+          ))}
+          {last === undefined ? null : (
+            <CitationGroupMore count={42}>
+              <Citation sources={[last]} />
+            </CitationGroupMore>
+          )}
+        </CitationGroup>
+      </Citations>
+    </DemoRow>
+  );
+}
+
+export { CitationDemo, CitationGroupDemo };

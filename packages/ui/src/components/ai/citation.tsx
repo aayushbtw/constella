@@ -63,6 +63,27 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.md,
   },
+  group: {
+    alignItems: "center",
+    display: "flex",
+    flexWrap: "wrap",
+    gap: space.xxs,
+    minWidth: 0,
+  },
+  // One unit the row can't split, so the count never wraps onto a line alone.
+  groupMore: {
+    alignItems: "center",
+    display: "flex",
+    gap: space.xxs,
+    minWidth: 0,
+  },
+  groupCount: {
+    color: colors.textSecondary,
+    flexShrink: 0,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+    whiteSpace: "nowrap",
+  },
   source: {
     color: "inherit",
     display: "flex",
@@ -200,5 +221,37 @@ function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
   );
 }
 
-export { Citation, Citations };
+/** A wrapping row of citations: the sources a search found, say. */
+function CitationGroup({ children, sx }: { children: ReactNode; sx?: Sx }) {
+  return (
+    <div data-slot="citation-group" {...stylex.props(styles.group, sx)}>
+      {children}
+    </div>
+  );
+}
+
+/** The group's last citation and a count of the sources not shown, kept on one line. */
+function CitationGroupMore({
+  children,
+  count,
+  sx,
+}: {
+  children: ReactNode;
+  count: number;
+  sx?: Sx;
+}) {
+  return (
+    <span
+      data-slot="citation-group-more"
+      {...stylex.props(styles.groupMore, sx)}
+    >
+      {children}
+      <span {...stylex.props(typeStyles.textSm, styles.groupCount)}>
+        {count} more
+      </span>
+    </span>
+  );
+}
+
+export { Citation, CitationGroup, CitationGroupMore, Citations };
 export type { Source };
