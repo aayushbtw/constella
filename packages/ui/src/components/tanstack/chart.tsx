@@ -2,16 +2,19 @@
 
 import * as stylex from "@stylexjs/stylex";
 import type {
+  ChartBuildContext,
+  ChartPositionScaleOptions,
   ChartTooltipContent as ChartTooltipModel,
   ConfiguredScaleLike,
   ChartValue,
+  DomChartDefinition,
 } from "@tanstack/charts";
 import { Chart as ChartPrimitive } from "@tanstack/charts/react/tooltip";
 import type {
   ChartProps as ChartPrimitiveProps,
   ChartTooltipBodyRenderContext,
 } from "@tanstack/charts/react/tooltip";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import {
@@ -133,8 +136,6 @@ const chartTickFormat = (locale: Intl.LocalesArgument) => {
     Number.isInteger(value) ? compact.format(value) : "";
 };
 
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const hidden = ":is([data-slot='chart-legend-item']:not([data-pressed]) > *)";
 
 const styles = stylex.create({
@@ -159,9 +160,9 @@ const styles = stylex.create({
     fontWeight: fontWeights.regular,
     gridTemplateColumns: "auto minmax(0, 1fr) auto",
     maxWidth: sizes.tooltip,
-    paddingBlock: px10,
-    paddingInlineEnd: px10,
-    paddingInlineStart: px10,
+    paddingBlock: space.popup,
+    paddingInlineEnd: space.popup,
+    paddingInlineStart: space.popup,
     rowGap: space.xxxs,
     whiteSpace: "pre-line",
   },
@@ -236,6 +237,7 @@ const styles = stylex.create({
       default: colors.textMuted,
       ":is([data-pressed])": colors.textPrimary,
     },
+    fontWeight: fontWeights.regular,
     // Button's transitions (button.tsx `base`, kept in step by hand: StyleX can't import them),
     // plus the label's color, so hiding a series fades like its fill.
     transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}, ${durations.hover}, ${durations.hover}`,
@@ -439,7 +441,7 @@ function useChartTween<T extends Record<string, number>>(
  */
 const chartGroupScale = (
   weights: readonly (readonly [string, number])[],
-  padding: number
+  padding = 0
 ): ConfiguredScaleLike<string> => {
   let [from, to] = [0, 1];
   // At least one slot wide, so a last series closing doesn't stretch its bars.
@@ -473,7 +475,55 @@ const chartGroupScale = (
   return band;
 };
 
-/** Renders a TanStack Charts definition in the theme's palette, with a `ChartTooltipContent` unless `renderTooltipBody` replaces it. */
+type ChartScales = Readonly<Record<string, ChartPositionScaleOptions | null>>;
+
+// captionLg's 12, set on the axes, not in CSS: TanStack measures labels by this number for margins and thinning.
+const tickLabelSize = 12;
+
+const withTickLabelSize = <TSpec extends { scales?: ChartScales }>(
+  spec: TSpec
+): TSpec =>
+  spec.scales === undefined
+    ? spec
+    : {
+        ...spec,
+        scales: Object.fromEntries(
+          Object.entries(spec.scales).map(([id, options]) => [
+            id,
+            options === null ||
+            options.axis === false ||
+            options.axis?.tickLabels === false
+              ? options
+              : {
+                  ...options,
+                  axis: {
+                    ...options.axis,
+                    tickLabels: {
+                      fontSize: tickLabelSize,
+                      ...options.axis?.tickLabels,
+                    },
+                  },
+                },
+          ])
+        ),
+      };
+
+const withChartDefaults = <
+  TDatum,
+  TXValue extends ChartValue,
+  TYValue extends ChartValue,
+>(
+  definition: DomChartDefinition<TDatum, TXValue, TYValue>
+): DomChartDefinition<TDatum, TXValue, TYValue> =>
+  "chart" in definition
+    ? {
+        ...definition,
+        chart: (context: ChartBuildContext) =>
+          withTickLabelSize(definition.chart(context)),
+      }
+    : withTickLabelSize(definition);
+
+/** Renders a TanStack Charts definition in the theme's palette, with a `ChartTooltipContent` unless `renderTooltipBody` replaces it. Axis labels default to 12px. */
 function Chart<
   TDatum,
   TXValue extends ChartValue = ChartValue,
@@ -497,6 +547,10 @@ function Chart<
     new WeakMap<Element, { text: string | null; x: number; y: number }>()
   );
   const painted = useRef(props.definition);
+  const definition = useMemo(
+    () => withChartDefaults(props.definition),
+    [props.definition]
+  );
   const renderConfigTooltip = ({ content }: ChartTooltipBodyRenderContext) => (
     <ChartTooltipContent config={config} content={content} />
   );
@@ -535,6 +589,7 @@ function Chart<
         onRender={fadeLabels}
         renderTooltipBody={renderTooltipBody ?? renderConfigTooltip}
         {...props}
+        definition={definition}
       />
     </div>
   );

@@ -120,7 +120,7 @@ const styles = stylex.create({
   },
   search: { maxWidth: "100%", width: 256 },
   status: { width: 128 },
-  amount: { fontVariantNumeric: "tabular-nums", textAlign: "end", width: 128 },
+  amount: { width: 128 },
   frame: {
     borderBlockEndColor: colors.border,
     borderBlockStartColor: colors.border,
@@ -234,6 +234,7 @@ const columns = column.columns([
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
+    meta: { skeleton: "checkbox" },
   }),
   column.accessor("status", {
     cell: ({ getValue }) => (
@@ -251,6 +252,7 @@ const columns = column.columns([
     sortFn: "alphanumeric",
   }),
   column.accessor("amount", {
+    meta: { align: "end" },
     cell: ({ getValue }) => money.format(getValue()),
     header: ({ column: amount }) => (
       <DataTableColumnHeader column={amount} title="Amount" />
@@ -367,6 +369,7 @@ const fullColumns = full.columns([
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
+    meta: { skeleton: "checkbox" },
   }),
   full.accessor("status", {
     cell: ({ getValue }) => (
@@ -386,6 +389,7 @@ const fullColumns = full.columns([
     sortFn: "alphanumeric",
   }),
   full.accessor("amount", {
+    meta: { align: "end" },
     cell: ({ getValue }) => money.format(getValue()),
     enableGlobalFilter: false,
     header: ({ column: amount }) => (
@@ -506,6 +510,7 @@ const queryColumns = queried.columns([
     sortFn: "alphanumeric",
   }),
   queried.accessor("amount", {
+    meta: { align: "end" },
     cell: ({ getValue }) => money.format(getValue()),
     header: ({ column: amount }) => (
       <DataTableColumnHeader column={amount} title="Amount" />
@@ -601,6 +606,7 @@ const pagedColumns = paged.columns([
     ),
   }),
   paged.accessor("amount", {
+    meta: { align: "end" },
     cell: ({ getValue }) => money.format(getValue()),
     header: ({ column: amount }) => (
       <DataTableColumnHeader column={amount} title="Amount" />
@@ -725,6 +731,7 @@ const clickColumns = column.columns([
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
+    meta: { skeleton: "checkbox" },
   }),
   column.accessor("email", {
     cell: ({ row }) => <PaymentLink payment={row.original} />,
@@ -734,6 +741,7 @@ const clickColumns = column.columns([
     sortFn: "alphanumeric",
   }),
   column.accessor("amount", {
+    meta: { align: "end" },
     cell: ({ getValue }) => money.format(getValue()),
     header: ({ column: amount }) => (
       <DataTableColumnHeader column={amount} title="Amount" />

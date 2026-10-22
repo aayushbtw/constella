@@ -577,6 +577,7 @@
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/scroll-fade.json",
         "https://constella.aayush.cv/r/separator.json",
         "https://constella.aayush.cv/r/sheet.json",
         "https://constella.aayush.cv/r/skeleton.json",
@@ -976,7 +977,10 @@
       "title": "Table",
       "description": "Rows of data with a header, footer and caption, divided by faint edges.",
       "dependencies": ["@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/scroll-fade.json"
+      ],
       "files": [
         {
           "path": "src/components/primitives/table.tsx",
@@ -1174,8 +1178,6 @@
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/collapsible.json",
         "https://constella.aayush.cv/r/shimmer.json",
-        "https://constella.aayush.cv/r/spinner.json",
-        "https://constella.aayush.cv/r/swap-icon.json",
         "https://constella.aayush.cv/r/swap-text.json"
       ],
       "files": [

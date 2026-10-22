@@ -15,6 +15,7 @@ type CodeProps = Omit<
 const styles = stylex.create({
   base: {
     backgroundColor: colors.fill,
+    boxDecorationBreak: "clone",
     borderStartStartRadius: radii.xs,
     borderStartEndRadius: radii.xs,
     borderEndStartRadius: radii.xs,
@@ -22,8 +23,6 @@ const styles = stylex.create({
     fontFamily: fonts.mono,
     fontSize: "0.875em",
     fontVariantLigatures: "none",
-    paddingBlockStart: space.xxxs,
-    paddingBlockEnd: space.xxxs,
     paddingInlineStart: space.xxs,
     paddingInlineEnd: space.xxs,
   },

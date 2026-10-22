@@ -254,6 +254,26 @@ const styles = stylex.create({
       [groupOf("sm")]: sizes.controlXs,
       [groupOf("lg")]: sizes.controlLg,
     },
+    // The avatars' edge, so the count reads as one of them.
+    "::after": {
+      borderBlockColor: colors.border,
+      borderInlineColor: colors.border,
+      borderStartStartRadius: radii.full,
+      borderStartEndRadius: radii.full,
+      borderEndStartRadius: radii.full,
+      borderEndEndRadius: radii.full,
+      borderBlockStyle: "solid",
+      borderInlineStyle: "solid",
+      borderBlockWidth: strokes.border,
+      borderInlineWidth: strokes.border,
+      content: "''",
+      insetBlockEnd: 0,
+      insetBlockStart: 0,
+      insetInlineEnd: 0,
+      insetInlineStart: 0,
+      pointerEvents: "none",
+      position: "absolute",
+    },
   },
 });
 

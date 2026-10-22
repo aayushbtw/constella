@@ -85,11 +85,6 @@ const corner = {
   ":has(> [data-slot='avatar'][data-corners='pill']:first-child)": radii.full,
 };
 
-// shadcn's 6px and 10px, and an 18px small, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-const px18 = `calc(${sizes.controlXxs} - ${space.xxxs})`;
-
 const styles = stylex.create({
   base: {
     alignItems: "center",
@@ -120,23 +115,24 @@ const styles = stylex.create({
     transitionProperty: "background-color, border-color, color, opacity",
     transitionTimingFunction: "ease",
     // In a sentence it centers on the text; a badge opening on an icon or avatar would
-    // otherwise take its baseline from that child's bottom edge.
-    verticalAlign: "middle",
+    // otherwise take its baseline from that child's bottom edge. In a table cell it sits on
+    // the line's top, so it fills the line instead of growing the row.
+    verticalAlign: { default: "middle", ":is(td > *)": "top" },
     whiteSpace: "nowrap",
     width: "fit-content",
   },
   // Icons are `sizes.iconXs` up to default and `iconSm` at lg.
   sm: {
-    ...sizing(px6, space.xxs, px18),
+    ...sizing(space.row, space.xxs, sizes.controlXxxs),
     gap: space.xxs,
   },
   default: {
-    ...sizing(space.xs, px6, sizes.controlXxs),
+    ...sizing(space.xs, space.row, sizes.controlXxs),
     gap: space.xxs,
   },
   lg: {
-    ...sizing(px10, space.xs, sizes.controlXs),
-    gap: px6,
+    ...sizing(space.popup, space.xs, sizes.controlXs),
+    gap: space.row,
   },
   primary: {
     backgroundColor: colors.accentSolid,
@@ -175,8 +171,8 @@ const styles = stylex.create({
     transitionDuration: durations.hover,
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
-    height: { default: px6, ":is([data-size='lg'] > *)": space.xs },
-    width: { default: px6, ":is([data-size='lg'] > *)": space.xs },
+    height: { default: space.row, ":is([data-size='lg'] > *)": space.xs },
+    width: { default: space.row, ":is([data-size='lg'] > *)": space.xs },
   },
   link: {
     color: colors.textPrimary,

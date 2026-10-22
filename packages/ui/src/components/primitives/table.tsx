@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -44,6 +45,7 @@ const styles = stylex.create({
   container: {
     overflowX: "auto",
     position: "relative",
+    scrollbarWidth: "none",
     width: "100%",
   },
   // Separate, so the cells draw the dividers: collapsed, Chrome hides them under a selected row's fill in a cell that clips.
@@ -52,6 +54,7 @@ const styles = stylex.create({
     borderSpacing: 0,
     captionSide: "bottom",
     color: colors.textPrimary,
+    fontVariantNumeric: "tabular-nums",
     width: "100%",
   },
   footer: {
@@ -151,7 +154,10 @@ function Table({
   return (
     <TableInteractiveContext value={interactive}>
       <TableSizeContext value={size}>
-        <div data-slot="table-container" {...stylex.props(styles.container)}>
+        <div
+          data-slot="table-container"
+          {...stylex.props(styles.container, scrollFade.x)}
+        >
           <table
             data-size={size}
             data-slot="table"

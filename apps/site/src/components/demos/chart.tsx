@@ -130,7 +130,7 @@ const barDefinition = (
         y: "visitors",
         z: "device",
         color: "device",
-        layout: group({ scale: chartGroupScale(weights, 0.1) }),
+        layout: group({ scale: chartGroupScale(weights) }),
         radius: 4,
         inset: 1,
       }),

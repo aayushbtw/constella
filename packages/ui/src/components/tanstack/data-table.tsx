@@ -40,6 +40,7 @@ import type { Sx } from "@/lib/constella/styles";
 import {
   colors,
   durations,
+  lineHeights,
   opacities,
   sizes,
   space,
@@ -58,7 +59,7 @@ interface DataTableProps<
 > {
   /** The row open elsewhere, like in a Side Panel: marked current and filled a step above a selected one. */
   activeRowId?: string;
-  /** Keyed by column id: a column's width or alignment, on its header and cells. */
+  /** Keyed by column id: a column's width, on its header and cells. A column aligns to its end, like figures, with `meta: { align: "end" }`, and loads as a checkbox with `meta: { skeleton: "checkbox" }`. */
   columnSx?: Readonly<Partial<Record<string, Sx>>>;
   /** Shown in one full-width row when no row is left. */
   empty: ReactNode;
@@ -87,6 +88,17 @@ interface SortableColumn {
     | undefined
     | ((event: MouseEvent<HTMLButtonElement>) => void);
 }
+
+// A column's `meta`, read by shape, as TanStack leaves its type to the table.
+interface MetaColumn {
+  columnDef: { meta?: object };
+}
+
+const alignsEnd = ({ columnDef: { meta } }: MetaColumn) =>
+  meta !== undefined && "align" in meta && meta.align === "end";
+
+const loadsAsCheckbox = ({ columnDef: { meta } }: MetaColumn) =>
+  meta !== undefined && "skeleton" in meta && meta.skeleton === "checkbox";
 
 // What the column sizing feature adds to a column.
 interface SizedColumn {
@@ -120,8 +132,18 @@ const styles = stylex.create({
   busy: {
     opacity: opacities.busy,
   },
+  // Inline, so a column's alignment places it; its margins fill the text's line, so a loading row is as tall as a loaded one.
   skeleton: {
+    display: "inline-block",
     height: sizes.iconSm,
+    marginBlock: `calc((${lineHeights.textSm} - ${sizes.iconSm}) / 2)`,
+    verticalAlign: "top",
+    width: "60%",
+  },
+  skeletonCheckbox: {
+    height: sizes.icon,
+    marginBlock: `calc((${lineHeights.textSm} - ${sizes.icon}) / 2)`,
+    width: sizes.icon,
   },
   clickable: {
     cursor: "pointer",
@@ -136,12 +158,18 @@ const styles = stylex.create({
     height: sizes.media,
     textAlign: "center",
   },
-  // Lines its label up with the cells under it, despite the button's padding.
+  // Lines its label up with the cells under it, despite the button's padding and border.
   sort: {
-    marginInlineStart: `calc(-1 * ${space.xs})`,
+    marginInlineStart: `calc(-1 * (${space.popup} + ${strokes.border}))`,
+  },
+  sortEnd: {
+    marginInlineEnd: `calc(-1 * (${space.popup} + ${strokes.border}))`,
   },
   sortIcon: {
     color: colors.textMuted,
+  },
+  end: {
+    textAlign: "end",
   },
 });
 
@@ -221,6 +249,7 @@ function DataTable<
                 sx={[
                   styles.cell,
                   widthOf(header.column),
+                  alignsEnd(header.column) && styles.end,
                   columnSx[header.column.id],
                 ]}
               >
@@ -243,8 +272,16 @@ function DataTable<
           loadingRows.map((index) => (
             <TableRow key={index}>
               {columns.map((column) => (
-                <TableCell key={column.id}>
-                  <Skeleton sx={styles.skeleton} />
+                <TableCell
+                  key={column.id}
+                  sx={[alignsEnd(column) && styles.end, columnSx[column.id]]}
+                >
+                  <Skeleton
+                    sx={[
+                      styles.skeleton,
+                      loadsAsCheckbox(column) && styles.skeletonCheckbox,
+                    ]}
+                  />
                 </TableCell>
               ))}
             </TableRow>
@@ -272,7 +309,11 @@ function DataTable<
               ).map((cell) => (
                 <TableCell
                   key={cell.id}
-                  sx={[styles.cell, columnSx[cell.column.id]]}
+                  sx={[
+                    styles.cell,
+                    alignsEnd(cell.column) && styles.end,
+                    columnSx[cell.column.id],
+                  ]}
                 >
                   <table.FlexRender cell={cell} />
                 </TableCell>
@@ -301,13 +342,13 @@ const sortIcons = {
   none: UnfoldMoreIcon,
 };
 
-/** A header that sorts its column (needs `rowSortingFeature`); plain text if it can't sort. */
+/** A header that sorts its column (needs `rowSortingFeature`); plain text if it can't sort. In a column aligned to its end, the icon leads, so the label ends over the cells. */
 function DataTableColumnHeader({
   column,
   sx,
   title,
 }: {
-  column: SortableColumn;
+  column: MetaColumn & SortableColumn;
   sx?: Sx;
   title: string;
 }) {
@@ -319,30 +360,35 @@ function DataTableColumnHeader({
     );
   }
   const sorted = column.getIsSorted();
+  const end = alignsEnd(column);
+  const sortIcon = (
+    <SwapIcon
+      aria-hidden
+      sx={styles.sortIcon}
+      value={sorted === false ? "none" : sorted}
+    >
+      {Object.entries(sortIcons).map(([value, icon]) => (
+        <SwapIconItem key={value} value={value}>
+          <HugeiconsIcon
+            icon={icon}
+            size={sizes.iconSm}
+            strokeWidth={Number(strokes.icon)}
+          />
+        </SwapIconItem>
+      ))}
+    </SwapIcon>
+  );
   return (
     <Button
       data-slot="data-table-column-header"
       onClick={column.getToggleSortingHandler()}
       size="sm"
-      sx={[styles.sort, sx]}
+      sx={[end ? styles.sortEnd : styles.sort, sx]}
       variant="ghost"
     >
+      {end && sortIcon}
       {title}
-      <SwapIcon
-        aria-hidden
-        sx={styles.sortIcon}
-        value={sorted === false ? "none" : sorted}
-      >
-        {Object.entries(sortIcons).map(([value, icon]) => (
-          <SwapIconItem key={value} value={value}>
-            <HugeiconsIcon
-              icon={icon}
-              size={sizes.iconSm}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </SwapIconItem>
-        ))}
-      </SwapIcon>
+      {!end && sortIcon}
     </Button>
   );
 }
