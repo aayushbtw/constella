@@ -106,6 +106,6 @@ Add `disabled` to `Collapsible` so its trigger does nothing.
 
 | Part | Adds |
 | --- | --- |
-| `CollapsibleContent` | Grows to its height and fades in as it opens; takes `sx` |
+| `CollapsibleContent` | Grows to its height and fades in as it opens, and shuts a little faster; takes `sx` |
 
 For the rest, see [Base UI Collapsible](https://base-ui.com/react/components/collapsible).

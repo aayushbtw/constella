@@ -34,3 +34,5 @@ Floating surfaces draw their edge with `shadows`: `lg` for toasts, popovers and 
 ## Footers
 
 A dialog's or card's footer is a `fillSubtle` bar with a top edge, set flush into the sides and bottom, so the actions read as their own row instead of floating under the text.
+
+A surface with a header, body and footer has one scroller: the header and footer stay pinned and only the body scrolls (a dialog with `DialogBody`, a sheet, a side panel), so the popup itself never scrolls.

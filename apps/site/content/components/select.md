@@ -129,11 +129,11 @@ Use the `size` prop on `SelectTrigger` to match the controls beside it, and on `
 
 <!-- ::demo name="select-sizes" -->
 
-| Size      | Trigger | Row  |
-| --------- | ------- | ---- |
-| `sm`      | 28px    | 24px |
-| `default` | 32px    | 28px |
-| `lg`      | 36px    | 32px |
+| Size      | Trigger | Row  | Text | Icon |
+| --------- | ------- | ---- | ---- | ---- |
+| `sm`      | 28px    | 24px | 12px | 14px |
+| `default` | 32px    | 28px | 13px | 16px |
+| `lg`      | 36px    | 32px | 13px | 16px |
 
 ```tsx
 <SelectTrigger size="sm">

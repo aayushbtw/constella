@@ -122,12 +122,14 @@ What a step found or did opens under it in `TraceStepContent`, lined up with the
 
 Set `state` on `TraceStep` while it runs, if it failed or before it starts. A step without one is done. The marker and title follow the state, so say it in the title too. To change tense as it settles ("Reading" to "Read"), put the title in a [Swap Text](/docs/components/swap-text).
 
-| State     | Marker  | Title                                   |
-| --------- | ------- | --------------------------------------- |
-| none      | A dot   | Done: "Ran pnpm install"                |
-| `running` | Spinner | Shimmers: "Running pnpm build"          |
-| `error`   | Alert   | `dangerText`: "Failed to run pnpm lint" |
-| `pending` | A dot   | Dimmed: "Run pnpm test"                 |
+| State     | Marker                  | Title                          |
+| --------- | ----------------------- | ------------------------------ |
+| none      | A filled dot            | Done: "Ran pnpm install"       |
+| `running` | A dot with a pulse ring | Shimmers: "Running pnpm build" |
+| `error`   | A red dot               | "Failed to run pnpm lint"      |
+| `pending` | A hollow dot            | Dimmed: "Run pnpm test"        |
+
+Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under the title. It turns `dangerText` on a failed step.
 
 <!-- ::demo name="trace-state" -->
 
@@ -140,11 +142,20 @@ Set `state` on `TraceStep` while it runs, if it failed or before it starts. A st
     </TraceTitle>
   </TraceLine>
 </TraceStep>
+<TraceStep state="error">
+  <TraceLine>
+    <TraceMarker />
+    <TraceTitle>Failed to run pnpm lint</TraceTitle>
+  </TraceLine>
+  <TraceStepContent>
+    <TraceDescription>Exit code 1 · 3 errors</TraceDescription>
+  </TraceStepContent>
+</TraceStep>
 ```
 
 ## Trace Marker
 
-`TraceMarker` draws the step's state on the rail. End a run on `variant="check"`. Children replace the mark.
+`TraceMarker` draws the step's state on the rail, as the fill of one dot. End a run on `variant="check"`, a plain tick. Children replace the mark.
 
 <!-- ::demo name="trace-marker" -->
 
@@ -185,7 +196,7 @@ Stream the model's reasoning into `TraceReasoning`, a string. It shows a window 
 
 ## Tool
 
-For a tool that runs smaller steps, list them in `TraceSubsteps`. Each `TraceSubstep` takes a `state`, a `TraceMarker` (a spinner that settles to a check) and a `TraceTitle`.
+For a tool that runs smaller steps, list them in `TraceSubsteps`. Each `TraceSubstep` takes a `state`, a `TraceMarker` (the step's dot, which settles to a filled one) and a `TraceTitle`.
 
 <!-- ::demo name="trace-tool" -->
 
@@ -235,7 +246,6 @@ Show a file a step made as an [Attachment](/docs/components/attachment) at `xs`.
     </AttachmentMedia>
     <AttachmentContent>
       <AttachmentTitle>sweden-launch</AttachmentTitle>
-      <AttachmentDescription>PDF</AttachmentDescription>
     </AttachmentContent>
   </Attachment>
 </TraceStepContent>
@@ -303,12 +313,12 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger the same way
 | --- | --- |
 | `Trace` | One rail of steps; steps that arrive after it mounts grow in |
 | `TraceStep` | `state`: `running`, `error` or `pending`; none is done. A node on the rail, which stops short of its marker |
-| `TraceLine` | The step's row, `textMuted`; `textPrimary` on hover inside a link or trigger, `dangerText` when the step failed, dimmed when pending |
-| `TraceMarker` | The state on the rail: a dot, a spinner, an alert; a check circle in a substep. `variant="check"` ends a run; children replace it |
+| `TraceLine` | The step's row, `textMuted`; `textPrimary` on hover inside a link or trigger, dimmed when pending |
+| `TraceMarker` | The state on the rail: one dot, filled when done, pulsing while running, red when failed, hollow while pending. `variant="check"`, a tick, ends a run; children replace it |
 | `TraceTitle` | The verb, cut short; it shimmers while the step runs. Medium `textSecondary` in a trigger |
 | `TraceIcon` | A 16px slot hidden from screen readers: before a subject, or after the title as the indicator |
 | `TraceSubject` | What the step acted on, medium `textSecondary`, cut short |
-| `TraceDescription` | Muted, tabular numbers; doesn't truncate |
+| `TraceDescription` | Muted, tabular numbers; doesn't truncate. `dangerText` on a failed step |
 | `TraceStepContent` | `open`, true by default: what opens under the step, lined up with its title |
 | `TraceReasoning` | A string, shown as a window of its newest four lines |
 | `TraceSubsteps` | A card of substeps |

@@ -83,9 +83,9 @@ List the sources a search found in a `CitationGroup`, a row that wraps. To count
 
 | Part | Adds |
 | --- | --- |
-| `Citations` | The shared `HoverCardContent`: per source, the logo and name, the headline and description each clamped to 2 lines, the date |
+| `Citations` | The shared `HoverCardContent`: per source, a row that lights on hover with the logo and name, the headline and description each clamped to 2 lines, the date |
 | `CitationGroup` | A row that wraps, `space.xxs` apart |
-| `CitationGroupMore` | Its children and `{count} more` in `textSecondary`, as one unit that doesn't wrap apart |
+| `CitationGroupMore` | Its children and `{count} more` in `textMuted`, as one unit that doesn't wrap apart |
 | `Citation` | A [Badge](/docs/components/badge) rendering a [Hover Card](/docs/components/hover-card) trigger link to the first source: its logo in an [Avatar](/docs/components/avatar), its name cut at 160px, then `+N` |
 
 | Prop | Part | Type |

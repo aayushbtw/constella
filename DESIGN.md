@@ -42,7 +42,7 @@ A rule that holds for several components goes in its topic file; one that holds 
 - A per-control disabled look.
 - `ease-in`; an entrance from `scale(0)` or full transparency; bounce on a surface.
 - Motion on a keyboard action, or motion over 300ms outside a spinner, pulse or the home page.
-- Animating a surface's `height` or `width` to fit its content, except a collapsible, a trace step, a shared hover card and the sidebar.
+- Animating a surface's `height` or `width` to fit its content, except a collapsible, a trace step, a shared hover card, a toast and the sidebar.
 - Hover without `media.hover`, so touch sticks.
 - Corners that aren't concentric.
 - A hardcoded value where a token exists.

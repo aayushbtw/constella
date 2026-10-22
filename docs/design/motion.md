@@ -2,7 +2,7 @@
 
 ## Should it animate
 
-Ask how often it's seen. Something used dozens of times a day gets little or no motion. Keyboard-initiated actions never animate.
+Ask how often it's seen. Something used dozens of times a day gets little or no motion. Keyboard-initiated actions never animate. A checkbox, radio, switch or Swap Icon changed from the keyboard changes at once: its moving part drops its transition under `:focus-visible`, which only keyboard focus matches, so the tick draw, dot pop and thumb overshoot are the pointer's. A click on a control already focused from the keyboard skips too.
 
 Restraint is the default. A component used every day gets one motion that explains a change, not several that decorate it. No blur-ins, no bounce on a surface or anything that travels far. An agent's live run is the exception, since each step arriving is what the reader is watching for. Its steps grow in and fade up from a 2px blur, and its clock counts ([Trace](components.md#trace)). `overshoot` is only for a small mark landing where it already almost is.
 
@@ -22,24 +22,27 @@ Never `ease-in`: it delays the moment the eye is watching.
 
 ## Duration
 
-| Token            | For                                                     |
-| ---------------- | ------------------------------------------------------- |
-| `hover`          | Color changes on hover                                  |
-| `press`          | Scale on `:active`                                      |
-| `popover`        | Small surfaces that open from a trigger                 |
-| `popoverExit`    | The same surfaces leaving, and submenus                 |
-| `dialog`         | A dialog and its backdrop                               |
-| `chart`          | A chart's marks moving to a legend change               |
-| `sidebar`        | The sidebar opening to its full width                   |
-| `sidebarExit`    | The sidebar narrowing to its rail or out of view        |
-| `move`           | Indicators and thumbs that travel                       |
-| `crossfade`      | Cross-fades between states                              |
-| `layout`         | A surface growing or shrinking to fit                   |
-| `spin`           | One turn of a spinner                                   |
-| `pulse`          | One breath of a skeleton or indeterminate bar           |
-| `shimmer`        | One sweep of light across text still being worked on    |
-| `confirm`        | How long a confirmation (copied, saved) holds           |
-| `tooltipDelay`   | Rest before a tooltip opens                             |
+| Token | For |
+| --- | --- |
+| `hover` | Color changes on hover |
+| `press` | Scale on `:active` |
+| `popover` | Small surfaces that open from a trigger |
+| `popoverExit` | The same surfaces leaving, and submenus |
+| `dialog` | A dialog and its backdrop |
+| `chart` | A chart's marks moving to a legend change |
+| `sidebar` | The sidebar opening to its full width |
+| `sidebarExit` | The sidebar narrowing to its rail or out of view |
+| `move` | Indicators and thumbs that travel |
+| `crossfade` | Cross-fades between states |
+| `layout` | A surface growing or shrinking to fit |
+| `layoutExit` | A collapsible shutting, and what turns with it, on `out`: quicker than it opened, so the settle's tail doesn't read as stuck |
+| `stagger` | The gap between siblings arriving one after another |
+| `spin` | One turn of a spinner |
+| `pulse` | One breath of a skeleton, an indeterminate bar or a running trace marker's ring |
+| `shimmer` | One sweep of light across text still being worked on |
+| `confirm` | How long a confirmation (copied, saved) holds |
+| `fallbackDelay` | How long an image may load before its fallback shows (a citation's globe) |
+| `tooltipDelay` | Rest before a tooltip opens |
 | `hoverCardDelay` | Rest before a hover card opens, the same as a tooltip's |
 
 Interface motion stays at or under 300ms. A spinner, a pulse and a shimmer are the exceptions: unhurried, so waiting reads as working, not urgent.
@@ -56,8 +59,8 @@ When one state replaces another in place, both stay on screen and cross-fade, so
 
 ## Layout animation
 
-When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a shared hover card's height and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a shared hover card's height, a toast's height (Base UI's stack measures it) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
 
 ## Reduced motion
 
-Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay; a shimmer stops and its text shows plain. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.
+Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay; a shimmer stops and its text shows plain; a running trace marker's pulse ring stops and its fill stays. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.

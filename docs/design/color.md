@@ -24,4 +24,4 @@ A chart's series take six hues of their own, step 9 of Radix indigo, teal, viole
 
 Light and dark get the same care. Every color is a role token, so a component looks right in both without knowing which one it's in.
 
-A theme switch cross-fades the whole page as one (a view transition, on the `crossfade` curve). Transitions pause for the flip, so no control fades into the new theme on its own clock after the page.
+A theme switch cross-fades the whole page as one (a view transition, on `crossfade`'s duration and curve). Transitions pause for the flip, so no control fades into the new theme on its own clock after the page.

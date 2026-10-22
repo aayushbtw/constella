@@ -19,6 +19,7 @@ const column = createColumnHelper<typeof features, Payment>();
 const columns = column.columns([
   column.display({
     id: "select",
+    meta: { skeleton: "checkbox" },
     header: ({ table }) => <DataTableSelectAll table={table} />,
     cell: ({ row }) => <DataTableSelectRow row={row} />,
     enableSorting: false,
@@ -50,7 +51,7 @@ Build the table with [TanStack Table](https://tanstack.com/table)'s `useTable`, 
 
 When the table sits in an element that scrolls on its own, like an app's main area beside a sidebar, pass that element as `scrollRef`, as the Row Click example does with a ScrollArea's `viewportRef`.
 
-The table's layout is fixed, as only the rows on screen render, so set narrow columns' widths with `columnSx`. Text too long for its column ends in an ellipsis. Give the table a `minWidth` in `sx`. On a narrow screen it then scrolls sideways, and a column without a width keeps its room.
+The table's layout is fixed, as only the rows on screen render, so set narrow columns' widths with `columnSx`. Align a column of figures to its end with `meta: { align: "end" }` on the column: its header and cells follow, and a `DataTableColumnHeader` puts its sort icon first, so the label ends over the digits. Text too long for its column ends in an ellipsis. Give the table a `minWidth` in `sx`. On a narrow screen it then scrolls sideways, and a column without a width keeps its room.
 
 **Keep `features` and `columns` outside the component.** A new array each render rebuilds every row model.
 
@@ -77,11 +78,12 @@ header: ({ column }) => (
 
 ## Data Table Select All
 
-Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row.
+Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox.
 
 ```tsx
 column.display({
   id: "select",
+  meta: { skeleton: "checkbox" },
   header: ({ table }) => <DataTableSelectAll table={table} />,
   cell: ({ row }) => <DataTableSelectRow row={row} />,
 });
@@ -204,8 +206,8 @@ const table = useTable({
 
 | Part | Adds |
 | --- | --- |
-| `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width or alignment by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
-| `DataTableColumnHeader` | `column`, `title` |
+| `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
+| `DataTableColumnHeader` | `column`, `title`; the sort icon leads in a column with `meta: { align: "end" }` |
 | `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |
 | `DataTableViewOptions` | `table`; `labels`, each column's name by id |

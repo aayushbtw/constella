@@ -16,15 +16,23 @@ An `sm` card that names itself by its title. The title leads with a `fill` media
 
 ## Attachment
 
-A file as a small `raised` card on a `border`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerSubtle`, turns the edge `dangerBorder` as an invalid field's is, and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group scrolls sideways, snaps and fades its edges.
+A file as a small `raised` card on a `border`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerSubtle`, turns the edge `dangerBorder` as an invalid field's is, and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group sits `space.xs` apart, scrolls sideways, snaps and fades its edges.
+
+The text block is exactly the media's height, so the media's inset holds on every side; text is `textSm` at every size. Horizontal, the text's end inset matches its gap from the media. A vertical card is `sizes.attachment` wide, `attachmentWide` with text.
+
+| Size | Media | Text | Media to text, text end |
+| --- | --- | --- | --- |
+| `default` | `media` (40) | Two 20px lines | `space.sm` |
+| `sm` | `controlMd` (32) | Two 16px lines (`captionLg` leading) | `space.popup` |
+| `xs` | `controlSm` (28) | One line: title and description inline, on one baseline, `space.xs` apart | `space.row` |
 
 ## Avatar
 
-Follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
+Follows the control heights (24, 32, 36), so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through; the count draws the avatars' `border` ring too, so it reads as one of them. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
 
 ## Badge
 
-Takes the button's five variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A `color` tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the color in its dot, spinner or icons, so a row of them stays quiet. A `primary` takes the color's tint, as a danger button does, since a status color is never a solid fill (see [color](color.md)). A dot is muted with no color, and follows the text on `primary`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline.
+Takes the button's five variants, so emphasis means the same thing on both, at 18, 20 or 24px with `radii.chip` corners. A `color` tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the color in its dot, spinner or icons, so a row of them stays quiet. A `primary` takes the color's tint, as a danger button does, since a status color is never a solid fill (see [color](color.md)). A dot is muted with no color, and follows the text on `primary`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline. In a table cell it sits on the line's top instead, so it fills the line rather than growing the row.
 
 ## Button group
 
@@ -40,13 +48,13 @@ Its edge turns `accentSolid` when checked.
 
 ## Chart
 
-Axes, ticks and grid lines take `textMuted` through `currentColor`, with no axis line or tick stubs in the examples: the grid carries the scale. Series take `chart1` to `chart6` in order and keep their color when another is hidden. Bars round 4px and sit 2px apart; lines are 2px. A hovered bar column takes a `fillSubtle` band under its bars, the hover fill; a line chart takes a rule. Count axes read compact (`12M`) through `chartTickFormat`, which takes the locale, since the server's default can differ from the reader's.
+Axes, ticks and grid lines take `textMuted` through `currentColor`, with no axis line or tick stubs in the examples: the grid carries the scale. Series take `chart1` to `chart6` in order and keep their color when another is hidden. Bars round 4px and sit 2px apart (each bar's `inset: 1`, with `chartGroupScale`'s padding defaulting to 0); lines are 2px. Axis labels are 12px, `captionLg`'s size: `Chart` sets `tickLabels.fontSize` on every axis, not CSS, since TanStack measures labels by that number for margins and thinning; a definition's own `fontSize` wins. A hovered bar column takes a `fillSubtle` band under its bars, the hover fill; a line chart takes a rule. Count axes read compact (`12M`) through `chartTickFormat`, which takes the locale, since the server's default can differ from the reader's.
 
 The tooltip is a popover's surface, not the Tooltip's inverted one: it holds figures to read, not a one-line hint. Title in medium, then a row per series: a short bar in its paint, its label in `textSecondary` and its value in medium. Rows share three columns, so a row without a bar (a total) lines up with the rest. The hovered series' label steps up to `textPrimary`, with no fill. It sits beside the pointer so it never covers the values it reads. It keeps that shape with one series shown.
 
 Under RTL the header, legend and tooltip flip; the plot doesn't. Time and figures read left to right in most RTL locales, as in shadcn's charts.
 
-The legend is a row of small ghost toggles that wraps, pulled back to line its first dot up with the text above. Every entry starts shown, so shown stays quiet (`textPrimary`, filled dot) and hidden reads: `textMuted` and a hollow dot, never color alone. The change fades on `ease` at `hover` speed, like a toggle's fill. The last shown entry can't be hidden in the examples; an empty chart answers nothing.
+The legend is a row of small ghost toggles that wraps, pulled back to line its first dot up with the text above. Labels are regular, so the legend never outranks the title. Every entry starts shown, so shown stays quiet (`textPrimary`, filled dot) and hidden reads: `textMuted` and a hollow dot, never color alone. The change fades on `ease` at `hover` speed, like a toggle's fill. The last shown entry can't be hidden in the examples; an empty chart answers nothing.
 
 A clicked legend entry moves the plot for `chart` on `out`; from the keyboard it snaps. Values ease; shapes don't morph. Each type moves as below:
 
@@ -61,23 +69,23 @@ The axis takes its final scale at the click, and the marks move to it from where
 
 ## Citation
 
-A pill capped at `sizes.citation` (160px), its first publication's name truncating, with the logo as the badge's leading avatar and the other sources counted after it (`+2`, `textMuted`). Every citation opens one shared card, so hovering the next moves it there. The card lists each source `space.md` apart, each a link: the logo and publication in `textSecondary`, the headline in medium `textBase` clamped to 2 lines and underlined on hover, the description in `textSecondary` clamped to 2 lines, the date in `textMuted`. A logo loads without a referrer; without one a globe stands in, waiting 600ms behind a loading logo so it doesn't flash first.
+A pill capped at `sizes.citation` (160px), its first publication's name truncating, with the logo as the badge's leading avatar and the other sources counted after it (`+2`, `textMuted`). Every citation opens one shared card, so hovering the next moves it there. The card lists each source as a menu-style row: a link on `radii.sm` with `space.row` padding, `space.xxs` apart inside the card's `space.xxs` inset so its fill nests in the card's corner, lit `fillSubtle` on hover (`stateStyles.ghost`), with no underline. Each holds the logo and publication in `textSecondary`, the headline in medium `textBase` clamped to 2 lines, the description in `textSecondary` clamped to 2 lines, the date in `textMuted`. A logo loads without a referrer; without one a globe stands in, waiting `durations.fallbackDelay` behind a loading logo so it doesn't flash first. A group's "N more" is `textMuted`, like the pill's count.
 
 ## Code Block
 
-A `fillSubtle` tray on `radii.md`, `textSm` mono (`captionLg` at `sm`), read left to right. Long lines scroll sideways with no scrollbar. The end fades while there's more, drawn around the scroller so the numbers stay clear. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks sit in the header icon's column, so the code starts under the title. Line numbers stay put beside the code, never over it. With `wrap`, a marked line's gutter fill covers only its first row. Numbers and marks are `textMuted` (marks `successText` and `dangerText`) and never copy. A highlighted line takes `fill`, an added one `successSubtle` and a removed one `dangerSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerSubtle` and its text `danger`. A tall block is capped by a `maxHeight` and `overflowY` through `CodeBlockContent`'s `sx`, with no scrollbar; never with `lineNumbers`, since the numbers sit on that wrapper and would scroll and clip.
+A `fillSubtle` tray on `radii.md`, `textSm` mono (`captionLg` at `sm`), read left to right. Long lines scroll sideways with no scrollbar. The end fades while there's more, drawn around the scroller so the numbers stay clear. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them; the end fade then stops where the floating action starts, so scrolled code never shows beside it. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks sit in the header icon's column, so the code starts under the title. Line numbers stay put beside the code, never over it. With `wrap`, a marked line's gutter fill covers only its first row. Numbers and marks are `textMuted` (marks `successText` and `dangerText`) and never copy. A highlighted line takes `fill`, an added one `successSubtle` and a removed one `dangerSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerSubtle` and its text `danger`. A tall block is capped by a `maxHeight` and `overflowY` through `CodeBlockContent`'s `sx`, with no scrollbar; never with `lineNumbers`, since the numbers sit on that wrapper and would scroll and clip.
 
 ## Collapsible
 
-The one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
+The one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
 
 ## Command
 
-A menu that stays open under a search field: the menu's rows on a `raised` surface, the field an input group whose corner nests in the command's, and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
+A menu that stays open under a search field: the menu's rows on a `raised` surface at `radii.sm`, the field an input group at `xs`, like the rows, nesting in the command's corner (a Command Dialog's popup is `sm` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
 
 ## Markdown
 
-An answer reads as the page: `textLg`, blocks `space.md` apart, headings in semibold (`heading4`, then `heading6`) and two levels down in the outline, so they sit under the page's own. Inline code is a `fill` chip in mono at 0.875em; a fenced block is a Code Block. A quote is `textSecondary` behind a 2px `border` rule. Tables are the Table component, taking GFM's column alignment. Links keep the text color, underlined in `textMuted`, and open in a new tab.
+An answer reads as the page: `textBase`, blocks `space.md` apart, headings in semibold (`heading6`, then `textLg`) and two levels down in the outline, so they sit under the page's own. The root owns their spacing (a `base.css` slot rule, as StyleX can't style a child by what precedes it): `space.md + space.xs` before a heading, `space.md` after, none before the first. Inline code is a `fill` chip in mono at 0.875em; a fenced block is a Code Block. A quote is `textSecondary` behind a 2px `border` rule. Tables are the Table component, taking GFM's column alignment; a table has no box, so its first and last cells drop their inline padding and its text lines up with the prose, while a code block and a quote keep their insets. Links keep the text color, underlined in `textMuted`, and open in a new tab.
 
 ## Marker
 
@@ -85,7 +93,7 @@ A note between messages, in `textSecondary` at `sm`: plain, over a `border` hair
 
 ## Conversation
 
-Reads as a page with the user's words set off: a user's message is a `fillOpaque` bubble on `radii.lg` at the end, at most 80% wide; an answer is plain `textLg`, with its actions as ghost icon buttons under it. The composer is an input group on `radii.xl` with the `raised` fill, the top of the corner ladder, whose text grows to six lines; its submit is a primary pill that swaps its arrow for a stop square while an answer streams. Its header and footer sit `radii.xl` minus half `controlSm` from the edge (6px by default), so its pills nest in its corner at any radius; `sm` attachments match them at the default radius. A well is a tray around it in `well` (`neutral-a2` in light, `a3` in dark, where a2 sits too close to `raised`) for context like a project or connected apps, usually one bar on one side; a bar's quiet ghost pills take `textSecondary`, and a leading icon lines up with the composer's text. The scroller opens at the newest message and follows a stream only while the reader is at the end; its jump-to-end pill rises in on `popover` when there's more below.
+Reads as a page with the user's words set off: a user's message is a `fillOpaque` bubble on `radii.lg` at the end, at most 80% wide; an answer is plain `textBase`, with its actions as ghost icon buttons under it. The composer is an input group on `radii.xl` with the `raised` fill, the top of the corner ladder, whose text grows to six lines; its submit is a primary pill that swaps its arrow for a stop square while an answer streams. Its header and footer sit `radii.xl` minus half `controlSm` from the edge (6px by default), so its pills nest in its corner at any radius; `sm` attachments match them at the default radius. A well is a tray around it in `well` (`neutral-a2` in light, `a3` in dark, where a2 sits too close to `raised`) for context like a project or connected apps, usually one bar on one side; a bar's quiet ghost pills take `textSecondary`, and a leading icon lines up with the composer's text. The scroller opens at the newest message and follows a stream only while the reader is at the end; its jump-to-end pill rises in on `popover` when there's more below.
 
 ## Copy button
 
@@ -93,9 +101,9 @@ A button that swaps its copy icon for a tick for `durations.confirm` and back. W
 
 ## Data table
 
-A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width; text too long for a column ends in an ellipsis. A sortable header is a ghost button pulled back to line its label up with the cells, with a muted unfold, up or down mark that cross-fades through SwapIcon as the sort changes; a selected row takes `fill`; the row open beside it (`aria-current`) takes `fillStrong`, a step above, since only one row is open at a time. Hovering a filled row stacks `fillSubtle` on it as an inset shadow, as in the sidebar.
+A table whose rows render only while on screen, so its layout is fixed and narrow columns set their width; text too long for a column ends in an ellipsis. Rows are 37px, Table's. A column of figures aligns to its end (`meta: { align: "end" }`), header and cells. A sortable header is a ghost button pulled back by its padding and border to line its label up with the cells, with a muted unfold, up or down mark that cross-fades through SwapIcon as the sort changes; in an end-aligned column the mark leads, so the label ends over the digits; a selected row takes `fill`; the row open beside it (`aria-current`) takes `fillStrong`, a step above, since only one row is open at a time. Hovering a filled row stacks `fillSubtle` on it as an inset shadow, as in the sidebar.
 
-A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows; while the next page loads over the old one, the body fades to `opacities.busy`.
+A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows as tall as loaded ones: each cell a bar `iconSm` tall and 60% wide in a `textSm` line, keeping its column's width and alignment, and the checkbox column a `sizes.icon` square; while the next page loads over the old one, the body fades to `opacities.busy`.
 
 Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. The column menu is an outline button that opens a menu of checkbox items.
 
@@ -133,7 +141,7 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `background` on `shadows.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `controlSm` tall (`size` on the content makes it `controlXs` with `xs` type, or `controlMd`, and a submenu inherits it), `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
 
@@ -141,7 +149,7 @@ A filtered menu is a command in a popup: its field is the command's input group,
 
 ## Progress and meter
 
-The slider's track: `strokes.track` tall, `fill` under `accentSolid`, full corners. The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `color` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
+The slider's track: `strokes.track` tall, `fillOpaque` under `accentSolid`, full corners (`trackStyles`, shared with the label and value above it). The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `color` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
 
 ## Questionnaire
 
@@ -161,7 +169,7 @@ A mask over the scroller, not a gradient in the page's color, so it works on any
 
 ## Select
 
-Its trigger is an input's surface, so a select and an input in one form read as one family. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
+Its trigger is an input's surface, so a select and an input in one form read as one family; at `sm` the trigger and rows take `captionLg`, and the chevron and tick follow `controlIconSize`. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
 
 ## Separator
 
@@ -181,7 +189,7 @@ Its header is a row `sizes.header` tall, the page header's height, so the two ha
 
 Sits on `sidebar`, a step off the page, split from it by an `borderSubtle` hairline, so it reads as the frame and the page as the content. It's in the flow and sticky, not fixed, so it sits beside the page at any height. Its header is a row `sizes.header` tall, the page header's height, so the two line up across the edge, with the trigger at its end.
 
-Rows are a control tall, `space.xxxs` apart. The whole row answers the pointer, its action included, on `fillSubtle`, and stays lit while a menu from it is open. The current row takes `fill`, and hover stacks on it as an inset shadow so it still fades. Rows don't press. The current one keeps regular weight, since a weight change shifts the label. A label cut off fades over its last `space.lg` instead of an ellipsis, and fades out before an action drawn over the row's end; its tooltip shows it whole. A row's shortcut shows only while the row is pointed at or focused, and keeps its room when hidden so the label never moves.
+Its content scrolls under `scrollFade.y`, so a list running past the footer fades instead of slicing. Rows are a control tall, `space.xxxs` apart. The whole row answers the pointer, its action included, on `fillSubtle`, and stays lit while a menu from it is open. The current row takes `fill`, and hover stacks on it as an inset shadow so it still fades. Rows don't press. The current one keeps regular weight, since a weight change shifts the label. A label cut off fades over its last `space.lg` instead of an ellipsis, and fades out before an action drawn over the row's end; its tooltip shows it whole. A row's shortcut shows only while the row is pointed at or focused, and keeps its room when hidden so the label never moves.
 
 The one surface whose width animates. It morphs on screen rather than entering or leaving, so it runs on `inOut`, taking `sidebar` to open and `sidebarExit` to close.
 
@@ -213,11 +221,15 @@ A checkbox that slides: `fillStrong` track off, `accentSolid` on. Off, the thumb
 
 ## Table
 
-Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
+Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Its container scrolls sideways with no scrollbar and fades its edges (`scrollFade.x`). A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
 
 ## Textarea
 
 An input's surface, two control heights tall, growing with its content and resizing only vertically.
+
+## Toast
+
+Enters and leaves along one path: from and back to `translateY(100%)` with a fade, in on `move` + `out`, out on `popoverExit`. A swipe leaves the way it was thrown. Its height animates as the stack expands, the exception to animating a height: Base UI's stack measures each toast and sets the height, so the animation never feeds its own measurement. Under reduced motion it only fades.
 
 ## Toggle
 
@@ -229,22 +241,24 @@ The one shape for an agent's run: reasoning, tool calls, sources and files are a
 
 | Part | Look |
 | --- | --- |
-| Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops `iconSize / 2` from a dot's center, and 6px further from a spinner, alert or check, which read heavier. It starts under the trigger's chevron and ends on the last step |
-| Marker | A 6px `border` dot when done or pending, a spinner while running, an alert when failed; a substep settles to a check circle; `check` ends a run on an `accentSolid` disc |
-| Line | A control tall, no fill, `textMuted` at `sm`; `textPrimary` on hover inside a link or trigger. `error` is `dangerText`; `pending` dims to `opacities.disabled` |
+| Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops `space.xxxs` past every dot's edge (`dotSize / 2 + space.xxxs` from its center), and past the `check` mark's (`iconSize / 2 + space.xxxs`), so two marked steps in a row still leave a line between them. It starts under the trigger's chevron and ends on the last step |
+| Marker | One 6px dot for every step and substep, its fill the state: `textMuted` when done, `textPrimary` with a pulse ring while running, `dangerSolid` when failed, hollow with a 1px inset `textMuted` ring while pending (dimmed with the line). `check` ends a run on a plain 16px tick in `textMuted` |
+| Line | A control tall, no fill, `textMuted` at `sm`; `textPrimary` on hover inside a link or trigger. A failed step stays `textMuted` and says "Failed ..."; `pending` dims to `opacities.disabled` |
 | Title | The verb, cut short; shimmers while running. Medium `textSecondary` in a trigger |
 | Subject | Medium `textSecondary` after its icon, `space.xxs` closer; cut short |
-| Description | `textMuted`, tabular; never truncates |
+| Description | `textMuted`, tabular; never truncates. `dangerText` when the step failed, for the reason ("Exit code 1 · 3 errors"), which goes in the step's content under the title |
 | Content | `textSecondary` at `sm`, lined up with the title; a ring on its edge stays inside the clip |
 | Reasoning | `textMuted`, a window of four lines, the top one fading under a mask once full |
-| Substeps | A `defaultRingSubtle` card of `controlMd` rows split by `borderSubtle`; running rows `textSecondary`, done rows `textPrimary` |
+| Substeps | A `defaultRingSubtle` card of `controlMd` rows split by `borderSubtle`; done rows `textSecondary`, running, failed and pending rows `textMuted`. Nothing in a run is `textPrimary` |
 
 | Motion | Values |
 | --- | --- |
-| A step arriving | Its space grows from `0fr` on `move` + `out`, then it fades in from 4px down under `motion.crossfadeTextBlur`, 50ms later. Only steps that arrive after the Trace mounts; once each, so a shut panel showing again replays none. Reduced motion: a fade |
-| Content opening | Its rows grow on `move`, then it fades in 50ms later |
+| A step arriving | Its space grows from `0fr` on `move` + `out`, then it fades in from `motion.arriveOffset` down under `motion.crossfadeTextBlur`, `durations.stagger` later. Only steps that arrive after the Trace mounts; once each, so a shut panel showing again replays none. Reduced motion: a fade |
+| Content opening | Its rows grow on `move`, then it fades in `durations.stagger` later |
 | Content shutting | It fades out on `popoverExit`, then its rows shut on `popover` |
+| Running marker | A ring grows from the dot to `space.xxs` and fades, over `durations.pulse` on `out`, on repeat. Reduced motion: the fill stays, with no ring |
+| State change | The dot's fill crossfades on `crossfade` |
 | Text changing | Titles and counts sit in a Swap Text: tense morphs, numbers roll |
-| The trigger's chevron | Turns a quarter on `move` + `out` |
+| The trigger's chevron and rail stub | On the panel's timing each way: `layout` opening, `layoutExit` + `out` shutting, so they land as the panel does. The chevron turns a quarter, its color on `hover` + `ease`; the stub under it scales and fades from its top, clipping away with the rail below |
 
 A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.

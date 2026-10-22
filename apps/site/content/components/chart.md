@@ -25,7 +25,7 @@ const definition = useMemo(
           y: "visitors",
           z: "device",
           color: "device",
-          layout: group({ scale: chartGroupScale(weights, 0.1) }),
+          layout: group({ scale: chartGroupScale(weights) }),
           radius: 4,
           inset: 1,
         }),
@@ -242,13 +242,10 @@ For grouped bars, ease each series' slot with `chartGroupScale`. Give it a weigh
 
 ```tsx
 layout: group({
-  scale: chartGroupScale(
-    [
-      ["desktop", values.desktop],
-      ["mobile", values.mobile],
-    ],
-    0.1
-  ),
+  scale: chartGroupScale([
+    ["desktop", values.desktop],
+    ["mobile", values.mobile],
+  ]),
 }),
 ```
 
@@ -293,7 +290,7 @@ defineChart({
 
 | Part | Adds |
 | --- | --- |
-| `Chart` | `config`, naming series in the default tooltip; `renderTooltipBody`, `ChartTooltipContent` by default; `animate`, fading in tick labels a change adds or moves |
+| `Chart` | `config`, naming series in the default tooltip; `renderTooltipBody`, `ChartTooltipContent` by default; `animate`, fading in tick labels a change adds or moves. Sets every axis's `tickLabels.fontSize` to 12 unless the definition sets its own |
 | `ChartTooltipContent` | `content`, TanStack's title and rows, or its text; `config`; `indicator`, `line` by default; `hideLabel` |
 | `ChartTooltipRow` | `active`, the series under the pointer or keyboard |
 | `ChartIndicator` | `color`, the series' paint; `variant`, `dot` or `line`; hollow in a hidden legend item |
@@ -304,4 +301,4 @@ defineChart({
 | `chartFold` | `config`, `rows`, and `{ series, value }`, the rows' field names; `label`, `Other` by default; the first six series and one `other`, summed |
 | `chartTickFormat` | `locale` in, an axis's `ticks.format` out: compact counts (`12M`), whole numbers only |
 | `useChartTween` | `target`, values by key; `animate`; returns them eased over `dialog` on `out`, or at once when `animate` is false or motion is reduced |
-| `chartGroupScale` | `weights`, each series' share of a slot from 0 to 1; `padding`; a band scale for `group({ scale })` |
+| `chartGroupScale` | `weights`, each series' share of a slot from 0 to 1; `padding`, 0 by default, as each bar's `inset: 1` already sets them 2px apart; a band scale for `group({ scale })` |

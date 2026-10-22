@@ -78,11 +78,13 @@ Use the `size` prop to fit a composer or a dense list.
 <Attachment size="sm">…</Attachment>
 ```
 
-| Size      | Media | Text |
-| --------- | ----- | ---- |
-| `default` | 40px  | 14px |
-| `sm`      | 32px  | 13px |
-| `xs`      | 28px  | 13px |
+| Size      | Media | Text | Lines                                   |
+| --------- | ----- | ---- | --------------------------------------- |
+| `default` | 40px  | 13px | Two: title, then description            |
+| `sm`      | 32px  | 13px | Two: title, then description            |
+| `xs`      | 28px  | 13px | One: title and description side by side |
+
+Keep `xs` to one short line of content.
 
 ## Media
 
