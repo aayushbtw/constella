@@ -201,7 +201,7 @@ Narrowed, it's `sizes.sidebarIcon` wide, a control plus its group padding. Each 
 
 Below `media.md` it opens as a sheet, where the trigger closes it.
 
-A section change (into Settings and back) slides like a stack: the header and content leave `motion.exitOffset` toward where they came from, on `popoverExit`, and the new section arrives from the other side on `popover`, both on `crossfade` under `motion.crossfadeBlur`, clipped to their own boxes. The blur is the one exception to "no blur-ins": it's rare, and it tells two sections apart. The footer and the page stay put. Under `media.reducedMotion` it only fades. It's a view transition, so the old section is a snapshot and never re-renders.
+A section change (into Settings and back) slides like a stack: the header and content leave `motion.exitOffset` toward where they came from, on `popoverExit`, and the new section arrives from the other side on `popover`, both on `crossfade` under `motion.crossfadeBlur`, clipped to their own boxes. The blur is the one exception to "no blur-ins": it's rare, and it tells two sections apart. The footer, the page and the header's `SidebarTrigger` stay put: the trigger is the same control in both sections, so sliding it would read as a shake. Under `media.reducedMotion` it only fades. It's a view transition, so the old section is a snapshot and never re-renders.
 
 ## Skeleton
 

@@ -169,7 +169,7 @@ Put a `SidebarMenuAction` after a row's button for an action of its own, like a 
 
 ## Sections
 
-When a row leads into a section with its own sidebar, like Settings in the first demo, change it with `changeSection` from `useSidebar`. It runs your update in a view transition: the header and content slide forward into the section, or back out of it, and the page swaps at once.
+When a row leads into a section with its own sidebar, like Settings in the first demo, change it with `changeSection` from `useSidebar`. It runs your update in a view transition: the header and content slide forward into the section, or back out of it, while the trigger holds still and the page swaps at once.
 
 ```tsx
 const { changeSection } = useSidebar();
