@@ -33,10 +33,26 @@ const legendVariants = ["legend", "label"] as const;
 type LegendVariant = (typeof legendVariants)[number];
 
 const card = ":has(> [data-slot='field-content'])";
+// A flush card's field group is a list: its cards become rows, split by hairlines.
+const list =
+  "[data-slot='card'][data-size='flush'] > [data-slot='field-group']";
+const inList = ":is([data-slot='card'][data-size='flush'] > *)";
+const row = `:is(${list} > [data-slot='field'] > *)`;
+const afterRow = `:is(${list} > [data-slot='field'] ~ *)`;
+
+const cardRadius = {
+  default: null,
+  [card]: { default: radii.md, [row]: 0 },
+} as const;
+const cardEdge = {
+  default: null,
+  [card]: { default: strokes.border, [row]: 0 },
+} as const;
 
 const styles = stylex.create({
   set: {
-    borderBlockWidth: 0,
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
     borderInlineWidth: 0,
     display: "flex",
     flexDirection: "column",
@@ -57,10 +73,13 @@ const styles = stylex.create({
   group: {
     display: "flex",
     flexDirection: "column",
-    gap: space.md,
+    gap: { default: space.md, [inList]: 0 },
     width: "100%",
   },
   field: {
+    borderBlockStartColor: { default: null, [afterRow]: colors.borderSubtle },
+    borderBlockStartStyle: { default: null, [afterRow]: "solid" },
+    borderBlockStartWidth: { default: null, [afterRow]: strokes.border },
     display: "flex",
     gap: space.xs,
     width: "100%",
@@ -90,16 +109,29 @@ const styles = stylex.create({
       default: null,
       [card]: {
         default: "transparent",
-        ":has([data-checked])": colors.fillSubtle,
+        ":has([data-checked])": {
+          default: colors.fillSubtle,
+          [row]: "transparent",
+        },
         [media.hover]: {
           default: "transparent",
           ":hover:not([data-disabled])": colors.fillSubtle,
-          ":has([data-checked])": colors.fillSubtle,
+          ":has([data-checked])": {
+            default: colors.fillSubtle,
+            [row]: "transparent",
+          },
         },
         ":active:not([data-disabled])": colors.fillSubtle,
       },
     },
-    borderBlockColor: {
+    borderBlockEndColor: {
+      default: null,
+      [card]: {
+        default: colors.border,
+        ":has([data-checked])": colors.accentSolid,
+      },
+    },
+    borderBlockStartColor: {
       default: null,
       [card]: {
         default: colors.border,
@@ -113,21 +145,26 @@ const styles = stylex.create({
         ":has([data-checked])": colors.accentSolid,
       },
     },
-    borderStartStartRadius: { default: null, [card]: radii.md },
-    borderStartEndRadius: { default: null, [card]: radii.md },
-    borderEndStartRadius: { default: null, [card]: radii.md },
-    borderEndEndRadius: { default: null, [card]: radii.md },
-    borderBlockStyle: { default: null, [card]: "solid" },
+    borderStartStartRadius: cardRadius,
+    borderStartEndRadius: cardRadius,
+    borderEndStartRadius: cardRadius,
+    borderEndEndRadius: cardRadius,
+    borderBlockEndStyle: { default: null, [card]: "solid" },
+    borderBlockStartStyle: { default: null, [card]: "solid" },
     borderInlineStyle: { default: null, [card]: "solid" },
-    borderBlockWidth: { default: null, [card]: strokes.border },
-    borderInlineWidth: { default: null, [card]: strokes.border },
+    borderBlockEndWidth: cardEdge,
+    borderBlockStartWidth: cardEdge,
+    borderInlineWidth: cardEdge,
     cursor: {
       default: null,
       [card]: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     },
     gap: { default: space.xs, [card]: space.sm },
     paddingBlock: { default: null, [card]: space.sm },
-    paddingInline: { default: null, [card]: space.sm },
+    paddingInline: {
+      default: null,
+      [card]: { default: space.sm, [row]: space.md },
+    },
     transitionDuration: durations.hover,
     transitionProperty: "background-color, border-color",
     transitionTimingFunction: "ease",

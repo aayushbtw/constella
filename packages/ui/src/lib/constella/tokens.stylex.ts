@@ -260,6 +260,9 @@ export const sizes = stylex.defineConsts({
   // A centered block of short text, like an empty state's.
   measure: `calc(${spaceUnit} * 96)`,
   popover: `calc(${spaceUnit} * 72)`,
+  // A settings dialog's nav and page side by side, capped to the window.
+  settingsDialog: `calc(${spaceUnit} * 220)`,
+  settingsDialogHeight: `calc(${spaceUnit} * 160)`,
   // A side panel beside the content.
   sidePanel: `calc(${spaceUnit} * 100)`,
   // A sidebar open, and collapsed to its icons (a control and its group padding).

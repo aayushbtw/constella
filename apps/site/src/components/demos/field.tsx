@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
+import { Card } from "@/components/primitives/card";
 import { Checkbox } from "@/components/primitives/checkbox";
 import {
   Field,
@@ -50,6 +51,7 @@ const items = [
 
 const styles = stylex.create({
   narrow: { maxWidth: 320, width: "100%" },
+  wide: { maxWidth: 384, width: "100%" },
   form: { maxWidth: 448, width: "100%" },
   full: { width: "100%" },
   thirds: {
@@ -405,6 +407,37 @@ function FieldCardDemo() {
   );
 }
 
+function FieldCardListDemo() {
+  return (
+    <DemoRow sx={styles.wide}>
+      <Card size="flush">
+        <FieldGroup>
+          <Field>
+            <FieldLabel>
+              <FieldContent>
+                <FieldTitle>Mentions</FieldTitle>
+                <FieldDescription>When someone @mentions you.</FieldDescription>
+              </FieldContent>
+              <Switch defaultChecked />
+            </FieldLabel>
+          </Field>
+          <Field>
+            <FieldLabel>
+              <FieldContent>
+                <FieldTitle>Weekly digest</FieldTitle>
+                <FieldDescription>
+                  A summary of the week’s activity, every Monday.
+                </FieldDescription>
+              </FieldContent>
+              <Switch />
+            </FieldLabel>
+          </Field>
+        </FieldGroup>
+      </Card>
+    </DemoRow>
+  );
+}
+
 function FieldDisabledDemo() {
   return (
     <DemoRow sx={styles.narrow}>
@@ -440,6 +473,7 @@ export {
   FieldSwitchDemo,
   FieldTextareaDemo,
   FieldCardDemo,
+  FieldCardListDemo,
   FieldDemo,
   FieldDisabledDemo,
   FieldErrorDemo,

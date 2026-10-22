@@ -182,6 +182,28 @@ Put the control and a `FieldContent` inside the `FieldLabel` to turn the whole l
 </Field>
 ```
 
+### Card
+
+Put the cards in a `FieldGroup` directly inside a `flush` [Card](/docs/components/card) to list them as rows of one card, split by hairlines. A settings page lists its switches this way.
+
+<!-- ::demo name="field-card-list" -->
+
+```tsx
+<Card size="flush">
+  <FieldGroup>
+    <Field>
+      <FieldLabel>
+        <FieldContent>
+          <FieldTitle>Mentions</FieldTitle>
+          <FieldDescription>When someone @mentions you.</FieldDescription>
+        </FieldContent>
+        <Switch defaultChecked />
+      </FieldLabel>
+    </Field>
+  </FieldGroup>
+</Card>
+```
+
 ## Error
 
 Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails. With a form library, pass its errors to `errors` instead: each message shows once, several as a list, and nothing renders when there are none.

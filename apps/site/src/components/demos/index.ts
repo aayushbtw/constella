@@ -155,6 +155,7 @@ import {
 } from "~/components/demos/empty";
 import {
   FieldCardDemo,
+  FieldCardListDemo,
   FieldDemo,
   FieldDisabledDemo,
   FieldFormDemo,
@@ -300,6 +301,7 @@ import {
   SeparatorMenuDemo,
   SeparatorVerticalDemo,
 } from "~/components/demos/separator";
+import { SettingsDialogDemo } from "~/components/demos/settings-dialog";
 import { ShadowsDemo } from "~/components/demos/shadow";
 import { SheetDemo, SheetSideDemo } from "~/components/demos/sheet";
 import { SidePanelDemo } from "~/components/demos/side-panel";
@@ -550,6 +552,7 @@ const demos = {
   "empty-content": EmptyContentDemo,
   field: FieldDemo,
   "field-card": FieldCardDemo,
+  "field-card-list": FieldCardListDemo,
   "field-disabled": FieldDisabledDemo,
   "field-form": FieldFormDemo,
   "field-group": FieldGroupDemo,
@@ -676,6 +679,7 @@ const demos = {
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,
   "separator-vertical": SeparatorVerticalDemo,
+  "settings-dialog": SettingsDialogDemo,
   sheet: SheetDemo,
   "sheet-side": SheetSideDemo,
   "side-panel": SidePanelDemo,

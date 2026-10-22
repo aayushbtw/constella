@@ -44,7 +44,7 @@ Its corner is `radii.lg`; its padding (`space.md`, `sm` at `sm`, none at `flush`
 
 ## Choice card
 
-Its edge turns `accentSolid` when checked.
+Its edge turns `accentSolid` when checked. In a `flush` card's field group, choice cards become the card's rows: no edge, corner or checked fill of their own, `space.md` inline padding, a `borderSubtle` hairline between them, and `fillSubtle` on hover. The switch shows the state, so a row doesn't.
 
 ## Chart
 
@@ -180,6 +180,10 @@ A 1px `borderSubtle` line: it groups content, it doesn't bound a control. A vert
 ## Sheet
 
 Travels the whole way in from its edge on `layout` (the drawer curve, `durations.layout`), and leaves the same way, faster, on `dialog`: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. Under reduced motion it fades in place. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
+
+## Settings dialog
+
+A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capped to the window, with no padding: a sidebar that doesn't collapse beside a page, stacked above it below `media.sm`, where the nav's rows end before the close button. The page pads `space.lg` and is the one pane that scrolls on its own, since the page behind a dialog can't. Its header ends its text clear of the close button, as a dialog's does.
 
 ## Side panel
 

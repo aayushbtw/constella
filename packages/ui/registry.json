@@ -592,6 +592,25 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/sidebar/index.md"
     },
     {
+      "name": "settings-dialog",
+      "type": "registry:ui",
+      "title": "Settings Dialog",
+      "description": "A dialog laid out as a nav beside a page, for settings with several pages.",
+      "dependencies": ["@stylexjs/stylex"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/dialog.json",
+        "https://constella.aayush.cv/r/sidebar.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/primitives/settings-dialog.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/settings-dialog/index.md"
+    },
+    {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
