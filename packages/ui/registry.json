@@ -794,7 +794,7 @@
       "name": "meter",
       "type": "registry:ui",
       "title": "Meter",
-      "description": "A bar for a measurement against a limit, red once it's reached.",
+      "description": "A bar or an icon-sized ring for a measurement against a limit, like usage against a quota.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [

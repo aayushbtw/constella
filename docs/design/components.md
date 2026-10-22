@@ -151,6 +151,8 @@ A filtered menu is a command in a popup: its field is the command's input group,
 
 The slider's track: `strokes.track` tall, `fillOpaque` under `accentSolid`, full corners (`trackStyles`, shared with the label and value above it). The fill travels to a new value on `move` + `out`, and jumps under reduced motion. While the amount isn't known, a third-width segment sweeps across the track on `pulse` + `inOut`, and breathes in place under reduced motion. A meter's `color` swaps the fill for that role's `Solid`; it never picks one from its value, since a full meter can be good (battery) or bad (quota). It needs no roles of its own.
 
+A `ring` meter is the same track and fill as a ring a step under an icon, centered in an icon's box like Spinner, so it sits in a table cell or beside text: `fillOpaque` under the fill, which starts at twelve o'clock and runs clockwise with round caps, butt at zero so an empty ring draws no dot. It travels like the bar, and takes `color` the same way.
+
 ## Questionnaire
 
 One question at a time, each answer a choice card. The card is Field's: `border`, `radii.md`, `fillSubtle` on hover and when picked, an `accentSolid` edge when picked and `dangerBorder` when invalid. Its Checkbox or Radio indicator is drawn to match, since shadcn's headless questionnaire needs a native input. The whole card rings on keyboard focus. A shortcut is a Kbd at the card's end. Previous sits at the start of the actions, Skip and Next or Submit at the end. The active question swaps at once, with no motion: it's usually changed from the keyboard.

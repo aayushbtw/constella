@@ -96,6 +96,31 @@ function MeterColorDemo() {
   );
 }
 
+function MeterVariantDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <Meter max={10} value={7}>
+          <MeterLabel>Seats</MeterLabel>
+          <MeterValue>{(_, value) => `${value} of 10`}</MeterValue>
+        </Meter>
+        <Meter max={10} value={7} variant="ring">
+          <MeterLabel>Seats</MeterLabel>
+          <MeterValue>{(_, value) => `${value} of 10`}</MeterValue>
+        </Meter>
+        <Meter color="danger" max={10} value={10} variant="ring">
+          <MeterLabel>Seats</MeterLabel>
+          <MeterValue>{() => "10 of 10 · full"}</MeterValue>
+        </Meter>
+        <Meter max={10} value={0} variant="ring">
+          <MeterLabel>Guests</MeterLabel>
+          <MeterValue>{() => "None yet"}</MeterValue>
+        </Meter>
+      </div>
+    </DemoRow>
+  );
+}
+
 interface Upload {
   name: string;
   size: number;
@@ -222,6 +247,7 @@ export {
   MeterDemo,
   MeterColorDemo,
   MeterValueDemo,
+  MeterVariantDemo,
   ProgressDemo,
   ProgressIndeterminateDemo,
   ProgressLabelDemo,

@@ -41,9 +41,27 @@ Meter
     └── MeterIndicator
 ```
 
+## Meter Variant
+
+Use `variant="ring"` for an icon-sized ring in place of the bar, for a meter in a table row or beside an icon. The label and value sit beside it.
+
+<!-- ::demo name="meter-variant" -->
+
+```tsx
+<Meter max={10} value={7} variant="ring">
+  <MeterLabel>Seats</MeterLabel>
+  <MeterValue>{(_, value) => `${value} of 10`}</MeterValue>
+</Meter>
+```
+
+| Variant | Draws |
+| --- | --- |
+| `bar` | A full-width track under the label and value (default) |
+| `ring` | A ring the size of an icon before them, filling clockwise from the top |
+
 ## Meter Color
 
-The fill is `accentSolid` until you give it a `color`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
+The fill, bar or ring, is `accentSolid` until you give it a `color`. A full meter isn't always bad, so the meter never picks one itself: set it from your own thresholds.
 
 <!-- ::demo name="meter-status" -->
 
@@ -81,6 +99,6 @@ Set `max` to measure in the quota's own units, and give `MeterValue` a function 
 
 | Part | Adds |
 | --- | --- |
-| `Meter` | Renders `MeterTrack` and `MeterIndicator` after its children; `color` (`success`, `info`, `warning`, `danger`) colors the fill and sets `data-color` |
+| `Meter` | Renders `MeterTrack` and `MeterIndicator` after its children; `variant` (`bar`, `ring`) swaps them for a ring before its children and sets `data-variant`; `color` (`success`, `info`, `warning`, `danger`) colors the fill and sets `data-color` |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Meter](https://base-ui.com/react/components/meter).
