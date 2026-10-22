@@ -69,10 +69,8 @@ const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
 const filtering = ":has(> [data-slot='dropdown-menu-list'])";
 
-// shadcn's padding, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
 // An inset row starts where the text of a row with an icon does.
-const insetStart = `calc(${px6} * 2 + ${sizes.icon})`;
+const insetStart = `calc(${space.row} * 2 + ${sizes.icon})`;
 
 const styles = stylex.create({
   positioner: {
@@ -169,12 +167,12 @@ const styles = stylex.create({
     color: { default: colors.textPrimary, [danger]: colors.dangerText },
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
-    gap: px6,
+    gap: space.row,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
     overflowWrap: "anywhere",
-    paddingInlineEnd: px6,
-    paddingInlineStart: { default: px6, [inset]: insetStart },
+    paddingInlineEnd: space.row,
+    paddingInlineStart: { default: space.row, [inset]: insetStart },
     position: "relative",
     userSelect: "none",
   },
@@ -184,7 +182,7 @@ const styles = stylex.create({
   itemLg: { minHeight: sizes.controlMd },
   // Room on the end for the tick, as in a select.
   checkable: {
-    paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
   },
   // Checkbox's tick: draws in from its start, fades out quickly.
   indicator: {
@@ -194,7 +192,7 @@ const styles = stylex.create({
       ":is([data-starting-style])": "inset(0 100% 0 0)",
     },
     display: "flex",
-    insetInlineEnd: space.xs,
+    insetInlineEnd: space.row,
     justifyContent: "center",
     opacity: { default: 1, ":is([data-ending-style])": 0 },
     pointerEvents: "none",
@@ -220,8 +218,8 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
-    paddingInlineEnd: px6,
-    paddingInlineStart: { default: px6, [inset]: insetStart },
+    paddingInlineEnd: space.row,
+    paddingInlineStart: { default: space.row, [inset]: insetStart },
   },
   separator: {
     backgroundColor: colors.borderSubtle,

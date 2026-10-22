@@ -115,14 +115,15 @@ const styles = stylex.create({
       // Two attributes, so these outrank the expanded position above.
       ":is([data-starting-style]):not([data-swipe-direction])":
         "translateY(100%)",
-      ":is([data-ending-style]):not([data-swipe-direction])": `translateY(${motion.exitOffset})`,
+      ":is([data-ending-style]):not([data-swipe-direction])":
+        "translateY(100%)",
       ":is([data-ending-style][data-swipe-direction='down'])": `translateY(calc(${swipeY} + 150%))`,
       ":is([data-ending-style][data-swipe-direction='right'])": `translateX(calc(${swipeX} + 150%)) translateY(${offsetY})`,
     },
     transformOrigin: "bottom center",
     transitionDuration: {
       default: durations.move,
-      ":is([data-ending-style])": durations.popover,
+      ":is([data-ending-style])": durations.popoverExit,
     },
     transitionProperty: {
       default: "opacity, height, transform",

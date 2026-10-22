@@ -32,7 +32,7 @@ import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
-  command: { maxWidth: "100%", width: 384 },
+  command: { maxWidth: "100%", width: sizes.dialog },
   stack: { flexDirection: "column", gap: space.md },
 });
 

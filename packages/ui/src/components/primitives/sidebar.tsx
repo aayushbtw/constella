@@ -40,6 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
@@ -1253,7 +1254,7 @@ function SidebarContent({ swap = true, sx, ...props }: SwapProps) {
     <div
       data-slot="sidebar-content"
       {...props}
-      {...stylex.props(styles.content, swap && styles.swap, sx)}
+      {...stylex.props(scrollFade.y, styles.content, swap && styles.swap, sx)}
     />
   );
 }

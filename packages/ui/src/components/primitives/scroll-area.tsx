@@ -21,9 +21,6 @@ const horizontal = ":is([data-orientation='horizontal'])";
 // Shown while the pointer is over the area or it's scrolling, like an overlay scrollbar.
 const shown = ":is([data-hovering], [data-scrolling])";
 
-// shadcn's thickness, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   root: {
     position: "relative",
@@ -39,7 +36,7 @@ const styles = stylex.create({
   scrollbar: {
     display: "flex",
     flexDirection: { default: "row", [horizontal]: "column" },
-    height: { default: "100%", [horizontal]: px10 },
+    height: { default: "100%", [horizontal]: space.popup },
     opacity: { default: 0, [shown]: 1 },
     paddingBlockEnd: strokes.border,
     paddingBlockStart: strokes.border,
@@ -50,7 +47,7 @@ const styles = stylex.create({
     transitionProperty: "opacity",
     transitionTimingFunction: "ease",
     userSelect: "none",
-    width: { default: px10, [horizontal]: "100%" },
+    width: { default: space.popup, [horizontal]: "100%" },
   },
   thumb: {
     backgroundColor: colors.border,

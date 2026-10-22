@@ -35,9 +35,6 @@ const offstage = ":is([data-starting-style], [data-ending-style])";
 const closing = ":is([data-ending-style]):not([data-instant])";
 const instant = ":is([data-instant])";
 
-// shadcn's padding and gap, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   positioner: {
     zIndex: layers.popover,
@@ -53,10 +50,10 @@ const styles = stylex.create({
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    gap: px10,
+    gap: space.popup,
     maxWidth: "var(--available-width)",
-    paddingBlock: px10,
-    paddingInline: px10,
+    paddingBlock: space.popup,
+    paddingInline: space.popup,
     width: sizes.popover,
   },
   motion: {

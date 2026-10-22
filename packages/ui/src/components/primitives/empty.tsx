@@ -21,9 +21,6 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-// shadcn's gap, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   empty: {
     alignItems: "center",
@@ -81,7 +78,7 @@ const styles = stylex.create({
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    gap: px10,
+    gap: space.popup,
     maxWidth: sizes.measure,
     minWidth: 0,
     width: "100%",

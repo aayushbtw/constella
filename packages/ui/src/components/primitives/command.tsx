@@ -44,16 +44,13 @@ type CommandProps = Omit<
 const highlighted = ":is([data-highlighted])";
 const off = ":is([data-disabled])";
 
-// shadcn's padding, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-
 const styles = stylex.create({
   command: {
     backgroundColor: colors.raised,
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
@@ -67,10 +64,10 @@ const styles = stylex.create({
   // Inside the command's padding, so its corner nests in the command's.
   input: {
     backgroundColor: colors.fill,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
     boxShadow: "none",
   },
   icon: {
@@ -98,8 +95,8 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
-    paddingInlineEnd: px6,
-    paddingInlineStart: px6,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
   },
   // A menu's row, so a command list and a menu read as one family.
   item: {
@@ -114,12 +111,12 @@ const styles = stylex.create({
     borderEndEndRadius: radii.xs,
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
-    gap: px6,
+    gap: space.row,
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
     overflowWrap: "anywhere",
-    paddingInlineEnd: px6,
-    paddingInlineStart: px6,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
     userSelect: "none",
   },
   separator: {
@@ -158,6 +155,10 @@ const styles = stylex.create({
     paddingInlineStart: space.sm,
   },
   dialog: {
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     gap: 0,
     paddingBlockEnd: 0,
     paddingBlockStart: 0,

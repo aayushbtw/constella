@@ -33,9 +33,6 @@ const offstage = ":is([data-starting-style], [data-ending-style])";
 const closing = ":is([data-ending-style]):not([data-instant])";
 const instant = ":is([data-instant])";
 
-// shadcn's padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   // Moving between triggers that share one card, it glides to the new one.
   positioner: {
@@ -61,10 +58,10 @@ const styles = stylex.create({
     height: "var(--popup-height, auto)",
     maxWidth: "var(--available-width)",
     opacity: { default: 1, [offstage]: 0 },
-    paddingBlockEnd: px10,
-    paddingBlockStart: px10,
-    paddingInlineEnd: px10,
-    paddingInlineStart: px10,
+    paddingBlockEnd: space.popup,
+    paddingBlockStart: space.popup,
+    paddingInlineEnd: space.popup,
+    paddingInlineStart: space.popup,
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {

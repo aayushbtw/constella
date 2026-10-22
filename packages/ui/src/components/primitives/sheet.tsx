@@ -39,6 +39,7 @@ type SheetContentProps = Styled<SheetPrimitive.Popup.Props> & {
 };
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
+const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
 
 const styles = stylex.create({
   // Slides the whole way in from its edge and back out the same way.
@@ -52,7 +53,10 @@ const styles = stylex.create({
       default: 1,
       [media.reducedMotion]: { default: 1, [offstage]: 0 },
     },
-    overflowY: "auto",
+    overflowY: {
+      default: "auto",
+      ":has(> [data-slot='sheet-body'])": "hidden",
+    },
     position: "fixed",
     transitionDuration: {
       default: durations.layout,
@@ -125,11 +129,16 @@ const styles = stylex.create({
     gap: space.xxs,
     paddingBlockEnd: space.md,
     paddingBlockStart: space.md,
-    paddingInlineEnd: space.md,
+    paddingInlineEnd: {
+      default: space.md,
+      [withClose]: `calc(${sizes.controlSm} + ${space.xs})`,
+    },
     paddingInlineStart: space.md,
   },
   body: {
     flexGrow: 1,
+    minHeight: 0,
+    overflowY: "auto",
     paddingInlineEnd: space.md,
     paddingInlineStart: space.md,
   },

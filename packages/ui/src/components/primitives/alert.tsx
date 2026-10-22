@@ -33,9 +33,6 @@ const text = {
 
 const narrow = "@container (max-width: 24rem)";
 
-// shadcn's padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   alert: {
     backgroundColor: colors.raised,
@@ -68,8 +65,8 @@ const styles = stylex.create({
     },
     paddingBlockEnd: space.xs,
     paddingBlockStart: space.xs,
-    paddingInlineEnd: px10,
-    paddingInlineStart: px10,
+    paddingInlineEnd: space.popup,
+    paddingInlineStart: space.popup,
     rowGap: space.xxxs,
     textAlign: "start",
     width: "100%",

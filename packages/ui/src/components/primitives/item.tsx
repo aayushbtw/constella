@@ -45,9 +45,6 @@ const inSize = (size: ItemSize) =>
 const withDescription =
   ":is([data-slot='item']:has([data-slot='item-description']) > *)";
 
-// shadcn's padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   item: {
     alignItems: "center",
@@ -77,14 +74,14 @@ const styles = stylex.create({
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
-    columnGap: px10,
+    columnGap: space.popup,
     display: "flex",
     flexWrap: "wrap",
-    paddingBlockEnd: px10,
-    paddingBlockStart: px10,
+    paddingBlockEnd: space.popup,
+    paddingBlockStart: space.popup,
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
-    rowGap: px10,
+    rowGap: space.popup,
     textAlign: "start",
     textDecorationLine: "none",
     transform: { default: null, [`${pressable}:active`]: presses.row },
@@ -113,8 +110,8 @@ const styles = stylex.create({
     columnGap: space.xs,
     paddingBlockEnd: space.xs,
     paddingBlockStart: space.xs,
-    paddingInlineEnd: px10,
-    paddingInlineStart: px10,
+    paddingInlineEnd: space.popup,
+    paddingInlineStart: space.popup,
     rowGap: space.xs,
   },
   media: {
@@ -158,7 +155,7 @@ const styles = stylex.create({
       ":is([data-slot='item-content'] + *)": "none",
     },
     flexDirection: "column",
-    gap: { default: space.xxs, [inSize("xs")]: 0 },
+    gap: { default: space.xxxs, [inSize("xs")]: 0 },
     minWidth: 0,
   },
   title: {
@@ -202,7 +199,7 @@ const styles = stylex.create({
     // Separated rows space by their own padding, with the line between them.
     gap: {
       default: space.md,
-      ":has([data-size='sm'])": px10,
+      ":has([data-size='sm'])": space.popup,
       ":has([data-size='xs'])": space.xs,
       ":has(> [data-slot='item-separator'])": 0,
     },

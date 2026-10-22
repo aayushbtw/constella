@@ -23,13 +23,21 @@ const styles = stylex.create({
     },
     opacity: { default: 1, [offstage]: 0 },
     overflow: "hidden",
+    // Shutting is quicker and drops the gentle settle, whose long tail reads as stuck.
     transitionDuration: {
       default: durations.layout,
+      ":is([data-ending-style]):not([data-collapsible-instant])": {
+        default: durations.layoutExit,
+        [media.reducedMotion]: "0s",
+      },
       [media.reducedMotion]: "0s",
       ":is([data-collapsible-instant])": "0s",
     },
     transitionProperty: "height, opacity",
-    transitionTimingFunction: easings.layout,
+    transitionTimingFunction: {
+      default: easings.layout,
+      ":is([data-ending-style])": easings.out,
+    },
   },
 });
 

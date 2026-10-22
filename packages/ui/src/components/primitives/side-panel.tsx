@@ -84,7 +84,7 @@ const styles = stylex.create({
     flexShrink: 0,
     gap: space.xxs,
     height: sizes.header,
-    paddingInlineEnd: space.xs,
+    paddingInlineEnd: `calc((${sizes.header} - ${sizes.controlSm}) / 2)`,
     paddingInlineStart: space.md,
   },
   title: {

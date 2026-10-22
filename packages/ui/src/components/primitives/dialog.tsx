@@ -39,6 +39,7 @@ type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
 const instant = ":is([data-skip-motion])";
+const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
 
 const styles = stylex.create({
   backdrop: {
@@ -64,7 +65,8 @@ const styles = stylex.create({
     insetInlineStart: 0,
     justifyContent: "center",
     paddingBlock: space.md,
-    paddingInline: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
     position: "fixed",
     zIndex: layers.dialog,
   },
@@ -81,9 +83,13 @@ const styles = stylex.create({
     gap: space.md,
     maxHeight: "100%",
     opacity: { default: 1, [offstage]: 0 },
-    overflowY: "auto",
+    overflowY: {
+      default: "auto",
+      ":has(> [data-slot='dialog-body'])": "hidden",
+    },
     paddingBlock: space.md,
-    paddingInline: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
     position: "relative",
     // A parent steps back while a dialog opened from it sits on top.
     transform: {
@@ -106,7 +112,11 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
-    gap: space.xs,
+    gap: space.xxs,
+    paddingInlineEnd: {
+      default: null,
+      [withClose]: `calc(${sizes.controlSm} + ${space.xs} - ${space.md})`,
+    },
   },
   // Bleeds to the popup's edges so the scrollbar sits there, not beside the text.
   body: {
@@ -115,7 +125,8 @@ const styles = stylex.create({
     marginInline: `calc(-1 * ${space.md})`,
     minHeight: 0,
     overflowY: "auto",
-    paddingInline: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
   },
   // A tinted bar set into the popup's bottom edge, so the actions read as their own row.
   footer: {
@@ -133,7 +144,8 @@ const styles = stylex.create({
     marginBlockStart: "auto",
     marginInline: `calc(-1 * ${space.md})`,
     paddingBlock: space.md,
-    paddingInline: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
   },
   title: {
     fontWeight: fontWeights.medium,
