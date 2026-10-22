@@ -117,6 +117,7 @@ const typeStyles = stylex.create({
   },
   textLg: { fontSize: fontSizes.textLg, lineHeight: lineHeights.textLg },
   textBase: { fontSize: fontSizes.textBase, lineHeight: lineHeights.textBase },
+  textMd: { fontSize: fontSizes.textMd, lineHeight: lineHeights.textMd },
   textSm: { fontSize: fontSizes.textSm, lineHeight: lineHeights.textSm },
   captionLg: {
     fontSize: fontSizes.captionLg,

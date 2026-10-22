@@ -151,6 +151,8 @@ export const fontSizes = stylex.defineConsts({
   textLg: `calc(${typeUnit} * 4.5)`,
   // Reading copy.
   textBase: `calc(${typeUnit} * 3.5 + 1px)`,
+  // A sidebar's rows.
+  textMd: `calc(${typeUnit} * 3.5)`,
   // Controls and the text inside components.
   textSm: `calc(${typeUnit} * 3 + 1px)`,
   // Badges, shortcuts, group labels.
@@ -171,6 +173,7 @@ export const lineHeights = stylex.defineConsts({
   heading6: `calc(${leadingUnit} * 6)`,
   textLg: `calc(${leadingUnit} * 6)`,
   textBase: `calc(${leadingUnit} * 6)`,
+  textMd: `calc(${leadingUnit} * 5)`,
   textSm: `calc(${leadingUnit} * 5)`,
   captionLg: `calc(${leadingUnit} * 4)`,
   captionBase: `calc(${leadingUnit} * 4)`,

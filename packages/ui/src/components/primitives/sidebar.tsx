@@ -1393,7 +1393,7 @@ function SidebarMenuButton({
     props: mergeProps<"button">(
       props,
       stylex.props(
-        [typeStyles.textSm, styles.button],
+        [typeStyles.textMd, styles.button],
         variant === "outline" && styles.buttonOutline,
         buttonSizeStyles[size],
         withEnd && styles.buttonWithEnd,
@@ -1537,7 +1537,7 @@ function SidebarMenuSubButton({
     defaultTagName: "a",
     props: mergeProps<"a">(
       props,
-      stylex.props([typeStyles.textSm, styles.subButton], sx)
+      stylex.props([typeStyles.textMd, styles.subButton], sx)
     ),
     render,
     state: { active: isActive, slot: "sidebar-menu-sub-button" },
