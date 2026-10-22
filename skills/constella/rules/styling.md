@@ -49,7 +49,7 @@ A wrapper you write passes `sx` through, never drops it, and applies it last in 
 
 ## No utility classes
 
-There is no Tailwind in the project, so `flex`, `gap-4`, `bg-muted`, `text-sm` do nothing. Lay out with a `stylex.create` style.
+Constella doesn't use Tailwind, and its parts take no `className`, so `flex`, `gap-4`, `bg-muted`, `text-sm` never reach them. Even in an app that has Tailwind, lay out Constella code with a `stylex.create` style.
 
 **Incorrect:**
 
