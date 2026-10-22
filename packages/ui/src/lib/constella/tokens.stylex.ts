@@ -208,6 +208,9 @@ export const space = stylex.defineConsts({
   md: "var(--space-md)",
   lg: "var(--space-lg)",
   xl: "var(--space-xl)",
+  // shadcn's off-grid insets, a hairline under a step so they follow the preset: a row's 6, a popup's 10.
+  row: `calc(var(--space-xs) - ${spaceUnit} * 0.5)`,
+  popup: `calc(var(--space-sm) - ${spaceUnit} * 0.5)`,
 } as const);
 
 export const radii = stylex.defineConsts({
@@ -227,6 +230,11 @@ export const sizes = stylex.defineConsts({
   controlSm: "var(--size-control-sm)",
   controlXs: "var(--size-control-xs)",
   controlXxs: "var(--size-control-xxs)",
+  // A small badge: a hairline under `controlXxs`, so it follows the preset.
+  controlXxxs: `calc(var(--size-control-xxs) - ${spaceUnit} * 0.5)`,
+  // A vertical attachment card's width, and its wide variant's.
+  attachment: `calc(${spaceUnit} * 24)`,
+  attachmentWide: `calc(${spaceUnit} * 30)`,
   // A citation pill's widest; a longer publication name truncates.
   citation: `calc(${spaceUnit} * 40)`,
   dialog: `calc(${spaceUnit} * 96)`,
@@ -292,7 +300,7 @@ export const layers = stylex.defineConsts({
 export const opacities = stylex.defineConsts({
   busy: "0.8",
   // A skeleton at the low point of its pulse.
-  pulse: "0.5",
+  pulse: "0.6",
   disabled: "0.6",
   hover: "0.88",
 });
@@ -312,42 +320,67 @@ export const presses = stylex.defineConsts({
   row: "scale(0.99)",
 });
 
+// Shared by name so the tokens and the CSS variables below can't drift.
+const easeOut = "cubic-bezier(0.23, 1, 0.32, 1)";
+const easeCrossfade = "cubic-bezier(0.2, 0, 0, 1)";
+const popoverIn = "180ms";
+const popoverOut = "120ms";
+const crossfadeFor = "300ms";
+const surfaceFor = "200ms";
+
 export const easings = stylex.defineConsts({
   inOut: "cubic-bezier(0.77, 0, 0.175, 1)",
-  out: "cubic-bezier(0.23, 1, 0.32, 1)",
+  out: easeOut,
   overshoot: "cubic-bezier(0.34, 1.56, 0.64, 1)",
   layout: "cubic-bezier(0.32, 0.72, 0, 1)",
-  crossfade: "cubic-bezier(0.2, 0, 0, 1)",
+  crossfade: easeCrossfade,
 } as const);
 
 export const durations = stylex.defineConsts({
   hover: "150ms",
   move: "250ms",
-  popover: "180ms",
-  popoverExit: "120ms",
+  popover: popoverIn,
+  popoverExit: popoverOut,
   press: "160ms",
   layout: "300ms",
+  layoutExit: surfaceFor,
   spin: "1s",
   // One breath of a skeleton: slow, so loading reads as calm.
   pulse: "2s",
   // One sweep of a shimmer across working text.
   shimmer: "2s",
-  crossfade: "300ms",
+  crossfade: crossfadeFor,
   // How long a confirmation (copied, saved) holds before it reverts; read in JS.
   confirm: "1500ms",
-  dialog: "200ms",
-  chart: "200ms",
+  dialog: surfaceFor,
+  chart: surfaceFor,
   sidebar: "250ms",
-  sidebarExit: "200ms",
+  sidebarExit: surfaceFor,
+  // The gap between siblings arriving one after another.
+  stagger: "50ms",
+  // How long an image may load before its fallback shows; read in JS.
+  fallbackDelay: "600ms",
   // Half Base UI's 600ms, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",
 } as const);
 
+// The motion CSS outside StyleX's reach reads (view transitions in base.css and the site),
+// under literal names.
+export const motionVars = stylex.defineVars({
+  "--duration-crossfade": crossfadeFor,
+  "--duration-popover": popoverIn,
+  "--duration-popover-exit": popoverOut,
+  "--ease-crossfade": easeCrossfade,
+  "--ease-out": easeOut,
+});
+
 // The shapes motion moves between: where a crossfade starts, how far an exit drops,
 // how much each surface behind a stack shrinks.
 export const motion = stylex.defineConsts({
+  // How far a row rises as it arrives.
+  arriveOffset: "4px",
   dialogScale: "0.96",
   dotScale: "0.5",
   exitOffset: "8px",

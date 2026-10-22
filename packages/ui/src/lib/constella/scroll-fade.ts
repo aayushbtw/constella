@@ -26,7 +26,7 @@ const fadeOutEnd = stylex.keyframes({
 
 const stops = `transparent, #000 ${fade.start}, #000 calc(100% - ${fade.end}), transparent`;
 
-const endStops = `#000 calc(100% - ${fade.end}), transparent`;
+const endStops = `#000 calc(100% - ${fade.endInset} - ${fade.end}), transparent calc(100% - ${fade.endInset})`;
 
 /** Fades a scroller's edges while there's more content past them. Pass to the element that scrolls. */
 const scrollFade = stylex.create({

@@ -1,21 +1,20 @@
 import * as stylex from "@stylexjs/stylex";
 
-import type {
-  durations,
-  easings,
-  layers,
-  shadows,
-  sizes,
-  space,
-} from "@/lib/constella/tokens.stylex";
+import type { layers } from "@/lib/constella/tokens.stylex";
 import {
   colors,
+  durations,
+  easings,
   fontSizes,
   fontWeights,
   joins,
   letterSpacings,
   lineHeights,
+  media,
   radii,
+  shadows,
+  sizes,
+  space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
@@ -134,6 +133,142 @@ const typeStyles = stylex.create({
   captionXs: {
     fontSize: fontSizes.captionXs,
     lineHeight: lineHeights.captionXs,
+  },
+});
+
+// The open state repeats inside the media block, which StyleX ranks above a bare condition.
+const interactive = <R, A>(rest: R, active: A) => ({
+  default: rest,
+  ":is([data-popup-open])": active,
+  [media.hover]: {
+    default: rest,
+    ":is([data-popup-open])": active,
+    ":hover:not(:disabled)": active,
+  },
+  ":active:not(:disabled)": active,
+});
+
+// The press and open state repeat inside the media block, which StyleX ranks above a bare condition.
+const lift = {
+  default: shadows.default,
+  ":is([data-popup-open])": shadows.defaultHover,
+  [media.hover]: {
+    default: shadows.default,
+    ":is([data-popup-open])": shadows.defaultHover,
+    ":hover:not(:disabled, :active)": shadows.defaultHover,
+    ":active:not(:disabled)": shadows.defaultPressed,
+  },
+  ":active:not(:disabled)": shadows.defaultPressed,
+};
+
+const pressed = ":is([data-pressed])";
+const hoverUnpressed = ":hover:not(:disabled, [data-pressed])";
+const activeUnpressed = ":active:not(:disabled, [data-pressed])";
+const hoverPressed = ":is([data-pressed]):hover:not(:disabled, :active)";
+
+// Selected is `fill`; hover stays a step under, and hovering a selected part stacks
+// `fillSubtle` on its fill as an inset shadow, so the two never read alike.
+const selectable = <R>(rest: R) => ({
+  default: rest,
+  [media.hover]: {
+    default: rest,
+    [hoverUnpressed]: colors.fillSubtle,
+    [pressed]: colors.fill,
+  },
+  [activeUnpressed]: colors.fillSubtle,
+  [pressed]: colors.fill,
+});
+const lit = `inset 0 0 0 100vmax ${colors.fillSubtle}`;
+const unlit = "inset 0 0 0 100vmax transparent";
+
+// A pressable's fill and height by variant, for a part that looks like a button but isn't
+// one. Apply after the part's own styles: each replaces its whole property.
+const stateStyles = stylex.create({
+  ghost: { backgroundColor: interactive("transparent", colors.fillSubtle) },
+  outline: {
+    backgroundColor: interactive(colors.background, colors.fillSubtle),
+  },
+  secondary: { backgroundColor: interactive(colors.fill, colors.fillStrong) },
+  lift: { boxShadow: lift },
+  // A ghost toggle, selected while `[data-pressed]`.
+  selectedFill: {
+    backgroundColor: selectable("transparent"),
+    boxShadow: {
+      default: unlit,
+      [media.hover]: { default: unlit, [hoverPressed]: lit },
+    },
+  },
+  // An outline toggle: `selectedFill` on a background, with the lift under it.
+  selectedFillLifted: {
+    backgroundColor: selectable(colors.background),
+    boxShadow: {
+      default: `${unlit}, ${shadows.default}`,
+      [media.hover]: {
+        default: `${unlit}, ${shadows.default}`,
+        ":hover:not(:disabled, :active)": `${unlit}, ${shadows.defaultHover}`,
+        [hoverPressed]: `${lit}, ${shadows.defaultHover}`,
+        ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+      },
+      ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+    },
+  },
+});
+
+// A control's icon by its size, for an icon the part renders itself (`size={controlIconSize[size]}`).
+const controlIconSize = {
+  xs: sizes.iconXs,
+  "icon-xs": sizes.iconXs,
+  sm: sizes.iconSm,
+  "icon-sm": sizes.icon,
+  default: sizes.icon,
+  icon: sizes.icon,
+  lg: sizes.icon,
+  "icon-lg": sizes.icon,
+} as const;
+
+// The bar Progress and Meter share, and the label and value above it. A slider's track takes `colors.fillOpaque` too.
+const trackStyles = stylex.create({
+  root: {
+    alignItems: "center",
+    display: "flex",
+    flexWrap: "wrap",
+    gap: space.sm,
+    width: "100%",
+  },
+  track: {
+    backgroundColor: colors.fillOpaque,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
+    display: "flex",
+    height: strokes.track,
+    overflow: "hidden",
+    position: "relative",
+    width: "100%",
+  },
+  indicator: {
+    backgroundColor: colors.accentSolid,
+    borderStartStartRadius: radii.full,
+    borderStartEndRadius: radii.full,
+    borderEndStartRadius: radii.full,
+    borderEndEndRadius: radii.full,
+    height: "100%",
+    transitionDuration: {
+      default: durations.move,
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "width, background-color",
+    transitionTimingFunction: easings.out,
+  },
+  label: {
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
+  },
+  value: {
+    color: colors.textSecondary,
+    fontVariantNumeric: "tabular-nums",
+    marginInlineStart: "auto",
   },
 });
 
@@ -284,11 +419,14 @@ type Sx = stylex.StyleXStyles<
 >;
 
 export {
+  controlIconSize,
   joinStyles,
+  stateStyles,
   textColors,
   textColorStyles,
   textWeights,
   textWeightStyles,
+  trackStyles,
   typeStyles,
   visuallyHidden,
 };
