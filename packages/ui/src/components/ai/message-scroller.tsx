@@ -60,15 +60,18 @@ const styles = stylex.create({
   // Rises in while there's more below, and drops away at the end.
   button: {
     insetBlockEnd: space.md,
-    insetInlineStart: "50%",
+    insetInlineEnd: 0,
+    insetInlineStart: 0,
+    marginInlineEnd: "auto",
+    marginInlineStart: "auto",
     opacity: { default: 1, [away]: 0 },
     pointerEvents: { default: "auto", [away]: "none" },
     position: "absolute",
     transform: {
-      default: "translateX(-50%)",
+      default: "none",
       [away]: {
-        default: `translate(-50%, ${motion.exitOffset}) scale(${motion.popoverScale})`,
-        [media.reducedMotion]: "translateX(-50%)",
+        default: `translateY(${motion.exitOffset}) scale(${motion.popoverScale})`,
+        [media.reducedMotion]: "none",
       },
     },
     transitionDuration: durations.popover,

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Alert02Icon,
-  ArrowDown01Icon,
-  CheckmarkCircle02Icon,
-  Tick02Icon,
-} from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
@@ -24,8 +19,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/primitives/collapsible";
-import { Spinner } from "@/components/primitives/spinner";
-import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import { SwapText } from "@/components/primitives/swap-text";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -61,13 +54,11 @@ interface StepContext {
   // Whether the step is still arriving, so a substep mounted with it doesn't enter twice.
   arriving: boolean;
   state: TraceState | undefined;
-  substep: boolean;
 }
 
 const Step = createContext<StepContext>({
   arriving: false,
   state: undefined,
-  substep: false,
 });
 
 // True once the Trace has mounted: only a step that arrives after it gets an entrance, so a
@@ -76,6 +67,8 @@ const Live = createContext<{ readonly current: boolean }>({ current: false });
 
 const step = "[data-slot='trace-step']";
 const open = ":is([data-panel-open] *)";
+const panelOpen = ":is([data-panel-open])";
+const triggerInstant = ":is([data-collapsible-instant])";
 const instant = ":is([data-collapsible-instant] *)";
 const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
@@ -83,11 +76,12 @@ const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
 const inTrigger = ":is([data-slot='trace-collapsible-trigger'] *)";
 
-// The rail stops short of each marker: a dot's own gap, or more past a spinner, alert or
-// check, which read heavier. Measured from the marker's center, half a row down.
-const dotHole = `calc(${sizes.icon} / 2)`;
-const ringHole = `calc(${sizes.icon} / 2 + ${space.xxs} + ${space.xxxs})`;
-const ringed = `:is([data-state='running'], [data-state='error'], :has(> * > [data-slot='trace-line'] > [data-slot='trace-marker'][data-variant='check']))`;
+// The rail stops the same gap short of each marker's edge, measured from its center, half a
+// row down.
+const dotSize = `calc(${space.xxs} + ${space.xxxs})`;
+const dotHole = `calc(${dotSize} / 2 + ${space.xxxs})`;
+const checkHole = `calc(${sizes.icon} / 2 + ${space.xxxs})`;
+const checked = `:has(> * > [data-slot='trace-line'] > [data-slot='trace-marker'][data-variant='check'])`;
 const rail = {
   backgroundColor: colors.border,
   content: "''",
@@ -104,12 +98,19 @@ const arrive = stylex.keyframes({
   from: {
     filter: `blur(${motion.crossfadeTextBlur})`,
     opacity: 0,
-    transform: `translateY(${space.xxs})`,
+    transform: `translateY(${motion.arriveOffset})`,
   },
 });
 
 const fadeIn = stylex.keyframes({
   from: { opacity: 0 },
+});
+
+const breathe = stylex.keyframes({
+  from: {
+    boxShadow: `0 0 0 0 color-mix(in oklch, ${colors.textPrimary} 40%, transparent)`,
+  },
+  to: { boxShadow: `0 0 0 ${space.xxs} transparent` },
 });
 
 const styles = stylex.create({
@@ -134,7 +135,7 @@ const styles = stylex.create({
       },
       height: {
         default: `calc(${sizes.controlSm} / 2 - ${dotHole})`,
-        [ringed]: `calc(${sizes.controlSm} / 2 - ${ringHole})`,
+        [checked]: `calc(${sizes.controlSm} / 2 - ${checkHole})`,
       },
       top: 0,
     },
@@ -145,7 +146,7 @@ const styles = stylex.create({
       content: { default: "''", [`:nth-last-child(1 of ${step})`]: "none" },
       top: {
         default: `calc(${sizes.controlSm} / 2 + ${dotHole})`,
-        [ringed]: `calc(${sizes.controlSm} / 2 + ${ringHole})`,
+        [checked]: `calc(${sizes.controlSm} / 2 + ${checkHole})`,
       },
     },
   },
@@ -166,7 +167,7 @@ const styles = stylex.create({
     overflow: "hidden",
   },
   arriving: {
-    animationDelay: { default: "50ms", [media.reducedMotion]: "0s" },
+    animationDelay: { default: durations.stagger, [media.reducedMotion]: "0s" },
     animationDuration: durations.move,
     animationFillMode: "backwards",
     animationName: { default: arrive, [media.reducedMotion]: fadeIn },
@@ -211,9 +212,6 @@ const styles = stylex.create({
     transitionTimingFunction: "ease",
     width: "fit-content",
   },
-  error: {
-    color: colors.dangerText,
-  },
   pending: {
     opacity: opacities.disabled,
   },
@@ -225,33 +223,35 @@ const styles = stylex.create({
     justifyContent: "center",
     width: sizes.icon,
   },
-  dotSlot: {
-    alignItems: "center",
-    height: sizes.icon,
-    justifyContent: "center",
-    width: sizes.icon,
-  },
   dot: {
-    backgroundColor: colors.border,
+    backgroundColor: colors.textMuted,
     borderEndEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderStartStartRadius: radii.full,
-    height: `calc(${space.xxs} + ${space.xxxs})`,
-    width: `calc(${space.xxs} + ${space.xxxs})`,
+    height: dotSize,
+    transitionDuration: durations.crossfade,
+    transitionProperty: "background-color",
+    transitionTimingFunction: easings.crossfade,
+    width: dotSize,
+  },
+  dotRunning: {
+    animationDuration: durations.pulse,
+    animationIterationCount: "infinite",
+    animationName: { default: breathe, [media.reducedMotion]: "none" },
+    animationTimingFunction: easings.out,
+    backgroundColor: colors.textPrimary,
+  },
+  dotError: {
+    backgroundColor: colors.dangerSolid,
+  },
+  dotPending: {
+    backgroundColor: "transparent",
+    boxShadow: `inset 0 0 0 ${strokes.border} ${colors.textMuted}`,
   },
   check: {
-    alignItems: "center",
-    backgroundColor: colors.accentSolid,
-    borderEndEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderStartStartRadius: radii.full,
-    color: colors.accentOnSolid,
+    color: colors.textMuted,
     display: "flex",
-    height: sizes.iconSm,
-    justifyContent: "center",
-    width: sizes.iconSm,
   },
   icon: {
     alignItems: "center",
@@ -297,6 +297,9 @@ const styles = stylex.create({
     flexShrink: 0,
     fontVariantNumeric: "tabular-nums",
   },
+  descriptionError: {
+    color: colors.dangerText,
+  },
   // Opening grows the space, then fades in; closing fades out, then shuts.
   content: {
     display: "grid",
@@ -318,7 +321,10 @@ const styles = stylex.create({
     filter: "blur(0)",
     gridTemplateRows: "1fr",
     opacity: 1,
-    transitionDelay: { default: "0s, 50ms, 50ms", [media.reducedMotion]: "0s" },
+    transitionDelay: {
+      default: `0s, ${durations.stagger}, ${durations.stagger}`,
+      [media.reducedMotion]: "0s",
+    },
     transitionDuration: {
       default: `${durations.move}, ${durations.move}, ${durations.move}`,
       [media.reducedMotion]: "0s",
@@ -346,15 +352,29 @@ const styles = stylex.create({
   },
   trigger: {
     position: "relative",
+    // Shrinks into the chevron with the panel, on its timing, so it doesn't outlast the rail below.
     "::after": {
       ...rail,
       bottom: 0,
-      // Kept while the panel shuts, so its first step's rail isn't left hanging.
-      content: {
-        default: "none",
-        ":is([data-panel-open], :has(+ [data-ending-style]))": "''",
-      },
+      opacity: { default: 0, [panelOpen]: 1 },
       top: `calc(${sizes.controlSm} / 2 + ${dotHole})`,
+      transform: { default: "scaleY(0)", [panelOpen]: "none" },
+      transformOrigin: "top",
+      transitionDuration: {
+        default: durations.layoutExit,
+        [panelOpen]: {
+          default: durations.layout,
+          [triggerInstant]: "0s",
+          [media.reducedMotion]: "0s",
+        },
+        [triggerInstant]: "0s",
+        [media.reducedMotion]: "0s",
+      },
+      transitionProperty: "opacity, transform",
+      transitionTimingFunction: {
+        default: easings.out,
+        [panelOpen]: easings.layout,
+      },
     },
   },
   chevron: {
@@ -367,13 +387,22 @@ const styles = stylex.create({
       [rtl]: "rotate(90deg)",
       [open]: "none",
     },
+    // On the panel's timing each way, so it lands as the panel does.
     transitionDuration: {
-      default: durations.move,
+      default: `${durations.hover}, ${durations.layoutExit}`,
+      [open]: {
+        default: `${durations.hover}, ${durations.layout}`,
+        [instant]: "0s",
+        [media.reducedMotion]: "0s",
+      },
       [instant]: "0s",
       [media.reducedMotion]: "0s",
     },
     transitionProperty: "color, transform",
-    transitionTimingFunction: easings.out,
+    transitionTimingFunction: {
+      default: `ease, ${easings.out}`,
+      [open]: `ease, ${easings.layout}`,
+    },
   },
   // A window on the newest lines; older ones scroll up under a fade.
   reasoning: {
@@ -408,9 +437,8 @@ const styles = stylex.create({
     borderBlockStartStyle: "solid",
     borderBlockStartWidth: strokes.border,
     color: {
-      default: colors.textPrimary,
-      ":is([data-state])": colors.textSecondary,
-      ":is([data-state='error'])": colors.dangerText,
+      default: colors.textSecondary,
+      ":is([data-state])": colors.textMuted,
     },
     opacity: {
       default: null,
@@ -477,7 +505,7 @@ function TraceStep({
   const [growing, stepRef] = useArrival<HTMLDivElement>();
   const [arriving, innerRef] = useArrival<HTMLDivElement>();
   const context = useMemo(
-    () => ({ arriving: growing || arriving, state, substep: false }),
+    () => ({ arriving: growing || arriving, state }),
     [arriving, growing, state]
   );
   return (
@@ -512,7 +540,6 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.line],
-        state === "error" && styles.error,
         state === "pending" && styles.pending,
         sx
       )}
@@ -532,8 +559,8 @@ function Icon({ icon, size }: { icon: typeof Tick02Icon; size: string }) {
 }
 
 /**
- * The step's node on the rail: a dot when done, a spinner while running, an alert when it
- * failed. `check` ends a run. Children replace the mark.
+ * The step's node on the rail: one dot, filled when done, pulsing while running, red when it
+ * failed and hollow while pending. `check` ends a run. Children replace the mark.
  */
 function TraceMarker({
   children,
@@ -544,7 +571,7 @@ function TraceMarker({
   sx?: Sx;
   variant?: TraceMarkerVariant;
 }) {
-  const { state, substep } = use(Step);
+  const { state } = use(Step);
   return (
     <span
       aria-hidden
@@ -552,18 +579,16 @@ function TraceMarker({
       data-variant={variant}
       {...stylex.props(styles.marker, sx)}
     >
-      {children ?? <Mark state={state} substep={substep} variant={variant} />}
+      {children ?? <Mark state={state} variant={variant} />}
     </span>
   );
 }
 
 function Mark({
   state,
-  substep,
   variant,
 }: {
   state: TraceState | undefined;
-  substep: boolean;
   variant: TraceMarkerVariant | undefined;
 }) {
   if (variant === "check") {
@@ -572,31 +597,21 @@ function Mark({
         <HugeiconsIcon
           aria-hidden
           icon={Tick02Icon}
-          size={sizes.iconXs}
-          strokeWidth={2.5}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
         />
       </span>
     );
   }
   return (
-    <SwapIcon value={state ?? "done"}>
-      <SwapIconItem value="running">
-        <Spinner aria-hidden />
-      </SwapIconItem>
-      <SwapIconItem value="error">
-        <Icon icon={Alert02Icon} size={sizes.icon} />
-      </SwapIconItem>
-      <SwapIconItem sx={styles.dotSlot} value="pending">
-        <span {...stylex.props(styles.dot)} />
-      </SwapIconItem>
-      <SwapIconItem sx={substep ? undefined : styles.dotSlot} value="done">
-        {substep ? (
-          <Icon icon={CheckmarkCircle02Icon} size={sizes.icon} />
-        ) : (
-          <span {...stylex.props(styles.dot)} />
-        )}
-      </SwapIconItem>
-    </SwapIcon>
+    <span
+      {...stylex.props(
+        styles.dot,
+        state === "running" && styles.dotRunning,
+        state === "error" && styles.dotError,
+        state === "pending" && styles.dotPending
+      )}
+    />
   );
 }
 
@@ -637,11 +652,16 @@ function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
 
 /** A count or a duration after the title; it doesn't truncate. */
 function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
+  const { state } = use(Step);
   return (
     <span
       data-slot="trace-description"
       {...props}
-      {...stylex.props(styles.description, sx)}
+      {...stylex.props(
+        styles.description,
+        state === "error" && styles.descriptionError,
+        sx
+      )}
     />
   );
 }
@@ -821,7 +841,7 @@ function TraceReasoning({ children, sx }: { children: string; sx?: Sx }) {
   );
 }
 
-/** A card of the smaller steps one step runs, each settling to a check. */
+/** A card of the smaller steps one step runs, each marked like a step. */
 function TraceSubsteps({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -844,10 +864,7 @@ function TraceSubstep({
 }) {
   const parent = use(Step);
   const [arriving, ref] = useArrival<HTMLDivElement>(parent.arriving);
-  const context = useMemo(
-    () => ({ arriving, state, substep: true }),
-    [arriving, state]
-  );
+  const context = useMemo(() => ({ arriving, state }), [arriving, state]);
   return (
     <Step value={context}>
       <div

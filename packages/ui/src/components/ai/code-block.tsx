@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
 import { scrollFade } from "@/lib/constella/scroll-fade";
+import { scrollFadeVars } from "@/lib/constella/scroll-fade.stylex";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -54,6 +55,8 @@ const pad = codeBlockVars.padInline;
 // The header icon's column: line numbers and diff marks sit in it, so code starts under the title.
 const gutter = `calc(${pad} + ${sizes.icon} + ${space.xs})`;
 const clearActions = `calc(${space.xs} + ${sizes.controlSm} + ${space.xs})`;
+const floating =
+  ":is([data-slot='code-block']:has(> [data-slot='code-block-actions']) > *)";
 
 const styles = stylex.create({
   block: {
@@ -130,6 +133,10 @@ const styles = stylex.create({
       [underHeader]: space.xxs,
     },
     position: "relative",
+  },
+  // The fade ends where the floating action starts, so code never shows beside it.
+  contentBesideActions: {
+    [scrollFadeVars.endInset]: { default: null, [floating]: clearActions },
   },
   // Never a containing block (no position, transform, filter, contain, container-type or will-change), or it would scroll and clip the numbers.
   pre: {
@@ -327,7 +334,12 @@ function CodeBlockContent({
     <div
       data-slot="code-block-content"
       dir="ltr"
-      {...stylex.props(styles.content, scrollFade.xEndAround, sx)}
+      {...stylex.props(
+        styles.content,
+        scrollFade.xEndAround,
+        styles.contentBesideActions,
+        sx
+      )}
     >
       <pre
         data-numbered={lineNumbers || undefined}

@@ -58,7 +58,6 @@ const styles = stylex.create({
   heading: {
     fontWeight: fontWeights.semibold,
     marginBlockEnd: 0,
-    marginBlockStart: { default: space.xs, ":first-child": 0 },
     textWrap: "balance",
   },
   strong: { fontWeight: fontWeights.semibold },
@@ -94,6 +93,11 @@ const styles = stylex.create({
     marginBlockStart: 0,
     marginBlockEnd: 0,
     width: "100%",
+  },
+  // The table has no box, so its text lines up with the prose.
+  cell: {
+    paddingInlineEnd: { default: space.xs, ":last-child": 0 },
+    paddingInlineStart: { default: space.xs, ":first-child": 0 },
   },
   start: { textAlign: "start" },
   center: { textAlign: "center" },
@@ -179,10 +183,10 @@ const components = {
   table: (props: Props<"table">) => <Table {...props} />,
   tbody: (props: Props<"tbody">) => <TableBody {...props} />,
   td: ({ style, ...props }: Props<"td">) => (
-    <TableCell {...props} sx={alignOf(style)} />
+    <TableCell {...props} sx={[styles.cell, alignOf(style)]} />
   ),
   th: ({ style, ...props }: Props<"th">) => (
-    <TableHead {...props} sx={alignOf(style)} />
+    <TableHead {...props} sx={[styles.cell, alignOf(style)]} />
   ),
   thead: (props: Props<"thead">) => <TableHeader {...props} />,
   tr: (props: Props<"tr">) => <TableRow {...props} />,

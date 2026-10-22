@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import {
   Attachment,
   AttachmentContent,
-  AttachmentDescription,
   AttachmentMedia,
   AttachmentTitle,
 } from "@/components/ai/attachment";
@@ -403,7 +402,6 @@ function TraceDemo() {
                       </AttachmentMedia>
                       <AttachmentContent>
                         <AttachmentTitle>sweden-launch</AttachmentTitle>
-                        <AttachmentDescription>PDF</AttachmentDescription>
                       </AttachmentContent>
                     </Attachment>
                   </TraceStepContent>
@@ -465,6 +463,9 @@ function TraceStateDemo() {
             <TraceMarker />
             <TraceTitle>Failed to run pnpm lint</TraceTitle>
           </TraceLine>
+          <TraceStepContent>
+            <TraceDescription>Exit code 1 · 3 errors</TraceDescription>
+          </TraceStepContent>
         </TraceStep>
         <TraceStep state="pending">
           <TraceLine>
@@ -578,7 +579,6 @@ function TraceFileDemo() {
               </AttachmentMedia>
               <AttachmentContent>
                 <AttachmentTitle>sweden-launch</AttachmentTitle>
-                <AttachmentDescription>PDF</AttachmentDescription>
               </AttachmentContent>
             </Attachment>
           </TraceStepContent>

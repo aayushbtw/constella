@@ -56,14 +56,10 @@ const withMedia = ":has(> [data-slot='attachment-media'])";
 const withContent = ":has(> [data-slot='attachment-content'])";
 const pressable = ":has(> [data-slot='attachment-trigger'])";
 
-// shadcn's insets, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 // The media's corner plus the inset around it, so the two stay concentric.
 const corner = {
   default: `calc(${radii.sm} + ${space.xs})`,
-  ":is([data-size='sm'])": `calc(${radii.sm} + ${px6})`,
+  ":is([data-size='sm'])": `calc(${radii.sm} + ${space.row})`,
   ":is([data-size='xs'])": `calc(${radii.xs} + ${space.xxs})`,
 };
 
@@ -72,19 +68,19 @@ const textOnly = `:not(${withMedia})${withContent}`;
 const padBlock = {
   default: 0,
   [textOnly]: space.xs,
-  [`:is([data-size='sm'])${textOnly}`]: px6,
+  [`:is([data-size='sm'])${textOnly}`]: space.row,
   [`:is([data-size='xs'])${textOnly}`]: space.xxs,
   [withMedia]: space.xs,
-  [`:is([data-size='sm'])${withMedia}`]: px6,
+  [`:is([data-size='sm'])${withMedia}`]: space.row,
   [`:is([data-size='xs'])${withMedia}`]: space.xxs,
 };
 const padInline = {
   default: 0,
-  [textOnly]: px10,
+  [textOnly]: space.popup,
   [`:is([data-size='sm'])${textOnly}`]: space.xs,
-  [`:is([data-size='xs'])${textOnly}`]: px6,
+  [`:is([data-size='xs'])${textOnly}`]: space.row,
   [withMedia]: space.xs,
-  [`:is([data-size='sm'])${withMedia}`]: px6,
+  [`:is([data-size='sm'])${withMedia}`]: space.row,
   [`:is([data-size='xs'])${withMedia}`]: space.xxs,
 };
 
@@ -103,19 +99,19 @@ const styles = stylex.create({
     },
     borderBlockEndColor: {
       default: colors.border,
-      ":is([data-state='error'])": colors.dangerText,
+      ":is([data-state='error'])": colors.dangerBorder,
     },
     borderBlockStartColor: {
       default: colors.border,
-      ":is([data-state='error'])": colors.dangerText,
+      ":is([data-state='error'])": colors.dangerBorder,
     },
     borderInlineEndColor: {
       default: colors.border,
-      ":is([data-state='error'])": colors.dangerText,
+      ":is([data-state='error'])": colors.dangerBorder,
     },
     borderInlineStartColor: {
       default: colors.border,
-      ":is([data-state='error'])": colors.dangerText,
+      ":is([data-state='error'])": colors.dangerBorder,
     },
     borderBlockEndStyle: {
       default: "solid",
@@ -151,8 +147,9 @@ const styles = stylex.create({
     flexWrap: "wrap",
     gap: {
       default: space.xs,
-      ":is([data-size='sm'])": px10,
-      ":is([data-size='xs'])": px6,
+      ":is([data-orientation='horizontal'][data-size='default'])": space.sm,
+      ":is([data-size='sm'])": space.popup,
+      ":is([data-size='xs'])": space.row,
     },
     maxWidth: "100%",
     minWidth: {
@@ -161,7 +158,16 @@ const styles = stylex.create({
     },
     paddingBlockEnd: padBlock,
     paddingBlockStart: padBlock,
-    paddingInlineEnd: padInline,
+    // The text's end inset matches its gap from the media.
+    paddingInlineEnd: {
+      ...padInline,
+      [`:is([data-orientation='horizontal'][data-size='default'])${withMedia}`]:
+        space.sm,
+      [`:is([data-orientation='horizontal'][data-size='sm'])${withMedia}`]:
+        space.popup,
+      [`:is([data-orientation='horizontal'][data-size='xs'])${withMedia}`]:
+        space.row,
+    },
     paddingInlineStart: padInline,
     position: "relative",
     scrollSnapAlign: "start",
@@ -170,8 +176,9 @@ const styles = stylex.create({
     transitionTimingFunction: "ease",
     width: {
       default: "fit-content",
-      ":is([data-orientation='vertical'])": 96,
-      [`:is([data-orientation='vertical'])${withContent}`]: 120,
+      ":is([data-orientation='vertical'])": sizes.attachment,
+      [`:is([data-orientation='vertical'])${withContent}`]:
+        sizes.attachmentWide,
     },
   },
   media: {
@@ -209,9 +216,16 @@ const styles = stylex.create({
       [inState("idle")]: 1,
     },
   },
+  // Two lines exactly the media's height, so the media's inset holds on every side; xs has room for one.
   content: {
+    alignItems: { default: null, [inSize("xs")]: "baseline" },
+    columnGap: { default: null, [inSize("xs")]: space.xs },
+    display: { default: null, [inSize("xs")]: "flex" },
     flex: "1",
-    lineHeight: lineHeights.textSm,
+    lineHeight: {
+      default: lineHeights.textSm,
+      [inSize("sm")]: lineHeights.captionLg,
+    },
     maxWidth: "100%",
     minWidth: 0,
     paddingInlineEnd: { default: null, [vertical]: space.xxs },
@@ -237,7 +251,9 @@ const styles = stylex.create({
       [inState("error")]: colors.dangerText,
     },
     display: "block",
-    marginBlockStart: space.xxxs,
+    flexShrink: 0,
+    lineHeight: { default: null, [inSize("sm")]: lineHeights.captionLg },
+    marginBlockStart: { default: 0, [vertical]: space.xxxs },
     maxWidth: "100%",
     minWidth: 0,
     overflow: "hidden",
@@ -286,7 +302,7 @@ const styles = stylex.create({
   },
   group: {
     display: "flex",
-    gap: space.sm,
+    gap: space.xs,
     minWidth: 0,
     overflowX: "auto",
     overscrollBehaviorX: "contain",

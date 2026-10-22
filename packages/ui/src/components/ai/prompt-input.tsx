@@ -80,8 +80,10 @@ const styles = stylex.create({
       default: lineHeights.textBase,
       [media.coarse]: lineHeights.touch,
     },
-    // Grows with its text up to six control heights, then scrolls.
-    maxHeight: `calc(${sizes.controlMd} * 6)`,
+    maxHeight: {
+      default: `calc(${lineHeights.textBase} * 6 + ${space.xs} * 2)`,
+      [media.coarse]: `calc(${lineHeights.touch} * 6 + ${space.xs} * 2)`,
+    },
     minHeight: sizes.controlLg,
     overflowY: "auto",
   },

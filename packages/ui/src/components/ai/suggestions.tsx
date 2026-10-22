@@ -18,8 +18,10 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
     // Room for the focus ring, which the viewport would clip.
-    paddingBlock: space.xxs,
-    paddingInline: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingBlockEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+    paddingInlineEnd: space.xxs,
     width: "max-content",
   },
 });

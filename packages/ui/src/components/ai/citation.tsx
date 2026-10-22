@@ -19,11 +19,12 @@ import {
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { stateStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
+  durations,
   fontWeights,
-  media,
+  radii,
   sizes,
   space,
   strokes,
@@ -58,10 +59,17 @@ const styles = stylex.create({
     color: colors.textMuted,
     flexShrink: 0,
   },
+  // A menu's inset, so each source's hover fill nests in the card's corner.
+  card: {
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+  },
   list: {
     display: "flex",
     flexDirection: "column",
-    gap: space.md,
+    gap: space.xxs,
   },
   group: {
     alignItems: "center",
@@ -78,18 +86,29 @@ const styles = stylex.create({
     minWidth: 0,
   },
   groupCount: {
-    color: colors.textSecondary,
+    color: colors.textMuted,
     flexShrink: 0,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
     whiteSpace: "nowrap",
   },
   source: {
+    borderStartStartRadius: radii.sm,
+    borderStartEndRadius: radii.sm,
+    borderEndStartRadius: radii.sm,
+    borderEndEndRadius: radii.sm,
     color: "inherit",
     display: "flex",
     flexDirection: "column",
     gap: space.xs,
+    paddingBlockEnd: space.row,
+    paddingBlockStart: space.row,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
     textDecorationLine: "none",
+    transitionDuration: durations.hover,
+    transitionProperty: "background-color",
+    transitionTimingFunction: "ease",
   },
   publication: {
     alignItems: "center",
@@ -105,10 +124,6 @@ const styles = stylex.create({
   },
   title: {
     fontWeight: fontWeights.medium,
-    textDecorationLine: {
-      default: "none",
-      [media.hover]: { default: null, ":is(a:hover > *)": "underline" },
-    },
   },
   description: {
     color: colors.textSecondary,
@@ -118,6 +133,9 @@ const styles = stylex.create({
   },
 });
 
+// oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("600ms")` is NaN
+const fallbackDelay = Number.parseFloat(durations.fallbackDelay);
+
 function Logo({ source, size }: { size?: "sm"; source: Source }) {
   return (
     <Avatar aria-hidden corners="rounded" size={size}>
@@ -125,7 +143,9 @@ function Logo({ source, size }: { size?: "sm"; source: Source }) {
         <AvatarImage alt="" referrerPolicy="no-referrer" src={source.icon} />
       )}
       {/* Held back while a logo loads, so the pill doesn't flash the globe before it. */}
-      <AvatarFallback delay={source.icon === undefined ? undefined : 600}>
+      <AvatarFallback
+        delay={source.icon === undefined ? undefined : fallbackDelay}
+      >
         <HugeiconsIcon
           aria-hidden
           icon={Globe02Icon}
@@ -149,7 +169,7 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
       {children}
       <HoverCard handle={handle}>
         {({ payload }) => (
-          <HoverCardContent sx={sx}>
+          <HoverCardContent sx={[styles.card, sx]}>
             {payload === undefined ? null : (
               <div {...stylex.props(styles.list)}>
                 {payload.map((source) => (
@@ -158,7 +178,7 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
                     key={source.url}
                     rel="noreferrer"
                     target="_blank"
-                    {...stylex.props(styles.source)}
+                    {...stylex.props(styles.source, stateStyles.ghost)}
                   >
                     <span {...stylex.props(styles.publication)}>
                       <Logo size="sm" source={source} />
