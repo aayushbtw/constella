@@ -32,9 +32,6 @@ type TextareaProps = Omit<ComponentProps<"textarea">, "className" | "style"> & {
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
 const disabled = ":is(:disabled, [data-disabled])";
 
-// shadcn's padding, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
 // A growing textarea can't scale `fontSizes.touch` down the way Input does: its layout
 // height would stay at 16px's.
 
@@ -75,7 +72,7 @@ const styles = stylex.create({
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     paddingBlock: space.xs,
-    paddingInline: px10,
+    paddingInline: space.popup,
     resize: { default: "vertical", [disabled]: "none" },
     transitionDuration: durations.hover,
     transitionProperty: "border-color, box-shadow",
@@ -90,11 +87,11 @@ const styles = stylex.create({
       [media.coarse]: lineHeights.touch,
     },
     minHeight: `calc(${sizes.controlSm} * 2)`,
-    paddingBlock: px6,
+    paddingBlock: space.row,
   },
   lg: {
     minHeight: `calc(${sizes.controlLg} * 2)`,
-    paddingBlock: px10,
+    paddingBlock: space.popup,
   },
 });
 

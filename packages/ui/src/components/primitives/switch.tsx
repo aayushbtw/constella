@@ -118,8 +118,12 @@ const styles = stylex.create({
     boxShadow: shadows.default,
     display: "block",
     pointerEvents: "none",
-    // The thumb lands with a little give; the stretch answers the press at once.
-    transitionDuration: `${durations.move}, ${durations.press}, ${durations.hover}`,
+    // The thumb lands with a little give; the stretch answers the press at once. Toggled from
+    // the keyboard (only a keyboard focus matches `:focus-visible`), it doesn't move.
+    transitionDuration: {
+      default: `${durations.move}, ${durations.press}, ${durations.hover}`,
+      ":is(:focus-visible > *)": "0s",
+    },
     transitionProperty: {
       default: "transform, width, background-color",
       [media.reducedMotion]: "background-color",

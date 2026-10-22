@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
-import { visuallyHidden } from "@/lib/constella/styles";
-import { durations, sizes, strokes } from "@/lib/constella/tokens.stylex";
+import { controlIconSize, visuallyHidden } from "@/lib/constella/styles";
+import { durations, strokes } from "@/lib/constella/tokens.stylex";
 
 type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
@@ -25,10 +25,6 @@ function read(content: string | (() => string)) {
 
 // The Web clock takes bare milliseconds; the token carries `ms`.
 const confirmFor = Number(durations.confirm.slice(0, -"ms".length));
-
-const labelledIconSizes: Partial<
-  Record<NonNullable<ButtonProps["size"]>, string>
-> = { sm: sizes.iconSm, xs: sizes.iconXs };
 
 /** Copies `value`, and shows a tick for a moment after. */
 function CopyButton({
@@ -70,9 +66,7 @@ function CopyButton({
 
   const labelled = children !== undefined;
   const buttonSize = size ?? (labelled ? "sm" : "icon-sm");
-  const iconSize = labelled
-    ? (labelledIconSizes[buttonSize] ?? sizes.icon)
-    : sizes.icon;
+  const iconSize = controlIconSize[buttonSize];
 
   return (
     <>

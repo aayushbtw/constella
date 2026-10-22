@@ -63,7 +63,7 @@ const styles = stylex.create({
     position: "relative",
     width: { default: "100%", [vertical]: strokes.track },
     "::before": {
-      backgroundColor: colors.fill,
+      backgroundColor: colors.fillOpaque,
       borderStartStartRadius: radii.full,
       borderStartEndRadius: radii.full,
       borderEndStartRadius: radii.full,

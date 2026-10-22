@@ -13,7 +13,12 @@ import { createContext, use, useContext } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import {
+  controlIconSize,
+  joinStyles,
+  stateStyles,
+  typeStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -61,23 +66,11 @@ const instant = ":is([data-skip-motion])";
 // Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
 const maxHeight = `min(var(--available-height), ${sizes.menuHeight})`;
 
-// shadcn's padding, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   // An input's surface, so a select and an input in one form read as one family.
   trigger: {
     alignItems: "center",
     backgroundClip: "padding-box",
-    backgroundColor: {
-      default: colors.background,
-      [media.hover]: {
-        default: colors.background,
-        ":hover:not(:disabled)": colors.fillSubtle,
-      },
-      ":active:not(:disabled)": colors.fillSubtle,
-    },
     borderBlockColor: {
       default: colors.border,
       [invalid]: colors.dangerBorder,
@@ -94,9 +87,11 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     boxShadow: {
       default: shadows.default,
+      [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
       // Repeated inside the media block, which StyleX ranks above the bare conditions.
       [media.hover]: {
         default: shadows.default,
+        [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
         [`:hover:not(:disabled, :active):not(${invalid})`]:
           shadows.defaultHover,
         [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
@@ -108,7 +103,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     cursor: { default: "pointer", [disabled]: "not-allowed" },
     display: "flex",
-    gap: px6,
+    gap: space.row,
     height: sizes.controlMd,
     justifyContent: "space-between",
     marginBlock: 0,
@@ -117,7 +112,7 @@ const styles = stylex.create({
     minWidth: 0,
     opacity: { default: 1, [disabled]: opacities.disabled },
     paddingInlineEnd: space.xs,
-    paddingInlineStart: px10,
+    paddingInlineStart: space.popup,
     transitionDuration: durations.hover,
     transitionProperty: "background-color, border-color, box-shadow",
     transitionTimingFunction: "ease",
@@ -200,11 +195,11 @@ const styles = stylex.create({
     borderEndEndRadius: radii.xs,
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "flex",
-    gap: px6,
+    gap: space.row,
     minHeight: sizes.controlSm,
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
-    paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
-    paddingInlineStart: px6,
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
+    paddingInlineStart: space.row,
     position: "relative",
     userSelect: "none",
   },
@@ -224,7 +219,7 @@ const styles = stylex.create({
   indicator: {
     alignItems: "center",
     display: "flex",
-    insetInlineEnd: space.xs,
+    insetInlineEnd: space.row,
     justifyContent: "center",
     position: "absolute",
   },
@@ -232,8 +227,8 @@ const styles = stylex.create({
     color: colors.textMuted,
     fontWeight: fontWeights.medium,
     paddingBlock: space.xxs,
-    paddingInlineEnd: px6,
-    paddingInlineStart: px6,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
   },
   separator: {
     backgroundColor: colors.borderSubtle,
@@ -263,15 +258,21 @@ const styles = stylex.create({
 const sizeStyles = {
   default: null,
   lg: styles.lg,
-  sm: [typeStyles.textSm, styles.sm],
+  sm: [typeStyles.captionLg, styles.sm],
 } satisfies Record<SelectSize, stylex.StyleXStyles | null>;
 
-function Glyph({ icon }: { icon: typeof Tick02Icon }) {
+function Glyph({
+  icon,
+  size = "default",
+}: {
+  icon: typeof Tick02Icon;
+  size?: SelectSize;
+}) {
   return (
     <HugeiconsIcon
       aria-hidden
       icon={icon}
-      size={sizes.icon}
+      size={controlIconSize[size]}
       strokeWidth={Number(strokes.icon)}
     />
   );
@@ -280,7 +281,7 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 const itemSizeStyles = {
   default: null,
   lg: styles.itemLg,
-  sm: [typeStyles.textSm, styles.itemSm],
+  sm: [typeStyles.captionLg, styles.itemSm],
 } satisfies Record<SelectSize, stylex.StyleXStyles | null>;
 
 const SkipMotion = createContext(false);
@@ -331,6 +332,7 @@ function SelectTrigger({
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.trigger],
+        stateStyles.outline,
         joinStyles.sm,
         joinStyles.edges,
         sizeStyles[size],
@@ -339,7 +341,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon {...stylex.props(styles.icon)}>
-        <Glyph icon={UnfoldMoreIcon} />
+        <Glyph icon={UnfoldMoreIcon} size={size} />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -436,13 +438,14 @@ function SelectItem({
   sx,
   ...props
 }: Styled<SelectPrimitive.Item.Props>) {
+  const size = use(Size);
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.item],
-        itemSizeStyles[use(Size)],
+        itemSizeStyles[size],
         sx
       )}
     >
@@ -450,7 +453,7 @@ function SelectItem({
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator {...stylex.props(styles.indicator)}>
-        <Glyph icon={Tick02Icon} />
+        <Glyph icon={Tick02Icon} size={size} />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   );

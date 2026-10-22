@@ -38,9 +38,6 @@ const vertical = ":is([data-orientation='vertical'])";
 
 const besideColumn = ":is([data-slot='tabs'][data-orientation='vertical'] > *)";
 
-// shadcn's padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   tabs: {
     display: "flex",
@@ -144,7 +141,7 @@ const styles = stylex.create({
   tabSm: {
     gap: space.xxs,
     height: sizes.controlXs,
-    paddingInline: px10,
+    paddingInline: space.popup,
   },
   tabLg: {
     height: sizes.controlMd,

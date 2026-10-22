@@ -105,10 +105,6 @@ const bySize = (values: Record<InputGroupSize, string>) => ({
 const insetMargin = (group: string, item: string) =>
   `calc((${group} - ${item}) / 2 - ${strokes.border} - ${space.xs})`;
 
-// shadcn's spacing, off our 4px grid.
-const px6 = `calc(${space.xs} - ${space.xxxs})` as const;
-const px10 = `calc(${space.sm} - ${space.xxxs})` as const;
-
 const stackedInput = `calc(${lineHeights.textSm} + ${space.xs} + ${space.xxs})`;
 const chipInset = `calc((${sizes.controlMd} - ${sizes.controlXs}) / 2 - ${strokes.border})`;
 const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
@@ -196,8 +192,8 @@ const styles = stylex.create({
     gap: space.xs,
     justifyContent: "center",
     // The control's line, so text above or below it sits the same distance from the edge.
-    paddingBlockEnd: px6,
-    paddingBlockStart: px6,
+    paddingBlockEnd: space.row,
+    paddingBlockStart: space.row,
     userSelect: "none",
   },
   inlineStart: {
@@ -215,16 +211,16 @@ const styles = stylex.create({
     order: -1,
     paddingBlockEnd: 0,
     paddingBlockStart: space.xs,
-    paddingInlineEnd: { default: px10, [trailingButton]: space.xs },
-    paddingInlineStart: px10,
+    paddingInlineEnd: { default: space.popup, [trailingButton]: space.xs },
+    paddingInlineStart: space.popup,
   },
   blockEnd: {
     justifyContent: "flex-start",
     order: 1,
     paddingBlockEnd: space.xs,
     paddingBlockStart: 0,
-    paddingInlineEnd: { default: px10, [trailingButton]: space.xs },
-    paddingInlineStart: px10,
+    paddingInlineEnd: { default: space.popup, [trailingButton]: space.xs },
+    paddingInlineStart: space.popup,
   },
   separatedStart: {
     borderBlockEndColor: colors.borderSubtle,
@@ -305,13 +301,13 @@ const styles = stylex.create({
       [inGroupWith("block-end")]: unscaled(space.xs),
     },
     paddingInlineEnd: {
-      default: unscaled(px10),
-      [inGroupWith("inline-end")]: unscaled(px6),
+      default: unscaled(space.popup),
+      [inGroupWith("inline-end")]: unscaled(space.row),
       [beforeSuffix]: unscaled(space.xxxs),
     },
     paddingInlineStart: {
-      default: unscaled(px10),
-      [inGroupWith("inline-start")]: unscaled(px6),
+      default: unscaled(space.popup),
+      [inGroupWith("inline-start")]: unscaled(space.row),
       [afterPrefix]: unscaled(space.xxxs),
     },
     scale: { default: null, [media.coarse]: inputVars.scale },
@@ -377,8 +373,8 @@ const styles = stylex.create({
   // Concentric with the group's corner at the even inset.
   buttonXs: {
     gap: space.xxs,
-    paddingInlineEnd: px6,
-    paddingInlineStart: px6,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
   },
 });
 

@@ -34,9 +34,6 @@ type ButtonGroupTextProps = Styled<useRender.ComponentProps<"div">>;
 // Groups inside a group sit apart, so nothing joins at this level.
 const nested = ":has(> [data-slot='button-group'])";
 
-// shadcn's inline padding, off our 4px grid.
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   group: {
     alignItems: "stretch",
@@ -71,7 +68,7 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: space.xs,
-    paddingInline: px10,
+    paddingInline: space.popup,
     whiteSpace: "nowrap",
   },
   separatorHorizontal: {

@@ -4,7 +4,7 @@ import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
 
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, stateStyles, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -65,22 +65,13 @@ const loading = "[aria-busy='true']:disabled";
 const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
   ":is([data-popup-open])": active,
-  [media.hover]: { default: rest, ":hover:not(:disabled)": active },
+  [media.hover]: {
+    default: rest,
+    ":is([data-popup-open])": active,
+    ":hover:not(:disabled)": active,
+  },
   ":active:not(:disabled)": active,
 });
-
-// Every surface that can be pressed climbs the ladder. The press repeats inside the media
-// block, which StyleX ranks above a bare `:active`.
-const lift = {
-  default: shadows.default,
-  ":is([data-popup-open])": shadows.defaultHover,
-  [media.hover]: {
-    default: shadows.default,
-    ":hover:not(:disabled, :active)": shadows.defaultHover,
-    ":active:not(:disabled)": shadows.defaultPressed,
-  },
-  ":active:not(:disabled)": shadows.defaultPressed,
-};
 
 const kbdInset = (height: string) =>
   `calc((${height} - ${sizes.kbd}) / 2 - ${strokes.border})`;
@@ -108,10 +99,6 @@ const square = (size: string) => ({
   width: size,
 });
 
-// shadcn's spacing, which sits off our 4px grid at 6px and 10px.
-const px6 = `calc(${space.xs} - ${space.xxxs})`;
-const px10 = `calc(${space.sm} - ${space.xxxs})`;
-
 const styles = stylex.create({
   base: {
     alignItems: "center",
@@ -132,7 +119,7 @@ const styles = stylex.create({
     display: "inline-flex",
     flexShrink: 0,
     fontWeight: fontWeights.medium,
-    gap: px6,
+    gap: space.row,
     justifyContent: "center",
     marginBlock: 0,
     marginInline: 0,
@@ -155,20 +142,23 @@ const styles = stylex.create({
   },
   // Icons shrink with the size: `sizes.iconXs` at xs, `iconSm` at sm, `icon` from default.
   xs: {
-    ...inset(space.xs, px6, sizes.controlXs),
+    ...inset(space.xs, space.row, sizes.controlXs),
     gap: space.xxs,
     height: sizes.controlXs,
   },
   sm: {
-    ...inset(px10, px6, sizes.controlSm),
+    ...inset(space.popup, space.row, sizes.controlSm),
     gap: space.xxs,
     height: sizes.controlSm,
   },
   default: {
-    ...inset(px10, space.xs, sizes.controlMd),
+    ...inset(space.popup, space.xs, sizes.controlMd),
     height: sizes.controlMd,
   },
-  lg: { ...inset(px10, space.xs, sizes.controlLg), height: sizes.controlLg },
+  lg: {
+    ...inset(space.popup, space.xs, sizes.controlLg),
+    height: sizes.controlLg,
+  },
   iconXs: square(sizes.controlXs),
   iconSm: square(sizes.controlSm),
   icon: square(sizes.controlMd),
@@ -187,23 +177,14 @@ const styles = stylex.create({
       [loading]: opacities.busy,
     },
   },
-  secondary: {
-    backgroundColor: interactive(colors.fill, colors.fillStrong),
-    boxShadow: lift,
-    color: colors.textPrimary,
-  },
+  secondary: { color: colors.textPrimary },
   outline: {
     backgroundClip: "padding-box",
-    backgroundColor: interactive(colors.background, colors.fillSubtle),
     borderBlockColor: colors.border,
     borderInlineColor: colors.border,
-    boxShadow: lift,
     color: colors.textPrimary,
   },
-  ghost: {
-    backgroundColor: interactive("transparent", colors.fillSubtle),
-    color: colors.textPrimary,
-  },
+  ghost: { color: colors.textPrimary },
   // A tint, not a solid: destruction is marked, never shouted.
   danger: {
     backgroundColor: interactive(colors.dangerSubtle, colors.dangerSubtleHover),
@@ -238,12 +219,14 @@ const styles = stylex.create({
   },
 });
 
+const secondary = [styles.secondary, stateStyles.secondary, stateStyles.lift];
+
 const variantStyles = {
-  ghost: styles.ghost,
+  ghost: [styles.ghost, stateStyles.ghost],
   link: styles.link,
-  outline: styles.outline,
+  outline: [styles.outline, stateStyles.outline, stateStyles.lift],
   primary: styles.primary,
-  secondary: styles.secondary,
+  secondary,
 } satisfies Record<ButtonVariant, stylex.StyleXStyles>;
 
 // A solid takes the tint too: destruction is marked, never shouted.
@@ -251,7 +234,7 @@ const colorStyles = {
   ghost: { danger: styles.dangerGhost },
   link: { danger: styles.dangerLink },
   outline: { danger: styles.dangerOutline },
-  primary: { danger: [styles.secondary, styles.danger, styles.dangerSolid] },
+  primary: { danger: [secondary, styles.danger, styles.dangerSolid] },
   secondary: { danger: styles.danger },
 } satisfies Record<ButtonVariant, Record<ButtonColor, stylex.StyleXStyles>>;
 

@@ -5,7 +5,7 @@ import * as stylex from "@stylexjs/stylex";
 
 import { buttonStyles } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
-import { colors, media } from "@/lib/constella/tokens.stylex";
+import { stateStyles } from "@/lib/constella/styles";
 
 const toggleVariants = ["default", "outline"] as const;
 const toggleSizes = [
@@ -26,26 +26,10 @@ type ToggleProps = Omit<TogglePrimitive.Props, "className" | "style"> & {
   variant?: ToggleVariant;
 };
 
-const pressed = ":is([data-pressed])";
-const hover = ":hover:not(:disabled, [data-pressed])";
-const active = ":active:not(:disabled, [data-pressed])";
-
-// A pressed toggle is selected, so it takes `fill`; hover and press stay a step under it.
-const fills = (rest: string) => ({
-  default: rest,
-  [media.hover]: {
-    default: rest,
-    [hover]: colors.fillSubtle,
-    [pressed]: colors.fill,
-  },
-  [active]: colors.fillSubtle,
-  [pressed]: colors.fill,
-});
-
-const styles = stylex.create({
-  default: { backgroundColor: fills("transparent") },
-  outline: { backgroundColor: fills(colors.background) },
-});
+const variantStyles = {
+  default: stateStyles.selectedFill,
+  outline: stateStyles.selectedFillLifted,
+} satisfies Record<ToggleVariant, stylex.StyleXStyles>;
 
 /** A toggle's styles: a ghost or outline button that fills while pressed. */
 function toggleStyles({
@@ -57,7 +41,7 @@ function toggleStyles({
       size,
       variant: variant === "outline" ? "outline" : "ghost",
     }),
-    styles[variant],
+    variantStyles[variant],
   ];
 }
 

@@ -125,8 +125,13 @@ const styles = stylex.create({
       default: "scale(1)",
       ":is([data-starting-style])": `scale(${motion.dotScale})`,
     },
-    // The dot pops a touch past its size and settles.
-    transitionDuration: durations.popover,
+    // The dot pops a touch past its size and settles. Picked from the keyboard (only a
+    // keyboard focus matches `:focus-visible`), it doesn't move.
+    transitionDuration: {
+      default: durations.popover,
+      ":is([data-ending-style]):not(:focus-visible > *)": durations.hover,
+      ":is(:focus-visible > *)": "0s",
+    },
     transitionProperty: {
       default: "transform, opacity",
       [media.reducedMotion]: "opacity",

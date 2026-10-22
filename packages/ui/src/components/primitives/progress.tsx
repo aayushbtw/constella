@@ -4,17 +4,12 @@ import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import * as stylex from "@stylexjs/stylex";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { trackStyles, typeStyles } from "@/lib/constella/styles";
 import {
-  colors,
   durations,
   easings,
-  fontWeights,
   media,
   opacities,
-  radii,
-  space,
-  strokes,
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -32,26 +27,7 @@ const breathe = stylex.keyframes({
 const unknown = ":is([data-indeterminate])";
 
 const styles = stylex.create({
-  root: {
-    alignItems: "center",
-    display: "flex",
-    flexWrap: "wrap",
-    gap: space.sm,
-    width: "100%",
-  },
-  track: {
-    backgroundColor: colors.fill,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    display: "flex",
-    height: strokes.track,
-    overflow: "hidden",
-    position: "relative",
-    width: "100%",
-  },
-  indicator: {
+  indeterminate: {
     animationDuration: { default: null, [unknown]: durations.pulse },
     animationIterationCount: { default: null, [unknown]: "infinite" },
     animationName: {
@@ -59,28 +35,7 @@ const styles = stylex.create({
       [unknown]: { default: sweep, [media.reducedMotion]: breathe },
     },
     animationTimingFunction: { default: null, [unknown]: easings.inOut },
-    backgroundColor: colors.accentSolid,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    height: "100%",
-    transitionDuration: {
-      default: durations.move,
-      [media.reducedMotion]: "0s",
-    },
-    transitionProperty: "width, background-color",
-    transitionTimingFunction: easings.out,
     width: { default: null, [unknown]: "33.333%" },
-  },
-  label: {
-    color: colors.textPrimary,
-    fontWeight: fontWeights.medium,
-  },
-  value: {
-    color: colors.textSecondary,
-    fontVariantNumeric: "tabular-nums",
-    marginInlineStart: "auto",
   },
 });
 
@@ -94,7 +49,7 @@ function Progress({
     <ProgressPrimitive.Root
       data-slot="progress"
       {...props}
-      {...stylex.props(styles.root, sx)}
+      {...stylex.props(trackStyles.root, sx)}
     >
       {children}
       <ProgressTrack>
@@ -112,7 +67,7 @@ function ProgressTrack({
     <ProgressPrimitive.Track
       data-slot="progress-track"
       {...props}
-      {...stylex.props(styles.track, sx)}
+      {...stylex.props(trackStyles.track, sx)}
     />
   );
 }
@@ -125,7 +80,7 @@ function ProgressIndicator({
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
       {...props}
-      {...stylex.props(styles.indicator, sx)}
+      {...stylex.props(trackStyles.indicator, styles.indeterminate, sx)}
     />
   );
 }
@@ -138,7 +93,7 @@ function ProgressLabel({
     <ProgressPrimitive.Label
       data-slot="progress-label"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.label], sx)}
+      {...stylex.props([typeStyles.textSm, trackStyles.label], sx)}
     />
   );
 }
@@ -151,7 +106,7 @@ function ProgressValue({
     <ProgressPrimitive.Value
       data-slot="progress-value"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.value], sx)}
+      {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}
     />
   );
 }

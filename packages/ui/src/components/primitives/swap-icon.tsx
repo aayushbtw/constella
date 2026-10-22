@@ -23,7 +23,11 @@ const styles = stylex.create({
   item: {
     display: "flex",
     gridArea: "1 / 1",
-    transitionDuration: durations.crossfade,
+    transitionDuration: {
+      default: durations.crossfade,
+      // Swapped from the keyboard on the control it sits in (only a keyboard focus matches `:focus-visible`), it doesn't move.
+      ":is(:focus-visible > [data-slot='swap-icon'] > *)": "0s",
+    },
     transitionProperty: {
       default: "opacity, filter, transform",
       [media.reducedMotion]: "opacity, filter",

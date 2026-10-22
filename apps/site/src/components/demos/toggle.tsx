@@ -18,14 +18,18 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/primitives/toggle-group";
-import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
+import { controlIconSize } from "@/lib/constella/styles";
+import { space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
-function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
+function Glyph({
+  size = "default",
+  ...props
+}: Omit<HugeiconsIconProps, "size" | "strokeWidth"> & { size?: ToggleSize }) {
   return (
     <HugeiconsIcon
       aria-hidden
-      size={sizes.icon}
+      size={controlIconSize[size]}
       strokeWidth={Number(strokes.icon)}
       {...props}
     />
@@ -68,7 +72,7 @@ function ToggleSizeDemo() {
     <DemoRow>
       {textSizes.map((size) => (
         <Toggle key={size} size={size} variant="outline">
-          <Glyph icon={TextItalicIcon} />
+          <Glyph icon={TextItalicIcon} size={size} />
           Italic
         </Toggle>
       ))}
@@ -86,17 +90,17 @@ function ToggleDisabledDemo() {
   );
 }
 
-function Formatting() {
+function Formatting({ size }: { size?: ToggleSize }) {
   return (
     <>
       <ToggleGroupItem aria-label="Toggle bold" value="bold">
-        <Glyph icon={TextBoldIcon} />
+        <Glyph icon={TextBoldIcon} size={size} />
       </ToggleGroupItem>
       <ToggleGroupItem aria-label="Toggle italic" value="italic">
-        <Glyph icon={TextItalicIcon} />
+        <Glyph icon={TextItalicIcon} size={size} />
       </ToggleGroupItem>
       <ToggleGroupItem aria-label="Toggle underline" value="underline">
-        <Glyph icon={TextUnderlineIcon} />
+        <Glyph icon={TextUnderlineIcon} size={size} />
       </ToggleGroupItem>
     </>
   );
@@ -134,7 +138,7 @@ function ToggleGroupSizeDemo() {
     <DemoRow sx={styles.stack}>
       {iconSizes.map((size) => (
         <ToggleGroup defaultValue={["bold"]} key={size} multiple size={size}>
-          <Formatting />
+          <Formatting size={size} />
         </ToggleGroup>
       ))}
     </DemoRow>

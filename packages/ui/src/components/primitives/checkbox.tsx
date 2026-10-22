@@ -98,6 +98,7 @@ const styles = stylex.create({
   default: box(sizes.icon),
   lg: box(sizes.iconLg),
   // The tick draws in from its start and fades out; unchecking is the system answering, so it's quick.
+  // Toggled from the keyboard (only a keyboard focus matches `:focus-visible`), it doesn't move.
   indicator: {
     clipPath: {
       default: "inset(0)",
@@ -107,7 +108,8 @@ const styles = stylex.create({
     opacity: { default: 1, ":is([data-ending-style])": 0 },
     transitionDuration: {
       default: durations.move,
-      ":is([data-ending-style])": durations.hover,
+      ":is([data-ending-style]):not(:focus-visible > *)": durations.hover,
+      ":is(:focus-visible > *)": "0s",
     },
     transitionProperty: {
       default: "clip-path, opacity",
