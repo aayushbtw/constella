@@ -2,17 +2,19 @@ import * as stylex from "@stylexjs/stylex";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment } from "react";
 
+import { Link as TextLink } from "@/components/typography/link";
 import { Text } from "@/components/typography/text";
-import { media as uiMedia, space } from "@/lib/constella/tokens.stylex";
+import {
+  fontSizes,
+  letterSpacings,
+  lineHeights,
+  media as uiMedia,
+  space,
+} from "@/lib/constella/tokens.stylex";
 import { Showcase, showcaseSize } from "~/components/home/showcase";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
-import {
-  fontSizes as siteFontSizes,
-  layout,
-  lineHeights,
-  media,
-} from "~/lib/tokens.stylex";
+import { layout, media } from "~/lib/tokens.stylex";
 import { getComponents } from "~/server/components";
 
 const structuredData = {
@@ -59,9 +61,15 @@ const styles = stylex.create({
     gap: space.lg,
   },
   title: {
-    fontSize: siteFontSizes.display,
-    letterSpacing: "-0.02em",
-    lineHeight: lineHeights.display,
+    fontSize: {
+      default: fontSizes.heading4,
+      [media.sidebar]: fontSizes.heading3,
+    },
+    letterSpacing: letterSpacings.heading,
+    lineHeight: {
+      default: lineHeights.heading4,
+      [media.sidebar]: lineHeights.heading3,
+    },
     maxWidth: "16ch",
     textWrap: "balance",
   },
@@ -90,10 +98,6 @@ const styles = stylex.create({
     display: "flex",
     gap: space.md,
     listStyle: "none",
-  },
-  link: {
-    textDecoration: "underline",
-    textUnderlineOffset: 3,
   },
 });
 
@@ -126,26 +130,21 @@ function Home() {
 
         <ul {...stylex.props(styles.inline, entrance.item(1, items))}>
           <li>
-            <Link
-              params={{ slug: "installation" }}
-              to="/docs/$slug"
-              {...stylex.props(styles.link)}
+            <TextLink
+              render={
+                <Link params={{ slug: "installation" }} to="/docs/$slug" />
+              }
             >
               Get started
-            </Link>
+            </TextLink>
           </li>
           <li>
-            <a href={config.repo} {...stylex.props(styles.link)}>
-              GitHub
-            </a>
+            <TextLink href={config.repo}>GitHub</TextLink>
           </li>
           <li>
-            <a
-              href={`https://x.com/${config.socials.twitter}`}
-              {...stylex.props(styles.link)}
-            >
+            <TextLink href={`https://x.com/${config.socials.twitter}`}>
               X
-            </a>
+            </TextLink>
           </li>
         </ul>
       </div>
@@ -159,13 +158,11 @@ function Home() {
         <ul {...stylex.props(styles.list)}>
           {components.map(({ slug, title }) => (
             <li key={slug} {...stylex.props(styles.item)}>
-              <Link
-                params={{ slug }}
-                to="/docs/components/$slug"
-                {...stylex.props(styles.link)}
+              <TextLink
+                render={<Link params={{ slug }} to="/docs/components/$slug" />}
               >
                 {title}
-              </Link>
+              </TextLink>
             </li>
           ))}
         </ul>

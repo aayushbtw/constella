@@ -49,7 +49,7 @@ const styles = stylex.create({
   h2: {
     marginBlockEnd: space.sm,
     marginBlockStart: {
-      default: `calc(${space.xl} + ${space.md})`,
+      default: space.xl,
       ":first-child": 0,
     },
     scrollMarginTop: layout.pageTop,
@@ -176,8 +176,9 @@ const components = {
       {...props}
       color="primary"
       render={<h2>{children}</h2>}
+      size="lg"
       sx={styles.h2}
-      weight="medium"
+      weight="semibold"
     />
   ),
   h3: ({ children, ...props }) => (
@@ -185,9 +186,9 @@ const components = {
       {...props}
       color="primary"
       render={<h3>{children}</h3>}
-      size="sm"
+      size="base"
       sx={styles.h3}
-      weight="medium"
+      weight="semibold"
     />
   ),
   "md-demo": Demo,

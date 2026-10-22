@@ -8,6 +8,7 @@ import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
+  media as uiMedia,
   sizes,
   space,
   strokes,
@@ -18,10 +19,27 @@ import { Search } from "~/components/search";
 import { config } from "~/lib/config";
 import { entrance } from "~/lib/entrance";
 import { toggleTheme } from "~/lib/theme";
-import { layers, layout, media } from "~/lib/tokens.stylex";
+import { layers, layout, media, shadows } from "~/lib/tokens.stylex";
+
+const edgeIn = stylex.keyframes({
+  from: { boxShadow: "inset 0 -1px 0 transparent" },
+  to: { boxShadow: shadows.rule },
+});
 
 const styles = stylex.create({
   header: {
+    animationDuration: "1ms",
+    animationFillMode: "both",
+    animationName: {
+      default: null,
+      "@supports (animation-timeline: scroll())": edgeIn,
+    },
+    animationRange: {
+      default: `0 ${space.md}`,
+      [uiMedia.reducedMotion]: "0 1px",
+    },
+    animationTimeline: "scroll(root block)",
+    animationTimingFunction: "linear",
     backgroundColor: colors.background,
     height: layout.header,
     insetBlockStart: 0,
@@ -76,7 +94,6 @@ const styles = stylex.create({
 const sections = [
   { label: "Docs", to: "/docs" },
   { label: "Components", to: "/docs/components" },
-  { label: "Blocks", to: "/blocks" },
 ] as const;
 
 // Components sit under /docs, so the longest matching prefix wins.

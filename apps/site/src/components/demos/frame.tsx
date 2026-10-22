@@ -10,7 +10,7 @@ import {
   radii,
   space,
 } from "@/lib/constella/tokens.stylex";
-import { shadows, surfaces } from "~/lib/tokens.stylex";
+import { layout, shadows, surfaces } from "~/lib/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: stylex.StyleXStyles;
@@ -36,7 +36,7 @@ const styles = stylex.create({
     alignItems: "center",
     display: "flex",
     justifyContent: "center",
-    minHeight: 280,
+    minHeight: layout.stage,
     paddingBlock: space.xl,
     paddingInline: space.md,
   },
@@ -50,6 +50,8 @@ const styles = stylex.create({
     flexWrap: "wrap",
     gap: space.xs,
     justifyContent: "center",
+    maxWidth: "100%",
+    minWidth: 0,
   },
   // Set into the stage's foot, concentric with it, so it reads as part of the demo but not the component.
   controls: {
@@ -61,7 +63,7 @@ const styles = stylex.create({
     boxShadow: shadows.inset,
     display: "grid",
     gap: { default: space.md, [media.sm]: space.lg },
-    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gridTemplateColumns: `repeat(auto-fit, minmax(${layout.stageControl}, 1fr))`,
     paddingBlock: space.md,
     paddingInline: space.md,
   },
@@ -76,7 +78,7 @@ const styles = stylex.create({
   tiles: {
     display: "grid",
     gap: space.md,
-    gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+    gridTemplateColumns: `repeat(auto-fill, minmax(${layout.stageTile}, 1fr))`,
   },
   tile: {
     display: "flex",
@@ -92,7 +94,7 @@ const styles = stylex.create({
     borderEndEndRadius: radii.md,
     boxShadow: shadows.inset,
     display: "flex",
-    height: 72,
+    height: layout.stageSample,
     justifyContent: "center",
   },
   token: {

@@ -44,7 +44,8 @@ const styles = stylex.create({
   viewport: {
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
-    paddingInline: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
   },
   // Covers the page, so the menu reads as the header opened up.
   popup: {
@@ -60,7 +61,8 @@ const styles = stylex.create({
     overflowY: "hidden",
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
-    paddingInline: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
     width: "100%",
   },
   bar: {
@@ -69,7 +71,8 @@ const styles = stylex.create({
     flexShrink: 0,
     height: layout.header,
     justifyContent: "space-between",
-    paddingInline: layout.gutter,
+    paddingInlineEnd: layout.gutter,
+    paddingInlineStart: layout.gutter,
   },
   brand: {
     alignItems: "center",
@@ -90,7 +93,8 @@ const styles = stylex.create({
     overscrollBehaviorY: "contain",
     paddingBlockEnd: space.lg,
     paddingBlockStart: space.lg,
-    paddingInline: layout.gutter,
+    paddingInlineEnd: layout.gutter,
+    paddingInlineStart: layout.gutter,
   },
   // Named only while the level changes, so other view transitions leave it alone.
   swap: {
@@ -123,7 +127,8 @@ const styles = stylex.create({
     justifyContent: "space-between",
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
-    paddingInline: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
     textAlign: "start",
     textDecoration: "none",
     transitionDuration: durations.hover,
@@ -308,17 +313,6 @@ function NavMenu() {
                         </button>
                       </li>
                     ))}
-                {!group && (
-                  <li>
-                    <Link
-                      onClick={close}
-                      to="/blocks"
-                      {...stylex.props([typeStyles.heading4, styles.row])}
-                    >
-                      Blocks
-                    </Link>
-                  </li>
-                )}
               </ul>
             </nav>
           </DialogPopup>

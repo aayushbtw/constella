@@ -52,7 +52,12 @@ import { Chat } from "~/components/demos/chat";
 import { groups, Palette } from "~/components/demos/command";
 import { Formatting } from "~/components/demos/toggle";
 import { entrance } from "~/lib/entrance";
-import { media as siteMedia, shadows, surfaces } from "~/lib/tokens.stylex";
+import {
+  layout,
+  media as siteMedia,
+  shadows,
+  surfaces,
+} from "~/lib/tokens.stylex";
 
 // Concentric with the chat's composer, which sits its `xs` inset from the tile's edge.
 const corner = `calc(${radii.xl} + ${space.xs})`;
@@ -61,7 +66,7 @@ const styles = stylex.create({
   bento: {
     display: "grid",
     gap: space.md,
-    gridAutoRows: { default: "auto", [media.md]: "232px" },
+    gridAutoRows: { default: "auto", [media.md]: layout.bentoRow },
     gridTemplateColumns: {
       default: "minmax(0, 1fr)",
       [media.md]: "repeat(2, minmax(0, 1fr))",
@@ -78,7 +83,7 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     gap: space.md,
-    minHeight: { default: 216, [media.md]: 0 },
+    minHeight: { default: layout.bentoTile, [media.md]: 0 },
     paddingBlockEnd: space.md,
     paddingBlockStart: space.md,
     paddingInline: space.md,
@@ -116,7 +121,7 @@ const styles = stylex.create({
     minHeight: 0,
   },
   fill: {
-    maxWidth: 320,
+    maxWidth: layout.bentoFill,
     width: "100%",
   },
   chat: {
@@ -125,7 +130,7 @@ const styles = stylex.create({
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
-    height: { default: 440, [media.md]: "100%" },
+    height: { default: layout.bentoChat, [media.md]: "100%" },
     width: "100%",
   },
   command: {

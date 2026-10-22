@@ -308,10 +308,7 @@ function ChartBreak({ data }: { data: Dataset }) {
               z: "key",
               color: "key",
               layout: group({
-                scale: chartGroupScale(
-                  keys.map((key) => [key, 1] as const),
-                  0.1
-                ),
+                scale: chartGroupScale(keys.map((key) => [key, 1] as const)),
               }),
               radius: 4,
               inset: 1,

@@ -1,5 +1,6 @@
 import monoLatin from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import { gray, grayDark } from "@radix-ui/colors";
 import * as stylex from "@stylexjs/stylex";
 import { createThemeCss } from "@tanstack/highlight/theme";
 import { githubDarkTheme } from "@tanstack/highlight/themes/github-dark";
@@ -48,16 +49,6 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      {
-        name: "theme-color",
-        media: "(prefers-color-scheme: light)",
-        content: "#fcfcfc",
-      },
-      {
-        name: "theme-color",
-        media: "(prefers-color-scheme: dark)",
-        content: "#111111",
-      },
       ...siteMeta,
       ...seo({}),
     ],
@@ -115,6 +106,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ScriptOnce>{themeScript}</ScriptOnce>
         <link href={pageUrl} rel="canonical" />
         <meta content={pageUrl} property="og:url" />
+        {/* Here, not in head(): the router keeps one meta per name. */}
+        <meta
+          content={gray.gray1}
+          media="(prefers-color-scheme: light)"
+          name="theme-color"
+        />
+        <meta
+          content={grayDark.gray1}
+          media="(prefers-color-scheme: dark)"
+          name="theme-color"
+        />
         <HeadContent />
         <DevStyleX />
       </head>
