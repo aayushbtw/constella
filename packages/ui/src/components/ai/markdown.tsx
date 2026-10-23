@@ -63,11 +63,13 @@ const styles = stylex.create({
     textWrap: "balance",
   },
   strong: { fontWeight: fontWeights.semimedium },
-  list: { paddingInlineStart: "1.25em" },
+  list: {
+    marginBlockStart: { default: 0, ":is(li > *)": "0.5em" },
+    paddingInlineStart: "1.25em",
+  },
   // Its padding, not the list's, sets the marker's distance from the text.
   item: {
-    marginBlockEnd: "0.5em",
-    marginBlockStart: "0.5em",
+    marginBlockStart: { default: "0.5em", ":first-child": 0 },
     paddingInlineStart: "0.25em",
     "::marker": { color: colors.textSecondary },
   },
