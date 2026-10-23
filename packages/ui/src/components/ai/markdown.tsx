@@ -144,6 +144,14 @@ function CodeBlock({ className: _className, ...props }: Props<"pre">) {
   );
 }
 
+function LastHeading({ children, ...props }: Props<"h6">) {
+  return (
+    <h6 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
+      {children}
+    </h6>
+  );
+}
+
 // An answer sits under the page's own headings, so its outline starts two levels down.
 const components = {
   a: ({ children, ...props }: Props<"a">) => (
@@ -170,11 +178,9 @@ const components = {
       {children}
     </h5>
   ),
-  h4: ({ children, ...props }: Props<"h4">) => (
-    <h6 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
-      {children}
-    </h6>
-  ),
+  h4: LastHeading,
+  h5: LastHeading,
+  h6: LastHeading,
   hr: (props: Props<"hr">) => <hr {...props} {...stylex.props(styles.rule)} />,
   li: (props: Props<"li">) => <li {...props} {...stylex.props(styles.item)} />,
   ol: (props: Props<"ol">) => (
