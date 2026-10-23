@@ -52,7 +52,7 @@ function MailIcon() {
       <HugeiconsIcon
         aria-hidden
         icon={Mail01Icon}
-        size={sizes.iconXs}
+        size={sizes.iconSm}
         strokeWidth={Number(strokes.icon)}
       />
     </ApprovalMedia>

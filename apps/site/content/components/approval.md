@@ -135,7 +135,7 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 | --- | --- |
 | `Approval` | A `sm` [Card](/docs/components/card) with `role="group"`, named by its title |
 | `ApprovalTitle` | The card's name; a row with the media before the text |
-| `ApprovalMedia` | A tile for the tool's icon, hidden from screen readers |
+| `ApprovalMedia` | The tool's bare icon, centered on the title's line and hidden from screen readers |
 | `ApprovalFields` | A `dl` grid: labels in `textSecondary`, values wrap anywhere |
 | `ApprovalFooter` | The card's footer, buttons at its end |
 | `ApprovalCancel` | An outline `sm` [Button](/docs/components/button), pushed to the footer's start |

@@ -12,7 +12,7 @@ Wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), s
 
 ## Approval
 
-An `sm` card that names itself by its title. The title leads with a `fill` media tile `sizes.iconLg` square. Arguments are a `dl` grid, labels in `textSecondary`. A full-bleed separator splits the arguments from a long body. Once answered, the footer goes and a Badge in the action says what happened.
+An `sm` card that names itself by its title. The title leads with its icon bare, no tile: `iconSm`, about the title's cap height, `space.row` from the text and centered on its line. Arguments are a `dl` grid, labels in `textSecondary`. A full-bleed separator splits the arguments from a long body. Once answered, the footer goes and a Badge in the action says what happened.
 
 ## Attachment
 

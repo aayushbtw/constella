@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/primitives/card";
 import type { Sx } from "@/lib/constella/styles";
-import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
+import { colors, lineHeights, space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
@@ -27,20 +27,14 @@ const styles = stylex.create({
   title: {
     alignItems: "start",
     display: "flex",
-    gap: space.xs,
+    gap: space.row,
   },
+  // As tall as the title's line, so the icon centers on it.
   media: {
     alignItems: "center",
-    backgroundColor: colors.fill,
-    borderStartStartRadius: radii.xs,
-    borderStartEndRadius: radii.xs,
-    borderEndStartRadius: radii.xs,
-    borderEndEndRadius: radii.xs,
     display: "flex",
     flexShrink: 0,
-    height: sizes.iconLg,
-    justifyContent: "center",
-    width: sizes.iconLg,
+    height: lineHeights.textSm,
   },
   fields: {
     alignItems: "baseline",
@@ -97,7 +91,7 @@ function ApprovalTitle({ sx, ...props }: ComponentProps<typeof CardTitle>) {
   return <CardTitle {...props} id={titleId} sx={[styles.title, sx]} />;
 }
 
-/** A small tile for the tool's icon. */
+/** The tool's icon, bare, before the title. */
 function ApprovalMedia({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
