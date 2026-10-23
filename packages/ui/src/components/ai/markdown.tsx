@@ -51,12 +51,11 @@ const styles = stylex.create({
     minWidth: 0,
     overflowWrap: "break-word",
   },
-  // Blocks space by margins in their own `em`, which collapse: two blocks sit as far apart as the larger asks.
+  // Blocks space by collapsing margins, so the root stays a block box, not flex or grid.
   block: {
     marginBlockEnd: { default: "1em", ":last-child": 0 },
     marginBlockStart: 0,
   },
-  // Closer to what it heads than to what came before.
   heading: {
     fontWeight: fontWeights.semibold,
     marginBlockEnd: { default: "0.5em", ":last-child": 0 },
