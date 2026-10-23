@@ -127,6 +127,7 @@ function MarkdownCode({ className, ...props }: Props<"code">) {
 function CodeBlock({ className: _className, ...props }: Props<"pre">) {
   const pre = useRef<HTMLPreElement>(null);
   return (
+    // The margin goes on a wrapper: `sx` takes only space tokens, and here 1em is the prose's.
     <div {...stylex.props(styles.block)}>
       <CodeBlockRoot>
         {/* Dropping the class keeps `data-lang`, which a highlight theme keys on. */}
@@ -183,6 +184,7 @@ const components = {
   strong: (props: Props<"strong">) => (
     <strong {...props} {...stylex.props(styles.strong)} />
   ),
+  // A margin on the table would stay inside its scroll container.
   table: (props: Props<"table">) => (
     <div {...stylex.props(styles.block)}>
       <Table {...props} />
