@@ -16,7 +16,7 @@ So Constella moves the rules out of prose and into types:
 - **`sx` takes tokens.** Color, space, radius, shadow, type size, layer and motion come from named roles, never raw values.
 - **Variants are closed lists,** not free strings.
 
-Two teams got there first. Polar: "make it hard to express an off-brand decision in code in the first place" ([Orbit](https://polar.sh/blog/orbit-llm-safe-design-system)). Linear: "the endless configurability became a liability" ([Styling Linear for the future](https://linear.app/now/styling-linear-for-the-future-stylex)). Neither uses Constella.
+Two teams got there first. Polar: "make it hard to express an off-brand decision in code in the first place" ([Orbit](https://polar.sh/blog/orbit-llm-safe-design-system)). Linear: "the endless configurability became a liability" ([Styling Linear for the future](https://linear.app/now/styling-linear-for-the-future-stylex)). Constella grew out of studying both.
 
 ## Credits
 
