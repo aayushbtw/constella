@@ -67,7 +67,8 @@ const styles = stylex.create({
   list: { paddingInlineStart: "1.25em" },
   // Its padding, not the list's, sets the marker's distance from the text.
   item: {
-    marginBlock: "0.5em",
+    marginBlockEnd: "0.5em",
+    marginBlockStart: "0.5em",
     paddingInlineStart: "0.25em",
     "::marker": { color: colors.textSecondary },
   },

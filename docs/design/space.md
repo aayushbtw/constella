@@ -32,7 +32,7 @@ Every px value in these docs is at the default 16px root. Interfere puts spacing
 | Nested groups side by side | `xs`, and they don't join |
 | A dialog or card's padding | `md`; any more and a 16px title looks lost |
 
-One owner per gap: a group sets the gap between its children, and a child adds no margin of its own. Items with separators between them drop their gap and let their own padding space them.
+One owner per gap: a group sets the gap between its children, and a child adds no margin of its own. Items with separators between them drop their gap and let their own padding space them. Markdown is the exception: prose flows rather than lays out, so each block carries margins in its own `em`, which collapse ([Markdown](components.md#markdown)).
 
 ## Control heights
 

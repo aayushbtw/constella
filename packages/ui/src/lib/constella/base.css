@@ -342,15 +342,6 @@
     width: 100%;
   }
 
-  /* StyleX can't style a child by what precedes it, so markdown's root adds `space.xs` to its
-     gap before a heading here; after one, the gap alone. */
-  :where([data-slot="markdown"]) > :where(h3, h4, h5, h6) {
-    margin-block-start: 0;
-  }
-  :where([data-slot="markdown"]) > :where(*) + :where(h3, h4, h5, h6) {
-    margin-block-start: var(--space-xs);
-  }
-
   /* A directional icon is the consumer's child, which StyleX can't reach, so one attribute
      turns it to face the reading direction. */
   :where([dir="rtl"] [data-rtl-flip]) {
