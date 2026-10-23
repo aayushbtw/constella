@@ -211,7 +211,9 @@ const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
 // The action's menu only: the row's own tooltip writes the same attribute.
 const actionOpen = `${item}:has(> ${action}[data-popup-open])`;
-const rowOpen = `:is(${actionOpen} > *)`;
+// Or the row's own popup, as a menu's trigger: its tooltip also writes `data-popup-open`,
+// and a collapsible's trigger is expanded without one.
+const rowOpen = `:is(${actionOpen} > *, [aria-haspopup][aria-expanded='true'])`;
 const idle = ":not([data-active])";
 const rowFill = {
   default: "transparent",

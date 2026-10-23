@@ -145,6 +145,29 @@ Put a shortcut after the label in a `SidebarMenuKbd`. It shows while the row is 
 </SidebarMenuButton>
 ```
 
+## Sidebar Footer
+
+For an account menu, render a `size="lg"` `SidebarMenuButton` as a `DropdownMenuTrigger`. The row stays lit while its menu is open, and in the icon rail it narrows to its avatar.
+
+```tsx
+<SidebarFooter>
+  <SidebarMenu>
+    <SidebarMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+        >
+          <Avatar>…</Avatar>
+          <SidebarMenuLabel>shadcn</SidebarMenuLabel>
+          <HugeiconsIcon icon={UnfoldMoreIcon} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="top">…</DropdownMenuContent>
+      </DropdownMenu>
+    </SidebarMenuItem>
+  </SidebarMenu>
+</SidebarFooter>
+```
+
 ## Sidebar Menu Action
 
 Put a `SidebarMenuAction` after a row's button for an action of its own, like a menu. It's drawn over the row's end, and the label fades out before it. With `showOnHover` it shows only while its row is hovered or focused, or its menu is open, so the label keeps the full width the rest of the time. Show `SidebarMenuSkeleton` rows while the list loads.

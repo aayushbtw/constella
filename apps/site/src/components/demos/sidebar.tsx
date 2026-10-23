@@ -6,12 +6,16 @@ import {
   CreditCardIcon,
   Delete02Icon,
   Folder01Icon,
+  HelpCircleIcon,
   Key01Icon,
+  Logout03Icon,
+  Mail01Icon,
   MoreHorizontalIcon,
   PencilEdit01Icon,
   PencilEdit02Icon,
   Search01Icon,
   Settings01Icon,
+  UnfoldMoreIcon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -30,6 +34,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
 import { Kbd } from "@/components/primitives/kbd";
@@ -134,6 +141,22 @@ const styles = stylex.create({
     paddingInlineEnd: space.md,
     paddingInlineStart: space.md,
   },
+  avatar: { flexShrink: 0 },
+  line: {
+    display: "block",
+  },
+  plan: { color: colors.textSecondary },
+  chevron: { color: colors.textSecondary, flexShrink: 0 },
+  account: {
+    alignItems: "center",
+    display: "flex",
+    gap: space.xs,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
+  },
+  accountName: { minWidth: 0 },
   tile: {
     aspectRatio: "16 / 10",
     backgroundColor: colors.fillSubtle,
@@ -289,18 +312,79 @@ function Recents({
   );
 }
 
-function User() {
+function UserAvatar() {
+  return (
+    <Avatar sx={styles.avatar}>
+      <AvatarImage alt="" src="/avatars/shadcn.png" />
+      <AvatarFallback>CN</AvatarFallback>
+    </Avatar>
+  );
+}
+
+function UserName() {
+  return (
+    <>
+      <span {...stylex.props(styles.line)}>shadcn</span>
+      <span {...stylex.props([typeStyles.captionLg, styles.line, styles.plan])}>
+        Pro
+      </span>
+    </>
+  );
+}
+
+function User({ side }: { side: SidebarSide }) {
   return (
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="shadcn">
-            <Avatar size="sm">
-              <AvatarImage alt="" src="/avatars/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <SidebarMenuLabel>shadcn</SidebarMenuLabel>
-          </SidebarMenuButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+            >
+              <UserAvatar />
+              <SidebarMenuLabel>
+                <UserName />
+              </SidebarMenuLabel>
+              <Glyph icon={UnfoldMoreIcon} {...stylex.props(styles.chevron)} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align={side === "left" ? "start" : "end"}
+              side="top"
+            >
+              <div {...stylex.props([typeStyles.textSm, styles.account])}>
+                <UserAvatar />
+                <span {...stylex.props(styles.accountName)}>
+                  <UserName />
+                </span>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Glyph icon={Settings01Icon} />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Glyph icon={HelpCircleIcon} />
+                  Help
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem>
+                    <Glyph icon={BookOpen01Icon} />
+                    Docs
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Glyph icon={Mail01Icon} />
+                    Contact support
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Glyph icon={Logout03Icon} data-rtl-flip />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarFooter>
@@ -383,7 +467,7 @@ function AppSidebar({
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
-        <User />
+        <User side={side} />
         <SidebarRail />
       </Sidebar>
     );
@@ -461,7 +545,7 @@ function AppSidebar({
           <Recents current={current} onSelect={onSelect} />
         </SidebarExpandedOnly>
       </SidebarContent>
-      <User />
+      <User side={side} />
       <SidebarRail />
     </Sidebar>
   );
