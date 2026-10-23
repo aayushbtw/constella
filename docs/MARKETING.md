@@ -43,7 +43,7 @@ The one place counts live; drafts below leave them as `<n>`. Recount before you 
 
 | Number | Value | How to count | Counted |
 | --- | --- | --- | --- |
-| Components | 65 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-10-19 |
+| Components | 66 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-10-23 |
 | Lint rules of our own | 8 | `ls packages/lint/src/rules` | 2026-10-19 |
 | `constella/*` disables | 0 | `rg 'oxlint-disable.*constella/'` | 2026-10-19 |
 | First commit | 2026-10-05 | `git log --reverse --format=%ad --date=short \| head -1` | 2026-10-19 |
