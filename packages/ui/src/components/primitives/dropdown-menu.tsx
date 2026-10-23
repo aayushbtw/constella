@@ -174,6 +174,7 @@ const styles = stylex.create({
     paddingInlineEnd: space.row,
     paddingInlineStart: { default: space.row, [inset]: insetStart },
     position: "relative",
+    textDecorationLine: "none",
     userSelect: "none",
   },
   itemSm: {
