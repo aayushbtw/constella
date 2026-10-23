@@ -1,16 +1,12 @@
 "use client";
 
+import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useMemo } from "react";
 import type { ReactNode } from "react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/primitives/avatar";
 import { Badge } from "@/components/primitives/badge";
 import {
   createHoverCardHandle,
@@ -116,6 +112,11 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
   },
+  body: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxs,
+  },
   clamp: {
     display: "-webkit-box",
     overflow: "hidden",
@@ -131,29 +132,67 @@ const styles = stylex.create({
   date: {
     color: colors.textMuted,
   },
+  logo: {
+    display: "flex",
+    flexShrink: 0,
+  },
+  logoPill: {
+    height: sizes.iconXs,
+    width: sizes.iconXs,
+  },
+  logoCard: {
+    height: sizes.iconSm,
+    width: sizes.iconSm,
+  },
+  logoImage: {
+    borderStartStartRadius: radii.xs,
+    borderStartEndRadius: radii.xs,
+    borderEndStartRadius: radii.xs,
+    borderEndEndRadius: radii.xs,
+    height: "100%",
+    objectFit: "cover",
+    width: "100%",
+  },
+  logoFallback: {
+    color: colors.textSecondary,
+    display: "flex",
+    height: "100%",
+    width: "100%",
+  },
 });
 
 // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("600ms")` is NaN
 const fallbackDelay = Number.parseFloat(durations.fallbackDelay);
 
-function Logo({ source, size }: { size?: "sm"; source: Source }) {
+// A bare favicon, not an Avatar: no tile or edge around it.
+function Logo({ source, sx }: { source: Source; sx: Sx }) {
   return (
-    <Avatar aria-hidden corners="rounded" size={size}>
+    <AvatarPrimitive.Root
+      aria-hidden
+      data-icon="inline-start"
+      {...stylex.props(styles.logo, sx)}
+    >
       {source.icon === undefined ? null : (
-        <AvatarImage alt="" referrerPolicy="no-referrer" src={source.icon} />
+        <AvatarPrimitive.Image
+          alt=""
+          referrerPolicy="no-referrer"
+          src={source.icon}
+          {...stylex.props(styles.logoImage)}
+        />
       )}
       {/* Held back while a logo loads, so the pill doesn't flash the globe before it. */}
-      <AvatarFallback
+      <AvatarPrimitive.Fallback
         delay={source.icon === undefined ? undefined : fallbackDelay}
+        {...stylex.props(styles.logoFallback)}
       >
         <HugeiconsIcon
           aria-hidden
           icon={Globe02Icon}
-          size="1em"
+          size="100%"
           strokeWidth={Number(strokes.icon)}
         />
-      </AvatarFallback>
-    </Avatar>
+      </AvatarPrimitive.Fallback>
+    </AvatarPrimitive.Root>
   );
 }
 
@@ -181,23 +220,27 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
                     {...stylex.props(styles.source, stateStyles.ghost)}
                   >
                     <span {...stylex.props(styles.publication)}>
-                      <Logo size="sm" source={source} />
+                      <Logo source={source} sx={styles.logoCard} />
                       {source.name}
                     </span>
-                    <span
-                      {...stylex.props(
-                        typeStyles.textBase,
-                        styles.clamp,
-                        styles.title
-                      )}
-                    >
-                      {source.title}
-                    </span>
-                    {source.description === undefined ? null : (
-                      <span {...stylex.props(styles.clamp, styles.description)}>
-                        {source.description}
+                    <span {...stylex.props(styles.body)}>
+                      <span
+                        {...stylex.props(
+                          typeStyles.textBase,
+                          styles.clamp,
+                          styles.title
+                        )}
+                      >
+                        {source.title}
                       </span>
-                    )}
+                      {source.description === undefined ? null : (
+                        <span
+                          {...stylex.props(styles.clamp, styles.description)}
+                        >
+                          {source.description}
+                        </span>
+                      )}
+                    </span>
                     {source.date === undefined ? null : (
                       <span {...stylex.props(styles.date)}>{source.date}</span>
                     )}
@@ -232,7 +275,7 @@ function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
       }
       sx={[styles.pill, sx]}
     >
-      <Logo source={first} />
+      <Logo source={first} sx={styles.logoPill} />
       <span {...stylex.props(styles.name)}>{first.name}</span>
       {sources.length > 1 && (
         <span {...stylex.props(styles.more)}>+{sources.length - 1}</span>

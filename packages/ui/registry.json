@@ -1214,13 +1214,13 @@
       "title": "Citation",
       "description": "A source's pill in an answer, opening a card with its publication, headline and date.",
       "dependencies": [
+        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/avatar.json",
         "https://constella.aayush.cv/r/badge.json",
         "https://constella.aayush.cv/r/hover-card.json"
       ],
