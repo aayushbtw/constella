@@ -220,6 +220,7 @@ const rowFill = {
   [media.hover]: {
     default: "transparent",
     [`${rowHovered}${idle}`]: colors.fillSubtle,
+    [`${rowOpen}${idle}`]: colors.fillSubtle,
     [highlighted]: colors.fill,
   },
   [`${rowOpen}${idle}`]: colors.fillSubtle,
@@ -537,7 +538,7 @@ const styles = stylex.create({
       default: null,
       [highlighted]: {
         default: unlit,
-        [media.hover]: { default: unlit, [rowHovered]: lit },
+        [media.hover]: { default: unlit, [rowHovered]: lit, [rowOpen]: lit },
         [rowOpen]: lit,
       },
     },
