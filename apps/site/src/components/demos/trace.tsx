@@ -4,8 +4,11 @@ import {
   File02Icon,
   FileEditIcon,
   Globe02Icon,
+  Idea01Icon,
   RepeatIcon,
+  Search01Icon,
   TerminalIcon,
+  Tick02Icon,
   UserGroupIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -44,6 +47,7 @@ import {
   TraceReasoning,
   TraceStep,
   TraceStepContent,
+  TraceStepTrigger,
   TraceSubject,
   TraceSubstep,
   TraceSubsteps,
@@ -80,12 +84,18 @@ const styles = stylex.create({
   width: { maxWidth: "100%", width: 420 },
 });
 
-function Icon({ icon }: { icon: IconSvgElement }) {
+function Icon({
+  icon,
+  size = sizes.icon,
+}: {
+  icon: IconSvgElement;
+  size?: string;
+}) {
   return (
     <HugeiconsIcon
       aria-hidden
       icon={icon}
-      size={sizes.icon}
+      size={size}
       strokeWidth={Number(strokes.icon)}
     />
   );
@@ -150,6 +160,11 @@ function useClock(end: number) {
   };
 }
 
+function useStepOpen(running: boolean) {
+  const [open, setOpen] = useState<boolean>();
+  return { onOpenChange: setOpen, open: open ?? running };
+}
+
 function Replay({
   disabled,
   onClick,
@@ -183,6 +198,62 @@ const live = (state: TraceState | "done") =>
 const shownWords = (t: number, [start, end]: readonly [number, number]) =>
   Math.ceil((words.length * (Math.min(t, end) - start)) / (end - start));
 
+function Thinking({
+  t,
+  span,
+  done,
+}: {
+  t: number;
+  span: readonly [number, number];
+  done: string;
+}) {
+  const state = stateAt(t, span);
+  if (state === null) {
+    return null;
+  }
+  const running = state === "running";
+  return (
+    <TraceStep open={running} state={live(state)}>
+      <TraceLine>
+        <TraceMarker>
+          <Icon icon={Idea01Icon} size={sizes.iconSm} />
+        </TraceMarker>
+        <TraceTitle>
+          <SwapText>{running ? "Thinking" : done}</SwapText>
+        </TraceTitle>
+      </TraceLine>
+      <TraceStepContent>
+        <TraceReasoning>
+          {words.slice(0, shownWords(t, span)).join(" ")}
+        </TraceReasoning>
+      </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+function Tasks({
+  t,
+  tasks,
+}: {
+  t: number;
+  tasks: readonly (readonly [IconSvgElement, string, string, number])[];
+}) {
+  return (
+    <TraceSubsteps>
+      {tasks.map(([icon, running, done, at]) => (
+        <TraceSubstep key={done} state={t < at ? "running" : undefined}>
+          <TraceMarker>
+            <Icon icon={icon} size={sizes.iconSm} />
+          </TraceMarker>
+          <TraceTitle>
+            <SwapText>{t < at ? running : done}</SwapText>
+          </TraceTitle>
+        </TraceSubstep>
+      ))}
+    </TraceSubsteps>
+  );
+}
+
 function ReadOrders({
   t,
   span,
@@ -193,37 +264,39 @@ function ReadOrders({
   tasks: readonly [number, number];
 }) {
   const state = stateAt(t, span);
+  const open = useStepOpen(state === "running");
   if (state === null) {
     return null;
   }
   return (
-    <TraceStep state={live(state)}>
-      <TraceLine>
-        <TraceMarker />
+    <TraceStep state={live(state)} {...open}>
+      <TraceStepTrigger>
+        <TraceMarker>
+          <Icon icon={DatabaseIcon} size={sizes.iconSm} />
+        </TraceMarker>
         <TraceTitle>
           <SwapText>{state === "running" ? "Reading" : "Read"}</SwapText>
         </TraceTitle>
-        <TraceIcon>
-          <Icon icon={DatabaseIcon} />
-        </TraceIcon>
         <TraceSubject>Swedish orders</TraceSubject>
-      </TraceLine>
-      <TraceStepContent open={state === "running"}>
-        <TraceSubsteps>
-          {(
+      </TraceStepTrigger>
+      <TraceStepContent>
+        <Tasks
+          t={t}
+          tasks={[
             [
-              ["Pulling", "Pulled", "Swedish order history", tasks[0]],
-              ["Spotting", "Spotted", "top sellers in Sweden", tasks[1]],
-            ] as const
-          ).map(([running, done, what, at]) => (
-            <TraceSubstep key={what} state={t < at ? "running" : undefined}>
-              <TraceMarker />
-              <TraceTitle>
-                <SwapText>{`${t < at ? running : done} ${what}`}</SwapText>
-              </TraceTitle>
-            </TraceSubstep>
-          ))}
-        </TraceSubsteps>
+              DatabaseIcon,
+              "Pulling Swedish order history",
+              "Pulled Swedish order history",
+              tasks[0],
+            ],
+            [
+              Search01Icon,
+              "Spotting top sellers in Sweden",
+              "Spotted top sellers in Sweden",
+              tasks[1],
+            ],
+          ]}
+        />
       </TraceStepContent>
     </TraceStep>
   );
@@ -250,9 +323,11 @@ function SearchSources({
   }
   const shown = found.filter((at) => t >= at).length;
   return (
-    <TraceStep state={live(state)}>
+    <TraceStep open={shown > 0} state={live(state)}>
       <TraceLine>
-        <TraceMarker />
+        <TraceMarker>
+          <Icon icon={Search01Icon} size={sizes.iconSm} />
+        </TraceMarker>
         <TraceTitle>
           <SwapText>{state === "running" ? "Searching" : "Searched"}</SwapText>
         </TraceTitle>
@@ -262,7 +337,7 @@ function SearchSources({
           </TraceDescription>
         )}
       </TraceLine>
-      <TraceStepContent open={shown > 0}>
+      <TraceStepContent>
         <CitationGroup>
           {sources
             .slice(0, Math.min(shown, sources.length - 1))
@@ -274,6 +349,96 @@ function SearchSources({
           )}
         </CitationGroup>
       </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+function Delegate({
+  t,
+  span,
+  tasks,
+}: {
+  t: number;
+  span: readonly [number, number];
+  tasks: readonly [number, number];
+}) {
+  const state = stateAt(t, span);
+  const open = useStepOpen(state === "running");
+  if (state === null) {
+    return null;
+  }
+  return (
+    <TraceStep state={live(state)} {...open}>
+      <TraceStepTrigger>
+        <TraceMarker>
+          <Icon icon={UserGroupIcon} size={sizes.iconSm} />
+        </TraceMarker>
+        <TraceTitle>
+          <SwapText>
+            {state === "running" ? "Delegating to" : "Delegated to"}
+          </SwapText>
+        </TraceTitle>
+        <TraceSubject>Brand researcher</TraceSubject>
+      </TraceStepTrigger>
+      <TraceStepContent>
+        <Tasks
+          t={t}
+          tasks={[
+            [
+              Globe02Icon,
+              "Scanning Swedish competitor brands",
+              "Scanned Swedish competitor brands",
+              tasks[0],
+            ],
+            [
+              Globe02Icon,
+              "Mapping local pricing trends",
+              "Mapped local pricing trends",
+              tasks[1],
+            ],
+          ]}
+        />
+      </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+function Report({ state }: { state: TraceState | "done" }) {
+  return (
+    <TraceStep state={live(state)}>
+      <TraceLine>
+        <TraceMarker>
+          <Icon icon={File02Icon} size={sizes.iconSm} />
+        </TraceMarker>
+        <TraceTitle>
+          <SwapText>
+            {state === "running" ? "Preparing the report" : "Report is ready"}
+          </SwapText>
+        </TraceTitle>
+      </TraceLine>
+      <TraceStepContent>
+        <Attachment size="xs">
+          <AttachmentMedia>
+            <Icon icon={File02Icon} />
+          </AttachmentMedia>
+          <AttachmentContent>
+            <AttachmentTitle>sweden-launch</AttachmentTitle>
+          </AttachmentContent>
+        </Attachment>
+      </TraceStepContent>
+    </TraceStep>
+  );
+}
+
+function Finished() {
+  return (
+    <TraceStep>
+      <TraceLine>
+        <TraceMarker>
+          <Icon icon={Tick02Icon} size={sizes.iconSm} />
+        </TraceMarker>
+        <TraceTitle>Finished working</TraceTitle>
+      </TraceLine>
     </TraceStep>
   );
 }
@@ -293,8 +458,6 @@ const run = {
 function TraceDemo() {
   const { t, replay, run: take } = useClock(run.end);
   const [open, setOpen] = useState<boolean>();
-  const thinking = stateAt(t, run.thinking);
-  const delegating = stateAt(t, run.delegating);
   const reporting = stateAt(t, run.reporting);
   const finished = t >= run.end;
   const seconds = Math.floor(Math.min(t, run.end));
@@ -323,98 +486,12 @@ function TraceDemo() {
           </TraceCollapsibleTrigger>
           <TraceCollapsibleContent>
             <Trace>
-              {thinking === null ? null : (
-                <TraceStep state={live(thinking)}>
-                  <TraceLine>
-                    <TraceMarker />
-                    <TraceTitle>
-                      <SwapText>
-                        {thinking === "running" ? "Thinking" : "Done thinking"}
-                      </SwapText>
-                    </TraceTitle>
-                  </TraceLine>
-                  <TraceStepContent open={thinking === "running"}>
-                    <TraceReasoning>
-                      {words.slice(0, shownWords(t, run.thinking)).join(" ")}
-                    </TraceReasoning>
-                  </TraceStepContent>
-                </TraceStep>
-              )}
+              <Thinking done="Done thinking" span={run.thinking} t={t} />
               <ReadOrders span={run.reading} t={t} tasks={run.readTasks} />
               <SearchSources found={run.found} span={run.searching} t={t} />
-              {delegating === null ? null : (
-                <TraceStep state={live(delegating)}>
-                  <TraceLine>
-                    <TraceMarker />
-                    <TraceTitle>
-                      <SwapText>
-                        {delegating === "running"
-                          ? "Delegating to"
-                          : "Delegated to"}
-                      </SwapText>
-                    </TraceTitle>
-                    <TraceIcon>
-                      <Icon icon={UserGroupIcon} />
-                    </TraceIcon>
-                    <TraceSubject>Brand researcher</TraceSubject>
-                  </TraceLine>
-                  <TraceStepContent open={delegating === "running"}>
-                    <TraceSubsteps>
-                      {(
-                        [
-                          ["Scanning", "Scanned", "Swedish competitor brands"],
-                          ["Mapping", "Mapped", "local pricing trends"],
-                        ] as const
-                      ).map(([running, done, what], index) => {
-                        const over = t >= (run.delegateTasks[index] ?? 0);
-                        return (
-                          <TraceSubstep
-                            key={what}
-                            state={over ? undefined : "running"}
-                          >
-                            <TraceMarker />
-                            <TraceTitle>
-                              <SwapText>{`${over ? done : running} ${what}`}</SwapText>
-                            </TraceTitle>
-                          </TraceSubstep>
-                        );
-                      })}
-                    </TraceSubsteps>
-                  </TraceStepContent>
-                </TraceStep>
-              )}
-              {reporting === null ? null : (
-                <TraceStep state={live(reporting)}>
-                  <TraceLine>
-                    <TraceMarker />
-                    <TraceTitle>
-                      <SwapText>
-                        {reporting === "running"
-                          ? "Preparing the report"
-                          : "Report is ready"}
-                      </SwapText>
-                    </TraceTitle>
-                  </TraceLine>
-                  <TraceStepContent>
-                    <Attachment size="xs">
-                      <AttachmentMedia>
-                        <Icon icon={File02Icon} />
-                      </AttachmentMedia>
-                      <AttachmentContent>
-                        <AttachmentTitle>sweden-launch</AttachmentTitle>
-                      </AttachmentContent>
-                    </Attachment>
-                  </TraceStepContent>
-                </TraceStep>
-              )}
-              {finished ? (
-                <TraceStep>
-                  <TraceLine>
-                    <TraceMarker variant="check" />
-                    <TraceTitle>Finished working</TraceTitle>
-                  </TraceLine>
-                </TraceStep>
-              ) : null}
+              <Delegate span={run.delegating} t={t} tasks={run.delegateTasks} />
+              {reporting === null ? null : <Report state={reporting} />}
+              {finished ? <Finished /> : null}
             </Trace>
           </TraceCollapsibleContent>
         </TraceCollapsible>
@@ -429,11 +506,55 @@ function TraceStepDemo() {
       <Trace sx={styles.width}>
         <TraceStep>
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={DatabaseIcon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Read</TraceTitle>
-            <TraceIcon>
-              <Icon icon={DatabaseIcon} />
-            </TraceIcon>
+            <TraceSubject>Swedish orders</TraceSubject>
+          </TraceLine>
+        </TraceStep>
+      </Trace>
+    </DemoRow>
+  );
+}
+
+const searches = [
+  "Swedish e-commerce growth 2026",
+  "Nordic delivery and returns expectations",
+];
+
+function TraceStepTriggerDemo() {
+  return (
+    <DemoRow>
+      <Trace sx={styles.width}>
+        <TraceStep defaultOpen={false}>
+          <TraceStepTrigger>
+            <TraceMarker>
+              <Icon icon={Search01Icon} size={sizes.iconSm} />
+            </TraceMarker>
+            <TraceTitle>Searched the web</TraceTitle>
+            <TraceDescription>2 searches</TraceDescription>
+          </TraceStepTrigger>
+          <TraceStepContent>
+            <TraceSubsteps>
+              {searches.map((query) => (
+                <TraceSubstep key={query}>
+                  <TraceMarker>
+                    <Icon icon={Globe02Icon} size={sizes.iconSm} />
+                  </TraceMarker>
+                  <TraceTitle>Searched for</TraceTitle>
+                  <TraceSubject>{query}</TraceSubject>
+                </TraceSubstep>
+              ))}
+            </TraceSubsteps>
+          </TraceStepContent>
+        </TraceStep>
+        <TraceStep>
+          <TraceLine>
+            <TraceMarker>
+              <Icon icon={DatabaseIcon} size={sizes.iconSm} />
+            </TraceMarker>
+            <TraceTitle>Read</TraceTitle>
             <TraceSubject>Swedish orders</TraceSubject>
           </TraceLine>
         </TraceStep>
@@ -448,19 +569,25 @@ function TraceStateDemo() {
       <Trace sx={styles.width}>
         <TraceStep>
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={TerminalIcon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Ran pnpm install</TraceTitle>
           </TraceLine>
         </TraceStep>
         <TraceStep state="running">
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={TerminalIcon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Running pnpm build</TraceTitle>
           </TraceLine>
         </TraceStep>
         <TraceStep state="error">
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={TerminalIcon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Failed to run pnpm lint</TraceTitle>
           </TraceLine>
           <TraceStepContent>
@@ -469,7 +596,9 @@ function TraceStateDemo() {
         </TraceStep>
         <TraceStep state="pending">
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={TerminalIcon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Run pnpm test</TraceTitle>
           </TraceLine>
         </TraceStep>
@@ -484,17 +613,14 @@ function TraceMarkerDemo() {
       <Trace sx={styles.width}>
         <TraceStep>
           <TraceLine>
-            <TraceMarker />
+            <TraceMarker>
+              <Icon icon={Search01Icon} size={sizes.iconSm} />
+            </TraceMarker>
             <TraceTitle>Searched</TraceTitle>
             <TraceDescription>46 sources</TraceDescription>
           </TraceLine>
         </TraceStep>
-        <TraceStep>
-          <TraceLine>
-            <TraceMarker variant="check" />
-            <TraceTitle>Finished working</TraceTitle>
-          </TraceLine>
-        </TraceStep>
+        <Finished />
       </Trace>
     </DemoRow>
   );
@@ -503,27 +629,14 @@ function TraceMarkerDemo() {
 const thinkFor = 3.2;
 
 function TraceReasoningDemo() {
-  const { t, replay } = useClock(thinkFor);
-  const running = t < thinkFor;
+  const { t, replay, run: take } = useClock(thinkFor);
   return (
     <DemoRow
-      controls={<Replay disabled={running} onClick={replay} />}
+      controls={<Replay disabled={t < thinkFor} onClick={replay} />}
       sx={styles.stage}
     >
-      <Trace sx={styles.width}>
-        <TraceStep state={running ? "running" : undefined}>
-          <TraceLine>
-            <TraceMarker />
-            <TraceTitle>
-              <SwapText>{running ? "Thinking" : "Thought for 3s"}</SwapText>
-            </TraceTitle>
-          </TraceLine>
-          <TraceStepContent open={running}>
-            <TraceReasoning>
-              {words.slice(0, shownWords(t, [0, thinkFor])).join(" ")}
-            </TraceReasoning>
-          </TraceStepContent>
-        </TraceStep>
+      <Trace key={take} sx={styles.width}>
+        <Thinking done="Thought for 3s" span={[0, thinkFor]} t={t} />
       </Trace>
     </DemoRow>
   );
@@ -532,13 +645,13 @@ function TraceReasoningDemo() {
 const tool = { span: [0, 2.6], tasks: [1.2, 2.4] } as const;
 
 function TraceToolDemo() {
-  const { t, replay } = useClock(tool.span[1]);
+  const { t, replay, run: take } = useClock(tool.span[1]);
   return (
     <DemoRow
       controls={<Replay disabled={t < tool.span[1]} onClick={replay} />}
       sx={styles.stage}
     >
-      <Trace sx={styles.width}>
+      <Trace key={take} sx={styles.width}>
         <ReadOrders span={tool.span} t={t} tasks={tool.tasks} />
       </Trace>
     </DemoRow>
@@ -567,22 +680,7 @@ function TraceFileDemo() {
   return (
     <DemoRow>
       <Trace sx={styles.width}>
-        <TraceStep>
-          <TraceLine>
-            <TraceMarker />
-            <TraceTitle>Report is ready</TraceTitle>
-          </TraceLine>
-          <TraceStepContent>
-            <Attachment size="xs">
-              <AttachmentMedia>
-                <Icon icon={File02Icon} />
-              </AttachmentMedia>
-              <AttachmentContent>
-                <AttachmentTitle>sweden-launch</AttachmentTitle>
-              </AttachmentContent>
-            </Attachment>
-          </TraceStepContent>
-        </TraceStep>
+        <Report state="done" />
       </Trace>
     </DemoRow>
   );
@@ -600,14 +698,13 @@ function TraceLinkDemo() {
             {...stylex.props(traceActionStyles())}
           >
             <TraceLine>
-              <TraceMarker />
+              <TraceMarker>
+                <Icon icon={Globe02Icon} size={sizes.iconSm} />
+              </TraceMarker>
               <TraceTitle>Read</TraceTitle>
-              <TraceIcon>
-                <Icon icon={Globe02Icon} />
-              </TraceIcon>
               <TraceSubject>Continuous integration</TraceSubject>
               <TraceIcon>
-                <Icon icon={ArrowUpRight01Icon} />
+                <Icon icon={ArrowUpRight01Icon} size={sizes.iconSm} />
               </TraceIcon>
             </TraceLine>
           </a>
@@ -629,11 +726,10 @@ function TraceDialogDemo() {
               }
             >
               <TraceLine>
-                <TraceMarker />
+                <TraceMarker>
+                  <Icon icon={TerminalIcon} size={sizes.iconSm} />
+                </TraceMarker>
                 <TraceTitle>Ran</TraceTitle>
-                <TraceIcon>
-                  <Icon icon={TerminalIcon} />
-                </TraceIcon>
                 <TraceSubject>git diff --stat</TraceSubject>
               </TraceLine>
             </DialogTrigger>
@@ -672,11 +768,10 @@ function TraceSheetDemo() {
               }
             >
               <TraceLine>
-                <TraceMarker />
+                <TraceMarker>
+                  <Icon icon={FileEditIcon} size={sizes.iconSm} />
+                </TraceMarker>
                 <TraceTitle>Edited</TraceTitle>
-                <TraceIcon>
-                  <Icon icon={FileEditIcon} />
-                </TraceIcon>
                 <TraceSubject>package.json</TraceSubject>
                 <TraceDescription>+1 −1</TraceDescription>
               </TraceLine>
@@ -719,5 +814,6 @@ export {
   TraceSourcesDemo,
   TraceStateDemo,
   TraceStepDemo,
+  TraceStepTriggerDemo,
   TraceToolDemo,
 };

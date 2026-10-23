@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
@@ -26,13 +26,10 @@ import {
   colors,
   durations,
   easings,
-  fontWeights,
   lineHeights,
   media,
   motion,
   opacities,
-  radii,
-  shadows,
   sizes,
   space,
   strokes,
@@ -42,13 +39,11 @@ const traceStates = ["running", "error", "pending"] as const;
 
 type TraceState = (typeof traceStates)[number];
 
-const traceMarkerVariants = ["check"] as const;
-
-type TraceMarkerVariant = (typeof traceMarkerVariants)[number];
-
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
+
+type CollapsibleProps = ComponentProps<typeof Collapsible>;
 
 interface StepContext {
   // Whether the step is still arriving, so a substep mounted with it doesn't enter twice.
@@ -61,31 +56,31 @@ const Step = createContext<StepContext>({
   state: undefined,
 });
 
+const InStepTrigger = createContext(false);
+
 // True once the Trace has mounted: only a step that arrives after it gets an entrance, so a
 // run read back from history, or rendered on the server, lands without one.
 const Live = createContext<{ readonly current: boolean }>({ current: false });
 
 const step = "[data-slot='trace-step']";
 const open = ":is([data-panel-open] *)";
-const panelOpen = ":is([data-panel-open])";
-const triggerInstant = ":is([data-collapsible-instant])";
-const instant = ":is([data-collapsible-instant] *)";
+// Only the trigger's own flag: the run's panel carries it too, and holds every step's chevron.
+const instant = ":is([data-slot$='-trigger'][data-collapsible-instant] *)";
 const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
 const inTrigger = ":is([data-slot='trace-collapsible-trigger'] *)";
+const stepHovered = ":is([data-slot='trace-step-trigger']:hover *)";
+const stepFocused = ":is([data-slot='trace-step-trigger']:focus-visible *)";
 
-// The rail stops the same gap short of each marker's edge, measured from its center, half a
-// row down.
-const dotSize = `calc(${space.xxs} + ${space.xxxs})`;
-const dotHole = `calc(${dotSize} / 2 + ${space.xxxs})`;
-const checkHole = `calc(${sizes.icon} / 2 + ${space.xxxs})`;
-const checked = `:has(> * > [data-slot='trace-line'] > [data-slot='trace-marker'][data-variant='check'])`;
+// The rail stops at each marker's box, measured from its center, half a row down; the box's room
+// around its 14px icon is the gap.
+const hole = `calc(${sizes.controlXs} / 2)`;
 const rail = {
   backgroundColor: colors.border,
   content: "''",
-  insetInlineStart: `calc(${sizes.icon} / 2 - ${strokes.border} / 2)`,
+  insetInlineStart: `calc(${sizes.controlXs} / 2 - ${strokes.border} / 2)`,
   position: "absolute",
   width: strokes.border,
 } as const;
@@ -106,13 +101,6 @@ const fadeIn = stylex.keyframes({
   from: { opacity: 0 },
 });
 
-const breathe = stylex.keyframes({
-  from: {
-    boxShadow: `0 0 0 0 color-mix(in oklch, ${colors.textPrimary} 40%, transparent)`,
-  },
-  to: { boxShadow: `0 0 0 ${space.xxs} transparent` },
-});
-
 const styles = stylex.create({
   trace: {
     display: "flex",
@@ -127,16 +115,8 @@ const styles = stylex.create({
     position: "relative",
     "::before": {
       ...rail,
-      content: {
-        default: "''",
-        // A run's first step meets the trigger's rail; a list's first step starts the rail.
-        [`:nth-child(1 of ${step}):not(:is([data-slot='trace-collapsible-content'] > [data-slot='trace'] > *))`]:
-          "none",
-      },
-      height: {
-        default: `calc(${sizes.controlSm} / 2 - ${dotHole})`,
-        [checked]: `calc(${sizes.controlSm} / 2 - ${checkHole})`,
-      },
+      content: { default: "''", [`:nth-child(1 of ${step})`]: "none" },
+      height: `calc(${sizes.controlMd} / 2 - ${hole})`,
       top: 0,
     },
     "::after": {
@@ -144,10 +124,7 @@ const styles = stylex.create({
       bottom: 0,
       // The rail ends on the newest step.
       content: { default: "''", [`:nth-last-child(1 of ${step})`]: "none" },
-      top: {
-        default: `calc(${sizes.controlSm} / 2 + ${dotHole})`,
-        [checked]: `calc(${sizes.controlSm} / 2 + ${checkHole})`,
-      },
+      top: `calc(${sizes.controlMd} / 2 + ${hole})`,
     },
   },
   // A step that arrives opens its space first, so the rail grows down to it.
@@ -197,14 +174,14 @@ const styles = stylex.create({
   line: {
     alignItems: "center",
     color: {
-      default: colors.textMuted,
+      default: colors.textSecondary,
       [media.hover]: { default: null, [hovered]: colors.textPrimary },
       [pressed]: colors.textPrimary,
     },
     cursor: { default: null, [inAction]: "pointer" },
     display: "flex",
     gap: space.xs,
-    height: sizes.controlSm,
+    height: sizes.controlMd,
     maxWidth: "100%",
     minWidth: 0,
     transitionDuration: durations.hover,
@@ -216,59 +193,87 @@ const styles = stylex.create({
     opacity: opacities.disabled,
   },
   marker: {
-    alignItems: "center",
-    display: "flex",
+    display: "inline-grid",
     flexShrink: 0,
-    height: sizes.icon,
-    justifyContent: "center",
-    width: sizes.icon,
+    height: sizes.controlXs,
+    placeItems: "center",
+    transitionDuration: durations.hover,
+    transitionProperty: "color",
+    transitionTimingFunction: "ease",
+    width: sizes.controlXs,
   },
-  dot: {
-    backgroundColor: colors.textMuted,
-    borderEndEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderStartStartRadius: radii.full,
-    height: dotSize,
-    transitionDuration: durations.crossfade,
-    transitionProperty: "background-color",
-    transitionTimingFunction: easings.crossfade,
-    width: dotSize,
+  markerError: {
+    color: colors.dangerText,
   },
-  dotRunning: {
-    animationDuration: durations.pulse,
-    animationIterationCount: "infinite",
-    animationName: { default: breathe, [media.reducedMotion]: "none" },
-    animationTimingFunction: easings.out,
-    backgroundColor: colors.textPrimary,
-  },
-  dotError: {
-    backgroundColor: colors.dangerSolid,
-  },
-  dotPending: {
-    backgroundColor: "transparent",
-    boxShadow: `inset 0 0 0 ${strokes.border} ${colors.textMuted}`,
-  },
-  check: {
-    color: colors.textMuted,
+  markLayer: {
     display: "flex",
+    gridArea: "1 / 1",
+    transitionDuration: {
+      default: durations.hover,
+      // Keyboard focus never animates.
+      [stepFocused]: "0s",
+    },
+    transitionProperty: {
+      default: "opacity, scale, filter",
+      [media.reducedMotion]: "opacity",
+    },
+    transitionTimingFunction: easings.crossfade,
+  },
+  // The outgoing layer shrinks and softens, so the two never double-expose.
+  markIdle: {
+    filter: {
+      default: "none",
+      [stepFocused]: `blur(${motion.crossfadeTextBlur})`,
+      [media.hover]: {
+        default: "none",
+        [stepHovered]: `blur(${motion.crossfadeTextBlur})`,
+      },
+    },
+    opacity: {
+      default: 1,
+      [stepFocused]: 0,
+      [media.hover]: { default: 1, [stepHovered]: 0 },
+    },
+    scale: {
+      default: 1,
+      [stepFocused]: motion.popoverScale,
+      [media.hover]: { default: 1, [stepHovered]: motion.popoverScale },
+    },
+  },
+  markActive: {
+    filter: {
+      default: `blur(${motion.crossfadeTextBlur})`,
+      [stepFocused]: "none",
+      [media.hover]: {
+        default: `blur(${motion.crossfadeTextBlur})`,
+        [stepHovered]: "none",
+      },
+    },
+    opacity: {
+      default: 0,
+      [stepFocused]: 1,
+      [media.hover]: { default: 0, [stepHovered]: 1 },
+    },
+    scale: {
+      default: motion.popoverScale,
+      [stepFocused]: 1,
+      [media.hover]: { default: motion.popoverScale, [stepHovered]: 1 },
+    },
   },
   icon: {
     alignItems: "center",
     display: "flex",
     flexShrink: 0,
-    height: sizes.icon,
+    height: sizes.iconSm,
     justifyContent: "center",
     marginInlineStart: {
       default: null,
       ":is([data-slot='trace-title'] ~ *)": `calc(-1 * ${space.xxs})`,
     },
-    width: sizes.icon,
+    width: sizes.iconSm,
   },
   title: {
     flexShrink: 0,
-    fontWeight: { default: null, [inTrigger]: fontWeights.medium },
-    color: { default: null, [inTrigger]: colors.textSecondary },
     maxWidth: "100%",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -281,58 +286,19 @@ const styles = stylex.create({
     WebkitTextFillColor: "currentColor",
   },
   subject: {
-    color: colors.textSecondary,
-    fontWeight: fontWeights.medium,
-    marginInlineStart: {
-      default: null,
-      ":is([data-slot='trace-icon'] + *)": `calc(-1 * ${space.xxs})`,
-    },
+    color: colors.textMuted,
     minWidth: 0,
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
   },
   description: {
-    color: colors.textMuted,
+    color: { default: colors.textMuted, [inTrigger]: "inherit" },
     flexShrink: 0,
     fontVariantNumeric: "tabular-nums",
   },
   descriptionError: {
     color: colors.dangerText,
-  },
-  // Opening grows the space, then fades in; closing fades out, then shuts.
-  content: {
-    display: "grid",
-    filter: `blur(${motion.crossfadeTextBlur})`,
-    gridTemplateRows: "0fr",
-    opacity: 0,
-    transitionDelay: {
-      default: `${durations.popoverExit}, 0s, 0s`,
-      [media.reducedMotion]: "0s",
-    },
-    transitionDuration: {
-      default: `${durations.popover}, ${durations.popoverExit}, ${durations.popoverExit}`,
-      [media.reducedMotion]: "0s",
-    },
-    transitionProperty: "grid-template-rows, opacity, filter",
-    transitionTimingFunction: easings.out,
-  },
-  contentOpen: {
-    filter: "blur(0)",
-    gridTemplateRows: "1fr",
-    opacity: 1,
-    transitionDelay: {
-      default: `0s, ${durations.stagger}, ${durations.stagger}`,
-      [media.reducedMotion]: "0s",
-    },
-    transitionDuration: {
-      default: `${durations.move}, ${durations.move}, ${durations.move}`,
-      [media.reducedMotion]: "0s",
-    },
-  },
-  contentClip: {
-    minHeight: 0,
-    overflow: "hidden",
   },
   contentBody: {
     color: colors.textSecondary,
@@ -342,7 +308,7 @@ const styles = stylex.create({
     // Keeps a ring drawn on the edge of what's inside within the clip.
     paddingBlockStart: space.xxxs,
     paddingInlineEnd: space.xxxs,
-    paddingInlineStart: `calc(${sizes.icon} + ${space.xs})`,
+    paddingInlineStart: `calc(${sizes.controlXs} + ${space.xs})`,
   },
   collapsible: {
     display: "flex",
@@ -350,38 +316,8 @@ const styles = stylex.create({
     minWidth: 0,
     width: "100%",
   },
-  trigger: {
-    position: "relative",
-    // Shrinks into the chevron with the panel, on its timing, so it doesn't outlast the rail below.
-    "::after": {
-      ...rail,
-      bottom: 0,
-      opacity: { default: 0, [panelOpen]: 1 },
-      top: `calc(${sizes.controlSm} / 2 + ${dotHole})`,
-      transform: { default: "scaleY(0)", [panelOpen]: "none" },
-      transformOrigin: "top",
-      transitionDuration: {
-        default: durations.layoutExit,
-        [panelOpen]: {
-          default: durations.layout,
-          [triggerInstant]: "0s",
-          [media.reducedMotion]: "0s",
-        },
-        [triggerInstant]: "0s",
-        [media.reducedMotion]: "0s",
-      },
-      transitionProperty: "opacity, transform",
-      transitionTimingFunction: {
-        default: easings.out,
-        [panelOpen]: easings.layout,
-      },
-    },
-  },
   chevron: {
-    color: {
-      default: colors.textMuted,
-      [media.hover]: { default: null, [hovered]: colors.textPrimary },
-    },
+    display: "flex",
     transform: {
       default: "rotate(-90deg)",
       [rtl]: "rotate(90deg)",
@@ -389,19 +325,19 @@ const styles = stylex.create({
     },
     // On the panel's timing each way, so it lands as the panel does.
     transitionDuration: {
-      default: `${durations.hover}, ${durations.layoutExit}`,
+      default: durations.layoutExit,
       [open]: {
-        default: `${durations.hover}, ${durations.layout}`,
+        default: durations.layout,
         [instant]: "0s",
         [media.reducedMotion]: "0s",
       },
       [instant]: "0s",
       [media.reducedMotion]: "0s",
     },
-    transitionProperty: "color, transform",
+    transitionProperty: "transform",
     transitionTimingFunction: {
-      default: `ease, ${easings.out}`,
-      [open]: `ease, ${easings.layout}`,
+      default: easings.out,
+      [open]: easings.layout,
     },
   },
   // A window on the newest lines; older ones scroll up under a fade.
@@ -418,40 +354,20 @@ const styles = stylex.create({
     maskImage: `linear-gradient(to bottom, transparent, black ${lineHeights.textSm})`,
   },
   substeps: {
-    borderEndEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderStartStartRadius: radii.md,
-    boxShadow: shadows.defaultRingSubtle,
     display: "flex",
     flexDirection: "column",
-    marginBlockEnd: space.xxs,
-    marginBlockStart: space.xxs,
   },
   substep: {
     alignItems: "center",
-    borderBlockStartColor: {
-      default: colors.borderSubtle,
-      ":first-child": "transparent",
-    },
-    borderBlockStartStyle: "solid",
-    borderBlockStartWidth: strokes.border,
-    color: {
-      default: colors.textSecondary,
-      ":is([data-state])": colors.textMuted,
-    },
+    color: colors.textSecondary,
+    display: "flex",
+    gap: space.xs,
+    height: sizes.controlMd,
+    minWidth: 0,
     opacity: {
       default: null,
       ":is([data-state='pending'])": opacities.disabled,
     },
-    display: "flex",
-    gap: space.xs,
-    height: sizes.controlMd,
-    paddingInlineEnd: space.sm,
-    paddingInlineStart: space.sm,
-    transitionDuration: durations.crossfade,
-    transitionProperty: "color",
-    transitionTimingFunction: easings.crossfade,
   },
 });
 
@@ -479,6 +395,19 @@ function traceActionStyles() {
   return styles.action;
 }
 
+function Chevron() {
+  return (
+    <span {...stylex.props(styles.chevron)}>
+      <HugeiconsIcon
+        aria-hidden
+        icon={ArrowDown01Icon}
+        size={sizes.iconSm}
+        strokeWidth={Number(strokes.icon)}
+      />
+    </span>
+  );
+}
+
 /** The steps an agent takes, on one rail. */
 function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
   const live = useRef(false);
@@ -492,16 +421,22 @@ function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** One step: its line, and what opens under it. Without `state` it's done. */
+/**
+ * One step: its line, and what opens under it. Without `state` it's done. Its content shows
+ * unless `open` or `defaultOpen` is false; a `TraceStepTrigger` toggles it.
+ */
 function TraceStep({
   children,
+  defaultOpen = true,
+  onOpenChange,
+  open: shown,
   state,
   sx,
 }: {
   children: ReactNode;
   state?: TraceState;
   sx?: Sx;
-}) {
+} & Pick<CollapsibleProps, "defaultOpen" | "onOpenChange" | "open">) {
   const [growing, stepRef] = useArrival<HTMLDivElement>();
   const [arriving, innerRef] = useArrival<HTMLDivElement>();
   const context = useMemo(
@@ -516,16 +451,23 @@ function TraceStep({
         ref={stepRef}
         {...stylex.props(styles.step, growing && styles.growing, sx)}
       >
-        <div
-          ref={innerRef}
-          {...stylex.props(
-            styles.stepInner,
-            growing && styles.clipped,
-            arriving && styles.arriving
-          )}
+        <Collapsible
+          defaultOpen={defaultOpen}
+          onOpenChange={onOpenChange}
+          open={shown}
+          render={
+            <div
+              ref={innerRef}
+              {...stylex.props(
+                styles.stepInner,
+                growing && styles.clipped,
+                arriving && styles.arriving
+              )}
+            />
+          }
         >
           {children}
-        </div>
+        </Collapsible>
       </div>
     </Step>
   );
@@ -547,75 +489,59 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
   );
 }
 
-function Icon({ icon, size }: { icon: typeof Tick02Icon; size: string }) {
+/**
+ * A step's line that opens and shuts its content. Put the line's parts in it; its marker turns
+ * into a chevron while it's pointed at. A step with `open` needs `onOpenChange` for it to toggle.
+ */
+function TraceStepTrigger({
+  children,
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof CollapsibleTrigger>>, "render">) {
   return (
-    <HugeiconsIcon
-      aria-hidden
-      icon={icon}
-      size={size}
-      strokeWidth={Number(strokes.icon)}
-    />
+    <CollapsibleTrigger
+      data-slot="trace-step-trigger"
+      render={<button type="button" {...stylex.props(styles.action, sx)} />}
+      {...props}
+    >
+      <InStepTrigger value>
+        <TraceLine>{children}</TraceLine>
+      </InStepTrigger>
+    </CollapsibleTrigger>
   );
 }
 
-/**
- * The step's node on the rail: one dot, filled when done, pulsing while running, red when it
- * failed and hollow while pending. `check` ends a run. Children replace the mark.
- */
-function TraceMarker({
-  children,
-  sx,
-  variant,
-}: {
-  children?: ReactNode;
-  sx?: Sx;
-  variant?: TraceMarkerVariant;
-}) {
+/** The step's icon on the rail, red when it failed. In a `TraceStepTrigger` it reveals a chevron. */
+function TraceMarker({ children, sx }: { children: ReactNode; sx?: Sx }) {
   const { state } = use(Step);
+  const inStepTrigger = use(InStepTrigger);
   return (
     <span
       aria-hidden
       data-slot="trace-marker"
-      data-variant={variant}
-      {...stylex.props(styles.marker, sx)}
+      {...stylex.props(
+        styles.marker,
+        state === "error" && styles.markerError,
+        sx
+      )}
     >
-      {children ?? <Mark state={state} variant={variant} />}
+      {inStepTrigger ? (
+        <>
+          <span {...stylex.props(styles.markLayer, styles.markIdle)}>
+            {children}
+          </span>
+          <span {...stylex.props(styles.markLayer, styles.markActive)}>
+            <Chevron />
+          </span>
+        </>
+      ) : (
+        children
+      )}
     </span>
   );
 }
 
-function Mark({
-  state,
-  variant,
-}: {
-  state: TraceState | undefined;
-  variant: TraceMarkerVariant | undefined;
-}) {
-  if (variant === "check") {
-    return (
-      <span {...stylex.props(styles.check)}>
-        <HugeiconsIcon
-          aria-hidden
-          icon={Tick02Icon}
-          size={sizes.icon}
-          strokeWidth={Number(strokes.icon)}
-        />
-      </span>
-    );
-  }
-  return (
-    <span
-      {...stylex.props(
-        styles.dot,
-        state === "running" && styles.dotRunning,
-        state === "error" && styles.dotError,
-        state === "pending" && styles.dotPending
-      )}
-    />
-  );
-}
-
-/** An icon in the line: the subject's, or after the title, the indicator. */
+/** An icon after the subject, like a link's arrow. */
 function TraceIcon({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
@@ -639,7 +565,7 @@ function TraceTitle({ children, sx }: { children: ReactNode; sx?: Sx }) {
   );
 }
 
-/** What the step acted on: "Swedish orders". Put its `TraceIcon` before it. */
+/** What the step acted on: "Swedish orders". */
 function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
@@ -666,32 +592,16 @@ function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
   );
 }
 
-/** What opens under a step, lined up with its title. `open` defaults to true. */
-function TraceStepContent({
-  children,
-  open: shown = true,
-  sx,
-}: {
-  children: ReactNode;
-  open?: boolean;
-  sx?: Sx;
-}) {
+/** What opens under a step, lined up with its title. The step's `open` shows it. */
+function TraceStepContent({ children, sx }: { children: ReactNode; sx?: Sx }) {
   return (
-    <div
-      data-slot="trace-step-content"
-      inert={!shown}
-      {...stylex.props(styles.content, shown && styles.contentOpen)}
-    >
-      <div {...stylex.props(styles.contentClip)}>
-        <div {...stylex.props([typeStyles.textSm, styles.contentBody], sx)}>
-          {children}
-        </div>
+    <CollapsibleContent data-slot="trace-step-content" keepMounted>
+      <div {...stylex.props([typeStyles.textSm, styles.contentBody], sx)}>
+        {children}
       </div>
-    </div>
+    </CollapsibleContent>
   );
 }
-
-type CollapsibleProps = ComponentProps<typeof Collapsible>;
 
 /** A run, or any list of steps, that opens and shuts under its trigger. */
 function TraceCollapsible({
@@ -714,7 +624,7 @@ function TraceCollapsible({
   );
 }
 
-/** A row with the chevron on the rail's column: put a `TraceTitle` and `TraceDescription` in it. */
+/** The run's row, with the chevron after it: put a `TraceTitle` and `TraceDescription` in it. */
 function TraceCollapsibleTrigger({
   children,
   sx,
@@ -723,19 +633,12 @@ function TraceCollapsibleTrigger({
   return (
     <CollapsibleTrigger
       data-slot="trace-collapsible-trigger"
-      render={
-        <button
-          type="button"
-          {...stylex.props(styles.action, styles.trigger, sx)}
-        />
-      }
+      render={<button type="button" {...stylex.props(styles.action, sx)} />}
       {...props}
     >
       <span {...stylex.props([typeStyles.textSm, styles.line])}>
-        <span {...stylex.props(styles.marker, styles.chevron)}>
-          <Icon icon={ArrowDown01Icon} size={sizes.icon} />
-        </span>
         {children}
+        <Chevron />
       </span>
     </CollapsibleTrigger>
   );
@@ -841,7 +744,7 @@ function TraceReasoning({ children, sx }: { children: string; sx?: Sx }) {
   );
 }
 
-/** A card of the smaller steps one step runs, each marked like a step. */
+/** The smaller steps one step runs, as rows under it. */
 function TraceSubsteps({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -852,7 +755,7 @@ function TraceSubsteps({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** One row of `TraceSubsteps`: a `TraceMarker` and a `TraceTitle`. */
+/** One row of `TraceSubsteps`: a `TraceMarker`, a `TraceTitle` and what it acted on. */
 function TraceSubstep({
   children,
   state,
@@ -889,14 +792,14 @@ export {
   TraceIcon,
   TraceLine,
   TraceMarker,
-  traceMarkerVariants,
   TraceReasoning,
   traceStates,
   TraceStep,
   TraceStepContent,
+  TraceStepTrigger,
   TraceSubject,
   TraceSubstep,
   TraceSubsteps,
   TraceTitle,
 };
-export type { TraceMarkerVariant, TraceState };
+export type { TraceState };

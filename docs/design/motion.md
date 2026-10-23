@@ -38,7 +38,7 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `layoutExit` | A collapsible shutting, and what turns with it, on `out`: quicker than it opened, so the settle's tail doesn't read as stuck |
 | `stagger` | The gap between siblings arriving one after another |
 | `spin` | One turn of a spinner |
-| `pulse` | One breath of a skeleton, an indeterminate bar or a running trace marker's ring |
+| `pulse` | One breath of a skeleton or an indeterminate bar |
 | `shimmer` | One sweep of light across text still being worked on |
 | `confirm` | How long a confirmation (copied, saved) holds |
 | `fallbackDelay` | How long an image may load before its fallback shows (a citation's globe) |
@@ -55,7 +55,7 @@ Never from `scale(0)` or full transparency in place. Start close to the final st
 
 When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
 
-`SwapIcon` and `SwapText` are these two as parts. The sidebar trigger's mark is the one crossfade that isn't a state change: it reveals the toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
+`SwapIcon` and `SwapText` are these two as parts. The sidebar trigger's mark and a trace step trigger's marker are the crossfades that aren't a state change: each reveals its toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
 
 ## Layout animation
 
@@ -63,4 +63,4 @@ When content changes, the layout takes its new size at once and only the surface
 
 ## Reduced motion
 
-Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay; a shimmer stops and its text shows plain; a running trace marker's pulse ring stops and its fill stays. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.
+Fewer and gentler, not none. Under `media.reducedMotion`, entrances keep their fade and drop the movement, and things that travel land instantly. Press feedback and reveals that don't move (a skeleton's breath) stay; a shimmer stops and its text shows plain. There is no global kill, so every animation that moves something says what it does under `media.reducedMotion`.

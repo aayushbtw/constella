@@ -247,24 +247,23 @@ The one shape for an agent's run: reasoning, tool calls, sources and files are a
 
 | Part | Look |
 | --- | --- |
-| Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops `space.xxxs` past every dot's edge (`dotSize / 2 + space.xxxs` from its center), and past the `check` mark's (`iconSize / 2 + space.xxxs`), so two marked steps in a row still leave a line between them. It starts under the trigger's chevron and ends on the last step |
-| Marker | One 6px dot for every step and substep, its fill the state: `textMuted` when done, `textPrimary` with a pulse ring while running, `dangerSolid` when failed, hollow with a 1px inset `textMuted` ring while pending (dimmed with the line). `check` ends a run on a plain 16px tick in `textMuted` |
-| Line | A control tall, no fill, `textMuted` at `sm`; `textPrimary` on hover inside a link or trigger. A failed step stays `textMuted` and says "Failed ..."; `pending` dims to `opacities.disabled` |
-| Title | The verb, cut short; shimmers while running. Medium `textSecondary` in a trigger |
-| Subject | Medium `textSecondary` after its icon, `space.xxs` closer; cut short |
+| Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops at each marker's `controlXs` box, whose room around the 14px icon is the gap. It starts on the first step, runs on beside a step's open content and ends on the last step |
+| Marker | The step's 14px (`iconSm`) icon centered in a `controlXs` box, in the line's color, so it brightens with a trigger's line on hover. `dangerText` when failed; dimmed with the line while pending. While running, only the title's shimmer shows it. In a step's trigger, the icon cross-fades to a chevron while pointed at or focused |
+| Line | `controlMd` tall, no fill, `textSecondary` at `sm`; `textPrimary` on hover inside a link or trigger. A failed step keeps its color and says "Failed ..."; `pending` dims to `opacities.disabled` |
+| Title | The verb, regular, in the line's color; cut short; shimmers while running. The run's trigger reads as one line: title and description both `textSecondary` |
+| Subject | `textMuted`, regular, so the verb leads; cut short |
 | Description | `textMuted`, tabular; never truncates. `dangerText` when the step failed, for the reason ("Exit code 1 · 3 errors"), which goes in the step's content under the title |
 | Content | `textSecondary` at `sm`, lined up with the title; a ring on its edge stays inside the clip |
-| Reasoning | `textMuted`, a window of four lines, the top one fading under a mask once full |
-| Substeps | A `defaultRingSubtle` card of `controlMd` rows split by `borderSubtle`; done rows `textSecondary`, running, failed and pending rows `textMuted`. Nothing in a run is `textPrimary` |
+| Reasoning | `textMuted`, a window of four lines, the top one fading under a mask once full. Open only while the model thinks; a finished thought is a plain line, not a trigger |
+| Substeps | Rows like a step's line under it, `controlMd` tall, each with its own icon and no rail of their own; `textSecondary`. Nothing in a run is `textPrimary` |
 
 | Motion | Values |
 | --- | --- |
 | A step arriving | Its space grows from `0fr` on `move` + `out`, then it fades in from `motion.arriveOffset` down under `motion.crossfadeTextBlur`, `durations.stagger` later. Only steps that arrive after the Trace mounts; once each, so a shut panel showing again replays none. Reduced motion: a fade |
-| Content opening | Its rows grow on `move`, then it fades in `durations.stagger` later |
-| Content shutting | It fades out on `popoverExit`, then its rows shut on `popover` |
-| Running marker | A ring grows from the dot to `space.xxs` and fades, over `durations.pulse` on `out`, on repeat. Reduced motion: the fill stays, with no ring |
-| State change | The dot's fill crossfades on `crossfade` |
+| Content opening and shutting | A [Collapsible](#collapsible)'s panel: its height and opacity on `layout`, shutting on `layoutExit` + `out` |
+| State change | The marker's color fades on `hover` + `ease` |
+| A step trigger's marker | Icon and chevron share one cell: the outgoing one shrinks to `motion.popoverScale` under `motion.crossfadeTextBlur` and fades, on `hover` + `crossfade`; keyboard focus swaps at once. Reduced motion: opacity only. The chevron turns a quarter on the panel's timing |
 | Text changing | Titles and counts sit in a Swap Text: tense morphs, numbers roll |
-| The trigger's chevron and rail stub | On the panel's timing each way: `layout` opening, `layoutExit` + `out` shutting, so they land as the panel does. The chevron turns a quarter, its color on `hover` + `ease`; the stub under it scales and fades from its top, clipping away with the rail below |
+| The run trigger's chevron | After its text, on the panel's timing each way: `layout` opening, `layoutExit` + `out` shutting, so it lands as the panel does. It turns a quarter |
 
-A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own.
+A link or a Dialog or Sheet trigger around a line takes `traceActionStyles()`, so it adds no chrome of its own. A step that opens its own content uses `TraceStepTrigger`, which does the same.

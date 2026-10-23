@@ -91,29 +91,32 @@ Reasoning, tool calls and steps are `TraceLine`s in a `Trace`, one line each. Do
 
 ```tsx
 <Trace>
-  <TraceCollapsible>
-    <TraceCollapsibleTrigger>
-      <TraceLine>
-        <TraceIcon>
-          <BrainIcon />
-        </TraceIcon>
-        <TraceTitle>Thought for 5s</TraceTitle>
-      </TraceLine>
-    </TraceCollapsibleTrigger>
-    <TraceCollapsibleContent>{reasoning}</TraceCollapsibleContent>
-  </TraceCollapsible>
-  <TraceLine status="running">
-    <TraceIcon>
-      <GlobeIcon />
-    </TraceIcon>
-    <TraceTitle>Searching the web</TraceTitle>
-  </TraceLine>
+  <TraceStep open={thinking} state={thinking ? "running" : undefined}>
+    <TraceLine>
+      <TraceMarker>
+        <IdeaIcon />
+      </TraceMarker>
+      <TraceTitle>{thinking ? "Thinking" : "Thought for 5s"}</TraceTitle>
+    </TraceLine>
+    <TraceStepContent>
+      <TraceReasoning>{reasoning}</TraceReasoning>
+    </TraceStepContent>
+  </TraceStep>
+  <TraceStep state="running">
+    <TraceLine>
+      <TraceMarker>
+        <GlobeIcon />
+      </TraceMarker>
+      <TraceTitle>Searching the web</TraceTitle>
+    </TraceLine>
+  </TraceStep>
 </Trace>
 ```
 
-- Behavior wraps the line: `TraceCollapsible`, a link, or a dialog trigger around a `TraceLine`.
-- `status` is `running` or `error`; leave it out when done. Color and motion carry it, so say it in the title ("Failed to run pnpm lint", not "pnpm lint").
-- `TraceIcon` is hidden from screen readers, so write the title as a sentence.
+- Every step's `TraceMarker` holds its icon; the marker is the node on the rail.
+- Behavior wraps the line: `TraceStepTrigger` to open a tool step's content, or a link or dialog trigger around a `TraceLine`. Reasoning shows while the model thinks and shuts after; a finished thought doesn't open.
+- `state` on `TraceStep` is `running`, `error` or `pending`; leave it out when done. Color and motion carry it, so say it in the title ("Failed to run pnpm lint", not "pnpm lint").
+- The marker is hidden from screen readers, so write the title as a sentence.
 
 ---
 

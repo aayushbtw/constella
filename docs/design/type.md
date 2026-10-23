@@ -30,9 +30,9 @@ What an agent did on the way to an answer (a trace, its reasoning, its steps) st
 
 | Part | Color | Weight |
 | --- | --- | --- |
-| A step's verb ("Read", "Searching"), a finished line ("Done thinking") | `textMuted` | regular |
-| What it acted on ("Swedish orders"), a run's title | `textSecondary` | medium |
-| Counts, durations | `textMuted` | regular, tabular |
+| A step's verb ("Read", "Searching"), a finished line ("Done thinking"), a run's title | `textSecondary` | regular |
+| What it acted on ("Swedish orders") | `textMuted` | regular |
+| Counts, durations (`textSecondary` in a run's trigger) | `textMuted` | regular, tabular |
 | Reasoning text | `textMuted` | regular |
 
 A source's chip keeps its own `textPrimary` name: it's a link out, not narration.

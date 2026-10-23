@@ -20,13 +20,12 @@ section: AI
     <Trace>
       <TraceStep state="running">
         <TraceLine>
-          <TraceMarker />
+          <TraceMarker>
+            <DatabaseIcon />
+          </TraceMarker>
           <TraceTitle>
             <SwapText>Reading</SwapText>
           </TraceTitle>
-          <TraceIcon>
-            <DatabaseIcon />
-          </TraceIcon>
           <TraceSubject>Swedish orders</TraceSubject>
         </TraceLine>
       </TraceStep>
@@ -55,7 +54,9 @@ import {
 <Trace>
   <TraceStep>
     <TraceLine>
-      <TraceMarker />
+      <TraceMarker>
+        <SearchIcon />
+      </TraceMarker>
       <TraceTitle>Searched the web</TraceTitle>
     </TraceLine>
   </TraceStep>
@@ -72,36 +73,36 @@ TraceCollapsible
 └── TraceCollapsibleContent
     └── Trace
         └── TraceStep
-            ├── TraceLine
+            ├── TraceLine or TraceStepTrigger
             │   ├── TraceMarker
             │   ├── TraceTitle
-            │   ├── TraceIcon
             │   ├── TraceSubject
-            │   └── TraceDescription
+            │   ├── TraceDescription
+            │   └── TraceIcon
             └── TraceStepContent
                 ├── TraceReasoning
                 └── TraceSubsteps
                     └── TraceSubstep
                         ├── TraceMarker
-                        └── TraceTitle
+                        ├── TraceTitle
+                        └── TraceSubject
 ```
 
-A `Trace` is one rail; each `TraceStep` is a node on it. The rail runs from step to step, stops short of each marker and ends on the last step. Steps that arrive after the `Trace` is on screen grow in; steps it mounts with don't. So mount a run read back from history with its steps, not before they load, or every step arrives at once.
+A `Trace` is one rail; each `TraceStep` is a node on it, marked by its icon. The rail runs from step to step, stops at each marker and ends on the last step. Steps that arrive after the `Trace` is on screen grow in; steps it mounts with don't. So mount a run read back from history with its steps, not before they load, or every step arrives at once.
 
 ## Trace Step
 
-A step's `TraceLine` reads as a sentence: a verb in `TraceTitle` ("Read"), then what it acted on in `TraceSubject`, after its `TraceIcon`. `TraceIcon` is hidden from screen readers, so the title and subject carry the meaning. Put a count or a duration in `TraceDescription`.
+A step's `TraceLine` reads as a sentence: its icon in `TraceMarker`, a verb in `TraceTitle` ("Read"), then what it acted on in `TraceSubject`. The marker is hidden from screen readers, so the title and subject carry the meaning. Put a count or a duration in `TraceDescription`.
 
 <!-- ::demo name="trace-step" -->
 
 ```tsx
 <TraceStep>
   <TraceLine>
-    <TraceMarker />
-    <TraceTitle>Read</TraceTitle>
-    <TraceIcon>
+    <TraceMarker>
       <DatabaseIcon />
-    </TraceIcon>
+    </TraceMarker>
+    <TraceTitle>Read</TraceTitle>
     <TraceSubject>Swedish orders</TraceSubject>
   </TraceLine>
 </TraceStep>
@@ -109,25 +110,54 @@ A step's `TraceLine` reads as a sentence: a verb in `TraceTitle` ("Read"), then 
 
 ### Content
 
-What a step found or did opens under it in `TraceStepContent`, lined up with the title. Pass `open` to show it while the step runs and shut it once the step settles. It grows open and fades in, and fades out before it shuts.
+What a step found or did opens under it in `TraceStepContent`, lined up with the title, and the rail runs on beside it. It shows by default; pass `open` to the step to show it while the step runs and shut it once the step settles.
 
 ```tsx
-<TraceStep state={state}>
+<TraceStep open={state === "running"} state={state}>
   <TraceLine>…</TraceLine>
-  <TraceStepContent open={state === "running"}>…</TraceStepContent>
+  <TraceStepContent>…</TraceStepContent>
 </TraceStep>
+```
+
+### Trigger
+
+To let the reader open a step's content, use a `TraceStepTrigger` in place of its `TraceLine`, with the same parts in it. Its marker turns into a chevron while it's pointed at or focused, and the chevron turns as the content opens. The step takes `open`, `defaultOpen` and `onOpenChange`, like a [Collapsible](/docs/components/collapsible); pass `defaultOpen={false}` to start it shut. A step with `open` needs `onOpenChange` too, or its trigger can't toggle it.
+
+<!-- ::demo name="trace-step-trigger" -->
+
+```tsx
+<TraceStep defaultOpen={false}>
+  <TraceStepTrigger>
+    <TraceMarker>
+      <SearchIcon />
+    </TraceMarker>
+    <TraceTitle>Searched the web</TraceTitle>
+    <TraceDescription>2 searches</TraceDescription>
+  </TraceStepTrigger>
+  <TraceStepContent>…</TraceStepContent>
+</TraceStep>
+```
+
+To open a step while it runs and still let the reader toggle it, keep their choice and fall back to the state:
+
+```tsx
+const [open, setOpen] = useState<boolean>();
+
+<TraceStep onOpenChange={setOpen} open={open ?? running} state={state}>
+  …
+</TraceStep>;
 ```
 
 ## State
 
 Set `state` on `TraceStep` while it runs, if it failed or before it starts. A step without one is done. The marker and title follow the state, so say it in the title too. To change tense as it settles ("Reading" to "Read"), put the title in a [Swap Text](/docs/components/swap-text).
 
-| State     | Marker                  | Title                          |
-| --------- | ----------------------- | ------------------------------ |
-| none      | A filled dot            | Done: "Ran pnpm install"       |
-| `running` | A dot with a pulse ring | Shimmers: "Running pnpm build" |
-| `error`   | A red dot               | "Failed to run pnpm lint"      |
-| `pending` | A hollow dot            | Dimmed: "Run pnpm test"        |
+| State     | Marker                         | Title                          |
+| --------- | ------------------------------ | ------------------------------ |
+| none      | Its icon                       | Done: "Ran pnpm install"       |
+| `running` | Its icon                       | Shimmers: "Running pnpm build" |
+| `error`   | Its icon, in red               | "Failed to run pnpm lint"      |
+| `pending` | Its icon, dimmed with the line | Dimmed: "Run pnpm test"        |
 
 Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under the title. It turns `dangerText` on a failed step.
 
@@ -136,7 +166,9 @@ Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under t
 ```tsx
 <TraceStep state="running">
   <TraceLine>
-    <TraceMarker />
+    <TraceMarker>
+      <TerminalIcon />
+    </TraceMarker>
     <TraceTitle>
       <SwapText>{running ? "Running pnpm build" : "Ran pnpm build"}</SwapText>
     </TraceTitle>
@@ -144,7 +176,9 @@ Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under t
 </TraceStep>
 <TraceStep state="error">
   <TraceLine>
-    <TraceMarker />
+    <TraceMarker>
+      <TerminalIcon />
+    </TraceMarker>
     <TraceTitle>Failed to run pnpm lint</TraceTitle>
   </TraceLine>
   <TraceStepContent>
@@ -155,14 +189,16 @@ Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under t
 
 ## Trace Marker
 
-`TraceMarker` draws the step's state on the rail, as the fill of one dot. End a run on `variant="check"`, a plain tick. Children replace the mark.
+`TraceMarker` puts the step's icon on the rail, in the line's color: a 14px icon (`sizes.iconSm`) in a 24px box, so the rail stops short of it. Pick the icon for what the step does: a search, a read, a command. End a run on a tick.
 
 <!-- ::demo name="trace-marker" -->
 
 ```tsx
 <TraceStep>
   <TraceLine>
-    <TraceMarker variant="check" />
+    <TraceMarker>
+      <TickIcon />
+    </TraceMarker>
     <TraceTitle>Finished working</TraceTitle>
   </TraceLine>
 </TraceStep>
@@ -170,25 +206,27 @@ Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under t
 
 ## Run
 
-Put a run's `Trace` in a `TraceCollapsible`. `TraceCollapsibleTrigger` puts the chevron on the rail's column, so the rail starts under it. Give it a `TraceTitle` and a `TraceDescription`, and a [Swap Text](/docs/components/swap-text) in each to morph "Working" into "Worked" and roll the seconds. The content stays mounted while shut, so reopening it doesn't make its steps arrive again.
+Put a run's `Trace` in a `TraceCollapsible`. `TraceCollapsibleTrigger` is a row with the chevron after its text. Give it a `TraceTitle` and a `TraceDescription`, and a [Swap Text](/docs/components/swap-text) in each to morph "Working" into "Worked" and roll the seconds. The content stays mounted while shut, so reopening it doesn't make its steps arrive again.
 
 See the demo at the top of the page.
 
 ## Reasoning
 
-Stream the model's reasoning into `TraceReasoning`, a string. It shows a window of the newest four lines. Each new word morphs in, the block glides up a line as one wraps, and the oldest fades under the top edge. A line break in the text starts a new line.
+Stream the model's reasoning into `TraceReasoning`, a string. It shows a window of the newest four lines. Each new word morphs in, the block glides up a line as one wraps, and the oldest fades under the top edge. A line break in the text starts a new line. It shows while the model thinks and shuts once it's done; a finished thought is a plain line, not one to open.
 
 <!-- ::demo name="trace-reasoning" -->
 
 ```tsx
-<TraceStep state={running ? "running" : undefined}>
+<TraceStep open={running} state={running ? "running" : undefined}>
   <TraceLine>
-    <TraceMarker />
+    <TraceMarker>
+      <IdeaIcon />
+    </TraceMarker>
     <TraceTitle>
       <SwapText>{running ? "Thinking" : "Thought for 3s"}</SwapText>
     </TraceTitle>
   </TraceLine>
-  <TraceStepContent open={running}>
+  <TraceStepContent>
     <TraceReasoning>{reasoning}</TraceReasoning>
   </TraceStepContent>
 </TraceStep>
@@ -196,15 +234,17 @@ Stream the model's reasoning into `TraceReasoning`, a string. It shows a window 
 
 ## Tool
 
-For a tool that runs smaller steps, list them in `TraceSubsteps`. Each `TraceSubstep` takes a `state`, a `TraceMarker` (the step's dot, which settles to a filled one) and a `TraceTitle`.
+For a tool that runs smaller steps, list them in `TraceSubsteps`. Each `TraceSubstep` is a row like a step's line: a `state`, a `TraceMarker` with its icon, a `TraceTitle` and what it acted on.
 
 <!-- ::demo name="trace-tool" -->
 
 ```tsx
-<TraceStepContent open={state === "running"}>
+<TraceStepContent>
   <TraceSubsteps>
     <TraceSubstep state={pulling ? "running" : undefined}>
-      <TraceMarker />
+      <TraceMarker>
+        <DatabaseIcon />
+      </TraceMarker>
       <TraceTitle>
         <SwapText>
           {pulling ? "Pulling order history" : "Pulled order history"}
@@ -253,7 +293,7 @@ Show a file a step made as an [Attachment](/docs/components/attachment) at `xs`.
 
 ## Link
 
-Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab, end the line with an arrow icon.
+Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab, end the line with an arrow in a `TraceIcon`.
 
 <!-- ::demo name="trace-link" -->
 
@@ -265,11 +305,10 @@ Wrap the `TraceLine` in a link styled with `traceActionStyles()`. For a new tab,
     {...stylex.props(traceActionStyles())}
   >
     <TraceLine>
-      <TraceMarker />
-      <TraceTitle>Read</TraceTitle>
-      <TraceIcon>
+      <TraceMarker>
         <GlobeIcon />
-      </TraceIcon>
+      </TraceMarker>
+      <TraceTitle>Read</TraceTitle>
       <TraceSubject>Continuous integration</TraceSubject>
       <TraceIcon>
         <ArrowUpRightIcon />
@@ -312,19 +351,20 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger the same way
 | Part | Adds |
 | --- | --- |
 | `Trace` | One rail of steps; steps that arrive after it mounts grow in |
-| `TraceStep` | `state`: `running`, `error` or `pending`; none is done. A node on the rail, which stops short of its marker |
-| `TraceLine` | The step's row, `textMuted`; `textPrimary` on hover inside a link or trigger, dimmed when pending |
-| `TraceMarker` | The state on the rail: one dot, filled when done, pulsing while running, red when failed, hollow while pending. `variant="check"`, a tick, ends a run; children replace it |
-| `TraceTitle` | The verb, cut short; it shimmers while the step runs. Medium `textSecondary` in a trigger |
-| `TraceIcon` | A 16px slot hidden from screen readers: before a subject, or after the title as the indicator |
-| `TraceSubject` | What the step acted on, medium `textSecondary`, cut short |
+| `TraceStep` | `state`: `running`, `error` or `pending`; none is done. `open`, `defaultOpen` (true) and `onOpenChange` for its content. A node on the rail, which stops at its marker |
+| `TraceLine` | The step's row, `textSecondary`; `textPrimary` on hover inside a link or trigger, dimmed when pending |
+| `TraceStepTrigger` | A `TraceLine` that opens and shuts the step's content; its marker shows a chevron while pointed at or focused |
+| `TraceMarker` | A 24px box holding the step's 14px icon (`sizes.iconSm`) on the rail, in the line's color; `dangerText` when the step failed |
+| `TraceTitle` | The verb, `textSecondary`, cut short; it shimmers while the step runs |
+| `TraceSubject` | What the step acted on, `textMuted`, cut short |
 | `TraceDescription` | Muted, tabular numbers; doesn't truncate. `dangerText` on a failed step |
-| `TraceStepContent` | `open`, true by default: what opens under the step, lined up with its title |
+| `TraceIcon` | A 14px slot after the title, hidden from screen readers: a link's arrow, say |
+| `TraceStepContent` | What opens under the step, lined up with its title; it stays mounted while shut |
 | `TraceReasoning` | A string, shown as a window of its newest four lines |
-| `TraceSubsteps` | A card of substeps |
-| `TraceSubstep` | `state`, as on a step: a row of a `TraceMarker` and a `TraceTitle` |
+| `TraceSubsteps` | The rows of a tool's smaller steps |
+| `TraceSubstep` | `state`, as on a step: a row of a `TraceMarker`, a `TraceTitle` and what it acted on |
 | `TraceCollapsible` | A [Collapsible](/docs/components/collapsible) root; `open` needs `onOpenChange` |
-| `TraceCollapsibleTrigger` | A row with the chevron on the rail's column, and the rail's start while open |
+| `TraceCollapsibleTrigger` | The run's row, with the chevron after its text |
 | `TraceCollapsibleContent` | The panel; it stays mounted while shut |
 | `traceActionStyles()` | Styles for a link or trigger that wraps a `TraceLine` |
 

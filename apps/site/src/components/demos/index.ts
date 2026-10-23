@@ -418,6 +418,7 @@ import {
   TraceSourcesDemo,
   TraceStateDemo,
   TraceStepDemo,
+  TraceStepTriggerDemo,
   TraceToolDemo,
 } from "~/components/demos/trace";
 import {
@@ -722,6 +723,7 @@ const demos = {
   "trace-sources": TraceSourcesDemo,
   "trace-state": TraceStateDemo,
   "trace-step": TraceStepDemo,
+  "trace-step-trigger": TraceStepTriggerDemo,
   "trace-tool": TraceToolDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
