@@ -2,7 +2,6 @@
 title: Approval
 description: A card asking to allow a tool call, with its arguments and answer buttons.
 section: AI
-draft: true
 ---
 
 <!-- ::demo name="approval" -->
