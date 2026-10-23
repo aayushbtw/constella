@@ -25,7 +25,7 @@ Everything is Markdown, so read it instead of guessing.
 3. **Variants before custom styles.** `variant="outline"`, `size="sm"`. Every control has the same size scale: `xs`, `sm`, `default`, `lg`.
 4. **Tokens, not values.** Colors, space, radii, sizes and motion come from `@/lib/constella/tokens.stylex`.
 
-## Critical rules
+## Rules
 
 Each links to a file with Incorrect/Correct pairs.
 

@@ -77,7 +77,7 @@ A `fillSubtle` tray, read left to right. Long lines scroll sideways with no scro
 
 ## Collapsible
 
-The one surface that animates its height: what sits below it has to make room, so the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
+Animates its height, since what sits below it has to make room: the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
 
 ## Command
 
