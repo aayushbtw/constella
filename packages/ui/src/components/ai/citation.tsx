@@ -43,8 +43,11 @@ interface Source {
 type Sources = readonly [Source, ...Source[]];
 
 const styles = stylex.create({
+  // A logo is a box, not a glyph with its own whitespace, so like a Button's Kbd it sits as
+  // far from the side as from the top and bottom.
   pill: {
     maxWidth: sizes.citation,
+    paddingInlineStart: `calc((${sizes.controlXxs} - ${sizes.iconXs}) / 2 - ${strokes.border})`,
   },
   name: {
     minWidth: 0,
