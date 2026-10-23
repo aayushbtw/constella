@@ -33,7 +33,7 @@ A rule that holds for several components goes in its topic file; one that holds 
 
 ## Never
 
-- A weight above 600.
+- A weight above 550.
 - A saturated status fill behind text, or status color on body copy.
 - Color as the only signal.
 - A hue on the default accent, or the accent on a tooltip.

@@ -20,8 +20,8 @@ Controls are 13px, as Interfere's are, so a dense UI stays a step under the read
 
 ## Weight
 
-- **Four steps: 400, 450, 500, 600.** `semimedium` (450) sits between body and label, as Interfere's does; it needs the variable font, which the theme names.
-- **Stops at 600.** `fontWeights.semibold` is the heaviest, for bold in prose; nothing is 700. Heavier type shouts in a quiet interface.
+- **Four steps: 400, 450, 500, 550.** `semimedium` (450) sits between body and label, as Interfere's does. 450 and 550 need the variable font, which the theme names.
+- **Stops at 550.** `fontWeights.semibold` is the heaviest, for headings and bold in prose. Heavier type shouts in a quiet interface.
 - **Medium marks what you act on or name**: control labels, titles, field labels. Body copy is regular.
 
 ## Agent process

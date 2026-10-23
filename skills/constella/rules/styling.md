@@ -205,7 +205,7 @@ import { Text } from "@/components/typography/text";
 - `Heading`: `level` sets the tag, `size` (1–6) the look.
 - `Caption`: small supporting text.
 - `Link`: a link inside running text; pass a router link as `render`. `Code`: inline code, sized relative to the text around it.
-- No weight above `semibold` (600). Numbers that change in place take `fontVariantNumeric: "tabular-nums"`.
+- No weight above `semibold` (550). Numbers that change in place take `fontVariantNumeric: "tabular-nums"`.
 
 ---
 

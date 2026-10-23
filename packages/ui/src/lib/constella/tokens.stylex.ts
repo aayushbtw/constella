@@ -192,9 +192,9 @@ export const letterSpacings = stylex.defineConsts({
 export const fontWeights = stylex.defineConsts({
   medium: "500",
   regular: "400",
-  // Between body and label; needs a variable font, or it rounds to 400 or 500.
+  // 450 and 550 need a variable font; a static one renders them as 500 and 600.
   semimedium: "450",
-  semibold: "600",
+  semibold: "550",
 });
 
 // The base space, sizes and the theme's radius multiply, 4px at a 16px root, as Tailwind's

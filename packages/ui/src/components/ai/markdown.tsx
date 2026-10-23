@@ -62,7 +62,7 @@ const styles = stylex.create({
     marginBlockStart: { default: "1.5em", ":first-child": 0 },
     textWrap: "balance",
   },
-  strong: { fontWeight: fontWeights.semimedium },
+  strong: { fontWeight: fontWeights.semibold },
   list: {
     marginBlockStart: { default: 0, ":is(li > *)": "0.5em" },
     paddingInlineStart: "1.25em",
