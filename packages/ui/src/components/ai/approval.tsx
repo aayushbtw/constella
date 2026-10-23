@@ -4,6 +4,8 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useId } from "react";
 import type { ComponentProps } from "react";
 
+import { Button } from "@/components/primitives/button";
+import type { ButtonProps } from "@/components/primitives/button";
 import {
   Card,
   CardAction,
@@ -62,6 +64,10 @@ const styles = stylex.create({
   },
   footer: {
     justifyContent: "flex-end",
+  },
+  // Apart from the action: a slip lands on the button that does nothing.
+  cancel: {
+    marginInlineEnd: "auto",
   },
 });
 
@@ -148,14 +154,33 @@ function ApprovalFieldValue({ sx, ...props }: Styled<ComponentProps<"dd">>) {
   );
 }
 
-/** The card's answer buttons, at its end: Cancel, then the action. */
+/** The card's answer buttons: `ApprovalCancel` at its start, the action at its end. */
 function ApprovalFooter({ sx, ...props }: ComponentProps<typeof CardFooter>) {
   return <CardFooter {...props} sx={[styles.footer, sx]} />;
+}
+
+/** The outline Cancel button, alone at the footer's start. */
+function ApprovalCancel({
+  size = "sm",
+  sx,
+  variant = "outline",
+  ...props
+}: Omit<ButtonProps, "render">) {
+  return (
+    <Button
+      data-slot="approval-cancel"
+      size={size}
+      sx={[styles.cancel, sx]}
+      variant={variant}
+      {...props}
+    />
+  );
 }
 
 export {
   Approval,
   ApprovalAction,
+  ApprovalCancel,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,

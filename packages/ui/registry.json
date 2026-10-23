@@ -80,6 +80,7 @@
       "dependencies": ["@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/card.json"
       ],
       "files": [

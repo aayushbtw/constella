@@ -37,9 +37,7 @@ draft: true
     <p>Hi both, the revised forecast is attached.</p>
   </ApprovalContent>
   <ApprovalFooter>
-    <Button size="sm" variant="outline">
-      Cancel
-    </Button>
+    <ApprovalCancel>Cancel</ApprovalCancel>
     <Button size="sm" variant="primary">
       Send mail
     </Button>
@@ -57,6 +55,7 @@ draft: true
 import {
   Approval,
   ApprovalAction,
+  ApprovalCancel,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,
@@ -75,9 +74,7 @@ import {
     <ApprovalTitle>Delete file</ApprovalTitle>
   </ApprovalHeader>
   <ApprovalFooter>
-    <Button size="sm" variant="outline">
-      Cancel
-    </Button>
+    <ApprovalCancel>Cancel</ApprovalCancel>
     <Button size="sm" color="danger">
       Delete file
     </Button>
@@ -99,11 +96,12 @@ Approval
 │           ├── ApprovalFieldLabel
 │           └── ApprovalFieldValue
 └── ApprovalFooter
+    └── ApprovalCancel
 ```
 
 ## Approval Footer
 
-Name the confirm button for the action ("Send mail"), never "Approve", and put Cancel before it.
+Name the confirm button for the action ("Send mail"), never "Approve". `ApprovalCancel` sits alone at the footer's start, the action at its end, so a slip lands on the button that does nothing. Another option, such as Edit, goes just before the action.
 
 ### Busy
 
@@ -126,11 +124,11 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 </ApprovalHeader>
 ```
 
-| Moment   | Footer             | Action                 |
-| -------- | ------------------ | ---------------------- |
-| Asking   | Cancel, the action | None                   |
-| Resuming | Both disabled      | None                   |
-| Answered | None               | A Badge: what happened |
+| Moment   | Footer                   | Action                 |
+| -------- | ------------------------ | ---------------------- |
+| Asking   | Cancel apart, the action | None                   |
+| Resuming | Both disabled            | None                   |
+| Answered | None                     | A Badge: what happened |
 
 ## API Reference
 
@@ -141,5 +139,6 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 | `ApprovalMedia` | A tile for the tool's icon, hidden from screen readers |
 | `ApprovalFields` | A `dl` grid: labels in `textSecondary`, values wrap anywhere |
 | `ApprovalFooter` | The card's footer, buttons at its end |
+| `ApprovalCancel` | An outline `sm` [Button](/docs/components/button), pushed to the footer's start |
 
 `ApprovalHeader`, `ApprovalAction` and `ApprovalContent` are the Card's parts. Every part takes `sx`, applied last. `ApprovalField` renders a `div`, its label a `dt` and its value a `dd`.

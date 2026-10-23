@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   Approval,
   ApprovalAction,
+  ApprovalCancel,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,
@@ -157,16 +158,14 @@ function ApprovalDemo() {
           <MailBody />
           {decided ? null : (
             <ApprovalFooter>
-              <Button
+              <ApprovalCancel
                 disabled={sending}
                 onClick={() => {
                   setAnswer("cancelled");
                 }}
-                size="sm"
-                variant="outline"
               >
                 Cancel
-              </Button>
+              </ApprovalCancel>
               <Button
                 aria-busy={sending}
                 disabled={sending}
