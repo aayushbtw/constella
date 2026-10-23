@@ -110,7 +110,8 @@ const styles = stylex.create({
     alignItems: "center",
     color: colors.textSecondary,
     display: "flex",
-    gap: space.xs,
+    // The row's padding, so the logo sits as far from its name as from the row's edge.
+    gap: space.row,
   },
   body: {
     display: "flex",
