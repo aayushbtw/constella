@@ -1,6 +1,6 @@
 ---
 title: Side Panel
-description: A panel beside the page for details, a form or anything else, full height.
+description: A panel floating beside the page for details, a form or anything else, full height.
 ---
 
 <!-- ::demo name="side-panel" -->
@@ -45,6 +45,8 @@ import {
 } from "@/components/primitives/side-panel";
 ```
 
+The panel floats beside the page: inset from the content and the window's edges, rounded, with a hairline all round and no shadow.
+
 Put a `SidePanelSlot` after the whole page, header included, in a flex row, so the panel runs the full height of it. Pass its ref to `SidePanelContent` as `container`.
 
 The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
@@ -64,6 +66,29 @@ SidePanel
     ├── SidePanelBody
     │   └── SidePanelDescription
     └── SidePanelFooter
+
+Panel
+├── PanelHeader
+│   └── PanelTitle
+└── PanelBody
+```
+
+## Panel
+
+Use `Panel` for a panel that's always on the page, such as a project's files beside its chat. It has the side panel's look without the dialog: no Close, no Escape, and the page sizes and places it. Use `SidePanel` for details that open from a row and Escape or Close shuts.
+
+<!-- ::demo name="side-panel-panel" -->
+
+```tsx
+<div {...stylex.props(styles.row)}>
+  <Page />
+  <Panel sx={styles.panel}>
+    <PanelHeader>
+      <PanelTitle>Files</PanelTitle>
+    </PanelHeader>
+    <PanelBody>…</PanelBody>
+  </Panel>
+</div>
 ```
 
 ## API Reference
@@ -76,5 +101,9 @@ SidePanel
 | `SidePanelDescription` | Muted text first in the body; the panel's accessible description |
 | `SidePanelBody` | Scrolls on its own |
 | `SidePanelFooter` | Pinned below the body |
+| `Panel` | An `aside` with the side panel's surface; size and place it with `sx` |
+| `PanelHeader` | A row `sizes.header` tall: the title, then any actions |
+| `PanelTitle` | The panel's heading, an `h2` |
+| `PanelBody` | Scrolls on its own |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Dialog](https://base-ui.com/react/components/dialog).

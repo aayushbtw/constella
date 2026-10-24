@@ -11,6 +11,10 @@ import {
   ItemTitle,
 } from "@/components/primitives/item";
 import {
+  Panel,
+  PanelBody,
+  PanelHeader,
+  PanelTitle,
   SidePanel,
   SidePanelBody,
   SidePanelContent,
@@ -90,6 +94,12 @@ const styles = stylex.create({
     marginBlockEnd: 0,
     marginBlockStart: 0,
   },
+  panel: {
+    marginBlockEnd: space.sm,
+    marginBlockStart: space.sm,
+    marginInlineEnd: space.sm,
+    width: sizes.sidePanel,
+  },
   term: { color: colors.textSecondary },
   value: { marginInlineStart: 0 },
 });
@@ -119,6 +129,13 @@ const events = [
     status: "Success",
     time: "08:55",
   },
+];
+
+const files = [
+  { name: "Q3 report.pdf", size: "2.4 MB" },
+  { name: "Pricing.xlsx", size: "860 KB" },
+  { name: "Brand guide.pdf", size: "5.1 MB" },
+  { name: "Notes.md", size: "12 KB" },
 ];
 
 function SidePanelDemo() {
@@ -193,4 +210,33 @@ function SidePanelDemo() {
   );
 }
 
-export { SidePanelDemo };
+function SidePanelPanelDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.frame)}>
+        <div {...stylex.props(styles.page)}>
+          <header {...stylex.props([typeStyles.textSm, styles.topbar])}>
+            Acme launch
+          </header>
+        </div>
+        <Panel sx={styles.panel}>
+          <PanelHeader>
+            <PanelTitle>Files</PanelTitle>
+          </PanelHeader>
+          <PanelBody>
+            {files.map((file) => (
+              <Item key={file.name} size="sm">
+                <ItemContent>
+                  <ItemTitle>{file.name}</ItemTitle>
+                  <ItemDescription>{file.size}</ItemDescription>
+                </ItemContent>
+              </Item>
+            ))}
+          </PanelBody>
+        </Panel>
+      </div>
+    </DemoRow>
+  );
+}
+
+export { SidePanelDemo, SidePanelPanelDemo };
