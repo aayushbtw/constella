@@ -315,7 +315,10 @@ import {
 import { SettingsDialogDemo } from "~/components/demos/settings-dialog";
 import { ShadowsDemo } from "~/components/demos/shadow";
 import { SheetDemo, SheetSideDemo } from "~/components/demos/sheet";
-import { SidePanelDemo } from "~/components/demos/side-panel";
+import {
+  SidePanelDemo,
+  SidePanelPanelDemo,
+} from "~/components/demos/side-panel";
 import {
   SidebarActionDemo,
   SidebarDemo,
@@ -700,6 +703,7 @@ const demos = {
   sheet: SheetDemo,
   "sheet-side": SheetSideDemo,
   "side-panel": SidePanelDemo,
+  "side-panel-panel": SidePanelPanelDemo,
   sidebar: SidebarDemo,
   "sidebar-action": SidebarActionDemo,
   "sidebar-offcanvas": SidebarOffcanvasDemo,

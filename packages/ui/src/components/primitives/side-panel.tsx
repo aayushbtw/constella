@@ -15,6 +15,7 @@ import {
   easings,
   fontWeights,
   media,
+  radii,
   sizes,
   space,
   strokes,
@@ -44,18 +45,43 @@ const styles = stylex.create({
     flexGrow: 1,
     minHeight: 0,
   },
-  // Part of the layout, split from the content by a hairline, not floating over it.
-  popup: {
+  // Part of the layout, not over it: a hairline all round.
+  surface: {
     backgroundColor: colors.background,
+    borderBlockEndColor: colors.borderSubtle,
+    borderBlockStartColor: colors.borderSubtle,
+    borderInlineEndColor: colors.borderSubtle,
     borderInlineStartColor: colors.borderSubtle,
+    borderBlockEndStyle: "solid",
+    borderBlockStartStyle: "solid",
+    borderInlineEndStyle: "solid",
     borderInlineStartStyle: "solid",
+    borderBlockEndWidth: strokes.border,
+    borderBlockStartWidth: strokes.border,
+    borderInlineEndWidth: strokes.border,
     borderInlineStartWidth: strokes.border,
+    borderStartStartRadius: radii.lg,
+    borderStartEndRadius: radii.lg,
+    borderEndStartRadius: radii.lg,
+    borderEndEndRadius: radii.lg,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    flexGrow: 1,
-    maxWidth: "100vw",
+    flexShrink: 0,
     minHeight: 0,
+    overflow: "hidden",
+  },
+  // Inset from the content and the window's edges.
+  placed: {
+    marginBlockEnd: space.sm,
+    marginBlockStart: space.sm,
+    marginInlineEnd: space.sm,
+    marginInlineStart: space.sm,
+    maxWidth: `calc(100vw - 2 * ${space.sm})`,
+    width: sizes.sidePanel,
+  },
+  popup: {
+    flexGrow: 1,
     opacity: { default: 1, [entering]: 0 },
     overflow: "hidden",
     transform: {
@@ -72,9 +98,8 @@ const styles = stylex.create({
     },
     transitionProperty: "opacity, transform",
     transitionTimingFunction: easings.layout,
-    width: sizes.sidePanel,
   },
-  // The page's header height, so the two line up across the edge.
+  // The page's header height, so its controls sit as the page's do.
   header: {
     alignItems: "center",
     borderBlockEndColor: colors.borderSubtle,
@@ -102,7 +127,8 @@ const styles = stylex.create({
     color: colors.textSecondary,
     marginBlockEnd: space.md,
     marginBlockStart: 0,
-    marginInline: 0,
+    marginInlineEnd: 0,
+    marginInlineStart: 0,
     textWrap: "pretty",
   },
   body: {
@@ -125,6 +151,47 @@ const styles = stylex.create({
     paddingInlineStart: space.md,
   },
 });
+
+/** The side panel's surface without the dialog or its place: the page sizes and places it. */
+function Panel({ sx, ...props }: Styled<ComponentProps<"aside">>) {
+  return (
+    <aside
+      data-slot="panel"
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.surface], sx)}
+    />
+  );
+}
+
+/** A row the page's header height: the title first, any actions after it. */
+function PanelHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="panel-header"
+      {...props}
+      {...stylex.props(styles.header, sx)}
+    />
+  );
+}
+
+function PanelTitle({ children, sx, ...props }: Styled<ComponentProps<"h2">>) {
+  return (
+    <h2
+      data-slot="panel-title"
+      {...props}
+      {...stylex.props([typeStyles.textLg, styles.title], sx)}
+    >
+      {children}
+    </h2>
+  );
+}
+
+/** Scrolls on its own once the panel's height can't hold it. */
+function PanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div data-slot="panel-body" {...props} {...stylex.props(styles.body, sx)} />
+  );
+}
 
 /** A non-modal dialog: clicking the content beside it leaves it open; Escape or Close shuts it. */
 function SidePanel(props: DialogPrimitive.Root.Props) {
@@ -153,7 +220,10 @@ function SidePanelContent({ container, sx, ...props }: SidePanelContentProps) {
       <DialogPrimitive.Popup
         data-slot="side-panel"
         {...props}
-        {...stylex.props([typeStyles.textSm, styles.popup], sx)}
+        {...stylex.props(
+          [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
+          sx
+        )}
       />
     </DialogPrimitive.Portal>
   );
@@ -232,6 +302,10 @@ function SidePanelFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
 }
 
 export {
+  Panel,
+  PanelBody,
+  PanelHeader,
+  PanelTitle,
   SidePanel,
   SidePanelBody,
   SidePanelContent,
