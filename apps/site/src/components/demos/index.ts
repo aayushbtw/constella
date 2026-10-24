@@ -43,6 +43,10 @@ import {
   BadgeVariantsDemo,
 } from "~/components/demos/badge";
 import {
+  BreadcrumbDemo,
+  BreadcrumbEllipsisDemo,
+} from "~/components/demos/breadcrumb";
+import {
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -468,6 +472,8 @@ const demos = {
   "badge-size": BadgeSizeDemo,
   "badge-status": BadgeColorDemo,
   "badge-variants": BadgeVariantsDemo,
+  breadcrumb: BreadcrumbDemo,
+  "breadcrumb-ellipsis": BreadcrumbEllipsisDemo,
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,

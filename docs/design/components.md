@@ -34,6 +34,10 @@ Follows the control heights, so it lines up with a button of the same size; its 
 
 Takes the button's five variants, so emphasis means the same thing on both. A `color` tints a `secondary` badge and colors a `ghost` or `link` one's text; an `outline` badge keeps its label neutral and puts the color in its dot, spinner or icons, so a row of them stays quiet. A `primary` takes the color's tint, as a danger button does, since a status color is never a solid fill (see [color](color.md)). A dot is muted with no color, and follows the text on `primary`. It never grows past its container: a longer label clips at its end, sideways only, so tall accents still show. An avatar leading it is the badge's height less `space.xxxs` and the border on each side, and the badge rounds its ends to `radii.full` around a pill avatar, so the two stay concentric. In a sentence it centers on the text (`vertical-align: middle`), since a badge opening on an icon or avatar would take that child's bottom as its baseline. In a table cell it sits on the line's top instead, so it fills the line rather than growing the row.
 
+## Breadcrumb
+
+A `textSm` trail in `textSecondary`, `space.xs` apart, with an `iconSm` arrow between steps that flips in RTL. Links turn `textPrimary` on hover; the current page is `textPrimary` and not a link. It sits above a page's title, not in place of it.
+
 ## Button group
 
 Joins its items into one control: the corners where two meet go square, and the item before draws the shared edge, so the seam is one line, not two. A separator between filled buttons draws that line instead, full height, and the buttons on both sides keep their own padding. Nested groups sit `space.xs` apart and don't join.

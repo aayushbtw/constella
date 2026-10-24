@@ -1007,6 +1007,26 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/item/index.md"
     },
     {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "A trail of links to the pages above the current one.",
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/primitives/breadcrumb.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/breadcrumb/index.md"
+    },
+    {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
