@@ -45,9 +45,9 @@ import {
 } from "@/components/primitives/side-panel";
 ```
 
-The panel floats beside the page: inset from the content and the window's edges, rounded, with a hairline all round and no shadow.
+The panel floats beside the page, lifted off it as the composer is: inset from the content and the window's edges, rounded, on the `raised` fill, its edge a ring in its `defaultRingSubtle` shadow.
 
-Put a `SidePanelSlot` after the whole page, header included, in a flex row, so the panel runs the full height of it. Pass its ref to `SidePanelContent` as `container`.
+Put a `SidePanelSlot` after the whole page, header included, in a flex row. Pass its ref to `SidePanelContent` as `container`. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
 
 The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
 
@@ -97,12 +97,13 @@ Use `Panel` for a panel that's always on the page, such as a project's files bes
 | --- | --- |
 | `SidePanel` | Base UI Dialog, non-modal, not closed by an outside click |
 | `SidePanelContent` | `container`: the slot's ref; renders the portal and popup |
-| `SidePanelHeader` | A row `sizes.header` tall, pinned: the title, any actions, then Close |
+| `SidePanelSlot` | Sticky below the header row, the window's height less it |
+| `SidePanelHeader` | A strip `sizes.header` less the panel's inset (44px), pinned: the title, any actions, then Close |
 | `SidePanelDescription` | Muted text first in the body; the panel's accessible description |
 | `SidePanelBody` | Scrolls on its own |
 | `SidePanelFooter` | Pinned below the body |
 | `Panel` | An `aside` with the side panel's surface; size and place it with `sx` |
-| `PanelHeader` | A row `sizes.header` tall: the title, then any actions |
+| `PanelHeader` | The side panel's strip: the title, then any actions |
 | `PanelTitle` | The panel's heading, an `h2` |
 | `PanelBody` | Scrolls on its own |
 

@@ -49,7 +49,7 @@ A header's gap from title to description goes by the title's size. Beside a clos
 | `textBase` title: dialog, alert dialog, sheet, card | `xxs` | 8 from the end and top |
 | `textSm` title: popover, toast, alert, item | `xxxs` | — |
 | Empty state | `xs` | — |
-| Side panel, `sizes.header` tall | — | `(header − controlSm) / 2` (10) from the end and top |
+| Side panel, a strip `sizes.header − 2 × space.row` (44) tall | — | `space.row` (6) from the end; the title `space.row + space.popup` in, on the body's edge |
 
 ## Corners
 

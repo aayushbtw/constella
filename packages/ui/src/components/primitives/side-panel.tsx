@@ -16,6 +16,7 @@ import {
   fontWeights,
   media,
   radii,
+  shadows,
   sizes,
   space,
   strokes,
@@ -33,10 +34,15 @@ type SidePanelContentProps = Styled<DialogPrimitive.Popup.Props> & {
 const entering = ":is([data-starting-style])";
 
 const styles = stylex.create({
+  // Held in view below the header row while the content beside it scrolls.
   slot: {
+    alignSelf: "flex-start",
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
+    height: `calc(100svh - ${sizes.header})`,
+    insetBlockStart: sizes.header,
+    position: "sticky",
   },
   // Base UI wraps the popup in the portal's own element, which has to fill the slot too.
   portal: {
@@ -45,21 +51,10 @@ const styles = stylex.create({
     flexGrow: 1,
     minHeight: 0,
   },
-  // Part of the layout, not over it: a hairline all round.
+  // Beside the content, lifted off it as the composer is: its fill and its edge a ring in its shadow.
   surface: {
-    backgroundColor: colors.background,
-    borderBlockEndColor: colors.borderSubtle,
-    borderBlockStartColor: colors.borderSubtle,
-    borderInlineEndColor: colors.borderSubtle,
-    borderInlineStartColor: colors.borderSubtle,
-    borderBlockEndStyle: "solid",
-    borderBlockStartStyle: "solid",
-    borderInlineEndStyle: "solid",
-    borderInlineStartStyle: "solid",
-    borderBlockEndWidth: strokes.border,
-    borderBlockStartWidth: strokes.border,
-    borderInlineEndWidth: strokes.border,
-    borderInlineStartWidth: strokes.border,
+    backgroundColor: colors.raised,
+    boxShadow: shadows.defaultRingSubtle,
     borderStartStartRadius: radii.lg,
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,
@@ -73,11 +68,11 @@ const styles = stylex.create({
   },
   // Inset from the content and the window's edges.
   placed: {
-    marginBlockEnd: space.sm,
-    marginBlockStart: space.sm,
-    marginInlineEnd: space.sm,
-    marginInlineStart: space.sm,
-    maxWidth: `calc(100vw - 2 * ${space.sm})`,
+    marginBlockEnd: space.row,
+    marginBlockStart: space.row,
+    marginInlineEnd: space.row,
+    marginInlineStart: space.row,
+    maxWidth: `calc(100vw - 2 * ${space.row})`,
     width: sizes.sidePanel,
   },
   popup: {
@@ -99,7 +94,8 @@ const styles = stylex.create({
     transitionProperty: "opacity, transform",
     transitionTimingFunction: easings.layout,
   },
-  // The page's header height, so its controls sit as the page's do.
+  // The header row less the panel's inset above and below, so a panel inset by `space.row`
+  // centres its controls on the header row's line.
   header: {
     alignItems: "center",
     borderBlockEndColor: colors.borderSubtle,
@@ -107,13 +103,15 @@ const styles = stylex.create({
     borderBlockEndWidth: strokes.border,
     display: "flex",
     flexShrink: 0,
-    gap: space.xxs,
-    height: sizes.header,
-    paddingInlineEnd: `calc((${sizes.header} - ${sizes.controlSm}) / 2)`,
-    paddingInlineStart: space.md,
+    gap: space.row,
+    height: `calc(${sizes.header} - 2 * ${space.row})`,
+    paddingInlineEnd: space.row,
+    paddingInlineStart: space.row,
   },
+  // Its text on the body's edge: the strip's padding plus this.
   title: {
     flexGrow: 1,
+    paddingInlineStart: space.popup,
     fontWeight: fontWeights.medium,
     marginBlockEnd: 0,
     marginBlockStart: 0,
@@ -121,6 +119,9 @@ const styles = stylex.create({
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
+  },
+  panelTitle: {
+    fontWeight: fontWeights.semibold,
   },
   // First in the body: the header is one row, with no room under the title.
   description: {
@@ -163,7 +164,7 @@ function Panel({ sx, ...props }: Styled<ComponentProps<"aside">>) {
   );
 }
 
-/** A row the page's header height: the title first, any actions after it. */
+/** The panel's top strip: the title first, any actions after it. */
 function PanelHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -179,7 +180,10 @@ function PanelTitle({ children, sx, ...props }: Styled<ComponentProps<"h2">>) {
     <h2
       data-slot="panel-title"
       {...props}
-      {...stylex.props([typeStyles.textLg, styles.title], sx)}
+      {...stylex.props(
+        [typeStyles.textBase, styles.title, styles.panelTitle],
+        sx
+      )}
     >
       {children}
     </h2>
@@ -229,7 +233,7 @@ function SidePanelContent({ container, sx, ...props }: SidePanelContentProps) {
   );
 }
 
-/** A row the page's header height: the title first, any actions after it, Close last. */
+/** The panel's top strip: the title first, any actions after it, Close last. */
 function SidePanelHeader({
   children,
   sx,
