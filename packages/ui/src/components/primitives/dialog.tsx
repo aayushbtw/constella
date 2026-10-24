@@ -152,6 +152,8 @@ const styles = stylex.create({
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInline: 0,
+    // A long name or address in the title breaks rather than widening the popup.
+    overflowWrap: "anywhere",
     textWrap: "balance",
   },
   description: {
@@ -159,6 +161,7 @@ const styles = stylex.create({
     marginBlockEnd: 0,
     marginBlockStart: 0,
     marginInline: 0,
+    overflowWrap: "anywhere",
     textWrap: "pretty",
   },
   closeButton: {
