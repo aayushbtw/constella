@@ -129,7 +129,7 @@ An input's surface drawn once around a borderless control and its addons, so the
 
 ## Item
 
-A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `border` when `outline`, and has `fillSubtle` when `secondary`. Only an item rendered as a link, a button or a label for its control answers: `fillSubtle` on hover, `presses.row` held. A default item reads at `textMd`, its title regular, its description `textSecondary`; `sm` and `xs` items keep `textSm`. Its media sits level with the title's first line when there's a description. Its text keeps at least `sizes.itemText`; narrower, the actions drop under it rather than squeeze it.
+A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `border` when `outline`, and has `fillSubtle` when `secondary`. Only an item rendered as a link, a button or a label for its control answers: `fillSubtle` on hover, `presses.row` held. A default item reads at `textMd`, its title regular, its description `textSecondary`; `sm` and `xs` items keep `textSm`. Its media sits level with the title's first line when there's a description; a `tile` is the image's box in `fillSubtle` at `radii.sm`, for a logo that would float on the page. Its text keeps at least `sizes.itemText`; narrower, the actions drop under it rather than squeeze it.
 
 ## Keycap (Kbd)
 

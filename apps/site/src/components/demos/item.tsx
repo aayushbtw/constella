@@ -176,6 +176,42 @@ function ItemIconDemo() {
   );
 }
 
+const providers = [
+  {
+    description: "Claude models",
+    name: "Anthropic",
+    src: "/logos/anthropic.svg",
+  },
+  { description: "GPT models", name: "OpenAI", src: "/logos/openai.svg" },
+];
+
+function ItemTileDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <ItemGroup>
+          {providers.map((provider) => (
+            <Item key={provider.name} variant="outline">
+              <ItemMedia variant="tile">
+                <img alt="" height={20} src={provider.src} width={20} />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{provider.name}</ItemTitle>
+                <ItemDescription>{provider.description}</ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Button size="sm" variant="outline">
+                  Connect
+                </Button>
+              </ItemActions>
+            </Item>
+          ))}
+        </ItemGroup>
+      </div>
+    </DemoRow>
+  );
+}
+
 const people = [
   {
     email: "shadcn@acme.com",
@@ -256,6 +292,30 @@ function ItemGroupDemo() {
   );
 }
 
+function ItemGroupListDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <ItemGroup render={<ul />}>
+          {people.map((person) => (
+            <Item key={person.name} render={<li />} size="sm">
+              <ItemMedia>
+                <Avatar size="sm">
+                  <AvatarImage alt="" src={person.src} />
+                  <AvatarFallback>{person.initials}</AvatarFallback>
+                </Avatar>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{person.name}</ItemTitle>
+              </ItemContent>
+            </Item>
+          ))}
+        </ItemGroup>
+      </div>
+    </DemoRow>
+  );
+}
+
 function ItemLinkDemo() {
   return (
     <DemoRow sx={styles.stage}>
@@ -329,8 +389,10 @@ export {
   ItemHeaderDemo,
   ItemDemo,
   ItemGroupDemo,
+  ItemGroupListDemo,
   ItemIconDemo,
   ItemLinkDemo,
   ItemSizeDemo,
+  ItemTileDemo,
   ItemVariantDemo,
 };
