@@ -14,7 +14,6 @@ import {
   use,
   useCallback,
   useEffect,
-  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -111,10 +110,6 @@ const RailContext = createContext<{
   tooltipSide: "left" | "right";
 }>({ collapsing: false, rail: false, tooltipSide: "right" });
 
-// The trigger's own view-transition name while the section changes, so it holds still
-// instead of sliding out and back in with the header.
-const TriggerNameContext = createContext<string | null>(null);
-
 // Toggles without the animation: a keyboard action is too frequent to animate.
 const KeyboardToggleContext = createContext<(() => void) | null>(null);
 
@@ -183,7 +178,10 @@ function useTruncated(enabled: boolean) {
   return { ref, truncated };
 }
 
-const inSectionChange = ":is([data-section-change] *)";
+// Its own provider's `changeSection`, or one the app started with the same types, like a
+// router's; `sidebar-scoped` marks a provider's own, so other sidebars on the page stay put.
+const inSectionChange =
+  ":is([data-section-change] *, :root:active-view-transition-type(sidebar-forward, sidebar-back):not(:active-view-transition-type(sidebar-scoped)) *)";
 // Toggled from the keyboard: too frequent to animate.
 const fromKeyboard = ":is([data-instant] *)";
 // The collapsed selectors outrank it, so each close duration pairs with it to stay at once.
@@ -361,7 +359,10 @@ const styles = stylex.create({
       width: strokes.indicator,
     },
   },
-  triggerName: (name: string) => ({ viewTransitionName: name }),
+  // Its own snapshot while the section changes, so it holds still instead of sliding with the header.
+  hold: {
+    viewTransitionName: { default: null, [inSectionChange]: "match-element" },
+  },
   // Named only while its own sidebar changes section; base.css slides the snapshots.
   swap: {
     viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
@@ -870,7 +871,7 @@ function SidebarProvider({
         setSectionChanges((count) => count + 1);
       });
       const transition = document.startViewTransition({
-        types: [`sidebar-${direction}`],
+        types: [`sidebar-${direction}`, "sidebar-scoped"],
         update: async () => {
           await flushSync(update);
         },
@@ -981,7 +982,6 @@ function Sidebar({
   );
   // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
   const sectionChange = sectionChanging ? "" : undefined;
-  const triggerName = `sidebar-trigger${useId()}`;
 
   if (collapsible === "none") {
     return (
@@ -991,7 +991,7 @@ function Sidebar({
         {...props}
         {...stylex.props(styles.static, sx)}
       >
-        <TriggerNameContext value={triggerName}>{children}</TriggerNameContext>
+        {children}
       </div>
     );
   }
@@ -1011,11 +1011,7 @@ function Sidebar({
           <SheetDescription sx={visuallyHidden.base}>
             Displays the mobile sidebar.
           </SheetDescription>
-          <InSheetContext value>
-            <TriggerNameContext value={triggerName}>
-              {children}
-            </TriggerNameContext>
-          </InSheetContext>
+          <InSheetContext value>{children}</InSheetContext>
         </SheetContent>
       </Sheet>
     );
@@ -1048,11 +1044,7 @@ function Sidebar({
           sx
         )}
       >
-        <RailContext value={railState}>
-          <TriggerNameContext value={triggerName}>
-            {children}
-          </TriggerNameContext>
-        </RailContext>
+        <RailContext value={railState}>{children}</RailContext>
       </div>
     </div>
   );
@@ -1073,14 +1065,9 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, sectionChanging, setOpenMobile, toggleSidebar } =
-    useSidebar();
+  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
   const inSheet = use(InSheetContext);
-  const name = use(TriggerNameContext);
-  const triggerSx = [
-    sectionChanging && name !== null && styles.triggerName(name),
-    sx,
-  ];
+  const triggerSx = [styles.hold, sx];
   const toggleFromKeyboard = use(KeyboardToggleContext);
   const { rail, tooltipSide } = use(RailContext);
 
