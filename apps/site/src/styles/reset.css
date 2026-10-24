@@ -1,7 +1,7 @@
 /* What the site resets past Constella's preflight. Declared before StyleX's layers, so any
    StyleX rule wins over it. */
 @layer reset {
-  :where(ul, ol, dd, blockquote, pre, figure) {
+  :where(ul, ol) {
     padding: 0;
   }
 

@@ -154,13 +154,9 @@ const styles = stylex.create({
       [inSize("xs")]: sizes.controlXs,
     },
   },
-  // A mark that isn't a picture, like a logo, sits on a filled square the image's size.
+  // A mark that isn't a picture, like a logo, sits on a filled square in the image's box.
   tile: {
     backgroundColor: colors.fillSubtle,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
   },
   // The basis wraps actions under the text once both no longer fit on one line.
   content: {
@@ -230,8 +226,6 @@ const styles = stylex.create({
       ":has(> [data-slot='item-separator'])": 0,
     },
     listStyleType: "none",
-    paddingBlockEnd: 0,
-    paddingBlockStart: 0,
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
     width: "100%",

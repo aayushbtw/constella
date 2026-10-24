@@ -35,18 +35,12 @@
     letter-spacing: inherit;
   }
 
-  /* Chrome highlights a placeholder when a page selection spans its field. */
-  :where(input, textarea):placeholder-shown {
-    user-select: none;
-  }
-
   :where(button) {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     text-align: unset;
-    user-select: none;
   }
 
   :where(button:disabled) {

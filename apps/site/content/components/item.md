@@ -138,7 +138,7 @@ Use `ItemGroup` for a list of items, and `ItemSeparator` between them.
 
 ### List
 
-Use the `render` prop to make the group a `ul` and each item an `li`, so screen readers announce a list.
+Use the `render` prop to make the group a `ul` and each item an `li`, so screen readers announce a list. **Render each `ItemSeparator` as an `li` too:** a list holds only items, and a bare separator would count as one.
 
 <!-- ::demo name="item-group-list" -->
 
