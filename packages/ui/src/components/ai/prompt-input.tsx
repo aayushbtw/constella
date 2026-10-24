@@ -248,7 +248,6 @@ function PromptInputWell({ sx, ...props }: Styled<ComponentProps<"div">>) {
 
 /** A quiet pill for a bar: secondary text, so the context reads behind the prompt. */
 function PromptInputBarButton({
-  corners = "pill",
   size = "sm",
   sx,
   variant = "ghost",
@@ -256,7 +255,6 @@ function PromptInputBarButton({
 }: Omit<ButtonProps, "color">) {
   return (
     <Button
-      corners={corners}
       data-slot="prompt-input-bar-button"
       size={size}
       variant={variant}
@@ -292,7 +290,6 @@ function PromptInputSubmit({
     <InputGroupButton
       aria-busy={state === "submitted" || undefined}
       aria-label={streaming ? "Stop" : "Send"}
-      corners="pill"
       data-slot="prompt-input-submit"
       data-state={state}
       disabled={streaming ? false : disabled}

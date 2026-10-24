@@ -345,7 +345,10 @@ const styles = stylex.create({
       paddingBlockStart: 0,
       paddingInlineEnd: space.xs,
       paddingInlineStart: space.xs,
-      transform: { default: null, ":active": presses.link },
+      transform: {
+        default: null,
+        ":active": { default: presses.link, [media.reducedMotion]: null },
+      },
       transitionDuration: `${durations.hover}, ${durations.press}`,
       transitionProperty: "background-color, transform",
       transitionTimingFunction: `ease, ${easings.out}`,

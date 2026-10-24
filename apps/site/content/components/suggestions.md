@@ -42,6 +42,6 @@ Suggestions
 | Part | Adds |
 | --- | --- |
 | `Suggestions` | A `role="group"` row in a [Scroll Area](/docs/components/scroll-area) with no scrollbar, its edges faded by [Scroll Fade](/docs/components/scroll-fade) |
-| `Suggestion` | An `outline` `sm` [Button](/docs/components/button) with `corners="pill"`. Shows `suggestion` unless given children, and passes it to `onClick` |
+| `Suggestion` | An `outline` `sm` [Button](/docs/components/button). Shows `suggestion` unless given children, and passes it to `onClick` |
 
 `Suggestions` takes `sx`, applied last. `Suggestion` takes every Button prop.

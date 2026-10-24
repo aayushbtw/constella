@@ -81,7 +81,7 @@ Each links to a file with Incorrect/Correct pairs.
 | Action | `Button` (`primary` once per view) |
 | Link that looks like a button | `buttonStyles` on an `<a>` |
 | Text input | `Input`, `Textarea`, `InputGroup` |
-| Choice | `Select`, `Checkbox`, `RadioGroup`, `Switch`, `Slider`, `ToggleGroup` |
+| Choice | `Select`, `Checkbox`, `RadioGroup`, `Switch`, `Slider`, `ToggleGroup`, `SegmentedControl` |
 | Form layout | `Field`, `FieldGroup`, `FieldSet` |
 | Data | `Table`, `DataTable`, `Card`, `Badge`, `Avatar`, `Item`, `Meter`, `Chart` |
 | Navigation | `Sidebar`, `Tabs`, `DropdownMenu` |

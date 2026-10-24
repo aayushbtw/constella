@@ -40,7 +40,7 @@ Joins its items into one control: the corners where two meet go square, and the 
 
 ## Card
 
-Its padding (none at `flush`, for rows that pad themselves) is one variable its header, content and footer read, so they line up at every size. Its footer is the dialog's. A `well` is a `fillSubtle` tray a ladder step around a card, `space.xxs` padding and the card's corner a step down to `md`, so the two are concentric; a header in the tray lines its text up with the card's. The action spans the description's row only when there is one, so a lone title stays one row tall.
+Its padding (none at `flush`, for rows that pad themselves) is one variable its header, content and footer read, so they line up at every size. Its footer is the dialog's. A `well` is a `fillSubtle` tray a ladder step around a card, `space.xxs` padding and the card's corner a step down to `md`, so the two are concentric; a header in the tray lines its text up with the card's. A `filled` card is a `fillSubtle` surface with no edge, for a section or stat that sits on the page. The action spans the description's row only when there is one, so a lone title stays one row tall.
 
 ## Choice card
 
@@ -129,7 +129,7 @@ An input's surface drawn once around a borderless control and its addons, so the
 
 ## Item
 
-A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `border` when `outline`, and has `fillSubtle` when `secondary`. Only an item rendered as a link or button answers: `fillSubtle` on hover, `presses.row` held. Its media sits level with the title's first line when there's a description. Its text keeps at least `sizes.itemText`; narrower, the actions drop under it rather than squeeze it.
+A row of media, text and actions, the shape a list or a settings row takes. It reserves a border like a control, `border` when `outline`, and has `fillSubtle` when `secondary`. Only an item rendered as a link, a button or a label for its control answers: `fillSubtle` on hover, `presses.row` held. A default item reads at `textMd`, its title regular, its description `textSecondary`; `sm` and `xs` items keep `textSm`. Its media sits level with the title's first line when there's a description. Its text keeps at least `sizes.itemText`; narrower, the actions drop under it rather than squeeze it.
 
 ## Keycap (Kbd)
 
@@ -168,6 +168,10 @@ Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, 
 ## Scroll fade
 
 A mask over the scroller, not a gradient in the page's color, so it works on any surface. An edge fades only while content is past it, up to `min(12%, space.xl)` deep and in full once `2 × space.xl` is past, driven by the scroll itself, so a list at rest is never dimmed. Without scroll-driven animations both edges fade.
+
+## Segmented control
+
+One pick among a few, read like tabs: items are `semimedium` `textSecondary` on no fill, the picked one `textPrimary`, and a `fill` pill on full corners slides to it on `move` + `inOut`. The pill is measured from the picked item, so it follows a webfont swap or a resize; until it's placed, the picked item takes the fill itself. Arrow keys move it at once, and so does reduced motion.
 
 ## Select
 
@@ -227,7 +231,11 @@ A checkbox that slides: `fillStrong` track off, `accentSolid` on. Off, the thumb
 
 ## Table
 
-Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Its container scrolls sideways with no scrollbar and fades its edges (`scrollFade.x`). A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
+Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Cells read at `textMd` with `space.sm` at their sides; the header is regular `textSecondary`, so the data leads. Its container scrolls sideways with no scrollbar and fades its edges (`scrollFade.x`). A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
+
+## Tabs
+
+The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline.
 
 ## Textarea
 
@@ -239,7 +247,7 @@ Enters and leaves along one path: from and back to `translateY(100%)` with a fad
 
 ## Toggle
 
-A ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one segmented control.
+A ghost or outline button that stays pressed, with the button's sizes and press. Pressed it takes `fill`. A toggle group passes its variant and size to every item; at spacing `0` they join through the ButtonGroup variables into one joined row.
 
 ## Trace
 

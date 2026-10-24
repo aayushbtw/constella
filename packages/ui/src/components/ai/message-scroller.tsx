@@ -154,7 +154,6 @@ function MessageScrollerButton({
       render={
         <Button
           aria-label="Scroll to end"
-          corners="pill"
           size="icon-sm"
           sx={[styles.button, sx]}
           variant="outline"

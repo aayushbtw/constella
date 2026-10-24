@@ -47,7 +47,7 @@ import {
   ButtonIconDemo,
   ButtonIconOnlyDemo,
   ButtonLinkDemo,
-  ButtonPillDemo,
+  ButtonCornersDemo,
   ButtonSizesDemo,
   ButtonBusyDemo,
   ButtonDisabledDemo,
@@ -73,6 +73,7 @@ import {
   CardDemo,
   CardSizeDemo,
   CardStatsDemo,
+  CardFilledDemo,
   CardWellDemo,
 } from "~/components/demos/card";
 import {
@@ -287,6 +288,10 @@ import {
   ScrollFadeHorizontalDemo,
 } from "~/components/demos/scroll-area";
 import {
+  SegmentedControlDemo,
+  SegmentedControlDisabledDemo,
+} from "~/components/demos/segmented-control";
+import {
   SelectAlignItemDemo,
   SelectDemo,
   SelectDisabledDemo,
@@ -465,7 +470,7 @@ const demos = {
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
   "button-link": ButtonLinkDemo,
-  "button-pill": ButtonPillDemo,
+  "button-corners": ButtonCornersDemo,
   "button-sizes": ButtonSizesDemo,
   "button-busy": ButtonBusyDemo,
   "button-disabled": ButtonDisabledDemo,
@@ -478,6 +483,7 @@ const demos = {
   "card-action": CardActionDemo,
   "card-stats": CardStatsDemo,
   "card-size": CardSizeDemo,
+  "card-filled": CardFilledDemo,
   "card-well": CardWellDemo,
   chart: ChartDemo,
   "chart-area": ChartAreaDemo,
@@ -727,6 +733,8 @@ const demos = {
   "trace-tool": TraceToolDemo,
   "swap-icon": SwapIconDemo,
   "swap-text": SwapTextDemo,
+  "segmented-control": SegmentedControlDemo,
+  "segmented-control-disabled": SegmentedControlDisabledDemo,
   switch: SwitchDemo,
   "switch-card": SwitchCardDemo,
   "switch-description": SwitchDescriptionDemo,

@@ -4,7 +4,7 @@
 
 Quiet, crisp, and finished, with a pulse. Near-monochrome by default, so the craft shows in the details: a press that gives, a hover that answers, a popover that settles. Most go unnoticed one at a time. Together they are the point.
 
-A few moments carry the character, and only these: a primary button that reads as a key, lit on top and shaded below; a switch thumb that stretches under the finger and lands with a little give; a radio dot that pops; floating surfaces that sit at a distance, with a near shadow and a far one, and a step lighter than the page in dark. A brand theme adds one hue to the accent, the focus ring, the text selection and the caret, and changes nothing else. Everything outside these stays still.
+A few moments carry the character, and only these: a switch thumb that stretches under the finger and lands with a little give; a radio dot that pops; floating surfaces that sit at a distance, with a near shadow and a far one, and a step lighter than the page in dark. A brand theme adds one hue to the accent, the focus ring, the text selection and the caret, and changes nothing else. Everything outside these stays still.
 
 ## When rules conflict
 

@@ -110,6 +110,16 @@ Use the `size` prop on `Card` to set its padding. `flush` drops it, for rows tha
 
 ## Variant
 
+Use the `variant` prop on `Card` to set its surface.
+
+| Variant   | Surface                           |
+| --------- | --------------------------------- |
+| `default` | A `border` edge on `raised`       |
+| `well`    | A `fillSubtle` tray around a card |
+| `filled`  | A `fillSubtle` fill with no edge  |
+
+### Well
+
 Use `variant="well"` for a tinted tray around a card and the header that labels it. The card inside takes the next corner down, so the two stay concentric.
 
 <!-- ::demo name="card-well" -->
@@ -121,6 +131,22 @@ Use `variant="well"` for a tinted tray around a card and the header that labels 
     <CardDescription>Available to everyone in the workspace.</CardDescription>
   </CardHeader>
   <Card size="flush">{rows}</Card>
+</Card>
+```
+
+### Filled
+
+Use `variant="filled"` for a flat tinted section or stat that sits on the page, with no edge.
+
+<!-- ::demo name="card-filled" -->
+
+```tsx
+<Card variant="filled">
+  <CardHeader>
+    <CardTitle>Usage this month</CardTitle>
+    <CardDescription>Resets on the 1st.</CardDescription>
+  </CardHeader>
+  <CardContent>1,284 of 2,000 messages used.</CardContent>
 </Card>
 ```
 
@@ -146,7 +172,7 @@ Small cards fit a grid of numbers, each with its change as a status badge.
 
 | Part | Adds |
 | --- | --- |
-| `Card` | `size`: `"sm"`, `"default"` or `"flush"`; `variant`: `"default"` or `"well"` |
+| `Card` | `size`: `"sm"`, `"default"` or `"flush"`; `variant`: `"default"`, `"well"` or `"filled"` |
 | `CardTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
 Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

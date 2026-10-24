@@ -83,9 +83,10 @@ What components ask for. Each is a scale step, so changing one changes only that
 | `--sidebar` | `--neutral-2` | The sidebar, a step off the page |
 | `--text-primary` | `--neutral-12` | Content |
 | `--text-secondary` | `--neutral-11` | Supporting copy |
+| `--text-muted` | Halfway from `--neutral-10` to `-11` | Metadata, placeholders, counts |
 | `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected (a row, the current nav item), pressed |
 | `--fill-opaque` | `--neutral-3` | A fill nothing shows through: avatars, tracks, user messages |
-| `--border-subtle`, `--border` | `--neutral-4`, `-6` | Dividers and the composer's ring, control borders |
+| `--border-subtle`, `--border`, `--border-strong` | `--neutral-4`, `-6`, `-9` | Dividers and the composer's ring, control borders, an empty checkbox's edge |
 | `--accent-solid` | `--neutral-12` | Primary buttons, checked controls |
 | `--accent-on-solid` | `--neutral-1` | Text and icons on the accent |
 | `--inverted-solid`, `--inverted-on-solid` | `--neutral-12`, `--neutral-1` | Tooltips |

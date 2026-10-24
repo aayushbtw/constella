@@ -205,7 +205,7 @@ function Picker({
   const picked = models.find((model) => model.value === value);
   return (
     <ModelPicker>
-      <ModelPickerTrigger corners="pill">
+      <ModelPickerTrigger>
         {picked && <ModelPickerLogo src={picked.logo} />}
         {picked?.label}
       </ModelPickerTrigger>

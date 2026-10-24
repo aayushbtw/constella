@@ -56,12 +56,12 @@ const styles = stylex.create({
     backgroundClip: { default: "padding-box", [on]: "border-box" },
     backgroundColor: { default: colors.fillSubtle, [on]: colors.accentSolid },
     borderBlockColor: {
-      default: colors.border,
+      default: colors.borderStrong,
       [invalid]: colors.dangerBorder,
       [on]: colors.accentSolid,
     },
     borderInlineColor: {
-      default: colors.border,
+      default: colors.borderStrong,
       [invalid]: colors.dangerBorder,
       [on]: colors.accentSolid,
     },
@@ -83,7 +83,10 @@ const styles = stylex.create({
     position: "relative",
     transform: {
       default: null,
-      ":active:not([data-disabled])": presses.icon,
+      ":active:not([data-disabled])": {
+        default: presses.icon,
+        [media.reducedMotion]: null,
+      },
     },
     transitionDuration: `${durations.hover}, ${durations.hover}, ${durations.press}`,
     transitionProperty: "background-color, border-color, transform",

@@ -87,14 +87,14 @@ Add `data-icon="inline-start"` or `data-icon="inline-end"` to the icon for the c
 </Button>
 ```
 
-## Pill
+## Corners
 
-Use `corners="pill"` to round the ends.
+Buttons are pills by default. Use `corners="rounded"` for the theme's control corner, `radii.sm`.
 
-<!-- ::demo name="button-pill" -->
+<!-- ::demo name="button-corners" -->
 
 ```tsx
-<Button corners="pill">Get started</Button>
+<Button corners="rounded">Get started</Button>
 ```
 
 ## As Link
@@ -156,7 +156,7 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 | `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "link"` | `"secondary"` |
 | `color` | `"danger"` | - |
 | `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
-| `corners` | `"rounded" \| "pill"` | `"rounded"` |
+| `corners` | `"rounded" \| "pill"` | `"pill"` |
 | `sx` | `Sx`, applied last |  |
 
 ### buttonStyles

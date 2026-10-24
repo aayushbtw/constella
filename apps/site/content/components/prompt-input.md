@@ -14,7 +14,7 @@ section: AI
   />
   <PromptInputFooter>
     <PromptInputTools>
-      <InputGroupButton aria-label="Attach" corners="pill" size="icon-sm">
+      <InputGroupButton aria-label="Attach" size="icon-sm">
         <HugeiconsIcon icon={Attachment01Icon} />
       </InputGroupButton>
     </PromptInputTools>

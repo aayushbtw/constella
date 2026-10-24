@@ -58,7 +58,7 @@ Without `multiple`, one item is on at a time, like an alignment. With it, any ca
 
 ## Spacing
 
-Use the `spacing` prop to set the gap. At `0` the items join into one segmented control, as in a [Button Group](/docs/components/button-group).
+Use the `spacing` prop to set the gap. At `0` the items join into one row, as in a [Button Group](/docs/components/button-group).
 
 <!-- ::demo name="toggle-group-spacing" -->
 

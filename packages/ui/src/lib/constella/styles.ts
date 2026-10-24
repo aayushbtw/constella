@@ -149,19 +149,6 @@ const interactive = <R, A>(rest: R, active: A) => ({
   ":active:not(:disabled)": active,
 });
 
-// The press and open state repeat inside the media block, which StyleX ranks above a bare condition.
-const lift = {
-  default: shadows.default,
-  ":is([data-popup-open])": shadows.defaultHover,
-  [media.hover]: {
-    default: shadows.default,
-    ":is([data-popup-open])": shadows.defaultHover,
-    ":hover:not(:disabled, :active)": shadows.defaultHover,
-    ":active:not(:disabled)": shadows.defaultPressed,
-  },
-  ":active:not(:disabled)": shadows.defaultPressed,
-};
-
 const pressed = ":is([data-pressed])";
 const hoverUnpressed = ":hover:not(:disabled, [data-pressed])";
 const activeUnpressed = ":active:not(:disabled, [data-pressed])";
@@ -189,8 +176,7 @@ const stateStyles = stylex.create({
   outline: {
     backgroundColor: interactive(colors.background, colors.fillSubtle),
   },
-  secondary: { backgroundColor: interactive(colors.fill, colors.fillStrong) },
-  lift: { boxShadow: lift },
+  secondary: { backgroundColor: interactive(colors.fillSubtle, colors.fill) },
   // A ghost toggle, selected while `[data-pressed]`.
   selectedFill: {
     backgroundColor: selectable("transparent"),
@@ -199,7 +185,7 @@ const stateStyles = stylex.create({
       [media.hover]: { default: unlit, [hoverPressed]: lit },
     },
   },
-  // An outline toggle: `selectedFill` on a background, with the lift under it.
+  // An outline toggle: `selectedFill` on a background, with the resting shadow under it.
   selectedFillLifted: {
     backgroundColor: selectable(colors.background),
     boxShadow: {

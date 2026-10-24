@@ -101,12 +101,10 @@
     --radius-chip: max(0px, var(--radius) - 0.125rem);
   }
 
-  /* gray-10 is too faint on the dark page for small labels, and gray-11 is secondary text.
-     Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12;
+  /* Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12;
      amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
   :root,
   .light {
-    --text-muted: var(--neutral-10);
     --inverted-fill: var(--white-a4);
     /* Floating surfaces sit above the page: white on the off-white page, a step lighter in dark. */
     --raised: #fff;
@@ -114,9 +112,6 @@
     --well: var(--neutral-a2);
     /* A mark on a `fillStrong` track, like a switch's off thumb: white in light; dark takes step 12 to stand off its track. */
     --fill-on-strong: #fff;
-    /* The primary fill's bevel: dark's near-white fill hides a faint highlight and makes any shade a band. */
-    --primary-lit: var(--white-a3);
-    --primary-shade: var(--black-a3);
     --danger-text: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
     --info-text: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
     --success-text: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
@@ -126,13 +121,10 @@
   }
 
   .dark {
-    --text-muted: color-mix(in oklab, var(--neutral-10), var(--neutral-11));
     --inverted-fill: var(--black-a2);
     --raised: var(--neutral-2);
     --well: var(--neutral-a3);
     --fill-on-strong: var(--neutral-12);
-    --primary-lit: var(--white-a11);
-    --primary-shade: var(--black-a1);
     --danger-text: var(--red-11);
     --info-text: var(--blue-11);
     --success-text: var(--green-11);

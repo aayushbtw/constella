@@ -11,6 +11,7 @@ import {
   colors,
   durations,
   easings,
+  fontSizes,
   fontWeights,
   lineHeights,
   media,
@@ -38,8 +39,8 @@ type ItemProps = Styled<useRender.ComponentProps<"div">> & {
   variant?: ItemVariant;
 };
 
-// An item only answers when it's rendered as a link or a button.
-const pressable = ":is(a, button)";
+// An item only answers when it's rendered as a link, a button or a label for its control.
+const pressable = ":is(a, button, label)";
 const inSize = (size: ItemSize) =>
   `:is([data-slot='item'][data-size='${size}'] *)`;
 const withDescription =
@@ -84,7 +85,13 @@ const styles = stylex.create({
     rowGap: space.popup,
     textAlign: "start",
     textDecorationLine: "none",
-    transform: { default: null, [`${pressable}:active`]: presses.row },
+    transform: {
+      default: null,
+      [`${pressable}:active`]: {
+        default: presses.row,
+        [media.reducedMotion]: null,
+      },
+    },
     transitionDuration: `${durations.hover}, ${durations.press}`,
     transitionProperty: "background-color, transform",
     transitionTimingFunction: `ease, ${easings.out}`,
@@ -161,15 +168,26 @@ const styles = stylex.create({
   title: {
     alignItems: "center",
     display: "flex",
-    fontWeight: fontWeights.medium,
+    fontWeight: fontWeights.regular,
     gap: space.xs,
-    lineHeight: lineHeights.textSm,
+    lineHeight: "inherit",
     overflow: "hidden",
     overflowWrap: "anywhere",
     width: "fit-content",
   },
+  // A default item's rows read at its own size; smaller items keep the control size.
   description: {
     color: colors.textSecondary,
+    fontSize: {
+      default: fontSizes.textMd,
+      [inSize("sm")]: fontSizes.textSm,
+      [inSize("xs")]: fontSizes.textSm,
+    },
+    lineHeight: {
+      default: lineHeights.textMd,
+      [inSize("sm")]: lineHeights.textSm,
+      [inSize("xs")]: lineHeights.textSm,
+    },
     display: "-webkit-box",
     marginBlockEnd: 0,
     marginBlockStart: 0,
@@ -252,7 +270,10 @@ function Item({
     props: mergeProps<"div">(
       props,
       stylex.props(
-        [typeStyles.textSm, styles.item],
+        [
+          size === "default" ? typeStyles.textMd : typeStyles.textSm,
+          styles.item,
+        ],
         variantStyles[variant],
         size === "xs" && styles.xs,
         sx
@@ -307,7 +328,7 @@ function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
     <p
       data-slot="item-description"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...stylex.props(styles.description, sx)}
     />
   );
 }

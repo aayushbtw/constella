@@ -20,6 +20,7 @@ export const colors = stylex.defineVars({
 
   border: "var(--border)",
   borderSubtle: "var(--border-subtle)",
+  borderStrong: "var(--border-strong)",
 
   // Translucent, so they read the same on any surface; `fillOpaque` hides what's under it.
   fillSubtle: "var(--fill-subtle)",
@@ -105,7 +106,7 @@ export const codeBlockVars = stylex.defineVars({
 
 // Steps by height, after Interfere's: `default` under a control, `lg` under a popup, `xl`
 // under a dialog. A step's slots follow it: `Hover`, `Pressed`, `Invalid`, `Ring` (draws its
-// own edge, `Subtle` in `borderSubtle`), `solid` for a solid fill's bevel.
+// own edge, `Subtle` in `borderSubtle`).
 export const shadows = stylex.defineConsts({
   // The border is the control's edge, these its height. It rises a step on hover and
   // settles flat while pressed.
@@ -117,11 +118,6 @@ export const shadows = stylex.defineConsts({
   defaultRingSubtle:
     "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
   defaultRingInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
-  // A lit top edge and a shaded bottom one, so the solid fill reads as a key, not a sticker.
-  solid:
-    "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 2px -1px var(--black-a3), 0 2px 4px 0 var(--black-a2)",
-  solidPressed:
-    "inset 0 1px 0 var(--primary-lit), inset 0 -1px 0 var(--primary-shade), 0 1px 1px -1px var(--black-a3)",
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   lg: "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   xl: "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",

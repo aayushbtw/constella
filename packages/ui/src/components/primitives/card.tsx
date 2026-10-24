@@ -17,7 +17,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 const cardSizes = ["sm", "default", "flush"] as const;
-const cardVariants = ["default", "well"] as const;
+const cardVariants = ["default", "well", "filled"] as const;
 
 type CardSize = (typeof cardSizes)[number];
 type CardVariant = (typeof cardVariants)[number];
@@ -74,6 +74,14 @@ const styles = stylex.create({
     paddingBlockEnd: cardVars.spacing,
     paddingInlineEnd: cardVars.spacing,
     paddingInlineStart: cardVars.spacing,
+  },
+  // A flat tinted surface with no edge, for a section or stat that sits on the page.
+  filled: {
+    backgroundColor: colors.fillSubtle,
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
   },
   header: {
     alignItems: "start",
@@ -161,6 +169,7 @@ function Card({
         [typeStyles.textSm, styles.card],
         sizeStyles[size],
         variant === "well" && styles.well,
+        variant === "filled" && styles.filled,
         sx
       )}
     />

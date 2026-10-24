@@ -13,7 +13,6 @@ import {
   media,
   opacities,
   presses,
-  shadows,
   sizes,
   space,
   strokes,
@@ -95,7 +94,10 @@ const square = (size: string) => ({
   height: size,
   paddingInlineEnd: 0,
   paddingInlineStart: 0,
-  transform: { default: null, [press]: presses.icon },
+  transform: {
+    default: null,
+    [press]: { default: presses.icon, [media.reducedMotion]: null },
+  },
   width: size,
 });
 
@@ -118,7 +120,7 @@ const styles = stylex.create({
     },
     display: "inline-flex",
     flexShrink: 0,
-    fontWeight: fontWeights.medium,
+    fontWeight: fontWeights.semimedium,
     gap: space.row,
     justifyContent: "center",
     marginBlock: 0,
@@ -129,11 +131,14 @@ const styles = stylex.create({
       [loading]: opacities.busy,
     },
     textDecorationLine: "none",
-    transform: { default: null, [press]: presses.link },
-    transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}, ${durations.hover}`,
-    transitionProperty: "transform, background-color, box-shadow, opacity",
+    transform: {
+      default: null,
+      [press]: { default: presses.link, [media.reducedMotion]: null },
+    },
+    transitionDuration: `${durations.press}, ${durations.hover}, ${durations.hover}`,
+    transitionProperty: "transform, background-color, opacity",
     touchAction: "manipulation",
-    transitionTimingFunction: `${easings.out}, ease, ease, ease`,
+    transitionTimingFunction: `${easings.out}, ease, ease`,
     userSelect: "none",
     WebkitTapHighlightColor: "transparent",
     whiteSpace: "nowrap",
@@ -166,13 +171,19 @@ const styles = stylex.create({
   // The solid fill lifts by thinning, so it needs no hover color of its own.
   primary: {
     backgroundColor: colors.accentSolid,
-    boxShadow: {
-      default: shadows.solid,
-      ":active:not(:disabled)": shadows.solidPressed,
-    },
     color: colors.accentOnSolid,
+    // Disabled and busy repeat inside the hover block, which StyleX ranks above a bare condition.
     opacity: {
-      ...interactive(1, opacities.hover),
+      default: 1,
+      ":is([data-popup-open])": opacities.hover,
+      [media.hover]: {
+        default: 1,
+        ":is([data-popup-open])": opacities.hover,
+        ":hover:not(:disabled)": opacities.hover,
+        ":disabled": opacities.disabled,
+        [loading]: opacities.busy,
+      },
+      ":active:not(:disabled)": opacities.hover,
       ":disabled": opacities.disabled,
       [loading]: opacities.busy,
     },
@@ -219,12 +230,12 @@ const styles = stylex.create({
   },
 });
 
-const secondary = [styles.secondary, stateStyles.secondary, stateStyles.lift];
+const secondary = [styles.secondary, stateStyles.secondary];
 
 const variantStyles = {
   ghost: [styles.ghost, stateStyles.ghost],
   link: styles.link,
-  outline: [styles.outline, stateStyles.outline, stateStyles.lift],
+  outline: [styles.outline, stateStyles.outline],
   primary: styles.primary,
   secondary,
 } satisfies Record<ButtonVariant, stylex.StyleXStyles>;
@@ -256,7 +267,7 @@ const cornerStyles = {
 
 /** A button's styles for another element, like a plain `<a>` that must keep its link role. */
 function buttonStyles({
-  corners = "rounded",
+  corners = "pill",
   size = "default",
   color,
   variant = "secondary",
@@ -272,7 +283,7 @@ function buttonStyles({
 }
 
 function Button({
-  corners = "rounded",
+  corners = "pill",
   size = "default",
   color,
   sx,

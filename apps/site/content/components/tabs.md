@@ -42,7 +42,7 @@ Tabs
 
 ## Variant
 
-Use the `variant` prop on `TabsList` to choose between a pill sliding in a track and a line sliding along a baseline.
+Use the `variant` prop on `TabsList` to choose between a pill sliding between the tabs and a line sliding along a baseline.
 
 <!-- ::demo name="tabs-line" -->
 
@@ -55,7 +55,7 @@ Use the `variant` prop on `TabsList` to choose between a pill sliding in a track
 
 | Variant   | Indicator                                 |
 | --------- | ----------------------------------------- |
-| `default` | A `fill` pill inside a bordered track     |
+| `default` | A `fill` pill, with no track around it    |
 | `line`    | An `accentSolid` line on a faint baseline |
 
 ## Size

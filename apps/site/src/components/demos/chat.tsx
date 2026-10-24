@@ -195,7 +195,7 @@ function Composer({
       />
       <PromptInputFooter>
         <PromptInputTools>
-          <InputGroupButton aria-label="Attach" corners="pill" size="icon-sm">
+          <InputGroupButton aria-label="Attach" size="icon-sm">
             <Glyph icon={Attachment01Icon} />
           </InputGroupButton>
         </PromptInputTools>
@@ -326,7 +326,6 @@ function PromptInputHeaderDemo() {
             <PromptInputTools>
               <InputGroupButton
                 aria-label="Attach"
-                corners="pill"
                 onClick={() => {
                   setFiles([...files, `notes-${files.length + 1}.md`]);
                 }}

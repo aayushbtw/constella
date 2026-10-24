@@ -57,7 +57,6 @@ function Suggestion({
 }: SuggestionProps) {
   return (
     <Button
-      corners="pill"
       onClick={() => {
         onClick?.(suggestion);
       }}

@@ -69,6 +69,8 @@ export const theme = stylex.defineVars({
   "--sidebar": "var(--neutral-2)",
   "--text-primary": "var(--neutral-12)",
   "--text-secondary": "var(--neutral-11)",
+  // Halfway to secondary: gray-10 is too faint for small labels, gray-11 would merge with secondary.
+  "--text-muted": "color-mix(in oklab, var(--neutral-10), var(--neutral-11))",
   "--fill-subtle": "var(--neutral-a2)",
   "--fill": "var(--neutral-a3)",
   "--fill-strong": "var(--neutral-a4)",
@@ -76,6 +78,8 @@ export const theme = stylex.defineVars({
   // Edges are solid steps: a translucent one shows whatever it crosses.
   "--border-subtle": "var(--neutral-4)",
   "--border": "var(--neutral-6)",
+  // A control's own edge, like an empty checkbox's: 3:1 on the page, as WCAG asks of controls.
+  "--border-strong": "var(--neutral-9)",
   "--inverted-solid": "var(--neutral-12)",
   "--inverted-on-solid": "var(--neutral-1)",
   "--font-mono":

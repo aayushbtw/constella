@@ -319,7 +319,7 @@
       "name": "toggle-group",
       "type": "registry:ui",
       "title": "Toggle Group",
-      "description": "Toggles that sit apart or join into a segmented control.",
+      "description": "Toggles that sit apart or join into one row.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -332,6 +332,21 @@
         }
       ],
       "docs": "Usage: https://constella.aayush.cv/docs/components/toggle-group/index.md"
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "One pick among a few, marked by a pill that slides to it.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/primitives/segmented-control.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/segmented-control/index.md"
     },
     {
       "name": "tooltip",
@@ -648,7 +663,7 @@
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
-      "description": "A segmented control whose indicator slides to the active tab.",
+      "description": "Views of the same content, with an indicator that slides to the active tab.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [

@@ -157,6 +157,20 @@ function CardWellDemo() {
   );
 }
 
+function CardFilledDemo() {
+  return (
+    <DemoRow sx={styles.stage}>
+      <Card sx={styles.card} variant="filled">
+        <CardHeader>
+          <CardTitle>Usage this month</CardTitle>
+          <CardDescription>Resets on the 1st.</CardDescription>
+        </CardHeader>
+        <CardContent>1,284 of 2,000 messages used.</CardContent>
+      </Card>
+    </DemoRow>
+  );
+}
+
 function Glyph({ icon }: { icon: typeof MoreHorizontalIcon }) {
   return (
     <HugeiconsIcon
@@ -246,4 +260,11 @@ function CardStatsDemo() {
   );
 }
 
-export { CardActionDemo, CardStatsDemo, CardDemo, CardSizeDemo, CardWellDemo };
+export {
+  CardActionDemo,
+  CardDemo,
+  CardFilledDemo,
+  CardSizeDemo,
+  CardStatsDemo,
+  CardWellDemo,
+};

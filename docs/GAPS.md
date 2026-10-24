@@ -41,6 +41,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 ### Input
 
 - [x] **Toggle** and **ToggleGroup**: segmented filters.
+- [x] **Segmented Control**: one required pick, marked by a pill that slides to it.
 - [x] **PromptInput**: the chat composer on `InputGroup`. Grows with its text, submits on Enter (not Shift+Enter or mid-IME), a header for attachments, a footer for tools, and a submit that turns into Stop while streaming.
 
 ### Chat
@@ -78,4 +79,4 @@ netigen builds these today. Each could become a Constella part once the componen
 
 ## Open
 
-- [x] **Lift on secondary and danger buttons.** Today only outline and primary climb the shadow ladder; netigen lifts every pressable surface.
+- [x] **Flat buttons.** No button carries a shadow: secondary is a `fillSubtle` fill, outline its border, primary its solid fill.

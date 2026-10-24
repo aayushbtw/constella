@@ -130,13 +130,13 @@ function ButtonIconOnlyDemo() {
   );
 }
 
-function ButtonPillDemo() {
+function ButtonCornersDemo() {
   return (
     <DemoRow>
-      <Button corners="pill" variant="outline">
+      <Button corners="rounded" variant="outline">
         Get started
       </Button>
-      <Button aria-label="Add" corners="pill" size="icon" variant="outline">
+      <Button aria-label="Add" corners="rounded" size="icon" variant="outline">
         <Glyph icon={Add01Icon} />
       </Button>
     </DemoRow>
@@ -213,7 +213,7 @@ export {
   ButtonIconDemo,
   ButtonIconOnlyDemo,
   ButtonLinkDemo,
-  ButtonPillDemo,
+  ButtonCornersDemo,
   ButtonSizesDemo,
   ButtonColorDemo,
   ButtonVariantsDemo,

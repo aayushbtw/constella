@@ -105,12 +105,12 @@ const styles = stylex.create({
     boxShadow: null,
   },
   head: {
-    color: colors.textPrimary,
-    fontWeight: fontWeights.medium,
+    color: colors.textSecondary,
+    fontWeight: fontWeights.regular,
     height: `calc(${sizes.controlLg} + ${space.xxs})`,
     paddingBlock: 0,
-    paddingInlineEnd: { default: space.xs, [checkbox]: 0 },
-    paddingInlineStart: space.xs,
+    paddingInlineEnd: { default: space.sm, [checkbox]: 0 },
+    paddingInlineStart: space.sm,
     textAlign: "start",
     verticalAlign: "middle",
     whiteSpace: "nowrap",
@@ -124,8 +124,8 @@ const styles = stylex.create({
       ":is(tfoot > :first-child > *)": strokes.border,
     },
     paddingBlock: space.xs,
-    paddingInlineEnd: { default: space.xs, [checkbox]: 0 },
-    paddingInlineStart: space.xs,
+    paddingInlineEnd: { default: space.sm, [checkbox]: 0 },
+    paddingInlineStart: space.sm,
     verticalAlign: "middle",
     whiteSpace: "nowrap",
   },
@@ -162,7 +162,7 @@ function Table({
             data-size={size}
             data-slot="table"
             {...props}
-            {...stylex.props([typeStyles.textSm, styles.table], sx)}
+            {...stylex.props([typeStyles.textMd, styles.table], sx)}
           />
         </div>
       </TableSizeContext>
