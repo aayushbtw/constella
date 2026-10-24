@@ -208,16 +208,6 @@ const { changeSection } = useSidebar();
 
 `update` can return a promise, like a router's `navigate`; the new section is captured when it settles. Only the provider that changed slides, so another sidebar on the page stays put.
 
-### Router
-
-When the router starts the view transition itself, as TanStack Router's `viewTransition` does, give it the type `sidebar-forward` or `sidebar-back` and the sidebar slides the same way, with no `changeSection`. Back and forward buttons go through the router, so they slide too.
-
-```tsx
-<Link to="/settings" viewTransition={{ types: ["sidebar-forward"] }}>
-  Settings
-</Link>
-```
-
 | Region           | Slides by default | Change it      |
 | ---------------- | ----------------- | -------------- |
 | `SidebarHeader`  | Yes               | `swap={false}` |
@@ -225,6 +215,26 @@ When the router starts the view transition itself, as TanStack Router's `viewTra
 | `SidebarFooter`  | No                | `swap`         |
 
 Browsers without view transition types swap at once.
+
+### Router
+
+When each section is its own route, let the router start the view transition with the type `sidebar-forward` or `sidebar-back`, and the sidebar slides with no `changeSection`. Set it in `defaultViewTransition`, which back and forward use too, and pick the direction from the two locations. Every sidebar on the page slides, since the router doesn't know which one changed.
+
+```tsx
+createRouter({
+  routeTree,
+  defaultViewTransition: {
+    types: ({ fromLocation, toLocation }) => {
+      const from = sectionOf(fromLocation);
+      const to = sectionOf(toLocation);
+      if (fromLocation === undefined || from === to) {
+        return false;
+      }
+      return [to === "home" ? "sidebar-back" : "sidebar-forward"];
+    },
+  },
+});
+```
 
 ## Side
 

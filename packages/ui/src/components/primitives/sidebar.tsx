@@ -14,6 +14,7 @@ import {
   use,
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -109,6 +110,10 @@ const RailContext = createContext<{
   rail: boolean;
   tooltipSide: "left" | "right";
 }>({ collapsing: false, rail: false, tooltipSide: "right" });
+
+// The trigger's own view-transition name while the section changes, so it holds still
+// instead of sliding out and back in with the header.
+const TriggerNameContext = createContext<string | null>(null);
 
 // Toggles without the animation: a keyboard action is too frequent to animate.
 const KeyboardToggleContext = createContext<(() => void) | null>(null);
@@ -359,10 +364,9 @@ const styles = stylex.create({
       width: strokes.indicator,
     },
   },
-  // Its own snapshot while the section changes, so it holds still instead of sliding with the header.
-  hold: {
-    viewTransitionName: { default: null, [inSectionChange]: "match-element" },
-  },
+  triggerName: (name: string) => ({
+    viewTransitionName: { default: null, [inSectionChange]: name },
+  }),
   // Named only while its own sidebar changes section; base.css slides the snapshots.
   swap: {
     viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
@@ -982,6 +986,7 @@ function Sidebar({
   );
   // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
   const sectionChange = sectionChanging ? "" : undefined;
+  const triggerName = `sidebar-trigger${useId()}`;
 
   if (collapsible === "none") {
     return (
@@ -991,7 +996,7 @@ function Sidebar({
         {...props}
         {...stylex.props(styles.static, sx)}
       >
-        {children}
+        <TriggerNameContext value={triggerName}>{children}</TriggerNameContext>
       </div>
     );
   }
@@ -1011,7 +1016,11 @@ function Sidebar({
           <SheetDescription sx={visuallyHidden.base}>
             Displays the mobile sidebar.
           </SheetDescription>
-          <InSheetContext value>{children}</InSheetContext>
+          <InSheetContext value>
+            <TriggerNameContext value={triggerName}>
+              {children}
+            </TriggerNameContext>
+          </InSheetContext>
         </SheetContent>
       </Sheet>
     );
@@ -1044,7 +1053,11 @@ function Sidebar({
           sx
         )}
       >
-        <RailContext value={railState}>{children}</RailContext>
+        <RailContext value={railState}>
+          <TriggerNameContext value={triggerName}>
+            {children}
+          </TriggerNameContext>
+        </RailContext>
       </div>
     </div>
   );
@@ -1067,7 +1080,8 @@ function SidebarTrigger({
 }: ButtonProps & { kbd?: ReactNode }) {
   const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
   const inSheet = use(InSheetContext);
-  const triggerSx = [styles.hold, sx];
+  const name = use(TriggerNameContext);
+  const triggerSx = [name !== null && styles.triggerName(name), sx];
   const toggleFromKeyboard = use(KeyboardToggleContext);
   const { rail, tooltipSide } = use(RailContext);
 
