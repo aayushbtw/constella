@@ -68,9 +68,13 @@ const off = ":is([data-disabled])";
 const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
 const filtering = ":has(> [data-slot='dropdown-menu-list'])";
+// Inside a large popup, whose rows, labels and separators sit further in.
+const roomy = ":is([data-size='lg'] *)";
+const roomyInset = ":is([data-size='lg'] *):is([data-inset])";
 
 // An inset row starts where the text of a row with an icon does.
 const insetStart = `calc(${space.row} * 2 + ${sizes.icon})`;
+const insetStartLg = `calc(${space.xs} * 2 + ${sizes.icon})`;
 
 const styles = stylex.create({
   positioner: {
@@ -90,7 +94,10 @@ const styles = stylex.create({
     flexDirection: { default: null, [filtering]: "column" },
     maxHeight: "var(--available-height)",
     maxWidth: "var(--available-width)",
-    minWidth: `max(var(--anchor-width), ${sizes.menu})`,
+    minWidth: {
+      default: `max(var(--anchor-width), ${sizes.menu})`,
+      ":is([data-size='lg'])": `max(var(--anchor-width), ${sizes.menuLg})`,
+    },
     opacity: { default: 1, [offstage]: 0 },
     overflowY: { default: "auto", [filtering]: "hidden" },
     paddingBlockEnd: space.xxs,
@@ -171,8 +178,13 @@ const styles = stylex.create({
     minHeight: sizes.controlSm,
     opacity: { default: 1, [off]: opacities.disabled },
     overflowWrap: "anywhere",
-    paddingInlineEnd: space.row,
-    paddingInlineStart: { default: space.row, [inset]: insetStart },
+    paddingInlineEnd: { default: space.row, [roomy]: space.xs },
+    paddingInlineStart: {
+      default: space.row,
+      [inset]: insetStart,
+      [roomy]: space.xs,
+      [roomyInset]: insetStartLg,
+    },
     position: "relative",
     textDecorationLine: "none",
     userSelect: "none",
@@ -183,7 +195,10 @@ const styles = stylex.create({
   itemLg: { minHeight: sizes.controlMd },
   // Room on the end for the tick, as in a select.
   checkable: {
-    paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
+    paddingInlineEnd: {
+      default: `calc(${sizes.icon} + ${space.row} * 2)`,
+      [roomy]: `calc(${sizes.icon} + ${space.xs} * 2)`,
+    },
   },
   // Checkbox's tick: draws in from its start, fades out quickly.
   indicator: {
@@ -193,7 +208,7 @@ const styles = stylex.create({
       ":is([data-starting-style])": "inset(0 100% 0 0)",
     },
     display: "flex",
-    insetInlineEnd: space.row,
+    insetInlineEnd: { default: space.row, [roomy]: space.xs },
     justifyContent: "center",
     opacity: { default: 1, ":is([data-ending-style])": 0 },
     pointerEvents: "none",
@@ -219,15 +234,24 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
-    paddingInlineEnd: space.row,
-    paddingInlineStart: { default: space.row, [inset]: insetStart },
+    paddingInlineEnd: { default: space.row, [roomy]: space.xs },
+    paddingInlineStart: {
+      default: space.row,
+      [inset]: insetStart,
+      [roomy]: space.xs,
+      [roomyInset]: insetStartLg,
+    },
   },
+  // Edge to edge by default; inset in a large menu, in line with its rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
-    marginInlineEnd: `calc(-1 * ${space.xxs})`,
-    marginInlineStart: `calc(-1 * ${space.xxs})`,
+    marginInlineEnd: { default: `calc(-1 * ${space.xxs})`, [roomy]: space.xs },
+    marginInlineStart: {
+      default: `calc(-1 * ${space.xxs})`,
+      [roomy]: space.xs,
+    },
   },
   shortcut: {
     color: colors.textMuted,
@@ -250,7 +274,7 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 
 const itemSizeStyles = {
   default: null,
-  lg: styles.itemLg,
+  lg: [typeStyles.textBase, styles.itemLg],
   sm: [typeStyles.textSm, styles.itemSm],
 } satisfies Record<DropdownMenuSize, stylex.StyleXStyles | null>;
 
