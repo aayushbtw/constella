@@ -43,6 +43,10 @@ import {
   BadgeVariantsDemo,
 } from "~/components/demos/badge";
 import {
+  BreadcrumbDemo,
+  BreadcrumbEllipsisDemo,
+} from "~/components/demos/breadcrumb";
+import {
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -211,10 +215,12 @@ import {
   ItemAvatarDemo,
   ItemDemo,
   ItemGroupDemo,
+  ItemGroupListDemo,
   ItemHeaderDemo,
   ItemIconDemo,
   ItemLinkDemo,
   ItemSizeDemo,
+  ItemTileDemo,
   ItemVariantDemo,
 } from "~/components/demos/item";
 import {
@@ -466,6 +472,8 @@ const demos = {
   "badge-size": BadgeSizeDemo,
   "badge-status": BadgeColorDemo,
   "badge-variants": BadgeVariantsDemo,
+  breadcrumb: BreadcrumbDemo,
+  "breadcrumb-ellipsis": BreadcrumbEllipsisDemo,
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
@@ -607,10 +615,12 @@ const demos = {
   item: ItemDemo,
   "item-avatar": ItemAvatarDemo,
   "item-group": ItemGroupDemo,
+  "item-group-list": ItemGroupListDemo,
   "item-header": ItemHeaderDemo,
   "item-icon": ItemIconDemo,
   "item-link": ItemLinkDemo,
   "item-size": ItemSizeDemo,
+  "item-tile": ItemTileDemo,
   "item-variant": ItemVariantDemo,
   kbd: KbdDemo,
   "kbd-button": KbdButtonDemo,

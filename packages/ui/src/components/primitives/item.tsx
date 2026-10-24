@@ -24,7 +24,7 @@ import {
 
 const itemVariants = ["default", "outline", "secondary"] as const;
 const itemSizes = ["xs", "sm", "default"] as const;
-const itemMediaVariants = ["default", "icon", "image"] as const;
+const itemMediaVariants = ["default", "icon", "image", "tile"] as const;
 
 type ItemVariant = (typeof itemVariants)[number];
 type ItemSize = (typeof itemSizes)[number];
@@ -154,6 +154,10 @@ const styles = stylex.create({
       [inSize("xs")]: sizes.controlXs,
     },
   },
+  // A mark that isn't a picture, like a logo, sits on a filled square in the image's box.
+  tile: {
+    backgroundColor: colors.fillSubtle,
+  },
   // The basis wraps actions under the text once both no longer fit on one line.
   content: {
     display: "flex",
@@ -221,6 +225,9 @@ const styles = stylex.create({
       ":has([data-size='xs'])": space.xs,
       ":has(> [data-slot='item-separator'])": 0,
     },
+    listStyleType: "none",
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
     width: "100%",
   },
 });
@@ -235,16 +242,21 @@ const mediaStyles = {
   default: null,
   icon: styles.icon,
   image: styles.image,
+  tile: [styles.image, styles.tile],
 } satisfies Record<ItemMediaVariant, stylex.StyleXStyles | null>;
 
-function ItemGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="item-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
-    />
-  );
+/** Render it as a `ul`, with each Item as an `li`, when its items are a list. */
+function ItemGroup({
+  render,
+  sx,
+  ...props
+}: Styled<useRender.ComponentProps<"div">>) {
+  return useRender({
+    defaultTagName: "div",
+    props: mergeProps<"div">(props, stylex.props(styles.group, sx)),
+    render,
+    state: { slot: "item-group" },
+  });
 }
 
 function ItemSeparator({ sx, ...props }: SeparatorProps) {

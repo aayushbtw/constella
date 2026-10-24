@@ -110,6 +110,18 @@ Use `ItemMedia` with `variant="icon"` for an icon. With a description, the media
 </ItemMedia>
 ```
 
+## Tile
+
+Use `variant="tile"` for a mark that isn't a photo, like a logo, on a filled square the image's size.
+
+<!-- ::demo name="item-tile" -->
+
+```tsx
+<ItemMedia variant="tile">
+  <img alt="" height={20} src="/logos/anthropic.svg" width={20} />
+</ItemMedia>
+```
+
 ## Item Group
 
 Use `ItemGroup` for a list of items, and `ItemSeparator` between them.
@@ -121,6 +133,19 @@ Use `ItemGroup` for a list of items, and `ItemSeparator` between them.
   <Item>…</Item>
   <ItemSeparator />
   <Item>…</Item>
+</ItemGroup>
+```
+
+### List
+
+Use the `render` prop to make the group a `ul` and each item an `li`, so screen readers announce a list. **Render each `ItemSeparator` as an `li` too:** a list holds only items, and a bare separator would count as one.
+
+<!-- ::demo name="item-group-list" -->
+
+```tsx
+<ItemGroup render={<ul />}>
+  <Item render={<li />}>…</Item>
+  <Item render={<li />}>…</Item>
 </ItemGroup>
 ```
 
@@ -150,7 +175,7 @@ Use `ItemHeader` and `ItemFooter` for full-width rows above and below the conten
 
 ## Link
 
-Use the `render` prop to render an item as a link. Only a link or a button answers hover and press.
+Use the `render` prop to render an item as a link. Only a link, a button or a label answers hover and press.
 
 <!-- ::demo name="item-link" -->
 
@@ -182,7 +207,8 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 | Part | Adds |
 | --- | --- |
 | `Item` | `variant`: `"default"`, `"outline"` or `"secondary"`; `size`: `"default"`, `"sm"` or `"xs"`; `render` |
-| `ItemMedia` | `variant`: `"default"`, `"icon"` or `"image"` |
+| `ItemGroup` | `render`, to make it a list: `render={<ul />}` |
+| `ItemMedia` | `variant`: `"default"`, `"icon"`, `"image"` or `"tile"` |
 | `ItemTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
 Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).

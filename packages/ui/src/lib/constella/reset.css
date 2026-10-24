@@ -1,21 +1,74 @@
-/* What the browser styles that components rely on being otherwise, as Tailwind's preflight does.
-   In base's layer, so any StyleX rule wins over it. */
+/* What the browser styles that components and pages rely on being otherwise, after Tailwind's
+   preflight. In base's layer, so any StyleX rule wins over it. */
 @layer base {
-  /* Padding and borders count in a box's size. Margins stay the app's. */
+  /* Padding and borders count in a box's size; spacing is the layout's, never the browser's. */
   *,
   ::before,
   ::after {
     box-sizing: border-box;
+    margin: 0;
   }
 
-  /* The browser gives controls a font of their own, so they take the page's. */
+  html {
+    /* iOS otherwise enlarges text in wide blocks such as code. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    text-rendering: optimizelegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  :where(img, picture, video, canvas, svg) {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* The browser gives controls a font and color of their own, so they take the page's. */
   :where(button, input, select, optgroup, textarea),
   ::file-selector-button {
-    font-family: inherit;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  :where(button) {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-align: unset;
+  }
+
+  :where(button:disabled) {
+    cursor: not-allowed;
+  }
+
+  /* A link looks like its text until a part draws it, as Link does. */
+  :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  :where(p, li, figcaption) {
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    text-wrap: balance;
   }
 
   /* Code takes the theme's mono; a part that wants the page font names it, as Kbd does. */
   :where(code, kbd, samp, pre) {
     font-family: var(--font-mono);
+  }
+
+  /* Important so a component's own `display` can't show what a primitive hid. */
+  [hidden]:not([hidden="until-found"]) {
+    display: none !important;
   }
 }
