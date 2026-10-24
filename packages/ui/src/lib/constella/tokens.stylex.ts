@@ -1,4 +1,3 @@
-import "./base.css";
 // The theme's variables, which base.css reads by name; nothing imports them by value.
 import "./theme.stylex";
 import * as stylex from "@stylexjs/stylex";

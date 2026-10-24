@@ -36,7 +36,7 @@
           "type": "registry:lib"
         }
       ],
-      "docs": "Needs the StyleX compiler with an `@/*` alias. Toggle dark mode with a `.dark` class on <html>. Setup per framework: https://constella.aayush.cv/docs/installation/index.md. Every docs page: https://constella.aayush.cv/llms.txt"
+      "docs": "Needs the StyleX compiler with an `@/*` alias. `@import` lib/constella/base.css from the stylesheet the root route or layout links. Toggle dark mode with a `.dark` class on <html>. Setup per framework: https://constella.aayush.cv/docs/installation/index.md. Every docs page: https://constella.aayush.cv/llms.txt"
     },
     {
       "name": "alert",
