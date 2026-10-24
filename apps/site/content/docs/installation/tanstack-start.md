@@ -14,8 +14,9 @@ Set up the components from https://constella.aayush.cv in this TanStack Start ap
 2. Run: npx shadcn@latest add @constella/button
 3. Install @stylexjs/unplugin and add @stylexjs/unplugin/vite to vite.config.ts before the other plugins, with aliases matching tsconfig.json's "@/*" path, cssInjectionTarget matching the stylesheet the root route links, and enableDebugDataProp: false.
 4. In dev, render <link href="/virtual:stylex.css" rel="stylesheet" /> in the root route's <head> and import("virtual:stylex:runtime") in an effect.
-5. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle if it has one.
-6. Load Inter and Geist Mono (@fontsource-variable/inter, @fontsource-variable/geist-mono), or put the project's fonts first in --font-sans and --font-mono in theme.stylex.ts.
+5. Start the stylesheet the root route links (src/styles.css) with @import "./lib/constella/base.css";
+6. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle if it has one.
+7. Load Inter and Geist Mono (@fontsource-variable/inter, @fontsource-variable/geist-mono), or put the project's fonts first in --font-sans and --font-mono in theme.stylex.ts.
 
 Then render a Button and check it's styled in dev and in a production build.
 ```
@@ -97,6 +98,14 @@ export default defineConfig({
 
 **Set `cssInjectionTarget`.** Without it, StyleX can pick a different CSS chunk in the client and server builds, and the stylesheet the HTML links has no styles. It matches `src/styles.css`, which builds to `styles-[hash].css`; change the prefix if yours has another name. `enableDebugDataProp: false` stops a hydration mismatch on `data-style-src`.
 
+## Import the base styles
+
+Constella's theme, preflight and focus ring are in `src/lib/constella/base.css`. Import it at the top of `src/styles.css`, the stylesheet your root route links, so it applies at first paint:
+
+```css
+@import "./lib/constella/base.css";
+```
+
 ## Load styles in dev
 
 In dev, StyleX serves its CSS separately. Load it in `src/routes/__root.tsx`:
@@ -138,4 +147,5 @@ Then set up [fonts](/docs/installation#fonts), [dark mode](/docs/installation#da
 | Symptom | Cause | Fix |
 | --- | --- | --- |
 | Unstyled in dev, styled in a build | StyleX's dev CSS isn't loaded | Render `<DevStyleX />` in the root's `<head>` |
+| No colors or focus ring, browser margins | `base.css` isn't imported | `@import` it from `src/styles.css` |
 | Styled in dev, unstyled in a build | StyleX appended to a CSS chunk the HTML doesn't link | Point `cssInjectionTarget` at your root stylesheet |

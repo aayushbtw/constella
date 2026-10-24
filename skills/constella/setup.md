@@ -21,6 +21,7 @@ Constella does nothing until a StyleX compiler runs on the app's source. Before 
 | `@stylexjs/babel-plugin` and `@stylexjs/postcss-plugin` | `babel.config.js`, `postcss.config.js` (Next.js) |
 | `@stylexjs/unplugin` | `vite.config.ts` (Vite, TanStack Start) |
 | `@stylex;` | the global stylesheet (Next.js) |
+| `@import` of `lib/constella/base.css` | the stylesheet the root links |
 
 - **Missing:** the project isn't set up. Ask the user before changing their build: Constella needs StyleX's compiler in the config. If they agree, do [Configure StyleX](#configure-stylex) after the first `add`. If not, stop; the components won't render styled without it.
 - **Present:** skip it, and still verify.
@@ -73,10 +74,11 @@ StyleX needs a compiler step, and each framework wires it differently. Read the 
 
 | Framework | Compiler | Entry |
 | --- | --- | --- |
-| Next.js 16.0.3+ (Turbopack) | `@stylexjs/babel-plugin` + `@stylexjs/postcss-plugin` | End `globals.css` with `@stylex;` |
-| TanStack Start (Vite) | `@stylexjs/unplugin/vite`, first in `plugins` | Set `cssInjectionTarget`; load `virtual:stylex.css` in dev |
+| Next.js 16.0.3+ (Turbopack) | `@stylexjs/babel-plugin` + `@stylexjs/postcss-plugin` | Start `globals.css` with `@import "../lib/constella/base.css";`, end it with `@stylex;` |
+| TanStack Start (Vite) | `@stylexjs/unplugin/vite`, first in `plugins` | Start `src/styles.css` with `@import "./lib/constella/base.css";`; set `cssInjectionTarget`; load `virtual:stylex.css` in dev |
 
 - **Keep the `@/*` alias in step.** StyleX and TypeScript resolve imports separately, so `tsconfig.json`'s `paths` and StyleX's `aliases` must both name `@/*`.
+- **Import `base.css` from the stylesheet the root links**, not from a module: a module's CSS applies after the first layout in dev, and its preflight's margins shift the page.
 - Without a `src` folder, drop `src/` from every path in the config.
 
 ---
@@ -90,6 +92,7 @@ Render a `Button` and check it's styled in dev **and** in a production build.
 | Unstyled everywhere | The compiler never ran on the components: `@stylex;` missing, or `include` doesn't cover the source |
 | Unstyled in dev, styled in a build | Dev CSS not loaded (TanStack Start: render `<DevStyleX />`) |
 | Styled in dev, unstyled in a build | StyleX appended to a CSS chunk the HTML doesn't link: point `cssInjectionTarget` at the root stylesheet |
+| No colors or focus ring, browser margins | `base.css` isn't imported from the root stylesheet |
 | `@/lib/constella/...` fails to resolve | The alias is in one config and not the other |
 
 The framework page's Troubleshooting table has the full list.
