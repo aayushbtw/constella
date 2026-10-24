@@ -71,6 +71,7 @@ const filtering = ":has(> [data-slot='dropdown-menu-list'])";
 
 // An inset row starts where the text of a row with an icon does.
 const insetStart = `calc(${space.row} * 2 + ${sizes.icon})`;
+const insetStartLg = `calc(${space.xs} + ${sizes.icon} + ${space.row})`;
 
 const styles = stylex.create({
   positioner: {
@@ -109,6 +110,10 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
+  },
+  // Wider, for a label beside its value.
+  popupLg: {
+    minWidth: `max(var(--anchor-width), ${sizes.menuLg})`,
   },
   // Inside the popup's padding, so its corner nests in the popup's.
   input: {
@@ -180,10 +185,18 @@ const styles = stylex.create({
   itemSm: {
     minHeight: sizes.controlXs,
   },
-  itemLg: { minHeight: sizes.controlMd },
+  // Rows, labels and separators sit further in.
+  itemLg: {
+    minHeight: sizes.controlMd,
+    paddingInlineEnd: space.xs,
+    paddingInlineStart: { default: space.xs, [inset]: insetStartLg },
+  },
   // Room on the end for the tick, as in a select.
   checkable: {
     paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
+  },
+  checkableLg: {
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.xs} * 2)`,
   },
   // Checkbox's tick: draws in from its start, fades out quickly.
   indicator: {
@@ -208,6 +221,9 @@ const styles = stylex.create({
     },
     transitionTimingFunction: easings.out,
   },
+  indicatorLg: {
+    insetInlineEnd: space.xs,
+  },
   chevron: {
     color: colors.textMuted,
     display: "flex",
@@ -222,12 +238,21 @@ const styles = stylex.create({
     paddingInlineEnd: space.row,
     paddingInlineStart: { default: space.row, [inset]: insetStart },
   },
+  labelLg: {
+    paddingInlineEnd: space.xs,
+    paddingInlineStart: { default: space.xs, [inset]: insetStartLg },
+  },
+  // Edge to edge by default; inset in a large menu, in line with its rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
     marginInlineEnd: `calc(-1 * ${space.xxs})`,
     marginInlineStart: `calc(-1 * ${space.xxs})`,
+  },
+  separatorLg: {
+    marginInlineEnd: space.xs,
+    marginInlineStart: space.xs,
   },
   shortcut: {
     color: colors.textMuted,
@@ -250,7 +275,7 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
 
 const itemSizeStyles = {
   default: null,
-  lg: styles.itemLg,
+  lg: [typeStyles.textBase, styles.itemLg],
   sm: [typeStyles.textSm, styles.itemSm],
 } satisfies Record<DropdownMenuSize, stylex.StyleXStyles | null>;
 
@@ -259,6 +284,10 @@ const Size = createContext<DropdownMenuSize>("default");
 
 function useItemSize() {
   return itemSizeStyles[use(Size)];
+}
+
+function useLarge() {
+  return use(Size) === "lg";
 }
 
 function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
@@ -328,7 +357,7 @@ function DropdownMenuContent({
             data-skip-motion={skip || undefined}
             data-slot="dropdown-menu-content"
             {...props}
-            {...stylex.props(styles.popup, sx)}
+            {...stylex.props(styles.popup, size === "lg" && styles.popupLg, sx)}
           />
         </MenuPrimitive.Positioner>
       </MenuPrimitive.Portal>
@@ -413,7 +442,11 @@ function DropdownMenuLabel({
       data-inset={isInset}
       data-slot="dropdown-menu-label"
       {...props}
-      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
+      {...stylex.props(
+        [typeStyles.captionLg, styles.label],
+        useLarge() && styles.labelLg,
+        sx
+      )}
     />
   );
 }
@@ -500,6 +533,7 @@ function DropdownMenuCheckboxItem({
   sx,
   ...props
 }: Styled<MenuPrimitive.CheckboxItem.Props> & Inset) {
+  const large = useLarge();
   return (
     <MenuPrimitive.CheckboxItem
       data-inset={isInset}
@@ -509,11 +543,14 @@ function DropdownMenuCheckboxItem({
         [typeStyles.textSm, styles.item],
         useItemSize(),
         styles.checkable,
+        large && styles.checkableLg,
         sx
       )}
     >
       {children}
-      <MenuPrimitive.CheckboxItemIndicator {...stylex.props(styles.indicator)}>
+      <MenuPrimitive.CheckboxItemIndicator
+        {...stylex.props(styles.indicator, large && styles.indicatorLg)}
+      >
         <Glyph icon={Tick02Icon} />
       </MenuPrimitive.CheckboxItemIndicator>
     </MenuPrimitive.CheckboxItem>
@@ -539,6 +576,7 @@ function DropdownMenuRadioItem({
   sx,
   ...props
 }: Styled<MenuPrimitive.RadioItem.Props> & Inset) {
+  const large = useLarge();
   return (
     <MenuPrimitive.RadioItem
       data-inset={isInset}
@@ -548,11 +586,14 @@ function DropdownMenuRadioItem({
         [typeStyles.textSm, styles.item],
         useItemSize(),
         styles.checkable,
+        large && styles.checkableLg,
         sx
       )}
     >
       {children}
-      <MenuPrimitive.RadioItemIndicator {...stylex.props(styles.indicator)}>
+      <MenuPrimitive.RadioItemIndicator
+        {...stylex.props(styles.indicator, large && styles.indicatorLg)}
+      >
         <Glyph icon={Tick02Icon} />
       </MenuPrimitive.RadioItemIndicator>
     </MenuPrimitive.RadioItem>
@@ -567,7 +608,7 @@ function DropdownMenuSeparator({
     <MenuPrimitive.Separator
       data-slot="dropdown-menu-separator"
       {...props}
-      {...stylex.props(styles.separator, sx)}
+      {...stylex.props(styles.separator, useLarge() && styles.separatorLg, sx)}
     />
   );
 }
