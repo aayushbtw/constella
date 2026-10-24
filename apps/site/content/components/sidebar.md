@@ -216,6 +216,26 @@ const { changeSection } = useSidebar();
 
 Browsers without view transition types swap at once.
 
+### Router
+
+When each section is its own route, let the router start the view transition with the type `sidebar-forward` or `sidebar-back`, and the sidebar slides with no `changeSection`. Set it in `defaultViewTransition`, which back and forward use too, and pick the direction from the two locations. Every sidebar on the page slides, since the router doesn't know which one changed.
+
+```tsx
+createRouter({
+  routeTree,
+  defaultViewTransition: {
+    types: ({ fromLocation, toLocation }) => {
+      const from = sectionOf(fromLocation);
+      const to = sectionOf(toLocation);
+      if (fromLocation === undefined || from === to) {
+        return false;
+      }
+      return [to === "home" ? "sidebar-back" : "sidebar-forward"];
+    },
+  },
+});
+```
+
 ## Side
 
 Use `side="right"` to put the sidebar after the page. It collapses toward its own edge.

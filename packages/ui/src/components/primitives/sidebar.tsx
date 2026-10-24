@@ -183,7 +183,10 @@ function useTruncated(enabled: boolean) {
   return { ref, truncated };
 }
 
-const inSectionChange = ":is([data-section-change] *)";
+// Its own provider's `changeSection`, or one the app started with the same types, like a
+// router's; `sidebar-scoped` marks a provider's own, so other sidebars on the page stay put.
+const inSectionChange =
+  ":is([data-section-change] *, :root:active-view-transition-type(sidebar-forward, sidebar-back):not(:active-view-transition-type(sidebar-scoped)) *)";
 // Toggled from the keyboard: too frequent to animate.
 const fromKeyboard = ":is([data-instant] *)";
 // The collapsed selectors outrank it, so each close duration pairs with it to stay at once.
@@ -361,7 +364,9 @@ const styles = stylex.create({
       width: strokes.indicator,
     },
   },
-  triggerName: (name: string) => ({ viewTransitionName: name }),
+  triggerName: (name: string) => ({
+    viewTransitionName: { default: null, [inSectionChange]: name },
+  }),
   // Named only while its own sidebar changes section; base.css slides the snapshots.
   swap: {
     viewTransitionClass: { default: null, [inSectionChange]: "sidebar-swap" },
@@ -870,7 +875,7 @@ function SidebarProvider({
         setSectionChanges((count) => count + 1);
       });
       const transition = document.startViewTransition({
-        types: [`sidebar-${direction}`],
+        types: [`sidebar-${direction}`, "sidebar-scoped"],
         update: async () => {
           await flushSync(update);
         },
@@ -1073,14 +1078,10 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, sectionChanging, setOpenMobile, toggleSidebar } =
-    useSidebar();
+  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
   const inSheet = use(InSheetContext);
   const name = use(TriggerNameContext);
-  const triggerSx = [
-    sectionChanging && name !== null && styles.triggerName(name),
-    sx,
-  ];
+  const triggerSx = [name !== null && styles.triggerName(name), sx];
   const toggleFromKeyboard = use(KeyboardToggleContext);
   const { rail, tooltipSide } = use(RailContext);
 
