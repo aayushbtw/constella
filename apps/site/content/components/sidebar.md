@@ -98,7 +98,7 @@ SidebarProvider
 
 ## Sidebar Header
 
-`SidebarHeader` is a row the page header's height (48px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
+`SidebarHeader` is a row the page header's height (56px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
 
 Wrap anything that only fits the open sidebar in `SidebarExpandedOnly`. It stays while the width moves, so the edge passes over it, and is removed once the sidebar has narrowed to its icons. In the content it fades with the labels.
 

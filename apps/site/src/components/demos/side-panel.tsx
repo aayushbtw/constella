@@ -86,6 +86,8 @@ const styles = stylex.create({
     paddingInlineStart: space.xs,
   },
   row: { cursor: "pointer" },
+  // The frame is its own height, not the window's, so the slot fills it rather than sticking.
+  slot: { alignSelf: "stretch", height: "auto", position: "static" },
   selected: { backgroundColor: colors.fill },
   facts: {
     display: "grid",
@@ -95,9 +97,9 @@ const styles = stylex.create({
     marginBlockStart: 0,
   },
   panel: {
-    marginBlockEnd: space.sm,
-    marginBlockStart: space.sm,
-    marginInlineEnd: space.sm,
+    marginBlockEnd: space.row,
+    marginBlockStart: space.row,
+    marginInlineEnd: space.row,
     width: sizes.sidePanel,
   },
   term: { color: colors.textSecondary },
@@ -170,7 +172,7 @@ function SidePanelDemo() {
             ))}
           </div>
         </div>
-        <SidePanelSlot ref={slot} />
+        <SidePanelSlot ref={slot} sx={styles.slot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {

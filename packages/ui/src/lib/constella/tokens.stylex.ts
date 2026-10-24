@@ -239,7 +239,7 @@ export const sizes = stylex.defineConsts({
   dialogLg: `calc(${spaceUnit} * 128)`,
   dialogSm: `calc(${spaceUnit} * 80)`,
   // The top row the sidebar and the page share, so their headers line up.
-  header: `calc(${spaceUnit} * 12)`,
+  header: `calc(${spaceUnit} * 14)`,
   hitArea: `calc(${spaceUnit} * 10)`,
   icon: `calc(${spaceUnit} * 4)`,
   iconLg: `calc(${spaceUnit} * 5)`,
