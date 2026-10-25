@@ -191,7 +191,7 @@ Travels the whole way in from its edge on `layout` (the drawer curve, `durations
 
 ## Settings dialog
 
-A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capped to the window, with no padding: a sidebar that doesn't collapse beside a page, stacked above it below `media.sm`, where the nav's rows end before the close button. The page pads `space.lg` and is the one pane that scrolls on its own, since the page behind a dialog can't. Its header ends its text clear of the close button, as a dialog's does.
+A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capped to the window, with no padding: a sidebar that doesn't collapse beside a page, stacked above it below `media.sm`, where the nav's rows end before the close button. The page pads `space.lg` and is the one pane that scrolls on its own, since the page behind a dialog can't. Its header ends its text clear of the close button, as a dialog's does, and its title reads at `textLg`, a step over a dialog's, since it heads a page.
 
 ## Side panel
 
@@ -231,7 +231,7 @@ The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`pres
 
 ## Switch
 
-A checkbox that slides: `fillStrong` track off, `accentSolid` on. Off, the thumb takes `fillOnStrong`: white in light, `gray-12` in dark. On, it takes `accentOnSolid`. Either way it stands off its track. A `textSecondary` thumb read as disabled on the light track. It takes `shadows.default` in both states; `shadows.defaultRing`'s ring made off look heavier than on. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
+A checkbox that slides: `fillStrong` track off, `infoSolid` on. Off, the thumb takes `fillOnStrong`: white in light, `gray-12` in dark. On, it takes `accentOnSolid`. Either way it stands off its track. A `textSecondary` thumb read as disabled on the light track. It takes `shadows.default` in both states; `shadows.defaultRing`'s ring made off look heavier than on. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
 
 ## Table
 

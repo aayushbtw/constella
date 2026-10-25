@@ -69,7 +69,7 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: colors.fillStrong,
-      ":is([data-checked])": colors.accentSolid,
+      ":is([data-checked])": colors.infoSolid,
     },
     borderBlockColor: {
       default: "transparent",

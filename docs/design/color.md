@@ -12,9 +12,9 @@ The default accent is near-black (near-white in dark), not a hue, so color stays
 
 ## Status
 
-Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The default accent is gray, so none of them collides with it; a theme's accent should keep its distance from them. Each has `Text` for icons and short labels, `Subtle` and `SubtleHover` as tints that mirror the neutral fills, and `Solid` for a dot that carries the status alone; `danger` adds `Border` for an invalid field. Status color marks the small thing that carries the meaning and never body text, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too, and a dot with no text beside it has an accessible name.
+Hue is reserved for status: `danger` (red), `success` (green), `warning` (amber), `info` (blue). The one other use is a switch's on state, which takes `infoSolid`, so on reads at a glance. The default accent is gray, so none of them collides with it; a theme's accent should keep its distance from them. Each has `Text` for icons and short labels, `Subtle` and `SubtleHover` as tints that mirror the neutral fills, and `Solid` for a dot that carries the status alone; `danger` adds `Border` for an invalid field. Status color marks the small thing that carries the meaning and never body text, so copy inside an alert stays neutral. And never alone: the icon's shape or the text says it too, and a dot with no text beside it has an accessible name.
 
-Status is never a saturated solid behind text. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway. Only a dot is solid, step 9, and amber takes step 11 in light, since step 9 is 1.5:1 on the page.
+Status is never a saturated solid behind text. A destructive action is red text on a red tint: a full red fill shouts in a quiet interface, and white on it can't reach text contrast in both themes anyway. Only a dot and a switch's on track are solid, step 9, and amber takes step 11 in light, since step 9 is 1.5:1 on the page.
 
 ## Chart series
 
