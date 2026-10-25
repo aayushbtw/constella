@@ -1,12 +1,15 @@
 "use client";
 
+import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { ArrowUp02Icon, StopIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps } from "react";
+import { createContext, use, useMemo, useRef } from "react";
+import type { ComponentProps, RefObject } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
+import { commandStyles } from "@/components/primitives/command";
 import {
   InputGroup,
   InputGroupAddon,
@@ -17,6 +20,7 @@ import type {
   InputGroupAddonProps,
   InputGroupButtonProps,
 } from "@/components/primitives/input-group";
+import { popoverStyles } from "@/components/primitives/popover";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
@@ -26,6 +30,7 @@ import {
   fontSizes,
   lineHeights,
   media,
+  offsets,
   radii,
   shadows,
   sizes,
@@ -144,6 +149,16 @@ const styles = stylex.create({
     paddingBlockStart: { default: space.xxs, ":first-child": 0 },
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
+  },
+  // As wide as the composer; a list pads its own top.
+  commandContent: {
+    boxShadow: shadows.lg,
+    maxHeight: "var(--available-height)",
+    paddingBlockStart: {
+      default: space.xxs,
+      ":has(> [data-slot='command-list'])": 0,
+    },
+    width: "var(--anchor-width)",
   },
 });
 
@@ -319,10 +334,153 @@ function PromptInputSubmit({
   );
 }
 
+interface CommandFrame {
+  /** Takes the textarea, and keeps the composer around it as the popup's anchor. */
+  attach: (input: Element | null) => void;
+  frame: RefObject<Element | null>;
+  open: boolean;
+}
+
+const CommandFrameContext = createContext<CommandFrame | null>(null);
+
+function useCommandFrame() {
+  const frame = use(CommandFrameContext);
+  if (frame === null) {
+    throw new Error(
+      "Prompt input command parts must be inside a PromptInputCommand."
+    );
+  }
+  return frame;
+}
+
+type PromptInputCommandProps = Omit<
+  AutocompletePrimitive.Root.Props<unknown>,
+  | "defaultOpen"
+  | "defaultValue"
+  | "filter"
+  | "inline"
+  | "mode"
+  | "open"
+  | "value"
+> & {
+  open: boolean;
+  /** The text the items are filtered by, like the draft after its `/`. */
+  query: string;
+  /** The draft; controlled, since Base UI keeps a pick's label as its own value. */
+  value: string;
+};
+
+/** A command list the prompt input opens over itself; the app sets `open` and `query` from the draft. */
+function PromptInputCommand({
+  onValueChange,
+  open,
+  query,
+  ...props
+}: PromptInputCommandProps) {
+  const frame = useRef<Element | null>(null);
+  const { contains } = AutocompletePrimitive.useFilter();
+  const context = useMemo(
+    () => ({
+      attach: (input: Element | null) => {
+        frame.current = input?.closest("[data-slot='input-group']") ?? null;
+      },
+      frame,
+      open,
+    }),
+    [open]
+  );
+  return (
+    <CommandFrameContext value={context}>
+      <AutocompletePrimitive.Root
+        autoHighlight="always"
+        filter={(item, _value, itemToString) =>
+          contains(item, query, itemToString)
+        }
+        onValueChange={(value, details) => {
+          // A pick runs the item's `onClick`; it never writes the item into the draft.
+          if (details.reason !== "item-press") {
+            onValueChange?.(value, details);
+          }
+        }}
+        open={open}
+        {...props}
+      />
+    </CommandFrameContext>
+  );
+}
+
+/** The prompt input's textarea as the command's input: while the list is open, arrows move, Enter, Cmd/Ctrl/Alt+Enter and Tab pick, Esc closes. */
+function PromptInputCommandTextarea(props: TextareaProps) {
+  const { attach, open } = useCommandFrame();
+  return (
+    <AutocompletePrimitive.Input
+      onKeyDown={(event) => {
+        // Closed, or moving the caret, it stays a plain textarea.
+        if (!open || event.key === "Home" || event.key === "End") {
+          event.preventBaseUIHandler();
+          return;
+        }
+        // Base UI picks on a plain Enter only; Tab and Cmd/Ctrl/Alt+Enter pick too, rather than submit.
+        const modifiedEnter =
+          event.key === "Enter" &&
+          (event.metaKey || event.ctrlKey || event.altKey);
+        if ((event.key === "Tab" && !event.shiftKey) || modifiedEnter) {
+          const highlighted = event.currentTarget.getAttribute(
+            "aria-activedescendant"
+          );
+          if (highlighted !== null) {
+            event.preventDefault();
+            event.currentTarget.ownerDocument
+              .querySelector<HTMLElement>(`#${CSS.escape(highlighted)}`)
+              ?.click();
+          }
+        }
+      }}
+      ref={attach}
+      render={<PromptInputTextarea {...props} />}
+    />
+  );
+}
+
+/** The command's popup on the composer's edge, above it unless there's no room. Holds a `CommandList` and `CommandEmpty`. */
+function PromptInputCommandContent({
+  align = "start",
+  side = "top",
+  sideOffset = Number(offsets.popover),
+  sx,
+  ...props
+}: Styled<AutocompletePrimitive.Popup.Props> &
+  Pick<
+    AutocompletePrimitive.Positioner.Props,
+    "align" | "side" | "sideOffset"
+  >) {
+  const { frame } = useCommandFrame();
+  return (
+    <AutocompletePrimitive.Portal>
+      <AutocompletePrimitive.Positioner
+        align={align}
+        anchor={frame}
+        side={side}
+        sideOffset={sideOffset}
+        {...stylex.props(popoverStyles.positioner)}
+      >
+        <AutocompletePrimitive.Popup
+          data-slot="prompt-input-command-content"
+          {...props}
+          {...stylex.props(commandStyles.surface, styles.commandContent, sx)}
+        />
+      </AutocompletePrimitive.Positioner>
+    </AutocompletePrimitive.Portal>
+  );
+}
+
 export {
   PromptInput,
   PromptInputBar,
   PromptInputBarButton,
+  PromptInputCommand,
+  PromptInputCommandContent,
+  PromptInputCommandTextarea,
   PromptInputFooter,
   PromptInputHeader,
   promptInputStates,
@@ -331,4 +489,4 @@ export {
   PromptInputTools,
   PromptInputWell,
 };
-export type { PromptInputState };
+export type { PromptInputCommandProps, PromptInputState };

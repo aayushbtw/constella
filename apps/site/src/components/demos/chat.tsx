@@ -2,10 +2,14 @@ import {
   Attachment01Icon,
   Cancel01Icon,
   File01Icon,
+  Analytics01Icon,
   Folder01Icon,
+  Mail01Icon,
   Plug01Icon,
   RepeatIcon,
+  TextAlignLeftIcon,
   ThumbsUpIcon,
+  TranslateIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
@@ -41,6 +45,9 @@ import {
   PromptInput,
   PromptInputBar,
   PromptInputBarButton,
+  PromptInputCommand,
+  PromptInputCommandContent,
+  PromptInputCommandTextarea,
   PromptInputFooter,
   PromptInputHeader,
   PromptInputSubmit,
@@ -50,6 +57,11 @@ import {
 } from "@/components/ai/prompt-input";
 import type { PromptInputState } from "@/components/ai/prompt-input";
 import { Button } from "@/components/primitives/button";
+import {
+  CommandEmpty,
+  CommandItem,
+  CommandList,
+} from "@/components/primitives/command";
 import { CopyButton } from "@/components/primitives/copy-button";
 import { InputGroupButton } from "@/components/primitives/input-group";
 import {
@@ -379,10 +391,89 @@ function PromptInputWellDemo() {
   );
 }
 
+interface SlashCommand {
+  icon: HugeiconsIconProps["icon"];
+  label: string;
+  value: string;
+}
+
+const commands: SlashCommand[] = [
+  { icon: TextAlignLeftIcon, label: "Summarize", value: "summarize" },
+  { icon: Analytics01Icon, label: "Weekly report", value: "weekly-report" },
+  { icon: Mail01Icon, label: "Draft an email", value: "draft-email" },
+  { icon: TranslateIcon, label: "Translate", value: "translate" },
+];
+
+function PromptInputCommandDemo() {
+  const [text, setText] = useState("");
+  const [dismissed, setDismissed] = useState(false);
+  // Open while the draft is a `/` and one word.
+  const query = /^\/(?<query>\S*)$/u.exec(text)?.groups?.query;
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.column)}>
+        <PromptInputCommand
+          items={commands}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDismissed(true);
+            }
+          }}
+          onValueChange={(value) => {
+            setText(value);
+            setDismissed(false);
+          }}
+          open={query !== undefined && !dismissed}
+          query={query ?? ""}
+          value={text}
+        >
+          <PromptInput
+            onSubmit={(event) => {
+              event.preventDefault();
+              setText("");
+            }}
+          >
+            <PromptInputCommandTextarea
+              aria-label="Message"
+              placeholder="Ask anything, or type / for commands…"
+            />
+            <PromptInputFooter>
+              <PromptInputTools>
+                <InputGroupButton aria-label="Attach" size="icon-sm">
+                  <Glyph icon={Attachment01Icon} />
+                </InputGroupButton>
+              </PromptInputTools>
+              <PromptInputSubmit disabled={text.trim() === ""} />
+            </PromptInputFooter>
+          </PromptInput>
+          <PromptInputCommandContent>
+            <CommandEmpty>No commands found.</CommandEmpty>
+            <CommandList>
+              {(command: SlashCommand) => (
+                <CommandItem
+                  key={command.value}
+                  onClick={() => {
+                    setText(`/${command.value} `);
+                  }}
+                  value={command}
+                >
+                  <Glyph icon={command.icon} />
+                  {command.label}
+                </CommandItem>
+              )}
+            </CommandList>
+          </PromptInputCommandContent>
+        </PromptInputCommand>
+      </div>
+    </DemoRow>
+  );
+}
+
 export {
   Chat,
   ChatDemo,
   MessageDemo,
+  PromptInputCommandDemo,
   PromptInputDemo,
   PromptInputHeaderDemo,
   PromptInputWellDemo,

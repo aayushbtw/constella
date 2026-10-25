@@ -347,6 +347,11 @@ function CommandFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
+/** The command's surface, for a part that draws its own popup around a command list. */
+const commandStyles = {
+  surface: styles.command,
+};
+
 export {
   Command,
   CommandCollection,
@@ -360,5 +365,6 @@ export {
   CommandList,
   CommandSeparator,
   CommandShortcut,
+  commandStyles,
 };
 export type { CommandProps };

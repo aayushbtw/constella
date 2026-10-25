@@ -136,6 +136,8 @@ Reasoning, tool calls and steps are `TraceLine`s in a `Trace`, one line each. Do
 
 Attachments go in a `PromptInputHeader` above the text; a submit can send files with no text. Context around the composer (a project, connected apps) goes in a `PromptInputWell` with `PromptInputBar`s.
 
+Slash commands are a `PromptInputCommand` around the `PromptInput`, with `PromptInputCommandTextarea` in place of the textarea and a `CommandList` of `CommandItem`s in a `PromptInputCommandContent`. The app controls `value` and sets `open` and `query` from the draft; a pick runs the item's `onClick` and never writes into the draft. Don't build it from a `Popover` around the textarea. Base UI's Autocomplete owns the keys and the highlight.
+
 ---
 
 ## Markdown and Code Block

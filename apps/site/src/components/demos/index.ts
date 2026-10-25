@@ -89,6 +89,7 @@ import {
 import {
   ChatDemo,
   MessageDemo,
+  PromptInputCommandDemo,
   PromptInputDemo,
   PromptInputHeaderDemo,
   PromptInputWellDemo,
@@ -658,6 +659,7 @@ const demos = {
   "hover-card-side": HoverCardSideDemo,
   "hover-card-triggers": HoverCardTriggersDemo,
   "prompt-input": PromptInputDemo,
+  "prompt-input-command": PromptInputCommandDemo,
   "prompt-input-header": PromptInputHeaderDemo,
   "prompt-input-well": PromptInputWellDemo,
   progress: ProgressDemo,

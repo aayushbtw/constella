@@ -922,8 +922,9 @@
       "name": "prompt-input",
       "type": "registry:ui",
       "title": "Prompt Input",
-      "description": "The chat composer on an input group: grows with its text, submits on Enter, and turns into Stop while streaming.",
+      "description": "The chat composer on an input group: grows with its text, submits on Enter, turns into Stop while streaming, and opens a command list over itself.",
       "dependencies": [
+        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex"
@@ -931,7 +932,9 @@
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/command.json",
         "https://constella.aayush.cv/r/input-group.json",
+        "https://constella.aayush.cv/r/popover.json",
         "https://constella.aayush.cv/r/swap-icon.json",
         "https://constella.aayush.cv/r/textarea.json"
       ],
