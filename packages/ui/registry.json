@@ -1109,6 +1109,10 @@
         {
           "path": "src/components/tanstack/chart.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "src/components/tanstack/chart-legend.tsx",
+          "type": "registry:component"
         }
       ],
       "docs": "Usage: https://constella.aayush.cv/docs/components/chart/index.md"

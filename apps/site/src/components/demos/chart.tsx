@@ -19,19 +19,21 @@ import {
 } from "@/components/primitives/card";
 import {
   Chart,
-  ChartIndicator,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipLabel,
   ChartTooltipRow,
   ChartTooltipTitle,
   ChartTooltipValue,
-  chartColor,
   chartGroupScale,
   chartTickFormat,
   useChartTween,
 } from "@/components/tanstack/chart";
-import type { ChartConfig } from "@/components/tanstack/chart";
+import {
+  ChartIndicator,
+  ChartLegendContent,
+  chartColor,
+} from "@/components/tanstack/chart-legend";
+import type { ChartConfig } from "@/components/tanstack/chart-legend";
 import { colors, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 

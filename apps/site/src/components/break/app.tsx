@@ -35,13 +35,15 @@ import {
 } from "@/components/primitives/sidebar";
 import {
   Chart,
-  ChartLegendContent,
-  chartColor,
-  chartFold,
   chartGroupScale,
   chartTickFormat,
 } from "@/components/tanstack/chart";
-import type { ChartConfig } from "@/components/tanstack/chart";
+import {
+  ChartLegendContent,
+  chartColor,
+  chartFold,
+} from "@/components/tanstack/chart-legend";
+import type { ChartConfig } from "@/components/tanstack/chart-legend";
 import {
   colors,
   radii,

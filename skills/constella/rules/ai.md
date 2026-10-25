@@ -198,4 +198,5 @@ const config = {
 - **Keep the definition outside the component,** or in a `useMemo` on the values it reads. A new definition rebuilds the chart.
 - `chartColor(config)` gives the definition its color scale, so series take the theme's palette (`colors.chart1` … `chart6`).
 - The legend is `ChartLegendContent` outside the chart, bound to it by your state (`value`, `onValueChange`).
+- Import `ChartConfig`, `chartColor`, `chartFold`, `ChartIndicator` and the legend from `@/components/tanstack/chart-legend`, which loads no TanStack Charts, so a legend beside a lazy `Chart` stays light.
 - Compose a custom tooltip from `ChartTooltip`, `ChartTooltipRow` and `ChartIndicator` through `renderTooltipBody`.
