@@ -191,7 +191,7 @@ Travels the whole way in from its edge on `layout` (the drawer curve, `durations
 
 ## Settings dialog
 
-A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capped to the window, with no padding: a sidebar that doesn't collapse beside a page, stacked above it below `media.sm`, where the nav's rows end before the close button. The page pads `space.lg` and is the one pane that scrolls on its own, since the page behind a dialog can't. Its header ends its text clear of the close button, as a dialog's does, and its title reads at `textLg`, a step over a dialog's, since it heads a page.
+A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capped to the window, with no padding: a sidebar that doesn't collapse beside a page, stacked above it below `media.sm`, where the nav's rows end before the close button. The page pads `space.lg` and is the one pane that scrolls on its own, since the page behind a dialog can't. Its header ends its text clear of the close button, as a dialog's does, and its title reads at `textLg`, a step over a dialog's, since it heads a page. The title line is `sizes.controlSm` tall and rises to the close button's row beside the nav, so they centre on one line on every page, with or without a `leading` or `action` control, and it ends `space.xs` before the close button.
 
 ## Side panel
 

@@ -97,6 +97,14 @@ Give `SettingsDialogNav` a `label` for screen readers and an optional `title` ab
 </SettingsDialogPage>
 ```
 
+Put a back button before the title with `leading`, and controls at the end of its line with `action`; the title line always centres on the close button.
+
+```tsx
+<SettingsDialogPage action={<Button size="sm">Invite</Button>} title="Members">
+  …
+</SettingsDialogPage>
+```
+
 **Keep the last page while the dialog closes.** If the page comes from state that clears on close (a URL param), the page empties mid-fade; hold on to the last one shown until the dialog is closed.
 
 ## Field
@@ -125,6 +133,6 @@ Build each setting from [Field](/docs/components/field): a choice card with a `S
 | --- | --- |
 | `SettingsDialog` | Renders `Dialog` and a `DialogContent` with the nav beside the page, stacked on narrow screens, and a `DialogCloseButton`; `sx` goes to the popup |
 | `SettingsDialogNav` | `label` (required) names the nav; `title` labels its group; `sx` goes to the `Sidebar` |
-| `SettingsDialogPage` | `title` (required) and `description` render as `DialogTitle` and `DialogDescription` |
+| `SettingsDialogPage` | `title` (required) and `description` render as `DialogTitle` and `DialogDescription`; `leading` sits before the title and `action` at the end of its line |
 
 Every part takes `sx`, applied last. For the rest, see [Dialog](/docs/components/dialog) and [Sidebar](/docs/components/sidebar).

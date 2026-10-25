@@ -72,8 +72,24 @@ const styles = stylex.create({
     paddingInlineStart: space.lg,
   },
   // Ends its text clear of the close button, as a dialog's header does.
+  // Beside the nav, the title line rises to the close button's row and centres on it,
+  // so every page's title sits in the same place whether or not it has controls.
   header: {
-    paddingInlineEnd: `calc(${sizes.controlSm} + ${space.xs} - ${space.lg})`,
+    marginBlockStart: {
+      default: null,
+      [media.sm]: `calc(${space.xs} - ${space.lg})`,
+    },
+    paddingInlineEnd: `calc(${sizes.controlSm} + ${space.xs} * 2 - ${space.lg})`,
+  },
+  titleLine: {
+    alignItems: "center",
+    display: "flex",
+    gap: space.sm,
+    minHeight: sizes.controlSm,
+  },
+  title: {
+    flexGrow: 1,
+    minWidth: 0,
   },
 });
 
@@ -126,13 +142,17 @@ function SettingsDialogNav({
 }
 
 function SettingsDialogPage({
+  action,
   children,
   description,
+  leading,
   sx,
   title,
   ...props
 }: Styled<Omit<ComponentProps<"div">, "title">> & {
+  action?: ReactNode;
   description?: ReactNode;
+  leading?: ReactNode;
   title: ReactNode;
 }) {
   return (
@@ -142,7 +162,13 @@ function SettingsDialogPage({
       {...stylex.props(styles.page, sx)}
     >
       <DialogHeader sx={styles.header}>
-        <DialogTitle sx={typeStyles.textLg}>{title}</DialogTitle>
+        <div {...stylex.props(styles.titleLine)}>
+          {leading}
+          <DialogTitle sx={[typeStyles.textLg, styles.title]}>
+            {title}
+          </DialogTitle>
+          {action}
+        </div>
         {description === undefined ? null : (
           <DialogDescription>{description}</DialogDescription>
         )}

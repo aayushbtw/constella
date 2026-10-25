@@ -125,6 +125,7 @@ function Notifications() {
 function Members() {
   return (
     <SettingsDialogPage
+      action={<Button size="sm">Invite</Button>}
       description="Who can join Acme without an invite."
       title="Members"
     >
