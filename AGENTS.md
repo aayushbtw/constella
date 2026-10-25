@@ -25,6 +25,7 @@ Read the one that fits before changing things, and record new decisions in it, n
 
 ## Workflow
 
+- Before code: `packages/ui/src/components/tanstack/chart.tsx`: `vp dlx @tanstack/intent@latest load @tanstack/charts#design-a-chart --path`; `packages/ui/src/components/tanstack/data-table.tsx`: `vp dlx @tanstack/intent@latest load @tanstack/react-table#getting-started --path`; `packages/ui/src/components/tanstack/data-table.tsx`: `vp dlx @tanstack/intent@latest load @tanstack/table-core#core --path`; `packages/ui/src/components/ai/markdown.tsx`: `vp dlx @tanstack/intent@latest load @tanstack/markdown#react-rendering --path`; `apps/site/src/routes/`: `vp dlx @tanstack/intent@latest load @tanstack/router-core#router-core/data-loading --path`; `apps/site/src/routes/`: `vp dlx @tanstack/intent@latest load @tanstack/start-client-core#start-core/server-functions --path`.
 - Review also checks: `DESIGN.md`, the `docs/design/` files the change touches, `docs/ARCHITECTURE.md`, and that no demo fakes a missing component.
 
 ## Dependencies first
