@@ -105,7 +105,7 @@ for (const item of registry.items) {
   compare(
     item.name,
     "dependencies",
-    new Set(item.dependencies),
+    new Set(item.dependencies?.map((dep) => dep.replace(/(?<=.)@.*$/u, ""))),
     new Set([...packages].filter((name) => !provided.has(name)))
   );
   compare(
