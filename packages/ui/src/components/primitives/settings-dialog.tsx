@@ -80,7 +80,7 @@ const styles = stylex.create({
   header: {
     paddingInlineEnd: {
       default: `calc(${sizes.controlSm} + ${space.xs} * 2 - ${space.lg})`,
-      [media.sm]: `calc(${sizes.controlSm} + ${space.xs})`,
+      [media.sm]: `calc(${sizes.controlSm} + ${space.lg})`,
     },
   },
   titleLine: {
