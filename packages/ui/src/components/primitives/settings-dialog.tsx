@@ -71,15 +71,17 @@ const styles = stylex.create({
     paddingInlineEnd: space.lg,
     paddingInlineStart: space.lg,
   },
-  // Ends its text clear of the close button, as a dialog's header does.
-  // Beside the nav, the title line rises to the close button's row and centres on it,
-  // so every page's title sits in the same place whether or not it has controls.
+  // Beside the nav, the close button drops to the page's padding, onto its title line.
+  close: {
+    insetBlockStart: { default: space.xs, [media.sm]: space.lg },
+    insetInlineEnd: { default: space.xs, [media.sm]: space.lg },
+  },
+  // Ends its controls clear of the close button on the same line.
   header: {
-    marginBlockStart: {
-      default: null,
-      [media.sm]: `calc(${space.xs} - ${space.lg})`,
+    paddingInlineEnd: {
+      default: `calc(${sizes.controlSm} + ${space.xs} * 2 - ${space.lg})`,
+      [media.sm]: `calc(${sizes.controlSm} + ${space.xs})`,
     },
-    paddingInlineEnd: `calc(${sizes.controlSm} + ${space.xs} * 2 - ${space.lg})`,
   },
   titleLine: {
     alignItems: "center",
@@ -106,7 +108,7 @@ function SettingsDialog({
     <Dialog {...props}>
       <DialogContent data-slot="settings-dialog" sx={[styles.popup, sx]}>
         {children}
-        <DialogCloseButton />
+        <DialogCloseButton sx={styles.close} />
       </DialogContent>
     </Dialog>
   );
