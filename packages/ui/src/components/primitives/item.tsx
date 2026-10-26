@@ -177,6 +177,8 @@ const styles = stylex.create({
     lineHeight: "inherit",
     overflow: "hidden",
     overflowWrap: "anywhere",
+    // Held to the content's width, so a nowrap title truncates rather than overflowing.
+    maxWidth: "100%",
     width: "fit-content",
   },
   // A default item's rows read at its own size; smaller items keep the control size.
