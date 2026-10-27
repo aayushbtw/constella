@@ -170,6 +170,11 @@
     outline-color: var(--red-11);
   }
 
+  /* The composer shows focus with its caret: a text field matches :focus-visible on a click too. */
+  :where([data-slot="prompt-input"] [data-slot="input-group"]) {
+    outline: none;
+  }
+
   /* A popup or questionnaire step takes focus to hold it, not as a control. */
   :where(
     [role="dialog"],

@@ -50,12 +50,15 @@ const styles = stylex.create({
   // Stacked, the nav runs under the close button, so its rows end before it.
   nav: {
     height: { default: "auto", [media.sm]: "100%" },
-    paddingBlockStart: space.md,
     paddingInlineEnd: {
       default: `calc(${sizes.controlSm} + ${space.xs})`,
       [media.sm]: 0,
     },
     width: { default: "100%", [media.sm]: sizes.sidebar },
+  },
+  // Inside the scroller, so the first row's focus ring isn't clipped.
+  navContent: {
+    paddingBlockStart: space.md,
   },
   // The one pane that scrolls on its own: the page behind a dialog can't.
   page: {
@@ -93,6 +96,9 @@ const styles = stylex.create({
     flexGrow: 1,
     minWidth: 0,
   },
+  description: {
+    textWrap: "balance",
+  },
 });
 
 /** A dialog laid out as a nav beside a page, with a close button in its corner. */
@@ -128,7 +134,7 @@ function SettingsDialogNav({
   return (
     <SidebarProvider sx={styles.provider}>
       <Sidebar collapsible="none" {...props} sx={[styles.nav, sx]}>
-        <SidebarContent>
+        <SidebarContent sx={styles.navContent}>
           <SidebarGroup>
             {title === undefined ? null : (
               <SidebarGroupLabel>{title}</SidebarGroupLabel>
@@ -172,7 +178,9 @@ function SettingsDialogPage({
           {action}
         </div>
         {description === undefined ? null : (
-          <DialogDescription>{description}</DialogDescription>
+          <DialogDescription sx={styles.description}>
+            {description}
+          </DialogDescription>
         )}
       </DialogHeader>
       {children}
