@@ -196,17 +196,23 @@ const styles = stylex.create({
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "flex",
     gap: space.row,
-    minHeight: sizes.controlSm,
+    minHeight: sizes.controlMd,
     opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
-    paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
-    paddingInlineStart: space.row,
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.sm})`,
+    paddingInlineStart: space.sm,
     position: "relative",
     userSelect: "none",
   },
   itemSm: {
-    minHeight: sizes.controlXs,
+    minHeight: sizes.controlSm,
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.row} * 2)`,
+    paddingInlineStart: space.row,
   },
-  itemLg: { minHeight: sizes.controlMd },
+  itemLg: {
+    minHeight: sizes.controlLg,
+    paddingInlineEnd: `calc(${sizes.icon} + ${space.md})`,
+    paddingInlineStart: space.md,
+  },
   // Wraps rather than truncating, so options that differ only at the end stay apart.
   itemText: {
     alignItems: "center",
@@ -219,23 +225,30 @@ const styles = stylex.create({
   indicator: {
     alignItems: "center",
     display: "flex",
-    insetInlineEnd: space.row,
+    insetInlineEnd: space.sm,
     justifyContent: "center",
     position: "absolute",
   },
+  indicatorSm: { insetInlineEnd: space.row },
+  indicatorLg: { insetInlineEnd: space.md },
   label: {
     color: colors.textMuted,
     fontWeight: fontWeights.medium,
     paddingBlock: space.xxs,
-    paddingInlineEnd: space.row,
-    paddingInlineStart: space.row,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
   },
+  labelSm: { paddingInlineEnd: space.row, paddingInlineStart: space.row },
+  labelLg: { paddingInlineEnd: space.md, paddingInlineStart: space.md },
+  // In line with the rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlock: space.xxs,
-    marginInline: `calc(-1 * ${space.xxs})`,
+    marginInline: space.sm,
   },
+  separatorSm: { marginInline: space.row },
+  separatorLg: { marginInline: space.md },
   scrollArrow: {
     alignItems: "center",
     backgroundColor: colors.raised,
@@ -278,11 +291,36 @@ function Glyph({
   );
 }
 
-const itemSizeStyles = {
-  default: null,
-  lg: styles.itemLg,
-  sm: [typeStyles.captionLg, styles.itemSm],
-} satisfies Record<SelectSize, stylex.StyleXStyles | null>;
+// The popup's rows by `SelectContent`'s size; the base styles are `default`'s.
+const contentSizeStyles = {
+  default: {
+    indicator: null,
+    item: null,
+    label: null,
+    separator: null,
+    text: typeStyles.textMd,
+  },
+  lg: {
+    indicator: styles.indicatorLg,
+    item: styles.itemLg,
+    label: styles.labelLg,
+    separator: styles.separatorLg,
+    text: typeStyles.textBase,
+  },
+  sm: {
+    indicator: styles.indicatorSm,
+    item: styles.itemSm,
+    label: styles.labelSm,
+    separator: styles.separatorSm,
+    text: typeStyles.textSm,
+  },
+} satisfies Record<
+  SelectSize,
+  Record<
+    "indicator" | "item" | "label" | "separator" | "text",
+    stylex.StyleXStyles | null
+  >
+>;
 
 const SkipMotion = createContext(false);
 const Size = createContext<SelectSize>("default");
@@ -428,7 +466,11 @@ function SelectLabel({
     <SelectPrimitive.GroupLabel
       data-slot="select-label"
       {...props}
-      {...stylex.props([typeStyles.captionLg, styles.label], sx)}
+      {...stylex.props(
+        [typeStyles.captionLg, styles.label],
+        contentSizeStyles[use(Size)].label,
+        sx
+      )}
     />
   );
 }
@@ -439,20 +481,19 @@ function SelectItem({
   ...props
 }: Styled<SelectPrimitive.Item.Props>) {
   const size = use(Size);
+  const sized = contentSizeStyles[size];
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
       {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.item],
-        itemSizeStyles[size],
-        sx
-      )}
+      {...stylex.props([sized.text, styles.item], sized.item, sx)}
     >
       <SelectPrimitive.ItemText {...stylex.props(styles.itemText)}>
         {children}
       </SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator {...stylex.props(styles.indicator)}>
+      <SelectPrimitive.ItemIndicator
+        {...stylex.props(styles.indicator, sized.indicator)}
+      >
         <Glyph icon={Tick02Icon} size={size} />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
@@ -467,7 +508,11 @@ function SelectSeparator({
     <SelectPrimitive.Separator
       data-slot="select-separator"
       {...props}
-      {...stylex.props(styles.separator, sx)}
+      {...stylex.props(
+        styles.separator,
+        contentSizeStyles[use(Size)].separator,
+        sx
+      )}
     />
   );
 }

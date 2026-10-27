@@ -256,7 +256,7 @@ export const sizes = stylex.defineConsts({
   // The least an item's text keeps beside its actions before they drop under it.
   itemText: `calc(${spaceUnit} * 40)`,
   menu: `calc(${spaceUnit} * 36)`,
-  // A large menu's least width, roomy enough for a label beside its value.
+  // A default or large menu's least width, roomy enough for a label beside its value.
   menuLg: `calc(${spaceUnit} * 64)`,
   menuHeight: `calc(${spaceUnit} * 80)`,
   // A model picker's list: short names beside a search field.

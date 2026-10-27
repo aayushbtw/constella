@@ -162,15 +162,15 @@ Wrap the menu in `DropdownMenuFilterProvider`, add `DropdownMenuInput`, and put 
 
 ## Size
 
-Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes its parent's size unless it sets its own. A large menu has larger text, rows and labels set further in, inset separators, and a 256px min width.
+Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes its parent's size unless it sets its own. Rows, labels and the tick sit the side inset in from the popup's edge, and separators stop at it, so their text and ends line up.
 
 <!-- ::demo name="dropdown-menu-sizes" -->
 
-| Size      | Row  | Text | Min width |
-| --------- | ---- | ---- | --------- |
-| `sm`      | 24px | 13px | 144px     |
-| `default` | 28px | 13px | 144px     |
-| `lg`      | 32px | 15px | 256px     |
+| Size      | Row  | Text | Side inset | Min width |
+| --------- | ---- | ---- | ---------- | --------- |
+| `sm`      | 28px | 13px | 6px        | 144px     |
+| `default` | 32px | 14px | 12px       | 256px     |
+| `lg`      | 36px | 15px | 16px       | 256px     |
 
 ```tsx
 <DropdownMenuContent size="lg">

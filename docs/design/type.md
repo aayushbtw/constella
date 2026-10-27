@@ -9,14 +9,14 @@ After Interfere's: headings rank 1 (largest) to 6, text steps around `textBase`,
 | `heading1`–`heading6` | 56/56, 44/56, 36/44, 28/36, 24/32, 20/24, `letterSpacings.heading` | Page and section titles in the app; a Markdown h1 takes `heading6` |
 | `textLg` | 18/24 | A side panel's title; Markdown h2–h4 and a docs page's h2, in semibold |
 | `textBase` | 15/24 | Reading copy: the docs, an app's pages, a chat's answers, messages and composer; a dialog, card or field set's title, in medium; a docs page's h3, in semibold |
-| `textMd` | 14/20 | Rows read at a glance, a step over the controls around them: a sidebar's, a default item's, a table's |
-| `textSm` | 13/20 | Every control and the text inside components: labels, descriptions, rows, menus |
+| `textMd` | 14/20 | Rows read at a glance, a step over the controls around them: a sidebar's, a default item's, a table's, a default menu's, select's and command's |
+| `textSm` | 13/20 | Every control and the text inside components: labels, descriptions, rows, `sm` menus |
 | `captionLg` | 12/16 | Keycaps, `xs` controls, badges, menu labels and shortcuts |
 | `captionBase` | 11/16 | Metadata under a title, timestamps |
 | `captionSm` | 10/16 | Fine print |
 | `captionXs` | 8/12 | A mark too small to read as a line, like a count on an icon |
 
-Controls are 13px, as Interfere's are, so a dense UI stays a step under the reading size. Rows are the exception, at `textMd`: a sidebar's (and sub-rows), a default item's title and description, and a table's cells; a sidebar's `sm` rows and group labels, and `sm` and `xs` items, keep `textSm`. Peers share a step: two titles in one row never differ in size because one string is longer. `Text`, `Heading` and `Caption` set a step for an app; `Caption` takes `uppercase`, which adds `letterSpacings.caps`. Inside running text, `Link` underlines in `border` and turns `textPrimary` on hover; `Code` is mono at `0.875em` on `fill`, relative so it sits a step under any text around it; it adds no block padding, so it never grows the line, and a wrapped chip keeps its corners and side padding on each line.
+Controls are 13px, as Interfere's are, so a dense UI stays a step under the reading size. Rows are the exception, at `textMd`: a sidebar's (and sub-rows), a default item's title and description, a table's cells, and a menu's, select's and command's rows (`textBase` in an `lg` menu); a sidebar's `sm` rows and group labels, `sm` and `xs` items, and an `sm` menu's rows keep `textSm`. Peers share a step: two titles in one row never differ in size because one string is longer. `Text`, `Heading` and `Caption` set a step for an app; `Caption` takes `uppercase`, which adds `letterSpacings.caps`. Inside running text, `Link` underlines in `border` and turns `textPrimary` on hover; `Code` is mono at `0.875em` on `fill`, relative so it sits a step under any text around it; it adds no block padding, so it never grows the line, and a wrapped chip keeps its corners and side padding on each line.
 
 ## Weight
 

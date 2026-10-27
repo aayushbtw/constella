@@ -89,7 +89,7 @@ A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside th
 
 ## Command
 
-A menu that stays open under a search field: the menu's rows on a `raised` surface at `radii.sm`, the field an input group at `xs`, like the rows, nesting in the command's corner (a Command Dialog's popup is `sm` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
+A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.sm`, the field an `lg` input group a step above them, its corner `xs` like theirs, nesting in the command's corner (a Command Dialog's popup is `sm` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
 
 ## Markdown
 
@@ -153,9 +153,17 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 Share one surface and one motion: `raised` on `shadows.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
-A select's items and a menu's are the same row: `controlSm` tall (`size` on the content makes it `controlXs` with `xs` type, or `controlMd` with `textBase` (15px) type, and a submenu inherits it), `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A large menu pads its rows and labels `space.xs` (8px), insets its separators by as much, and is at least `sizes.menuLg` (256px) wide. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
+A select's items and a menu's are the same row: `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
-A filtered menu is a command in a popup: its field is the command's input group, sized with the rows a step up and its corner `xs` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
+| Size | Row | Text | Side inset | End column |
+| --- | --- | --- | --- | --- |
+| `sm` | `controlSm` (28) | `textSm` | `space.row` (6) | `icon + 2 × row` (28) |
+| `default` | `controlMd` (32) | `textMd` | `space.sm` (12) | `icon + sm` (28) |
+| `lg` | `controlLg` (36) | `textBase` | `space.md` (16) | `icon + md` (32) |
+
+Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (256px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
+
+A filtered menu is a command in a popup: its field is the command's input group, a step above the rows (`lg` at most) and its corner `xs` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
 
 ## Progress and meter
 
@@ -185,7 +193,7 @@ One pick among a few, read like tabs: items are `semimedium` `textSecondary` on 
 
 ## Select
 
-Its trigger is an input's surface, so a select and an input in one form read as one family; at `sm` the trigger and rows take `captionLg`, and the chevron and tick follow `controlIconSize`. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
+Its trigger is an input's surface, so a select and an input in one form read as one family; at `sm` the trigger takes `captionLg`, and the chevron and tick follow `controlIconSize`. `size` on the content sizes the rows as a menu's. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
 
 ## Separator
 

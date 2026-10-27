@@ -19,7 +19,7 @@ Every px value in these docs is at the default 16px root. Interfere puts spacing
 
 | Token | Default | Is | For |
 | --- | --- | --- | --- |
-| `space.row` | 6 | `xs` − `xxxs` | A row's inline padding and gap; a menu's end column, so a tick and a shortcut end on one line |
+| `space.row` | 6 | `xs` − `xxxs` | A row's inline padding and gap; an `sm` menu's side inset and end column, so a tick and a shortcut end on one line |
 | `space.popup` | 10 | `sm` − `xxxs` | A popover's and a chart tooltip's padding; an `sm` button's inline padding |
 | `sizes.controlXxxs` | 18 | `controlXxs` − `xxxs` | An `sm` badge |
 

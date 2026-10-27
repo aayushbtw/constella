@@ -95,10 +95,10 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
-    paddingInlineEnd: space.row,
-    paddingInlineStart: space.row,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
   },
-  // A menu's row, so a command list and a menu read as one family.
+  // A default menu's row, so a command list and a menu read as one family.
   item: {
     alignItems: "center",
     backgroundColor: {
@@ -112,19 +112,20 @@ const styles = stylex.create({
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
     gap: space.row,
-    minHeight: sizes.controlSm,
+    minHeight: sizes.controlMd,
     opacity: { default: 1, [off]: opacities.disabled },
     overflowWrap: "anywhere",
-    paddingInlineEnd: space.row,
-    paddingInlineStart: space.row,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
     userSelect: "none",
   },
+  // In line with the rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
     height: strokes.border,
     marginBlockEnd: space.xxs,
-    marginInlineEnd: `calc(-1 * ${space.xxs})`,
-    marginInlineStart: `calc(-1 * ${space.xxs})`,
+    marginInlineEnd: space.sm,
+    marginInlineStart: space.sm,
   },
   shortcut: {
     color: colors.textMuted,
@@ -228,7 +229,7 @@ function CommandInput({
   ...props
 }: Omit<Styled<AutocompletePrimitive.Input.Props>, "render">) {
   return (
-    <InputGroup data-slot="command-input" sx={[styles.input, sx]}>
+    <InputGroup data-slot="command-input" size="lg" sx={[styles.input, sx]}>
       {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
       <AutocompletePrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
@@ -266,7 +267,7 @@ function CommandEmpty({
     <AutocompletePrimitive.Empty
       data-slot="command-empty"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.empty], sx)}
+      {...stylex.props([typeStyles.textMd, styles.empty], sx)}
     />
   );
 }
@@ -309,7 +310,7 @@ function CommandItem({
     <AutocompletePrimitive.Item
       data-slot="command-item"
       {...props}
-      {...stylex.props([typeStyles.textSm, styles.item], sx)}
+      {...stylex.props([typeStyles.textMd, styles.item], sx)}
     />
   );
 }
