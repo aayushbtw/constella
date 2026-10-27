@@ -457,9 +457,15 @@ const styles = stylex.create({
   },
   action: {
     alignItems: "center",
+    // Stays lit while its menu is open, as a button's trigger does.
     backgroundColor: {
       default: "transparent",
-      [media.hover]: { default: "transparent", ":hover": colors.fillSubtle },
+      ":is([data-popup-open])": colors.fillSubtle,
+      [media.hover]: {
+        default: "transparent",
+        ":hover": colors.fillSubtle,
+        ":is([data-popup-open])": colors.fillSubtle,
+      },
     },
     borderBlockEndWidth: 0,
     borderBlockStartWidth: 0,
