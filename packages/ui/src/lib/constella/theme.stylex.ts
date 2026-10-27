@@ -6,10 +6,12 @@
 //   The ones that differ between light and dark live in base.css.
 // - Shape and density: one radius (the rest derive from it), control heights, spacing. In rem
 //   (1rem is 16px at the default root), so they grow with the reader's browser font size.
+// - Depth: `--shadow-*`, the drops under controls and in-page surfaces. Raised lifts them;
+//   flat leaves them out, so edges are borders and fills. Floating surfaces keep theirs.
 // - Fonts: `--font-sans` for text, `--font-mono` for code and figures. Named, not shipped: load
 //   them or put yours first. base.css sets them on the page and reset.css on controls and code; components inherit.
 //
-// The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing, Inter and Geist Mono.
+// The defaults are Polaris: Radix gray, an ink accent, 8px corners, default sizing, raised depth, Inter and Geist Mono.
 // Literal names, so `base.css` can read them. For more themes to switch between at
 // runtime, `stylex.createTheme(theme, { … })` and apply it to <html>.
 import * as stylex from "@stylexjs/stylex";
@@ -102,4 +104,13 @@ export const theme = stylex.defineVars({
   "--space-md": "1rem",
   "--space-lg": "1.5rem",
   "--space-xl": "3rem",
+  // Depth: raised. Flat sets each to `0 0 transparent`, a drop that draws nothing, as `none` can't sit in a list.
+  "--shadow-default":
+    "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
+  "--shadow-default-hover":
+    "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
+  "--shadow-default-pressed": "0 1px 1px -1px var(--black-a2)",
+  "--shadow-default-ring": "0 1px 3px var(--black-a5)",
+  "--shadow-default-ring-subtle":
+    "0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
 });

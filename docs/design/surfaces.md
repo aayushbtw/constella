@@ -2,9 +2,13 @@
 
 ## Controls
 
-Controls (buttons, inputs) have a real border for their edge: the edge takes space, so what the user sees is what's laid out, and a shadow ring would draw outside the box, look 2px larger and double up at a button group's seams. Buttons are flat: a secondary is a `fillSubtle` fill, an outline its border, a primary its solid fill, and none carries a shadow. A field, a checkbox, a select trigger and an outline toggle keep `shadows.default` under their edge; a select trigger and an outline toggle climb a step to `defaultHover` on hover and settle to `defaultPressed` while held. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill bleeds through the edge's anti-aliased corners.
+Controls (buttons, inputs) have a real border for their edge: the edge takes space, so what the user sees is what's laid out, and a shadow ring would draw outside the box, look 2px larger and double up at a button group's seams. Buttons are flat: a secondary is a `fillSubtle` fill, an outline its border, a primary its solid fill, and none carries a shadow. A field, a checkbox, a select trigger and an outline toggle keep `shadows.default` under their edge (in a raised theme, [depth](#depth)); a select trigger and an outline toggle climb a step to `defaultHover` on hover and settle to `defaultPressed` while held. Every variant reserves the border, transparent when it has no edge, so a fill and an outline are the same size. A bordered control sets `background-clip: padding-box`: otherwise the fill bleeds through the edge's anti-aliased corners.
 
 A slider thumb rides above its track, so it takes a shadow too: `shadows.defaultRing` is a gray ring plus a drop shadow. `shadows.default` alone vanishes on the dark page and leaves the thumb flat. A switch thumb takes `default`: its fill does the separating.
+
+## Depth
+
+A theme picks its depth: `raised`, the default, or `flat`. Raised gives controls and in-page surfaces a drop: the `shadows.default` steps under a field or a trigger, the drop under a slider thumb's ring and under the composer's ring. Flat drops all of them, so an edge is a border, a ring or a fill and nothing in the page lifts; a select trigger and an outline toggle then answer hover with their fill alone. The theme sets the drops (`--shadow-*` in `theme.stylex.ts`) and parts read `shadows.*` as before, so no part branches on depth. Rings that draw an edge, the invalid halo and the focus ring stay at both depths. A side panel keeps `shadows.panel` at both depths: it stands apart from the content beside it. What floats always keeps `lg` or `xl`: a popover, menu, select list, hover card, dialog, sheet, toast, tooltip and a data table's action bar, since their shadow says they sit above the page, not how deep the page is.
 
 ## Edges
 

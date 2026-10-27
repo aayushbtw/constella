@@ -1,4 +1,4 @@
-// A theme is Radix Colors scales by name mapped onto theme.stylex.ts, plus shape and density.
+// A theme is Radix Colors scales by name mapped onto theme.stylex.ts, plus shape, density and depth.
 // Radix's dark files switch on `.dark`, so one value covers both appearances.
 
 const grays = ["gray", "mauve", "slate", "sage", "olive", "sand"] as const;
@@ -97,15 +97,40 @@ const scalingPresets = {
   },
 } as const;
 
+// The drops under controls and in-page surfaces. Flat draws none, so edges are borders and
+// fills; floating surfaces keep their shadows in both. A transparent drop, as `none` can't sit
+// in the lists parts build.
+const noDrop = "0 0 transparent";
+const depthPresets = {
+  raised: {
+    default: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
+    "default-hover":
+      "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
+    "default-pressed": "0 1px 1px -1px var(--black-a2)",
+    "default-ring": "0 1px 3px var(--black-a5)",
+    "default-ring-subtle":
+      "0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+  },
+  flat: {
+    default: noDrop,
+    "default-hover": noDrop,
+    "default-pressed": noDrop,
+    "default-ring": noDrop,
+    "default-ring-subtle": noDrop,
+  },
+} as const;
+
 /** A preset's px at the default 16px root, in rem, so it grows with the reader's font size. */
 const rem = (px: number) => `${px / 16}rem`;
 
 type ThemeName = keyof typeof themes;
 type RadiusPreset = keyof typeof radiusPresets;
 type ScalingPreset = keyof typeof scalingPresets;
+type DepthPreset = keyof typeof depthPresets;
 
 interface ThemeOptions {
   accent: Accent;
+  depth: DepthPreset;
   radius: RadiusPreset;
   scaling: ScalingPreset;
   /** Its grays and default accent. */
@@ -166,7 +191,7 @@ function scaleFiles(scale: string) {
 }
 
 /** Every variable in theme.stylex.ts, in its order, for these choices. */
-function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
+function themeEntries({ accent, depth, radius, scaling, theme }: ThemeOptions) {
   const { gray } = themes[theme];
   const ink = accent === "ink";
   const { controls, space } = scalingPresets[scaling];
@@ -191,6 +216,10 @@ function themeEntries({ accent, radius, scaling, theme }: ThemeOptions) {
       `--space-${size}`,
       rem(space[size]),
     ]),
+    ...Object.entries(depthPresets[depth]).map(([slot, value]): Entry => [
+      `--shadow-${slot}`,
+      value,
+    ]),
   ] satisfies Entry[];
 }
 
@@ -208,9 +237,9 @@ function themeScales({
 
 /** A complete theme.stylex.ts for these choices, to replace the one Constella installs. */
 function generateThemeFile(options: ThemeOptions) {
-  const { accent, radius, scaling, theme } = options;
+  const { accent, depth, radius, scaling, theme } = options;
   return [
-    `// ${themes[theme].label}: ${themes[theme].gray} grays, ${accent} accent, ${radius} radius, ${scaling} sizing.`,
+    `// ${themes[theme].label}: ${themes[theme].gray} grays, ${accent} accent, ${radius} radius, ${scaling} sizing, ${depth} depth.`,
     ...themeScales(options).flatMap((scale) =>
       scaleFiles(scale).map((file) => `import "@radix-ui/colors/${file}.css";`)
     ),
@@ -245,4 +274,11 @@ export {
   themeScales,
   themes,
 };
-export type { Accent, RadiusPreset, ScalingPreset, ThemeName, ThemeOptions };
+export type {
+  Accent,
+  DepthPreset,
+  RadiusPreset,
+  ScalingPreset,
+  ThemeName,
+  ThemeOptions,
+};

@@ -105,18 +105,22 @@ export const codeBlockVars = stylex.defineVars({
 
 // Steps by height, after Interfere's: `default` under a control, `lg` under a popup, `xl`
 // under a dialog. A step's slots follow it: `Hover`, `Pressed`, `Invalid`, `Ring` (draws its
-// own edge, `Subtle` in `borderSubtle`).
+// own edge, `Subtle` in `borderSubtle`). The theme's depth sets `default`'s drops (`--shadow-*`):
+// a flat theme drops them, and a ring keeps its edge. `panel`, `lg` and `xl` stand off the page, so every theme keeps them.
 export const shadows = stylex.defineConsts({
   // The border is the control's edge, these its height. It rises a step on hover and
   // settles flat while pressed.
-  default: "0 1px 2px -1px var(--black-a1), 0 2px 4px 0 var(--black-a1)",
-  defaultHover: "0 1px 2px -1px var(--black-a2), 0 2px 4px 0 var(--black-a1)",
-  defaultPressed: "0 1px 1px -1px var(--black-a2)",
+  default: "var(--shadow-default)",
+  defaultHover: "var(--shadow-default-hover)",
+  defaultPressed: "var(--shadow-default-pressed)",
   defaultInvalid: "0 0 0 2px var(--red-a4)",
-  defaultRing: "0 0 0 1px var(--border), 0 1px 3px var(--black-a5)",
+  defaultRing: "0 0 0 1px var(--border), var(--shadow-default-ring)",
   defaultRingSubtle:
-    "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
+    "0 0 0 0.5px var(--border-subtle), var(--shadow-default-ring-subtle)",
   defaultRingInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
+  // A side panel beside the page: it stands apart from the content in every depth, so the theme doesn't set it.
+  panel:
+    "0 0 0 0.5px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 12px -6px var(--black-a1)",
   // A near shadow for contact and a far one for height, so a surface sits at a distance.
   lg: "0 0 0 1px var(--border-subtle), 0 1px 2px var(--black-a1), 0 4px 16px -4px var(--black-a3)",
   xl: "0 0 0 1px var(--border-subtle), 0 1px 3px var(--black-a1), 0 16px 40px -8px var(--black-a4)",

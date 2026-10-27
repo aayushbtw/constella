@@ -42,6 +42,7 @@ import {
 } from "~/lib/theme-css";
 import type {
   Accent,
+  DepthPreset,
   RadiusPreset,
   ScalingPreset,
   ThemeName,
@@ -60,6 +61,11 @@ const scalingLabels = {
   default: "Default",
   spacious: "Spacious",
 } satisfies Record<ScalingPreset, string>;
+
+const depthLabels = {
+  raised: "Raised",
+  flat: "Flat",
+} satisfies Record<DepthPreset, string>;
 
 const styles = stylex.create({
   preview: {
@@ -156,8 +162,9 @@ function ThemeBuilderDemo() {
   const [accent, setAccent] = useState<Accent>(themes[defaultTheme].accent);
   const [radius, setRadius] = useState<RadiusPreset>("medium");
   const [scaling, setScaling] = useState<ScalingPreset>("default");
+  const [depth, setDepth] = useState<DepthPreset>("raised");
 
-  const options = useDeferredValue({ accent, radius, scaling, theme });
+  const options = useDeferredValue({ accent, depth, radius, scaling, theme });
   const file = useMemo(() => generateThemeFile(options), [options]);
   const scalesCss = useScalesCss(themeScales(options));
   const preview = `${scalesCss}\n${previewCss(options)}`;
@@ -254,6 +261,29 @@ function ThemeBuilderDemo() {
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(scalingLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field>
+              <FieldLabel>Depth</FieldLabel>
+              <Select
+                items={depthLabels}
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setDepth(value);
+                  }
+                }}
+                value={depth}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(depthLabels).map(([value, label]) => (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>

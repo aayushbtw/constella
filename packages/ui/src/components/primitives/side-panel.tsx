@@ -54,7 +54,7 @@ const styles = stylex.create({
   // Beside the content, lifted off it as the composer is: its fill and its edge a ring in its shadow.
   surface: {
     backgroundColor: colors.raised,
-    boxShadow: shadows.defaultRingSubtle,
+    boxShadow: shadows.panel,
     borderStartStartRadius: radii.lg,
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,

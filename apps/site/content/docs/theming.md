@@ -1,6 +1,6 @@
 ---
 title: Theming
-description: Pick a theme, then bring your accent, corners and density. A theme is one StyleX file you own.
+description: Pick a theme, then bring your accent, corners, density and depth. A theme is one StyleX file you own.
 order: 2
 ---
 
@@ -8,7 +8,7 @@ A theme is `theme.stylex.ts`: one file of variables you own. Components read onl
 
 ## Theme builder
 
-Pick a theme, then change its accent, radius and sizing if you like, and copy the file. The page wears the theme while you build it.
+Pick a theme, then change its accent, radius, sizing and depth if you like, and copy the file. The page wears the theme while you build it.
 
 <!-- ::demo name="theme-builder" -->
 
@@ -16,7 +16,7 @@ Accents are [Radix Colors](https://www.radix-ui.com/colors) scales by name, so t
 
 ## Themes
 
-Themes are named after stars, each hinting at its color. A theme sets colors only: its grays and a default accent. Radius and sizing are yours to pick on top.
+Themes are named after stars, each hinting at its color. A theme sets colors only: its grays and a default accent. Radius, sizing and depth are yours to pick on top.
 
 | Theme     | Grays | Accent | Note                                    |
 | --------- | ----- | ------ | --------------------------------------- |
@@ -113,6 +113,29 @@ The other corners step from `--radius` by `min(--radius, 4px)`, so each nests co
 | `md`   | radius + step    | 12px   |
 | `lg`   | radius + 2 steps | 16px   |
 | `xl`   | radius + 3 steps | 20px   |
+
+### Depth
+
+The drops under controls and in-page surfaces. Floating surfaces (popovers, menus, select lists, dialogs, sheets, toasts, tooltips, a data table's action bar) keep their shadows at either depth.
+
+| Variable | Raised | Under |
+| --- | --- | --- |
+| `--shadow-default` | A soft drop | Fields, checkboxes, radios, select triggers, outline toggles, a switch's thumb |
+| `--shadow-default-hover`, `--shadow-default-pressed` | A step up, a step down | A select trigger and an outline toggle, hovered and held |
+| `--shadow-default-ring` | A gray drop | A slider's thumb, under its ring |
+| `--shadow-default-ring-subtle` | A near and a far drop | The composer, under its ring |
+
+`raised` is Polaris's. `flat` sets each to `0 0 transparent`, so an edge is a border, a ring or a fill and nothing in the page lifts:
+
+```ts
+"--shadow-default": "0 0 transparent",
+"--shadow-default-hover": "0 0 transparent",
+"--shadow-default-pressed": "0 0 transparent",
+"--shadow-default-ring": "0 0 transparent",
+"--shadow-default-ring-subtle": "0 0 transparent",
+```
+
+Not `none`: parts list these with other shadows, where `none` is invalid. The rings that draw an edge, the invalid halo and the focus ring stay at either depth.
 
 ## Status colors
 
