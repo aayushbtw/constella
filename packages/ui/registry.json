@@ -803,6 +803,54 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/popover/index.md"
     },
     {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "A month grid for picking a day or a range, with the selection in the info color.",
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex",
+        "react-day-picker"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/primitives/calendar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/calendar/index.md"
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:ui",
+      "title": "Date Range Picker",
+      "description": "A button showing a range of days, opening a two-month calendar with optional presets beside it.",
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex",
+        "react-day-picker"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/calendar.json",
+        "https://constella.aayush.cv/r/popover.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/primitives/date-range-picker.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/date-range-picker/index.md"
+    },
+    {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Dropdown Menu",

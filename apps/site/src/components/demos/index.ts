@@ -72,6 +72,7 @@ import {
   ButtonGroupSplitDemo,
   ButtonGroupTextDemo,
 } from "~/components/demos/button-group";
+import { CalendarDemo, CalendarRangeDemo } from "~/components/demos/calendar";
 import {
   CardActionDemo,
   CardDemo,
@@ -137,6 +138,10 @@ import {
   DataTableQueryDemo,
   DataTableRowClickDemo,
 } from "~/components/demos/data-table";
+import {
+  DateRangePickerDemo,
+  DateRangePickerPresetsDemo,
+} from "~/components/demos/date-range-picker";
 import {
   DialogControlledDemo,
   DialogDemo,
@@ -652,6 +657,10 @@ const demos = {
   "meter-value": MeterValueDemo,
   "meter-variant": MeterVariantDemo,
   message: MessageDemo,
+  calendar: CalendarDemo,
+  "calendar-range": CalendarRangeDemo,
+  "date-range-picker": DateRangePickerDemo,
+  "date-range-picker-presets": DateRangePickerPresetsDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,

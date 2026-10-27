@@ -83,6 +83,10 @@ A `fillSubtle` tray, read left to right. Long lines scroll sideways with no scro
 
 Animates its height, since what sits below it has to make room: the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
 
+## Calendar and date range picker
+
+A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a small outline-less button in a popover, with presets as ghost buttons in a column set off by a `borderSubtle` edge; the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
+
 ## Command
 
 A menu that stays open under a search field: the menu's rows on a `raised` surface at `radii.sm`, the field an input group at `xs`, like the rows, nesting in the command's corner (a Command Dialog's popup is `sm` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
