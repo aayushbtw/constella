@@ -1091,6 +1091,10 @@
         {
           "path": "src/components/primitives/table.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "src/lib/constella/table.stylex.ts",
+          "type": "registry:lib"
         }
       ],
       "docs": "Usage: https://constella.aayush.cv/docs/components/table/index.md"

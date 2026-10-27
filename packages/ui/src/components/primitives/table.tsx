@@ -7,6 +7,7 @@ import type { ComponentProps } from "react";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
+import { tableVars } from "@/lib/constella/table.stylex";
 import {
   colors,
   durations,
@@ -109,8 +110,12 @@ const styles = stylex.create({
     fontWeight: fontWeights.regular,
     height: `calc(${sizes.controlLg} + ${space.xxs})`,
     paddingBlock: 0,
-    paddingInlineEnd: { default: space.sm, [checkbox]: 0 },
-    paddingInlineStart: space.sm,
+    paddingInlineEnd: {
+      default: space.sm,
+      [checkbox]: 0,
+      ":last-child": tableVars.inset,
+    },
+    paddingInlineStart: { default: space.sm, ":first-child": tableVars.inset },
     textAlign: "start",
     verticalAlign: "middle",
     whiteSpace: "nowrap",
@@ -124,8 +129,12 @@ const styles = stylex.create({
       ":is(tfoot > :first-child > *)": strokes.border,
     },
     paddingBlock: space.xs,
-    paddingInlineEnd: { default: space.sm, [checkbox]: 0 },
-    paddingInlineStart: space.sm,
+    paddingInlineEnd: {
+      default: space.sm,
+      [checkbox]: 0,
+      ":last-child": tableVars.inset,
+    },
+    paddingInlineStart: { default: space.sm, ":first-child": tableVars.inset },
     verticalAlign: "middle",
     whiteSpace: "nowrap",
   },
