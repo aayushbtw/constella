@@ -62,6 +62,7 @@ DataTable
 ├── DataTableColumnHeader
 ├── DataTableSelectAll
 ├── DataTableSelectRow
+├── DataTableActionBar
 ├── DataTablePagination
 └── DataTableViewOptions
 ```
@@ -87,6 +88,23 @@ column.display({
   header: ({ table }) => <DataTableSelectAll table={table} />,
   cell: ({ row }) => <DataTableSelectRow row={row} />,
 });
+```
+
+## Data Table Action Bar
+
+Use `DataTableActionBar` for actions on the selected rows. It floats at the bottom of the window while any row is selected, with the count, your actions and a Clear button, and leaves when none is. Register `rowSelectionFeature`. Put [Buttons](/docs/components/button) or a [Dropdown Menu](/docs/components/dropdown-menu) trigger in it, with `corners="rounded"` so they nest in its corner, and leave room under the table for it.
+
+<!-- ::demo name="data-table-action-bar" -->
+
+```tsx
+<DataTableActionBar label="Payment actions" table={table}>
+  <Button corners="rounded" size="sm" variant="ghost">
+    Copy emails
+  </Button>
+  <Button color="danger" corners="rounded" size="sm" variant="ghost">
+    Delete
+  </Button>
+</DataTableActionBar>
 ```
 
 ## Filtering
@@ -207,6 +225,7 @@ const table = useTable({
 | Part | Adds |
 | --- | --- |
 | `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
+| `DataTableActionBar` | `table`, `label`; `children`, the actions, between the count and Clear |
 | `DataTableColumnHeader` | `column`, `title`; the sort icon leads in a column with `meta: { align: "end" }` |
 | `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |

@@ -1103,7 +1103,7 @@
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
-      "description": "Renders a TanStack Table as a Table, virtualized, with sorting, selection, pagination, column visibility and TanStack Query states.",
+      "description": "Renders a TanStack Table as a Table, virtualized, with sorting, selection, an action bar, pagination, column visibility and TanStack Query states.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
@@ -1125,6 +1125,10 @@
       "files": [
         {
           "path": "src/components/tanstack/data-table.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/components/tanstack/data-table-action-bar.tsx",
           "type": "registry:component"
         },
         {

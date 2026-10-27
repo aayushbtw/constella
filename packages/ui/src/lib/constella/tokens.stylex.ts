@@ -293,6 +293,8 @@ export const offsets = stylex.defineConsts({
 });
 
 export const layers = stylex.defineConsts({
+  // Floats over the page, under a dialog's backdrop.
+  bar: "30",
   dialog: "40",
   // Above a dialog, so a select or menu opened from one sits on top of it.
   popover: "45",

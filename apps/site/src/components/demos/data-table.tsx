@@ -76,6 +76,7 @@ import {
 } from "@/components/primitives/toggle-group";
 import {
   DataTable,
+  DataTableActionBar,
   DataTableColumnHeader,
   DataTablePagination,
   DataTableSelectAll,
@@ -145,6 +146,8 @@ const styles = stylex.create({
     width: "100%",
   },
   main: { flexGrow: 1, minWidth: 0 },
+  // A containing block for the fixed bar, so it floats at the frame's foot, not the window's.
+  contained: { contain: "layout" },
   // The docs column is narrower than an app, so a slimmer panel leaves the table room.
   panel: { width: 288 },
   content: {
@@ -816,7 +819,73 @@ function DataTableRowClickDemo() {
   );
 }
 
+function DataTableActionBarDemo() {
+  const [rows, setRows] = useState(payments);
+  const table = useTable({ columns, data: rows, features, getRowId });
+  return (
+    <DemoRow sx={styles.stage}>
+      <div {...stylex.props(styles.frame, styles.contained)}>
+        <div {...stylex.props(styles.content)}>
+          <DataTable
+            columnSx={{
+              amount: styles.amount,
+              select: styles.select,
+              status: styles.status,
+            }}
+            empty={
+              <Button
+                onClick={() => {
+                  setRows(payments);
+                }}
+                variant="link"
+              >
+                Restore payments
+              </Button>
+            }
+            label="Payments"
+            sx={styles.wide}
+            table={table}
+          />
+        </div>
+        <DataTableActionBar label="Payment actions" table={table}>
+          <Button
+            corners="rounded"
+            onClick={() => {
+              void navigator.clipboard.writeText(
+                table
+                  .getSelectedRowModel()
+                  .rows.map(({ original }) => original.email)
+                  .join("\n")
+              );
+            }}
+            size="sm"
+            variant="ghost"
+          >
+            <Glyph icon={Copy01Icon} />
+            Copy emails
+          </Button>
+          <Button
+            color="danger"
+            corners="rounded"
+            onClick={() => {
+              const ids = new Set(table.getSelectedRowIds());
+              setRows((current) => current.filter(({ id }) => !ids.has(id)));
+              table.resetRowSelection(true);
+            }}
+            size="sm"
+            variant="ghost"
+          >
+            <Glyph icon={Delete02Icon} />
+            Delete
+          </Button>
+        </DataTableActionBar>
+      </div>
+    </DemoRow>
+  );
+}
+
 export {
+  DataTableActionBarDemo,
   DataTableDemo,
   DataTableFilterDemo,
   DataTablePaginationDemo,

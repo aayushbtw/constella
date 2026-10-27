@@ -132,6 +132,7 @@ import {
 } from "~/components/demos/color";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
+  DataTableActionBarDemo,
   DataTableDemo,
   DataTableFilterDemo,
   DataTablePaginationDemo,
@@ -554,6 +555,7 @@ const demos = {
   "copy-button-label": CopyButtonLabelDemo,
   "copy-button-variant": CopyButtonVariantDemo,
   "data-table": DataTableDemo,
+  "data-table-action-bar": DataTableActionBarDemo,
   "data-table-filter": DataTableFilterDemo,
   "data-table-pagination": DataTablePaginationDemo,
   "data-table-query": DataTableQueryDemo,

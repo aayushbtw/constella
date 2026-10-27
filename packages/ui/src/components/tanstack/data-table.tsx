@@ -394,6 +394,7 @@ function DataTableColumnHeader({
 }
 
 export { DataTable, DataTableColumnHeader };
+export { DataTableActionBar } from "@/components/tanstack/data-table-action-bar";
 export { DataTablePagination } from "@/components/tanstack/data-table-pagination";
 export {
   DataTableSelectAll,

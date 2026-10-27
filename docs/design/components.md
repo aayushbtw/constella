@@ -113,6 +113,8 @@ A table whose rows render only while on screen, so its layout is fixed and narro
 
 A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows as tall as loaded ones: each cell a bar `iconSm` tall and 60% wide in a `textSm` line, keeping its column's width and alignment, and the checkbox column a `sizes.icon` square; while the next page loads over the old one, the body fades to `opacities.busy`.
 
+The action bar floats at the window's foot while any row is selected: a popover's surface (`raised`, `shadows.lg`, `radii.md`) a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. The count is announced through a live region outside the bar, since a hidden bar isn't read.
+
 Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. The column menu is an outline button that opens a menu of checkbox items.
 
 ## Dialog

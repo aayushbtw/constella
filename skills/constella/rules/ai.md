@@ -173,7 +173,7 @@ const table = useTable({ columns, data, features });
 ```
 
 - **Keep `features` and `columns` outside the component.** A new array each render rebuilds every row model.
-- Register the feature a part needs: `rowSortingFeature` for `DataTableColumnHeader`, `rowSelectionFeature` for `DataTableSelectAll` and `DataTableSelectRow`, `columnVisibilityFeature` for `DataTableViewOptions`, filtering features for search.
+- Register the feature a part needs: `rowSortingFeature` for `DataTableColumnHeader`, `rowSelectionFeature` for `DataTableSelectAll`, `DataTableSelectRow` and `DataTableActionBar`, `columnVisibilityFeature` for `DataTableViewOptions`, filtering features for search.
 - Narrow columns take `columnSx` widths and the table a `minWidth` in `sx`; the layout is fixed.
 - In a container that scrolls on its own, pass it as `scrollRef`. Loading, stale and error states come from a TanStack Query `useQuery` result.
 
