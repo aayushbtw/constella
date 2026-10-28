@@ -85,7 +85,7 @@ Animates its height, since what sits below it has to make room: the panel grows 
 
 ## Calendar and date range picker
 
-A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a small outline-less button in a popover, with presets as ghost buttons in a column set off by a `borderSubtle` edge; the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
+A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
 
 ## Command
 

@@ -37,7 +37,7 @@ interface DateRangePreset {
 }
 
 const styles = stylex.create({
-  // A large menu's corner, so the presets read as one.
+  // A menu's corner, so the presets read as one.
   content: {
     borderEndEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
@@ -63,7 +63,7 @@ const styles = stylex.create({
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
   },
-  // A large menu's radio item, its tick on the end.
+  // A default menu's radio item, its tick on the end.
   preset: {
     alignItems: "center",
     borderBlockEndWidth: 0,
@@ -80,8 +80,8 @@ const styles = stylex.create({
     gap: space.row,
     justifyContent: "space-between",
     minHeight: sizes.controlMd,
-    paddingInlineEnd: space.xs,
-    paddingInlineStart: space.xs,
+    paddingInlineEnd: space.sm,
+    paddingInlineStart: space.sm,
     textAlign: "start",
   },
   calendar: {
@@ -136,12 +136,12 @@ function DateRangePicker({
       }}
       open={open}
     >
-      <PopoverTrigger render={<Button size="sm" />}>
+      <PopoverTrigger render={<Button />}>
         <HugeiconsIcon
           aria-hidden
           data-icon="inline-start"
           icon={Calendar03Icon}
-          size={controlIconSize.sm}
+          size={controlIconSize.default}
           strokeWidth={Number(strokes.icon)}
         />
         {new Intl.DateTimeFormat(calendar.locale?.code ?? "en-US", {
@@ -174,7 +174,7 @@ function DateRangePicker({
                   }}
                   type="button"
                   {...stylex.props(
-                    typeStyles.textSm,
+                    typeStyles.textMd,
                     styles.preset,
                     stateStyles.ghost
                   )}
