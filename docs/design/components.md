@@ -8,7 +8,7 @@ A box like a card, a control's radius and padding: `border` border, `raised` fil
 
 ## Alert dialog
 
-Wears the dialog's surface, motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
+Wears the dialog's surface (`radii.xl`), motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
 
 ## Approval
 
@@ -85,11 +85,11 @@ Animates its height, since what sits below it has to make room: the panel grows 
 
 ## Calendar and date range picker
 
-A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
+A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
 
 ## Command
 
-A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.sm`, the field an `lg` input group a step above them, its corner `xs` like theirs, nesting in the command's corner (a Command Dialog's popup is `sm` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
+A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.lg`, the field an `lg` input group a step above them, its corner `md` like theirs, nesting in the command's corner (a Command Dialog's popup is `lg` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
 
 ## Markdown
 
@@ -113,13 +113,13 @@ A table whose rows render only while on screen, so its layout is fixed and narro
 
 A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows as tall as loaded ones: each cell a bar `iconSm` tall and 60% wide in a `textSm` line, keeping its column's width and alignment, and the checkbox column a `sizes.icon` square; while the next page loads over the old one, the body fades to `opacities.busy`.
 
-The action bar floats at the window's foot while any row is selected: a popover's surface (`raised`, `shadows.lg`, `radii.md`) a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. The count is announced through a live region outside the bar, since a hidden bar isn't read.
+The action bar floats at the window's foot while any row is selected: a popover's fill and shadow (`raised`, `shadows.lg`) at `radii.md` a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. The count is announced through a live region outside the bar, since a hidden bar isn't read.
 
 Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. The column menu is an outline button that opens a menu of checkbox items.
 
 ## Dialog
 
-Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Its popup is `raised` on `radii.xl`. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
 
 ## Empty state
 
@@ -131,11 +131,11 @@ Its button is a `fill` chip set into the box with an even inset on three sides, 
 
 ## Hover card
 
-A popover opened by resting on a link, with the popover's surface and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half Base UI's default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
+A popover opened by resting on a link, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half Base UI's default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
 
 ## Input group
 
-An input's surface drawn once around a borderless control and its addons, so the group carries the edge, invalid halo, ring and disabled fade. Buttons in a header or footer gather at its end. An input stacked with a header or footer takes the addon's line height and a 4px step between them, so the two lines space as evenly as their outer edges.
+An input's surface, at `radii.md`, drawn once around a borderless control and its addons, so the group carries the edge, invalid halo, ring and disabled fade. Buttons in a header or footer gather at its end. An input stacked with a header or footer takes the addon's line height and a 4px step between them, so the two lines space as evenly as their outer edges.
 
 ## Item
 
@@ -151,9 +151,9 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
-A select's items and a menu's are the same row: `xs` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
+A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
 | Size | Row | Text | Side inset | End column |
 | --- | --- | --- | --- | --- |
@@ -163,7 +163,7 @@ A select's items and a menu's are the same row: `xs` corners inside the popup's 
 
 Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (200px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
 
-A filtered menu is a command in a popup: its field is the command's input group, a step above the rows (`lg` at most) and its corner `xs` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
+A filtered menu is a command in a popup: its field is the command's input group, a step above the rows (`lg` at most) and its corner `md` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
 
 ## Progress and meter
 
@@ -193,7 +193,7 @@ One pick among a few, read like tabs: items are `semimedium` `textSecondary` on 
 
 ## Select
 
-Its trigger is an input's surface, so a select and an input in one form read as one family; at `sm` the trigger takes `captionLg`, and the chevron and tick follow `controlIconSize`. `size` on the content sizes the rows as a menu's. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
+Its trigger is an input's surface at `radii.md`, so a select and an input in one form read as one family; at `sm` the trigger takes `captionLg`, and the chevron and tick follow `controlIconSize`. `size` on the content sizes the rows as a menu's. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
 
 ## Separator
 
@@ -257,7 +257,7 @@ The default list has no track: a `fill` pill on full corners slides between `sem
 
 ## Textarea
 
-An input's surface, two control heights tall, growing with its content and resizing only vertically.
+An input's surface at `radii.md`, two control heights tall, growing with its content and resizing only vertically.
 
 ## Toast
 

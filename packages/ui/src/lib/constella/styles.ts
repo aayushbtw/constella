@@ -67,6 +67,7 @@ const joinStyles = stylex.create({
     },
   },
   full: corners(radii.full),
+  md: corners(radii.md),
   sm: corners(radii.sm),
   xs: corners(radii.xs),
 });

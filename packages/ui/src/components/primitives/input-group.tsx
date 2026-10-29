@@ -411,7 +411,7 @@ function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
       {...props}
-      {...stylex.props(styles.group, joinStyles.sm, joinStyles.edges, sx)}
+      {...stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)}
     />
   );
 }

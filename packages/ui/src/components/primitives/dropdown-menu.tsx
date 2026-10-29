@@ -81,10 +81,10 @@ const styles = stylex.create({
   // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.raised,
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
+    borderStartStartRadius: radii.lg,
+    borderStartEndRadius: radii.lg,
+    borderEndStartRadius: radii.lg,
+    borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
     color: colors.textPrimary,
     // A filtered popup keeps its field in place and scrolls the list instead.
@@ -118,10 +118,10 @@ const styles = stylex.create({
   },
   // Inside the popup's padding, so its corner nests in the popup's.
   input: {
-    borderStartStartRadius: radii.xs,
-    borderStartEndRadius: radii.xs,
-    borderEndStartRadius: radii.xs,
-    borderEndEndRadius: radii.xs,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     flexShrink: 0,
   },
   searchIcon: {
@@ -166,10 +166,10 @@ const styles = stylex.create({
       [highlighted]: colors.fillSubtle,
       [`${danger}${highlighted}`]: colors.dangerSubtle,
     },
-    borderStartStartRadius: radii.xs,
-    borderStartEndRadius: radii.xs,
-    borderEndStartRadius: radii.xs,
-    borderEndEndRadius: radii.xs,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
     color: { default: colors.textPrimary, [danger]: colors.dangerText },
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
