@@ -116,7 +116,7 @@ export const shadows = stylex.defineConsts({
   defaultInvalid: "0 0 0 2px var(--red-a4)",
   defaultRing: "0 0 0 1px var(--border), var(--shadow-default-ring)",
   defaultRingSubtle:
-    "0 0 0 0.5px var(--border-subtle), var(--shadow-default-ring-subtle)",
+    "0 0 0 1px var(--border-subtle), var(--shadow-default-ring-subtle)",
   defaultRingInvalid: "0 0 0 1px var(--danger-border), 0 0 0 3px var(--red-a4)",
   // A side panel beside the page: it stands apart from the content in every depth, so the theme doesn't set it.
   panel:

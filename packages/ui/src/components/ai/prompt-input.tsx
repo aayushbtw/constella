@@ -55,6 +55,8 @@ const barInset = `calc(${space.xxs} - ${strokes.border})` as const;
 const invalid =
   ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
+// The well frames the prompt, so its own ring would double the edge.
+const inWell = ":is([data-slot='prompt-input-well'] *)";
 
 const styles = stylex.create({
   form: {
@@ -74,6 +76,7 @@ const styles = stylex.create({
     borderInlineStartWidth: 0,
     boxShadow: {
       default: shadows.defaultRingSubtle,
+      [inWell]: "var(--shadow-default-ring-subtle)",
       [invalid]: shadows.defaultRingInvalid,
     },
     height: "auto",

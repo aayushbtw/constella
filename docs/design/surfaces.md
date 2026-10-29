@@ -22,7 +22,7 @@ A box in the layout (a card, an alert) takes a real `border` border, not a shado
 
 ## Composer
 
-The prompt input is a surface, not a control: no border, and its edge is a 0.5px `borderSubtle` ring inside `shadows.defaultRingSubtle`, over a soft drop, so the biggest box on the page reads lighter than a field. It never sits in a button group, so the ring's drawing outside the box costs nothing. Invalid swaps in `defaultRingInvalid`, a 1px `danger` ring and its halo. In a well the ring stays outside, a step darker than the well in both themes. Its fill is `raised`, like a layout box.
+The prompt input is a surface, not a control: no border, and its edge is a 1px `borderSubtle` ring inside `shadows.defaultRingSubtle`, over a soft drop, so the biggest box on the page reads lighter than a field. It never sits in a button group, so the ring's drawing outside the box costs nothing. Invalid swaps in `defaultRingInvalid`, a 1px `danger` ring and its halo. In a well it draws no ring of its own, since the well frames it; it keeps only the theme's `--shadow-default-ring-subtle` drop, transparent in flat depth. Its fill is `raised`, like a layout box.
 
 ## Floating
 

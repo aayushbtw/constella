@@ -45,7 +45,7 @@ import {
 } from "@/components/primitives/side-panel";
 ```
 
-The panel floats beside the page, lifted off it as the composer is: inset from the content and the window's edges, rounded, on the `raised` fill, its edge a ring in its `defaultRingSubtle` shadow.
+The panel floats beside the page, lifted off it as the composer is: inset from the content and the window's edges, rounded, on the `raised` fill, its edge a ring in its `shadows.panel` shadow.
 
 Put a `SidePanelSlot` after the whole page, header included, in a flex row. Pass its ref to `SidePanelContent` as `container`. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
 
