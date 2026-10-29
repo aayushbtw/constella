@@ -257,7 +257,7 @@ export const sizes = stylex.defineConsts({
   itemText: `calc(${spaceUnit} * 40)`,
   menu: `calc(${spaceUnit} * 36)`,
   // A default or large menu's least width, roomy enough for a label beside its value.
-  menuLg: `calc(${spaceUnit} * 64)`,
+  menuLg: `calc(${spaceUnit} * 50)`,
   menuHeight: `calc(${spaceUnit} * 80)`,
   // A model picker's list: short names beside a search field.
   modelPicker: `calc(${spaceUnit} * 60)`,
