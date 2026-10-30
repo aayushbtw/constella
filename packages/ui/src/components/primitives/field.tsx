@@ -128,21 +128,21 @@ const styles = stylex.create({
       default: null,
       [card]: {
         default: colors.border,
-        ":has([data-checked])": colors.accentSolid,
+        ":has([data-checked])": colors.infoSolid,
       },
     },
     borderBlockStartColor: {
       default: null,
       [card]: {
         default: colors.border,
-        ":has([data-checked])": colors.accentSolid,
+        ":has([data-checked])": colors.infoSolid,
       },
     },
     borderInlineColor: {
       default: null,
       [card]: {
         default: colors.border,
-        ":has([data-checked])": colors.accentSolid,
+        ":has([data-checked])": colors.infoSolid,
       },
     },
     borderStartStartRadius: cardRadius,

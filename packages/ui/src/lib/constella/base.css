@@ -47,15 +47,19 @@
     color-scheme: dark;
   }
 
-  /* Status tints are the vivid step 9 at low opacity: Radix's dark alpha steps go muddy.
-     Listed on each theme class, so the mix resolves where the theme's step 9 does. */
+  /* Status tints are the vivid step 9 (info, its own solid) at low opacity: Radix's dark alpha
+     steps go muddy. Listed on each theme class, so the mix resolves where the theme's color does. */
   :root,
   .light,
   .dark {
     --danger-subtle: color-mix(in oklab, var(--red-9) 14%, transparent);
     --danger-subtle-hover: color-mix(in oklab, var(--red-9) 22%, transparent);
-    --info-subtle: color-mix(in oklab, var(--blue-9) 14%, transparent);
-    --info-subtle-hover: color-mix(in oklab, var(--blue-9) 22%, transparent);
+    --info-subtle: color-mix(in oklab, var(--info-solid) 14%, transparent);
+    --info-subtle-hover: color-mix(
+      in oklab,
+      var(--info-solid) 22%,
+      transparent
+    );
     --success-subtle: color-mix(in oklab, var(--green-9) 14%, transparent);
     --success-subtle-hover: color-mix(
       in oklab,
@@ -88,7 +92,7 @@
   :root {
     --danger-solid: var(--red-9);
     --danger-border: var(--danger-text);
-    --info-solid: var(--blue-9);
+    --info-on-solid: #fff;
     --success-solid: var(--green-9);
     /* Corners climb from the one radius a `space.xxs` step at a time, so each nests
        concentrically in the next; the step shrinks with a small radius so all reach 0 together. */
@@ -101,8 +105,8 @@
     --radius-chip: max(0px, var(--radius) - 0.125rem);
   }
 
-  /* Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12;
-     amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
+  /* Light step 11 drops under 4.5:1 on its tint, so status text leans 30% toward step 12
+     (info leans its solid 40%); amber 9 is 1.5:1 on the light page, so its dot takes step 11. */
   :root,
   .light {
     --inverted-fill: var(--white-a4);
@@ -113,7 +117,9 @@
     /* A mark on a `fillStrong` track, like a switch's off thumb: white in light; dark takes step 12 to stand off its track. */
     --fill-on-strong: #fff;
     --danger-text: color-mix(in oklab, var(--red-11), var(--red-12) 30%);
-    --info-text: color-mix(in oklab, var(--blue-11), var(--blue-12) 30%);
+    /* Radix blue 9 reads sky; info is a deeper royal blue, so a switch's on state looks set. */
+    --info-solid: #195eff;
+    --info-text: color-mix(in oklab, var(--info-solid), var(--blue-12) 40%);
     --success-text: color-mix(in oklab, var(--green-11), var(--green-12) 30%);
     --warning-text: color-mix(in oklab, var(--amber-11), var(--amber-12) 30%);
     --warning-solid: var(--amber-11);
@@ -126,7 +132,8 @@
     --well: var(--neutral-a3);
     --fill-on-strong: var(--neutral-12);
     --danger-text: var(--red-11);
-    --info-text: var(--blue-11);
+    --info-solid: #427eff;
+    --info-text: color-mix(in oklab, var(--info-solid), #fff 35%);
     --success-text: var(--green-11);
     --warning-text: var(--amber-11);
     --warning-solid: var(--amber-9);

@@ -109,7 +109,7 @@ const styles = stylex.create({
   thumb: {
     backgroundColor: {
       default: colors.fillOnStrong,
-      ":is([data-checked])": colors.accentOnSolid,
+      ":is([data-checked])": colors.infoOnSolid,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,

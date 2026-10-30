@@ -98,6 +98,12 @@ const status: Swatch[] = [
   { color: colors.infoSubtle, kind: "fill", token: "infoSubtle" },
   { color: colors.infoSubtleHover, kind: "fill", token: "infoSubtleHover" },
   { color: colors.infoSolid, kind: "fill", token: "infoSolid" },
+  {
+    color: colors.infoOnSolid,
+    kind: "text",
+    on: colors.infoSolid,
+    token: "infoOnSolid",
+  },
 ];
 
 const styles = stylex.create({

@@ -87,7 +87,7 @@ What components ask for. Each is a scale step, so changing one changes only that
 | `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected (a row, the current nav item), pressed |
 | `--fill-opaque` | `--neutral-3` | A fill nothing shows through: avatars, tracks, user messages |
 | `--border-subtle`, `--border`, `--border-strong` | `--neutral-4`, `-6`, `-9` | Dividers and the composer's ring, control borders, an empty checkbox's edge |
-| `--accent-solid` | `--neutral-12` | Primary buttons, checked controls |
+| `--accent-solid` | `--neutral-12` | Primary buttons, slider fill |
 | `--accent-on-solid` | `--neutral-1` | Text and icons on the accent |
 | `--inverted-solid`, `--inverted-on-solid` | `--neutral-12`, `--neutral-1` | Tooltips |
 | `--focus-ring` | `--neutral-8` | The focus outline |

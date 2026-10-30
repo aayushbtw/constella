@@ -145,7 +145,7 @@ const styles = stylex.create({
   },
   solid: {
     backgroundColor: colors.infoSolid,
-    color: colors.accentOnSolid,
+    color: colors.infoOnSolid,
   },
   // An end square on the side the band continues from.
   startEdge: {

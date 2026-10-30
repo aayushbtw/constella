@@ -48,7 +48,7 @@ Its padding (none at `flush`, for rows that pad themselves) is one variable its 
 
 ## Choice card
 
-Its edge turns `accentSolid` when checked. In a `flush` card's field group, choice cards become the card's rows: no edge, corner or checked fill of their own, `space.md` inline padding, a `borderSubtle` hairline between them, and `fillSubtle` on hover. The switch shows the state, so a row doesn't.
+Its edge turns `infoSolid` when checked. In a `flush` card's field group, choice cards become the card's rows: no edge, corner or checked fill of their own, `space.md` inline padding, a `borderSubtle` hairline between them, and `fillSubtle` on hover. The switch shows the state, so a row doesn't.
 
 ## Chart
 
@@ -85,7 +85,7 @@ Animates its height, since what sits below it has to make room: the panel grows 
 
 ## Calendar and date range picker
 
-A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `accentOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
+A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `infoOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
 
 ## Command
 
@@ -173,7 +173,7 @@ A `ring` meter is the same track and fill as a ring a step under an icon, center
 
 ## Questionnaire
 
-One question at a time, each answer a choice card. The card is Field's: `border`, `radii.md`, `fillSubtle` on hover and when picked, an `accentSolid` edge when picked and `dangerBorder` when invalid. Its Checkbox or Radio indicator is drawn to match, since shadcn's headless questionnaire needs a native input. The whole card rings on keyboard focus. A shortcut is a Kbd at the card's end. Previous sits at the start of the actions, Skip and Next or Submit at the end. The active question swaps at once, with no motion: it's usually changed from the keyboard.
+One question at a time, each answer a choice card. The card is Field's: `border`, `radii.md`, `fillSubtle` on hover and when picked, an `infoSolid` edge when picked and `dangerBorder` when invalid. Its Checkbox or Radio indicator is drawn to match, since shadcn's headless questionnaire needs a native input. The whole card rings on keyboard focus. A shortcut is a Kbd at the card's end. Previous sits at the start of the actions, Skip and Next or Submit at the end. The active question swaps at once, with no motion: it's usually changed from the keyboard.
 
 ## Radio
 
@@ -245,7 +245,7 @@ The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`pres
 
 ## Switch
 
-A checkbox that slides: `fillStrong` track off, `infoSolid` on. Off, the thumb takes `fillOnStrong`: white in light, `gray-12` in dark. On, it takes `accentOnSolid`. Either way it stands off its track. A `textSecondary` thumb read as disabled on the light track. It takes `shadows.default` in both states; `shadows.defaultRing`'s ring made off look heavier than on. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
+A checkbox that slides: `fillStrong` track off, `infoSolid` on. Off, the thumb takes `fillOnStrong`: white in light, `gray-12` in dark. On, it takes `infoOnSolid`. Either way it stands off its track. A `textSecondary` thumb read as disabled on the light track. It takes `shadows.default` in both states; `shadows.defaultRing`'s ring made off look heavier than on. Held, the thumb stretches a quarter of its width toward where it will travel (back from the end when on, so it stays in the track), and travels on `overshoot` over `durations.move`. Under reduced motion it jumps and doesn't stretch.
 
 ## Table
 

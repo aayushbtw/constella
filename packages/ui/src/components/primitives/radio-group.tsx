@@ -66,16 +66,16 @@ const styles = stylex.create({
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
     backgroundClip: { default: "padding-box", [on]: "border-box" },
-    backgroundColor: { default: colors.fillSubtle, [on]: colors.accentSolid },
+    backgroundColor: { default: colors.fillSubtle, [on]: colors.infoSolid },
     borderBlockColor: {
       default: colors.border,
       [invalid]: colors.dangerBorder,
-      [on]: colors.accentSolid,
+      [on]: colors.infoSolid,
     },
     borderInlineColor: {
       default: colors.border,
       [invalid]: colors.dangerBorder,
-      [on]: colors.accentSolid,
+      [on]: colors.infoSolid,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
@@ -111,7 +111,7 @@ const styles = stylex.create({
   lg: circle(sizes.iconLg),
   // The dot grows from the center and fades out; unchecking is the system answering, so it's quick.
   indicator: {
-    backgroundColor: colors.accentOnSolid,
+    backgroundColor: colors.infoOnSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

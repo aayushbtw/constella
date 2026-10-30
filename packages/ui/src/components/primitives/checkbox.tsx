@@ -54,16 +54,16 @@ const styles = stylex.create({
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
     backgroundClip: { default: "padding-box", [on]: "border-box" },
-    backgroundColor: { default: colors.fillSubtle, [on]: colors.accentSolid },
+    backgroundColor: { default: colors.fillSubtle, [on]: colors.infoSolid },
     borderBlockColor: {
       default: colors.borderStrong,
       [invalid]: colors.dangerBorder,
-      [on]: colors.accentSolid,
+      [on]: colors.infoSolid,
     },
     borderInlineColor: {
       default: colors.borderStrong,
       [invalid]: colors.dangerBorder,
-      [on]: colors.accentSolid,
+      [on]: colors.infoSolid,
     },
     borderStartStartRadius: radii.xs,
     borderStartEndRadius: radii.xs,
@@ -74,7 +74,7 @@ const styles = stylex.create({
     borderBlockWidth: strokes.border,
     borderInlineWidth: strokes.border,
     boxShadow: { default: shadows.default, [invalid]: shadows.defaultInvalid },
-    color: colors.accentOnSolid,
+    color: colors.infoOnSolid,
     cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     flexShrink: 0,

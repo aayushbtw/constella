@@ -118,22 +118,22 @@ const styles = stylex.create({
     },
     borderBlockStartColor: {
       default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
       [invalid]: colors.dangerBorder,
     },
     borderBlockEndColor: {
       default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
       [invalid]: colors.dangerBorder,
     },
     borderInlineStartColor: {
       default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
       [invalid]: colors.dangerBorder,
     },
     borderInlineEndColor: {
       default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.accentSolid,
+      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
       [invalid]: colors.dangerBorder,
     },
     borderStartStartRadius: radii.md,
@@ -185,23 +185,23 @@ const styles = stylex.create({
     backgroundClip: { default: "padding-box", [checked]: "border-box" },
     backgroundColor: {
       default: colors.fillSubtle,
-      [checked]: colors.accentSolid,
+      [checked]: colors.infoSolid,
     },
     borderBlockStartColor: {
       default: colors.border,
-      [checked]: colors.accentSolid,
+      [checked]: colors.infoSolid,
     },
     borderBlockEndColor: {
       default: colors.border,
-      [checked]: colors.accentSolid,
+      [checked]: colors.infoSolid,
     },
     borderInlineStartColor: {
       default: colors.border,
-      [checked]: colors.accentSolid,
+      [checked]: colors.infoSolid,
     },
     borderInlineEndColor: {
       default: colors.border,
-      [checked]: colors.accentSolid,
+      [checked]: colors.infoSolid,
     },
     borderStartStartRadius: { default: radii.xs, [radio]: radii.full },
     borderStartEndRadius: { default: radii.xs, [radio]: radii.full },
@@ -216,7 +216,7 @@ const styles = stylex.create({
     borderInlineStartWidth: strokes.border,
     borderInlineEndWidth: strokes.border,
     boxShadow: shadows.default,
-    color: colors.accentOnSolid,
+    color: colors.infoOnSolid,
     display: "flex",
     flexShrink: 0,
     height: sizes.icon,
@@ -241,7 +241,7 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
   },
   dot: {
-    backgroundColor: colors.accentOnSolid,
+    backgroundColor: colors.infoOnSolid,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,

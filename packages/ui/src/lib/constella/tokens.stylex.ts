@@ -46,6 +46,7 @@ export const colors = stylex.defineVars({
   infoSubtle: "var(--info-subtle)",
   infoSubtleHover: "var(--info-subtle-hover)",
   infoSolid: "var(--info-solid)",
+  infoOnSolid: "var(--info-on-solid)",
   successText: "var(--success-text)",
   successSubtle: "var(--success-subtle)",
   successSubtleHover: "var(--success-subtle-hover)",
