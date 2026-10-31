@@ -120,7 +120,7 @@ const { config, rows } = chartFold(allConfig, allRows, {
 
 | Series | Token           | Hue    |
 | ------ | --------------- | ------ |
-| 1      | `colors.chart1` | Indigo |
+| 1      | `colors.chart1` | Plum   |
 | 2      | `colors.chart2` | Teal   |
 | 3      | `colors.chart3` | Violet |
 | 4      | `colors.chart4` | Cyan   |

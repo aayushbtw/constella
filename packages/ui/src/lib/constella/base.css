@@ -20,8 +20,8 @@
 @import "@radix-ui/colors/red-alpha.css";
 @import "@radix-ui/colors/red-dark.css";
 @import "@radix-ui/colors/red-dark-alpha.css";
-@import "@radix-ui/colors/indigo.css";
-@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/plum.css";
+@import "@radix-ui/colors/plum-dark.css";
 @import "@radix-ui/colors/teal.css";
 @import "@radix-ui/colors/teal-dark.css";
 @import "@radix-ui/colors/violet.css";
@@ -74,7 +74,7 @@
     );
     /* Chart series, in this order: no status hue, and each neighbor stays apart under
        red-green color blindness. TanStack Charts reads its palette by the `--ts-chart-*` names. */
-    --chart-1: var(--indigo-9);
+    --chart-1: var(--plum-9);
     --chart-2: var(--teal-9);
     --chart-3: var(--violet-9);
     --chart-4: var(--cyan-9);
