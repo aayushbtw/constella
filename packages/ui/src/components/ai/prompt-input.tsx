@@ -319,6 +319,7 @@ function PromptInputSubmit({
       onClick={(event) => {
         onClick?.(event);
         if (streaming) {
+          event.preventDefault();
           onStop?.();
         }
       }}
