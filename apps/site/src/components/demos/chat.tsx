@@ -13,10 +13,11 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
-import { createChat } from "@shadcn/helpers/tanstack-ai";
 import * as stylex from "@stylexjs/stylex";
-import { useChat } from "@tanstack/ai-react";
+import { chat } from "@tanstack/ai";
+import { stream, useChat } from "@tanstack/ai-react";
 import type { UIMessage } from "@tanstack/ai-react";
+import { fakeText } from "@tanstack/ai/testing";
 import { useState } from "react";
 
 import {
@@ -139,7 +140,32 @@ function Glyph(props: Omit<HugeiconsIconProps, "strokeWidth">) {
 const reply =
   "Constella is a component library on Base UI and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
 
-const script = createChat().user("What is Constella?").assistant(reply);
+const threadId = "chat-demo";
+
+const initialMessages: UIMessage[] = [
+  {
+    id: "question",
+    role: "user",
+    parts: [{ type: "text", content: "What is Constella?" }],
+  },
+  {
+    id: "answer",
+    role: "assistant",
+    parts: [{ type: "text", content: reply }],
+  },
+];
+
+const adapter = fakeText({ tokensPerSecond: 24 });
+
+const connection = stream((messages, _data, signal) => {
+  // The fake errors once its queue is empty, so every send gets a fresh answer.
+  adapter.setResponses([{ text: reply }]);
+  const abortController = new AbortController();
+  signal?.addEventListener("abort", () => {
+    abortController.abort();
+  });
+  return chat({ abortController, adapter, messages, threadId });
+});
 
 function textOf(message: UIMessage) {
   return message.parts
@@ -233,8 +259,9 @@ function PromptInputDemo() {
 
 function Chat({ sx }: { sx?: stylex.StyleXStyles }) {
   const { messages, sendMessage, status, stop } = useChat({
-    connection: script.transport({ delayMs: 60, fallback: reply }),
-    initialMessages: script.get(),
+    connection,
+    initialMessages,
+    threadId,
   });
 
   return (
