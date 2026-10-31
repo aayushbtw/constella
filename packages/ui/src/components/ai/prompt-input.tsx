@@ -296,10 +296,11 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
 /** Sends the prompt; while an answer streams it turns into Stop, which calls `onStop`. */
 function PromptInputSubmit({
   disabled,
+  onClick,
   onStop,
   state = "ready",
   ...props
-}: Omit<InputGroupButtonProps, "children" | "onClick" | "type"> & {
+}: Omit<InputGroupButtonProps, "children" | "type"> & {
   onStop?: () => void;
   state?: PromptInputState;
 }) {
@@ -311,11 +312,16 @@ function PromptInputSubmit({
       data-slot="prompt-input-submit"
       data-state={state}
       disabled={streaming ? false : disabled}
-      onClick={streaming ? onStop : undefined}
       size="icon-sm"
       type={streaming ? "button" : "submit"}
       variant="primary"
       {...props}
+      onClick={(event) => {
+        onClick?.(event);
+        if (streaming) {
+          onStop?.();
+        }
+      }}
     >
       <SwapIcon aria-hidden value={streaming ? "stop" : "send"}>
         <SwapIconItem value="send">
