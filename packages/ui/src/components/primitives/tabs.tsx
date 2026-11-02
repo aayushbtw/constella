@@ -52,8 +52,7 @@ const styles = stylex.create({
     flexGrow: { default: null, [besideColumn]: 1 },
     minWidth: { default: null, [besideColumn]: sizes.menu },
   },
-  // A row too long for its container scrolls, fading the edge with more past it; a picked tab
-  // scrolls in clear of the fade.
+  // A row too long for its container scrolls; arrow keys bring the next tab into view.
   list: {
     display: "flex",
     flexDirection: { default: "row", [vertical]: "column" },
@@ -208,11 +207,10 @@ const TabsListContext = createContext<{
   variant: TabsListVariant;
 }>({ size: "default", variant: "default" });
 
-// A column's list stays unmasked: a mask would clip the line indicator drawn just outside it.
 const TabsOrientationContext =
   createContext<TabsPrimitive.Root.Orientation>("horizontal");
 
-// Scrolls the list, never the page, until the tab clears its edges by the list's scroll padding.
+// Not scrollIntoView: it scrolls the page as well as the list.
 const reveal = (list: HTMLElement, tab: HTMLElement) => {
   const style = getComputedStyle(list);
   const [left, right] = [style.scrollPaddingLeft, style.scrollPaddingRight].map(
@@ -257,7 +255,6 @@ function TabsList({
   const orientation = use(TabsOrientationContext);
   const list = useRef<HTMLDivElement>(null);
 
-  // However a tab is picked (arrows, a click, a value set from elsewhere), it scrolls into view.
   useLayoutEffect(() => {
     const element = list.current;
     const picks = new MutationObserver((records) => {
@@ -267,7 +264,7 @@ function TabsList({
           target instanceof HTMLElement &&
           target.ariaSelected === "true"
         ) {
-          // Next frame: a router that keeps the value in the URL restores the list's old scroll after the pick renders.
+          // Next frame: TanStack Router's scroll restoration puts the list's old scroll back after a pick that navigates.
           requestAnimationFrame(() => {
             reveal(element, target);
           });
