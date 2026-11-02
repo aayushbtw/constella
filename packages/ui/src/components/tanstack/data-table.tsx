@@ -121,7 +121,8 @@ const styles = stylex.create({
   fixed: {
     tableLayout: "fixed",
   },
-  pad: (height: number) => ({ height }),
+  // Never the browser's scroll anchor: as the virtualizer grows the one above, holding this in view would scroll on and on.
+  pad: (height: number) => ({ height, overflowAnchor: "none" }),
   width: (width: number) => ({ width }),
   body: {
     opacity: 1,
