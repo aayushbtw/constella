@@ -35,7 +35,12 @@ function useDataTableVirtualizer({
   rows: readonly { id: string }[];
   scrollRef: RefObject<HTMLElement | null> | undefined;
 }) {
-  const [scrollMargin, setScrollMargin] = useState(0);
+  // Until measured, the body starts at the top of the view, as on the server, so hydration renders the server's rows.
+  const [scrollMargin, setScrollMargin] = useState(() =>
+    scrollRef === undefined && typeof window !== "undefined"
+      ? window.scrollY
+      : 0
+  );
 
   // The body's distance from the top of what scrolls, which the scroll offset is
   // measured from; measured again whenever the content above it changes height.
