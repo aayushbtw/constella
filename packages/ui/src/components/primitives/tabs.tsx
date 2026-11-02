@@ -2,8 +2,9 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, use, useMemo } from "react";
+import { createContext, use, useLayoutEffect, useMemo, useRef } from "react";
 
+import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -51,7 +52,8 @@ const styles = stylex.create({
     flexGrow: { default: null, [besideColumn]: 1 },
     minWidth: { default: null, [besideColumn]: sizes.menu },
   },
-  // A row too long for its container scrolls; arrow keys bring the next tab into view.
+  // A row too long for its container scrolls, fading the edge with more past it; a picked tab
+  // scrolls in clear of the fade.
   list: {
     display: "flex",
     flexDirection: { default: "row", [vertical]: "column" },
@@ -59,6 +61,7 @@ const styles = stylex.create({
     maxWidth: "100%",
     overflowX: { default: "auto", [vertical]: "visible" },
     position: "relative",
+    scrollPaddingInline: { default: space.xl, [vertical]: null },
     scrollbarWidth: { default: "none", [vertical]: "auto" },
     width: "fit-content",
   },
@@ -205,13 +208,40 @@ const TabsListContext = createContext<{
   variant: TabsListVariant;
 }>({ size: "default", variant: "default" });
 
-function Tabs({ sx, ...props }: Styled<TabsPrimitive.Root.Props>) {
+// A column's list stays unmasked: a mask would clip the line indicator drawn just outside it.
+const TabsOrientationContext =
+  createContext<TabsPrimitive.Root.Orientation>("horizontal");
+
+// Scrolls the list, never the page, until the tab clears its edges by the list's scroll padding.
+const reveal = (list: HTMLElement, tab: HTMLElement) => {
+  const style = getComputedStyle(list);
+  const [left, right] = [style.scrollPaddingLeft, style.scrollPaddingRight].map(
+    // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("48px")` is NaN
+    (padding) => Number.parseFloat(padding)
+  );
+  list.scrollLeft = Math.min(
+    Math.max(
+      list.scrollLeft,
+      tab.offsetLeft + tab.offsetWidth + right - list.clientWidth
+    ),
+    tab.offsetLeft - left
+  );
+};
+
+function Tabs({
+  orientation = "horizontal",
+  sx,
+  ...props
+}: Styled<TabsPrimitive.Root.Props>) {
   return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      {...props}
-      {...stylex.props(styles.tabs, sx)}
-    />
+    <TabsOrientationContext value={orientation}>
+      <TabsPrimitive.Root
+        data-slot="tabs"
+        orientation={orientation}
+        {...props}
+        {...stylex.props(styles.tabs, sx)}
+      />
+    </TabsOrientationContext>
   );
 }
 
@@ -224,6 +254,37 @@ function TabsList({
   ...props
 }: TabsListProps) {
   const context = useMemo(() => ({ size, variant }), [size, variant]);
+  const orientation = use(TabsOrientationContext);
+  const list = useRef<HTMLDivElement>(null);
+
+  // However a tab is picked (arrows, a click, a value set from elsewhere), it scrolls into view.
+  useLayoutEffect(() => {
+    const element = list.current;
+    const picks = new MutationObserver((records) => {
+      for (const { target } of records) {
+        if (
+          element !== null &&
+          target instanceof HTMLElement &&
+          target.ariaSelected === "true"
+        ) {
+          // Next frame: a router that keeps the value in the URL restores the list's old scroll after the pick renders.
+          requestAnimationFrame(() => {
+            reveal(element, target);
+          });
+        }
+      }
+    });
+    if (element !== null && orientation === "horizontal") {
+      picks.observe(element, {
+        attributeFilter: ["aria-selected"],
+        subtree: true,
+      });
+    }
+    return () => {
+      picks.disconnect();
+    };
+  }, [orientation]);
+
   return (
     <TabsListContext value={context}>
       <TabsPrimitive.List
@@ -232,8 +293,14 @@ function TabsList({
         data-size={size}
         data-slot="tabs-list"
         data-variant={variant}
+        ref={list}
         {...props}
-        {...stylex.props(styles.list, listVariantStyles[variant], sx)}
+        {...stylex.props(
+          styles.list,
+          listVariantStyles[variant],
+          orientation === "horizontal" && scrollFade.x,
+          sx
+        )}
       >
         {children}
         <TabsIndicator sx={indicatorVariantStyles[variant]} />

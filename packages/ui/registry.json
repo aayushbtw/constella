@@ -665,7 +665,10 @@
       "title": "Tabs",
       "description": "Views of the same content, with an indicator that slides to the active tab.",
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/scroll-fade.json"
+      ],
       "files": [
         {
           "path": "src/components/primitives/tabs.tsx",

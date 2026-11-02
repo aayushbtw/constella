@@ -253,7 +253,7 @@ Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Cells re
 
 ## Tabs
 
-The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline.
+The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline. A row too long for its container scrolls sideways with no scrollbar and fades the edge with more past it (`scrollFade.x`); a picked tab, by the keys or from elsewhere, scrolls in `space.xl` clear of that edge. A vertical list never fades, as the mask would clip its line indicator, drawn just outside it.
 
 ## Textarea
 
