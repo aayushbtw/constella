@@ -165,7 +165,6 @@ const styles = stylex.create({
   },
 });
 
-// oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("600ms")` is NaN
 const fallbackDelay = Number.parseFloat(durations.fallbackDelay);
 
 // A bare favicon, not an Avatar: no tile or edge around it.

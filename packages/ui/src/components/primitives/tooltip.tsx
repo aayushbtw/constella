@@ -72,7 +72,6 @@ function Tooltip(props: TooltipPrimitive.Root.Props) {
 }
 
 function TooltipTrigger({
-  // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("300ms")` is NaN
   delay = Number.parseFloat(durations.tooltipDelay),
   sx,
   ...props

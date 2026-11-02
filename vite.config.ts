@@ -72,8 +72,13 @@ export default defineConfig({
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
     },
-    // Fixtures that must hold raw values, to prove `sx` rejects them.
     overrides: [
+      // Parts read CSS values (`48px`, `300ms`), which `Number` makes NaN and `parseFloat` reads.
+      {
+        files: ["packages/ui/src/components/**"],
+        rules: { "unicorn/prefer-number-coercion": "off" },
+      },
+      // Fixtures that must hold raw values, to prove `sx` rejects them.
       {
         files: ["packages/ui/type-tests/**"],
         rules: {

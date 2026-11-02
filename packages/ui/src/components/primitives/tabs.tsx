@@ -214,7 +214,6 @@ const TabsOrientationContext =
 const reveal = (list: HTMLElement, tab: HTMLElement) => {
   const style = getComputedStyle(list);
   const [left, right] = [style.scrollPaddingLeft, style.scrollPaddingRight].map(
-    // oxlint-disable-next-line unicorn/prefer-number-coercion -- `Number("48px")` is NaN
     (padding) => Number.parseFloat(padding)
   );
   list.scrollLeft = Math.min(
