@@ -75,8 +75,10 @@ const styles = stylex.create({
     maxWidth: `calc(100vw - 2 * ${space.row})`,
     width: sizes.sidePanel,
   },
+  // Shrinks to the slot's height, so a long body scrolls instead of stretching the page.
   popup: {
     flexGrow: 1,
+    flexShrink: 1,
     opacity: { default: 1, [entering]: 0 },
     overflow: "hidden",
     transform: {
