@@ -4,7 +4,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps, RefObject } from "react";
+import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
@@ -27,8 +27,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 type SidePanelContentProps = Styled<DialogPrimitive.Popup.Props> & {
-  /** The `SidePanelSlot` to open in, beside the content. */
-  container: RefObject<HTMLElement | null>;
+  /** The `SidePanelSlot` to open in, beside the content; null until it mounts, and the panel waits for it. */
+  container: HTMLElement | null;
 };
 
 const entering = ":is([data-starting-style])";

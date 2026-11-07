@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/primitives/badge";
 import { Button } from "@/components/primitives/button";
@@ -141,7 +141,7 @@ const files = [
 ];
 
 function SidePanelDemo() {
-  const slot = useRef<HTMLDivElement>(null);
+  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const event = selected === null ? undefined : events[selected];
   return (
@@ -172,7 +172,7 @@ function SidePanelDemo() {
             ))}
           </div>
         </div>
-        <SidePanelSlot ref={slot} sx={styles.slot} />
+        <SidePanelSlot ref={setSlot} sx={styles.slot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {
