@@ -6,11 +6,11 @@ description: A panel floating beside the page for details, a form or anything el
 <!-- ::demo name="side-panel" -->
 
 ```tsx
-const slot = useRef<HTMLDivElement>(null);
+const [slot, setSlot] = useState<HTMLDivElement | null>(null);
 
 <div {...stylex.props(styles.row)}>
   <Page onSelect={setSelected} />
-  <SidePanelSlot ref={slot} />
+  <SidePanelSlot ref={setSlot} />
   <SidePanel
     onOpenChange={(open) => !open && setSelected(null)}
     open={selected !== null}
@@ -47,7 +47,7 @@ import {
 
 The panel floats beside the page, lifted off it as the composer is: inset from the content and the window's edges, rounded, on the `raised` fill, its edge a ring in its `shadows.panel` shadow.
 
-Put a `SidePanelSlot` after the whole page, header included, in a flex row. Pass its ref to `SidePanelContent` as `container`. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
+Put a `SidePanelSlot` after the whole page, header included, in a flex row. Keep its element in state through its `ref`, and pass that to `SidePanelContent` as `container`. **Not a `useRef`:** a panel inside the page that's open on load mounts before the slot's ref is set, and opens at the end of the body instead. Given null, the panel waits for the slot. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
 
 The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
 
@@ -96,7 +96,7 @@ Use `Panel` for a panel that's always on the page, such as a project's files bes
 | Part | Adds |
 | --- | --- |
 | `SidePanel` | Base UI Dialog, non-modal, not closed by an outside click |
-| `SidePanelContent` | `container`: the slot's ref; renders the portal and popup |
+| `SidePanelContent` | `container`: the slot's element, null until it mounts; renders the portal and popup |
 | `SidePanelSlot` | Sticky below the header row, the window's height less it |
 | `SidePanelHeader` | A strip `sizes.header` less the panel's inset (44px), pinned: the title, any actions, then Close |
 | `SidePanelDescription` | Muted text first in the body; the panel's accessible description |

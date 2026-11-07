@@ -754,7 +754,7 @@ const clickColumns = column.columns([
 ]);
 
 function DataTableRowClickDemo() {
-  const slot = useRef<HTMLDivElement>(null);
+  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const main = useRef<HTMLDivElement>(null);
   const [openId, setOpenId] = useState<string | undefined>();
   const table = useTable({
@@ -787,7 +787,7 @@ function DataTableRowClickDemo() {
             </OpenPayment>
           </div>
         </ScrollArea>
-        <SidePanelSlot ref={slot} />
+        <SidePanelSlot ref={setSlot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {
