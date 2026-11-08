@@ -56,12 +56,12 @@ const styles = stylex.create({
     backgroundClip: { default: "padding-box", [on]: "border-box" },
     backgroundColor: { default: colors.fillSubtle, [on]: colors.infoSolid },
     borderBlockColor: {
-      default: colors.borderStrong,
+      default: colors.border,
       [invalid]: colors.dangerBorder,
       [on]: colors.infoSolid,
     },
     borderInlineColor: {
-      default: colors.borderStrong,
+      default: colors.border,
       [invalid]: colors.dangerBorder,
       [on]: colors.infoSolid,
     },
