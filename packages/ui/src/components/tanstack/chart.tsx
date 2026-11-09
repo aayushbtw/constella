@@ -263,14 +263,19 @@ function useChartTween<T extends Record<string, number>>(
     if (duration === 0) {
       paint();
     }
-    let frame = requestAnimationFrame(function step() {
+    const controller = new AbortController();
+    requestAnimationFrame(function step() {
+      // A cancelled clock reads as done, so a frame left over from cleanup would paint the old target.
+      if (controller.signal.aborted) {
+        return;
+      }
       paint();
       if (clock.playState !== "finished") {
-        frame = requestAnimationFrame(step);
+        requestAnimationFrame(step);
       }
     });
     return () => {
-      cancelAnimationFrame(frame);
+      controller.abort();
       clock.cancel();
     };
   }, [animate, target]);
