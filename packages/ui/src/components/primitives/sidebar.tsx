@@ -967,20 +967,20 @@ function Sidebar({
   // Settles once the width transition ends; with none running (reduced motion) at once.
   useEffect(() => {
     const running = desktop.current?.getAnimations() ?? [];
-    let cancelled = false;
+    const controller = new AbortController();
     async function settle() {
       await Promise.allSettled(
         running.map(async (animation) => await animation.finished)
       );
       // The next toggle cancels this run, and its own run settles it. Any other end, like the
       // column unmounting for the sheet, still settles, so the rail never waits on it.
-      if (!cancelled) {
+      if (!controller.signal.aborted) {
         setSettled(isCollapsed);
       }
     }
     void settle();
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [isCollapsed]);
   const collapsing = isCollapsed && collapsible === "icon";
