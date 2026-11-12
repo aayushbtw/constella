@@ -175,7 +175,11 @@ const unlit = "inset 0 0 0 100vmax transparent";
 const stateStyles = stylex.create({
   ghost: { backgroundColor: interactive("transparent", colors.fillSubtle) },
   outline: {
-    backgroundColor: interactive(colors.background, colors.fillSubtle),
+    backgroundColor: colors.background,
+    backgroundImage: interactive(
+      "none",
+      `linear-gradient(${colors.fillSubtle}, ${colors.fillSubtle})`
+    ),
   },
   secondary: { backgroundColor: interactive(colors.fillSubtle, colors.fill) },
   // A ghost toggle, selected while `[data-pressed]`.

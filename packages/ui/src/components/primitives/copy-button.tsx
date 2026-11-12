@@ -16,6 +16,8 @@ type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
   value: string | (() => string);
   /** The same content as HTML, for a target that takes it: a spreadsheet pastes a table as cells. */
   html?: string | (() => string);
+  /** The glyph's size, when it differs from the button size's. */
+  iconSize?: string;
 };
 
 function read(content: string | (() => string)) {
@@ -31,6 +33,7 @@ function CopyButton({
   "aria-label": label,
   children,
   html,
+  iconSize: glyph,
   size,
   value,
   variant = "ghost",
@@ -66,7 +69,7 @@ function CopyButton({
 
   const labelled = children !== undefined;
   const buttonSize = size ?? (labelled ? "sm" : "icon-sm");
-  const iconSize = controlIconSize[buttonSize];
+  const iconSize = glyph ?? controlIconSize[buttonSize];
 
   return (
     <>

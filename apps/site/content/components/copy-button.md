@@ -59,4 +59,4 @@ Pass `children` for a visible label after the icon. It names the button, and the
 
 | Part | Adds |
 | --- | --- |
-| `CopyButton` | `value`: the text to copy, or a function that returns it at the press; `html`: the same as markup, as a string or a function; a `Button`'s props but `onClick` |
+| `CopyButton` | `value`: the text to copy, or a function that returns it at the press; `html`: the same as markup, as a string or a function; `iconSize`: the glyph's size, when it differs from the button size's; a `Button`'s props but `onClick` |
