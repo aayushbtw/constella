@@ -12,6 +12,7 @@ const toggleSizes = [
   "sm",
   "default",
   "lg",
+  "icon-xs",
   "icon-sm",
   "icon",
   "icon-lg",

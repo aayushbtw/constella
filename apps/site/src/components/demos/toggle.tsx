@@ -37,7 +37,12 @@ function Glyph({
 }
 
 const textSizes = ["sm", "default", "lg"] satisfies ToggleSize[];
-const iconSizes = ["icon-sm", "icon", "icon-lg"] satisfies ToggleSize[];
+const iconSizes = [
+  "icon-xs",
+  "icon-sm",
+  "icon",
+  "icon-lg",
+] satisfies ToggleSize[];
 
 const styles = stylex.create({
   stack: { flexDirection: "column", gap: space.md },
