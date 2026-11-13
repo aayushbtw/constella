@@ -238,6 +238,7 @@ import {
 } from "~/components/demos/kbd";
 import { LabelDemo, LabelWrapDemo } from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
+import { LoadingBarDemo } from "~/components/demos/loading-bar";
 import {
   MarkdownDemo,
   MarkdownStreamingDemo,
@@ -642,6 +643,7 @@ const demos = {
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
   link: LinkDemo,
+  "loading-bar": LoadingBarDemo,
   markdown: MarkdownDemo,
   "markdown-streaming": MarkdownStreamingDemo,
   marker: MarkerDemo,

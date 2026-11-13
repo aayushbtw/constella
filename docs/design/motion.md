@@ -40,12 +40,14 @@ Never `ease-in`: it delays the moment the eye is watching.
 | `spin` | One turn of a spinner |
 | `pulse` | One breath of a skeleton or an indeterminate bar |
 | `shimmer` | One sweep of light across text still being worked on |
+| `trickle` | One creep of the loading bar toward its end |
 | `confirm` | How long a confirmation (copied, saved) holds |
 | `fallbackDelay` | How long an image may load before its fallback shows (a citation's globe) |
+| `loadingDelay` | How long a load runs before the loading bar shows |
 | `tooltipDelay` | Rest before a tooltip opens |
 | `hoverCardDelay` | Rest before a hover card opens, the same as a tooltip's |
 
-Interface motion stays at or under 300ms. A spinner, a pulse and a shimmer are the exceptions: unhurried, so waiting reads as working, not urgent.
+Interface motion stays at or under 300ms. A spinner, a pulse, a shimmer and the loading bar's creep are the exceptions: unhurried, so waiting reads as working, not urgent.
 
 ## Entrances
 

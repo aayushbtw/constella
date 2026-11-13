@@ -30,6 +30,7 @@ What Constella needs before netigen-v2 can run on it, from the netigen-v2 audit 
 - [x] **AlertDialog**: destructive confirms.
 - [x] **Meter** and **Progress**: usage against a cap; progress of a task.
 - [x] **Skeleton**: content still arriving.
+- [x] **Loading Bar**: a line along the window's top while a slow page loads.
 
 ### Disclosure
 

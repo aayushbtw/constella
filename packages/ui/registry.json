@@ -1015,6 +1015,21 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/progress/index.md"
     },
     {
+      "name": "loading-bar",
+      "type": "registry:ui",
+      "title": "Loading Bar",
+      "description": "A line along the window's top edge while a page loads, shown only once the load is slow.",
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "files": [
+        {
+          "path": "src/components/primitives/loading-bar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/loading-bar/index.md"
+    },
+    {
       "name": "radio-group",
       "type": "registry:ui",
       "title": "Radio Group",
