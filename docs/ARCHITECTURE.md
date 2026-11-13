@@ -2,7 +2,7 @@
 
 ## Stack
 
-- **Base UI underneath.** Behavior, focus and accessibility come from the primitive. A component adds styling and composition, never its own version of what Base UI already handles.
+- **Base UI underneath.** Behavior, focus and accessibility come from the primitive. A component adds styling and composition, never its own version of what Base UI already handles. [UI SDK](#ui-sdk-watch) is the planned replacement, once it's ready.
 - **StyleX only.** Most shadcn registries ship Tailwind, so another one adds nothing.
 - **Command is Base UI too.** shadcn's Command is cmdk; ours is Base UI's Autocomplete, inline and always open, so it filters the `items` it's given rather than its children.
 - **TanStack for data.** A data table renders a `useTable` instance the app builds with its own features (Table v9), virtualizes with TanStack Virtual against the window or a `scrollRef`, and reads its loading, stale and error states from a TanStack Query `useQuery` result; the app owns state, the component owns markup. A chart renders a TanStack Charts definition the app builds; the definition owns marks, scales, focus and the tooltip's behavior, the component owns the surface, the tooltip's markup and the legend. The palette reaches the library through the `--ts-chart-*` names it reads, set in `base.css`, so a definition needs no theme. Markdown renders TanStack Markdown with Constella's parts mapped onto its tags, its fences in a Code Block; the app passes the highlighter and adds its theme CSS, since the language set and code colors are its choice. Code Block ships no highlighter for the same reason. The app renders its tokens inside each `CodeBlockLine`. Docs list these under their own TanStack sidebar section.
@@ -119,6 +119,41 @@ The root `vite.config.ts` turns four of them off for `packages/ui/type-tests/**`
 A rule earns its place when a correction comes up twice. Add one there before writing the same note again.
 
 CI (`.github/workflows/ci.yml`) runs `check` and `build` on each push to `main` and each PR, so a broken rule shows up even when no one ran it locally.
+
+## UI SDK watch
+
+[UI SDK](https://ui-sdk.dev) (`vercel-labs/ui`, Apache-2.0) is a headless behavior library: `@ui-sdk/core` holds keyboard, focus, selection, dismissal, popups, drag and drop and their ARIA, with adapters for React 19+, Vue, Svelte, Solid and Web Components. It ships importable parts for the components Base UI covers, plus Color Picker, Image Cropper, Date and Time Input, Token Input, Tree, Timeline and Rating. We migrate from Base UI to it once it's ready. Until then, build on Base UI and log each check here.
+
+### Ready when
+
+| Criterion | Status |
+| --- | --- |
+| Out of beta (GA, "APIs may still change" gone) | No. Beta since launch, 2026-11-12 |
+| Covers every Base UI part Constella uses, including anchored Toast | Not checked per component. Anchored Toast not documented |
+| A Toast or Popover spike ports with no behavior hand-rolled | Not run |
+| shadcn ships a UI SDK base, or we accept leaving base-nova parity | No |
+
+### Same model as Base UI
+
+- Parts per component (`ToastRegion`, `Toast`, `ToastTitle`, `ToastDescription`, `ToastAction`, `ToastClose`), imported from `@ui-sdk/react/<component>`.
+- `render` on every part, as an element or a function of props and state. No `asChild`, as in Base UI.
+- `data-slot`, state attributes (`data-open`, `data-side`, `data-disabled`) and `data-starting-style`/`data-ending-style` for exits.
+- Popup placement props: `side`, `align`, `sideOffset`, `alignOffset`, `collisionPadding`, `anchor`.
+
+### Port cost
+
+| Change | Touches |
+| --- | --- |
+| Popups use the browser top layer, with no Portal or Positioner part | Every popup component's structure, and the Portal pass-through rule in [Composition](#composition) |
+| CSS variable names differ (`--toast-swipe-x` vs `--toast-swipe-movement-x`, `--toast-offset` vs `--toast-offset-y`, `--toast-front-height` vs `--toast-frontmost-height`) | Every component's styles |
+| Toast limit is `maxVisible` on the region, not `limit` on a provider; no `data-limited` | Toast |
+| No shadcn style on it | The shadcn-first workflow; demos stop mirroring base-nova |
+
+### Log
+
+| Date | Checked | Finding |
+| --- | --- | --- |
+| 2026-11-13 | Beta at launch; Toast, Styling and Animation, Parts and Composition, Popups docs | Same parts and `render` model as Base UI; Toast matches Base UI except anchored toasts. Not ready: beta, no shadcn base |
 
 ## Gotchas
 
