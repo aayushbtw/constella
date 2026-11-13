@@ -16,7 +16,7 @@ An `sm` card that names itself by its title. The title leads with its icon bare,
 
 ## Attachment
 
-A file as a small `raised` card on a `border`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerSubtle`, turns the edge `dangerBorder` as an invalid field's is, and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group sits `space.xs` apart, scrolls sideways, snaps and fades its edges.
+A file as a small `raised` card on a `border`, its corner the media's plus the inset so the two nest. The media is a `fill` tile; an image fills it and waits at `opacities.busy` until the file is in. Idle is a dashed edge; uploading and processing shimmer the title in `textSecondary`; an error tints the media `dangerSubtle`, turns the edge `dangerBorder` as an invalid field's is, and says why in the description, so color is never the only signal. A trigger covers the card and takes the ring on the card's corner; actions sit above it. A group sits `space.xs` apart, scrolls sideways, snaps and fades its edges; a vertical wheel scrolls it sideways until its end, then the page.
 
 The text block is exactly the media's height, so the media's inset holds on every side; text is `textSm` at every size. Horizontal, the text's end inset matches its gap from the media. A vertical card is `sizes.attachment` wide, `attachmentWide` with text.
 
