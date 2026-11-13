@@ -128,6 +128,7 @@
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/scroll-area.json",
         "https://constella.aayush.cv/r/scroll-fade.json"
       ],
       "files": [
@@ -1089,6 +1090,7 @@
       "dependencies": ["@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/scroll-area.json",
         "https://constella.aayush.cv/r/scroll-fade.json"
       ],
       "files": [

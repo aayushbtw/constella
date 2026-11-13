@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
+import { ScrollArea } from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -44,9 +45,6 @@ const checkbox = ":has([data-slot='checkbox'])";
 
 const styles = stylex.create({
   container: {
-    overflowX: "auto",
-    position: "relative",
-    scrollbarWidth: "none",
     width: "100%",
   },
   // Separate, so the cells draw the dividers: collapsed, Chrome hides them under a selected row's fill in a cell that clips.
@@ -163,9 +161,11 @@ function Table({
   return (
     <TableInteractiveContext value={interactive}>
       <TableSizeContext value={size}>
-        <div
+        <ScrollArea
           data-slot="table-container"
-          {...stylex.props(styles.container, scrollFade.x)}
+          scrollbar="horizontal"
+          sx={styles.container}
+          viewportSx={scrollFade.x}
         >
           <table
             data-size={size}
@@ -173,7 +173,7 @@ function Table({
             {...props}
             {...stylex.props([typeStyles.textMd, styles.table], sx)}
           />
-        </div>
+        </ScrollArea>
       </TableSizeContext>
     </TableInteractiveContext>
   );

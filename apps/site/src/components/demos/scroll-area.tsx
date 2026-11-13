@@ -115,13 +115,12 @@ function ScrollAreaDemo() {
 function ScrollAreaHorizontalDemo() {
   return (
     <DemoRow>
-      <ScrollArea sx={styles.gallery}>
+      <ScrollArea scrollbar="horizontal" sx={styles.gallery}>
         <div {...stylex.props(styles.row)}>
           {Array.from({ length: 6 }, (_, i) => (
             <div key={i} {...stylex.props(styles.tile)} />
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </DemoRow>
   );
@@ -211,13 +210,16 @@ function ScrollFadeDemo() {
 function ScrollFadeHorizontalDemo() {
   return (
     <DemoRow>
-      <ScrollArea sx={styles.gallery} viewportSx={scrollFade.x}>
+      <ScrollArea
+        scrollbar="horizontal"
+        sx={styles.gallery}
+        viewportSx={scrollFade.x}
+      >
         <div {...stylex.props(styles.row)}>
           {Array.from({ length: 6 }, (_, i) => (
             <div key={i} {...stylex.props(styles.tile)} />
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </DemoRow>
   );
