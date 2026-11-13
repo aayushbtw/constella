@@ -45,7 +45,6 @@ const steps = {
   },
 } satisfies Record<Phase, Record<"idle" | "loading", Step | null>>;
 
-// Starts a sliver in, never from nothing, and stops short of the end until the load does.
 const trickle = [{ transform: "scaleX(0.1)" }, { transform: "scaleX(0.9)" }];
 
 const breathe = stylex.keyframes({
@@ -69,7 +68,6 @@ const styles = stylex.create({
     width: "100%",
     zIndex: layers.loadingBar,
   },
-  // Its travel is a Web Animation, so the finish starts from wherever the trickle reached.
   indicator: {
     animationDuration: {
       default: null,
