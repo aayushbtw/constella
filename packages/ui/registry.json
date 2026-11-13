@@ -667,7 +667,8 @@
       "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/scroll-fade.json"
+        "https://constella.aayush.cv/r/scroll-fade.json",
+        "https://constella.aayush.cv/r/relay-wheel.json"
       ],
       "files": [
         {
@@ -1266,6 +1267,19 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/scroll-fade/index.md"
     },
     {
+      "name": "relay-wheel",
+      "type": "registry:lib",
+      "title": "Relay Wheel",
+      "description": "Scrolls a one-line sideways row on a vertical mouse wheel until its end, then lets the page scroll.",
+      "files": [
+        {
+          "path": "src/lib/constella/relay-wheel.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "docs": "A ref callback for the element that scrolls sideways: `ref={relayWheel}`. In an effect, call it with the element and run what it returns on cleanup. Only for a one-line strip with nothing to read past it; a block with height, like a table or code, keeps the page's scroll."
+    },
+    {
       "name": "attachment",
       "type": "registry:ui",
       "title": "Attachment",
@@ -1275,7 +1289,8 @@
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/shimmer.json",
-        "https://constella.aayush.cv/r/scroll-fade.json"
+        "https://constella.aayush.cv/r/scroll-fade.json",
+        "https://constella.aayush.cv/r/relay-wheel.json"
       ],
       "files": [
         {
@@ -1368,7 +1383,8 @@
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/scroll-area.json",
-        "https://constella.aayush.cv/r/scroll-fade.json"
+        "https://constella.aayush.cv/r/scroll-fade.json",
+        "https://constella.aayush.cv/r/relay-wheel.json"
       ],
       "files": [
         {

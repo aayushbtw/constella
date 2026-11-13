@@ -179,6 +179,10 @@ One question at a time, each answer a choice card. The card is Field's: `border`
 
 A round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`.
 
+## Relay wheel
+
+A mouse wheel sends only a vertical delta, which a sideways row ignores. A one-line strip with nothing to read past it (tabs, suggestions, an attachment group) takes the wheel and scrolls sideways until its end, then hands it to the page. A block with height, like a table or code, doesn't: it sits in the reading flow, and taking the wheel there would stall the page's scroll.
+
 ## Scroll area
 
 Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. Where a scroll fade already shows there's more, like the docs sidebar, `hideScrollbar` drops the scrollbar.
@@ -241,7 +245,7 @@ The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`pres
 
 ## Suggestions
 
-`outline` `sm` pill buttons in one row that scrolls sideways with no scrollbar; `scrollFade.x` shows there's more. The row keeps `space.xxs` around the pills so the viewport doesn't clip a focus ring.
+`outline` `sm` pill buttons in one row that scrolls sideways with no scrollbar; `scrollFade.x` shows there's more, and a vertical wheel scrolls it sideways until its end, then the page. The row keeps `space.xxs` around the pills so the viewport doesn't clip a focus ring.
 
 ## Switch
 
@@ -253,7 +257,7 @@ Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Cells re
 
 ## Tabs
 
-The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline. A row too long for its container scrolls sideways with no scrollbar and fades the edge with more past it (`scrollFade.x`); a picked tab, by the keys or from elsewhere, scrolls in `space.xl` clear of that edge. A vertical list never fades, as the mask would clip its line indicator, drawn just outside it.
+The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline. A row too long for its container scrolls sideways with no scrollbar and fades the edge with more past it (`scrollFade.x`), and a vertical wheel scrolls it sideways until its end, then the page; a picked tab, by the keys or from elsewhere, scrolls in `space.xl` clear of that edge. A vertical list never fades, as the mask would clip its line indicator, drawn just outside it.
 
 ## Textarea
 

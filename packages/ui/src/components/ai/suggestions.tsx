@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import { ScrollArea } from "@/components/primitives/scroll-area";
+import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { space } from "@/lib/constella/tokens.stylex";
@@ -29,7 +30,7 @@ const styles = stylex.create({
 /** A row that scrolls sideways with no scrollbar; its edges fade while there's more. */
 function Suggestions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <ScrollArea viewportSx={scrollFade.x}>
+    <ScrollArea viewportRef={relayWheel} viewportSx={scrollFade.x}>
       <div
         data-slot="suggestions"
         // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
