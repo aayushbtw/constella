@@ -970,8 +970,11 @@
       "type": "registry:ui",
       "title": "Hover Card",
       "description": "A popover that previews a link while the pointer rests on it.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/popover.json"
+      ],
       "files": [
         {
           "path": "src/components/primitives/hover-card.tsx",
