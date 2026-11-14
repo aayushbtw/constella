@@ -189,7 +189,7 @@ A mouse wheel sends only a vertical delta, which a sideways row ignores. A one-l
 
 ## Scroll area
 
-Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows takes Tab, and the area draws its ring, since the fade would mask the scroller's own.
+Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows and holds nothing focusable takes Tab, and the area draws its ring, since the fade would mask the scroller's own. One with links or controls inside doesn't, since Tab reaches them.
 
 ## Scroll fade
 

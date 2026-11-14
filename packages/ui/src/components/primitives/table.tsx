@@ -162,7 +162,6 @@ function Table({
     <TableInteractiveContext value={interactive}>
       <TableSizeContext value={size}>
         <ScrollArea
-          data-slot="table-container"
           scrollbar="horizontal"
           sx={styles.container}
           viewportSx={scrollFade.x}

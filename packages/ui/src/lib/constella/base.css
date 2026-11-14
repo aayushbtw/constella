@@ -214,22 +214,23 @@
     outline: none;
   }
 
-  /* A scroller that overflows takes Tab. Its scroll fade would mask its own ring, so the
-     scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
-  :where(
-    [data-slot="scroll-area-viewport"],
-    [data-slot="code-block-content"] pre
-  ):focus-visible {
+  /* A scroller that overflows and holds nothing focusable takes Tab. Its scroll fade would mask its
+     own ring, so the scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
+  :where([data-slot="scroll-area-viewport"]):focus-visible {
     outline: none;
   }
   :where(
-    :has(> [data-slot="scroll-area-viewport"]:focus-visible),
-    [data-slot="code-block-content"]:has(pre:focus-visible)
+    [data-slot="scroll-area"]:has(
+      > [data-slot="scroll-area-viewport"]:focus-visible
+    ),
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
   ) {
     outline: 1px solid var(--focus-ring);
     outline-offset: 0;
   }
-  :where([data-slot="code-block-content"]:has(pre:focus-visible)) {
+  :where(
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
+  ) {
     outline-offset: -1px;
   }
 
