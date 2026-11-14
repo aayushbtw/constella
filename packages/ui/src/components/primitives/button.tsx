@@ -60,13 +60,16 @@ const press = ":active:not([aria-haspopup], :disabled)";
 const busy = "[aria-busy='true']";
 const loading = "[aria-busy='true']:disabled";
 
-// At rest, and while hovered or while its popup is open (Base UI marks the trigger).
+// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
+const popupOpen = ":is([data-popup-open], [aria-haspopup][data-open])";
+
+// At rest, and while hovered or while its popup is open.
 const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
-  ":is([data-popup-open])": active,
+  [popupOpen]: active,
   [media.hover]: {
     default: rest,
-    ":is([data-popup-open])": active,
+    [popupOpen]: active,
     ":hover:not(:disabled)": active,
   },
   ":active:not(:disabled)": active,
@@ -175,10 +178,10 @@ const styles = stylex.create({
     // Disabled and busy repeat inside the hover block, which StyleX ranks above a bare condition.
     opacity: {
       default: 1,
-      ":is([data-popup-open])": opacities.hover,
+      [popupOpen]: opacities.hover,
       [media.hover]: {
         default: 1,
-        ":is([data-popup-open])": opacities.hover,
+        [popupOpen]: opacities.hover,
         ":hover:not(:disabled)": opacities.hover,
         ":disabled": opacities.disabled,
         [loading]: opacities.busy,

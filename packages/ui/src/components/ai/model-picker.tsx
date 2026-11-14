@@ -1,9 +1,13 @@
 "use client";
 
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { Tick02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  createPopoverController,
+  PopoverContent as PopoverContentPrimitive,
+} from "@ui-sdk/react/popover";
+import type { PopoverProps } from "@ui-sdk/react/popover";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 import {
@@ -15,7 +19,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ComponentProps, RefObject } from "react";
+import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -25,6 +29,7 @@ import {
   Popover,
   popoverStyles,
   PopoverTrigger,
+  usePopoverInstant,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
 import type { Sx } from "@/lib/constella/styles";
@@ -60,9 +65,6 @@ const styles = stylex.create({
   },
   detailsStart: {
     flexDirection: "row-reverse",
-  },
-  instant: {
-    transitionDuration: "0s",
   },
   command: {
     boxShadow: shadows.lg,
@@ -103,8 +105,8 @@ const styles = stylex.create({
 });
 
 interface Picker {
-  actions: RefObject<PopoverPrimitive.Root.Actions | null>;
   cancelShow: () => void;
+  controller: NonNullable<PopoverProps["controller"]>;
   detailsId: string;
   picked: boolean;
   setPicked: (picked: boolean) => void;
@@ -124,12 +126,12 @@ function usePicker() {
 }
 
 function ModelPicker({
-  actionsRef,
+  controller: givenController,
   onOpenChangeComplete,
   ...props
-}: PopoverPrimitive.Root.Props) {
-  const ownActions = useRef<PopoverPrimitive.Root.Actions | null>(null);
-  const actions = actionsRef ?? ownActions;
+}: PopoverProps) {
+  const ownController = useMemo(() => createPopoverController(), []);
+  const controller = givenController ?? ownController;
   const [picked, setPicked] = useState(false);
   const [shown, setShown] = useState(false);
   const timer = useRef(0);
@@ -142,10 +144,10 @@ function ModelPicker({
   );
   const picker = useMemo(
     () => ({
-      actions,
       cancelShow: () => {
         clearTimeout(timer.current);
       },
+      controller,
       detailsId,
       picked,
       setPicked,
@@ -161,12 +163,12 @@ function ModelPicker({
       },
       shown,
     }),
-    [actions, detailsId, picked, shown]
+    [controller, detailsId, picked, shown]
   );
   return (
     <PickerContext value={picker}>
       <Popover
-        actionsRef={actions}
+        controller={controller}
         // Reset once closed, since a controlled `open` never calls `onOpenChange`.
         onOpenChangeComplete={(open) => {
           if (!open) {
@@ -190,7 +192,6 @@ function ModelPickerTrigger({
 }: ButtonProps) {
   return (
     <PopoverTrigger
-      data-slot="model-picker-trigger"
       render={<Button size={size} variant={variant} {...props} />}
     >
       {children}
@@ -204,12 +205,10 @@ function ModelPickerTrigger({
   );
 }
 
-/** Renders the portal, the positioner and a popup that is no surface, so the command and details card beside it are. */
+/** A popover content that is no surface, so the command and details card beside it are. */
 function ModelPickerContent({
   align = "start",
-  alignOffset = 0,
   detailsSide = "inline-end",
-  side = "bottom",
   sideOffset = Number(offsets.popover),
   sx,
   ...props
@@ -218,29 +217,22 @@ function ModelPickerContent({
   detailsSide?: (typeof modelPickerDetailsSides)[number];
 }) {
   const { picked } = usePicker();
+  const instant = usePopoverInstant();
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(popoverStyles.positioner)}
-      >
-        <PopoverPrimitive.Popup
-          data-details-side={detailsSide}
-          data-slot="model-picker-content"
-          {...props}
-          {...stylex.props(
-            popoverStyles.motion,
-            styles.content,
-            detailsSide === "inline-start" && styles.detailsStart,
-            picked && styles.instant,
-            sx
-          )}
-        />
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverContentPrimitive
+      align={align}
+      data-details-side={detailsSide}
+      sideOffset={sideOffset}
+      {...props}
+      {...stylex.props(
+        popoverStyles.popup,
+        popoverStyles.motion,
+        styles.content,
+        detailsSide === "inline-start" && styles.detailsStart,
+        (picked || instant) && popoverStyles.instant,
+        sx
+      )}
+    />
   );
 }
 
@@ -285,7 +277,7 @@ function ModelPickerItem({
   selected = false,
   ...props
 }: ComponentProps<typeof CommandItem> & { selected?: boolean }) {
-  const { actions, cancelShow, detailsId, setPicked, showAfterRest, shown } =
+  const { cancelShow, controller, detailsId, setPicked, showAfterRest, shown } =
     usePicker();
   return (
     <CommandItem
@@ -294,7 +286,7 @@ function ModelPickerItem({
       onClick={(event) => {
         onClick?.(event);
         setPicked(true);
-        actions.current?.close();
+        controller.close();
       }}
       onPointerEnter={(event) => {
         onPointerEnter?.(event);

@@ -74,6 +74,14 @@ export const joins = stylex.defineVars({
   inline: "1",
 });
 
+// A Base UI popup's room to the viewport edge, copied on its positioner, where Base UI sets
+// `--available-height` and `--available-width`: ui-sdk registers both page-wide without
+// inheritance, so the popup inside can't read them. Gone once no Base UI popup is left.
+export const popupVars = stylex.defineVars({
+  availableHeight: "100dvh",
+  availableWidth: "100dvw",
+});
+
 // An avatar's diameter, its badge's, the hole its photo leaves for the badge, and its
 // corner. Avatar sets them per size, so the masks that cut it apart from its neighbors and
 // badge can do math on them.

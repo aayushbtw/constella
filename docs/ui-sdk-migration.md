@@ -81,7 +81,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Unit | Phase | Base UI parts | ui-sdk | Status | PR | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Popover | 1 | popover | Popover | todo |  | The spike |
+| Popover | 1 | popover | Popover | pr |  | The spike. Ports Model Picker's popover parts too, since it built on ours |
 | Button | 2 | button | Button | todo |  |  |
 | Separator | 2 | separator | Separator | todo |  |  |
 | Toggle | 2 | toggle | Toggle | todo |  |  |
@@ -111,7 +111,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
 | Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo |  | No Toggle Group documented; check |
 | Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  |  |
-| Model Picker | 5 | popover, render helpers |  | todo |  | After Popover, Command |
+| Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
 | Prompt Input | 5 | autocomplete |  | todo |  | After Command |
 | Citation | 5 | avatar |  | todo |  | After Avatar, Hover Card |
 | Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
@@ -144,6 +144,15 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Popover | Pre-existing on `main`: a click inside a popover opened from an `InputGroupAddon` reaches the addon's `onClick`, which focuses the group's input (`input-group.tsx` `InputGroupAddon`). Base UI kept the popover open; ui-sdk closes it, since focus left. To file and fix on `main` first; the fix must also skip clicks from in-place popup content, which is a DOM child of the addon after the port |
+| 2026-11-14 | Popover | Pre-existing on `main`: the prerendered Date Range Picker page throws React error #418 (hydration text mismatch) on load, in both builds |
+| 2026-11-14 | Popover | ui-sdk registers `--available-height` and `--available-width` without inheritance as soon as a popover mounts, so every Base UI popup on the page lost its max height and width. Their positioners now copy the values into `popupVars` |
+| 2026-11-14 | Popover | The open content rendered in place counted as a ButtonGroup part and squared the trigger's end corners. The joins skip `[popover]` |
+| 2026-11-14 | Popover | The content inherits from where it sits: an addon's weight, cursor and `user-select`, a group's joins. `popoverStyles.popup` resets them. ui-sdk's runtime layer, not `web.css`, resets the browser's `[popover]` box |
+| 2026-11-14 | Popover | No `data-instant`. `Popover` keeps the keyboard and focus-out skip from `onOpenChange`'s `details` and commits it with `flushSync`; without it an Escape after a pointer open ran the 120ms exit |
+| 2026-11-14 | Popover | `initialFocus` takes no open type, so Date Range Picker picks `"auto"` or `"content"` from `details.source` in `onOpenChange` |
+| 2026-11-14 | Popover | Base UI's `actionsRef` is ui-sdk's controller: Model Picker closes on pick with `createPopoverController().close()` |
+| 2026-11-14 | Popover | Not on `main`: Model Picker's docs still link Base UI `useRender` for `render`, left from #16 |
 | 2026-11-14 | Render helpers | `SidebarGroupAction` and `SidebarMenuAction` forced `type="button"` onto a `render` element on `main`. Found by the slop review of #16, filed and fixed on `main` as [#17](https://github.com/aayushbtw/constella/issues/17), then merged in |
 | 2026-11-14 | Render helpers | A handler on a `render` element that calls `preventDefault()` now skips the part's own handler (ui-sdk `mergeProps`). Base UI needed `event.preventBaseUIHandler()` for that |
 | 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |

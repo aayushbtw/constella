@@ -1,8 +1,18 @@
 "use client";
 
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import * as stylex from "@stylexjs/stylex";
+import {
+  PopoverClose as PopoverClosePrimitive,
+  PopoverContent as PopoverContentPrimitive,
+  PopoverDescription as PopoverDescriptionPrimitive,
+  Popover as PopoverPrimitive,
+  PopoverTitle as PopoverTitlePrimitive,
+  PopoverTrigger as PopoverTriggerPrimitive,
+} from "@ui-sdk/react/popover";
+import type { PopoverProps } from "@ui-sdk/react/popover";
+import { createContext, use, useState } from "react";
 import type { ComponentProps } from "react";
+import { flushSync } from "react-dom";
 
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -11,7 +21,7 @@ import {
   durations,
   easings,
   fontWeights,
-  layers,
+  joins,
   media,
   motion,
   offsets,
@@ -25,19 +35,26 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type PopoverContentProps = Styled<PopoverPrimitive.Popup.Props> &
-  Pick<
-    PopoverPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
-  >;
+type PopoverContentProps = Styled<
+  ComponentProps<typeof PopoverContentPrimitive>
+>;
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style]):not([data-instant])";
-const instant = ":is([data-instant])";
+const closing = ":is([data-ending-style])";
 
 const styles = stylex.create({
-  positioner: {
-    zIndex: layers.popover,
+  // The content renders in place, so it drops what it would inherit from there: a group's joins,
+  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box.
+  popup: {
+    [joins.block]: "1",
+    [joins.either]: "1",
+    [joins.inline]: "1",
+    color: colors.textPrimary,
+    cursor: "auto",
+    fontWeight: fontWeights.regular,
+    textAlign: "start",
+    userSelect: "auto",
+    whiteSpace: "normal",
   },
   // Select's surface and motion (below), so every popup opens the same way.
   surface: {
@@ -63,13 +80,15 @@ const styles = stylex.create({
     transitionDuration: {
       default: durations.popover,
       [closing]: durations.popoverExit,
-      [instant]: "0s",
     },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
+  },
+  instant: {
+    transitionDuration: "0s",
   },
   header: {
     display: "flex",
@@ -90,52 +109,59 @@ const styles = stylex.create({
   },
 });
 
-function Popover(props: PopoverPrimitive.Root.Props) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />;
+// Whether the last open or close came from the keyboard or focus leaving, which skip the motion,
+// as Base UI's `data-instant` did. ui-sdk marks the content as it closes, after this callback,
+// so the flag commits first: a frame later, the exit would already be running.
+const InstantContext = createContext(false);
+
+function Popover({ onOpenChange, ...props }: PopoverProps) {
+  const [instant, setInstant] = useState(false);
+  return (
+    <InstantContext value={instant}>
+      <PopoverPrimitive
+        onOpenChange={(open, details) => {
+          flushSync(() => {
+            setInstant(
+              details.source === "keyboard" || details.reason === "focus-out"
+            );
+          });
+          onOpenChange?.(open, details);
+        }}
+        {...props}
+      />
+    </InstantContext>
+  );
+}
+
+/** Whether the popover's last open or close skips its motion; apply `popoverStyles.instant` while it does. */
+function usePopoverInstant() {
+  return use(InstantContext);
 }
 
 function PopoverTrigger({
   sx,
   ...props
-}: Styled<PopoverPrimitive.Trigger.Props>) {
-  return (
-    <PopoverPrimitive.Trigger
-      data-slot="popover-trigger"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: Styled<ComponentProps<typeof PopoverTriggerPrimitive>>) {
+  return <PopoverTriggerPrimitive {...props} {...stylex.props(sx)} />;
 }
 
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
 function PopoverContent({
-  align = "center",
-  alignOffset = 0,
-  side = "bottom",
   sideOffset = Number(offsets.popover),
   sx,
   ...props
 }: PopoverContentProps) {
+  const instant = usePopoverInstant();
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(styles.positioner)}
-      >
-        <PopoverPrimitive.Popup
-          data-slot="popover-content"
-          {...props}
-          {...stylex.props(
-            [typeStyles.textSm, styles.surface],
-            styles.motion,
-            sx
-          )}
-        />
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverContentPrimitive
+      sideOffset={sideOffset}
+      {...props}
+      {...stylex.props(
+        [typeStyles.textSm, styles.popup, styles.surface],
+        styles.motion,
+        instant && styles.instant,
+        sx
+      )}
+    />
   );
 }
 
@@ -149,10 +175,12 @@ function PopoverHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function PopoverTitle({ sx, ...props }: Styled<PopoverPrimitive.Title.Props>) {
+function PopoverTitle({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof PopoverTitlePrimitive>>) {
   return (
-    <PopoverPrimitive.Title
-      data-slot="popover-title"
+    <PopoverTitlePrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, styles.title], sx)}
     />
@@ -162,30 +190,39 @@ function PopoverTitle({ sx, ...props }: Styled<PopoverPrimitive.Title.Props>) {
 function PopoverDescription({
   sx,
   ...props
-}: Styled<PopoverPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof PopoverDescriptionPrimitive>>) {
   return (
-    <PopoverPrimitive.Description
-      data-slot="popover-description"
+    <PopoverDescriptionPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
 
-/** The positioner's layer, the popup's surface and its motion, for a part that draws its own popup. */
+function PopoverClose({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof PopoverClosePrimitive>>) {
+  return <PopoverClosePrimitive {...props} {...stylex.props(sx)} />;
+}
+
+/** The popup's reset, surface and motion, for a part that draws its own popup. */
 const popoverStyles = {
+  instant: styles.instant,
   motion: styles.motion,
-  positioner: styles.positioner,
+  popup: styles.popup,
   surface: [typeStyles.textSm, styles.surface],
 };
 
 export {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
   popoverStyles,
   PopoverTitle,
   PopoverTrigger,
+  usePopoverInstant,
 };
 export type { PopoverContentProps };
