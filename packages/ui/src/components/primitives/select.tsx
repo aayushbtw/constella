@@ -29,6 +29,7 @@ import {
   motion,
   offsets,
   opacities,
+  popupVars,
   radii,
   shadows,
   sizes,
@@ -64,7 +65,7 @@ const closing =
 const instant = ":is([data-skip-motion])";
 
 // Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
-const maxHeight = `min(var(--available-height), ${sizes.menuHeight})`;
+const maxHeight = `min(${popupVars.availableHeight}, ${sizes.menuHeight})`;
 
 const styles = stylex.create({
   // An input's surface, so a select and an input in one form read as one family.
@@ -142,6 +143,8 @@ const styles = stylex.create({
     flexShrink: 0,
   },
   positioner: {
+    [popupVars.availableHeight]: "var(--available-height)",
+    [popupVars.availableWidth]: "var(--available-width)",
     zIndex: layers.popover,
   },
   popup: {
@@ -153,7 +156,7 @@ const styles = stylex.create({
     boxShadow: shadows.lg,
     color: colors.textPrimary,
     maxHeight,
-    maxWidth: "var(--available-width)",
+    maxWidth: popupVars.availableWidth,
     minWidth: sizes.menu,
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },

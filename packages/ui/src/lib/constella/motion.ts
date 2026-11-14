@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { flushSync } from "react-dom";
 
 interface OpenChangeDetails {
-  event: Event;
+  event?: Event;
   reason: string;
+  source?: string;
 }
 
-// Base UI marks only some keyboard changes `data-instant`, and differently per primitive.
-function skipsMotion({ event, reason }: OpenChangeDetails) {
+function skipsMotion({ event, reason, source }: OpenChangeDetails) {
+  // ui-sdk marks no change `data-instant` outside Tooltip, but reports how each one came about.
+  if (source !== undefined) {
+    return source === "keyboard" || reason === "focus-out";
+  }
+  // Base UI marks only some keyboard changes `data-instant`, and differently per primitive.
   switch (reason) {
     case "escape-key":
     case "item-press":
@@ -29,7 +35,15 @@ function useSkipMotion<Details extends OpenChangeDetails>(
 ) {
   const [skip, setSkip] = useState(false);
   function handleOpenChange(open: boolean, details: Details) {
-    setSkip(skipsMotion(details));
+    const next = skipsMotion(details);
+    if (details.source === undefined) {
+      setSkip(next);
+    } else if (next !== skip) {
+      // ui-sdk reads the content's transitions right after this callback, so the attribute lands first.
+      flushSync(() => {
+        setSkip(next);
+      });
+    }
     onOpenChange?.(open, details);
   }
   return [skip, handleOpenChange] as const;

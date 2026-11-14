@@ -13,6 +13,7 @@ import {
   media,
   motion,
   offsets,
+  popupVars,
   radii,
   shadows,
   sizes,
@@ -43,6 +44,7 @@ const styles = stylex.create({
     },
     transitionProperty: "top, left, right, bottom",
     transitionTimingFunction: easings.out,
+    [popupVars.availableWidth]: "var(--available-width)",
     zIndex: layers.popover,
   },
   // A popover's surface and motion.
@@ -56,7 +58,7 @@ const styles = stylex.create({
     color: colors.textPrimary,
     // Base UI measures each trigger's content, so the card can grow to the next one's height.
     height: "var(--popup-height, auto)",
-    maxWidth: "var(--available-width)",
+    maxWidth: popupVars.availableWidth,
     opacity: { default: 1, [offstage]: 0 },
     paddingBlockEnd: space.popup,
     paddingBlockStart: space.popup,

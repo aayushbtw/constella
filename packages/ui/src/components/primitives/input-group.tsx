@@ -434,7 +434,7 @@ function InputGroupAddon({
         if (
           !(event.target instanceof Element) ||
           !event.currentTarget.contains(event.target) ||
-          event.target.closest("button")
+          event.target.closest("button, [popover]")
         ) {
           return;
         }
