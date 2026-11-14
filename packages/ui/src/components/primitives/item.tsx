@@ -4,7 +4,6 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
-import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -225,7 +224,7 @@ const styles = stylex.create({
       default: space.md,
       ":has([data-size='sm'])": space.popup,
       ":has([data-size='xs'])": space.xs,
-      ":has(> [data-slot='item-separator'])": 0,
+      ":has(> [data-slot='separator'])": 0,
     },
     listStyleType: "none",
     paddingInlineEnd: 0,
@@ -260,16 +259,7 @@ function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
   );
 }
 
-function ItemSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="item-separator"
-      orientation="horizontal"
-      {...props}
-      sx={sx}
-    />
-  );
-}
+const ItemSeparator = Separator;
 
 function Item({
   render,

@@ -83,8 +83,11 @@ Horizontal separators between list items.
 
 ## API Reference
 
-`Separator` takes every prop of [Base UI's Separator](https://base-ui.com/react/components/separator#api-reference), plus `sx`, applied last.
+`Separator` takes every prop of [UI SDK's Separator](https://ui-sdk.dev/docs/components/separator#api-reference), plus `sx`, applied last.
 
 | Prop          | Values                         | Default        |
 | ------------- | ------------------------------ | -------------- |
 | `orientation` | `"horizontal"` \| `"vertical"` | `"horizontal"` |
+| `decorative`  | `boolean`                      | `false`        |
+
+`decorative` hides a line that adds no information from screen readers, with `role="none"`.

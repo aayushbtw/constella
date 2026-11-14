@@ -1274,13 +1274,7 @@ function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
 }
 
 function SidebarSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="sidebar-separator"
-      {...props}
-      sx={[styles.separator, sx]}
-    />
-  );
+  return <Separator {...props} sx={[styles.separator, sx]} />;
 }
 
 function SidebarContent({ swap = true, sx, ...props }: SwapProps) {

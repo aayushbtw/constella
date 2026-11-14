@@ -83,7 +83,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | --- | --- | --- | --- | --- | --- | --- |
 | Popover | 1 | popover | Popover | merged | [#25](https://github.com/aayushbtw/constella/pull/25) | The spike. Ports Model Picker's popover parts too, since it built on ours |
 | Button | 2 | button | Button | todo |  |  |
-| Separator | 2 | separator | Separator | todo |  |  |
+| Separator | 2 | separator | Separator | pr |  | Button Group, Item and Sidebar separators now carry `separator` |
 | Toggle | 2 | toggle | Toggle | todo |  |  |
 | Checkbox | 2 | checkbox | Checkbox | todo |  |  |
 | Switch | 2 | switch | Switch | todo |  | Swap `packages/ui/test/agent.test.tsx`'s raw ui-sdk Switch for ours |
@@ -145,6 +145,8 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Separator | ui-sdk owns `data-slot`, so `ButtonGroupSeparator`, `ItemSeparator` and `SidebarSeparator` lost `button-group-separator`, `item-separator` and `sidebar-separator` and carry `separator`. The group joins (`styles.ts` `joined`) and Item Group's gap read `[data-slot='separator']`. The joins' selector change renames two classes on every joinable part in the built CSS; demos are pixel-identical before and after, light and dark |
+| 2026-11-14 | Separator | Same markup as Base UI's (`div`, `role="separator"`, `aria-orientation`, `data-orientation`). New `decorative` prop gives `role="none"`; no Constella part sets it yet. A separator never shows in the agent `snapshot()` |
 | 2026-11-14 | Popover | A Model Picker pick by pointer ran the 120ms exit; Base UI's build closed it at once. `controller.close()` reports `source: "programmatic"`, so `useSkipMotion` doesn't skip, and the batched `setPicked(true)` landed after ui-sdk read the transitions. `ModelPickerItem` commits `picked` with `flushSync` before it closes. A controller close takes only a `reason` from a fixed list, so a pick can't reach `useSkipMotion` |
 | 2026-11-14 | Popover | StyleX can't share a selector key across files: a `defineConsts` value as a key compiles to a descendant selector (`:is(…) .x123`), and importing a plain one fails the compile, since StyleX resolves imports only from `.stylex.ts` files. `popupOpen` stays repeated in `styles.ts`, `button.tsx` and `prompt-input.tsx` |
 | 2026-11-14 | Popover | Pre-existing on `main`: a click inside a popover opened from an `InputGroupAddon` reaches the addon's `onClick`, which focuses the group's input (`input-group.tsx` `InputGroupAddon`). Base UI kept the popover open; ui-sdk closes it, since focus left. Filed and fixed on `main` as [#23](https://github.com/aayushbtw/constella/issues/23), then merged in; this PR also skips clicks from in-place `[popover]` content, a DOM child of the addon after the port |

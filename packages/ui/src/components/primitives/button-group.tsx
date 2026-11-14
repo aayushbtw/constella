@@ -122,7 +122,6 @@ function ButtonGroupSeparator({
 }: SeparatorProps) {
   return (
     <Separator
-      data-slot="button-group-separator"
       orientation={orientation}
       {...props}
       sx={[
