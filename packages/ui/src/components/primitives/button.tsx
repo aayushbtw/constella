@@ -60,7 +60,7 @@ type ButtonProps = Omit<
 
 // ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only; other elements use `:disabled`.
 const disabled = ":is(:disabled, [data-disabled])";
-// A caller marks its own work with `aria-busy`; ui-sdk sets it, `aria-disabled` and `data-pending` while a press's Promise runs.
+// A caller marks its own work with `aria-busy`.
 const busy = "[aria-busy='true']";
 // Working and can't be pressed: a lighter fade than disabled.
 const loading = `:is(${busy}${disabled}, [data-pending])`;
