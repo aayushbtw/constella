@@ -43,8 +43,10 @@ import {
   Tabs,
   TabsContent,
   TabsList,
+  tabsListVariants,
   TabsTrigger,
 } from "@/components/primitives/tabs";
+import type { TabsListVariant } from "@/components/primitives/tabs";
 import { Heading } from "@/components/typography/heading";
 import { Text } from "@/components/typography/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
@@ -279,13 +281,18 @@ const tabSets = {
   worst: [text.french, text.german, "Members (1,284)", "API"],
 } satisfies Record<Dataset, string[]>;
 
+const tabsLabels = {
+  default: "Pill tabs",
+  line: "Line tabs",
+} satisfies Record<TabsListVariant, string>;
+
 function TabsBreak({ data }: { data: Dataset }) {
   const tabs = tabSets[data];
   return (
     <div {...stylex.props(styles.column)}>
-      {(["default", "line"] as const).map((variant) => (
+      {tabsListVariants.map((variant) => (
         <Tabs defaultValue={tabs[0]} key={variant}>
-          <TabsList variant={variant}>
+          <TabsList aria-label={tabsLabels[variant]} variant={variant}>
             {tabs.map((tab) => (
               <TabsTrigger key={tab} value={tab}>
                 {tab}
@@ -295,7 +302,7 @@ function TabsBreak({ data }: { data: Dataset }) {
         </Tabs>
       ))}
       <Tabs defaultValue={tabs[0]} orientation="vertical">
-        <TabsList variant="line">
+        <TabsList aria-label="Vertical tabs" variant="line">
           {tabs.map((tab) => (
             <TabsTrigger key={tab} value={tab}>
               {tab}

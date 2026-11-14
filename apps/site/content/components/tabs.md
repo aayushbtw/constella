@@ -22,7 +22,7 @@ import {
 
 ```tsx
 <Tabs defaultValue="preview">
-  <TabsList>
+  <TabsList aria-label="View">
     <TabsTrigger value="preview">Preview</TabsTrigger>
     <TabsTrigger value="code">Code</TabsTrigger>
   </TabsList>
@@ -47,7 +47,7 @@ Use the `variant` prop on `TabsList` to choose between a pill sliding between th
 <!-- ::demo name="tabs-line" -->
 
 ```tsx
-<TabsList variant="line">
+<TabsList aria-label="Project" variant="line">
   <TabsTrigger value="overview">Overview</TabsTrigger>
   <TabsTrigger value="activity">Activity</TabsTrigger>
 </TabsList>
@@ -65,7 +65,9 @@ Use the `size` prop on `TabsList`. Every trigger in the list follows it.
 <!-- ::demo name="tabs-size" -->
 
 ```tsx
-<TabsList size="sm">…</TabsList>
+<TabsList aria-label="Range" size="sm">
+  …
+</TabsList>
 ```
 
 | Size      | Tab height  | Text |
@@ -82,7 +84,7 @@ Set `orientation="vertical"` on `Tabs` to stack the tabs beside their panels, as
 
 ```tsx
 <Tabs defaultValue="general" orientation="vertical">
-  <TabsList variant="line">
+  <TabsList aria-label="Settings" variant="line">
     <TabsTrigger value="general">General</TabsTrigger>
     <TabsTrigger value="billing">Billing</TabsTrigger>
   </TabsList>
@@ -105,11 +107,11 @@ Add `disabled` to a `TabsTrigger` to keep it in place but out of reach.
 
 ## API Reference
 
-`TabsList` renders the indicator that slides to the active tab, and switches tabs as the arrow keys move focus; pass `activateOnFocus={false}` to switch on Enter instead. A row of tabs wider than its container scrolls sideways, fading the edge with more past it, and the picked tab scrolls into view however it was picked. A vertical list's panel moves under it once it has less than `sizes.menu` beside it.
+`TabsList` renders the indicator that slides to the active tab. Name each list with `aria-label`. Tabs switch as the arrow keys move focus; set `activation="manual"` on `Tabs` to switch on Enter instead. A row of tabs wider than its container scrolls sideways, fading the edge with more past it, and the picked tab scrolls into view however it was picked. A vertical list's panel moves under it once it has less than `sizes.menu` beside it.
 
 | Prop      | Type                        | Default     |
 | --------- | --------------------------- | ----------- |
 | `variant` | `"default" \| "line"`       | `"default"` |
 | `size`    | `"sm" \| "default" \| "lg"` | `"default"` |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Tabs](https://base-ui.com/react/components/tabs).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Tabs](https://ui-sdk.dev/docs/components/tabs).

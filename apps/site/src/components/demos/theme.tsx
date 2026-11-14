@@ -301,7 +301,7 @@ function ThemeBuilderDemo() {
             <Badge variant="primary">New</Badge>
           </div>
           <Tabs defaultValue="account">
-            <TabsList>
+            <TabsList aria-label="Settings">
               <TabsTrigger value="account">Account</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
               <TabsTrigger value="team">Team</TabsTrigger>
