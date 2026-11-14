@@ -25,6 +25,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
+// Base UI's Field described each thumb's input as well as the group.
 const SliderDescriptionContext = createContext<string | undefined>(undefined);
 
 const halfThumb = `calc(${sizes.thumb} / 2)`;
@@ -131,7 +132,6 @@ function Slider<Value extends number | readonly number[]>({
   const field = useFieldControl(props);
   const root = { "data-slot": "slider", name: field?.name, ...props };
   const joined: SliderPrimitive.Root.Props<Value> = field?.props(root) ?? root;
-  // Base UI's Field described each thumb's input as well as the group.
   return (
     <SliderDescriptionContext value={joined["aria-describedby"]}>
       <SliderPrimitive.Root {...joined} {...stylex.props(styles.slider, sx)} />

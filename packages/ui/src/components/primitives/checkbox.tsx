@@ -30,7 +30,7 @@ type CheckboxSize = (typeof checkboxSizes)[number];
 
 type CheckboxProps = Omit<
   ComponentProps<typeof CheckboxPrimitive>,
-  "className" | "style"
+  "children" | "className" | "style"
 > & {
   size?: CheckboxSize;
   sx?: Sx;
