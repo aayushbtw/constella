@@ -82,7 +82,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Unit | Phase | Base UI parts | ui-sdk | Status | PR | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Popover | 1 | popover | Popover | merged | [#25](https://github.com/aayushbtw/constella/pull/25) | The spike. Ports Model Picker's popover parts too, since it built on ours |
-| Button | 2 | button | Button | pr |  |  |
+| Button | 2 | button | Button | merged | [#27](https://github.com/aayushbtw/constella/pull/27) |  |
 | Separator | 2 | separator | Separator | merged | [#26](https://github.com/aayushbtw/constella/pull/26) | Button Group, Item and Sidebar separators now carry `separator` |
 | Toggle | 2 | toggle | Toggle | merged | [#30](https://github.com/aayushbtw/constella/pull/30) | Toggle Group and Segmented Control keep Base UI's toggle until phase 4 |
 | Checkbox | 2 | checkbox | Checkbox | todo |  |  |
@@ -192,3 +192,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Filed and fixed #29 on `main` (Switch docs listed two sizes), found by the Switch port; merged `main` in |
 | 2026-11-14 | #26 merged: Separator on ui-sdk. Its three parts read the `separator` slot |
 | 2026-11-14 | #30 merged: Toggle on ui-sdk. Both libraries emit `data-pressed`, so no bridge |
+| 2026-11-14 | #27 merged: Button on ui-sdk. Button re-applies a passed `data-slot`, the one sanctioned exception; disabled and pending styles read ui-sdk's `data-disabled` and `data-pending` |
