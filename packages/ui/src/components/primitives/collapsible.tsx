@@ -17,16 +17,19 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
+const closing = ":is([data-ending-style])";
+// A keyboard open has no from-state, so its first frame is already open.
+const opening = ":is([data-starting-style]):not([data-collapsible-instant])";
 
 const styles = stylex.create({
   // Content below has to make room, so the panel grows to ui-sdk's measured height.
   content: {
     height: {
       default: "var(--collapsible-panel-height)",
-      [offstage]: 0,
+      [closing]: 0,
+      [opening]: 0,
     },
-    opacity: { default: 1, [offstage]: 0 },
+    opacity: { default: 1, [closing]: 0, [opening]: 0 },
     overflow: "hidden",
     // Shutting is quicker and drops the gentle settle, whose long tail reads as stuck.
     transitionDuration: {
