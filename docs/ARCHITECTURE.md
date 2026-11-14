@@ -171,6 +171,26 @@ The bridge sees only UI SDK and `definePrimitive` components, and the docs give 
 | Components Base UI doesn't provide (Chat, Prompt Input, Attachment, Data Table, Chart) are invisible to the bridge unless rebuilt on `definePrimitive` with an `agent` key | Each AI and TanStack component |
 | The bridge names components by accessible name | Every part needs a label an agent can type; distinct, since labels match by whole word ("Name" hits "Project name") |
 
+### Port notes
+
+From the 0.1.0-beta.1 docs in `node_modules/@ui-sdk/react/docs` and the `ui-sdk` skill, before any spike. Each one still needs a spike to prove it.
+
+| Topic | Note |
+| --- | --- |
+| Layers | ui-sdk injects a small runtime stylesheet in a top-level `ui-sdk` layer on first mount. Declared last, it beats StyleX's layers, so `ui-sdk` goes first in `useCSSLayers.before`, and a consumer's global CSS starts with `@layer ui-sdk;` |
+| `web.css` | Not imported. It also resets the browser's popover defaults on popup content, centers dialogs and places the toast region by `data-side`/`data-align`, so our styles take that over |
+| `data-slot` | ui-sdk sets and owns it. Names change: `dropdown-menu-*` to `menu-*`, `dialog-popup` to `dialog-content`, `toast-viewport` to `toast-region` |
+| Open state | Triggers carry `data-open`/`data-closed`, not Base UI's `data-popup-open` |
+| In-place popups | Content renders next to its trigger, so DOM events bubble through it, and the group joins' `:nth-child(1 of [data-slot])` may count it |
+| `--available-height` | Registered without inheritance; an inner scroller reads it only if the popup copies it to its own variable |
+| Gaps | Menu documents no search input part (ours ships `dropdown-menu-input`); no anchored Toast |
+| RTL | No `DirectionProvider`; it reads the page's direction |
+| SSR | No provider. Runtime CSS arrives after hydration, and closed `keepMounted` content relies on the `[hidden]` rule `reset.css` already has. Agent bridge and `observe` start in client code only. `data-review-loc` likely mismatches hydration the way StyleX's `data-style-src` did |
+| Testing | `@ui-sdk/core/testing`: `checkPattern` for 15 ARIA patterns, `mount` with `keys`/`click`/`drag`, `checkServer`, `checkDirection`. Vitest and jsdom with `__UI_SDK_STRICT__` and the stubs in the skill's `testing.md` |
+| Extras to use | `createConfirm()` (awaitable Alert Dialog), `useShortcut` and the `shortcuts` registry, `useAsyncOptions`, `presentation="sheet"`, async Close `action`, `debug` prop on roots |
+
+Spike order: Popover (layers, popover reset, slots, motion, hydration), then Toast (region placement, stack variables), then Menu with a submenu and an agent-bridge test.
+
 ### Log
 
 | Date | Checked | Finding |
