@@ -85,17 +85,17 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Button | 2 | button | Button | merged | [#27](https://github.com/aayushbtw/constella/pull/27) |  |
 | Separator | 2 | separator | Separator | merged | [#26](https://github.com/aayushbtw/constella/pull/26) | Button Group, Item and Sidebar separators now carry `separator` |
 | Toggle | 2 | toggle | Toggle | merged | [#30](https://github.com/aayushbtw/constella/pull/30) | Toggle Group and Segmented Control keep Base UI's toggle until phase 4 |
-| Checkbox | 2 | checkbox | Checkbox | pr |  | In the Field PR |
-| Switch | 2 | switch | Switch | pr |  | In the Field PR. `packages/ui/test/agent.test.tsx` uses ours |
-| Radio Group | 2 | radio-group, radio | Radio | pr |  | In the Field PR |
+| Checkbox | 2 | checkbox | Checkbox | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
+| Switch | 2 | switch | Switch | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. `packages/ui/test/agent.test.tsx` uses ours |
+| Radio Group | 2 | radio-group, radio | Radio | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
 | Progress | 2 | progress | Progress | todo |  |  |
 | Loading Bar | 2 | progress | Progress | todo |  | Added on main 2026-11-14; port after Progress |
 | Meter | 2 | meter | Meter | todo |  |  |
 | Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold. Drop its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
-| Field | 2 | field, fieldset | Field | pr |  | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
-| Input Group | 2 | input | Input | pr |  | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`, so Command's `command-input` and Dropdown Menu's `dropdown-menu-input` would be lost. Revisit when we want `InputClear` |
-| Textarea | 2 | field | Textarea | pr |  | In the Field PR |
+| Field | 2 | field, fieldset | Field | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
+| Input Group | 2 | input | Input | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`, so Command's `command-input` and Dropdown Menu's `dropdown-menu-input` would be lost. Revisit when we want `InputClear` |
+| Textarea | 2 | field | Textarea | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
 | Scroll Area | 2 | scroll-area | Scroll Area | todo |  | Code Block also uses it, and `DirectionProvider` |
 | Collapsible | 2 | collapsible | Collapsible | todo |  |  |
 | Tabs | 2 | tabs | Tabs | todo |  |  |
@@ -205,3 +205,5 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | #26 merged: Separator on ui-sdk. Its three parts read the `separator` slot |
 | 2026-11-14 | #30 merged: Toggle on ui-sdk. Both libraries emit `data-pressed`, so no bridge |
 | 2026-11-14 | #27 merged: Button on ui-sdk. Button re-applies a passed `data-slot`, the one sanctioned exception; disabled and pending styles read ui-sdk's `data-disabled` and `data-pending` |
+| 2026-11-14 | Filed #31 (Textarea didn't grow without field-sizing) and #32 (CopyButton drops the clipboard Promise), found by reviews; #31 fixed in #28 with ui-sdk's autoResize, #32 open on `main` |
+| 2026-11-14 | #28 merged: Field, Checkbox, Switch, Radio Group, Input Group and Textarea on ui-sdk as one unit, since a ui-sdk control in a Base UI Field loses its wiring. Select and Slider use ui-sdk's `useFieldControl` until their rows. Phase 2 so far: Button, Separator, Toggle and the Field unit merged |
