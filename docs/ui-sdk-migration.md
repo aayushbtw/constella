@@ -61,7 +61,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Task | Status | PR | Notes |
 | --- | --- | --- | --- |
-| `ui-sdk` first in `useCSSLayers.before`; `@layer ui-sdk;` in the site's global CSS | todo |  |  |
+| `base.css` declares `@layer ui-sdk;` first, below StyleX's layers | pr |  |  |
 | `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | todo |  | 22 files: alert, badge, breadcrumb, button-group, card, empty, field, input-group, item, kbd, sidebar, textarea, the 5 typography parts, attachment, code-block, marker, model-picker, shimmer |
 | Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo |  |  |
 

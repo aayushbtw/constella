@@ -179,7 +179,7 @@ From the 0.1.0-beta.1 docs in `node_modules/@ui-sdk/react/docs` and the `ui-sdk`
 
 | Topic | Note |
 | --- | --- |
-| Layers | ui-sdk injects a small runtime stylesheet in a top-level `ui-sdk` layer on first mount. Declared last, it beats StyleX's layers, so `ui-sdk` goes first in `useCSSLayers.before`, and a consumer's global CSS starts with `@layer ui-sdk;` |
+| Layers | ui-sdk injects a small runtime stylesheet in a top-level `ui-sdk` layer on first mount. Undeclared, it lands last and beats StyleX's layers. `base.css` opens with `@layer ui-sdk;`, so every consumer that imports it gets `ui-sdk` as the lowest layer, below `reset`, `base` and StyleX's, with no step of its own. Built order: `ui-sdk, reset, base, priority1…11` |
 | `web.css` | Not imported. It also resets the browser's popover defaults on popup content, centers dialogs and places the toast region by `data-side`/`data-align`, so our styles take that over |
 | `data-slot` | ui-sdk sets and owns it. Names change: `dropdown-menu-*` to `menu-*`, `dialog-popup` to `dialog-content`, `toast-viewport` to `toast-region` |
 | Open state | Triggers carry `data-open`/`data-closed`, not Base UI's `data-popup-open` |
