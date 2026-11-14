@@ -1,9 +1,9 @@
 "use client";
 
 import { Input as InputPrimitive } from "@base-ui/react/input";
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -467,20 +467,16 @@ function InputGroupButton({
   );
 }
 
-function InputGroupText({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"span">>) {
-  return useRender({
-    defaultTagName: "span",
-    props: mergeProps<"span">(
+function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
+  return renderElement(
+    "span",
+    mergeProps(
+      { "data-slot": "input-group-text" },
       props,
       stylex.props([typeStyles.textSm, styles.text], sx)
     ),
-    render,
-    state: { slot: "input-group-text" },
-  });
+    render
+  );
 }
 
 /** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */

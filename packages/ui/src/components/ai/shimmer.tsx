@@ -1,14 +1,11 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx } from "@/lib/constella/styles";
 import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
-type ShimmerProps = Omit<
-  useRender.ComponentProps<"span">,
-  "className" | "style"
-> & {
+type ShimmerProps = Omit<PartProps<"span">, "className" | "style"> & {
   sx?: Sx;
 };
 
@@ -47,12 +44,15 @@ const styles = stylex.create({
 
 /** Text still being worked on: a slow sweep of light across it. */
 function Shimmer({ render, sx, ...props }: ShimmerProps) {
-  return useRender({
-    defaultTagName: "span",
-    props: mergeProps<"span">(props, stylex.props(styles.shimmer, sx)),
-    render,
-    state: { slot: "shimmer" },
-  });
+  return renderElement(
+    "span",
+    mergeProps(
+      { "data-slot": "shimmer" },
+      props,
+      stylex.props(styles.shimmer, sx)
+    ),
+    render
+  );
 }
 
 export { Shimmer };

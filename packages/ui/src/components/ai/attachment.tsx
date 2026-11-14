@@ -1,8 +1,8 @@
 "use client";
 
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
@@ -435,30 +435,30 @@ function AttachmentTrigger({
   render,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"button">>) {
-  return useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      render ? {} : { type: "button" },
+}: Styled<PartProps<"button">>) {
+  return renderElement(
+    "button",
+    mergeProps(
+      {
+        "data-slot": "attachment-trigger",
+        type: render ? undefined : "button",
+      },
       props,
       stylex.props(styles.trigger, sx)
     ),
-    render,
-    state: { slot: "attachment-trigger" },
-  });
+    render
+  );
 }
 
 /** A row of attachments that scrolls and snaps, its edges fading while there's more. */
-function AttachmentGroup({ ref, sx, ...props }: Styled<ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
-      props,
-      stylex.props(styles.group, scrollFade.x, sx)
-    ),
-    ref: [ref ?? null, relayWheel],
-    state: { slot: "attachment-group" },
-  });
+function AttachmentGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="attachment-group"
+      {...mergeProps(props, { ref: relayWheel })}
+      {...stylex.props(styles.group, scrollFade.x, sx)}
+    />
+  );
 }
 
 export {

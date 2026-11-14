@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -186,17 +186,16 @@ function CardHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function CardTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "card-title" },
-  });
+function CardTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "card-title" },
+      props,
+      stylex.props(styles.title, sx)
+    ),
+    render
+  );
 }
 
 function CardDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
