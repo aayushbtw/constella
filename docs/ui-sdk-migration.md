@@ -87,7 +87,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Switch | 2 | switch | Switch | todo |  |  |
 | Radio Group | 2 | radio-group, radio | Radio | todo |  |  |
 | Progress | 2 | progress | Progress | todo |  |  |
-| Loading Bar | 2 | progress | Progress | todo |  |  | Added on main 2026-11-14; port after Progress |
+| Loading Bar | 2 | progress | Progress | todo |  | Added on main 2026-11-14; port after Progress |
 | Meter | 2 | meter | Meter | todo |  |  |
 | Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold |
 | Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
