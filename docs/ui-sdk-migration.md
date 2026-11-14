@@ -85,17 +85,17 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Button | 2 | button | Button | merged | [#27](https://github.com/aayushbtw/constella/pull/27) |  |
 | Separator | 2 | separator | Separator | merged | [#26](https://github.com/aayushbtw/constella/pull/26) | Button Group, Item and Sidebar separators now carry `separator` |
 | Toggle | 2 | toggle | Toggle | merged | [#30](https://github.com/aayushbtw/constella/pull/30) | Toggle Group and Segmented Control keep Base UI's toggle until phase 4 |
-| Checkbox | 2 | checkbox | Checkbox | todo |  |  |
-| Switch | 2 | switch | Switch | todo |  | Swap `packages/ui/test/agent.test.tsx`'s raw ui-sdk Switch for ours |
-| Radio Group | 2 | radio-group, radio | Radio | todo |  |  |
+| Checkbox | 2 | checkbox | Checkbox | pr |  | In the Field PR |
+| Switch | 2 | switch | Switch | pr |  | In the Field PR. `packages/ui/test/agent.test.tsx` uses ours |
+| Radio Group | 2 | radio-group, radio | Radio | pr |  | In the Field PR |
 | Progress | 2 | progress | Progress | todo |  |  |
 | Loading Bar | 2 | progress | Progress | todo |  | Added on main 2026-11-14; port after Progress |
 | Meter | 2 | meter | Meter | todo |  |  |
-| Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold |
+| Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold. Drop its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
-| Field | 2 | field, fieldset | Field | todo |  | No Fieldset documented; check |
-| Input Group | 2 | input | Input | todo |  |  |
-| Textarea | 2 | field | Textarea | todo |  |  |
+| Field | 2 | field, fieldset | Field | pr |  | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
+| Input Group | 2 | input | Input | pr |  | In the Field PR |
+| Textarea | 2 | field | Textarea | pr |  | In the Field PR |
 | Scroll Area | 2 | scroll-area | Scroll Area | todo |  | Code Block also uses it, and `DirectionProvider` |
 | Collapsible | 2 | collapsible | Collapsible | todo |  |  |
 | Tabs | 2 | tabs | Tabs | todo |  |  |
@@ -106,7 +106,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Side Panel | 3 | dialog | Drawer | todo |  |  |
 | Alert Dialog | 3 | alert-dialog | Alert Dialog | todo |  | Consider `createConfirm()` |
 | Toast | 3 | toast | Toast | todo |  | No anchored toasts; region placement is ours without `web.css` |
-| Select | 4 | select | Select | todo |  | Drop the `popupVars` copy |
+| Select | 4 | select | Select | todo |  | Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy |
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
 | Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo |  | No Toggle Group documented; check |
@@ -156,6 +156,17 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Button | Base UI added `tabindex="0"` to every Button; ui-sdk leaves a native button's focus to the browser. 1,254 prerendered buttons lose the attribute |
 | 2026-11-14 | Button | ui-sdk marks `focusableWhenDisabled` and a disabled link with `data-disabled` and `aria-disabled`, not `:disabled`, and a running Promise from `onClick` with `data-pending`, `aria-busy` and `aria-disabled`, never `:disabled`. Button's fade, hover and press, and `stateStyles`' hover, now read `:disabled`, `[data-disabled]` and `[data-pending]`; a pending press looks loading, like `aria-busy` with `disabled`, and its cursor comes from `aria-busy`. `:disabled` stays for `buttonStyles` on elements that aren't Buttons (Toggle, Questionnaire's nav), and `aria-busy` for callers that mark their own work. Toggle's `selectable` guards still read `:disabled` only, which Base UI Toggle also sets |
 | 2026-11-14 | Button | Not adopted yet: a Promise-pending press has no way to swap its content (ui-sdk's `data-show="idle\|pending"` pattern), and the Saving, showcase and Approval demos still hand-roll `aria-busy` with `useState` timers. Adopt both when a caller first returns a Promise from `onClick`; until then the docs don't advertise it |
+| 2026-11-14 | Field | Field, Checkbox, Switch, Radio Group, Input Group and Textarea port together. A ui-sdk control in a Base UI `Field` joined nothing (no name, description, `disabled` or `invalid`), and the reverse held for Base UI's controls, so any one alone needed a bridge in the Field demos |
+| 2026-11-14 | Field | Base UI's Select and Slider still sit in Fields (Field, Input and Select demos). ui-sdk's Field binds a control it finds in the DOM after mount, so they worked in the browser without help, but the server's HTML had the label's `for` on an id no element had. Each calls ui-sdk's documented `useFieldControl` (`select.tsx`, `slider.tsx`) until its row ports; `field-mixed.test.tsx` checks name, description, `disabled` and `invalid`, and the server's `for`. The Slider takes the description on its `group`, not on each thumb's input as Base UI did, since Base UI's thumb doesn't pass `aria-describedby` to its input |
+| 2026-11-14 | Field | Pressing a `FieldLabel` opens a Select in a Field, before and after: its `for` points at the trigger, a button, and a label click activates a button. Not changed by the port |
+| 2026-11-14 | Field | ui-sdk's `FieldLegend` is a native `<legend>`, outside the set's flex flow, so the set's `gap` no longer spaced it from what follows; the legend takes `marginBlockEnd: space.sm`. Base UI's legend was a `div`. 192 demo shots on 11 pages match Base UI's pixel for pixel, light and dark, after the fix |
+| 2026-11-14 | Field | The legend names the `fieldset`, not a radio group inside it, and the agent bridge then names the group after its first radio. The Field and Radio Group fieldset demos point the group at the legend with `aria-labelledby`, as ui-sdk's Radio docs do |
+| 2026-11-14 | Field | `FieldLabel htmlFor` is ignored: ui-sdk writes the field's control id into `for`. A control with its own `id` (Card's and Sheet's demos) keeps it, so the server's `for` misses until hydration fixes it. Label clicks work after hydration. Drop the explicit ids when those demos next change |
+| 2026-11-14 | Input Group | ui-sdk owns `data-slot`, so the control is `input` (inside `input-group-input`) or `textarea`, not `input-group-control`. The group's ring, invalid edge and fade (`input-group.tsx` `control`, `base.css`, Prompt Input's invalid edge) read those, plus `input-group-control`, which a custom control still carries by hand. Command and Dropdown Menu render our Input from Base UI's autocomplete and menu inputs; typing, filtering and arrow keys work as before |
+| 2026-11-14 | Radio Group | Slots are `radio` and `radio-indicator`, not `radio-group-item` and `radio-group-indicator`; nothing read the old names. The radio is a `<button>`, disabled natively. The dot's pop and its keyboard skip match Base UI's frame for frame |
+| 2026-11-14 | Switch | Checkbox and Switch drop the Base UI field bridge their solo ports needed. A note from Switch's solo port said Base UI exports no field context; it does (`internals/field-root-context`, `internals/labelable-provider` in 1.9.0), and we chose not to use it |
+| 2026-11-14 | Checkbox | Base UI's `indeterminate` prop is gone: ui-sdk takes `checked="indeterminate"`, and `onCheckedChange` gets `true`, `false` or `"indeterminate"` (a press only ever reports a boolean). Callers narrow with `checked === true`, since `strict-boolean-expressions` rejects the union. Data Table's select-all and the docs demos changed |
+| 2026-11-14 | Checkbox | The root is a `<button type="button">`, not Base UI's `<span>`, and disabled is native `disabled` (Base UI used `tabindex="-1"`). The hidden input carries `data-slot="checkbox-input"` and sits `position: absolute`, not `fixed`. State attributes (`data-checked`, `data-unchecked`, `data-indeterminate`, `data-disabled`) keep Base UI's names, so no reader changed |
 | 2026-11-14 | Popover | A Model Picker pick by pointer ran the 120ms exit; Base UI's build closed it at once. `controller.close()` reports `source: "programmatic"`, so `useSkipMotion` doesn't skip, and the batched `setPicked(true)` landed after ui-sdk read the transitions. `ModelPickerItem` commits `picked` with `flushSync` before it closes. A controller close takes only a `reason` from a fixed list, so a pick can't reach `useSkipMotion` |
 | 2026-11-14 | Popover | StyleX can't share a selector key across files: a `defineConsts` value as a key compiles to a descendant selector (`:is(…) .x123`), and importing a plain one fails the compile, since StyleX resolves imports only from `.stylex.ts` files. `popupOpen` stays repeated in `styles.ts`, `button.tsx` and `prompt-input.tsx` |
 | 2026-11-14 | Popover | Pre-existing on `main`: a click inside a popover opened from an `InputGroupAddon` reaches the addon's `onClick`, which focuses the group's input (`input-group.tsx` `InputGroupAddon`). Base UI kept the popover open; ui-sdk closes it, since focus left. Filed and fixed on `main` as [#23](https://github.com/aayushbtw/constella/issues/23), then merged in; this PR also skips clicks from in-place `[popover]` content, a DOM child of the addon after the port |

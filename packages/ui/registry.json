@@ -245,10 +245,10 @@
       "title": "Checkbox",
       "description": "A small square that fills with the accent when checked.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
@@ -369,7 +369,7 @@
       "type": "registry:ui",
       "title": "Field",
       "description": "Lays out a control with its label, description and error, and links them.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/label.json",
@@ -510,7 +510,7 @@
       "type": "registry:ui",
       "title": "Textarea",
       "description": "A multi-line text box that grows with its content and links to its Field.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -525,7 +525,7 @@
       "type": "registry:ui",
       "title": "Input Group",
       "description": "Icons, text, keys and buttons set inside an input or textarea's box.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
@@ -647,7 +647,7 @@
       "type": "registry:ui",
       "title": "Slider",
       "description": "A thin track and a solid thumb, with its label and value above.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/label.json"
@@ -747,7 +747,7 @@
       "type": "registry:ui",
       "title": "Switch",
       "description": "Turns a setting on or off, in three sizes, beside a label or in a card.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -781,7 +781,8 @@
         "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
@@ -1033,7 +1034,7 @@
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "Picks one option out of a few, beside labels, with descriptions or as cards.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {

@@ -107,23 +107,27 @@ Put the content and the item inside a `FieldLabel` to make the whole card pick i
 
 ## Fieldset
 
-Use `FieldSet` and `FieldLegend` to name the group.
+Use `FieldSet` and `FieldLegend` to group the choices. The legend names the set, so point the group at it with `aria-labelledby` too.
 
 <!-- ::demo name="radio-group-fieldset" -->
 
 ```tsx
+const legend = useId();
+
 <FieldSet>
-  <FieldLegend variant="label">Subscription Plan</FieldLegend>
-  <FieldSetDescription>
+  <FieldLegend id={legend} variant="label">
+    Subscription Plan
+  </FieldLegend>
+  <FieldDescription>
     Yearly and lifetime plans offer significant savings.
-  </FieldSetDescription>
-  <RadioGroup defaultValue="monthly">
+  </FieldDescription>
+  <RadioGroup aria-labelledby={legend} defaultValue="monthly">
     <Field orientation="horizontal">
       <RadioGroupItem value="monthly" />
       <FieldLabel>Monthly ($9.99/month)</FieldLabel>
     </Field>
   </RadioGroup>
-</FieldSet>
+</FieldSet>;
 ```
 
 ## Disabled
@@ -154,4 +158,4 @@ Add `invalid` to each `Field`, and `aria-invalid` to its item.
 
 ## API Reference
 
-`RadioGroupItem` takes `size` (`"sm"`, `"default"` or `"lg"`). `RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [Base UI Radio Group](https://base-ui.com/react/components/radio).
+`RadioGroupItem` takes `size` (`"sm"`, `"default"` or `"lg"`). `RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [UI SDK Radio](https://ui-sdk.dev/docs/components/radio).

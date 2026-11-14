@@ -73,9 +73,9 @@ Use a `FieldSet` of fields for a checkbox list.
 ```tsx
 <FieldSet>
   <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
-  <FieldSetDescription>
+  <FieldDescription>
     Select the items you want to show on the desktop.
-  </FieldSetDescription>
+  </FieldDescription>
   <FieldGroup>
     <Field orientation="horizontal">
       <Checkbox defaultChecked />
@@ -111,7 +111,7 @@ Put the checkbox and its content inside a `FieldLabel` to make the whole card to
 
 ## Controlled
 
-Use `checked` and `onCheckedChange` to control the checkbox.
+Use `checked` and `onCheckedChange` to control the checkbox. The value is `true`, `false` or `"indeterminate"`.
 
 <!-- ::demo name="checkbox-controlled" -->
 
@@ -119,14 +119,17 @@ Use `checked` and `onCheckedChange` to control the checkbox.
 const [checked, setChecked] = useState(true);
 
 <Label>
-  <Checkbox checked={checked} onCheckedChange={setChecked} />
+  <Checkbox
+    checked={checked}
+    onCheckedChange={(next) => setChecked(next === true)}
+  />
   {checked ? "Notifications on" : "Notifications off"}
 </Label>;
 ```
 
 ## Indeterminate
 
-Use `indeterminate` when some, but not all, of a group is checked.
+Pass `checked="indeterminate"` when some, but not all, of a group is checked. A click checks it.
 
 <!-- ::demo name="checkbox-indeterminate" -->
 
@@ -141,9 +144,10 @@ function FruitPicker() {
     <>
       <Label>
         <Checkbox
-          checked={all}
-          indeterminate={selected.length > 0 && !all}
-          onCheckedChange={(checked) => setSelected(checked ? fruits : [])}
+          checked={all || (selected.length > 0 && "indeterminate")}
+          onCheckedChange={(checked) =>
+            setSelected(checked === true ? fruits : [])
+          }
         />
         All fruits
       </Label>
@@ -153,7 +157,7 @@ function FruitPicker() {
             checked={selected.includes(fruit)}
             onCheckedChange={(checked) =>
               setSelected((current) =>
-                checked
+                checked === true
                   ? [...current, fruit]
                   : current.filter((item) => item !== fruit)
               )
@@ -205,7 +209,7 @@ Put a checkbox in the first cell of each row, and one in the header to select th
     <Checkbox
       aria-label={`Select ${row.name}`}
       checked={selected.has(row.id)}
-      onCheckedChange={(checked) => toggle(row.id, checked)}
+      onCheckedChange={(checked) => toggle(row.id, checked === true)}
     />
   </TableCell>
   <TableCell>{row.name}</TableCell>
@@ -214,4 +218,4 @@ Put a checkbox in the first cell of each row, and one in the header to select th
 
 ## API Reference
 
-`Checkbox` renders the box and its tick, which turns into a dash when `indeterminate`. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. For the rest, see [Base UI Checkbox](https://base-ui.com/react/components/checkbox).
+`Checkbox` renders a button with the `checkbox` role, its tick, which turns into a dash while `checked` is `"indeterminate"`, and a hidden native checkbox for forms. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. For the rest, see [UI SDK Checkbox](https://ui-sdk.dev/docs/components/checkbox).

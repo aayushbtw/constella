@@ -54,7 +54,7 @@ const inset =
 // A bar button's leading icon (6px padding past a 1px border) lines up with the composer's text (10px in).
 const barInset = `calc(${space.xxs} - ${strokes.border})` as const;
 const invalid =
-  ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
+  ":has(> :is([data-slot='textarea'], [data-slot='input-group-control']):is([aria-invalid='true'], [data-invalid]))";
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";

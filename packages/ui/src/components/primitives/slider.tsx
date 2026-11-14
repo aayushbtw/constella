@@ -2,6 +2,7 @@
 
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
+import { useFieldControl } from "@ui-sdk/react/field";
 
 import { labelStyles } from "@/components/primitives/label";
 import type { Sx } from "@/lib/constella/styles";
@@ -123,10 +124,17 @@ function Slider<Value extends number | readonly number[]>({
   sx,
   ...props
 }: Styled<SliderPrimitive.Root.Props<Value>>) {
+  // Joins a ui-sdk Field until Slider ports.
+  const field = useFieldControl(props);
+  const root = {
+    "data-slot": "slider",
+    disabled: field?.disabled,
+    name: field?.name,
+    ...props,
+  };
   return (
     <SliderPrimitive.Root
-      data-slot="slider"
-      {...props}
+      {...(field?.props(root) ?? root)}
       {...stylex.props(styles.slider, sx)}
     />
   );

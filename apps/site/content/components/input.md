@@ -284,4 +284,4 @@ Use [Input Group](/docs/components/input-group) to put icons, text or buttons in
 
 ## API Reference
 
-`Input` is an [Input Group](/docs/components/input-group) box around Base UI's input, so inside a `Field` it takes the field's name, state and validation. It takes `size` in place of the native `size` attribute. `sx` styles the box, applied last. Every other prop, `ref` included, goes to the `<input>`. For the rest, see [Base UI Input](https://base-ui.com/react/components/input).
+`Input` is an [Input Group](/docs/components/input-group) box around UI SDK's input, so inside a `Field` it takes the field's name, state and validation. It takes `size` in place of the native `size` attribute. `sx` styles the box, applied last. Every other prop, `ref` included, goes to the `<input>`. For the rest, see [UI SDK Input](https://ui-sdk.dev/docs/components/input).
