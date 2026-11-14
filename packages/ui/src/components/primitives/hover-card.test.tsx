@@ -15,8 +15,6 @@ import type { HoverCardController } from "./hover-card";
 
 const agent = createAgent();
 
-const ms = (token: string) => Number.parseFloat(token);
-
 afterEach(() => {
   if (vi.isFakeTimers()) {
     vi.runOnlyPendingTimers();
@@ -80,7 +78,7 @@ test("it opens and closes on the token delays", async () => {
   const trigger = screen.getByRole("link", { name: "@acme" });
 
   fireEvent.pointerEnter(trigger, { pointerType: "mouse" });
-  await wait(ms(durations.hoverCardDelay) - 1);
+  await wait(Number.parseFloat(durations.hoverCardDelay) - 1);
   expect(content()).toBeNull();
   await wait(1);
   expect(screen.getByText("Tools for teams that ship.")).toBeTruthy();
@@ -91,7 +89,7 @@ test("it opens and closes on the token delays", async () => {
     clientY: 500,
     pointerType: "mouse",
   });
-  await wait(ms(durations.hoverCardCloseDelay) - 1);
+  await wait(Number.parseFloat(durations.hoverCardCloseDelay) - 1);
   expect(Object.hasOwn(trigger.dataset, "open")).toBe(true);
   await wait(1);
   expect(Object.hasOwn(trigger.dataset, "open")).toBe(false);
@@ -105,7 +103,7 @@ test("a shared card shows the payload of the trigger that opened it", async () =
   fireEvent.pointerEnter(screen.getByRole("link", { name: "emil" }), {
     pointerType: "mouse",
   });
-  await wait(ms(durations.hoverCardDelay));
+  await wait(Number.parseFloat(durations.hoverCardDelay));
 
   expect(screen.getByText("Design engineer.")).toBeTruthy();
   expect(controller.getPayload()).toBe(people[1]);
@@ -127,7 +125,7 @@ test("the open card glides to a new trigger for one move, and doesn't on its fir
   expect(screen.getByText("Design engineer.")).toBeTruthy();
   expect(Object.hasOwn(content()?.dataset ?? {}, "moving")).toBe(true);
 
-  await wait(ms(durations.move) - 1);
+  await wait(Number.parseFloat(durations.move) - 1);
   expect(Object.hasOwn(content()?.dataset ?? {}, "moving")).toBe(true);
 
   await wait(1);

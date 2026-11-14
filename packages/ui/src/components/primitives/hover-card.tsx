@@ -112,7 +112,7 @@ function HoverCard({
 }: HoverCardProps) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [moving, setMoving] = useState(false);
-  const isOpen = useRef(false);
+  const isOpen = useRef(props.open ?? props.defaultOpen ?? false);
   const settle = useRef(0);
   const state = useMemo(() => ({ moving, skip }), [moving, skip]);
 

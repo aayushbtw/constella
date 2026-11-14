@@ -70,7 +70,8 @@ const activeIdle = `:active:not(${disabled}, [data-pending])`;
 const press = `:active:not([aria-haspopup], ${disabled}, [data-pending])`;
 
 // styles.ts's `popupOpen`; keep in step.
-const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
+const popupOpen =
+  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'])[data-open])";
 
 // At rest, and while hovered or while its popup is open.
 const interactive = <R, A>(rest: R, active: A) => ({
