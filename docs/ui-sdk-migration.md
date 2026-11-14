@@ -37,6 +37,8 @@ A unit PR merges when all hold:
 
 Zero diff is the gate only for units that must keep markup unchanged, such as the render helper swap. For every other unit, the output shows which markup changed, and only the expected changes may appear.
 
+**Tests.** `vpr test` runs `packages/ui` tests in jsdom, with StyleX compiled and strict mode on (`packages/ui/vite.config.ts`, `packages/ui/test/setup.ts`). Put a unit's test beside its component as `<name>.test.tsx`, importing from `vite-plus/test`. `packages/ui/test/agent.test.tsx` is the agent test template.
+
 ## Pre-existing problems
 
 A bug or inconsistency the port uncovers that `main` already has is never fixed, worked around or carried inside a port PR.
@@ -73,7 +75,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | --- | --- | --- | --- |
 | The global stylesheet declares `@layer ui-sdk;` first, below every app layer; install docs tell consumers to | merged | [#13](https://github.com/aayushbtw/constella/pull/13) |  |
 | `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | merged | [#16](https://github.com/aayushbtw/constella/pull/16) | 21 files; textarea stays with its row |
-| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo |  |  |
+| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | pr |  |  |
 
 ### Phases 1 to 5
 
@@ -84,7 +86,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Separator | 2 | separator | Separator | todo |  |  |
 | Toggle | 2 | toggle | Toggle | todo |  |  |
 | Checkbox | 2 | checkbox | Checkbox | todo |  |  |
-| Switch | 2 | switch | Switch | todo |  |  |
+| Switch | 2 | switch | Switch | todo |  | Swap `packages/ui/test/agent.test.tsx`'s raw ui-sdk Switch for ours |
 | Radio Group | 2 | radio-group, radio | Radio | todo |  |  |
 | Progress | 2 | progress | Progress | todo |  |  |
 | Loading Bar | 2 | progress | Progress | todo |  | Added on main 2026-11-14; port after Progress |
@@ -145,6 +147,9 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Render helpers | `SidebarGroupAction` and `SidebarMenuAction` forced `type="button"` onto a `render` element on `main`. Found by the slop review of #16, filed and fixed on `main` as [#17](https://github.com/aayushbtw/constella/issues/17), then merged in |
 | 2026-11-14 | Render helpers | A handler on a `render` element that calls `preventDefault()` now skips the part's own handler (ui-sdk `mergeProps`). Base UI needed `event.preventBaseUIHandler()` for that |
 | 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |
+| 2026-11-14 | Test setup | The skill's `testing.md` assigns the jsdom stubs and says not to use `??=`, since jsdom has some of them without the parts that matter; `core.md` "Testing in a Framework" uses `??=`. We follow the skill |
+| 2026-11-14 | Test setup | The skill imports from `vitest`; Vite+ ships Vitest as `vite-plus/test`, and `vite-plus/prefer-vite-plus-imports` enforces it |
+| 2026-11-14 | Test setup | `@stylexjs/unplugin` 0.19.1 leaves a polling interval running under Vitest, so each run hung 10 s on exit. 0.19.2 unrefs it. `packages/ui` takes ^0.19.2 for tests. The site stays on 0.19.1: 0.19.2 regroups StyleX's CSS layers and flips the cascade order of 63 rule pairs, so it gets its own upgrade with a popup-state check |
 
 ## Log
 

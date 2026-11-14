@@ -88,7 +88,13 @@ export default defineConfig({
           "constella/type-scale": "off",
         },
       },
+      // jsdom stubs are no-ops by design.
+      {
+        files: ["packages/ui/test/setup.ts"],
+        rules: { "class-methods-use-this": "off", "no-empty-function": "off" },
+      },
     ],
     options: { typeAware: true, typeCheck: true },
   },
+  test: { projects: ["packages/ui"] },
 });
