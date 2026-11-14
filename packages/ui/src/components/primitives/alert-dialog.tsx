@@ -8,7 +8,13 @@ import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
-import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
+import {
+  colors,
+  layers,
+  radii,
+  sizes,
+  space,
+} from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
 
@@ -25,6 +31,20 @@ type AlertDialogContentProps = Styled<AlertDialogPrimitive.Popup.Props> & {
 const inSmall = ":is([data-slot='alert-dialog-content'][data-size='sm'] *)";
 
 const styles = stylex.create({
+  viewport: {
+    alignItems: "center",
+    display: "flex",
+    insetBlockEnd: 0,
+    insetBlockStart: 0,
+    insetInlineEnd: 0,
+    insetInlineStart: 0,
+    justifyContent: "center",
+    paddingBlock: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
+    position: "fixed",
+    zIndex: layers.dialog,
+  },
   // A small confirm centers its text over two equal buttons.
   header: {
     alignItems: { default: "flex-start", [inSmall]: "center" },
@@ -104,7 +124,7 @@ function AlertDialogContent({
       <AlertDialogBackdrop />
       <AlertDialogPrimitive.Viewport
         data-slot="alert-dialog-viewport"
-        {...stylex.props(dialogStyles.viewport)}
+        {...stylex.props(styles.viewport)}
       >
         <AlertDialogPrimitive.Popup
           data-size={size}

@@ -115,4 +115,4 @@ const [open, setOpen] = useState(false);
 
 ## API Reference
 
-`DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [Base UI's Dialog](https://base-ui.com/react/components/dialog).
+`DialogContent` is a `DialogBackdrop` and a `DialogPopup`, which render in place, in the browser's top layer; use the two parts for a dialog without a backdrop. `DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/components/dialog).

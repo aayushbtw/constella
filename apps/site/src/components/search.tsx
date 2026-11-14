@@ -4,6 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useState } from "react";
 import type { MouseEvent } from "react";
+import { flushSync } from "react-dom";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -147,7 +148,13 @@ function Search() {
         description="Search for a page to go to..."
         instant={instant}
         onOpenChange={(next, { reason }) => {
-          setInstant(reason === "escape-key");
+          const skip = reason === "escape-key";
+          if (skip !== instant) {
+            // ui-sdk reads the content's transitions right after this callback, so the attribute lands first.
+            flushSync(() => {
+              setInstant(skip);
+            });
+          }
           setOpen(next);
         }}
         open={open}

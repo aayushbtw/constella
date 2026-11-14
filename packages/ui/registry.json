@@ -168,14 +168,15 @@
       "title": "Dialog",
       "description": "A centered surface over a dimmed page, for a decision that needs full attention.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/button.json"
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/popover.json"
       ],
       "files": [
         {
@@ -548,9 +549,15 @@
       "type": "registry:ui",
       "title": "Sheet",
       "description": "A dialog that slides in from an edge, for side panels on narrow screens.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/dialog.json"
       ],
       "files": [

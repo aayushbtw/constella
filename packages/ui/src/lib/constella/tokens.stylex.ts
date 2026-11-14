@@ -309,7 +309,8 @@ export const layers = stylex.defineConsts({
   // Floats over the page, under a dialog's backdrop.
   bar: "30",
   dialog: "40",
-  // Above a dialog, so a select or menu opened from one sits on top of it.
+  // Above a Base UI dialog, so a select or menu opened from one sits on top of it. A ui-sdk dialog
+  // sits in the top layer, above any z-index, so a Base UI popup opened in it renders under it.
   popover: "45",
   toast: "50",
   tooltip: "60",
