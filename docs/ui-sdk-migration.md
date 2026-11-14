@@ -81,7 +81,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Unit | Phase | Base UI parts | ui-sdk | Status | PR | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Popover | 1 | popover | Popover | pr |  | The spike. Ports Model Picker's popover parts too, since it built on ours |
+| Popover | 1 | popover | Popover | merged | [#25](https://github.com/aayushbtw/constella/pull/25) | The spike. Ports Model Picker's popover parts too, since it built on ours |
 | Button | 2 | button | Button | todo |  |  |
 | Separator | 2 | separator | Separator | todo |  |  |
 | Toggle | 2 | toggle | Toggle | todo |  |  |
@@ -177,3 +177,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | #18 merged: `vpr test` runs ui-sdk tests in jsdom with strict mode. Phase 0 done. The site stays on StyleX unplugin 0.19.1, since 0.19.2 regroups its CSS layers |
 | 2026-11-14 | Filed and fixed #19 on `main`: `vpr check` now runs in a fresh checkout (route tree committed, `tomekit build` before check); merged `main` in |
 | 2026-11-14 | Popover spike: GO with conditions. Filed and fixed #23 (InputGroupAddon focused the input on clicks inside a portaled popover) and #24 (date demos mismatched hydration) on `main`; merged `main` in |
+| 2026-11-14 | #25 merged: Popover on ui-sdk, phase 1 done. Verdict GO. Bridges until phase 7: `popupVars`, `useSkipMotion`'s ui-sdk branch with `flushSync`, dual open-state selector. Paused here; next is phase 2 |
