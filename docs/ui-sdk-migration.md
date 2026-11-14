@@ -1,6 +1,6 @@
 # ui-sdk migration
 
-The tracker for moving `packages/ui` from Base UI to ui-sdk. Read it first in any session that touches the port; update it in the same PR as the work. Why we're moving and what's known about ui-sdk live in [ARCHITECTURE.md, UI SDK watch](ARCHITECTURE.md#ui-sdk-watch).
+The tracker for moving `packages/ui` from Base UI to ui-sdk. Read it first in any session that touches the port; update it in the same PR as the work, or in a follow-up docs commit when units run in parallel. Why we're moving and what's known about ui-sdk live in [ARCHITECTURE.md, UI SDK watch](ARCHITECTURE.md#ui-sdk-watch).
 
 ## Branches and PRs
 
@@ -165,7 +165,7 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Tabs | `TabsTabIcon` isn't wrapped; no demo uses tab icons. Under 6x CPU throttle the indicator paints about 0.8s late before hydration on both builds, so Base UI's `renderBeforeHydration` bought nothing |
 | 2026-11-14 | Scroll Area | ui-sdk writes its own `scroll-area` slot over `code-block-content` and `table-container`. The focus rings in `base.css` now read `[data-slot="code-block"] > [data-slot="scroll-area"]` and `[data-slot="scroll-area"]` |
 | 2026-11-14 | Scroll Area | With no Scrollbar part ui-sdk keeps the browser's scrollbars, so `scrollbar="none"` adds `scrollbar-width: none` |
-| 2026-11-14 | Scroll Area | `scrollHideDelay` is 0, so leaving hides the bar at once, as before. A bar shown by scrolling fades by about 400ms, where Base UI held it about 800ms (measured) |
+| 2026-11-14 | Scroll Area | `scrollHideDelay` is 0, so leaving hides the bar at once, as before. A bar shown by scrolling fades sooner than on Base UI; runs measured 150 to 400ms against 600 to 800ms |
 | 2026-11-14 | Scroll Area | A viewport that holds a link or control is no longer a tab stop: the docs sidebar, suggestions and data tables. Keyboard reach is unchanged, with 76 of 76 sidebar links and 184 of 184 table controls. `docs/design/components.md` says so |
 | 2026-11-14 | Scroll Area | Known regression, shipped on the advisor's call. ui-sdk counts overflow in whole pixels, so a viewport that overflows by under a pixel gets no `tabindex`, while Chromium makes it a keyboard-focusable scroller. A Tab sweep of the docs found 12 phantom stops in 946 page-widths at a 16px root and 8 in 258 at 17px; Base UI had none. A `test.fails` pins it. A CSS workaround (`overflow: hidden` on viewports that don't overflow) was tried and dropped, since it locked content that grows after hydration. An upstream issue that asks for `tabindex="-1"` when the viewport can't scroll is drafted, not filed |
 | 2026-11-14 | Scroll Area | Every scroll area shows in the agent `snapshot()` as an unnamed `scroll-area` unless its root has an `aria-label`. A `test.fails` pins it |
