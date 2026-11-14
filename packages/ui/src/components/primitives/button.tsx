@@ -60,8 +60,7 @@ const press = ":active:not([aria-haspopup], :disabled)";
 const busy = "[aria-busy='true']";
 const loading = "[aria-busy='true']:disabled";
 
-// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
-// `:where` holds both at one attribute's specificity, as Base UI's alone was.
+// styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 
 // At rest, and while hovered or while its popup is open.

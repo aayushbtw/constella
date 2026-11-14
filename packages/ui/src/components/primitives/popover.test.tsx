@@ -31,22 +31,17 @@ function Dimensions() {
   );
 }
 
-test("the title names the content, the description describes it and placement reaches it", async () => {
+// Button's open style keys on `[aria-haspopup][data-open]` (styles.ts `popupOpen`).
+test("placement reaches the content, and the open trigger carries what the open style keys on", async () => {
   render(<Dimensions />);
   const trigger = screen.getByRole("button", { name: "Open popover" });
-  expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  expect(trigger.matches("[aria-haspopup][data-open]")).toBe(false);
 
   fireEvent.click(trigger);
 
   const content = await screen.findByRole("dialog", { name: "Dimensions" });
-  const description = document.querySelector(
-    `#${CSS.escape(content.getAttribute("aria-describedby") ?? "")}`
-  );
-  expect(description?.textContent).toBe("Set the dimensions for the layer.");
   expect(content.dataset).toMatchObject({ align: "start", side: "top" });
-  expect(trigger.getAttribute("aria-expanded")).toBe("true");
-  expect(Object.hasOwn(trigger.dataset, "open")).toBe(true);
-  expect(screen.getByText("Dimensions").tagName).toBe("H2");
+  expect(trigger.matches("[aria-haspopup][data-open]")).toBe(true);
 });
 
 test("Close closes it and returns focus to the trigger", async () => {

@@ -66,7 +66,6 @@ const styles = stylex.create({
     borderEndStartRadius: radii.lg,
     borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
-    color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
     gap: space.popup,

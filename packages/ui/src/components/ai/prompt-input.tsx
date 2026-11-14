@@ -56,8 +56,7 @@ const barInset = `calc(${space.xxs} - ${strokes.border})` as const;
 const invalid =
   ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
-// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
-// `:where` holds both at one attribute's specificity, as Base UI's alone was.
+// styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 // The well frames the prompt, so its own ring would double the edge.
 const inWell = ":is([data-slot='prompt-input-well'] *)";

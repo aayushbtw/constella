@@ -145,6 +145,8 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Popover | A Model Picker pick by pointer ran the 120ms exit; Base UI's build closed it at once. `controller.close()` reports `source: "programmatic"`, so `useSkipMotion` doesn't skip, and the batched `setPicked(true)` landed after ui-sdk read the transitions. `ModelPickerItem` commits `picked` with `flushSync` before it closes. A controller close takes only a `reason` from a fixed list, so a pick can't reach `useSkipMotion` |
+| 2026-11-14 | Popover | StyleX can't share a selector key across files: a `defineConsts` value as a key compiles to a descendant selector (`:is(…) .x123`), and importing a plain one fails the compile, since StyleX resolves imports only from `.stylex.ts` files. `popupOpen` stays repeated in `styles.ts`, `button.tsx` and `prompt-input.tsx` |
 | 2026-11-14 | Popover | Pre-existing on `main`: a click inside a popover opened from an `InputGroupAddon` reaches the addon's `onClick`, which focuses the group's input (`input-group.tsx` `InputGroupAddon`). Base UI kept the popover open; ui-sdk closes it, since focus left. To file and fix on `main` first; the fix must also skip clicks from in-place popup content, which is a DOM child of the addon after the port |
 | 2026-11-14 | Popover | Pre-existing on `main`: the prerendered Date Range Picker page throws React error #418 (hydration text mismatch) on load, in both builds |
 | 2026-11-14 | Popover | ui-sdk registers `--available-height` and `--available-width` without inheritance as soon as a popover mounts, so every Base UI popup on the page lost its max height and width. Their positioners now copy the values into `popupVars` |

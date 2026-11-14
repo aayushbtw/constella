@@ -140,7 +140,8 @@ const typeStyles = stylex.create({
 });
 
 // A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
-// `:where` holds both at one attribute's specificity, as Base UI's alone was.
+// `:where` holds both at one attribute's specificity, as Base UI's alone was. StyleX can't
+// share a selector key across files, so button.tsx and prompt-input.tsx repeat it.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 
 // The open state repeats inside the media block, which StyleX ranks above a bare condition.

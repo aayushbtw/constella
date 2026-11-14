@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
 
-// Base UI's details carry no `source`; ui-sdk's always do.
 interface OpenChangeDetails {
   event?: Event;
   reason: string;

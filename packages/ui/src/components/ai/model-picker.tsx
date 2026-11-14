@@ -7,7 +7,7 @@ import {
   createPopoverController,
   PopoverContent as PopoverContentPrimitive,
 } from "@ui-sdk/react/popover";
-import type { PopoverProps } from "@ui-sdk/react/popover";
+import type { PopoverController, PopoverProps } from "@ui-sdk/react/popover";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 import {
@@ -20,6 +20,7 @@ import {
   useState,
 } from "react";
 import type { ComponentProps } from "react";
+import { flushSync } from "react-dom";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -106,7 +107,7 @@ const styles = stylex.create({
 
 interface Picker {
   cancelShow: () => void;
-  controller: NonNullable<PopoverProps["controller"]>;
+  controller: PopoverController;
   detailsId: string;
   picked: boolean;
   setPicked: (picked: boolean) => void;
@@ -130,7 +131,8 @@ function ModelPicker({
   onOpenChangeComplete,
   ...props
 }: PopoverProps) {
-  const ownController = useMemo(() => createPopoverController(), []);
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [ownController] = useState(() => createPopoverController());
   const controller = givenController ?? ownController;
   const [picked, setPicked] = useState(false);
   const [shown, setShown] = useState(false);
@@ -285,7 +287,10 @@ function ModelPickerItem({
       aria-describedby={shown ? detailsId : undefined}
       onClick={(event) => {
         onClick?.(event);
-        setPicked(true);
+        // ui-sdk reads the content's transitions as it closes, so the skip lands first.
+        flushSync(() => {
+          setPicked(true);
+        });
         controller.close();
       }}
       onPointerEnter={(event) => {
