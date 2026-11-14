@@ -86,7 +86,7 @@ interface SortableColumn {
   getIsSorted: () => false | "asc" | "desc";
   getToggleSortingHandler: () =>
     | undefined
-    | ((event: MouseEvent<HTMLButtonElement>) => void);
+    | ((event: MouseEvent<HTMLElement>) => void);
 }
 
 // A column's `meta`, read by shape, as TanStack leaves its type to the table.

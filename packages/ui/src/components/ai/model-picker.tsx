@@ -19,7 +19,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 
 import { Button } from "@/components/primitives/button";
@@ -191,7 +191,7 @@ function ModelPickerTrigger({
   size = "sm",
   variant = "ghost",
   ...props
-}: ButtonProps) {
+}: Omit<ButtonProps, "children"> & { children?: ReactNode }) {
   return (
     <PopoverTrigger
       render={<Button size={size} variant={variant} {...props} />}

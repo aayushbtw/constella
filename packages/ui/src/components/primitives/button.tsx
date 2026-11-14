@@ -1,7 +1,9 @@
 "use client";
 
-import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { renderElement } from "@ui-sdk/react/primitive";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, stateStyles, typeStyles } from "@/lib/constella/styles";
@@ -50,8 +52,11 @@ interface ButtonStyleOptions {
   variant?: ButtonVariant;
 }
 
-type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> &
-  ButtonStyleOptions & { sx?: Sx };
+type ButtonProps = Omit<
+  ComponentProps<typeof ButtonPrimitive>,
+  "className" | "style"
+> &
+  ButtonStyleOptions & { "data-slot"?: string; sx?: Sx };
 
 // A trigger opens something on press, so it doesn't give.
 const press = ":active:not([aria-haspopup], :disabled)";
@@ -289,6 +294,8 @@ function Button({
   corners = "pill",
   size = "default",
   color,
+  "data-slot": slot,
+  render,
   sx,
   variant = "secondary",
   ...props
@@ -297,11 +304,22 @@ function Button({
     <ButtonPrimitive
       data-corners={corners}
       data-size={size}
-      data-slot="button"
       data-color={color}
       data-variant={variant}
       {...props}
       {...stylex.props(buttonStyles({ corners, size, color, variant }), sx)}
+      // ui-sdk writes `button` over a passed slot; a part built on Button keeps its own.
+      render={
+        slot === undefined
+          ? render
+          : (rendered, state) =>
+              renderElement(
+                "button",
+                { ...rendered, "data-slot": slot },
+                render,
+                state
+              )
+      }
     />
   );
 }

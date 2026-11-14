@@ -101,8 +101,6 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 Use `buttonStyles` to make a link look like a button.
 
-**Don't use `<Button render={<a />} nativeButton={false} />` for links.** Base UI's `Button` always sets `role="button"`, so screen readers announce it as a button, not a link.
-
 <!-- ::demo name="button-link" -->
 
 ```tsx
@@ -149,7 +147,7 @@ Add `aria-busy` while something runs. It shows a busy cursor, so working reads d
 
 ### Button
 
-Takes every prop of [Base UI's Button](https://base-ui.com/react/components/button), plus:
+Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/components/button), plus:
 
 | Prop | Type | Default |
 | --- | --- | --- |

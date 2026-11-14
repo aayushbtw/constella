@@ -110,7 +110,7 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "Five variants for every level of emphasis, in four sizes, each with an icon-only square.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {

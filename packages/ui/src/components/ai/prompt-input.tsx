@@ -323,8 +323,8 @@ function PromptInputSubmit({
       type={streaming ? "button" : "submit"}
       variant="primary"
       {...props}
-      onClick={(event) => {
-        onClick?.(event);
+      onClick={(event, details) => {
+        onClick?.(event, details);
         if (streaming) {
           event.preventDefault();
           onStop?.();
