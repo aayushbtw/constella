@@ -109,8 +109,8 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Select | 4 | select | Select | todo |  | Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy |
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
-| Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo |  | No Toggle Group documented; check |
-| Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  |  |
+| Toggle Group | 4 | toggle-group, toggle | Toggle Group | todo |  | Undocumented, but beta.1 exports `ToggleGroup` from `@ui-sdk/react/toggle`, and spec-01 builds on it. Decide `ToggleIcon` here |
+| Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  | `SegmentedControlIndicator` measures the chosen item into `--segmented-control-indicator-*`, which replaces our Mutation and Resize observers |
 | Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
 | Prompt Input | 5 | autocomplete |  | todo |  | After Command. Drop the `popupVars` copy |
 | Citation | 5 | avatar |  | todo |  | Logo ported with Avatar ([#36](https://github.com/aayushbtw/constella/pull/36)); waits on Hover Card |
@@ -176,6 +176,7 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Avatar | A broken photo stays in the DOM, hidden, beside the fallback, and every part carries `data-loading-status`. The fallback unmounts on load, as before |
 | 2026-11-14 | Avatar | Citation's logo carries `data-slot="avatar"`, so Badge's leading-avatar padding rule matches it. Pixels are unchanged; screenshots prove it, and no test does |
 | 2026-11-14 | Avatar | An avatar shows in `snapshot()` named by its image's `alt`. A fallback-only avatar, as in the Fallback demo, has no name. Citation's logos stay out, since they're `aria-hidden` |
+| 2026-11-15 | Avatar | Open. spec-01 names a fallback-only avatar with visually hidden name text inside `AvatarFallback` and its drawn initials `aria-hidden`. Untested whether `snapshot()` reads fallback text; a test settles it before we adopt it, as a `name` prop or a demo pattern |
 | 2026-11-14 | Avatar | In tests, a fallback `delay` needs `vi.advanceTimersByTimeAsync` inside `act` |
 | 2026-11-14 | Meter | Slots keep their names, and `meter-ring` stays ours. The root gains `--meter-value`, and the label loses `role="presentation"`. Base UI's hidden `x` span is gone; it caused a diff too faint to see (12/20px) in the open Model Picker |
 | 2026-11-14 | Meter | Custom text moves from `MeterValue` children and `getAriaValueText` to `format`, so screen readers hear the shown text ("7 of 10", "None yet") instead of a percent. The demos and Model Picker's ratings changed; the visible text didn't |
