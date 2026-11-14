@@ -27,6 +27,16 @@ A unit PR merges when all hold:
 9. Reuse check: the `ui-sdk-reuse-reviewer` agent (`.claude/agents/ui-sdk-reuse-reviewer.md`) returned `CLEAN`, or every finding was fixed and a fresh run returned `CLEAN`. The PR body links its verdict.
 10. An independent `orbit:verifier` returned `PASS` or `PASS+NOTES` on the head SHA.
 
+### Checks
+
+`apps/site/scripts/diff-prerender.ts` diffs the prerendered docs pages of two builds, tag by tag. It ignores scripts, `/assets/` links, attribute order and class order.
+
+1. On the base branch, run `vpr build`, then `cp -R apps/site/.cloudflare/output/v0/workers/default/assets <before>`. Keep `<before>` outside the repo.
+2. On the unit branch, run `vpr build`, then copy the same folder to `<after>`.
+3. Run `node apps/site/scripts/diff-prerender.ts <before> <after>`. It exits 0 when every page is identical and 1 with a per-page diff otherwise.
+
+Zero diff is the gate only for units that must keep markup unchanged, such as the render helper swap. For every other unit, the output shows which markup changed, and only the expected changes may appear.
+
 ## Pre-existing problems
 
 A bug or inconsistency the port uncovers that `main` already has is never fixed, worked around or carried inside a port PR.
