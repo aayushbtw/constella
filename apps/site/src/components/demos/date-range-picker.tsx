@@ -29,7 +29,8 @@ const presetsFor = (today: Date): DateRangePreset[] => [
   },
 ];
 
-const today = day(new Date());
+// Fixed, as the page is prerendered and a live date would differ from the build's on hydration.
+const today = new Date(2026, 5, 18);
 const presets = presetsFor(today);
 
 function DateRangePickerDemo() {
