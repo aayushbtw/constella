@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node --import tomekit/register scripts/registry-examples.ts && vp build",
+    "generate": "tomekit build",
     "deploy": "cf deploy",
     "dev": "vp dev",
     "preview": "vp preview"

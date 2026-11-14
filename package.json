@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "vp run -t site#build",
-    "check": "vp check && node packages/ui/scripts/check-registry.ts",
+    "check": "vp run site#generate && vp check && node packages/ui/scripts/check-registry.ts",
     "deploy": "vp run -t site#build && vp run site#deploy",
     "dev": "vp dev",
-    "fix": "vp check --fix",
+    "fix": "vp run site#generate && vp check --fix",
     "test": "vp test"
   },
   "devDependencies": {
