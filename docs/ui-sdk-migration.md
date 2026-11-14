@@ -9,7 +9,7 @@ The tracker for moving `packages/ui` from Base UI to ui-sdk. Read it first in an
 | Integration branch | `ui-sdk`, long-lived. Lands on `main` once, when [Done](#done) holds. Draft PR `ui-sdk` → `main` shows the whole diff |
 | Unit branch | `port/<unit>` off `ui-sdk`, one row of the tracker (or one phase-0 task) per branch |
 | Unit PR | Base `ui-sdk`, label `ui-sdk`, title `feat(<component>): port to ui-sdk`. Squash-merged once its checklist passes |
-| Tracker | The unit PR sets its row's status and PR link. No other place tracks status |
+| Tracker | The unit PR sets its row's status and PR link. When units run in parallel, a follow-up docs commit on `ui-sdk` sets them instead, so the PRs don't conflict. No other place tracks status |
 | Syncing `main` | Merge `main` into `ui-sdk` (never rebase; unit branches sit on it) at least weekly and before each phase starts. A `main` change to a ported component gets ported in the same merge. Record the merge below |
 
 ## Unit checklist
@@ -19,7 +19,7 @@ A unit PR merges when all hold:
 1. No `@base-ui/react` import left in the unit's files.
 2. Slots follow ui-sdk's names; every style and `:has()` selector that read the old name is updated (`rg` the old name across `packages/ui` and `apps/site`).
 3. The docs page's demos render and behave as before, screenshotted light and dark, with popups open.
-4. A test with `@ui-sdk/core/testing`: our wiring, plus an agent-bridge `snapshot` that names every control.
+4. A test with `@testing-library/react` and the agent bridge from `@ui-sdk/react/agent`: our wiring, plus a `snapshot` that names every control.
 5. Motion skills from `AGENTS.md` run on it.
 6. `vpr check` and `vpr build` pass.
 7. Port notes or gaps found go in [Findings](#findings), and decisions in ARCHITECTURE.md.
@@ -88,17 +88,17 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Checkbox | 2 | checkbox | Checkbox | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
 | Switch | 2 | switch | Switch | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. `packages/ui/test/agent.test.tsx` uses ours |
 | Radio Group | 2 | radio-group, radio | Radio | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
-| Progress | 2 | progress | Progress | todo |  |  |
-| Loading Bar | 2 | progress | Progress | todo |  | Added on main 2026-11-14; port after Progress |
-| Meter | 2 | meter | Meter | todo |  |  |
+| Progress | 2 | progress | Progress | merged | [#33](https://github.com/aayushbtw/constella/pull/33) |  |
+| Loading Bar | 2 | progress | Progress | merged | [#42](https://github.com/aayushbtw/constella/pull/42) | Built on ui-sdk's Progress root and indicator, not ours |
+| Meter | 2 | meter | Meter | merged | [#34](https://github.com/aayushbtw/constella/pull/34) |  |
 | Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold. Drop its `useFieldControl` and its half of `field-mixed.test.tsx` |
-| Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
+| Avatar | 2 | avatar | Avatar | merged | [#36](https://github.com/aayushbtw/constella/pull/36) | Ports Citation's logo too |
 | Field | 2 | field, fieldset | Field | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
 | Input Group | 2 | input | Input | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`, so Command's `command-input` and Dropdown Menu's `dropdown-menu-input` would be lost. Revisit when we want `InputClear` |
 | Textarea | 2 | field | Textarea | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
-| Scroll Area | 2 | scroll-area | Scroll Area | todo |  | Code Block also uses it, and `DirectionProvider` |
-| Collapsible | 2 | collapsible | Collapsible | todo |  |  |
-| Tabs | 2 | tabs | Tabs | todo |  |  |
+| Scroll Area | 2 | scroll-area | Scroll Area | merged | [#37](https://github.com/aayushbtw/constella/pull/37) | Ports Code Block's scroller too. Known gap: a viewport that overflows by under a pixel is a Tab stop |
+| Collapsible | 2 | collapsible | Collapsible | merged | [#40](https://github.com/aayushbtw/constella/pull/40) | Ports Trace's collapsibles too |
+| Tabs | 2 | tabs | Tabs | merged | [#41](https://github.com/aayushbtw/constella/pull/41) |  |
 | Tooltip | 3 | tooltip | Tooltip | todo |  |  |
 | Hover Card | 3 | preview-card | Hover Card | todo |  | Drop the `popupVars` copy. ui-sdk's hover card trigger lists only `data-open`; check Button's open style when it ports |
 | Dialog | 3 | dialog | Dialog | todo |  |  |
@@ -113,7 +113,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  |  |
 | Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
 | Prompt Input | 5 | autocomplete |  | todo |  | After Command. Drop the `popupVars` copy |
-| Citation | 5 | avatar |  | todo |  | After Avatar, Hover Card |
+| Citation | 5 | avatar |  | todo |  | Logo ported with Avatar ([#36](https://github.com/aayushbtw/constella/pull/36)); waits on Hover Card |
 | Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
 | Sidebar | 5 | via Sheet, render helpers |  | todo |  | Re-verify only |
 
@@ -145,6 +145,46 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Collapsible | ui-sdk owns `data-slot`, so the content is `collapsible-panel`, not `collapsible-content`. Trace's five `trace-*` collapsible slots are gone. Its selectors read `[data-slot='collapsible-trigger'][data-open]`, and a context tells the run trigger from a step trigger |
+| 2026-11-14 | Collapsible | ui-sdk holds `data-starting-style` for one frame, so the content skips it during a keyboard toggle (`data-collapsible-instant`) and under reduced motion. Without the skip, a 0s open painted 1 or 2 empty frames; the verifier caught it under reduced motion |
+| 2026-11-14 | Collapsible | A pointer close starts one frame sooner than on Base UI, which isn't visible. Trace's live run clips the same 54 frames on both builds |
+| 2026-11-14 | Collapsible | A disabled trigger carries `aria-disabled` and `data-disabled`, not native `disabled`, and stays in the Tab order. It looks the same, and a press does nothing |
+| 2026-11-14 | Collapsible | A closed `keepMounted` panel keeps the trigger's `aria-controls`, which Base UI removed. Server HTML loses the inline `--collapsible-panel-height`; the paint with JavaScript off is unchanged |
+| 2026-11-14 | Collapsible | Trace steps with no trigger show in the agent `snapshot()` as unnamed collapsibles that offer `setOpen` and `press`. Phase 6 gives Trace its own entry |
+| 2026-11-14 | Collapsible | The React entry exports no root props type, though Popover exports `PopoverProps`. `CollapsibleTrigger` children may be a function of state, which the docs don't mention; Trace's triggers limit `children` to `ReactNode` |
+| 2026-11-14 | Collapsible | Pre-existing on `main`: Trace's step trigger shows no chevron on keyboard focus. Filed as [#39](https://github.com/aayushbtw/constella/issues/39) |
+| 2026-11-14 | Loading Bar | Built on ui-sdk's Progress root and indicator, not our Progress parts, since ours bring the track, its width transition and the indeterminate sweep. Its parts read `progress` and `progress-indicator`; nothing read the old `loading-bar` slots |
+| 2026-11-14 | Loading Bar | Props drop `children`, `min`, `max`, `format` and `locale`; `getValueLabel` stays. Timing, reduced motion and restart match Base UI frame for frame |
+| 2026-11-14 | Loading Bar | Candidate follow-up, not done: the `finishing` phase and its `setTimeout` before removal could use `@ui-sdk/core`'s `animateOut`. Nobody has checked how `animateOut` handles a restart during the finish |
+| 2026-11-14 | Tabs | ui-sdk owns `data-slot`, so `tabs-trigger` is `tabs-tab` and `tabs-content` is `tabs-panel`. The selected style reads `[data-selected]`, not `[data-active]`. Nothing outside `tabs.tsx` read them |
+| 2026-11-14 | Tabs | We keep our `aria-selected` reveal observer and wheel relay. With the observer off, a pointer pick of a half-hidden tab doesn't scroll in Chromium or WebKit. ui-sdk's press focuses with `preventScroll`, and its reveal skips a focused tab, though its docs say "the browser reveals it". Upstream note drafted, not filed |
+| 2026-11-14 | Tabs | ui-sdk writes `--active-tab-*` 0.6ms before `data-activation-direction` leaves `none`, so its documented rule ("`none` means don't animate") snapped the first pointer pick. Our indicator skips its transition only while nothing in the list has focus and the attribute is `none` |
+| 2026-11-14 | Tabs | `activateOnFocus` on `TabsList` is gone. ui-sdk's default `activation="automatic"` matches it, and `activation="manual"` switches on Enter. `Tabs` is generic over its value, and `onValueChange` can receive `null` |
+| 2026-11-14 | Tabs | In RTL, arrows follow the reading direction without a provider; Base UI ignored `dir`. A scripted `element.click()` now focuses the tab. A text-only panel gets `tabindex="0"` after mount, and only when it holds nothing focusable |
+| 2026-11-14 | Tabs | The agent bridge names tabs by the list's name, so every `TabsList` in the demos, the break page, the docs and the skill snippet now has an `aria-label`. A disabled tab shows in the `snapshot()` items with nothing that marks it disabled |
+| 2026-11-14 | Tabs | `TabsTabIcon` isn't wrapped; no demo uses tab icons. Under 6x CPU throttle the indicator paints about 0.8s late before hydration on both builds, so Base UI's `renderBeforeHydration` bought nothing |
+| 2026-11-14 | Scroll Area | ui-sdk writes its own `scroll-area` slot over `code-block-content` and `table-container`. The focus rings in `base.css` now read `[data-slot="code-block"] > [data-slot="scroll-area"]` and `[data-slot="scroll-area"]` |
+| 2026-11-14 | Scroll Area | With no Scrollbar part ui-sdk keeps the browser's scrollbars, so `scrollbar="none"` adds `scrollbar-width: none` |
+| 2026-11-14 | Scroll Area | `scrollHideDelay` is 0, so leaving hides the bar at once, as before. A bar shown by scrolling fades by about 400ms, where Base UI held it about 800ms (measured) |
+| 2026-11-14 | Scroll Area | A viewport that holds a link or control is no longer a tab stop: the docs sidebar, suggestions and data tables. Keyboard reach is unchanged, with 76 of 76 sidebar links and 184 of 184 table controls. `docs/design/components.md` says so |
+| 2026-11-14 | Scroll Area | Known regression, shipped on the advisor's call. ui-sdk counts overflow in whole pixels, so a viewport that overflows by under a pixel gets no `tabindex`, while Chromium makes it a keyboard-focusable scroller. A Tab sweep of the docs found 12 phantom stops in 946 page-widths at a 16px root and 8 in 258 at 17px; Base UI had none. A `test.fails` pins it. A CSS workaround (`overflow: hidden` on viewports that don't overflow) was tried and dropped, since it locked content that grows after hydration. An upstream issue that asks for `tabindex="-1"` when the viewport can't scroll is drafted, not filed |
+| 2026-11-14 | Scroll Area | Every scroll area shows in the agent `snapshot()` as an unnamed `scroll-area` unless its root has an `aria-label`. A `test.fails` pins it |
+| 2026-11-14 | Scroll Area | Without `DirectionProvider`, thumbs follow `dir`; Base UI shrank an RTL thumb. Code Block drops the provider and keeps `dir="ltr"` |
+| 2026-11-14 | Scroll Area | `ScrollAreaContent` isn't used: its `min-width: fit-content` would cut Code Block's line highlights short |
+| 2026-11-14 | Scroll Area | Bars that don't overflow, and the corner, stay mounted with an inline `display: none`, so every page's server HTML grows. Bars on both axes now stop short of the corner |
+| 2026-11-14 | Avatar | Server markup now holds the photo as a hidden `<img>` (inline hide, `aria-hidden`) plus a hoisted `<link rel="preload" as="image">` for each photo; Base UI rendered no image until it loaded. Clearing ui-sdk's inline hide starts the existing 300ms fade, so the `[data-starting-style]` rule is gone |
+| 2026-11-14 | Avatar | A broken photo stays in the DOM, hidden, beside the fallback, and every part carries `data-loading-status`. The fallback unmounts on load, as before |
+| 2026-11-14 | Avatar | Citation's logo carries `data-slot="avatar"`, so Badge's leading-avatar padding rule matches it. Pixels are unchanged; screenshots prove it, and no test does |
+| 2026-11-14 | Avatar | An avatar shows in `snapshot()` named by its image's `alt`. A fallback-only avatar, as in the Fallback demo, has no name. Citation's logos stay out, since they're `aria-hidden` |
+| 2026-11-14 | Avatar | In tests, a fallback `delay` needs `vi.advanceTimersByTimeAsync` inside `act` |
+| 2026-11-14 | Meter | Slots keep their names, and `meter-ring` stays ours. The root gains `--meter-value`, and the label loses `role="presentation"`. Base UI's hidden `x` span is gone; it caused a diff too faint to see (12/20px) in the open Model Picker |
+| 2026-11-14 | Meter | Custom text moves from `MeterValue` children and `getAriaValueText` to `format`, so screen readers hear the shown text ("7 of 10", "None yet") instead of a percent. The demos and Model Picker's ratings changed; the visible text didn't |
+| 2026-11-14 | Meter | The ring reads `percent` from the root's render state instead of our `percentOf`. It can't use `--meter-value`, a percentage, since `stroke-dasharray` on a `pathLength` circle needs a plain number |
+| 2026-11-14 | Meter | A meter shows in `snapshot()` as `meter` with its label, value, min and max, and no actions |
+| 2026-11-14 | Meter | Pre-existing on `main`: with `max <= min` the ring drew full while the value disagreed. Filed as [#35](https://github.com/aayushbtw/constella/issues/35). On ui-sdk both come from one computation |
+| 2026-11-14 | Progress | Slots and state attributes (`data-indeterminate`, `data-progressing`, `data-complete`) match Base UI's, so no reader changed. The root gains `--progress-value`. The indicator loses Base UI's inline `height: inherit` and its hidden `x` span, which Chromium exposed as a stray "x" text node under every bar |
+| 2026-11-14 | Progress | ui-sdk 0.1.0-beta.1's `ProgressValue` sets no `aria-hidden`, though its docs say the value is hidden. Chromium exposes its text under the progressbar, so ours adds `aria-hidden` until ui-sdk hides it. `MeterValue` gets the same |
+| 2026-11-14 | Progress | Custom text goes through `format`, which writes both the visible value and `aria-valuetext`. The port fixed [#38](https://github.com/aayushbtw/constella/issues/38), where the Uploads demo showed MB and screen readers heard a percent, as Textarea did #31. `ProgressValue`'s function child gets `(state)`. `value` is optional, and leaving it out means indeterminate. An indeterminate bar loses Base UI's `aria-valuetext="indeterminate progress"` |
 | 2026-11-14 | Separator | ui-sdk owns `data-slot`, so `ButtonGroupSeparator`, `ItemSeparator` and `SidebarSeparator` lost `button-group-separator`, `item-separator` and `sidebar-separator` and carry `separator`. The group joins (`styles.ts` `joined`) and Item Group's gap read `[data-slot='separator']`. The joins' selector change renames two classes on every joinable part in the built CSS; demos are pixel-identical before and after, light and dark |
 | 2026-11-14 | Separator | Same markup as Base UI's (`div`, `role="separator"`, `aria-orientation`, `data-orientation`). New `decorative` prop gives `role="none"`; no Constella part sets it yet. A separator never shows in the agent `snapshot()` |
 | 2026-11-14 | Toggle | Base UI and ui-sdk both mark a pressed toggle `data-pressed`, so `stateStyles.selectedFill`, Segmented Control and Chart Legend need no second selector while Toggle Group stays on Base UI. The markup loses Base UI's `tabindex="0"`, and a disabled toggle adds `aria-disabled="true"` beside `disabled` |
@@ -207,3 +247,5 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | #27 merged: Button on ui-sdk. Button re-applies a passed `data-slot`, the one sanctioned exception; disabled and pending styles read ui-sdk's `data-disabled` and `data-pending` |
 | 2026-11-14 | Filed #31 (Textarea didn't grow without field-sizing) and #32 (CopyButton drops the clipboard Promise), found by reviews; #31 fixed in #28 with ui-sdk's autoResize, #32 open on `main` |
 | 2026-11-14 | #28 merged: Field, Checkbox, Switch, Radio Group, Input Group and Textarea on ui-sdk as one unit, since a ui-sdk control in a Base UI Field loses its wiring. Select and Slider use ui-sdk's `useFieldControl` until their rows. Phase 2 so far: Button, Separator, Toggle and the Field unit merged |
+| 2026-11-14 | The rest of phase 2 ran as parallel unit PRs, each with an independent reuse review and verifier: #33 Progress, #34 Meter, #36 Avatar, #37 Scroll Area, #41 Tabs, #42 Loading Bar and #40 Collapsible merged. Verifiers failed Progress once (value text exposed twice), Scroll Area twice (a phantom Tab stop, then a workaround that locked late-growing content) and Collapsible once (empty frames under reduced motion). Each was fixed before merge. Filed #35, #38 (fixed in #33) and #39 |
+| 2026-11-14 | Phase 2 done except Slider, which waits on Tooltip (phase 3). Open on `main`: #32, #35 and #39. Upstream drafts not filed: the scroll area sub-pixel Tab stop, the Tabs `preventScroll` docs, and the Progress and Meter value `aria-hidden` docs |
