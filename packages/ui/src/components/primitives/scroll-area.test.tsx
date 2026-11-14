@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { createRef } from "react";
+import { renderToString } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
 
 import { CodeBlock, CodeBlockContent } from "@/components/ai/code-block";
@@ -89,6 +90,19 @@ test("a code block's pre is the viewport, its ref reaches it, and its root sits 
   expect(root?.parentElement).toBe(block);
   expect(root?.getAttribute("dir")).toBe("ltr");
   expect(orientations(container)).toEqual(["horizontal"]);
+});
+
+test("server markup leaves the viewport without data-at-start, so it scrolls before hydration", () => {
+  const server = document.createElement("div");
+  server.innerHTML = renderToString(
+    <ScrollArea scrollbar="horizontal">Gallery</ScrollArea>
+  );
+  const viewport = server.querySelector<HTMLElement>(
+    "[data-slot='scroll-area-viewport']"
+  );
+
+  expect(viewport).not.toBeNull();
+  expect(viewport?.dataset.atStart).toBeUndefined();
 });
 
 function SuggestionRow() {

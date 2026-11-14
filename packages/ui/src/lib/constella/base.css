@@ -234,6 +234,14 @@
     outline-offset: -1px;
   }
 
+  /* Chromium makes a sub-pixel overflow a Tab stop that ui-sdk's whole-pixel check calls non-scrolling; remove once ui-sdk gives that viewport tabindex=-1. */
+  [data-slot="scroll-area-viewport"][data-at-start]:not(
+      [data-overflow-x],
+      [data-overflow-y]
+    ) {
+    overflow: hidden !important;
+  }
+
   /* A table row spans its scroll container, which would clip the ring's sides, so it draws inside. */
   :where(tr):focus-visible {
     outline-offset: -1px;
