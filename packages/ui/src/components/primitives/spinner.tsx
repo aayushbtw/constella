@@ -18,14 +18,14 @@ type SpinnerProps = Omit<ComponentProps<"output">, "className" | "style"> & {
 };
 
 // A badge sets its icons at `iconXs` (`iconSm` at lg), so its spinner steps down with them.
-const inBadge = ":where([data-slot='badge']:not([data-size='lg']) *)";
-const inLgBadge = ":where([data-slot='badge'][data-size='lg'] *)";
+const inBadge = ":where([data-badge]:not([data-size='lg']) *)";
+const inLgBadge = ":where([data-badge][data-size='lg'] *)";
 const badgeSpinner = `calc(${sizes.iconXs} - ${space.xxxs})`;
 const lgBadgeSpinner = `calc(${sizes.iconSm} - ${space.xxxs})`;
 
 // An outline badge keeps its text neutral, so its spinner carries the color.
 const inColor = (color: string) =>
-  `:where([data-slot='badge'][data-variant='outline'][data-color='${color}'] *)`;
+  `:where([data-badge][data-variant='outline'][data-color='${color}'] *)`;
 
 const spin = stylex.keyframes({ to: { transform: "rotate(360deg)" } });
 

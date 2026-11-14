@@ -125,6 +125,8 @@ Use the `render` prop to render a link as a badge. Only a link answers hover.
 </Badge>
 ```
 
+A trigger goes in `render` too: `<Badge render={<HoverCardTrigger href="…" />}>`, as [Citation](/docs/components/citation) does. Not the trigger as a badge: the badge would render its `span` in place of the trigger's link.
+
 ## Avatar
 
 Put an [Avatar](/docs/components/avatar) first in the badge, with `aria-hidden`.

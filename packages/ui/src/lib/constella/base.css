@@ -240,7 +240,7 @@
   }
 
   /* StyleX can't style a child it didn't render, so an outline badge's icon takes its color here. */
-  :where([data-slot="badge"][data-variant="outline"]) {
+  :where([data-badge][data-variant="outline"]) {
     &[data-color="success"] > [data-icon] {
       color: var(--success-text);
     }

@@ -60,6 +60,12 @@ test("a citation's server markup holds no globe while its logo loads", () => {
   expect(html).not.toContain("<svg");
 });
 
+test("a citation's server pill is still drawn as a badge", () => {
+  const html = renderToString(<Cited source={withoutLogo} />);
+
+  expect(html).toMatch(/<a[^>]*data-badge=""/u);
+});
+
 test("a citation without a logo shows the globe at once", () => {
   const { container } = render(<Cited source={withoutLogo} />);
 
@@ -94,6 +100,7 @@ test("a citation's pill opens the shared card with a link to each source", async
   );
   const pill = screen.getByRole("link", { name: /Acme Journal/u });
   expect(pill.dataset.slot).toBe("hover-card-trigger");
+  expect(pill.dataset.badge).toBe("");
 
   fireEvent.pointerEnter(pill, { pointerType: "mouse" });
   await act(async () => {
