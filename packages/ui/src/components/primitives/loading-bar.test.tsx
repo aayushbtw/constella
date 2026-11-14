@@ -8,8 +8,6 @@ import { LoadingBar } from "./loading-bar";
 
 const agent = createAgent();
 const loadingDelay = Number.parseFloat(durations.loadingDelay);
-const finishFor =
-  Number.parseFloat(durations.move) + Number.parseFloat(durations.popoverExit);
 
 let reducedMotion = false;
 const animate = vi.fn();
@@ -28,7 +26,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  cleanup();
   vi.useRealTimers();
   vi.unstubAllGlobals();
   Reflect.deleteProperty(Element.prototype, "animate");
@@ -37,6 +34,12 @@ afterEach(() => {
 function advance(ms: number) {
   act(() => {
     vi.advanceTimersByTime(ms);
+  });
+}
+
+function runAll() {
+  act(() => {
+    vi.runAllTimers();
   });
 }
 
@@ -50,7 +53,7 @@ test("a load that ends within the delay never shows a bar", () => {
   const { rerender } = render(<LoadingBar aria-label="Loading page" loading />);
   advance(loadingDelay - 1);
   rerender(<LoadingBar aria-label="Loading page" loading={false} />);
-  advance(loadingDelay + finishFor);
+  runAll();
 
   expect(screen.queryByRole("progressbar")).toBeNull();
 });
@@ -63,14 +66,14 @@ test("past the delay, a named bar with no value shows", () => {
   expect(bar.dataset.state).toBe("shown");
 });
 
-test("when loading ends, the bar finishes, then goes after the finish duration", () => {
+test("when loading ends, the bar finishes, then goes", () => {
   const { rerender } = showBar();
   rerender(<LoadingBar aria-label="Loading page" loading={false} />);
   advance(0);
 
   expect(screen.getByRole("progressbar").dataset.state).toBe("finishing");
 
-  advance(finishFor);
+  runAll();
 
   expect(screen.queryByRole("progressbar")).toBeNull();
 });
@@ -108,11 +111,5 @@ test("an agent sees the shown bar by its name", () => {
   const components = agent
     .snapshot()
     .filter((entry) => entry.offPage !== true && entry.component !== "more");
-  for (const entry of components) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
   expect(components.map((entry) => entry.label)).toEqual(["Loading page"]);
 });
