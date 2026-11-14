@@ -131,7 +131,7 @@ Its button is a `fill` chip set into the box with an even inset on three sides, 
 
 ## Hover card
 
-A popover opened by resting on a link, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half Base UI's default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
+A popover opened by resting on a link or focusing it by keyboard, never by a tap, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half the 600ms default of Base UI and ui-sdk, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out` and swaps the content at once, so reading a row of mentions is one card following the pointer, not cards opening and closing. Focus moves it without the glide. A trigger styled as a button takes no open fill, so it keeps its hover fill only while the pointer is on it, not while the pointer is in the card.
 
 ## Input group
 
