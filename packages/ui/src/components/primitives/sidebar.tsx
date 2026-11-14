@@ -1097,8 +1097,9 @@ function SidebarTrigger({
         aria-label={ariaLabel ?? "Close sidebar"}
         data-slot="sidebar-trigger"
         onClick={(event, details) => {
-          onClick?.(event, details);
+          const result = onClick?.(event, details);
           setOpenMobile(false);
+          return result;
         }}
         size={size}
         sx={triggerSx}
@@ -1123,13 +1124,14 @@ function SidebarTrigger({
             aria-label={ariaLabel ?? label}
             data-slot="sidebar-trigger"
             onClick={(event, details) => {
-              onClick?.(event, details);
+              const result = onClick?.(event, details);
               // Enter or Space: a keyboard toggle, so it skips the animation.
               if (event.detail === 0 && toggleFromKeyboard) {
                 toggleFromKeyboard();
               } else {
                 toggleSidebar();
               }
+              return result;
             }}
             size={size}
             sx={triggerSx}

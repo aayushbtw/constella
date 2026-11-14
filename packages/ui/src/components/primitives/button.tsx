@@ -58,12 +58,18 @@ type ButtonProps = Omit<
 > &
   ButtonStyleOptions & { "data-slot"?: string; sx?: Sx };
 
+// ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only; other elements use `:disabled`.
+const disabled = ":is(:disabled, [data-disabled])";
+// ui-sdk marks a press whose Promise is running; a caller marks its own work with `aria-busy`.
+const busy = ":is([aria-busy='true'], [data-pending])";
+// Working and can't be pressed: a lighter fade than disabled.
+const loading =
+  ":is([aria-busy='true']:is(:disabled, [data-disabled]), [data-pending])";
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
 // A trigger opens something on press, so it doesn't give.
-const press = ":active:not([aria-haspopup], :disabled)";
-
-// Working, not unavailable: a busy cursor, and when it can't be pressed, a lighter fade than disabled.
-const busy = "[aria-busy='true']";
-const loading = "[aria-busy='true']:disabled";
+const press =
+  ":active:not([aria-haspopup], :disabled, [data-disabled], [data-pending])";
 
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
@@ -75,9 +81,9 @@ const interactive = <R, A>(rest: R, active: A) => ({
   [media.hover]: {
     default: rest,
     [popupOpen]: active,
-    ":hover:not(:disabled)": active,
+    [hoverIdle]: active,
   },
-  ":active:not(:disabled)": active,
+  [activeIdle]: active,
 });
 
 const kbdInset = (height: string) =>
@@ -123,7 +129,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     cursor: {
       default: "pointer",
-      ":disabled": "not-allowed",
+      [disabled]: "not-allowed",
       [busy]: "progress",
     },
     display: "inline-flex",
@@ -135,7 +141,7 @@ const styles = stylex.create({
     marginInline: 0,
     opacity: {
       default: 1,
-      ":disabled": opacities.disabled,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
     textDecorationLine: "none",
@@ -187,12 +193,12 @@ const styles = stylex.create({
       [media.hover]: {
         default: 1,
         [popupOpen]: opacities.hover,
-        ":hover:not(:disabled)": opacities.hover,
-        ":disabled": opacities.disabled,
+        [hoverIdle]: opacities.hover,
+        [disabled]: opacities.disabled,
         [loading]: opacities.busy,
       },
-      ":active:not(:disabled)": opacities.hover,
-      ":disabled": opacities.disabled,
+      [activeIdle]: opacities.hover,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
   },
@@ -224,7 +230,7 @@ const styles = stylex.create({
   dangerSolid: {
     opacity: {
       default: 1,
-      ":disabled": opacities.disabled,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
   },
@@ -273,7 +279,7 @@ const cornerStyles = {
   rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
-/** A button's styles for another element, like a plain `<a>` that must keep its link role. */
+/** A button's styles for an element that isn't a Button, like a server-rendered link. */
 function buttonStyles({
   corners = "pill",
   size = "default",

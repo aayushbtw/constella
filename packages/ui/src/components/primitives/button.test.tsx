@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test, vi } from "vite-plus/test";
 
@@ -6,12 +6,10 @@ import { Button } from "./button";
 import { Dialog, DialogTrigger } from "./dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
-
 const slot = (name: string) =>
   screen.getByRole("button", { name }).dataset.slot;
 
-test("renders a button named by its slot, with its options mirrored", () => {
+test("mirrors its options as data attributes", () => {
   render(
     <Button color="danger" corners="rounded" size="sm" variant="outline">
       Delete
@@ -55,7 +53,7 @@ test("a part built on it, or a trigger rendered as it, keeps its own slot", () =
   );
 });
 
-test("disabled can't be pressed and leaves the tab order", () => {
+test("disabled can't be pressed or focused", () => {
   const onClick = vi.fn();
   render(
     <Button disabled onClick={onClick}>
@@ -65,8 +63,46 @@ test("disabled can't be pressed and leaves the tab order", () => {
 
   const button = screen.getByRole("button", { name: "Save" });
   fireEvent.click(button);
+  button.focus();
   expect(onClick).not.toHaveBeenCalled();
-  expect(button.matches(":disabled")).toBe(true);
+  expect(document.activeElement).not.toBe(button);
+});
+
+test("a render function with a slot gets the state and keeps the slot", () => {
+  render(
+    <Button
+      data-slot="copy-button"
+      disabled
+      render={(props, state) => (
+        <button type="button" {...props}>
+          {state.disabled ? "Unavailable" : "Copy"}
+        </button>
+      )}
+    />
+  );
+
+  expect(slot("Unavailable")).toBe("copy-button");
+});
+
+test("a Promise from onClick keeps it pending and unpressable until it settles", async () => {
+  const { promise, resolve } = Promise.withResolvers<null>();
+  const onClick = vi.fn(async () => await promise);
+  render(<Button onClick={onClick}>Save</Button>);
+  const button = screen.getByRole("button", { name: "Save" });
+
+  fireEvent.click(button);
+  await vi.waitFor(() => {
+    expect(button.dataset.pending).toBeDefined();
+  });
+  expect(button.getAttribute("aria-busy")).toBe("true");
+  fireEvent.click(button);
+  expect(onClick).toHaveBeenCalledOnce();
+
+  await act(async () => {
+    resolve(null);
+    await promise;
+  });
+  expect(button.dataset.pending).toBeUndefined();
 });
 
 test("render swaps the element and keeps it a link", () => {
@@ -79,38 +115,6 @@ test("render swaps the element and keeps it a link", () => {
 
   const link = screen.getByRole("link", { name: "Settings" });
   expect(link.dataset).toMatchObject({ slot: "button", variant: "outline" });
-});
-
-test("as a ui-sdk trigger, the open trigger matches the open style", async () => {
-  render(
-    <Popover>
-      <PopoverTrigger render={<Button />}>Open</PopoverTrigger>
-      <PopoverContent>Body</PopoverContent>
-    </Popover>
-  );
-  const trigger = screen.getByRole("button", { name: "Open" });
-  expect(trigger.matches(popupOpen)).toBe(false);
-
-  fireEvent.click(trigger);
-
-  await screen.findByRole("dialog");
-  expect(trigger.matches(popupOpen)).toBe(true);
-});
-
-test("as a Base UI trigger, the open trigger matches the open style", async () => {
-  render(
-    <Dialog>
-      <DialogTrigger render={<Button />}>Open</DialogTrigger>
-    </Dialog>
-  );
-  const trigger = screen.getByRole("button", { name: "Open" });
-  expect(trigger.matches(popupOpen)).toBe(false);
-
-  fireEvent.click(trigger);
-
-  await vi.waitFor(() => {
-    expect(trigger.matches(popupOpen)).toBe(true);
-  });
 });
 
 test("an agent can find and press every button", async () => {

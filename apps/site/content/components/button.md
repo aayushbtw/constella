@@ -99,7 +99,7 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 ## As Link
 
-Use `buttonStyles` to make a link look like a button.
+Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that isn't a Button, like a server-rendered link, use `buttonStyles`.
 
 <!-- ::demo name="button-link" -->
 
@@ -129,6 +129,7 @@ Add `aria-busy` while something runs. It shows a busy cursor, so working reads d
 
 - With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
 - Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
+- Return a Promise from `onClick` and the button marks itself the same way until it settles, loading and unpressable.
 
 <!-- ::demo name="button-busy" -->
 
