@@ -1,11 +1,13 @@
-import { DirectionProvider } from "@base-ui/react/direction-provider";
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import * as stylex from "@stylexjs/stylex";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
+import { ScrollArea, ScrollAreaViewport } from "@ui-sdk/react/scroll-area";
 import type { ComponentProps, ReactNode } from "react";
 
-import { ScrollBar } from "@/components/primitives/scroll-area";
+import {
+  ScrollBar,
+  scrollHideDelay,
+} from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { scrollFadeVars } from "@/lib/constella/scroll-fade.stylex";
 import type { Sx } from "@/lib/constella/styles";
@@ -329,47 +331,44 @@ function CodeBlockContent({
   wrap?: boolean;
 }) {
   return (
-    // Base UI places the thumb by the provider's direction, not `dir`.
-    <DirectionProvider direction="ltr">
-      <ScrollAreaPrimitive.Root
-        data-slot="code-block-content"
-        dir="ltr"
-        {...stylex.props(styles.content, styles.contentBesideActions, sx)}
-      >
-        {/* The fade draws here, so the scrollbar beside it stays clear. */}
-        <div {...stylex.props(scrollFade.xEndAround)}>
-          <ScrollAreaPrimitive.Viewport
-            render={
-              <pre
-                data-numbered={lineNumbers || undefined}
-                data-wrap={wrap || undefined}
-                {...props}
-              />
-            }
-            {...stylex.props(
-              styles.pre,
-              scrollFade.source,
-              styles.start(startLine - 1),
-              wrap && styles.wrap
-            )}
-          >
-            <code data-slot="code-block-code" {...stylex.props(styles.code)}>
-              {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
-              {lineNumbers && typeof children === "string"
-                ? children
-                    .replace(/\n$/u, "")
-                    .split("\n")
-                    .map((line, index) => (
-                      // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
-                      <CodeBlockLine key={index}>{line}</CodeBlockLine>
-                    ))
-                : children}
-            </code>
-          </ScrollAreaPrimitive.Viewport>
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollAreaPrimitive.Root>
-    </DirectionProvider>
+    <ScrollArea
+      dir="ltr"
+      scrollHideDelay={scrollHideDelay}
+      {...stylex.props(styles.content, styles.contentBesideActions, sx)}
+    >
+      {/* The fade draws here, so the scrollbar beside it stays clear. */}
+      <div {...stylex.props(scrollFade.xEndAround)}>
+        <ScrollAreaViewport
+          render={
+            <pre
+              data-numbered={lineNumbers || undefined}
+              data-wrap={wrap || undefined}
+              {...props}
+            />
+          }
+          {...stylex.props(
+            styles.pre,
+            scrollFade.source,
+            styles.start(startLine - 1),
+            wrap && styles.wrap
+          )}
+        >
+          <code data-slot="code-block-code" {...stylex.props(styles.code)}>
+            {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
+            {lineNumbers && typeof children === "string"
+              ? children
+                  .replace(/\n$/u, "")
+                  .split("\n")
+                  .map((line, index) => (
+                    // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
+                    <CodeBlockLine key={index}>{line}</CodeBlockLine>
+                  ))
+              : children}
+          </code>
+        </ScrollAreaViewport>
+      </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }
 

@@ -125,7 +125,7 @@
       "type": "registry:ui",
       "title": "Code Block",
       "description": "Code in a tray, with a title, actions, line numbers and diffs. The app highlights it.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/scroll-area.json",
@@ -762,7 +762,7 @@
       "type": "registry:ui",
       "title": "Scroll Area",
       "description": "A scrolling region with an overlay scrollbar that shows while in use.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
