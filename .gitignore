@@ -6,8 +6,6 @@ dist
 .cloudflare
 worker-configuration.d.ts
 
-routeTree.gen.ts
-
 .env
 .env.*
 !.env.example
