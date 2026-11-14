@@ -173,10 +173,9 @@ function SaveButtons() {
     const done = saving
       ? setTimeout(() => {
           setSaving(false);
-          toast.add({
+          toast.success({
             description: "Your changes are live.",
             title: "Saved",
-            type: "success",
           });
         }, 1200)
       : undefined;

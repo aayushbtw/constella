@@ -127,7 +127,7 @@ function report(
       .filter((value) => value !== "");
     return `${name}: ${values.join(", ") || "none"}`;
   });
-  toast.add({ description: answers.join(" · "), title });
+  toast({ description: answers.join(" · "), title });
 }
 
 function QuestionnaireDemo() {
@@ -337,7 +337,7 @@ function QuestionnaireValidationDemo() {
     );
     if (result.success) {
       setErrors({});
-      toast.add({
+      toast({
         description: `detail: ${result.data.detail} · audience: ${result.data.audience}`,
         title: "Answer configured",
       });
@@ -529,7 +529,7 @@ function QuestionnaireResumeDemo() {
         defaultItem="verification"
         items={draftItems}
         onReset={() => {
-          toast.add({ title: "Saved answers restored" });
+          toast({ title: "Saved answers restored" });
         }}
         onSubmit={(event) => {
           report("Draft updated", event, ["change", "verification", "notes"]);

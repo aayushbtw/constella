@@ -139,7 +139,7 @@ function DialogControlledDemo() {
               color="danger"
               onClick={() => {
                 setOpen(false);
-                toast.add({ title: "Project deleted" });
+                toast({ title: "Project deleted" });
               }}
             >
               Delete
