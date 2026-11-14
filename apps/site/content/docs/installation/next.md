@@ -13,7 +13,7 @@ Set up the components from https://constella.aayush.cv in this Next.js app, foll
 1. In components.json, add "registries": { "@constella": "https://constella.aayush.cv/r/{name}.json" }. If there's no components.json, write one by hand with "style": "base-nova", "tsx": true, "rsc": true, empty "tailwind" fields ("config": "", "css": "", "baseColor": "neutral") and aliases for components, ui, lib, utils and hooks under "@/". Don't run shadcn init. It sets up Tailwind.
 2. Run: npx shadcn@latest add @constella/button
 3. Install @stylexjs/babel-plugin, @stylexjs/postcss-plugin and autoprefixer. Add babel.config.js with the next/babel preset and @stylexjs/babel-plugin (aliases matching tsconfig.json's "@/*" path), and postcss.config.js with @stylexjs/postcss-plugin reusing those Babel plugins, its include covering the app's source.
-4. Start app/globals.css (or src/app/globals.css) with @import of lib/constella/base.css (relative, eg "../lib/constella/base.css"), and end it with @stylex;
+4. Start app/globals.css (or src/app/globals.css) with @layer ui-sdk; then @import of lib/constella/base.css (relative, eg "../lib/constella/base.css"), and end it with @stylex;
 5. Dark mode is a `dark` class on <html>. Reuse the project's existing theme toggle (next-themes with attribute="class") if it has one.
 6. Load Inter and Geist Mono (next/font or @fontsource-variable/inter, @fontsource-variable/geist-mono), or put the project's fonts first in --font-sans and --font-mono in theme.stylex.ts.
 
@@ -113,9 +113,10 @@ module.exports = {
 };
 ```
 
-In `src/app/globals.css`, which the root layout already imports, import Constella's theme, preflight and focus ring at the top, and end with the directive StyleX replaces with its CSS:
+In `src/app/globals.css`, which the root layout already imports, import Constella's theme, preflight and focus ring at the top, and end with the directive StyleX replaces with its CSS. Put `@layer ui-sdk;` above the import, so the CSS components add at runtime sits below your styles:
 
 ```css
+@layer ui-sdk;
 @import "../lib/constella/base.css";
 
 /* Your own global styles. */

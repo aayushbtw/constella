@@ -1,5 +1,3 @@
-/* ui-sdk injects this layer at runtime; declaring it first keeps it below StyleX's layers. */
-@layer ui-sdk;
 @import "@radix-ui/colors/black-alpha.css";
 @import "@radix-ui/colors/white-alpha.css";
 @import "@radix-ui/colors/gray.css";
