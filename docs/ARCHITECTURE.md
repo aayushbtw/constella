@@ -131,7 +131,25 @@ CI (`.github/workflows/ci.yml`) runs `check` and `build` on each push to `main` 
 | Out of beta (GA, "APIs may still change" gone) | No. Beta since launch, 2026-11-12 |
 | Covers every Base UI part Constella uses, including anchored Toast | Not checked per component. Anchored Toast not documented |
 | A Toast or Popover spike ports with no behavior hand-rolled | Not run |
-| shadcn ships a UI SDK base, or we accept leaving base-nova parity | No |
+| shadcn ships a UI SDK base, or we accept leaving base-nova parity | No. HextaUI is building a styled UI SDK flavor |
+| The `agent` key on `definePrimitive` is out of experimental | No. Experimental in 0.1.0-beta.1 |
+
+### Agent bridge
+
+The reason to move. `createAgent()` from `@ui-sdk/react/agent` returns a bridge every UI SDK component registers with, so an agent drives the UI through component APIs instead of screenshots and clicks. Fits Constella's AI components: an assistant built from Chat and Prompt Input can operate the rest of the app.
+
+| Piece | Does |
+| --- | --- |
+| `snapshot()` | Every component with a short `ref`, kind, accessible label, state and allowed actions; a closed Select lists its `items` |
+| `query()` | Finds components by text, or lists the choices inside one |
+| `act({ steps })` | Runs steps in order by `ref` or label; returns each step's `changes` and every field's `values`. A failed step stops the call with no rollback; `ok: true` doesn't mean each change was accepted |
+| `allow` on `createAgent` | Sees each step first; `false` or a promise refuses or asks |
+| `data-agent-confirm`, `-hidden`, `-secret` | Needs a person; hidden from the agent; value redacted (password, card and OTP fields by default) |
+| `details.source` in change callbacks | `agent` beside `keyboard`, `mouse`, `programmatic` and others; `details.cancel()` refuses. `withSource` keeps it across an `await` |
+| `definePrimitive({ agent: { actions } })` | Exposes a custom component's methods; without it the bridge guesses `setX`, `open`, `toggle`, `clear` |
+| `registerTools(agent, { allow })` | Publishes the three tools on WebMCP's `document.modelContext`, with a second, stricter `allow` for the browser's agent |
+
+The bridge sees only UI SDK components, so a page that mixes libraries gives the agent a partial view. That argues for migrating whole, not component by component.
 
 ### Same model as Base UI
 
@@ -148,12 +166,15 @@ CI (`.github/workflows/ci.yml`) runs `check` and `build` on each push to `main` 
 | CSS variable names differ (`--toast-swipe-x` vs `--toast-swipe-movement-x`, `--toast-offset` vs `--toast-offset-y`, `--toast-front-height` vs `--toast-frontmost-height`) | Every component's styles |
 | Toast limit is `maxVisible` on the region, not `limit` on a provider; no `data-limited` | Toast |
 | No shadcn style on it | The shadcn-first workflow; demos stop mirroring base-nova |
+| Components Base UI doesn't provide (Chat, Prompt Input, Attachment, Data Table, Chart) are invisible to the bridge unless rebuilt on `definePrimitive` with an `agent` key | Each AI and TanStack component |
+| The bridge names components by accessible name | Every part needs a label an agent can type; distinct, since labels match by whole word ("Name" hits "Project name") |
 
 ### Log
 
 | Date | Checked | Finding |
 | --- | --- | --- |
 | 2026-11-13 | Beta at launch; Toast, Styling and Animation, Parts and Composition, Popups docs | Same parts and `render` model as Base UI; Toast matches Base UI except anchored toasts. Not ready: beta, no shadcn base |
+| 2026-11-14 | [HextaUI's agent bridge walkthrough](https://hextaui.com/blog/ui-sdk-webmcp-ai-agents-react), 0.1.0-beta.1 | Bridge works as documented. Bug: a WebMCP `allow` refusal after the person accepted a confirm reports "The person said no". Vercel's benchmark (their numbers, not reproduced): 5 vs 16 tool calls, 16 s vs 41 s, $0.032 vs $0.073 against browser tools |
 
 ## Gotchas
 
