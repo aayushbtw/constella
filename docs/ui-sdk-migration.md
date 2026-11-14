@@ -142,6 +142,7 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-14 | Render helpers | `SidebarGroupAction` and `SidebarMenuAction` forced `type="button"` onto a `render` element on `main`. Found by the slop review of #16, filed and fixed on `main` as [#17](https://github.com/aayushbtw/constella/issues/17), then merged in |
 | 2026-11-14 | Render helpers | A handler on a `render` element that calls `preventDefault()` now skips the part's own handler (ui-sdk `mergeProps`). Base UI needed `event.preventBaseUIHandler()` for that |
 | 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |
 

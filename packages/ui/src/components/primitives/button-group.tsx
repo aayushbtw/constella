@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";

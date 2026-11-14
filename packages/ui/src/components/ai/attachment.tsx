@@ -454,8 +454,10 @@ function AttachmentTrigger({
 function AttachmentGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
-      data-slot="attachment-group"
-      {...mergeProps(props, { ref: relayWheel })}
+      {...mergeProps(
+        { "data-slot": "attachment-group", ref: relayWheel },
+        props
+      )}
       {...stylex.props(styles.group, scrollFade.x, sx)}
     />
   );
