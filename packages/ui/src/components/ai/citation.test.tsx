@@ -28,7 +28,6 @@ function Cited({ source }: { source: Source }) {
 const globe = (root: ParentNode) =>
   root.querySelector("[data-slot='avatar-fallback'] svg");
 
-// A fake timer dropped mid-flight leaves ui-sdk waiting on it, which hangs a later test.
 afterEach(() => {
   if (vi.isFakeTimers()) {
     vi.runOnlyPendingTimers();

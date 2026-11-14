@@ -17,7 +17,6 @@ const agent = createAgent();
 
 const ms = (token: string) => Number.parseFloat(token);
 
-// A fake timer dropped mid-flight leaves ui-sdk waiting on it, which hangs a later test.
 afterEach(() => {
   if (vi.isFakeTimers()) {
     vi.runOnlyPendingTimers();

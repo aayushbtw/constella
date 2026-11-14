@@ -75,8 +75,6 @@ const styles = stylex.create({
     paddingInline: space.popup,
     width: sizes.popover,
   },
-  // Moving between triggers that share one card, it glides to the new one. Only then, or it
-  // would trail its trigger on scroll.
   motion: {
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
@@ -99,10 +97,9 @@ const styles = stylex.create({
   },
 });
 
-// ui-sdk takes bare milliseconds; the tokens carry `ms`.
-const openDelay = Number(durations.hoverCardDelay.slice(0, -"ms".length));
-const closeAfter = Number(durations.hoverCardCloseDelay.slice(0, -"ms".length));
-const moveFor = Number(durations.move.slice(0, -"ms".length));
+const openDelay = Number.parseFloat(durations.hoverCardDelay);
+const closeAfter = Number.parseFloat(durations.hoverCardCloseDelay);
+const moveFor = Number.parseFloat(durations.move);
 
 const Motion = createContext({ moving: false, skip: false });
 
