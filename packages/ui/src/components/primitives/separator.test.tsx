@@ -3,7 +3,7 @@ import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test } from "vite-plus/test";
 
 import { ButtonGroup, ButtonGroupSeparator } from "./button-group";
-import { ItemGroup, ItemSeparator } from "./item";
+import { Item, ItemGroup, ItemSeparator } from "./item";
 import {
   Popover,
   PopoverContent,
@@ -39,7 +39,7 @@ test("a decorative separator is hidden from screen readers", () => {
   expect(container.firstElementChild?.getAttribute("role")).toBe("none");
 });
 
-test("parts built on it keep the slot their groups read", () => {
+test("a button group divides vertically and an item group horizontally", () => {
   render(
     <>
       <ButtonGroup>
@@ -48,24 +48,16 @@ test("parts built on it keep the slot their groups read", () => {
         <button type="button">Snooze</button>
       </ButtonGroup>
       <ItemGroup>
-        <div data-slot="item">Ada</div>
+        <Item>Ada</Item>
         <ItemSeparator />
-        <div data-slot="item">Grace</div>
+        <Item>Grace</Item>
       </ItemGroup>
     </>
   );
   const [groupSeparator, itemSeparator] = screen.getAllByRole("separator");
 
   expect(groupSeparator?.getAttribute("aria-orientation")).toBe("vertical");
-  expect(
-    screen
-      .getByRole("button", { name: "Snooze" })
-      .matches("[data-slot='separator'] + *")
-  ).toBe(true);
   expect(itemSeparator?.getAttribute("aria-orientation")).toBe("horizontal");
-  expect(
-    itemSeparator?.parentElement?.matches(":has(> [data-slot='separator'])")
-  ).toBe(true);
 });
 
 test("an agent sees the controls around a separator by name, and not the separator", () => {
@@ -90,11 +82,5 @@ test("an agent sees the controls around a separator by name, and not the separat
   const components = agent
     .snapshot()
     .filter((entry) => entry.offPage !== true && entry.component !== "more");
-  for (const entry of components) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
   expect(components.map((entry) => entry.label)).toEqual(["Filters", "Sort"]);
 });

@@ -4,7 +4,6 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
-import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -260,9 +259,7 @@ function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
   );
 }
 
-function ItemSeparator(props: SeparatorProps) {
-  return <Separator orientation="horizontal" {...props} />;
-}
+const ItemSeparator = Separator;
 
 function Item({
   render,
