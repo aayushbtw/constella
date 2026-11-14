@@ -69,6 +69,7 @@ const Live = createContext<{ readonly current: boolean }>({ current: false });
 
 const step = "[data-slot='trace-step']";
 const triggerOpen = ":is([data-slot='collapsible-trigger'][data-open] *)";
+// Only the trigger's: the run's panel carries the flag too and holds every step's chevron.
 const instant =
   ":is([data-slot='collapsible-trigger'][data-collapsible-instant] *)";
 const rtl = ":is([dir='rtl'] *)";

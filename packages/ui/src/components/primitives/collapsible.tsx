@@ -18,7 +18,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 const closing = ":is([data-ending-style])";
-// ui-sdk holds the starting style one frame, which a 0s keyboard open would show as an empty panel.
+// ui-sdk holds the starting style one frame, which a 0s open would show as an empty panel.
 const opening = ":is([data-starting-style]):not([data-collapsible-instant])";
 
 const styles = stylex.create({
@@ -27,14 +27,21 @@ const styles = stylex.create({
     height: {
       default: "var(--collapsible-panel-height)",
       [closing]: 0,
-      [opening]: 0,
+      [opening]: {
+        default: 0,
+        [media.reducedMotion]: "var(--collapsible-panel-height)",
+      },
     },
-    opacity: { default: 1, [closing]: 0, [opening]: 0 },
+    opacity: {
+      default: 1,
+      [closing]: 0,
+      [opening]: { default: 0, [media.reducedMotion]: 1 },
+    },
     overflow: "hidden",
     // Shutting is quicker and drops the gentle settle, whose long tail reads as stuck.
     transitionDuration: {
       default: durations.layout,
-      ":is([data-ending-style]):not([data-collapsible-instant])": {
+      [`${closing}:not([data-collapsible-instant])`]: {
         default: durations.layoutExit,
         [media.reducedMotion]: "0s",
       },
@@ -44,7 +51,7 @@ const styles = stylex.create({
     transitionProperty: "height, opacity",
     transitionTimingFunction: {
       default: easings.layout,
-      ":is([data-ending-style])": easings.out,
+      [closing]: easings.out,
     },
   },
 });
