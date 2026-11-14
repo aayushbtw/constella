@@ -48,16 +48,20 @@ Put a `ProgressLabel` and `ProgressValue` in `Progress` to name it and show its 
 
 ## Progress Value
 
-Give `ProgressValue` a function to show the value your way, like a file's size. Set `max` to count in its own units. The fill travels to each new value.
+Set `max` to count in its own units, like a file's size, and pass `format` a function of the value to write it your way. `ProgressValue` shows that text, and screen readers read it too. The fill travels to each new value.
 
 <!-- ::demo name="progress-value" -->
 
 ```tsx
-<Progress max={file.size} value={sent}>
+<Progress
+  format={(sent) =>
+    sent >= file.size ? "Done" : `${mb(sent)} of ${mb(file.size)}`
+  }
+  max={file.size}
+  value={sent}
+>
   <ProgressLabel>{file.name}</ProgressLabel>
-  <ProgressValue>
-    {() => (sent >= file.size ? "Done" : `${mb(sent)} of ${mb(file.size)}`)}
-  </ProgressValue>
+  <ProgressValue />
 </Progress>
 ```
 

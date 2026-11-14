@@ -136,10 +136,10 @@ const uploads: Upload[] = [
 const megabytes = (value: number) => `${value.toFixed(1)} MB`;
 
 function Uploads() {
-  const [sent, setSent] = useState(() => uploads.map(() => 0));
+  const [progress, setProgress] = useState(() => uploads.map(() => 0));
   useEffect(() => {
     const timer = setInterval(() => {
-      setSent((all) =>
+      setProgress((all) =>
         all.map((value, index) => {
           const upload = uploads[index];
           return upload === undefined
@@ -153,17 +153,20 @@ function Uploads() {
     };
   }, []);
   return uploads.map((upload, index) => {
-    const value = sent[index] ?? 0;
+    const value = progress[index] ?? 0;
     return (
-      <Progress key={upload.name} max={upload.size} value={value}>
+      <Progress
+        format={(sent) =>
+          sent >= upload.size
+            ? "Done"
+            : `${megabytes(sent)} of ${megabytes(upload.size)}`
+        }
+        key={upload.name}
+        max={upload.size}
+        value={value}
+      >
         <ProgressLabel>{upload.name}</ProgressLabel>
-        <ProgressValue>
-          {() =>
-            value >= upload.size
-              ? "Done"
-              : `${megabytes(value)} of ${megabytes(upload.size)}`
-          }
-        </ProgressValue>
+        <ProgressValue />
       </Progress>
     );
   });

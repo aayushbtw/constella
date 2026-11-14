@@ -19,6 +19,7 @@ test("a labelled bar is named by its label and shows its value", () => {
   expect(bar.querySelector("[data-slot='progress-value']")?.textContent).toBe(
     "56%"
   );
+  expect(screen.getByText("56%").getAttribute("aria-hidden")).toBe("true");
 });
 
 test("the track and indicator follow the children, filled to the value's share of max", () => {
@@ -41,20 +42,36 @@ test("the track and indicator follow the children, filled to the value's share o
   expect(indicator?.style.width).toBe("60%");
 });
 
-test("a function child replaces the value's text", () => {
-  render(
-    <Progress max={8.4} value={8.4}>
+function Upload({ sent }: { sent: number }) {
+  return (
+    <Progress
+      format={(value) =>
+        value >= 8.4 ? "Done" : `${value.toFixed(1)} MB of 8.4 MB`
+      }
+      max={8.4}
+      value={sent}
+    >
       <ProgressLabel>brand-guidelines.pdf</ProgressLabel>
-      <ProgressValue>{() => "Done"}</ProgressValue>
+      <ProgressValue />
     </Progress>
   );
+}
+
+test("format writes both the visible value and what screen readers hear, and follows a new value", () => {
+  const { rerender } = render(<Upload sent={2.7} />);
   const bar = screen.getByRole("progressbar", {
     name: "brand-guidelines.pdf",
   });
 
-  expect(bar.querySelector("[data-slot='progress-value']")?.textContent).toBe(
-    "Done"
+  expect(screen.getByText("2.7 MB of 8.4 MB").dataset.slot).toBe(
+    "progress-value"
   );
+  expect(bar.getAttribute("aria-valuetext")).toBe("2.7 MB of 8.4 MB");
+
+  rerender(<Upload sent={8.4} />);
+
+  expect(screen.getByText("Done").dataset.slot).toBe("progress-value");
+  expect(bar.getAttribute("aria-valuetext")).toBe("Done");
 });
 
 test("an unknown amount marks the indicator indeterminate and reads no value", () => {
