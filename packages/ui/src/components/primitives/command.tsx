@@ -4,24 +4,15 @@ import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomple
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps } from "react";
 
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogDescription,
-  DialogPopup,
-  DialogPortal,
-  DialogTitle,
-  DialogViewport,
-} from "@/components/primitives/dialog";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/primitives/input-group";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -133,10 +124,6 @@ const styles = stylex.create({
     marginInlineStart: "auto",
     whiteSpace: "nowrap",
   },
-  viewport: {
-    alignItems: "flex-start",
-    paddingBlockStart: `max(${space.md}, 15vh)`,
-  },
   footer: {
     alignItems: "center",
     backgroundColor: colors.fillSubtle,
@@ -155,17 +142,6 @@ const styles = stylex.create({
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
   },
-  dialog: {
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    gap: 0,
-    paddingBlockEnd: 0,
-    paddingBlockStart: 0,
-    paddingInlineEnd: 0,
-    paddingInlineStart: 0,
-  },
 });
 
 /** A searchable list, always open, built on Base UI's inline Autocomplete. Pass `items`. */
@@ -183,44 +159,6 @@ function Command({
         {...props}
       />
     </div>
-  );
-}
-
-/** Renders a dialog with a command inside, named for screen readers by `title` and `description`. */
-function CommandDialog({
-  children,
-  description = "Search for a command to run...",
-  instant = false,
-  sx,
-  title = "Command Palette",
-  ...props
-}: Omit<ComponentProps<typeof Dialog>, "children"> & {
-  children: ReactNode;
-  description?: string;
-  /** Opens and closes with no motion, for a change the keyboard made. */
-  instant?: boolean;
-  sx?: Sx;
-  title?: string;
-}) {
-  return (
-    <Dialog {...props}>
-      <DialogPortal>
-        <DialogBackdrop data-skip-motion={instant || undefined} />
-        <DialogViewport sx={styles.viewport}>
-          <DialogPopup
-            data-skip-motion={instant || undefined}
-            size="lg"
-            sx={[styles.dialog, sx]}
-          >
-            <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
-            <DialogDescription sx={visuallyHidden.base}>
-              {description}
-            </DialogDescription>
-            {children}
-          </DialogPopup>
-        </DialogViewport>
-      </DialogPortal>
-    </Dialog>
   );
 }
 
@@ -353,10 +291,11 @@ const commandStyles = {
   surface: styles.command,
 };
 
+export { CommandDialog } from "@/components/primitives/command-dialog";
+
 export {
   Command,
   CommandCollection,
-  CommandDialog,
   CommandEmpty,
   CommandFooter,
   CommandGroup,
