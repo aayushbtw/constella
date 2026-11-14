@@ -1,7 +1,14 @@
 "use client";
 
-import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Progress as ProgressPrimitive,
+  ProgressIndicator as ProgressIndicatorPrimitive,
+  ProgressLabel as ProgressLabelPrimitive,
+  ProgressTrack as ProgressTrackPrimitive,
+  ProgressValue as ProgressValuePrimitive,
+} from "@ui-sdk/react/progress";
+import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { trackStyles, typeStyles } from "@/lib/constella/styles";
@@ -14,6 +21,12 @@ import {
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
+};
+
+type ProgressProps = Styled<
+  Omit<ComponentProps<typeof ProgressPrimitive>, "children">
+> & {
+  children?: ReactNode;
 };
 
 // A segment a third the track's width, crossing it while the amount is unknown.
@@ -40,32 +53,23 @@ const styles = stylex.create({
 });
 
 /** Renders the track and indicator after its children, so a label and value sit above. */
-function Progress({
-  children,
-  sx,
-  ...props
-}: Styled<ProgressPrimitive.Root.Props>) {
+function Progress({ children, sx, ...props }: ProgressProps) {
   return (
-    <ProgressPrimitive.Root
-      data-slot="progress"
-      {...props}
-      {...stylex.props(trackStyles.root, sx)}
-    >
+    <ProgressPrimitive {...props} {...stylex.props(trackStyles.root, sx)}>
       {children}
       <ProgressTrack>
         <ProgressIndicator />
       </ProgressTrack>
-    </ProgressPrimitive.Root>
+    </ProgressPrimitive>
   );
 }
 
 function ProgressTrack({
   sx,
   ...props
-}: Styled<ProgressPrimitive.Track.Props>) {
+}: Styled<ComponentProps<typeof ProgressTrackPrimitive>>) {
   return (
-    <ProgressPrimitive.Track
-      data-slot="progress-track"
+    <ProgressTrackPrimitive
       {...props}
       {...stylex.props(trackStyles.track, sx)}
     />
@@ -75,10 +79,9 @@ function ProgressTrack({
 function ProgressIndicator({
   sx,
   ...props
-}: Styled<ProgressPrimitive.Indicator.Props>) {
+}: Styled<ComponentProps<typeof ProgressIndicatorPrimitive>>) {
   return (
-    <ProgressPrimitive.Indicator
-      data-slot="progress-indicator"
+    <ProgressIndicatorPrimitive
       {...props}
       {...stylex.props(trackStyles.indicator, styles.indeterminate, sx)}
     />
@@ -88,10 +91,9 @@ function ProgressIndicator({
 function ProgressLabel({
   sx,
   ...props
-}: Styled<ProgressPrimitive.Label.Props>) {
+}: Styled<ComponentProps<typeof ProgressLabelPrimitive>>) {
   return (
-    <ProgressPrimitive.Label
-      data-slot="progress-label"
+    <ProgressLabelPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, trackStyles.label], sx)}
     />
@@ -101,10 +103,9 @@ function ProgressLabel({
 function ProgressValue({
   sx,
   ...props
-}: Styled<ProgressPrimitive.Value.Props>) {
+}: Styled<ComponentProps<typeof ProgressValuePrimitive>>) {
   return (
-    <ProgressPrimitive.Value
-      data-slot="progress-value"
+    <ProgressValuePrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}
     />

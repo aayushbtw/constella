@@ -79,4 +79,4 @@ Pass `value={null}` while the amount isn't known yet. A segment sweeps across th
 | --- | --- |
 | `Progress` | Renders `ProgressTrack` and `ProgressIndicator` after its children |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Progress](https://base-ui.com/react/components/progress).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Progress](https://ui-sdk.dev/docs/components/progress).
