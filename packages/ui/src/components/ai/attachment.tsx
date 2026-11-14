@@ -434,13 +434,12 @@ function AttachmentAction({
 function AttachmentTrigger({
   render,
   sx,
-  type,
   ...props
 }: Styled<useRender.ComponentProps<"button">>) {
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
-      { type: render ? type : (type ?? "button") },
+      render ? {} : { type: "button" },
       props,
       stylex.props(styles.trigger, sx)
     ),
