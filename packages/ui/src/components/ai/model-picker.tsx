@@ -287,7 +287,7 @@ function ModelPickerItem({
       aria-describedby={shown ? detailsId : undefined}
       onClick={(event) => {
         onClick?.(event);
-        // ui-sdk reads the content's transitions as it closes, so the skip lands first.
+        // Lands before close(); see useSkipMotion in motion.ts.
         flushSync(() => {
           setPicked(true);
         });

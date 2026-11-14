@@ -17,7 +17,7 @@ import {
 
 const models = ["Claude Opus", "GPT-5"];
 
-// ui-sdk reads the content's transitions as `onOpenChange` returns, so the skip must be in the DOM by then.
+// The skip must be in the DOM when onOpenChange fires; see useSkipMotion in motion.ts.
 test("picking a model closes the picker with no exit motion", async () => {
   const skipOnClose: boolean[] = [];
   render(
