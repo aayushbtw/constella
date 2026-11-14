@@ -60,16 +60,14 @@ type ButtonProps = Omit<
 
 // ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only; other elements use `:disabled`.
 const disabled = ":is(:disabled, [data-disabled])";
-// ui-sdk marks a press whose Promise is running; a caller marks its own work with `aria-busy`.
-const busy = ":is([aria-busy='true'], [data-pending])";
+// A caller marks its own work with `aria-busy`; ui-sdk sets it, `aria-disabled` and `data-pending` while a press's Promise runs.
+const busy = "[aria-busy='true']";
 // Working and can't be pressed: a lighter fade than disabled.
-const loading =
-  ":is([aria-busy='true']:is(:disabled, [data-disabled]), [data-pending])";
-const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
-const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+const loading = `:is(${busy}${disabled}, [data-pending])`;
+const hoverIdle = `:hover:not(${disabled}, [data-pending])`;
+const activeIdle = `:active:not(${disabled}, [data-pending])`;
 // A trigger opens something on press, so it doesn't give.
-const press =
-  ":active:not([aria-haspopup], :disabled, [data-disabled], [data-pending])";
+const press = `:active:not([aria-haspopup], ${disabled}, [data-pending])`;
 
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
@@ -279,7 +277,7 @@ const cornerStyles = {
   rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
-/** A button's styles for an element that isn't a Button, like a server-rendered link. */
+/** A button's styles for an element that can't be a Button, like Calendar's day cells. */
 function buttonStyles({
   corners = "pill",
   size = "default",

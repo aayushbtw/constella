@@ -145,6 +145,7 @@ const typeStyles = stylex.create({
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 
 // ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled`, and a running press with `data-pending`.
+// button.tsx's `hoverIdle` and `activeIdle`; keep in step.
 const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
 const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
 

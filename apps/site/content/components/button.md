@@ -99,18 +99,14 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 ## As Link
 
-Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that isn't a Button, like a server-rendered link, use `buttonStyles`.
+Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that can't be a Button, like Calendar's day cells, use `buttonStyles`.
 
 <!-- ::demo name="button-link" -->
 
 ```tsx
-import * as stylex from "@stylexjs/stylex";
-
-import { buttonStyles } from "@/components/primitives/button";
-
-<a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
+<Button render={<a href="/settings" />} variant="outline">
   Settings
-</a>;
+</Button>
 ```
 
 ## Disabled
