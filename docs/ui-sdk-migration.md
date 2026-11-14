@@ -83,7 +83,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | --- | --- | --- | --- | --- | --- | --- |
 | Popover | 1 | popover | Popover | merged | [#25](https://github.com/aayushbtw/constella/pull/25) | The spike. Ports Model Picker's popover parts too, since it built on ours |
 | Button | 2 | button | Button | todo |  |  |
-| Separator | 2 | separator | Separator | pr |  | Button Group, Item and Sidebar separators now carry `separator` |
+| Separator | 2 | separator | Separator | merged | [#26](https://github.com/aayushbtw/constella/pull/26) | Button Group, Item and Sidebar separators now carry `separator` |
 | Toggle | 2 | toggle | Toggle | todo |  |  |
 | Checkbox | 2 | checkbox | Checkbox | todo |  |  |
 | Switch | 2 | switch | Switch | todo |  | Swap `packages/ui/test/agent.test.tsx`'s raw ui-sdk Switch for ours |
@@ -180,3 +180,5 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Filed and fixed #19 on `main`: `vpr check` now runs in a fresh checkout (route tree committed, `tomekit build` before check); merged `main` in |
 | 2026-11-14 | Popover spike: GO with conditions. Filed and fixed #23 (InputGroupAddon focused the input on clicks inside a portaled popover) and #24 (date demos mismatched hydration) on `main`; merged `main` in |
 | 2026-11-14 | #25 merged: Popover on ui-sdk, phase 1 done. Verdict GO. Bridges until phase 7: `popupVars`, `useSkipMotion`'s ui-sdk branch with `flushSync`, dual open-state selector. Paused here; next is phase 2 |
+| 2026-11-14 | Filed and fixed #29 on `main` (Switch docs listed two sizes), found by the Switch port; merged `main` in |
+| 2026-11-14 | #26 merged: Separator on ui-sdk. Its three parts read the `separator` slot |
