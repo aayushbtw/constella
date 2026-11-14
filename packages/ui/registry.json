@@ -1004,7 +1004,7 @@
       "type": "registry:ui",
       "title": "Progress",
       "description": "A bar for how far along a task is, with an optional label and value.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
