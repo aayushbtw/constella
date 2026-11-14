@@ -1,7 +1,14 @@
 "use client";
 
-import { Meter as MeterPrimitive } from "@base-ui/react/meter";
 import * as stylex from "@stylexjs/stylex";
+import {
+  MeterIndicator as MeterIndicatorPrimitive,
+  MeterLabel as MeterLabelPrimitive,
+  Meter as MeterPrimitive,
+  MeterTrack as MeterTrackPrimitive,
+  MeterValue as MeterValuePrimitive,
+} from "@ui-sdk/react/meter";
+import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { trackStyles, typeStyles } from "@/lib/constella/styles";
@@ -24,9 +31,14 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type MeterProps = Styled<MeterPrimitive.Root.Props> & {
+type MeterProps = Omit<
+  ComponentProps<typeof MeterPrimitive>,
+  "children" | "className" | "color" | "style"
+> & {
+  children?: ReactNode;
   color?: MeterColor;
   variant?: MeterVariant;
+  sx?: Sx;
 };
 
 const styles = stylex.create({
@@ -113,114 +125,103 @@ const rootStyles = {
   ring: styles.ringRoot,
 } satisfies Record<MeterVariant, stylex.StyleXStyles>;
 
-const percentOf = (value: number, min: number, max: number) =>
-  max > min
-    ? Math.min(Math.max(((value - min) / (max - min)) * 100, 0), 100)
-    : 100;
-
 /**
  * Renders its fill after its children, so a label and value sit beside it: a bar under them,
  * or at `ring`, an icon-sized ring before them.
  */
-function Meter({
-  children,
-  color,
-  max = 100,
-  min = 0,
-  sx,
-  value,
-  variant = "bar",
-  ...props
-}: MeterProps) {
-  const percent = percentOf(value, min, max);
+function Meter({ children, color, sx, variant = "bar", ...props }: MeterProps) {
   return (
-    <MeterPrimitive.Root
+    <MeterPrimitive
       data-color={color}
-      data-slot="meter"
       data-variant={variant}
-      max={max}
-      min={min}
-      value={value}
       {...props}
       {...stylex.props(rootStyles[variant], sx)}
     >
-      {variant === "ring" ? (
-        <svg
-          aria-hidden
-          data-slot="meter-ring"
-          viewBox="0 0 16 16"
-          {...stylex.props(styles.ring)}
-        >
-          <circle
-            cx={8}
-            cy={8}
-            pathLength={100}
-            r={6.5}
-            strokeWidth={3}
-            {...stylex.props(styles.ringTrack)}
-          />
-          <circle
-            cx={8}
-            cy={8}
-            pathLength={100}
-            r={6.5}
-            strokeWidth={3}
-            {...stylex.props(
-              styles.ringIndicator,
-              styles.ringFill(percent),
-              percent === 0 && styles.ringEmpty,
-              color && ringColorStyles[color]
-            )}
-          />
-        </svg>
-      ) : null}
-      {children}
-      {variant === "bar" ? (
-        <MeterTrack>
-          <MeterIndicator sx={color && colorStyles[color]} />
-        </MeterTrack>
-      ) : null}
-    </MeterPrimitive.Root>
+      {({ percent }) => (
+        <>
+          {variant === "ring" ? (
+            <svg
+              aria-hidden
+              data-slot="meter-ring"
+              viewBox="0 0 16 16"
+              {...stylex.props(styles.ring)}
+            >
+              <circle
+                cx={8}
+                cy={8}
+                pathLength={100}
+                r={6.5}
+                strokeWidth={3}
+                {...stylex.props(styles.ringTrack)}
+              />
+              <circle
+                cx={8}
+                cy={8}
+                pathLength={100}
+                r={6.5}
+                strokeWidth={3}
+                {...stylex.props(
+                  styles.ringIndicator,
+                  styles.ringFill(percent),
+                  percent === 0 && styles.ringEmpty,
+                  color && ringColorStyles[color]
+                )}
+              />
+            </svg>
+          ) : null}
+          {children}
+          {variant === "bar" ? (
+            <MeterTrack>
+              <MeterIndicator sx={color && colorStyles[color]} />
+            </MeterTrack>
+          ) : null}
+        </>
+      )}
+    </MeterPrimitive>
   );
 }
 
-function MeterTrack({ sx, ...props }: Styled<MeterPrimitive.Track.Props>) {
+function MeterTrack({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof MeterTrackPrimitive>>) {
   return (
-    <MeterPrimitive.Track
-      data-slot="meter-track"
-      {...props}
-      {...stylex.props(trackStyles.track, sx)}
-    />
+    <MeterTrackPrimitive {...props} {...stylex.props(trackStyles.track, sx)} />
   );
 }
 
 function MeterIndicator({
   sx,
   ...props
-}: Styled<MeterPrimitive.Indicator.Props>) {
+}: Styled<ComponentProps<typeof MeterIndicatorPrimitive>>) {
   return (
-    <MeterPrimitive.Indicator
-      data-slot="meter-indicator"
+    <MeterIndicatorPrimitive
       {...props}
       {...stylex.props(trackStyles.indicator, sx)}
     />
   );
 }
 
-function MeterLabel({ sx, ...props }: Styled<MeterPrimitive.Label.Props>) {
+function MeterLabel({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof MeterLabelPrimitive>>) {
   return (
-    <MeterPrimitive.Label
-      data-slot="meter-label"
+    <MeterLabelPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, trackStyles.label], sx)}
     />
   );
 }
 
-function MeterValue({ sx, ...props }: Styled<MeterPrimitive.Value.Props>) {
+function MeterValue({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof MeterValuePrimitive>>) {
   return (
-    <MeterPrimitive.Value
-      data-slot="meter-value"
+    <MeterValuePrimitive
+      // ui-sdk 0.1.0-beta.1 relies on the meter role hiding its children, which Chromium doesn't; drop once ui-sdk hides it.
+      aria-hidden
       {...props}
       {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}
     />

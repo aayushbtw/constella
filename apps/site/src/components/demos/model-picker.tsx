@@ -184,7 +184,7 @@ function Rating({ label, value }: { label: string; value: number }) {
   return (
     <Meter
       sx={styles.rating}
-      getAriaValueText={() => `${value} of 5`}
+      format={(rating) => `${rating} of 5`}
       max={5}
       value={value}
     >
