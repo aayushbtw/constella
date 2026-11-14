@@ -119,7 +119,7 @@ Pagination sits under the table: the range in `textSecondary` at the start; rows
 
 ## Dialog
 
-Its popup is `raised` on `radii.xl`. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index, so a Base UI popup (Select, Menu, Tooltip) opened inside it renders under it until that popup ports. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
 
 ## Empty state
 
@@ -155,7 +155,7 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Base UI popups sit above dialogs on `layers.popover`; ui-sdk popups sit in the top layer. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, and ui-sdk marks none outside Tooltip, so every popup tracks the open-change reason with `useSkipMotion`. For a ui-sdk part it reads `details.source` and focus leaving. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Base UI popups sit above Base UI dialogs on `layers.popover`; ui-sdk popups and dialogs sit in the top layer, above any z-index, so a Base UI popup opened inside a ui-sdk dialog renders under it until that popup ports. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, and ui-sdk marks none outside Tooltip, so every popup tracks the open-change reason with `useSkipMotion`. For a ui-sdk part it reads `details.source` and focus leaving. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 

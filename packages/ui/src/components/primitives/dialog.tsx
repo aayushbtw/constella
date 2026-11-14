@@ -1,12 +1,22 @@
 "use client";
 
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  DialogBackdrop as DialogBackdropPrimitive,
+  DialogClose as DialogClosePrimitive,
+  DialogContent as DialogContentPrimitive,
+  DialogDescription as DialogDescriptionPrimitive,
+  Dialog as DialogPrimitive,
+  DialogTitle as DialogTitlePrimitive,
+  DialogTrigger as DialogTriggerPrimitive,
+} from "@ui-sdk/react/dialog";
+import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
+import { popoverStyles } from "@/components/primitives/popover";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -33,18 +43,26 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type DialogPopupProps = Styled<DialogPrimitive.Popup.Props> & {
+type DialogPopupProps = Styled<
+  ComponentProps<typeof DialogContentPrimitive>
+> & {
   size?: DialogSize;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
+// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
+const offstage =
+  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
 const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
+// ui-sdk sets `--dialog-stack`; Alert Dialog, still on Base UI, sets `--nested-dialogs`.
+const stack = "var(--dialog-stack, var(--nested-dialogs, 0))";
+const gutter = `calc(100% - 2 * ${space.md})`;
 
 const styles = stylex.create({
   backdrop: {
     backdropFilter: `blur(${blurs.backdrop})`,
     backgroundColor: colors.overlay,
+    cursor: "auto",
     insetBlockEnd: 0,
     insetBlockStart: 0,
     insetInlineEnd: 0,
@@ -54,20 +72,6 @@ const styles = stylex.create({
     transitionDuration: { default: durations.dialog, [instant]: 0 },
     transitionProperty: "opacity",
     transitionTimingFunction: easings.out,
-    zIndex: layers.dialog,
-  },
-  viewport: {
-    alignItems: "center",
-    display: "flex",
-    insetBlockEnd: 0,
-    insetBlockStart: 0,
-    insetInlineEnd: 0,
-    insetInlineStart: 0,
-    justifyContent: "center",
-    paddingBlock: space.md,
-    paddingInlineEnd: space.md,
-    paddingInlineStart: space.md,
-    position: "fixed",
     zIndex: layers.dialog,
   },
   popup: {
@@ -93,7 +97,7 @@ const styles = stylex.create({
     position: "relative",
     // A parent steps back while a dialog opened from it sits on top.
     transform: {
-      default: `translateY(calc(var(--nested-dialogs, 0) * -1 * ${space.sm})) scale(calc(1 - var(--nested-dialogs, 0) * ${motion.stackScale}))`,
+      default: `translateY(calc(${stack} * -1 * ${space.sm})) scale(calc(1 - ${stack} * ${motion.stackScale}))`,
       [offstage]: `scale(${motion.dialogScale})`,
     },
     transitionDuration: { default: durations.dialog, [instant]: 0 },
@@ -104,9 +108,21 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
     width: `min(100%, ${sizes.dialog})`,
   },
+  centered: {
+    height: "fit-content",
+    insetBlockEnd: 0,
+    insetBlockStart: 0,
+    insetInlineEnd: 0,
+    insetInlineStart: 0,
+    marginBlockEnd: "auto",
+    marginBlockStart: "auto",
+    marginInline: "auto",
+    maxHeight: gutter,
+    maxWidth: gutter,
+    position: "fixed",
+  },
   sm: { width: `min(100%, ${sizes.dialogSm})` },
   lg: { width: `min(100%, ${sizes.dialogLg})` },
-  // The viewport's padding stays around it, so it still reads as a dialog over the page.
   full: { height: "100%", width: "100%" },
   header: {
     display: "flex",
@@ -171,64 +187,38 @@ const styles = stylex.create({
   },
 });
 
-function Dialog(props: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root {...props} />;
+function Dialog(props: DialogProps) {
+  return <DialogPrimitive {...props} />;
 }
 
 function DialogTrigger({
   sx,
   ...props
-}: Styled<DialogPrimitive.Trigger.Props>) {
-  return (
-    <DialogPrimitive.Trigger
-      data-slot="dialog-trigger"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-function DialogPortal({ sx, ...props }: Styled<DialogPrimitive.Portal.Props>) {
-  return (
-    <DialogPrimitive.Portal
-      data-slot="dialog-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: Styled<ComponentProps<typeof DialogTriggerPrimitive>>) {
+  return <DialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
 }
 
 function DialogBackdrop({
   sx,
   ...props
-}: Styled<DialogPrimitive.Backdrop.Props>) {
+}: Styled<ComponentProps<typeof DialogBackdropPrimitive>>) {
   return (
-    <DialogPrimitive.Backdrop
-      data-slot="dialog-backdrop"
+    <DialogBackdropPrimitive
       {...props}
       {...stylex.props(styles.backdrop, sx)}
     />
   );
 }
 
-function DialogViewport({
-  sx,
-  ...props
-}: Styled<DialogPrimitive.Viewport.Props>) {
-  return (
-    <DialogPrimitive.Viewport
-      data-slot="dialog-viewport"
-      {...props}
-      {...stylex.props(styles.viewport, sx)}
-    />
-  );
-}
-
-// Shared with Alert Dialog, type included, so the two never drift apart.
+// Shared with Alert Dialog and Sheet, type included, so they never drift apart.
 const dialogStyles = {
-  ...styles,
+  backdrop: styles.backdrop,
+  closeButton: styles.closeButton,
   description: [typeStyles.textSm, styles.description],
+  footer: styles.footer,
+  header: styles.header,
   popup: [typeStyles.textSm, styles.popup],
+  sm: styles.sm,
   title: [typeStyles.textBase, styles.title],
 };
 
@@ -241,23 +231,26 @@ const sizeStyles = {
 
 function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
   return (
-    <DialogPrimitive.Popup
+    <DialogContentPrimitive
       data-size={size}
-      data-slot="dialog-popup"
       {...props}
-      {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
+      {...stylex.props(
+        popoverStyles.popup,
+        dialogStyles.popup,
+        styles.centered,
+        sizeStyles[size],
+        sx
+      )}
     />
   );
 }
 
 function DialogContent(props: DialogPopupProps) {
   return (
-    <DialogPortal>
+    <>
       <DialogBackdrop />
-      <DialogViewport>
-        <DialogPopup {...props} />
-      </DialogViewport>
-    </DialogPortal>
+      <DialogPopup {...props} />
+    </>
   );
 }
 
@@ -291,10 +284,12 @@ function DialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function DialogTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
+function DialogTitle({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DialogTitlePrimitive>>) {
   return (
-    <DialogPrimitive.Title
-      data-slot="dialog-title"
+    <DialogTitlePrimitive
       {...props}
       {...stylex.props(dialogStyles.title, sx)}
     />
@@ -304,38 +299,38 @@ function DialogTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
 function DialogDescription({
   sx,
   ...props
-}: Styled<DialogPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof DialogDescriptionPrimitive>>) {
   return (
-    <DialogPrimitive.Description
-      data-slot="dialog-description"
+    <DialogDescriptionPrimitive
       {...props}
       {...stylex.props(dialogStyles.description, sx)}
     />
   );
 }
 
-function DialogClose({ sx, ...props }: Styled<DialogPrimitive.Close.Props>) {
-  return (
-    <DialogPrimitive.Close
-      data-slot="dialog-close"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+function DialogClose({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DialogClosePrimitive>>) {
+  return <DialogClosePrimitive {...props} {...stylex.props(sx)} />;
 }
 
-// The styles ride on the Button: it applies its own last, over anything Base UI merges in.
+// The styles ride on the Button: it applies its own last, over anything ui-sdk merges in.
 function DialogCloseButton({
   children,
   sx,
   ...props
-}: Omit<Styled<DialogPrimitive.Close.Props>, "render">) {
+}: Omit<Styled<ComponentProps<typeof DialogClosePrimitive>>, "render">) {
   return (
-    <DialogPrimitive.Close
+    <DialogClosePrimitive
       aria-label="Close"
-      data-slot="dialog-close-button"
       render={
-        <Button size="icon-sm" sx={[styles.closeButton, sx]} variant="ghost" />
+        <Button
+          data-slot="dialog-close-button"
+          size="icon-sm"
+          sx={[styles.closeButton, sx]}
+          variant="ghost"
+        />
       }
       {...props}
     >
@@ -347,7 +342,7 @@ function DialogCloseButton({
           strokeWidth={Number(strokes.icon)}
         />
       )}
-    </DialogPrimitive.Close>
+    </DialogClosePrimitive>
   );
 }
 
@@ -362,10 +357,8 @@ export {
   DialogFooter,
   DialogHeader,
   DialogPopup,
-  DialogPortal,
   DialogTitle,
   DialogTrigger,
-  DialogViewport,
   dialogSizes,
   dialogStyles,
 };

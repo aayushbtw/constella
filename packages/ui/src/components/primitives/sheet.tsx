@@ -1,16 +1,13 @@
 "use client";
 
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
-import {
-  DialogBackdrop,
-  DialogCloseButton,
-  DialogDescription,
-  DialogPortal,
-  DialogTitle,
-} from "@/components/primitives/dialog";
+import { Button } from "@/components/primitives/button";
+import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -193,8 +190,11 @@ function SheetContent({
   ...props
 }: SheetContentProps) {
   return (
-    <DialogPortal>
-      <DialogBackdrop />
+    <SheetPrimitive.Portal data-slot="dialog-portal">
+      <SheetPrimitive.Backdrop
+        data-slot="dialog-backdrop"
+        {...stylex.props(dialogStyles.backdrop)}
+      />
       <SheetPrimitive.Popup
         data-side={side}
         data-slot="sheet-content"
@@ -202,9 +202,28 @@ function SheetContent({
         {...stylex.props([typeStyles.textSm, styles.popup], styles[side], sx)}
       >
         {children}
-        {showCloseButton && <DialogCloseButton />}
+        {showCloseButton && (
+          <SheetPrimitive.Close
+            aria-label="Close"
+            data-slot="dialog-close-button"
+            render={
+              <Button
+                size="icon-sm"
+                sx={dialogStyles.closeButton}
+                variant="ghost"
+              />
+            }
+          >
+            <HugeiconsIcon
+              aria-hidden
+              icon={Cancel01Icon}
+              size={sizes.icon}
+              strokeWidth={Number(strokes.icon)}
+            />
+          </SheetPrimitive.Close>
+        )}
       </SheetPrimitive.Popup>
-    </DialogPortal>
+    </SheetPrimitive.Portal>
   );
 }
 
@@ -234,12 +253,27 @@ function SheetFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function SheetTitle(props: ComponentProps<typeof DialogTitle>) {
-  return <DialogTitle data-slot="sheet-title" {...props} />;
+function SheetTitle({ sx, ...props }: Styled<SheetPrimitive.Title.Props>) {
+  return (
+    <SheetPrimitive.Title
+      data-slot="sheet-title"
+      {...props}
+      {...stylex.props(dialogStyles.title, sx)}
+    />
+  );
 }
 
-function SheetDescription(props: ComponentProps<typeof DialogDescription>) {
-  return <DialogDescription data-slot="sheet-description" {...props} />;
+function SheetDescription({
+  sx,
+  ...props
+}: Styled<SheetPrimitive.Description.Props>) {
+  return (
+    <SheetPrimitive.Description
+      data-slot="sheet-description"
+      {...props}
+      {...stylex.props(dialogStyles.description, sx)}
+    />
+  );
 }
 
 export {

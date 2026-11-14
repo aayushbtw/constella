@@ -112,7 +112,7 @@ function SettingsDialog({
 }) {
   return (
     <Dialog {...props}>
-      <DialogContent data-slot="settings-dialog" sx={[styles.popup, sx]}>
+      <DialogContent sx={[styles.popup, sx]}>
         {children}
         <DialogCloseButton sx={styles.close} />
       </DialogContent>

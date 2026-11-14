@@ -8,25 +8,22 @@ import {
   DialogBackdrop,
   DialogDescription,
   DialogPopup,
-  DialogPortal,
   DialogTitle,
-  DialogViewport,
 } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
 import { visuallyHidden } from "@/lib/constella/styles";
 import { radii, space } from "@/lib/constella/tokens.stylex";
 
 const styles = stylex.create({
-  viewport: {
-    alignItems: "flex-start",
-    paddingBlockStart: `max(${space.md}, 15vh)`,
-  },
   dialog: {
     borderStartStartRadius: radii.lg,
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,
     borderEndEndRadius: radii.lg,
     gap: 0,
+    marginBlockEnd: "auto",
+    marginBlockStart: `max(${space.md}, 15vh)`,
+    maxHeight: `calc(100% - max(${space.md}, 15vh) - ${space.md})`,
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
     paddingInlineEnd: 0,
@@ -52,22 +49,18 @@ function CommandDialog({
 }) {
   return (
     <Dialog {...props}>
-      <DialogPortal>
-        <DialogBackdrop data-skip-motion={instant || undefined} />
-        <DialogViewport sx={styles.viewport}>
-          <DialogPopup
-            data-skip-motion={instant || undefined}
-            size="lg"
-            sx={[styles.dialog, sx]}
-          >
-            <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
-            <DialogDescription sx={visuallyHidden.base}>
-              {description}
-            </DialogDescription>
-            {children}
-          </DialogPopup>
-        </DialogViewport>
-      </DialogPortal>
+      <DialogBackdrop data-skip-motion={instant || undefined} />
+      <DialogPopup
+        data-skip-motion={instant || undefined}
+        size="lg"
+        sx={[styles.dialog, sx]}
+      >
+        <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
+        <DialogDescription sx={visuallyHidden.base}>
+          {description}
+        </DialogDescription>
+        {children}
+      </DialogPopup>
     </Dialog>
   );
 }
