@@ -1330,7 +1330,7 @@ function SidebarGroupAction({
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
-      { type: "button" },
+      render ? {} : { type: "button" },
       props,
       stylex.props(styles.action, styles.groupAction, sx)
     ),
@@ -1464,15 +1464,15 @@ function SidebarMenuAction({
   sx,
   ...props
 }: Styled<useRender.ComponentProps<"button">> & { showOnHover?: boolean }) {
-  const marker = {
+  const marker: Record<`data-${string}`, string | undefined> = {
     "data-show-on-hover": showOnHover ? "" : undefined,
     "data-sidebar-menu-action": "",
-    type: "button" as const,
   };
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
       marker,
+      render ? {} : { type: "button" },
       props,
       stylex.props(
         styles.action,
