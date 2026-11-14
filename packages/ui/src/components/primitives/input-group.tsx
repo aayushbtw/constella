@@ -431,7 +431,11 @@ function InputGroupAddon({
       data-slot="input-group-addon"
       onClick={(event) => {
         onClick?.(event);
-        if (event.target instanceof Element && event.target.closest("button")) {
+        if (
+          !(event.target instanceof Element) ||
+          !event.currentTarget.contains(event.target) ||
+          event.target.closest("button")
+        ) {
           return;
         }
         event.currentTarget.parentElement
