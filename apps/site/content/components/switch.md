@@ -113,4 +113,4 @@ Add `invalid` to the `Field`, so the switch takes the red edge.
 
 ## API Reference
 
-`Switch` takes `size` (`"sm"` or `"default"`) and `sx`, applied last. For the rest, see [Base UI Switch](https://base-ui.com/react/components/switch).
+`Switch` takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. For the rest, see [Base UI Switch](https://base-ui.com/react/components/switch).
