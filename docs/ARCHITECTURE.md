@@ -136,20 +136,22 @@ CI (`.github/workflows/ci.yml`) runs `check` and `build` on each push to `main` 
 
 ### Agent bridge
 
-The reason to move. `createAgent()` from `@ui-sdk/react/agent` returns a bridge every UI SDK component registers with, so an agent drives the UI through component APIs instead of screenshots and clicks. Fits Constella's AI components: an assistant built from Chat and Prompt Input can operate the rest of the app.
+The reason to move. Official docs: [Built for Agents](https://ui-sdk.dev/docs/agents) and its [Reference](https://ui-sdk.dev/docs/agents/connect-an-agent/reference). `createAgent()` from `@ui-sdk/react/agent` returns a bridge every UI SDK component registers with, so an agent drives the UI through component APIs instead of screenshots and clicks. Fits Constella's AI components: an assistant built from Chat and Prompt Input can operate the rest of the app.
 
 | Piece | Does |
 | --- | --- |
 | `snapshot()` | Every component with a short `ref`, kind, accessible label, state and allowed actions; a closed Select lists its `items` |
 | `query()` | Finds components by text, or lists the choices inside one |
 | `act({ steps })` | Runs steps in order by `ref` or label; returns each step's `changes` and every field's `values`. A failed step stops the call with no rollback; `ok: true` doesn't mean each change was accepted |
-| `allow` on `createAgent` | Sees each step first; `false` or a promise refuses or asks |
+| `allow` on `createAgent` | Sees each step first; `false` or a promise refuses or asks. Optional, and without it every supported action runs. `timeout` defaults to 5 minutes |
+| `subscribe(listener)` | Every change with `previous`, `reason` and `source`, for an "edited by your assistant" log |
+| `createHistory`, `stageChanges` | Undo by source and staged, revertable changes. Experimental |
 | `data-agent-confirm`, `-hidden`, `-secret` | Needs a person; hidden from the agent; value redacted (password, card and OTP fields by default) |
 | `details.source` in change callbacks | `agent` beside `keyboard`, `mouse`, `programmatic` and others; `details.cancel()` refuses. `withSource` keeps it across an `await` |
 | `definePrimitive({ agent: { actions } })` | Exposes a custom component's methods; without it the bridge guesses `setX`, `open`, `toggle`, `clear` |
 | `registerTools(agent, { allow })` | Publishes the three tools on WebMCP's `document.modelContext`, with a second, stricter `allow` for the browser's agent |
 
-The bridge sees only UI SDK components, so a page that mixes libraries gives the agent a partial view. That argues for migrating whole, not component by component.
+The bridge sees only UI SDK and `definePrimitive` components, and the docs give no way to register other elements, so a page that mixes libraries gives the agent a partial view. That argues for migrating whole, not component by component. It runs in the browser only; `agentTools` gives the schemas, and the app runs its own model loop. The docs conflict on whether `query` opens a popup to read its choices, so assume it may, and `allow` runs after a component is found, so a popup can open before a refusal.
 
 ### Same model as Base UI
 
@@ -175,6 +177,7 @@ The bridge sees only UI SDK components, so a page that mixes libraries gives the
 | --- | --- | --- |
 | 2026-11-13 | Beta at launch; Toast, Styling and Animation, Parts and Composition, Popups docs | Same parts and `render` model as Base UI; Toast matches Base UI except anchored toasts. Not ready: beta, no shadcn base |
 | 2026-11-14 | [HextaUI's agent bridge walkthrough](https://hextaui.com/blog/ui-sdk-webmcp-ai-agents-react), 0.1.0-beta.1 | Bridge works as documented. Bug: a WebMCP `allow` refusal after the person accepted a confirm reports "The person said no". Vercel's benchmark (their numbers, not reproduced): 5 vs 16 tool calls, 16 s vs 41 s, $0.032 vs $0.073 against browser tools |
+| 2026-11-14 | [Built for Agents](https://ui-sdk.dev/docs/agents) and Connect an Agent pages | Confirms the walkthrough. Adds `subscribe`, experimental history helpers, browser-only scope, no third-party registration. Benchmark is medians of 3 runs on one task, against an unnamed library and browser tool set |
 
 ## Gotchas
 
