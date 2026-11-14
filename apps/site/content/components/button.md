@@ -99,7 +99,7 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 ## As Link
 
-Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that can't be a Button, like Calendar's day cells, use `buttonStyles`.
+Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that can't be a Button, like a Toggle, use `buttonStyles`.
 
 <!-- ::demo name="button-link" -->
 

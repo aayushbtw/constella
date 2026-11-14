@@ -58,7 +58,7 @@ type ButtonProps = Omit<
 > &
   ButtonStyleOptions & { "data-slot"?: string; sx?: Sx };
 
-// ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only; other elements use `:disabled`.
+// `:disabled` covers `buttonStyles` on elements that aren't Buttons; ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only.
 const disabled = ":is(:disabled, [data-disabled])";
 // A caller marks its own work with `aria-busy`.
 const busy = "[aria-busy='true']";
@@ -277,7 +277,7 @@ const cornerStyles = {
   rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
-/** A button's styles for an element that can't be a Button, like Calendar's day cells. */
+/** A button's styles for an element that can't be a Button, like a Toggle. */
 function buttonStyles({
   corners = "pill",
   size = "default",

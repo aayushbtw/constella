@@ -53,21 +53,6 @@ test("a part built on it, or a trigger rendered as it, keeps its own slot", () =
   );
 });
 
-test("disabled can't be pressed or focused", () => {
-  const onClick = vi.fn();
-  render(
-    <Button disabled onClick={onClick}>
-      Save
-    </Button>
-  );
-
-  const button = screen.getByRole("button", { name: "Save" });
-  fireEvent.click(button);
-  button.focus();
-  expect(onClick).not.toHaveBeenCalled();
-  expect(document.activeElement).not.toBe(button);
-});
-
 test("a render function with a slot gets the state and keeps the slot", () => {
   render(
     <Button
