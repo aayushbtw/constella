@@ -42,7 +42,7 @@ function RouteLoadingBar() {
 
 ### LoadingBar
 
-Takes every prop of [Base UI Progress](https://base-ui.com/react/components/progress)'s root except `value`, plus:
+Takes every prop of [UI SDK Progress](https://ui-sdk.dev/docs/components/progress)'s root except `value`, `min`, `max`, `format` and `locale`, plus:
 
 | Prop         | Type               | Default |
 | ------------ | ------------------ | ------- |

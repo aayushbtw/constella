@@ -1019,7 +1019,7 @@
       "type": "registry:ui",
       "title": "Loading Bar",
       "description": "A line along the window's top edge while a page loads, shown only once the load is slow.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
