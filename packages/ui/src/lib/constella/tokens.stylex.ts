@@ -107,7 +107,6 @@ export const inputVars = stylex.defineVars({
   scale: "1",
 });
 
-// A toast's content opacity: Toast sets it to 0 behind the front of a collapsed stack, ToastContent reads it.
 export const toastVars = stylex.defineVars({
   contentOpacity: "1",
 });

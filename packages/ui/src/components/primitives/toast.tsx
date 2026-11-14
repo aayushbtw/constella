@@ -119,7 +119,6 @@ const styles = stylex.create({
     transform: {
       default: `translateX(${swipeX}) translateY(calc(${swipeY} - var(--toast-index) * ${peek} - (1 - ${scale}) * var(--toast-front-height))) scale(${scale})`,
       ":is([data-expanded])": `translateX(${swipeX}) translateY(${offsetY})`,
-      // Only the front toast travels; one behind it enters or leaves in place, fading.
       ":is([data-front]):is([data-starting-style], [data-ending-style]):not([data-swipe-direction])":
         "translateY(100%)",
       // ui-sdk keeps the swipe variables while the toast leaves, so it carries on from the release.
@@ -141,7 +140,6 @@ const styles = stylex.create({
       ":is([data-swiping])": "opacity, height",
       [media.reducedMotion]: "opacity",
     },
-    // Height settles like any surface fitting new content; the stack moves on `out`.
     transitionTimingFunction: {
       default: `${easings.out}, ${easings.layout}, ${easings.out}`,
       ":is([data-ending-style])": easings.out,
@@ -149,7 +147,6 @@ const styles = stylex.create({
     userSelect: "none",
     width: "100%",
     zIndex: "calc(1000 - var(--toast-index))",
-    // The surface is its own layer, so the content can clip without cutting its shadow.
     "::before": {
       backgroundColor: colors.raised,
       borderStartStartRadius: radii.md,
@@ -179,7 +176,6 @@ const styles = stylex.create({
     alignItems: "flex-start",
     display: "flex",
     gap: space.sm,
-    // The toast's height eases to new content, so the content stays inside the surface meanwhile.
     maxHeight: "100%",
     opacity: toastVars.contentOpacity,
     overflow: "clip",
