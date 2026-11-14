@@ -225,7 +225,7 @@ const styles = stylex.create({
       default: space.md,
       ":has([data-size='sm'])": space.popup,
       ":has([data-size='xs'])": space.xs,
-      ":has(> [data-slot='item-separator'])": 0,
+      ":has(> [data-slot='separator'])": 0,
     },
     listStyleType: "none",
     paddingInlineEnd: 0,
@@ -260,15 +260,8 @@ function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
   );
 }
 
-function ItemSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="item-separator"
-      orientation="horizontal"
-      {...props}
-      sx={sx}
-    />
-  );
+function ItemSeparator(props: SeparatorProps) {
+  return <Separator orientation="horizontal" {...props} />;
 }
 
 function Item({

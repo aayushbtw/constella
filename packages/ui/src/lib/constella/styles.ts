@@ -25,7 +25,7 @@ const notLast = ":not(:nth-last-child(1 of [data-slot]:not([popover])))";
 
 // The neighbor before draws the shared edge, or the separator does.
 const joined =
-  ":not(:nth-child(1 of [data-slot]:not([popover])), [data-slot='button-group-separator'] + *)";
+  ":not(:nth-child(1 of [data-slot]:not([popover])), [data-slot='separator'] + *)";
 
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: Values<typeof radii>) => ({

@@ -684,7 +684,7 @@
       "type": "registry:ui",
       "title": "Separator",
       "description": "A hairline that divides content, across or down.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
