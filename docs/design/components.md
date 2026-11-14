@@ -269,7 +269,7 @@ An input's surface at `radii.md`, two control heights tall, growing with its con
 
 ## Toast
 
-Enters and leaves along one path: from and back to `translateY(100%)` with a fade, in on `move` + `out`, out on `popoverExit`. A swipe leaves the way it was thrown. Its height animates as the stack expands, the exception to animating a height: Base UI's stack measures each toast and sets the height, so the animation never feeds its own measurement. Under reduced motion it only fades.
+Enters and leaves the same way. Only the front toast travels, from and back to `translateY(100%)` with a fade. One behind it enters or leaves in place, fading. The stack moves on `move` + `out`, and a toast leaves on `popoverExit`. Its height eases on `layout` to new content, the exception to animating a height: ui-sdk measures the content laid out freely, so the animation never feeds its own measurement. A swipe leaves the way it was thrown, toward the end edge in RTL too. Under reduced motion it only fades.
 
 ## Toggle
 
