@@ -99,8 +99,8 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Scroll Area | 2 | scroll-area | Scroll Area | merged | [#37](https://github.com/aayushbtw/constella/pull/37) | Ports Code Block's scroller too. Known gap: a viewport that overflows by under a pixel is a Tab stop |
 | Collapsible | 2 | collapsible | Collapsible | merged | [#40](https://github.com/aayushbtw/constella/pull/40) | Ports Trace's collapsibles too |
 | Tabs | 2 | tabs | Tabs | merged | [#41](https://github.com/aayushbtw/constella/pull/41) |  |
-| Tooltip | 3 | tooltip | Tooltip | todo |  |  |
-| Hover Card | 3 | preview-card | Hover Card | todo |  | Drop the `popupVars` copy. ui-sdk's hover card trigger lists only `data-open`; check Button's open style when it ports |
+| Tooltip | 3 | tooltip | Tooltip | todo |  | Hover and focus only, no tap to open on touch: leave the undocumented `toggleable` off (user call, 2026-11-15) |
+| Hover Card | 3 | preview-card | Hover Card | todo |  | Hover and focus only, as Tooltip. Drop the `popupVars` copy. ui-sdk's hover card trigger lists only `data-open`; check Button's open style when it ports |
 | Dialog | 3 | dialog | Dialog | todo |  |  |
 | Sheet | 3 | dialog | Drawer | todo |  | Or Dialog with `presentation="sheet"`; decide in the PR |
 | Side Panel | 3 | dialog | Drawer | todo |  |  |
