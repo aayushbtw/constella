@@ -20,7 +20,6 @@ import type {
   InputGroupAddonProps,
   InputGroupButtonProps,
 } from "@/components/primitives/input-group";
-import { popoverStyles } from "@/components/primitives/popover";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
@@ -28,9 +27,11 @@ import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontSizes,
+  layers,
   lineHeights,
   media,
   offsets,
+  popupVars,
   radii,
   shadows,
   sizes,
@@ -53,8 +54,10 @@ const inset =
 // A bar button's leading icon (6px padding past a 1px border) lines up with the composer's text (10px in).
 const barInset = `calc(${space.xxs} - ${strokes.border})` as const;
 const invalid =
-  ":has(> [data-slot='input-group-control']:is([aria-invalid='true'], [data-invalid]))";
+  ":has(> :is([data-slot='textarea'], [data-slot='input-group-control']):is([aria-invalid='true'], [data-invalid]))";
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
+// styles.ts's `popupOpen`; keep in step.
+const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 // The well frames the prompt, so its own ring would double the edge.
 const inWell = ":is([data-slot='prompt-input-well'] *)";
 
@@ -133,7 +136,7 @@ const styles = stylex.create({
   barButton: {
     color: {
       default: colors.textSecondary,
-      ":is([data-popup-open])": colors.textPrimary,
+      [popupOpen]: colors.textPrimary,
       [media.hover]: {
         default: colors.textSecondary,
         ":hover:not(:disabled)": colors.textPrimary,
@@ -153,10 +156,14 @@ const styles = stylex.create({
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
   },
+  commandPositioner: {
+    [popupVars.availableHeight]: "var(--available-height)",
+    zIndex: layers.popover,
+  },
   // As wide as the composer; a list pads its own top.
   commandContent: {
     boxShadow: shadows.lg,
-    maxHeight: "var(--available-height)",
+    maxHeight: popupVars.availableHeight,
     paddingBlockStart: {
       default: space.xxs,
       ":has(> [data-slot='command-list'])": 0,
@@ -316,12 +323,13 @@ function PromptInputSubmit({
       type={streaming ? "button" : "submit"}
       variant="primary"
       {...props}
-      onClick={(event) => {
-        onClick?.(event);
+      onClick={(event, details) => {
+        const result = onClick?.(event, details);
         if (streaming) {
           event.preventDefault();
           onStop?.();
         }
+        return streaming ? undefined : result;
       }}
     >
       <SwapIcon aria-hidden value={streaming ? "stop" : "send"}>
@@ -472,7 +480,7 @@ function PromptInputCommandContent({
         anchor={frame}
         side={side}
         sideOffset={sideOffset}
-        {...stylex.props(popoverStyles.positioner)}
+        {...stylex.props(styles.commandPositioner)}
       >
         <AutocompletePrimitive.Popup
           data-slot="prompt-input-command-content"

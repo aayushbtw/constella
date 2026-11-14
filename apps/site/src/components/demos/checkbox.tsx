@@ -95,7 +95,12 @@ function CheckboxControlledDemo() {
   return (
     <DemoRow>
       <Label>
-        <Checkbox checked={checked} onCheckedChange={setChecked} />
+        <Checkbox
+          checked={checked}
+          onCheckedChange={(next) => {
+            setChecked(next === true);
+          }}
+        />
         {checked ? "Notifications on" : "Notifications off"}
       </Label>
     </DemoRow>
@@ -110,10 +115,9 @@ function CheckboxIndeterminateDemo() {
     <DemoRow sx={styles.column}>
       <Label>
         <Checkbox
-          checked={all}
-          indeterminate={selected.length > 0 && !all}
+          checked={all || (selected.length > 0 && "indeterminate")}
           onCheckedChange={(checked) => {
-            setSelected(checked ? fruits : []);
+            setSelected(checked === true ? fruits : []);
           }}
         />
         All fruits
@@ -125,7 +129,7 @@ function CheckboxIndeterminateDemo() {
               checked={selected.includes(fruit)}
               onCheckedChange={(checked) => {
                 setSelected((current) =>
-                  checked
+                  checked === true
                     ? [...current, fruit]
                     : current.filter((item) => item !== fruit)
                 );
@@ -177,11 +181,10 @@ function CheckboxTableDemo() {
             <TableHead>
               <Checkbox
                 aria-label="Select all"
-                checked={all}
-                indeterminate={selected.size > 0 && !all}
+                checked={all || (selected.size > 0 && "indeterminate")}
                 onCheckedChange={(checked) => {
                   setSelected(
-                    new Set(checked ? people.map((row) => row.id) : [])
+                    new Set(checked === true ? people.map((row) => row.id) : [])
                   );
                 }}
               />
@@ -204,7 +207,7 @@ function CheckboxTableDemo() {
                   onCheckedChange={(checked) => {
                     setSelected((current) => {
                       const next = new Set(current);
-                      if (checked) {
+                      if (checked === true) {
                         next.add(row.id);
                       } else {
                         next.delete(row.id);

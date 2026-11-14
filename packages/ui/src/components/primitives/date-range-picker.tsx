@@ -3,7 +3,7 @@
 import { Calendar03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type { DateRange, PropsBase } from "react-day-picker";
 
 import { Button } from "@/components/primitives/button";
@@ -116,7 +116,8 @@ function DateRangePicker({
   value: DayRange;
 }) {
   const [open, setOpen] = useState(false);
-  const popup = useRef<HTMLDivElement>(null);
+  // A pointer open focuses the popup, so no preset wears a ring it didn't earn.
+  const [initialFocus, setInitialFocus] = useState<"auto" | "content">("auto");
   // The first day picked, until a second one ends the range.
   const [anchor, setAnchor] = useState<Date | null>(null);
   const shown: DateRange =
@@ -130,7 +131,8 @@ function DateRangePicker({
 
   return (
     <Popover
-      onOpenChange={(next) => {
+      onOpenChange={(next, details) => {
+        setInitialFocus(details.source === "keyboard" ? "auto" : "content");
         setOpen(next);
         setAnchor(null);
       }}
@@ -156,9 +158,7 @@ function DateRangePicker({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        // A pointer open focuses the popup, so no preset wears a ring it didn't earn.
-        initialFocus={(openType) => openType === "keyboard" || popup.current}
-        ref={popup}
+        initialFocus={initialFocus}
         sx={styles.content}
       >
         {presets === undefined ? null : (

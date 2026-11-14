@@ -168,7 +168,6 @@ function CommandInput({
 }: Omit<Styled<AutocompletePrimitive.Input.Props>, "render">) {
   return (
     <InputGroup data-slot="command-input" size="lg" sx={[styles.input, sx]}>
-      {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
       <AutocompletePrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
         <span {...stylex.props(styles.icon)}>

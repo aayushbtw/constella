@@ -207,13 +207,13 @@ function DataTableSelectAll({
   return (
     <Checkbox
       aria-label="Select all"
-      checked={table.getIsAllRowsSelected()}
-      disabled={table.getRowModel().rows.length === 0}
-      indeterminate={
-        table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+      checked={
+        table.getIsAllRowsSelected() ||
+        (table.getIsSomeRowsSelected() && "indeterminate")
       }
+      disabled={table.getRowModel().rows.length === 0}
       onCheckedChange={(checked) => {
-        table.toggleAllRowsSelected(checked);
+        table.toggleAllRowsSelected(checked === true);
       }}
       sx={sx}
     />
@@ -243,7 +243,7 @@ function DataTableSelectRow({
             (event instanceof globalThis.MouseEvent ||
               event instanceof globalThis.KeyboardEvent) &&
             event.shiftKey,
-          target: { checked },
+          target: { checked: checked === true },
         });
       }}
       sx={numbered ? [styles.stacked, styles.revealed] : sx}

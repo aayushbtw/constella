@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -22,7 +22,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type MarkerProps = Styled<useRender.ComponentProps<"div">> & {
+type MarkerProps = Styled<PartProps<"div">> & {
   variant?: MarkerVariant;
 };
 
@@ -81,9 +81,10 @@ const styles = stylex.create({
 
 /** A note in a conversation's flow: a status, a system line, or a labeled break. */
 function Marker({ render, sx, variant = "default", ...props }: MarkerProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "marker", "data-variant": variant },
       props,
       stylex.props(
         [typeStyles.textSm, styles.marker],
@@ -92,10 +93,8 @@ function Marker({ render, sx, variant = "default", ...props }: MarkerProps) {
         sx
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot`, `data-variant`.
-    state: { slot: "marker", variant },
-  });
+    render
+  );
 }
 
 function MarkerIcon({ sx, ...props }: Styled<ComponentProps<"span">>) {

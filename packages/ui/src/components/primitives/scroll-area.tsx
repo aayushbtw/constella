@@ -1,8 +1,14 @@
 "use client";
 
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import * as stylex from "@stylexjs/stylex";
-import type { Ref } from "react";
+import {
+  ScrollArea as ScrollAreaPrimitive,
+  ScrollAreaCorner,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaViewport,
+} from "@ui-sdk/react/scroll-area";
+import type { ComponentProps, Ref } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -17,14 +23,12 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
+/** Pass to a scroll area root built by hand, so its bar fades the moment the pointer leaves, like `ScrollArea`'s. */
+const scrollHideDelay = 0;
+
 const horizontal = ":is([data-orientation='horizontal'])";
-// Shown while the pointer is over the area or it's scrolling, like an overlay scrollbar.
-const shown = ":is([data-hovering], [data-scrolling])";
 
 const styles = stylex.create({
-  root: {
-    position: "relative",
-  },
   viewport: {
     borderStartStartRadius: "inherit",
     borderStartEndRadius: "inherit",
@@ -33,21 +37,22 @@ const styles = stylex.create({
     height: "100%",
     width: "100%",
   },
+  noScrollbar: {
+    scrollbarWidth: "none",
+  },
   scrollbar: {
     display: "flex",
     flexDirection: { default: "row", [horizontal]: "column" },
-    height: { default: "100%", [horizontal]: space.popup },
-    opacity: { default: 0, [shown]: 1 },
+    height: { default: "auto", [horizontal]: space.popup },
+    opacity: { default: 0, ":is([data-visible])": 1 },
     paddingBlockEnd: strokes.border,
     paddingBlockStart: strokes.border,
     paddingInlineEnd: strokes.border,
     paddingInlineStart: strokes.border,
-    touchAction: "none",
     transitionDuration: durations.hover,
     transitionProperty: "opacity",
     transitionTimingFunction: "ease",
-    userSelect: "none",
-    width: { default: space.popup, [horizontal]: "100%" },
+    width: { default: space.popup, [horizontal]: "auto" },
   },
   thumb: {
     backgroundColor: colors.border,
@@ -68,27 +73,30 @@ function ScrollArea({
   viewportRef,
   viewportSx,
   ...props
-}: Styled<ScrollAreaPrimitive.Root.Props> & {
+}: Styled<ComponentProps<typeof ScrollAreaPrimitive>> & {
   scrollbar?: "vertical" | "horizontal" | "none";
   viewportRef?: Ref<HTMLDivElement>;
   viewportSx?: stylex.StyleXStyles;
 }) {
   return (
-    <ScrollAreaPrimitive.Root
-      data-slot="scroll-area"
+    <ScrollAreaPrimitive
+      scrollHideDelay={scrollHideDelay}
       {...props}
-      {...stylex.props(styles.root, sx)}
+      {...stylex.props(sx)}
     >
-      <ScrollAreaPrimitive.Viewport
-        data-slot="scroll-area-viewport"
+      <ScrollAreaViewport
         ref={viewportRef}
-        {...stylex.props(styles.viewport, viewportSx)}
+        {...stylex.props(
+          styles.viewport,
+          scrollbar === "none" && styles.noScrollbar,
+          viewportSx
+        )}
       >
         {children}
-      </ScrollAreaPrimitive.Viewport>
+      </ScrollAreaViewport>
       {scrollbar !== "none" && <ScrollBar orientation={scrollbar} />}
-      <ScrollAreaPrimitive.Corner />
-    </ScrollAreaPrimitive.Root>
+      <ScrollAreaCorner />
+    </ScrollAreaPrimitive>
   );
 }
 
@@ -96,21 +104,16 @@ function ScrollBar({
   orientation = "vertical",
   sx,
   ...props
-}: Styled<ScrollAreaPrimitive.Scrollbar.Props>) {
+}: Styled<ComponentProps<typeof ScrollAreaScrollbar>>) {
   return (
-    <ScrollAreaPrimitive.Scrollbar
-      data-orientation={orientation}
-      data-slot="scroll-area-scrollbar"
+    <ScrollAreaScrollbar
       orientation={orientation}
       {...props}
       {...stylex.props(styles.scrollbar, sx)}
     >
-      <ScrollAreaPrimitive.Thumb
-        data-slot="scroll-area-thumb"
-        {...stylex.props(styles.thumb)}
-      />
-    </ScrollAreaPrimitive.Scrollbar>
+      <ScrollAreaThumb {...stylex.props(styles.thumb)} />
+    </ScrollAreaScrollbar>
   );
 }
 
-export { ScrollArea, ScrollBar };
+export { ScrollArea, ScrollBar, scrollHideDelay };

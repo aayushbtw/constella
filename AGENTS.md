@@ -32,6 +32,10 @@ Read the one that fits before changing things, and record new decisions in it, n
 
 Before building a component, list every component it and its docs examples use (read shadcn's page for it: Slider needs Label and Tooltip, Tooltip needs Kbd, Label needs Checkbox, Checkbox needs Field). If any is missing, stop and build those first, bottom-up. Never fake a missing one in a demo with a native element or hand-rolled styles.
 
+## ui-sdk
+
+This branch ports components from Base UI to ui-sdk. Status, branch and PR rules and the unit checklist are in `docs/ui-sdk-migration.md`; read it first. Before using ui-sdk, follow the `ui-sdk` skill in `.agents/skills/`, and read `packages/ui/node_modules/@ui-sdk/react/docs/llms.txt`. To build a new component, also search `docs/core.md` there by heading (it's over 300 KB) and read `docs/rendering.md` next to it. Don't import `@ui-sdk/core/web.css`: Constella's StyleX styles are the look. It's a second theme keyed on the same `data-slot` names, with global `a`, `code`, `kbd` and `hr` rules and a focus `outline` on every `[data-slot]`, so it styles whatever ours leaves unset.
+
 ## Motion skills
 
 Load these from `.agents/skills/` at these points, every time:

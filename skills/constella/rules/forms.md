@@ -106,7 +106,7 @@ Inside a `Field`, `FieldLabel`, `FieldDescription` and `FieldError` attach to th
 </Field>
 ```
 
-- `match` shows the error always. Without it, `FieldError` shows only when Base UI's validation fails.
+- `match` shows the error always. Without it, `FieldError` shows only when the browser's validation fails.
 - With a form library, pass its errors: `<FieldError errors={field.state.meta.errors} />`. Nothing renders when the array is empty.
 - `<Field disabled>` disables its control and dims the label.
 
@@ -133,7 +133,7 @@ Group related checkboxes or radios in a `FieldSet` with a `FieldLegend`, not a `
 ```tsx
 <FieldSet>
   <FieldLegend variant="label">Notifications</FieldLegend>
-  <FieldSetDescription>Choose how you hear from us.</FieldSetDescription>
+  <FieldDescription>Choose how you hear from us.</FieldDescription>
   <FieldGroup>
     <Field orientation="horizontal">
       <Checkbox />
@@ -147,7 +147,7 @@ Group related checkboxes or radios in a `FieldSet` with a `FieldLegend`, not a `
 </FieldSet>
 ```
 
-A radio group is `FieldSet` + `FieldLegend` around `RadioGroup`, each `RadioGroupItem` in a horizontal `Field`. Break stacked fieldsets with `FieldSeparator`.
+A radio group is `FieldSet` + `FieldLegend` around `RadioGroup`, each `RadioGroupItem` in a horizontal `Field`. Point the group at the legend with `aria-labelledby`, since the legend names only the set. Break stacked fieldsets with `FieldSeparator`.
 
 ---
 

@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import { Card } from "@/components/primitives/card";
@@ -14,7 +14,6 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
 } from "@/components/primitives/field";
 import { Input } from "@/components/primitives/input";
@@ -129,9 +128,9 @@ function FieldFormDemo() {
         <FieldGroup>
           <FieldSet>
             <FieldLegend>Payment Method</FieldLegend>
-            <FieldSetDescription>
+            <FieldDescription>
               All transactions are secure and encrypted
-            </FieldSetDescription>
+            </FieldDescription>
             <FieldGroup>
               <Field>
                 <FieldLabel>Name on Card</FieldLabel>
@@ -157,9 +156,9 @@ function FieldFormDemo() {
           <FieldSeparator />
           <FieldSet>
             <FieldLegend>Billing Address</FieldLegend>
-            <FieldSetDescription>
+            <FieldDescription>
               The billing address associated with your payment method
-            </FieldSetDescription>
+            </FieldDescription>
             <Field orientation="horizontal">
               <Checkbox defaultChecked />
               <FieldLabel sx={styles.regular}>
@@ -285,14 +284,17 @@ function FieldSliderDemo() {
 }
 
 function FieldRadioDemo() {
+  const legend = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Subscription Plan</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Subscription Plan
+        </FieldLegend>
+        <FieldDescription>
           Yearly and lifetime plans offer significant savings.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="monthly">
+        </FieldDescription>
+        <RadioGroup aria-labelledby={legend} defaultValue="monthly">
           {plans.map((plan) => (
             <Field key={plan.value} orientation="horizontal">
               <RadioGroupItem value={plan.value} />
@@ -322,9 +324,9 @@ function FieldGroupDemo() {
       <FieldGroup>
         <FieldSet>
           <FieldLegend variant="label">Responses</FieldLegend>
-          <FieldSetDescription>
+          <FieldDescription>
             Get notified when ChatGPT responds to requests that take time.
-          </FieldSetDescription>
+          </FieldDescription>
           <Field orientation="horizontal">
             <Checkbox defaultChecked disabled />
             <FieldLabel sx={styles.regular}>Push notifications</FieldLabel>
@@ -333,9 +335,9 @@ function FieldGroupDemo() {
         <FieldSeparator />
         <FieldSet>
           <FieldLegend variant="label">Tasks</FieldLegend>
-          <FieldSetDescription>
+          <FieldDescription>
             Get notified when tasks you&apos;ve created have updates.
-          </FieldSetDescription>
+          </FieldDescription>
           <Field orientation="horizontal">
             <Checkbox />
             <FieldLabel sx={styles.regular}>Push notifications</FieldLabel>
@@ -373,9 +375,9 @@ function FieldSetDemo() {
         <FieldLegend variant="label">
           Show these items on the desktop
         </FieldLegend>
-        <FieldSetDescription>
+        <FieldDescription>
           Select the items you want to show on the desktop.
-        </FieldSetDescription>
+        </FieldDescription>
         <FieldGroup>
           {items.map((item) => (
             <Field key={item.label} orientation="horizontal">

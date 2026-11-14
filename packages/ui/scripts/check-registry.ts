@@ -24,7 +24,9 @@ for (const { name, files = [] } of registry.items) {
 const errors: string[] = [];
 
 const sources = await readdir(path.join(root, "src"), { recursive: true });
-for (const file of sources.filter((entry) => /\.(?:tsx?|css)$/u.test(entry))) {
+const shipped = (entry: string) =>
+  /\.(?:tsx?|css)$/u.test(entry) && !/\.test\.tsx?$/u.test(entry);
+for (const file of sources.filter(shipped)) {
   const owned = owners.get(`src/${file}`) ?? [];
   if (owned.length !== 1) {
     errors.push(

@@ -28,7 +28,7 @@ The text block is exactly the media's height, so the media's inset holds on ever
 
 ## Avatar
 
-Follows the control heights, so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through; the count draws the avatars' `border` ring too, so it reads as one of them. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
+Follows the control heights, so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through; the count draws the avatars' `border` ring too, so it reads as one of them. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (ui-sdk unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
 
 ## Badge
 
@@ -81,7 +81,7 @@ A `fillSubtle` tray, read left to right. Long lines scroll sideways under Scroll
 
 ## Collapsible
 
-Animates its height, since what sits below it has to make room: the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
+Animates its height, since what sits below it has to make room: the panel grows to ui-sdk's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. ui-sdk owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
 
 ## Calendar and date range picker
 
@@ -155,7 +155,7 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Base UI popups sit above dialogs on `layers.popover`; ui-sdk popups sit in the top layer. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, and ui-sdk marks none outside Tooltip, so every popup tracks the open-change reason with `useSkipMotion`. For a ui-sdk part it reads `details.source` and focus leaving. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
@@ -189,7 +189,7 @@ A mouse wheel sends only a vertical delta, which a sideways row ignores. A one-l
 
 ## Scroll area
 
-Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows takes Tab, and the area draws its ring, since the fade would mask the scroller's own.
+Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows and holds nothing focusable takes Tab, and the area draws its ring, since the fade would mask the scroller's own. One with links or controls inside doesn't, since Tab reaches them.
 
 ## Scroll fade
 

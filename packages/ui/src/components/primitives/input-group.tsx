@@ -1,9 +1,9 @@
 "use client";
 
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { Input as InputPrimitive } from "@ui-sdk/react/input";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -64,13 +64,14 @@ type InputGroupButtonProps = Omit<ButtonProps, "size"> & {
 
 // Native `size` counts characters; width comes from layout here.
 type InputGroupInputProps = Omit<
-  InputPrimitive.Props,
+  ComponentProps<typeof InputPrimitive>,
   "className" | "size" | "style"
 > & {
   sx?: Sx;
 };
 
-const control = "[data-slot='input-group-control']";
+const control =
+  ":is([data-slot='input-group-input'] > [data-slot='input'], [data-slot='input-group'] > [data-slot='textarea'], [data-slot='input-group-control'])";
 const invalid = `:has(${control}:is([aria-invalid='true'], [data-invalid]))`;
 const disabled = `:has(${control}:is(:disabled, [data-disabled]))`;
 const controlDisabled = ":is(:disabled, [data-disabled])";
@@ -434,7 +435,7 @@ function InputGroupAddon({
         if (
           !(event.target instanceof Element) ||
           !event.currentTarget.contains(event.target) ||
-          event.target.closest("button")
+          event.target.closest("button, [popover]")
         ) {
           return;
         }
@@ -471,20 +472,16 @@ function InputGroupButton({
   );
 }
 
-function InputGroupText({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"span">>) {
-  return useRender({
-    defaultTagName: "span",
-    props: mergeProps<"span">(
+function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
+  return renderElement(
+    "span",
+    mergeProps(
+      { "data-slot": "input-group-text" },
       props,
       stylex.props([typeStyles.textSm, styles.text], sx)
     ),
-    render,
-    state: { slot: "input-group-text" },
-  });
+    render
+  );
 }
 
 /** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */
@@ -498,7 +495,6 @@ function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
       <InputPrimitive
         type={type}
         {...props}
-        data-slot="input-group-control"
         {...stylex.props(styles.input, type === "file" && styles.file, sx)}
       />
     </span>
@@ -506,13 +502,7 @@ function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
 }
 
 function InputGroupTextarea({ sx, ...props }: TextareaProps) {
-  return (
-    <Textarea
-      data-slot="input-group-control"
-      {...props}
-      sx={[styles.control, styles.textarea, sx]}
-    />
-  );
+  return <Textarea {...props} sx={[styles.control, styles.textarea, sx]} />;
 }
 
 export {

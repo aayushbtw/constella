@@ -1,9 +1,13 @@
 "use client";
 
-import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  AvatarFallback as AvatarFallbackPrimitive,
+  AvatarImage as AvatarImagePrimitive,
+  Avatar as AvatarPrimitive,
+} from "@ui-sdk/react/avatar";
 import { createContext, use, useMemo } from "react";
 import type { ReactNode } from "react";
 
@@ -170,13 +174,13 @@ const fallbackDelay = Number.parseFloat(durations.fallbackDelay);
 // A bare favicon, not an Avatar: no tile or edge around it.
 function Logo({ source, sx }: { source: Source; sx: Sx }) {
   return (
-    <AvatarPrimitive.Root
+    <AvatarPrimitive
       aria-hidden
       data-icon="inline-start"
       {...stylex.props(styles.logo, sx)}
     >
       {source.icon === undefined ? null : (
-        <AvatarPrimitive.Image
+        <AvatarImagePrimitive
           alt=""
           referrerPolicy="no-referrer"
           src={source.icon}
@@ -184,7 +188,7 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
         />
       )}
       {/* Held back while a logo loads, so the pill doesn't flash the globe before it. */}
-      <AvatarPrimitive.Fallback
+      <AvatarFallbackPrimitive
         delay={source.icon === undefined ? undefined : fallbackDelay}
         {...stylex.props(styles.logoFallback)}
       >
@@ -194,8 +198,8 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
           size="100%"
           strokeWidth={Number(strokes.icon)}
         />
-      </AvatarPrimitive.Fallback>
-    </AvatarPrimitive.Root>
+      </AvatarFallbackPrimitive>
+    </AvatarPrimitive>
   );
 }
 

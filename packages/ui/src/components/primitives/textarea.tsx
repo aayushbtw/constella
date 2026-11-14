@@ -1,8 +1,7 @@
 "use client";
 
-import { Field as FieldPrimitive } from "@base-ui/react/field";
-import { mergeProps } from "@base-ui/react/merge-props";
 import * as stylex from "@stylexjs/stylex";
+import { Textarea as TextareaPrimitive } from "@ui-sdk/react/textarea";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -24,7 +23,10 @@ const textareaSizes = ["sm", "default", "lg"] as const;
 
 type TextareaSize = (typeof textareaSizes)[number];
 
-type TextareaProps = Omit<ComponentProps<"textarea">, "className" | "style"> & {
+type TextareaProps = Omit<
+  ComponentProps<typeof TextareaPrimitive>,
+  "autoResize" | "className" | "style"
+> & {
   size?: TextareaSize;
   sx?: Sx;
 };
@@ -110,15 +112,11 @@ function textareaStyles({
 
 function Textarea({ size = "default", sx, ...props }: TextareaProps) {
   return (
-    <FieldPrimitive.Control
-      render={(controlProps) => (
-        <textarea
-          data-size={size}
-          data-slot="textarea"
-          {...mergeProps<"textarea">(controlProps, props)}
-          {...stylex.props(textareaStyles({ size }), sx)}
-        />
-      )}
+    <TextareaPrimitive
+      autoResize
+      data-size={size}
+      {...props}
+      {...stylex.props(textareaStyles({ size }), sx)}
     />
   );
 }

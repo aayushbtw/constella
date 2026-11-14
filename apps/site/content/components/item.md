@@ -211,4 +211,4 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 | `ItemMedia` | `variant`: `"default"`, `"icon"`, `"image"` or `"tile"` |
 | `ItemTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

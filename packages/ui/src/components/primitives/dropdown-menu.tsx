@@ -30,6 +30,7 @@ import {
   motion,
   offsets,
   opacities,
+  popupVars,
   radii,
   shadows,
   sizes,
@@ -76,6 +77,8 @@ const insetStart = (padding: string) =>
 
 const styles = stylex.create({
   positioner: {
+    [popupVars.availableHeight]: "var(--available-height)",
+    [popupVars.availableWidth]: "var(--available-width)",
     zIndex: layers.popover,
   },
   // Select's surface and motion, so every popup opens the same way.
@@ -90,8 +93,8 @@ const styles = stylex.create({
     // A filtered popup keeps its field in place and scrolls the list instead.
     display: { default: null, [filtering]: "flex" },
     flexDirection: { default: null, [filtering]: "column" },
-    maxHeight: "var(--available-height)",
-    maxWidth: "var(--available-width)",
+    maxHeight: popupVars.availableHeight,
+    maxWidth: popupVars.availableWidth,
     // Wide enough for a label beside its value.
     minWidth: `max(var(--anchor-width), ${sizes.menuLg})`,
     opacity: { default: 1, [offstage]: 0 },
@@ -437,7 +440,6 @@ function DropdownMenuInput({
       size={useSizeStyles().input}
       sx={[styles.input, sx]}
     >
-      {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
       <MenuPrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
         <span {...stylex.props(styles.searchIcon)}>

@@ -59,7 +59,7 @@ Collapsible
 
 ## Nested
 
-Collapsibles nest, for a tree. Each folder's `CollapsibleTrigger` carries `data-panel-open` while it's open, so its chevron can turn.
+Collapsibles nest, for a tree. Each folder's `CollapsibleTrigger` carries `data-open` while it's open, so its chevron can turn.
 
 <!-- ::demo name="collapsible-tree" -->
 
@@ -94,7 +94,7 @@ const [open, setOpen] = useState(false);
 
 ## Disabled
 
-Add `disabled` to `Collapsible` so its trigger does nothing.
+Add `disabled` to `Collapsible` so its trigger does nothing. The trigger stays in the Tab order and reports itself disabled with `aria-disabled`.
 
 <!-- ::demo name="collapsible-disabled" -->
 
@@ -106,6 +106,6 @@ Add `disabled` to `Collapsible` so its trigger does nothing.
 
 | Part | Adds |
 | --- | --- |
-| `CollapsibleContent` | Grows to its height and fades in as it opens, and shuts a little faster; takes `sx` |
+| `CollapsibleContent` | Grows to its height and fades in as it opens, and shuts a little faster |
 
-For the rest, see [Base UI Collapsible](https://base-ui.com/react/components/collapsible).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Collapsible](https://ui-sdk.dev/docs/components/collapsible).

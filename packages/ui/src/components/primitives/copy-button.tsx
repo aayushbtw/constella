@@ -4,6 +4,7 @@ import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -11,7 +12,8 @@ import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import { controlIconSize, visuallyHidden } from "@/lib/constella/styles";
 import { durations, strokes } from "@/lib/constella/tokens.stylex";
 
-type CopyButtonProps = Omit<ButtonProps, "onClick" | "value"> & {
+type CopyButtonProps = Omit<ButtonProps, "children" | "onClick" | "value"> & {
+  children?: ReactNode;
   /** The text, or a function read at the press for text only the page holds, like highlighted code. */
   value: string | (() => string);
   /** The same content as HTML, for a target that takes it: a spreadsheet pastes a table as cells. */

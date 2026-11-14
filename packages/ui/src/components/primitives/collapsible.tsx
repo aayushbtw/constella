@@ -1,8 +1,13 @@
 "use client";
 
-import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible";
 import * as stylex from "@stylexjs/stylex";
+import {
+  CollapsiblePanel as CollapsiblePanelPrimitive,
+  Collapsible as CollapsiblePrimitive,
+  CollapsibleTrigger as CollapsibleTriggerPrimitive,
+} from "@ui-sdk/react/collapsible";
 import { createContext, use, useState } from "react";
+import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
@@ -12,21 +17,31 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
+const closing = ":is([data-ending-style])";
+// ui-sdk holds the starting style one frame, which a 0s open would show as an empty panel.
+const opening = ":is([data-starting-style]):not([data-collapsible-instant])";
 
 const styles = stylex.create({
-  // Content below has to make room, so the panel grows to Base UI's measured height.
+  // Content below has to make room, so the panel grows to ui-sdk's measured height.
   content: {
     height: {
       default: "var(--collapsible-panel-height)",
-      [offstage]: 0,
+      [closing]: 0,
+      [opening]: {
+        default: 0,
+        [media.reducedMotion]: "var(--collapsible-panel-height)",
+      },
     },
-    opacity: { default: 1, [offstage]: 0 },
+    opacity: {
+      default: 1,
+      [closing]: 0,
+      [opening]: { default: 0, [media.reducedMotion]: 1 },
+    },
     overflow: "hidden",
     // Shutting is quicker and drops the gentle settle, whose long tail reads as stuck.
     transitionDuration: {
       default: durations.layout,
-      ":is([data-ending-style]):not([data-collapsible-instant])": {
+      [`${closing}:not([data-collapsible-instant])`]: {
         default: durations.layoutExit,
         [media.reducedMotion]: "0s",
       },
@@ -36,7 +51,7 @@ const styles = stylex.create({
     transitionProperty: "height, opacity",
     transitionTimingFunction: {
       default: easings.layout,
-      ":is([data-ending-style])": easings.out,
+      [closing]: easings.out,
     },
   },
 });
@@ -49,15 +64,14 @@ function Collapsible({
   open,
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Root.Props>) {
+}: Styled<ComponentProps<typeof CollapsiblePrimitive>>) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [toggledTo, setToggledTo] = useState<boolean>();
   // A later change from the app's `open` isn't the keyboard's, so it animates.
   const instant = skip && (open === undefined || open === toggledTo);
   return (
     <Instant value={instant}>
-      <CollapsiblePrimitive.Root
-        data-slot="collapsible"
+      <CollapsiblePrimitive
         onOpenChange={(next, details) => {
           setToggledTo(next);
           handleOpenChange(next, details);
@@ -74,11 +88,10 @@ function Collapsible({
 function CollapsibleTrigger({
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Trigger.Props>) {
+}: Styled<ComponentProps<typeof CollapsibleTriggerPrimitive>>) {
   return (
-    <CollapsiblePrimitive.Trigger
+    <CollapsibleTriggerPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      data-slot="collapsible-trigger"
       {...props}
       {...stylex.props(sx)}
     />
@@ -88,11 +101,10 @@ function CollapsibleTrigger({
 function CollapsibleContent({
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Panel.Props>) {
+}: Styled<ComponentProps<typeof CollapsiblePanelPrimitive>>) {
   return (
-    <CollapsiblePrimitive.Panel
+    <CollapsiblePanelPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      data-slot="collapsible-content"
       {...props}
       {...stylex.props(styles.content, sx)}
     />

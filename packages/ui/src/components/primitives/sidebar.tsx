@@ -1,7 +1,5 @@
 "use client";
 
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import {
   Cancel01Icon,
   Menu01Icon,
@@ -9,6 +7,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import {
   createContext,
   use,
@@ -1096,9 +1096,10 @@ function SidebarTrigger({
       <Button
         aria-label={ariaLabel ?? "Close sidebar"}
         data-slot="sidebar-trigger"
-        onClick={(event) => {
-          onClick?.(event);
+        onClick={(event, details) => {
+          const result = onClick?.(event, details);
           setOpenMobile(false);
+          return result;
         }}
         size={size}
         sx={triggerSx}
@@ -1122,14 +1123,15 @@ function SidebarTrigger({
             aria-expanded={isMobile ? undefined : open}
             aria-label={ariaLabel ?? label}
             data-slot="sidebar-trigger"
-            onClick={(event) => {
-              onClick?.(event);
+            onClick={(event, details) => {
+              const result = onClick?.(event, details);
               // Enter or Space: a keyboard toggle, so it skips the animation.
               if (event.detail === 0 && toggleFromKeyboard) {
                 toggleFromKeyboard();
               } else {
                 toggleSidebar();
               }
+              return result;
             }}
             size={size}
             sx={triggerSx}
@@ -1274,13 +1276,7 @@ function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
 }
 
 function SidebarSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="sidebar-separator"
-      {...props}
-      sx={[styles.separator, sx]}
-    />
-  );
+  return <Separator {...props} sx={[styles.separator, sx]} />;
 }
 
 function SidebarContent({ swap = true, sx, ...props }: SwapProps) {
@@ -1303,40 +1299,40 @@ function SidebarGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function SidebarGroupLabel({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
+function SidebarGroupLabel({ render, sx, ...props }: Styled<PartProps<"div">>) {
   const { ref, truncated } = useTruncated(true);
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+  return renderElement(
+    "div",
+    mergeProps(
+      {
+        "data-slot": "sidebar-group-label",
+        "data-truncated": truncated ? "" : undefined,
+        ref,
+      },
       props,
       stylex.props([typeStyles.textSm, styles.groupLabel], sx)
     ),
-    ref,
-    render,
-    // Written as `data-truncated` while its text runs past its box.
-    state: { slot: "sidebar-group-label", truncated },
-  });
+    render
+  );
 }
 
 function SidebarGroupAction({
   render,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"button">>) {
-  return useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      render ? {} : { type: "button" },
+}: Styled<PartProps<"button">>) {
+  return renderElement(
+    "button",
+    mergeProps(
+      {
+        "data-slot": "sidebar-group-action",
+        type: render ? undefined : "button",
+      },
       props,
       stylex.props(styles.action, styles.groupAction, sx)
     ),
-    render,
-    state: { slot: "sidebar-group-action" },
-  });
+    render
+  );
 }
 
 function SidebarGroupContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
@@ -1388,7 +1384,7 @@ function SidebarMenuButton({
   variant = "default",
   withEnd = false,
   ...props
-}: Styled<useRender.ComponentProps<"button">> & {
+}: Styled<PartProps<"button">> & {
   isActive?: boolean;
   size?: SidebarMenuButtonSize;
   tooltip?: ReactNode;
@@ -1398,9 +1394,16 @@ function SidebarMenuButton({
 }) {
   const { rail, tooltipSide } = use(RailContext);
   const [truncated, setTruncated] = useState(false);
-  const button = useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
+  const button = renderElement(
+    "button",
+    mergeProps(
+      {
+        "data-active": isActive ? "" : undefined,
+        "data-size": size,
+        "data-slot": "sidebar-menu-button",
+        "data-variant": variant,
+        type: render ? undefined : "button",
+      },
       props,
       stylex.props(
         [typeStyles.textMd, styles.button],
@@ -1410,10 +1413,8 @@ function SidebarMenuButton({
         sx
       )
     ),
-    render: tooltip === undefined ? render : <TooltipTrigger render={render} />,
-    // Base UI writes each state key as a `data-*` attribute.
-    state: { active: isActive, size, slot: "sidebar-menu-button", variant },
-  });
+    tooltip === undefined ? render : <TooltipTrigger render={render} />
+  );
 
   if (tooltip === undefined) {
     return <LabelContext value={null}>{button}</LabelContext>;
@@ -1463,16 +1464,16 @@ function SidebarMenuAction({
   showOnHover = false,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"button">> & { showOnHover?: boolean }) {
-  const marker: Record<`data-${string}`, string | undefined> = {
-    "data-show-on-hover": showOnHover ? "" : undefined,
-    "data-sidebar-menu-action": "",
-  };
-  return useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      marker,
-      render ? {} : { type: "button" },
+}: Styled<PartProps<"button">> & { showOnHover?: boolean }) {
+  return renderElement(
+    "button",
+    mergeProps(
+      {
+        "data-show-on-hover": showOnHover ? "" : undefined,
+        "data-sidebar-menu-action": "",
+        "data-slot": "sidebar-menu-action",
+        type: render ? undefined : "button",
+      },
       props,
       stylex.props(
         styles.action,
@@ -1481,9 +1482,8 @@ function SidebarMenuAction({
         sx
       )
     ),
-    render,
-    state: { slot: "sidebar-menu-action" },
-  });
+    render
+  );
 }
 
 function SidebarMenuBadge({ sx, ...props }: Styled<ComponentProps<"div">>) {
@@ -1540,18 +1540,21 @@ function SidebarMenuSubButton({
   render,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"a">> & {
+}: Styled<PartProps<"a">> & {
   isActive?: boolean;
 }) {
-  return useRender({
-    defaultTagName: "a",
-    props: mergeProps<"a">(
+  return renderElement(
+    "a",
+    mergeProps(
+      {
+        "data-active": isActive ? "" : undefined,
+        "data-slot": "sidebar-menu-sub-button",
+      },
       props,
       stylex.props([typeStyles.textMd, styles.subButton], sx)
     ),
-    render,
-    state: { active: isActive, slot: "sidebar-menu-sub-button" },
-  });
+    render
+  );
 }
 
 export {

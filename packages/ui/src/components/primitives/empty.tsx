@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -121,20 +121,16 @@ function EmptyMedia({
   );
 }
 
-function EmptyTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+function EmptyTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "empty-title" },
       props,
       stylex.props([typeStyles.textSm, styles.title], sx)
     ),
-    render,
-    state: { slot: "empty-title" },
-  });
+    render
+  );
 }
 
 function EmptyDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {

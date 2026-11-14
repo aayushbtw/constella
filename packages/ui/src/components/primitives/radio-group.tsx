@@ -1,8 +1,12 @@
 "use client";
 
-import { Radio as RadioPrimitive } from "@base-ui/react/radio";
-import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Radio as RadioPrimitive,
+  RadioGroup as RadioGroupPrimitive,
+  RadioIndicator,
+} from "@ui-sdk/react/radio";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -29,7 +33,9 @@ const radioGroupItemSizes = ["sm", "default", "lg"] as const;
 
 type RadioGroupItemSize = (typeof radioGroupItemSizes)[number];
 
-type RadioGroupItemProps = Styled<RadioPrimitive.Root.Props> & {
+type RadioGroupItemProps = Styled<
+  Omit<ComponentProps<typeof RadioPrimitive>, "children">
+> & {
   size?: RadioGroupItemSize;
 };
 
@@ -152,10 +158,12 @@ const sizeStyles = {
   [stylex.StyleXStyles, stylex.StyleXStyles]
 >;
 
-function RadioGroup({ sx, ...props }: Styled<RadioGroupPrimitive.Props>) {
+function RadioGroup<Value extends string = string>({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof RadioGroupPrimitive<Value>>>) {
   return (
-    <RadioGroupPrimitive
-      data-slot="radio-group"
+    <RadioGroupPrimitive<Value>
       {...props}
       {...stylex.props(styles.group, sx)}
     />
@@ -169,17 +177,13 @@ function RadioGroupItem({
 }: RadioGroupItemProps) {
   const [item, indicator] = sizeStyles[size];
   return (
-    <RadioPrimitive.Root
+    <RadioPrimitive
       data-size={size}
-      data-slot="radio-group-item"
       {...props}
       {...stylex.props(styles.item, item, sx)}
     >
-      <RadioPrimitive.Indicator
-        data-slot="radio-group-indicator"
-        {...stylex.props(styles.indicator, indicator)}
-      />
-    </RadioPrimitive.Root>
+      <RadioIndicator {...stylex.props(styles.indicator, indicator)} />
+    </RadioPrimitive>
   );
 }
 

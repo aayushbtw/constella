@@ -150,7 +150,11 @@
   :where(
     :focus-visible,
     [data-slot="input-group"]:has(
-      [data-slot="input-group-control"]:focus-visible
+      :is(
+        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):focus-visible
     ),
     [data-slot="questionnaire-choice"]:has(
       > [data-slot="questionnaire-choice-input"]:focus-visible
@@ -164,14 +168,21 @@
     [aria-invalid="true"],
     [data-invalid],
     [data-slot="input-group"]:has(
-      [data-slot="input-group-control"]:is(
-        [aria-invalid="true"],
-        [data-invalid]
-      )
+      :is(
+        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):is([aria-invalid="true"], [data-invalid])
     )
   ):where(
     :focus-visible,
-    :has([data-slot="input-group-control"]:focus-visible),
+    :has(
+      :is(
+        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):focus-visible
+    ),
     :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
   ) {
     outline-color: var(--red-11);
@@ -203,22 +214,23 @@
     outline: none;
   }
 
-  /* A scroller that overflows takes Tab. Its scroll fade would mask its own ring, so the
-     scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
-  :where(
-    [data-slot="scroll-area-viewport"],
-    [data-slot="code-block-content"] pre
-  ):focus-visible {
+  /* A scroller that overflows and holds nothing focusable takes Tab. Its scroll fade would mask its
+     own ring, so the scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
+  :where([data-slot="scroll-area-viewport"]):focus-visible {
     outline: none;
   }
   :where(
-    :has(> [data-slot="scroll-area-viewport"]:focus-visible),
-    [data-slot="code-block-content"]:has(pre:focus-visible)
+    [data-slot="scroll-area"]:has(
+      > [data-slot="scroll-area-viewport"]:focus-visible
+    ),
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
   ) {
     outline: 1px solid var(--focus-ring);
     outline-offset: 0;
   }
-  :where([data-slot="code-block-content"]:has(pre:focus-visible)) {
+  :where(
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
+  ) {
     outline-offset: -1px;
   }
 
@@ -383,7 +395,13 @@
   }
 
   /* An input group rings its whole box, so the borderless control inside draws none. */
-  :where([data-slot="input-group-control"]:focus-visible) {
+  :where(
+    :is(
+      [data-slot="input-group-input"] > [data-slot="input"],
+      [data-slot="input-group"] > [data-slot="textarea"],
+      [data-slot="input-group-control"]
+    ):focus-visible
+  ) {
     outline: none;
   }
 }

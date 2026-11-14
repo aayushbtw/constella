@@ -207,4 +207,4 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
 
 ## API Reference
 
-`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `presence`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).
+`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `presence`. Every part takes `sx`, applied last. For the rest, see [UI SDK Avatar](https://ui-sdk.dev/docs/components/avatar).

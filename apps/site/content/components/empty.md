@@ -130,4 +130,4 @@ Put an [Avatar](/docs/components/avatar) in `EmptyMedia`.
 | `EmptyMedia` | `variant`: `"default"` or `"icon"`                |
 | `EmptyTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last, and renders a `div`. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

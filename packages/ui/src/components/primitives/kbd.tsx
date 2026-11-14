@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -89,20 +89,16 @@ const styles = stylex.create({
   },
 });
 
-function Kbd({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"kbd">>) {
-  return useRender({
-    defaultTagName: "kbd",
-    props: mergeProps<"kbd">(
+function Kbd({ render, sx, ...props }: Styled<PartProps<"kbd">>) {
+  return renderElement(
+    "kbd",
+    mergeProps(
+      { "data-slot": "kbd" },
       props,
       stylex.props([typeStyles.captionLg, styles.kbd], sx)
     ),
-    render,
-    state: { slot: "kbd" },
-  });
+    render
+  );
 }
 
 function KbdGroup({ sx, ...props }: Styled<ComponentProps<"kbd">>) {

@@ -1,10 +1,9 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
-import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -34,7 +33,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type ItemProps = Styled<useRender.ComponentProps<"div">> & {
+type ItemProps = Styled<PartProps<"div">> & {
   size?: ItemSize;
   variant?: ItemVariant;
 };
@@ -225,7 +224,7 @@ const styles = stylex.create({
       default: space.md,
       ":has([data-size='sm'])": space.popup,
       ":has([data-size='xs'])": space.xs,
-      ":has(> [data-slot='item-separator'])": 0,
+      ":has(> [data-slot='separator'])": 0,
     },
     listStyleType: "none",
     paddingInlineEnd: 0,
@@ -248,29 +247,19 @@ const mediaStyles = {
 } satisfies Record<ItemMediaVariant, stylex.StyleXStyles | null>;
 
 /** Render it as a `ul`, with each Item as an `li`, when its items are a list. */
-function ItemGroup({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.group, sx)),
-    render,
-    state: { slot: "item-group" },
-  });
-}
-
-function ItemSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="item-separator"
-      orientation="horizontal"
-      {...props}
-      sx={sx}
-    />
+function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-group" },
+      props,
+      stylex.props(styles.group, sx)
+    ),
+    render
   );
 }
+
+const ItemSeparator = Separator;
 
 function Item({
   render,
@@ -279,9 +268,10 @@ function Item({
   variant = "default",
   ...props
 }: ItemProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-size": size, "data-slot": "item", "data-variant": variant },
       props,
       stylex.props(
         [
@@ -293,10 +283,8 @@ function Item({
         sx
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`.
-    state: { size, slot: "item", variant },
-  });
+    render
+  );
 }
 
 function ItemMedia({
@@ -324,17 +312,16 @@ function ItemContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function ItemTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "item-title" },
-  });
+function ItemTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-title" },
+      props,
+      stylex.props(styles.title, sx)
+    ),
+    render
+  );
 }
 
 function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {

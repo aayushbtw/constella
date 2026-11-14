@@ -100,21 +100,32 @@ function MeterVariantDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <Meter max={10} value={7}>
+        <Meter format={(seats) => `${seats} of 10`} max={10} value={7}>
           <MeterLabel>Seats</MeterLabel>
-          <MeterValue>{(_, value) => `${value} of 10`}</MeterValue>
+          <MeterValue />
         </Meter>
-        <Meter max={10} value={7} variant="ring">
+        <Meter
+          format={(seats) => `${seats} of 10`}
+          max={10}
+          value={7}
+          variant="ring"
+        >
           <MeterLabel>Seats</MeterLabel>
-          <MeterValue>{(_, value) => `${value} of 10`}</MeterValue>
+          <MeterValue />
         </Meter>
-        <Meter color="danger" max={10} value={10} variant="ring">
+        <Meter
+          color="danger"
+          format={() => "10 of 10 · full"}
+          max={10}
+          value={10}
+          variant="ring"
+        >
           <MeterLabel>Seats</MeterLabel>
-          <MeterValue>{() => "10 of 10 · full"}</MeterValue>
+          <MeterValue />
         </Meter>
-        <Meter max={10} value={0} variant="ring">
+        <Meter format={() => "None yet"} max={10} value={0} variant="ring">
           <MeterLabel>Guests</MeterLabel>
-          <MeterValue>{() => "None yet"}</MeterValue>
+          <MeterValue />
         </Meter>
       </div>
     </DemoRow>
@@ -136,10 +147,10 @@ const uploads: Upload[] = [
 const megabytes = (value: number) => `${value.toFixed(1)} MB`;
 
 function Uploads() {
-  const [sent, setSent] = useState(() => uploads.map(() => 0));
+  const [progress, setProgress] = useState(() => uploads.map(() => 0));
   useEffect(() => {
     const timer = setInterval(() => {
-      setSent((all) =>
+      setProgress((all) =>
         all.map((value, index) => {
           const upload = uploads[index];
           return upload === undefined
@@ -153,17 +164,20 @@ function Uploads() {
     };
   }, []);
   return uploads.map((upload, index) => {
-    const value = sent[index] ?? 0;
+    const value = progress[index] ?? 0;
     return (
-      <Progress key={upload.name} max={upload.size} value={value}>
+      <Progress
+        format={(sent) =>
+          sent >= upload.size
+            ? "Done"
+            : `${megabytes(sent)} of ${megabytes(upload.size)}`
+        }
+        key={upload.name}
+        max={upload.size}
+        value={value}
+      >
         <ProgressLabel>{upload.name}</ProgressLabel>
-        <ProgressValue>
-          {() =>
-            value >= upload.size
-              ? "Done"
-              : `${megabytes(value)} of ${megabytes(upload.size)}`
-          }
-        </ProgressValue>
+        <ProgressValue />
       </Progress>
     );
   });
@@ -220,23 +234,27 @@ function MeterValueDemo() {
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <Meter max={5} value={3.2}>
+        <Meter
+          format={(used) =>
+            `${gigabytes.format(used)} of ${gigabytes.format(5)}`
+          }
+          max={5}
+          value={3.2}
+        >
           <MeterLabel>Storage</MeterLabel>
-          <MeterValue>
-            {(_, value) =>
-              `${gigabytes.format(value)} of ${gigabytes.format(5)}`
-            }
-          </MeterValue>
+          <MeterValue />
         </Meter>
-        <Meter max={2000} value={1240}>
+        <Meter
+          format={(sent) => `${sent.toLocaleString("en-US")} of 2,000`}
+          max={2000}
+          value={1240}
+        >
           <MeterLabel>Messages this month</MeterLabel>
-          <MeterValue>
-            {(_, value) => `${value.toLocaleString("en-US")} of 2,000`}
-          </MeterValue>
+          <MeterValue />
         </Meter>
-        <Meter max={10} value={10}>
+        <Meter format={() => "10 of 10 · full"} max={10} value={10}>
           <MeterLabel>Seats</MeterLabel>
-          <MeterValue>{() => "10 of 10 · full"}</MeterValue>
+          <MeterValue />
         </Meter>
       </div>
     </DemoRow>

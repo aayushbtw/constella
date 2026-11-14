@@ -37,12 +37,12 @@ function SheetDemo() {
           <SheetBody>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="sheet-name">Name</FieldLabel>
-                <Input defaultValue="Alex Smith" id="sheet-name" />
+                <FieldLabel>Name</FieldLabel>
+                <Input defaultValue="Alex Smith" />
               </Field>
               <Field>
-                <FieldLabel htmlFor="sheet-username">Username</FieldLabel>
-                <Input defaultValue="@alex" id="sheet-username" />
+                <FieldLabel>Username</FieldLabel>
+                <Input defaultValue="@alex" />
               </Field>
             </FieldGroup>
           </SheetBody>

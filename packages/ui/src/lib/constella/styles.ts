@@ -18,13 +18,14 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-// A group's own parts, not the focus guards Base UI drops beside an open popup's trigger.
-const notFirst = ":not(:nth-child(1 of [data-slot]))";
-const notLast = ":not(:nth-last-child(1 of [data-slot]))";
+// A group's own parts: not the focus guards Base UI drops beside an open popup's trigger,
+// nor an open popover's content, which renders in place beside it.
+const notFirst = ":not(:nth-child(1 of [data-slot]:not([popover])))";
+const notLast = ":not(:nth-last-child(1 of [data-slot]:not([popover])))";
 
 // The neighbor before draws the shared edge, or the separator does.
 const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
+  ":not(:nth-child(1 of [data-slot]:not([popover])), [data-slot='separator'] + *)";
 
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: Values<typeof radii>) => ({
@@ -138,16 +139,25 @@ const typeStyles = stylex.create({
   },
 });
 
+// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
+// `:where` holds both at one attribute's specificity, as Base UI's alone was. StyleX can't
+// share a selector key across files, so button.tsx and prompt-input.tsx repeat it.
+const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
+
+// button.tsx's `hoverIdle` and `activeIdle`; keep in step.
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+
 // The open state repeats inside the media block, which StyleX ranks above a bare condition.
 const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
-  ":is([data-popup-open])": active,
+  [popupOpen]: active,
   [media.hover]: {
     default: rest,
-    ":is([data-popup-open])": active,
-    ":hover:not(:disabled)": active,
+    [popupOpen]: active,
+    [hoverIdle]: active,
   },
-  ":active:not(:disabled)": active,
+  [activeIdle]: active,
 });
 
 const pressed = ":is([data-pressed])";

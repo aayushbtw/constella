@@ -72,4 +72,4 @@ Use the `size` prop to match the controls beside it, with Button's sizes. Use an
 | --- | --- |
 | `Toggle` | `variant`: `"default"` or `"outline"`; `size`: `"sm"`, `"default"`, `"lg"`, `"icon-xs"`, `"icon-sm"`, `"icon"` or `"icon-lg"` |
 
-`Toggle` takes `sx`, applied last. `toggleStyles` gives its styles to another element. For the rest, see [Base UI Toggle](https://base-ui.com/react/components/toggle).
+`Toggle` takes `sx`, applied last. `toggleStyles` gives its styles to another element. For the rest, see [UI SDK Toggle](https://ui-sdk.dev/docs/components/toggle).

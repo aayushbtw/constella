@@ -1,9 +1,13 @@
 "use client";
 
-import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { MinusSignIcon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Checkbox as CheckboxPrimitive,
+  CheckboxIndicator,
+} from "@ui-sdk/react/checkbox";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -25,8 +29,8 @@ const checkboxSizes = ["sm", "default", "lg"] as const;
 type CheckboxSize = (typeof checkboxSizes)[number];
 
 type CheckboxProps = Omit<
-  CheckboxPrimitive.Root.Props,
-  "className" | "style"
+  ComponentProps<typeof CheckboxPrimitive>,
+  "children" | "className" | "style"
 > & {
   size?: CheckboxSize;
   sx?: Sx;
@@ -143,16 +147,12 @@ const tickSizes = {
 
 function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
   return (
-    <CheckboxPrimitive.Root
+    <CheckboxPrimitive
       data-size={size}
-      data-slot="checkbox"
       {...props}
       {...stylex.props(styles.checkbox, sizeStyles[size], sx)}
     >
-      <CheckboxPrimitive.Indicator
-        data-slot="checkbox-indicator"
-        {...stylex.props(styles.indicator)}
-      >
+      <CheckboxIndicator {...stylex.props(styles.indicator)}>
         <HugeiconsIcon
           aria-hidden
           icon={Tick02Icon}
@@ -167,8 +167,8 @@ function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
           strokeWidth={Number(strokes.icon)}
           {...stylex.props(styles.minus)}
         />
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
+      </CheckboxIndicator>
+    </CheckboxPrimitive>
   );
 }
 

@@ -1,7 +1,11 @@
 "use client";
 
-import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Switch as SwitchPrimitive,
+  SwitchThumb as SwitchThumbPrimitive,
+} from "@ui-sdk/react/switch";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -21,7 +25,10 @@ const switchSizes = ["sm", "default", "lg"] as const;
 
 type SwitchSize = (typeof switchSizes)[number];
 
-type SwitchProps = Omit<SwitchPrimitive.Root.Props, "className" | "style"> & {
+type SwitchProps = Omit<
+  ComponentProps<typeof SwitchPrimitive>,
+  "children" | "className" | "style"
+> & {
   size?: SwitchSize;
   sx?: Sx;
 };
@@ -144,17 +151,13 @@ const sizeStyles = {
 function Switch({ size = "default", sx, ...props }: SwitchProps) {
   const [root, thumb] = sizeStyles[size];
   return (
-    <SwitchPrimitive.Root
+    <SwitchPrimitive
       data-size={size}
-      data-slot="switch"
       {...props}
       {...stylex.props(styles.switch, root, sx)}
     >
-      <SwitchPrimitive.Thumb
-        data-slot="switch-thumb"
-        {...stylex.props(styles.thumb, thumb)}
-      />
-    </SwitchPrimitive.Root>
+      <SwitchThumbPrimitive {...stylex.props(styles.thumb, thumb)} />
+    </SwitchPrimitive>
   );
 }
 

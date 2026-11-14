@@ -1,8 +1,6 @@
-"use client";
-
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -38,10 +36,7 @@ const badgeSizes = ["sm", "default", "lg"] as const;
 
 type BadgeSize = (typeof badgeSizes)[number];
 
-type BadgeProps = Omit<
-  useRender.ComponentProps<"span">,
-  "className" | "style"
-> & {
+type BadgeProps = Omit<PartProps<"span">, "className" | "style"> & {
   size?: BadgeSize;
   color?: BadgeColor;
   sx?: Sx;
@@ -272,16 +267,20 @@ function Badge({
   variant = "secondary",
   ...props
 }: BadgeProps) {
-  return useRender({
-    defaultTagName: "span",
-    props: mergeProps<"span">(
+  return renderElement(
+    "span",
+    mergeProps(
+      {
+        "data-color": color,
+        "data-size": size,
+        "data-slot": "badge",
+        "data-variant": variant,
+      },
       props,
       stylex.props(badgeStyles({ size, color, variant }), sx)
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`, `data-color`.
-    state: { size, slot: "badge", color, variant },
-  });
+    render
+  );
 }
 
 function BadgeDot({

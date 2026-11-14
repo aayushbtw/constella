@@ -1,6 +1,6 @@
 ---
 title: Popover
-description: Displays rich content in a portal, triggered by a button.
+description: Displays rich content in a floating panel, triggered by a button.
 ---
 
 <!-- ::demo name="popover" -->
@@ -50,9 +50,10 @@ import {
 Popover
 ├── PopoverTrigger
 └── PopoverContent
-    └── PopoverHeader
-        ├── PopoverTitle
-        └── PopoverDescription
+    ├── PopoverHeader
+    │   ├── PopoverTitle
+    │   └── PopoverDescription
+    └── PopoverClose
 ```
 
 ## Align
@@ -88,4 +89,4 @@ Put a [Field](/docs/components/field) group under the header for a small form.
 
 ## API Reference
 
-`PopoverContent` renders the portal, positioner and popup, and takes `side`, `align` and their offsets. It's 288px wide; pass `sx` to change it. Every part takes `sx`, applied last. For the rest, see [Base UI Popover](https://base-ui.com/react/components/popover).
+`PopoverContent` renders in place, beside its trigger, in the browser's top layer, and takes `side`, `align` and their offsets. It's 288px wide; pass `sx` to change it. `PopoverClose` is a button that closes the popover. Every part takes `sx`, applied last. For the rest, see [UI SDK Popover](https://ui-sdk.dev/docs/components/popover).

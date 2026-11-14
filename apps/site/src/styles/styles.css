@@ -1,3 +1,5 @@
+/* ui-sdk injects this layer at runtime; declared first, it stays below every other layer. */
+@layer ui-sdk;
 /* StyleX appends its generated CSS to this file at build time. */
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/geist-mono";
