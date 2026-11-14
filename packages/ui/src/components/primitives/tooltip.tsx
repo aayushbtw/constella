@@ -111,7 +111,7 @@ function TooltipTrigger({
       controller={given}
       onKeyDown={(event) => {
         onKeyDown?.(event);
-        // ui-sdk hears Escape on the document, after a Base UI Dialog or Sheet closed on it; drop once those port.
+        // ui-sdk hears Escape on the document, after a Base UI Sheet or Alert Dialog closed on it; drop once those port.
         if (
           event.key === "Escape" &&
           controller?.isOpen() === true &&

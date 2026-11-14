@@ -16,6 +16,7 @@ import { Button } from "./button";
 import { ButtonGroup } from "./button-group";
 import { Dialog, DialogContent, DialogTitle } from "./dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { Sheet, SheetContent, SheetTitle } from "./sheet";
 import {
   Sidebar,
   SidebarContent,
@@ -130,7 +131,9 @@ function CopyLink() {
 
 async function focusOpen() {
   const trigger = await screen.findByRole("button", { name: "Copy link" });
+  // A ui-sdk dialog focuses the trigger as it opens, which doesn't open the tooltip.
   act(() => {
+    trigger.blur();
     trigger.focus();
   });
   return { content: await screen.findByRole("tooltip"), trigger };
@@ -153,7 +156,29 @@ test("Escape on a focused trigger closes the tooltip without reaching the docume
   document.removeEventListener("keydown", onKeyDown);
 });
 
-test("in a Base UI dialog, the first Escape closes the tooltip and the second the dialog", async () => {
+test("in a Base UI sheet, the first Escape closes the tooltip and the second the sheet", async () => {
+  const onOpenChange = vi.fn<(open: boolean) => void>();
+  render(
+    <Sheet defaultOpen onOpenChange={onOpenChange}>
+      <SheetContent>
+        <SheetTitle>Share</SheetTitle>
+        <CopyLink />
+      </SheetContent>
+    </Sheet>
+  );
+  const { content, trigger } = await focusOpen();
+
+  fireEvent.keyDown(trigger, { key: "Escape" });
+  await waitFor(() => {
+    expect(content.hidden).toBe(true);
+  });
+  expect(onOpenChange).not.toHaveBeenCalled();
+
+  fireEvent.keyDown(trigger, { key: "Escape" });
+  expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+});
+
+test("in a dialog, the first Escape closes the tooltip and the second the dialog", async () => {
   const onOpenChange = vi.fn<(open: boolean) => void>();
   render(
     <Dialog defaultOpen onOpenChange={onOpenChange}>
