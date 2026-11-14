@@ -163,3 +163,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Filed and fixed #17 on `main` (Sidebar actions forced `type="button"` onto a `render` element), found by the slop review of #16; merged `main` in |
 | 2026-11-14 | #16 merged: 21 wrappers on `renderElement`/`mergeProps`, 0 of 82 prerendered pages differ. Its review surfaced #15 and #17, both fixed on `main` first |
 | 2026-11-14 | #18 merged: `vpr test` runs ui-sdk tests in jsdom with strict mode. Phase 0 done. The site stays on StyleX unplugin 0.19.1, since 0.19.2 regroups its CSS layers |
+| 2026-11-14 | Filed and fixed #19 on `main`: `vpr check` now runs in a fresh checkout (route tree committed, `tomekit build` before check); merged `main` in |
