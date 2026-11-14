@@ -1,11 +1,11 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import {
   ArrowRight01Icon,
   MoreHorizontalCircle01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -105,17 +105,16 @@ function BreadcrumbItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
 }
 
 /** Pass a router's link as `render`. */
-function BreadcrumbLink({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"a">>) {
-  return useRender({
-    defaultTagName: "a",
-    props: mergeProps<"a">(props, stylex.props(styles.link, sx)),
-    render,
-    state: { slot: "breadcrumb-link" },
-  });
+function BreadcrumbLink({ render, sx, ...props }: Styled<PartProps<"a">>) {
+  return renderElement(
+    "a",
+    mergeProps(
+      { "data-slot": "breadcrumb-link" },
+      props,
+      stylex.props(styles.link, sx)
+    ),
+    render
+  );
 }
 
 function BreadcrumbPage({ sx, ...props }: Styled<ComponentProps<"span">>) {

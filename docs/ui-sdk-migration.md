@@ -72,7 +72,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Task | Status | PR | Notes |
 | --- | --- | --- | --- |
 | The global stylesheet declares `@layer ui-sdk;` first, below every app layer; install docs tell consumers to | merged | [#13](https://github.com/aayushbtw/constella/pull/13) |  |
-| `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | todo |  | 22 files: alert, badge, breadcrumb, button-group, card, empty, field, input-group, item, kbd, sidebar, textarea, the 5 typography parts, attachment, code-block, marker, model-picker, shimmer |
+| `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | pr |  | 21 files; textarea stays with its row |
 | Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo |  |  |
 
 ### Phases 1 to 5
@@ -141,7 +141,10 @@ The port lands on `main` when every row is `merged`, the ARCHITECTURE.md "Ready 
 Gaps and surprises found while porting, newest first. Move a settled one into ARCHITECTURE.md.
 
 | Date | Unit | Finding |
-| ---- | ---- | ------- |
+| --- | --- | --- |
+| 2026-11-14 | Render helpers | `SidebarGroupAction` and `SidebarMenuAction` forced `type="button"` onto a `render` element on `main`. Found by the slop review of #16, filed and fixed on `main` as [#17](https://github.com/aayushbtw/constella/issues/17), then merged in |
+| 2026-11-14 | Render helpers | A handler on a `render` element that calls `preventDefault()` now skips the part's own handler (ui-sdk `mergeProps`). Base UI needed `event.preventBaseUIHandler()` for that |
+| 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |
 
 ## Log
 

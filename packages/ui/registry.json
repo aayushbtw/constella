@@ -43,7 +43,7 @@
       "type": "registry:ui",
       "title": "Alert",
       "description": "A callout with an icon, a title, a description and an action, its status on the icon.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -95,7 +95,7 @@
       "type": "registry:ui",
       "title": "Badge",
       "description": "A small label in the button's five variants, with icons, a spinner or a link.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -125,7 +125,7 @@
       "type": "registry:ui",
       "title": "Code Block",
       "description": "Code in a tray, with a title, actions, line numbers and diffs. The app highlights it.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/scroll-area.json",
@@ -229,7 +229,7 @@
       "type": "registry:ui",
       "title": "Card",
       "description": "A bordered surface that groups related content, with a header, content and footer.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -369,7 +369,7 @@
       "type": "registry:ui",
       "title": "Field",
       "description": "Lays out a control with its label, description and error, and links them.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/label.json",
@@ -388,7 +388,7 @@
       "type": "registry:ui",
       "title": "Kbd",
       "description": "A small keycap for a shortcut, in text, buttons and tooltips.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -403,7 +403,7 @@
       "type": "registry:ui",
       "title": "Text",
       "description": "Body copy on the type scale, in three sizes.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -418,7 +418,7 @@
       "type": "registry:ui",
       "title": "Heading",
       "description": "A heading whose rank and size are set apart, on the heading scale.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -433,7 +433,7 @@
       "type": "registry:ui",
       "title": "Caption",
       "description": "Small text for metadata and labels, in four sizes.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -448,7 +448,7 @@
       "type": "registry:ui",
       "title": "Link",
       "description": "A link inside running text, underlined.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -463,7 +463,7 @@
       "type": "registry:ui",
       "title": "Code",
       "description": "Code inside running text, in mono on a fill.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -525,7 +525,7 @@
       "type": "registry:ui",
       "title": "Input Group",
       "description": "Icons, text, keys and buttons set inside an input or textarea's box.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
@@ -586,10 +586,10 @@
       "title": "Sidebar",
       "description": "App navigation beside the page that collapses to icons or out of view, and opens as a sheet on narrow screens.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -699,7 +699,7 @@
       "type": "registry:ui",
       "title": "Button Group",
       "description": "Joins buttons, inputs and text into one control, across or down.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/separator.json"
@@ -1049,7 +1049,7 @@
       "type": "registry:ui",
       "title": "Empty",
       "description": "An empty state with media, a title, a description and actions.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -1064,7 +1064,7 @@
       "type": "registry:ui",
       "title": "Item",
       "description": "A row with media, a title, a description and actions, alone or in a list.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/separator.json"
@@ -1083,10 +1083,10 @@
       "title": "Breadcrumb",
       "description": "A trail of links to the pages above the current one.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
@@ -1217,7 +1217,7 @@
       "type": "registry:ui",
       "title": "Shimmer",
       "description": "A slow sweep of light across text still being worked on.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -1254,7 +1254,7 @@
       "type": "registry:ui",
       "title": "Marker",
       "description": "A note in a conversation: a status, a system line, or a labeled break.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -1301,7 +1301,7 @@
       "type": "registry:ui",
       "title": "Attachment",
       "description": "A file or image with its name, details, upload state and actions.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
@@ -1374,7 +1374,8 @@
         "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",

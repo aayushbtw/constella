@@ -1,11 +1,11 @@
 "use client";
 
-import { mergeProps } from "@base-ui/react/merge-props";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { useRender } from "@base-ui/react/use-render";
 import { Tick02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import {
   createContext,
   use,
@@ -353,17 +353,16 @@ function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function ModelPickerTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "model-picker-title" },
-  });
+function ModelPickerTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "model-picker-title" },
+      props,
+      stylex.props(styles.title, sx)
+    ),
+    render
+  );
 }
 
 function ModelPickerDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {

@@ -1,8 +1,8 @@
 import { DirectionProvider } from "@base-ui/react/direction-provider";
-import { mergeProps } from "@base-ui/react/merge-props";
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps, ReactNode } from "react";
 
 import { ScrollBar } from "@/components/primitives/scroll-area";
@@ -291,17 +291,16 @@ function CodeBlockHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
 }
 
 /** The file name or language, cut short on one line. */
-function CodeBlockTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "code-block-title" },
-  });
+function CodeBlockTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "code-block-title" },
+      props,
+      stylex.props(styles.title, sx)
+    ),
+    render
+  );
 }
 
 /** Buttons for the code: at the header's end, or floating on the first line when the block holds them itself. */

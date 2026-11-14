@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
@@ -34,7 +34,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type ItemProps = Styled<useRender.ComponentProps<"div">> & {
+type ItemProps = Styled<PartProps<"div">> & {
   size?: ItemSize;
   variant?: ItemVariant;
 };
@@ -248,17 +248,16 @@ const mediaStyles = {
 } satisfies Record<ItemMediaVariant, stylex.StyleXStyles | null>;
 
 /** Render it as a `ul`, with each Item as an `li`, when its items are a list. */
-function ItemGroup({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.group, sx)),
-    render,
-    state: { slot: "item-group" },
-  });
+function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-group" },
+      props,
+      stylex.props(styles.group, sx)
+    ),
+    render
+  );
 }
 
 function ItemSeparator({ sx, ...props }: SeparatorProps) {
@@ -279,9 +278,10 @@ function Item({
   variant = "default",
   ...props
 }: ItemProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-size": size, "data-slot": "item", "data-variant": variant },
       props,
       stylex.props(
         [
@@ -293,10 +293,8 @@ function Item({
         sx
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`.
-    state: { size, slot: "item", variant },
-  });
+    render
+  );
 }
 
 function ItemMedia({
@@ -324,17 +322,16 @@ function ItemContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function ItemTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "item-title" },
-  });
+function ItemTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-title" },
+      props,
+      stylex.props(styles.title, sx)
+    ),
+    render
+  );
 }
 
 function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {

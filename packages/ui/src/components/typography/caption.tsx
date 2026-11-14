@@ -1,6 +1,6 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
@@ -14,10 +14,7 @@ const captionSizes = ["xs", "sm", "base", "lg"] as const;
 
 type CaptionSize = (typeof captionSizes)[number];
 
-type CaptionProps = Omit<
-  useRender.ComponentProps<"p">,
-  "className" | "style"
-> & {
+type CaptionProps = Omit<PartProps<"p">, "className" | "style"> & {
   color?: TextColor;
   size?: CaptionSize;
   sx?: Sx;
@@ -51,9 +48,15 @@ function Caption({
   weight = "regular",
   ...props
 }: CaptionProps) {
-  return useRender({
-    defaultTagName: "p",
-    props: mergeProps<"p">(
+  return renderElement(
+    "p",
+    mergeProps(
+      {
+        "data-color": color,
+        "data-size": size,
+        "data-slot": "caption",
+        "data-weight": weight,
+      },
       props,
       stylex.props(
         styles.base,
@@ -64,9 +67,8 @@ function Caption({
         sx
       )
     ),
-    render,
-    state: { color, size, slot: "caption", weight },
-  });
+    render
+  );
 }
 
 export { Caption, captionSizes };

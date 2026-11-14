@@ -1,8 +1,6 @@
-"use client";
-
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
@@ -29,7 +27,7 @@ type ButtonGroupProps = Styled<ComponentProps<"div">> & {
   orientation?: ButtonGroupOrientation;
 };
 
-type ButtonGroupTextProps = Styled<useRender.ComponentProps<"div">>;
+type ButtonGroupTextProps = Styled<PartProps<"div">>;
 
 // Groups inside a group sit apart, so nothing joins at this level.
 const nested = ":has(> [data-slot='button-group'])";
@@ -101,9 +99,10 @@ function ButtonGroup({
 }
 
 function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "button-group-text" },
       props,
       stylex.props(
         [typeStyles.textSm, styles.text],
@@ -112,10 +111,8 @@ function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
         sx
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot="button-group-text"`.
-    state: { slot: "button-group-text" },
-  });
+    render
+  );
 }
 
 function ButtonGroupSeparator({
