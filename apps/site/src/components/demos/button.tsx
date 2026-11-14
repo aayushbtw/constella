@@ -6,14 +6,9 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
-import * as stylex from "@stylexjs/stylex";
 import { Fragment, useEffect, useState } from "react";
 
-import {
-  Button,
-  buttonStyles,
-  buttonVariants,
-} from "@/components/primitives/button";
+import { Button, buttonVariants } from "@/components/primitives/button";
 import type { ButtonSize, ButtonVariant } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
@@ -196,12 +191,13 @@ function GenerateButton() {
 function ButtonLinkDemo() {
   return (
     <DemoRow>
-      <a
-        href="/docs/components/toast"
-        {...stylex.props(buttonStyles({ variant: "outline" }))}
+      <Button
+        // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the button renders its children into the link
+        render={<a href="/docs/components/toast" />}
+        variant="outline"
       >
         Read the toast docs
-      </a>
+      </Button>
     </DemoRow>
   );
 }

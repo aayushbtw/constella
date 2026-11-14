@@ -323,12 +323,13 @@ function PromptInputSubmit({
       type={streaming ? "button" : "submit"}
       variant="primary"
       {...props}
-      onClick={(event) => {
-        onClick?.(event);
+      onClick={(event, details) => {
+        const result = onClick?.(event, details);
         if (streaming) {
           event.preventDefault();
           onStop?.();
         }
+        return streaming ? undefined : result;
       }}
     >
       <SwapIcon aria-hidden value={streaming ? "stop" : "send"}>

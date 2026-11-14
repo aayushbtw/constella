@@ -119,7 +119,7 @@ function Search() {
     };
   }, []);
 
-  const show = (event: MouseEvent<HTMLButtonElement>) => {
+  const show = (event: MouseEvent<HTMLElement>) => {
     // A click from Enter or Space has no click count.
     setInstant(event.detail === 0);
     setOpen(true);

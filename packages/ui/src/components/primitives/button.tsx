@@ -1,7 +1,9 @@
 "use client";
 
-import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import * as stylex from "@stylexjs/stylex";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { renderElement } from "@ui-sdk/react/primitive";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, stateStyles, typeStyles } from "@/lib/constella/styles";
@@ -50,15 +52,22 @@ interface ButtonStyleOptions {
   variant?: ButtonVariant;
 }
 
-type ButtonProps = Omit<ButtonPrimitive.Props, "className" | "style"> &
-  ButtonStyleOptions & { sx?: Sx };
+type ButtonProps = Omit<
+  ComponentProps<typeof ButtonPrimitive>,
+  "className" | "style"
+> &
+  ButtonStyleOptions & { "data-slot"?: string; sx?: Sx };
 
-// A trigger opens something on press, so it doesn't give.
-const press = ":active:not([aria-haspopup], :disabled)";
-
-// Working, not unavailable: a busy cursor, and when it can't be pressed, a lighter fade than disabled.
+// `:disabled` covers `buttonStyles` on elements that aren't Buttons; ui-sdk marks a disabled link or `focusableWhenDisabled` with `data-disabled` only.
+const disabled = ":is(:disabled, [data-disabled])";
+// A caller marks its own work with `aria-busy`.
 const busy = "[aria-busy='true']";
-const loading = "[aria-busy='true']:disabled";
+// Working and can't be pressed: a lighter fade than disabled.
+const loading = `:is(${busy}${disabled}, [data-pending])`;
+const hoverIdle = `:hover:not(${disabled}, [data-pending])`;
+const activeIdle = `:active:not(${disabled}, [data-pending])`;
+// A trigger opens something on press, so it doesn't give.
+const press = `:active:not([aria-haspopup], ${disabled}, [data-pending])`;
 
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
@@ -70,9 +79,9 @@ const interactive = <R, A>(rest: R, active: A) => ({
   [media.hover]: {
     default: rest,
     [popupOpen]: active,
-    ":hover:not(:disabled)": active,
+    [hoverIdle]: active,
   },
-  ":active:not(:disabled)": active,
+  [activeIdle]: active,
 });
 
 const kbdInset = (height: string) =>
@@ -118,7 +127,7 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     cursor: {
       default: "pointer",
-      ":disabled": "not-allowed",
+      [disabled]: "not-allowed",
       [busy]: "progress",
     },
     display: "inline-flex",
@@ -130,7 +139,7 @@ const styles = stylex.create({
     marginInline: 0,
     opacity: {
       default: 1,
-      ":disabled": opacities.disabled,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
     textDecorationLine: "none",
@@ -182,12 +191,12 @@ const styles = stylex.create({
       [media.hover]: {
         default: 1,
         [popupOpen]: opacities.hover,
-        ":hover:not(:disabled)": opacities.hover,
-        ":disabled": opacities.disabled,
+        [hoverIdle]: opacities.hover,
+        [disabled]: opacities.disabled,
         [loading]: opacities.busy,
       },
-      ":active:not(:disabled)": opacities.hover,
-      ":disabled": opacities.disabled,
+      [activeIdle]: opacities.hover,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
   },
@@ -219,7 +228,7 @@ const styles = stylex.create({
   dangerSolid: {
     opacity: {
       default: 1,
-      ":disabled": opacities.disabled,
+      [disabled]: opacities.disabled,
       [loading]: opacities.busy,
     },
   },
@@ -268,7 +277,7 @@ const cornerStyles = {
   rounded: joinStyles.sm,
 } satisfies Record<ButtonCorners, stylex.StyleXStyles>;
 
-/** A button's styles for another element, like a plain `<a>` that must keep its link role. */
+/** A button's styles for an element that can't be a Button, like a Toggle. */
 function buttonStyles({
   corners = "pill",
   size = "default",
@@ -289,6 +298,8 @@ function Button({
   corners = "pill",
   size = "default",
   color,
+  "data-slot": slot,
+  render,
   sx,
   variant = "secondary",
   ...props
@@ -297,11 +308,22 @@ function Button({
     <ButtonPrimitive
       data-corners={corners}
       data-size={size}
-      data-slot="button"
       data-color={color}
       data-variant={variant}
       {...props}
       {...stylex.props(buttonStyles({ corners, size, color, variant }), sx)}
+      // ui-sdk writes `button` over a passed slot; a part built on Button keeps its own.
+      render={
+        slot === undefined
+          ? render
+          : (rendered, state) =>
+              renderElement(
+                "button",
+                { ...rendered, "data-slot": slot },
+                render,
+                state
+              )
+      }
     />
   );
 }

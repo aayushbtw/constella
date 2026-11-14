@@ -99,20 +99,14 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 ## As Link
 
-Use `buttonStyles` to make a link look like a button.
-
-**Don't use `<Button render={<a />} nativeButton={false} />` for links.** Base UI's `Button` always sets `role="button"`, so screen readers announce it as a button, not a link.
+Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that can't be a Button, like a Toggle, use `buttonStyles`.
 
 <!-- ::demo name="button-link" -->
 
 ```tsx
-import * as stylex from "@stylexjs/stylex";
-
-import { buttonStyles } from "@/components/primitives/button";
-
-<a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
+<Button render={<a href="/settings" />} variant="outline">
   Settings
-</a>;
+</Button>
 ```
 
 ## Disabled
@@ -149,7 +143,7 @@ Add `aria-busy` while something runs. It shows a busy cursor, so working reads d
 
 ### Button
 
-Takes every prop of [Base UI's Button](https://base-ui.com/react/components/button), plus:
+Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/components/button), plus:
 
 | Prop | Type | Default |
 | --- | --- | --- |

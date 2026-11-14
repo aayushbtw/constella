@@ -144,6 +144,10 @@ const typeStyles = stylex.create({
 // share a selector key across files, so button.tsx and prompt-input.tsx repeat it.
 const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 
+// button.tsx's `hoverIdle` and `activeIdle`; keep in step.
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+
 // The open state repeats inside the media block, which StyleX ranks above a bare condition.
 const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
@@ -151,9 +155,9 @@ const interactive = <R, A>(rest: R, active: A) => ({
   [media.hover]: {
     default: rest,
     [popupOpen]: active,
-    ":hover:not(:disabled)": active,
+    [hoverIdle]: active,
   },
-  ":active:not(:disabled)": active,
+  [activeIdle]: active,
 });
 
 const pressed = ":is([data-pressed])";
