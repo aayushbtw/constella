@@ -87,12 +87,6 @@ test("an agent finds the tabs by the list's name and picks one", async () => {
   const entries = agent
     .snapshot()
     .filter((entry) => entry.offPage !== true && entry.component !== "more");
-  for (const entry of entries) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
   expect(entries.map((entry) => entry.label)).toEqual(["Range"]);
 
   const result = await agent.act({
