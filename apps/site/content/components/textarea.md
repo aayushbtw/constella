@@ -99,4 +99,4 @@ Use `Field`, `FieldLabel` and `FieldDescription` to give the textarea a label an
 
 ## API Reference
 
-`Textarea` renders Base UI's `Field.Control` as a `<textarea>`, so inside a `Field` it takes the field's name, state and validation. It starts two rows tall and grows with its content; set `rows` for a taller start. It takes `size` and `sx`, applied last.
+`Textarea` renders UI SDK's `<textarea>`, so inside a `Field` it takes the field's name, state and validation. It starts two rows tall and grows with its content; set `rows` for a taller start. It takes `size` and `sx`, applied last. For the rest, see [UI SDK Textarea](https://ui-sdk.dev/docs/components/textarea).

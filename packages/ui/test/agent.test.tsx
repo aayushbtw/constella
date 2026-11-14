@@ -1,23 +1,21 @@
 import { render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
-import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { expect, test } from "vite-plus/test";
+
+import { Label } from "@/components/primitives/label";
+import { Switch } from "@/components/primitives/switch";
 
 function Settings() {
   return (
     <>
-      <label>
+      <Label>
+        <Switch />
         Airplane mode
-        <Switch>
-          <SwitchThumb />
-        </Switch>
-      </label>
-      <label>
+      </Label>
+      <Label>
+        <Switch defaultChecked />
         Weekly digest
-        <Switch defaultChecked>
-          <SwitchThumb />
-        </Switch>
-      </label>
+      </Label>
     </>
   );
 }

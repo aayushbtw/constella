@@ -9,6 +9,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { useFieldControl } from "@ui-sdk/react/field";
 import { createContext, use, useContext } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
@@ -333,9 +334,16 @@ function Select<Value, Multiple extends boolean | undefined = false>({
   ...props
 }: SelectPrimitive.Root.Props<Value, Multiple>) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  // Joins a ui-sdk Field until Select ports.
+  const field = useFieldControl();
   return (
     <SkipMotion value={skip}>
-      <SelectPrimitive.Root onOpenChange={handleOpenChange} {...props} />
+      <SelectPrimitive.Root
+        disabled={field?.disabled}
+        name={field?.name}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
     </SkipMotion>
   );
 }
@@ -366,11 +374,15 @@ function SelectTrigger({
   sx,
   ...props
 }: SelectTriggerProps) {
+  const field = useFieldControl(props);
+  const trigger = {
+    "data-size": size,
+    "data-slot": "select-trigger",
+    ...props,
+  };
   return (
     <SelectPrimitive.Trigger
-      data-size={size}
-      data-slot="select-trigger"
-      {...props}
+      {...(field?.props(trigger) ?? trigger)}
       {...stylex.props(
         [typeStyles.textSm, styles.trigger],
         stateStyles.outline,

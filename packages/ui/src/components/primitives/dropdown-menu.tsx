@@ -440,7 +440,6 @@ function DropdownMenuInput({
       size={useSizeStyles().input}
       sx={[styles.input, sx]}
     >
-      {/* Keeps the group's `input-group-control` slot, so the group draws the focus ring. */}
       <MenuPrimitive.Input render={<InputGroupInput />} {...props} />
       <InputGroupAddon>
         <span {...stylex.props(styles.searchIcon)}>

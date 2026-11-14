@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import { useId } from "react";
 
 import {
   Field,
@@ -7,7 +8,6 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
 } from "@/components/primitives/field";
 import { Label } from "@/components/primitives/label";
@@ -144,14 +144,17 @@ function RadioGroupCardDemo() {
 }
 
 function RadioGroupFieldsetDemo() {
+  const legend = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Subscription Plan</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Subscription Plan
+        </FieldLegend>
+        <FieldDescription>
           Yearly and lifetime plans offer significant savings.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="monthly">
+        </FieldDescription>
+        <RadioGroup aria-labelledby={legend} defaultValue="monthly">
           {billing.map((item) => (
             <Field key={item.value} orientation="horizontal">
               <RadioGroupItem value={item.value} />
@@ -186,17 +189,20 @@ function RadioGroupDisabledDemo() {
 }
 
 function RadioGroupInvalidDemo() {
+  const legend = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Notification Preferences</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Notification Preferences
+        </FieldLegend>
+        <FieldDescription>
           Choose how you want to receive notifications.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="email">
+        </FieldDescription>
+        <RadioGroup aria-labelledby={legend} defaultValue="email">
           {channels.map((item) => (
             <Field invalid key={item.value} orientation="horizontal">
-              <RadioGroupItem aria-invalid value={item.value} />
+              <RadioGroupItem value={item.value} />
               <FieldLabel sx={styles.regular}>{item.label}</FieldLabel>
             </Field>
           ))}

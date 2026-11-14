@@ -1,8 +1,15 @@
 "use client";
 
-import { Field as FieldPrimitive } from "@base-ui/react/field";
-import { Fieldset as FieldsetPrimitive } from "@base-ui/react/fieldset";
 import * as stylex from "@stylexjs/stylex";
+import {
+  FieldDescription as FieldDescriptionPrimitive,
+  FieldError as FieldErrorPrimitive,
+  FieldGroup as FieldGroupPrimitive,
+  FieldLabel as FieldLabelPrimitive,
+  FieldLegend as FieldLegendPrimitive,
+  Field as FieldPrimitive,
+  FieldSet as FieldSetPrimitive,
+} from "@ui-sdk/react/field";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
@@ -57,16 +64,19 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     gap: space.sm,
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     marginInline: 0,
     minWidth: 0,
     paddingBlock: 0,
     paddingInline: 0,
   },
+  // A native legend sits outside the set's flex flow, so the gap after it is a margin.
   legend: {
     color: colors.textPrimary,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.textSm,
+    marginBlockEnd: space.sm,
     paddingBlock: 0,
     paddingInline: 0,
   },
@@ -173,7 +183,8 @@ const styles = stylex.create({
   description: {
     color: colors.textSecondary,
     fontWeight: fontWeights.regular,
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     marginInline: 0,
     overflowWrap: "anywhere",
     textWrap: "pretty",
@@ -184,7 +195,8 @@ const styles = stylex.create({
     color: colors.textMuted,
     display: "flex",
     gap: space.xs,
-    marginBlock: `calc(-1 * ${space.xs})`,
+    marginBlockEnd: `calc(-1 * ${space.xs})`,
+    marginBlockStart: `calc(-1 * ${space.xs})`,
     minHeight: lineHeights.textSm,
   },
   separatorLine: { flex: 1 },
@@ -198,7 +210,8 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.xxxs,
     listStylePosition: "inside",
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     paddingInline: 0,
   },
 });
@@ -213,24 +226,22 @@ const legendStyles = {
   legend: typeStyles.textBase,
 } satisfies Record<LegendVariant, stylex.StyleXStyles>;
 
-function FieldSet({ sx, ...props }: Styled<FieldsetPrimitive.Root.Props>) {
-  return (
-    <FieldsetPrimitive.Root
-      data-slot="field-set"
-      {...props}
-      {...stylex.props(styles.set, sx)}
-    />
-  );
+function FieldSet({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof FieldSetPrimitive>>) {
+  return <FieldSetPrimitive {...props} {...stylex.props(styles.set, sx)} />;
 }
 
 function FieldLegend({
   sx,
   variant = "legend",
   ...props
-}: Styled<FieldsetPrimitive.Legend.Props> & { variant?: LegendVariant }) {
+}: Styled<ComponentProps<typeof FieldLegendPrimitive>> & {
+  variant?: LegendVariant;
+}) {
   return (
-    <FieldsetPrimitive.Legend
-      data-slot="field-legend"
+    <FieldLegendPrimitive
       data-variant={variant}
       {...props}
       {...stylex.props(styles.legend, legendStyles[variant], sx)}
@@ -238,25 +249,23 @@ function FieldLegend({
   );
 }
 
-function FieldGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  return (
-    <div
-      data-slot="field-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
-    />
-  );
+function FieldGroup({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof FieldGroupPrimitive>>) {
+  return <FieldGroupPrimitive {...props} {...stylex.props(styles.group, sx)} />;
 }
 
 function Field({
   orientation = "vertical",
   sx,
   ...props
-}: Styled<FieldPrimitive.Root.Props> & { orientation?: FieldOrientation }) {
+}: Styled<ComponentProps<typeof FieldPrimitive>> & {
+  orientation?: FieldOrientation;
+}) {
   return (
-    <FieldPrimitive.Root
+    <FieldPrimitive
       data-orientation={orientation}
-      data-slot="field"
       {...props}
       {...stylex.props(styles.field, orientationStyles[orientation], sx)}
     />
@@ -273,10 +282,12 @@ function FieldContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function FieldLabel({ sx, ...props }: Styled<FieldPrimitive.Label.Props>) {
+function FieldLabel({
+  sx,
+  ...props
+}: Styled<Omit<ComponentProps<typeof FieldLabelPrimitive>, "htmlFor">>) {
   return (
-    <FieldPrimitive.Label
-      data-slot="field-label"
+    <FieldLabelPrimitive
       {...props}
       {...stylex.props(labelStyles(), styles.label, sx)}
     />
@@ -299,28 +310,16 @@ function FieldTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
 function FieldDescription({
   sx,
   ...props
-}: Styled<FieldPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof FieldDescriptionPrimitive>>) {
   return (
-    <FieldPrimitive.Description
-      data-slot="field-description"
+    <FieldDescriptionPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />
   );
 }
 
-/** A fieldset's helper text. Base UI's description only works inside a `Field`. */
-function FieldSetDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
-  return (
-    <p
-      data-slot="field-set-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
-    />
-  );
-}
-
-type FieldErrorProps = Styled<FieldPrimitive.Error.Props> &
+type FieldErrorProps = Styled<ComponentProps<typeof FieldErrorPrimitive>> &
   (
     | { errors: readonly ({ message?: string } | undefined)[]; match?: never }
     | { errors?: undefined }
@@ -329,8 +328,7 @@ type FieldErrorProps = Styled<FieldPrimitive.Error.Props> &
 function FieldError({ errors, sx, ...props }: FieldErrorProps) {
   if (errors === undefined) {
     return (
-      <FieldPrimitive.Error
-        data-slot="field-error"
+      <FieldErrorPrimitive
         {...props}
         {...stylex.props([typeStyles.textSm, styles.error], sx)}
       />
@@ -354,14 +352,13 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
     return null;
   }
   return (
-    <FieldPrimitive.Error
-      data-slot="field-error"
+    <FieldErrorPrimitive
       match
       {...props}
       {...stylex.props([typeStyles.textSm, styles.error], sx)}
     >
       {children}
-    </FieldPrimitive.Error>
+    </FieldErrorPrimitive>
   );
 }
 
@@ -398,7 +395,6 @@ export {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
   fieldOrientations,
   legendVariants,
