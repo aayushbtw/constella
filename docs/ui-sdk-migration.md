@@ -75,7 +75,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | --- | --- | --- | --- |
 | The global stylesheet declares `@layer ui-sdk;` first, below every app layer; install docs tell consumers to | merged | [#13](https://github.com/aayushbtw/constella/pull/13) |  |
 | `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | merged | [#16](https://github.com/aayushbtw/constella/pull/16) | 21 files; textarea stays with its row |
-| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | pr |  |  |
+| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | merged | [#18](https://github.com/aayushbtw/constella/pull/18) |  |
 
 ### Phases 1 to 5
 
@@ -162,3 +162,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Merged `main` into `ui-sdk` at c3b66d7: Loading Bar added (row added), Code Block now uses Scroll Area. Includes the #15 fix |
 | 2026-11-14 | Filed and fixed #17 on `main` (Sidebar actions forced `type="button"` onto a `render` element), found by the slop review of #16; merged `main` in |
 | 2026-11-14 | #16 merged: 21 wrappers on `renderElement`/`mergeProps`, 0 of 82 prerendered pages differ. Its review surfaced #15 and #17, both fixed on `main` first |
+| 2026-11-14 | #18 merged: `vpr test` runs ui-sdk tests in jsdom with strict mode. Phase 0 done. The site stays on StyleX unplugin 0.19.1, since 0.19.2 regroups its CSS layers |
