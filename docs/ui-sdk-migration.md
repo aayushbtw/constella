@@ -23,6 +23,20 @@ A unit PR merges when all hold:
 5. Motion skills from `AGENTS.md` run on it.
 6. `vpr check` and `vpr build` pass.
 7. Port notes or gaps found go in [Findings](#findings), and decisions in ARCHITECTURE.md.
+8. Slop check: `/orbit:deslop` and `/orbit:no-comments` ran over the diff, with fixes applied.
+9. Reuse check: the `ui-sdk-reuse-reviewer` agent (`.claude/agents/ui-sdk-reuse-reviewer.md`) returned `CLEAN`, or every finding was fixed and a fresh run returned `CLEAN`. The PR body links its verdict.
+10. An independent `orbit:verifier` returned `PASS` or `PASS+NOTES` on the head SHA.
+
+## Pre-existing problems
+
+A bug or inconsistency the port uncovers that `main` already has is never fixed, worked around or carried inside a port PR.
+
+1. File it: `gh issue create --label found-in-port`, with the file, the symptom and how to see it on `main`.
+2. Fix it on `main` in its own change, through the normal bug flow.
+3. Merge `main` into `ui-sdk`, then continue the port on the fixed code.
+4. Add the issue to [Findings](#findings).
+
+A port PR blocked on such a fix sets its row to `blocked` with the issue link.
 
 ## Phases
 
