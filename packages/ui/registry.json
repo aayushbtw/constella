@@ -1202,7 +1202,7 @@
       "type": "registry:ui",
       "title": "Avatar",
       "description": "A user's picture with a fallback, a status badge, and groups that overlap.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
@@ -1347,10 +1347,10 @@
       "title": "Citation",
       "description": "A source's pill in an answer, opening a card with its publication, headline and date.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",

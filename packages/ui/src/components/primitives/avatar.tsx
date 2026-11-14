@@ -1,7 +1,11 @@
 "use client";
 
-import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import * as stylex from "@stylexjs/stylex";
+import {
+  AvatarFallback as AvatarFallbackPrimitive,
+  AvatarImage as AvatarImagePrimitive,
+  Avatar as AvatarPrimitive,
+} from "@ui-sdk/react/avatar";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
@@ -30,7 +34,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type AvatarProps = Styled<AvatarPrimitive.Root.Props> & {
+type AvatarProps = Styled<ComponentProps<typeof AvatarPrimitive>> & {
   /** `rounded` for a logo; a group's cut-outs assume a pill. */
   corners?: AvatarCorners;
   size?: AvatarSize;
@@ -168,7 +172,7 @@ const styles = stylex.create({
     height: "100%",
     maskImage: avatarVars.badgeCut,
     objectFit: "cover",
-    opacity: { default: 1, ":is([data-starting-style])": 0 },
+    // ui-sdk hides the image inline until it loads; clearing that is where the fade starts.
     transitionDuration: durations.crossfade,
     transitionProperty: "opacity",
     transitionTimingFunction: easings.crossfade,
@@ -290,10 +294,9 @@ function Avatar({
   ...props
 }: AvatarProps) {
   return (
-    <AvatarPrimitive.Root
+    <AvatarPrimitive
       data-corners={corners}
       data-size={size}
-      data-slot="avatar"
       {...props}
       {...stylex.props(
         styles.avatar,
@@ -305,23 +308,21 @@ function Avatar({
   );
 }
 
-function AvatarImage({ sx, ...props }: Styled<AvatarPrimitive.Image.Props>) {
+function AvatarImage({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof AvatarImagePrimitive>>) {
   return (
-    <AvatarPrimitive.Image
-      data-slot="avatar-image"
-      {...props}
-      {...stylex.props(styles.image, sx)}
-    />
+    <AvatarImagePrimitive {...props} {...stylex.props(styles.image, sx)} />
   );
 }
 
 function AvatarFallback({
   sx,
   ...props
-}: Styled<AvatarPrimitive.Fallback.Props>) {
+}: Styled<ComponentProps<typeof AvatarFallbackPrimitive>>) {
   return (
-    <AvatarPrimitive.Fallback
-      data-slot="avatar-fallback"
+    <AvatarFallbackPrimitive
       {...props}
       {...stylex.props(styles.fallback, sx)}
     />
