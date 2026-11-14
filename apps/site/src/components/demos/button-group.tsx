@@ -418,11 +418,10 @@ function ButtonGroupInputGroupDemo() {
               }
             />
             <InputGroupAddon align="inline-end">
-              <Tooltip>
+              <Tooltip type="label">
                 <TooltipTrigger
                   render={
                     <InputGroupButton
-                      aria-label="Voice mode"
                       aria-pressed={voice}
                       onClick={() => {
                         setVoice(!voice);

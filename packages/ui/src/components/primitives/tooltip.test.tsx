@@ -6,9 +6,10 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import { createTooltipController } from "@ui-sdk/react/tooltip";
+import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
-import { notLast } from "@/lib/constella/styles";
 import { durations } from "@/lib/constella/tokens.stylex";
 
 import { Button } from "./button";
@@ -196,7 +197,37 @@ test("in a popover, the first Escape closes the tooltip and the second the popov
   expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
 });
 
-test("a closed tooltip beside the last button in a group leaves its end corners whole", () => {
+function SharedCopyLink() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [controller] = useState(() => createTooltipController());
+  return (
+    <>
+      <TooltipTrigger controller={controller} render={<Button />}>
+        Copy link
+      </TooltipTrigger>
+      <Tooltip controller={controller}>
+        <TooltipContent>Anyone with the link can view</TooltipContent>
+      </Tooltip>
+    </>
+  );
+}
+
+test("Escape on a trigger connected by its own controller stops at the trigger", async () => {
+  const onKeyDown = vi.fn<() => void>();
+  document.addEventListener("keydown", onKeyDown);
+  render(<SharedCopyLink />);
+  const { content, trigger } = await focusOpen();
+
+  fireEvent.keyDown(trigger, { key: "Escape" });
+  await waitFor(() => {
+    expect(content.hidden).toBe(true);
+  });
+  expect(onKeyDown).not.toHaveBeenCalled();
+  document.removeEventListener("keydown", onKeyDown);
+});
+
+// StyleX CSS never reaches jsdom, so this checks the hidden content the corner join skips.
+test("a closed tooltip in a group stays hidden, so the last button keeps its end corners", () => {
   render(
     <ButtonGroup>
       <Button>Archive</Button>
@@ -206,12 +237,15 @@ test("a closed tooltip beside the last button in a group leaves its end corners 
       </Tooltip>
     </ButtonGroup>
   );
-  expect(screen.getByRole("button", { name: "Report" }).matches(notLast)).toBe(
-    false
-  );
-  expect(screen.getByRole("button", { name: "Archive" }).matches(notLast)).toBe(
-    true
-  );
+  const content = screen.getByRole("tooltip", { hidden: true });
+  expect(content.hidden).toBe(true);
+  const shown = screen
+    .getByRole("group")
+    .querySelectorAll(":scope > [data-slot]:not([hidden])");
+  expect([...shown].map((part) => part.textContent)).toEqual([
+    "Archive",
+    "Report",
+  ]);
 });
 
 function Nav() {
@@ -221,7 +255,9 @@ function Nav() {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Home">Home</SidebarMenuButton>
+              <SidebarMenuButton aria-describedby="home-hint" tooltip="Home">
+                Home
+              </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               {/* oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link */}
@@ -237,19 +273,41 @@ function Nav() {
   );
 }
 
-test("sidebar rows and the trigger keep their own slots under a tooltip, and a row reads its name once", () => {
+test("sidebar rows and the trigger keep their own slots under a tooltip, and each reads its name once", async () => {
   render(<Nav />);
 
   const home = screen.getByRole("button", { name: "Home" });
   expect(home.dataset.slot).toBe("sidebar-menu-button");
-  expect(home.getAttribute("aria-describedby")).toBeNull();
+  expect(home.getAttribute("aria-labelledby")).toBeNull();
+  expect(home.getAttribute("aria-describedby")).toBe("home-hint");
 
   const docs = screen.getByRole("link", { name: "Docs" });
   expect(docs.dataset.slot).toBe("sidebar-menu-button");
   expect(docs.hasAttribute("type")).toBe(false);
+  expect(docs.getAttribute("aria-labelledby")).toBeNull();
+  expect(docs.getAttribute("aria-describedby")).toBeNull();
 
-  const trigger = screen.getByRole("button", { name: "Collapse sidebar" });
+  const trigger = await screen.findByRole("button", {
+    description: "",
+    name: "Collapse sidebar",
+  });
   expect(trigger.dataset.slot).toBe("sidebar-trigger");
+  expect(trigger.getAttribute("aria-describedby")).toBeNull();
+});
+
+test("a sidebar trigger with a shortcut is described by its tooltip", async () => {
+  render(
+    <SidebarProvider>
+      <SidebarTrigger kbd="⌘B" />
+    </SidebarProvider>
+  );
+
+  expect(
+    await screen.findByRole("button", {
+      description: "Collapse sidebar⌘B",
+      name: "Collapse sidebar",
+    })
+  ).toBeTruthy();
 });
 
 test("an agent finds every control and tooltip by name", async () => {

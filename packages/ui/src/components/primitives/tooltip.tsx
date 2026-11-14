@@ -99,13 +99,16 @@ function Tooltip({
 }
 
 function TooltipTrigger({
+  controller: given,
   onKeyDown,
   sx,
   ...props
 }: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
-  const { controller } = use(TooltipContext);
+  const context = use(TooltipContext);
+  const controller = given ?? context.controller;
   return (
     <TooltipTriggerPrimitive
+      controller={given}
       onKeyDown={(event) => {
         onKeyDown?.(event);
         // ui-sdk hears Escape on the document, after a Base UI Dialog or Sheet closed on it; drop once those port.

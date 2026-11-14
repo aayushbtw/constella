@@ -1110,7 +1110,7 @@ function SidebarTrigger({
     label = "Open sidebar";
   }
   return (
-    <Tooltip>
+    <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
@@ -1416,12 +1416,15 @@ function SidebarMenuButton({
 
   return (
     <LabelContext value={setTruncated}>
-      <Tooltip disabled={!(rail || truncated)} type="label">
+      <Tooltip disabled={!(rail || truncated)}>
         <TooltipTrigger
-          // The trigger's `type="button"` would land on a link row; `own` sets it on a native one.
-          render={({ type: _type, ...trigger }) =>
-            renderElement("button", mergeProps(trigger, own), render)
-          }
+          // The row's label stays in the accessibility tree, even in the rail, so the tooltip only repeats it; `own` sets `type` on a native row.
+          render={({
+            "aria-describedby": _describedBy,
+            "aria-labelledby": _labelledBy,
+            type: _type,
+            ...trigger
+          }) => renderElement("button", mergeProps(trigger, own), render)}
         />
         <TooltipContent align="center" side={tooltipSide}>
           {tooltip}

@@ -441,7 +441,6 @@ type Sx = stylex.StyleXStyles<
 export {
   controlIconSize,
   joinStyles,
-  notLast,
   popupReset,
   stateStyles,
   textColors,
