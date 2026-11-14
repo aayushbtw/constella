@@ -1,9 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { createRef } from "react";
-import { renderToString } from "react-dom/server";
-import { expect, test } from "vite-plus/test";
+import { expect, onTestFinished, test, vi } from "vite-plus/test";
 
 import { CodeBlock, CodeBlockContent } from "@/components/ai/code-block";
 
@@ -92,17 +91,22 @@ test("a code block's pre is the viewport, its ref reaches it, and its root sits 
   expect(orientations(container)).toEqual(["horizontal"]);
 });
 
-test("server markup leaves the viewport without data-at-start, so it scrolls before hydration", () => {
-  const server = document.createElement("div");
-  server.innerHTML = renderToString(
-    <ScrollArea scrollbar="horizontal">Gallery</ScrollArea>
-  );
-  const viewport = server.querySelector<HTMLElement>(
-    "[data-slot='scroll-area-viewport']"
+test.fails("a viewport with sub-pixel overflow stays out of Tab order", async () => {
+  onTestFinished(() => {
+    vi.restoreAllMocks();
+  });
+  vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(300);
+  vi.spyOn(HTMLElement.prototype, "scrollWidth", "get").mockReturnValue(300);
+  const pre = createRef<HTMLPreElement>();
+  render(
+    <CodeBlock>
+      <CodeBlockContent ref={pre}>pnpm add ai</CodeBlockContent>
+    </CodeBlock>
   );
 
-  expect(viewport).not.toBeNull();
-  expect(viewport?.dataset.atStart).toBeUndefined();
+  await waitFor(() => {
+    expect(pre.current?.getAttribute("tabindex")).toBe("-1");
+  });
 });
 
 function SuggestionRow() {
