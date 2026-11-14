@@ -20,7 +20,7 @@ function Order() {
   );
 }
 
-// jsdom reports every change as programmatic, so the keyboard snap is checked in a browser.
+// jsdom events are untrusted, so ui-sdk reports every source as programmatic; the keyboard snap needs a browser.
 test("a press opens and closes the content, with no instant flag", async () => {
   render(<Order />);
   const trigger = screen.getByRole("button", { name: "Order #4189" });

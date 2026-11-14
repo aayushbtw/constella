@@ -68,17 +68,15 @@ const InTrigger = createContext<"run" | "step" | undefined>(undefined);
 const Live = createContext<{ readonly current: boolean }>({ current: false });
 
 const step = "[data-slot='trace-step']";
-// Only the trigger's: the root and panel carry it too, and the run's hold every step's chevron.
-const open = ":is([data-slot='collapsible-trigger'][data-open] *)";
+const triggerOpen = ":is([data-slot='collapsible-trigger'][data-open] *)";
 const instant =
   ":is([data-slot='collapsible-trigger'][data-collapsible-instant] *)";
 const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
-// The mark layers render only in a step's trigger, so any trigger around them is the step's.
-const stepHovered = ":is([data-slot='collapsible-trigger']:hover *)";
-const stepFocused = ":is([data-slot='collapsible-trigger']:focus-visible *)";
+const triggerHovered = ":is([data-slot='collapsible-trigger']:hover *)";
+const triggerFocused = ":is([data-slot='collapsible-trigger']:focus-visible *)";
 
 // The rail stops at each marker's box, measured from its center, half a row down; the box's room
 // around its 14px icon is the gap.
@@ -217,7 +215,7 @@ const styles = stylex.create({
     transitionDuration: {
       default: durations.hover,
       // Keyboard focus never animates.
-      [stepFocused]: "0s",
+      [triggerFocused]: "0s",
     },
     transitionProperty: {
       default: "opacity, scale, filter",
@@ -229,41 +227,41 @@ const styles = stylex.create({
   markIdle: {
     filter: {
       default: "none",
-      [stepFocused]: `blur(${motion.crossfadeTextBlur})`,
+      [triggerFocused]: `blur(${motion.crossfadeTextBlur})`,
       [media.hover]: {
         default: "none",
-        [stepHovered]: `blur(${motion.crossfadeTextBlur})`,
+        [triggerHovered]: `blur(${motion.crossfadeTextBlur})`,
       },
     },
     opacity: {
       default: 1,
-      [stepFocused]: 0,
-      [media.hover]: { default: 1, [stepHovered]: 0 },
+      [triggerFocused]: 0,
+      [media.hover]: { default: 1, [triggerHovered]: 0 },
     },
     scale: {
       default: 1,
-      [stepFocused]: motion.popoverScale,
-      [media.hover]: { default: 1, [stepHovered]: motion.popoverScale },
+      [triggerFocused]: motion.popoverScale,
+      [media.hover]: { default: 1, [triggerHovered]: motion.popoverScale },
     },
   },
   markActive: {
     filter: {
       default: `blur(${motion.crossfadeTextBlur})`,
-      [stepFocused]: "none",
+      [triggerFocused]: "none",
       [media.hover]: {
         default: `blur(${motion.crossfadeTextBlur})`,
-        [stepHovered]: "none",
+        [triggerHovered]: "none",
       },
     },
     opacity: {
       default: 0,
-      [stepFocused]: 1,
-      [media.hover]: { default: 0, [stepHovered]: 1 },
+      [triggerFocused]: 1,
+      [media.hover]: { default: 0, [triggerHovered]: 1 },
     },
     scale: {
       default: motion.popoverScale,
-      [stepFocused]: 1,
-      [media.hover]: { default: motion.popoverScale, [stepHovered]: 1 },
+      [triggerFocused]: 1,
+      [media.hover]: { default: motion.popoverScale, [triggerHovered]: 1 },
     },
   },
   icon: {
@@ -330,12 +328,12 @@ const styles = stylex.create({
     transform: {
       default: "rotate(-90deg)",
       [rtl]: "rotate(90deg)",
-      [open]: "none",
+      [triggerOpen]: "none",
     },
     // On the panel's timing each way, so it lands as the panel does.
     transitionDuration: {
       default: durations.layoutExit,
-      [open]: {
+      [triggerOpen]: {
         default: durations.layout,
         [instant]: "0s",
         [media.reducedMotion]: "0s",
@@ -346,7 +344,7 @@ const styles = stylex.create({
     transitionProperty: "transform",
     transitionTimingFunction: {
       default: easings.out,
-      [open]: easings.layout,
+      [triggerOpen]: easings.layout,
     },
   },
   // A window on the newest lines; older ones scroll up under a fade.

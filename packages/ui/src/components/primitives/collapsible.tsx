@@ -18,7 +18,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 const closing = ":is([data-ending-style])";
-// A keyboard open has no from-state, so its first frame is already open.
+// ui-sdk holds the starting style one frame, which a 0s keyboard open would show as an empty panel.
 const opening = ":is([data-starting-style]):not([data-collapsible-instant])";
 
 const styles = stylex.create({
