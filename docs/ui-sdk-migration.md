@@ -61,7 +61,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Task | Status | PR | Notes |
 | --- | --- | --- | --- |
-| The global stylesheet declares `@layer ui-sdk;` first, below every app layer; install docs tell consumers to | pr |  |  |
+| The global stylesheet declares `@layer ui-sdk;` first, below every app layer; install docs tell consumers to | merged | [#13](https://github.com/aayushbtw/constella/pull/13) |  |
 | `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | todo |  | 22 files: alert, badge, breadcrumb, button-group, card, empty, field, input-group, item, kbd, sidebar, textarea, the 5 typography parts, attachment, code-block, marker, model-picker, shimmer |
 | Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo |  |  |
 
@@ -137,3 +137,6 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | Date | Event |
 | --- | --- |
 | 2026-11-14 | `ui-sdk` branch created; 0.1.0-beta.1 and the `ui-sdk` skill installed; tracker written |
+| 2026-11-14 | Added the reuse review, slop check and pre-existing problem rules. Unit branches renamed `port/<unit>`, since git refuses `ui-sdk/<unit>` beside `ui-sdk` |
+| 2026-11-14 | #13 merged: `@layer ui-sdk;` in the global stylesheet. The reuse review caught that declaring it in `base.css` loses to any layer declared earlier |
+| 2026-11-14 | Advisor on the render helper swap: own attrs first so caller props win, add `type="button"` by hand, Textarea stays on Base UI until its row, HTML diff harness lands first |
