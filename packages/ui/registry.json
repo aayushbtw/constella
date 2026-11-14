@@ -359,7 +359,7 @@
       "type": "registry:ui",
       "title": "Tooltip",
       "description": "A small inverted label that names what's under the pointer.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {

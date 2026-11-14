@@ -15,13 +15,12 @@ import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fontWeights,
-  joins,
   media,
   motion,
   offsets,
@@ -44,20 +43,6 @@ const closing = ":is([data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
 
 const styles = stylex.create({
-  // The content renders in place, so it drops what it would inherit from there: a group's joins,
-  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box.
-  popup: {
-    [joins.block]: "1",
-    [joins.either]: "1",
-    [joins.inline]: "1",
-    color: colors.textPrimary,
-    cursor: "auto",
-    fontVariantNumeric: "normal",
-    fontWeight: fontWeights.regular,
-    textAlign: "start",
-    userSelect: "text",
-    whiteSpace: "normal",
-  },
   // Select's surface and motion (below), so every popup opens the same way.
   surface: {
     backgroundColor: colors.raised,
@@ -143,7 +128,7 @@ function PopoverContent({
       sideOffset={sideOffset}
       {...props}
       {...stylex.props(
-        [typeStyles.textSm, styles.popup, styles.surface],
+        [typeStyles.textSm, popupReset.base, styles.surface],
         styles.motion,
         sx
       )}
@@ -195,7 +180,7 @@ function PopoverClose({
 /** The popup's reset, surface and motion, for a part that draws its own popup. */
 const popoverStyles = {
   motion: styles.motion,
-  popup: styles.popup,
+  popup: popupReset.base,
   surface: [typeStyles.textSm, styles.surface],
 };
 

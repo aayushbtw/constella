@@ -248,7 +248,7 @@ A disabled button takes no pointer events. Put the trigger on a wrapper.
 </Tooltip>
 ```
 
-Wrap neighbors in a `TooltipProvider` so the next opens at once. An icon-only button gets an `aria-label` as well as a tooltip.
+Neighbors group on their own, so once one is open the next opens at once. An icon-only button gets an `aria-label` as well as a tooltip.
 
 ---
 

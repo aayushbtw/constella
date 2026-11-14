@@ -1,16 +1,24 @@
 "use client";
 
-import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 import * as stylex from "@stylexjs/stylex";
+import {
+  createTooltipController,
+  TooltipContent as TooltipContentPrimitive,
+  Tooltip as TooltipPrimitive,
+  TooltipTrigger as TooltipTriggerPrimitive,
+} from "@ui-sdk/react/tooltip";
+import type { TooltipController, TooltipProps } from "@ui-sdk/react/tooltip";
+import { createContext, use, useMemo, useState } from "react";
+import type { ComponentProps } from "react";
 
+import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fontWeights,
-  layers,
   media,
   motion,
   offsets,
@@ -23,13 +31,13 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
+// ui-sdk holds `data-starting-style` a frame on an instant open, and `data-instant` while closing, which still fades.
+const offstage =
+  ":is([data-starting-style], [data-ending-style]):not([data-instant][data-open], [data-skip-motion])";
+const instant = ":is([data-instant][data-open], [data-skip-motion])";
 
 const styles = stylex.create({
-  positioner: {
-    zIndex: layers.tooltip,
-  },
-  popup: {
+  content: {
     alignItems: "center",
     backgroundColor: colors.invertedSolid,
     borderStartStartRadius: radii.sm,
@@ -50,10 +58,9 @@ const styles = stylex.create({
     paddingInlineStart: space.xs,
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
     transformOrigin: "var(--transform-origin)",
-    // Once one tooltip is open, the next opens at once, so moving along a toolbar stays quick.
     transitionDuration: {
       default: durations.hover,
-      ":is([data-instant])": "0s",
+      [instant]: "0s",
     },
     transitionProperty: {
       default: "opacity, transform",
@@ -63,99 +70,76 @@ const styles = stylex.create({
   },
 });
 
-function TooltipProvider(props: TooltipPrimitive.Provider.Props) {
-  return <TooltipPrimitive.Provider data-slot="tooltip-provider" {...props} />;
-}
+const TooltipContext = createContext<{
+  controller?: TooltipController;
+  skip: boolean;
+}>({ skip: false });
 
-function Tooltip(props: TooltipPrimitive.Root.Props) {
-  return <TooltipPrimitive.Root {...props} />;
+function Tooltip({
+  controller: given,
+  delay = Number.parseFloat(durations.tooltipDelay),
+  onOpenChange,
+  ...props
+}: TooltipProps) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [own] = useState(() => createTooltipController());
+  const controller = given ?? own;
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  const context = useMemo(() => ({ controller, skip }), [controller, skip]);
+  return (
+    <TooltipContext value={context}>
+      <TooltipPrimitive
+        controller={controller}
+        delay={delay}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </TooltipContext>
+  );
 }
 
 function TooltipTrigger({
-  delay = Number.parseFloat(durations.tooltipDelay),
+  onKeyDown,
   sx,
   ...props
-}: Styled<TooltipPrimitive.Trigger.Props>) {
+}: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
+  const { controller } = use(TooltipContext);
   return (
-    <TooltipPrimitive.Trigger
-      data-slot="tooltip-trigger"
-      delay={delay}
+    <TooltipTriggerPrimitive
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        // ui-sdk hears Escape on the document, after a Base UI Dialog or Sheet closed on it; drop once those port.
+        if (
+          event.key === "Escape" &&
+          controller?.isOpen() === true &&
+          controller.close({ event: event.nativeEvent, reason: "escape-key" })
+        ) {
+          event.stopPropagation();
+        }
+      }}
       {...props}
       {...stylex.props(sx)}
     />
   );
 }
 
-function TooltipPortal({
-  sx,
-  ...props
-}: Styled<TooltipPrimitive.Portal.Props>) {
-  return (
-    <TooltipPrimitive.Portal
-      data-slot="tooltip-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-function TooltipPositioner({
+function TooltipContent({
   sideOffset = Number(offsets.tooltip),
   sx,
   ...props
-}: Styled<TooltipPrimitive.Positioner.Props>) {
+}: Styled<ComponentProps<typeof TooltipContentPrimitive>>) {
+  const { skip } = use(TooltipContext);
   return (
-    <TooltipPrimitive.Positioner
-      data-slot="tooltip-positioner"
+    <TooltipContentPrimitive
+      data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
       {...props}
-      {...stylex.props(styles.positioner, sx)}
+      {...stylex.props(
+        [typeStyles.captionLg, popupReset.base, styles.content],
+        sx
+      )}
     />
   );
 }
 
-function TooltipPopup({ sx, ...props }: Styled<TooltipPrimitive.Popup.Props>) {
-  return (
-    <TooltipPrimitive.Popup
-      data-slot="tooltip-popup"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.popup], sx)}
-    />
-  );
-}
-
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
-function TooltipContent({
-  align,
-  alignOffset,
-  side,
-  sideOffset,
-  ...props
-}: Styled<TooltipPrimitive.Popup.Props> &
-  Pick<
-    TooltipPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
-  >) {
-  return (
-    <TooltipPortal>
-      <TooltipPositioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <TooltipPopup {...props} />
-      </TooltipPositioner>
-    </TooltipPortal>
-  );
-}
-
-export {
-  Tooltip,
-  TooltipContent,
-  TooltipPopup,
-  TooltipPortal,
-  TooltipPositioner,
-  TooltipProvider,
-  TooltipTrigger,
-};
+export { Tooltip, TooltipContent, TooltipTrigger };
