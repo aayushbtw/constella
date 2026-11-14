@@ -45,6 +45,11 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 
 type CollapsibleProps = ComponentProps<typeof Collapsible>;
 
+type TraceTriggerProps = Omit<
+  Styled<ComponentProps<typeof CollapsibleTrigger>>,
+  "children" | "render"
+> & { children?: ReactNode };
+
 interface StepContext {
   // Whether the step is still arriving, so a substep mounted with it doesn't enter twice.
   arriving: boolean;
@@ -56,23 +61,24 @@ const Step = createContext<StepContext>({
   state: undefined,
 });
 
-const InStepTrigger = createContext(false);
+const InTrigger = createContext<"run" | "step" | undefined>(undefined);
 
 // True once the Trace has mounted: only a step that arrives after it gets an entrance, so a
 // run read back from history, or rendered on the server, lands without one.
 const Live = createContext<{ readonly current: boolean }>({ current: false });
 
 const step = "[data-slot='trace-step']";
-const open = ":is([data-panel-open] *)";
-// Only the trigger's own flag: the run's panel carries it too, and holds every step's chevron.
-const instant = ":is([data-slot$='-trigger'][data-collapsible-instant] *)";
+// Only the trigger's: the root and panel carry it too, and the run's hold every step's chevron.
+const open = ":is([data-slot='collapsible-trigger'][data-open] *)";
+const instant =
+  ":is([data-slot='collapsible-trigger'][data-collapsible-instant] *)";
 const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
 const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
-const inTrigger = ":is([data-slot='trace-collapsible-trigger'] *)";
-const stepHovered = ":is([data-slot='trace-step-trigger']:hover *)";
-const stepFocused = ":is([data-slot='trace-step-trigger']:focus-visible *)";
+// The mark layers render only in a step's trigger, so any trigger around them is the step's.
+const stepHovered = ":is([data-slot='collapsible-trigger']:hover *)";
+const stepFocused = ":is([data-slot='collapsible-trigger']:focus-visible *)";
 
 // The rail stops at each marker's box, measured from its center, half a row down; the box's room
 // around its 14px icon is the gap.
@@ -293,9 +299,12 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
   },
   description: {
-    color: { default: colors.textMuted, [inTrigger]: "inherit" },
+    color: colors.textMuted,
     flexShrink: 0,
     fontVariantNumeric: "tabular-nums",
+  },
+  descriptionInRun: {
+    color: "inherit",
   },
   descriptionError: {
     color: colors.dangerText,
@@ -493,20 +502,15 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
  * A step's line that opens and shuts its content. Put the line's parts in it; its marker turns
  * into a chevron while it's pointed at. A step with `open` needs `onOpenChange` for it to toggle.
  */
-function TraceStepTrigger({
-  children,
-  sx,
-  ...props
-}: Omit<Styled<ComponentProps<typeof CollapsibleTrigger>>, "render">) {
+function TraceStepTrigger({ children, sx, ...props }: TraceTriggerProps) {
   return (
     <CollapsibleTrigger
-      data-slot="trace-step-trigger"
       render={<button type="button" {...stylex.props(styles.action, sx)} />}
       {...props}
     >
-      <InStepTrigger value>
+      <InTrigger value="step">
         <TraceLine>{children}</TraceLine>
-      </InStepTrigger>
+      </InTrigger>
     </CollapsibleTrigger>
   );
 }
@@ -514,7 +518,7 @@ function TraceStepTrigger({
 /** The step's icon on the rail, red when it failed. In a `TraceStepTrigger` it reveals a chevron. */
 function TraceMarker({ children, sx }: { children: ReactNode; sx?: Sx }) {
   const { state } = use(Step);
-  const inStepTrigger = use(InStepTrigger);
+  const inStepTrigger = use(InTrigger) === "step";
   return (
     <span
       aria-hidden
@@ -579,12 +583,14 @@ function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
 /** A count or a duration after the title; it doesn't truncate. */
 function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
   const { state } = use(Step);
+  const inRun = use(InTrigger) === "run";
   return (
     <span
       data-slot="trace-description"
       {...props}
       {...stylex.props(
         styles.description,
+        inRun && styles.descriptionInRun,
         state === "error" && styles.descriptionError,
         sx
       )}
@@ -595,7 +601,7 @@ function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
 /** What opens under a step, lined up with its title. The step's `open` shows it. */
 function TraceStepContent({ children, sx }: { children: ReactNode; sx?: Sx }) {
   return (
-    <CollapsibleContent data-slot="trace-step-content" keepMounted>
+    <CollapsibleContent keepMounted>
       <div {...stylex.props([typeStyles.textSm, styles.contentBody], sx)}>
         {children}
       </div>
@@ -615,13 +621,7 @@ function TraceCollapsible({
         onOpenChange: NonNullable<CollapsibleProps["onOpenChange"]>;
       }
   )) {
-  return (
-    <Collapsible
-      data-slot="trace-collapsible"
-      {...props}
-      sx={[styles.collapsible, sx]}
-    />
-  );
+  return <Collapsible {...props} sx={[styles.collapsible, sx]} />;
 }
 
 /** The run's row, with the chevron after it: put a `TraceTitle` and `TraceDescription` in it. */
@@ -629,17 +629,18 @@ function TraceCollapsibleTrigger({
   children,
   sx,
   ...props
-}: Omit<Styled<ComponentProps<typeof CollapsibleTrigger>>, "render">) {
+}: TraceTriggerProps) {
   return (
     <CollapsibleTrigger
-      data-slot="trace-collapsible-trigger"
       render={<button type="button" {...stylex.props(styles.action, sx)} />}
       {...props}
     >
-      <span {...stylex.props([typeStyles.textSm, styles.line])}>
-        {children}
-        <Chevron />
-      </span>
+      <InTrigger value="run">
+        <span {...stylex.props([typeStyles.textSm, styles.line])}>
+          {children}
+          <Chevron />
+        </span>
+      </InTrigger>
     </CollapsibleTrigger>
   );
 }
@@ -649,14 +650,7 @@ function TraceCollapsibleContent({
   sx,
   ...props
 }: Styled<ComponentProps<typeof CollapsibleContent>>) {
-  return (
-    <CollapsibleContent
-      data-slot="trace-collapsible-content"
-      keepMounted
-      sx={sx}
-      {...props}
-    />
-  );
+  return <CollapsibleContent keepMounted sx={sx} {...props} />;
 }
 
 const windowLines = 4;

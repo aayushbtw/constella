@@ -1,8 +1,13 @@
 "use client";
 
-import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible";
 import * as stylex from "@stylexjs/stylex";
+import {
+  CollapsiblePanel as CollapsiblePanelPrimitive,
+  Collapsible as CollapsiblePrimitive,
+  CollapsibleTrigger as CollapsibleTriggerPrimitive,
+} from "@ui-sdk/react/collapsible";
 import { createContext, use, useState } from "react";
+import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
@@ -15,7 +20,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 const offstage = ":is([data-starting-style], [data-ending-style])";
 
 const styles = stylex.create({
-  // Content below has to make room, so the panel grows to Base UI's measured height.
+  // Content below has to make room, so the panel grows to ui-sdk's measured height.
   content: {
     height: {
       default: "var(--collapsible-panel-height)",
@@ -49,15 +54,14 @@ function Collapsible({
   open,
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Root.Props>) {
+}: Styled<ComponentProps<typeof CollapsiblePrimitive>>) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [toggledTo, setToggledTo] = useState<boolean>();
   // A later change from the app's `open` isn't the keyboard's, so it animates.
   const instant = skip && (open === undefined || open === toggledTo);
   return (
     <Instant value={instant}>
-      <CollapsiblePrimitive.Root
-        data-slot="collapsible"
+      <CollapsiblePrimitive
         onOpenChange={(next, details) => {
           setToggledTo(next);
           handleOpenChange(next, details);
@@ -74,11 +78,10 @@ function Collapsible({
 function CollapsibleTrigger({
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Trigger.Props>) {
+}: Styled<ComponentProps<typeof CollapsibleTriggerPrimitive>>) {
   return (
-    <CollapsiblePrimitive.Trigger
+    <CollapsibleTriggerPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      data-slot="collapsible-trigger"
       {...props}
       {...stylex.props(sx)}
     />
@@ -88,11 +91,10 @@ function CollapsibleTrigger({
 function CollapsibleContent({
   sx,
   ...props
-}: Styled<CollapsiblePrimitive.Panel.Props>) {
+}: Styled<ComponentProps<typeof CollapsiblePanelPrimitive>>) {
   return (
-    <CollapsiblePrimitive.Panel
+    <CollapsiblePanelPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      data-slot="collapsible-content"
       {...props}
       {...stylex.props(styles.content, sx)}
     />

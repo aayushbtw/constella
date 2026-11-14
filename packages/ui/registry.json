@@ -264,7 +264,7 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "A section that opens and closes, growing to its height.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
