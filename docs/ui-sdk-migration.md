@@ -87,13 +87,14 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Switch | 2 | switch | Switch | todo |  |  |
 | Radio Group | 2 | radio-group, radio | Radio | todo |  |  |
 | Progress | 2 | progress | Progress | todo |  |  |
+| Loading Bar | 2 | progress | Progress | todo |  |  | Added on main 2026-11-14; port after Progress |
 | Meter | 2 | meter | Meter | todo |  |  |
 | Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold |
 | Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
 | Field | 2 | field, fieldset | Field | todo |  | No Fieldset documented; check |
 | Input Group | 2 | input | Input | todo |  |  |
 | Textarea | 2 | field | Textarea | todo |  |  |
-| Scroll Area | 2 | scroll-area | Scroll Area | todo |  |  |
+| Scroll Area | 2 | scroll-area | Scroll Area | todo |  | Code Block also uses it, and `DirectionProvider` |
 | Collapsible | 2 | collapsible | Collapsible | todo |  |  |
 | Tabs | 2 | tabs | Tabs | todo |  |  |
 | Tooltip | 3 | tooltip | Tooltip | todo |  |  |
@@ -150,3 +151,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Added the reuse review, slop check and pre-existing problem rules. Unit branches renamed `port/<unit>`, since git refuses `ui-sdk/<unit>` beside `ui-sdk` |
 | 2026-11-14 | #13 merged: `@layer ui-sdk;` in the global stylesheet. The reuse review caught that declaring it in `base.css` loses to any layer declared earlier |
 | 2026-11-14 | Advisor on the render helper swap: own attrs first so caller props win, add `type="button"` by hand, Textarea stays on Base UI until its row, HTML diff harness lands first |
+| 2026-11-14 | Merged `main` into `ui-sdk` at c3b66d7: Loading Bar added (row added), Code Block now uses Scroll Area. Includes the #15 fix |
