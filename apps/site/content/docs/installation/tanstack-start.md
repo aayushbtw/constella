@@ -100,7 +100,7 @@ export default defineConfig({
 
 ## Import the base styles
 
-Constella's theme, preflight and focus ring are in `src/lib/constella/base.css`. Import it at the top of `src/styles.css`, the stylesheet your root route links, so it applies at first paint. Put `@layer ui-sdk;` above it, so the CSS components add at runtime sits below your styles:
+Constella's theme, preflight and focus ring are in `src/lib/constella/base.css`. Import it at the top of `src/styles.css`, the stylesheet your root route links, so it applies at first paint. Put `@layer ui-sdk;` above it, so the CSS that components add at runtime sits below your styles:
 
 ```css
 @layer ui-sdk;

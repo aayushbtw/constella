@@ -113,7 +113,7 @@ module.exports = {
 };
 ```
 
-In `src/app/globals.css`, which the root layout already imports, import Constella's theme, preflight and focus ring at the top, and end with the directive StyleX replaces with its CSS. Put `@layer ui-sdk;` above the import, so the CSS components add at runtime sits below your styles:
+In `src/app/globals.css`, which the root layout already imports, import Constella's theme, preflight and focus ring at the top, and end with the directive StyleX replaces with its CSS. Put `@layer ui-sdk;` above the import, so the CSS that components add at runtime sits below your styles:
 
 ```css
 @layer ui-sdk;
