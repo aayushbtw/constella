@@ -29,7 +29,7 @@ import {
   Popover,
   popoverStyles,
   PopoverTrigger,
-  usePopoverInstant,
+  usePopoverSkipMotion,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
 import type { Sx } from "@/lib/constella/styles";
@@ -217,11 +217,12 @@ function ModelPickerContent({
   detailsSide?: (typeof modelPickerDetailsSides)[number];
 }) {
   const { picked } = usePicker();
-  const instant = usePopoverInstant();
+  const skip = usePopoverSkipMotion();
   return (
     <PopoverContentPrimitive
       align={align}
       data-details-side={detailsSide}
+      data-skip-motion={picked || skip || undefined}
       sideOffset={sideOffset}
       {...props}
       {...stylex.props(
@@ -229,7 +230,6 @@ function ModelPickerContent({
         popoverStyles.motion,
         styles.content,
         detailsSide === "inline-start" && styles.detailsStart,
-        (picked || instant) && popoverStyles.instant,
         sx
       )}
     />

@@ -10,10 +10,10 @@ import {
   PopoverTrigger as PopoverTriggerPrimitive,
 } from "@ui-sdk/react/popover";
 import type { PopoverProps } from "@ui-sdk/react/popover";
-import { createContext, use, useState } from "react";
+import { createContext, use } from "react";
 import type { ComponentProps } from "react";
-import { flushSync } from "react-dom";
 
+import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
@@ -40,7 +40,8 @@ type PopoverContentProps = Styled<
 >;
 
 const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style])";
+const closing = ":is([data-ending-style]):not([data-skip-motion])";
+const instant = ":is([data-skip-motion])";
 
 const styles = stylex.create({
   // The content renders in place, so it drops what it would inherit from there: a group's joins,
@@ -51,9 +52,10 @@ const styles = stylex.create({
     [joins.inline]: "1",
     color: colors.textPrimary,
     cursor: "auto",
+    fontVariantNumeric: "normal",
     fontWeight: fontWeights.regular,
     textAlign: "start",
-    userSelect: "auto",
+    userSelect: "text",
     whiteSpace: "normal",
   },
   // Select's surface and motion (below), so every popup opens the same way.
@@ -80,15 +82,13 @@ const styles = stylex.create({
     transitionDuration: {
       default: durations.popover,
       [closing]: durations.popoverExit,
+      [instant]: "0s",
     },
     transitionProperty: {
       default: "opacity, transform",
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
-  },
-  instant: {
-    transitionDuration: "0s",
   },
   header: {
     display: "flex",
@@ -109,33 +109,20 @@ const styles = stylex.create({
   },
 });
 
-// Whether the last open or close came from the keyboard or focus leaving, which skip the motion,
-// as Base UI's `data-instant` did. ui-sdk marks the content as it closes, after this callback,
-// so the flag commits first: a frame later, the exit would already be running.
-const InstantContext = createContext(false);
+const SkipMotion = createContext(false);
 
 function Popover({ onOpenChange, ...props }: PopoverProps) {
-  const [instant, setInstant] = useState(false);
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
-    <InstantContext value={instant}>
-      <PopoverPrimitive
-        onOpenChange={(open, details) => {
-          flushSync(() => {
-            setInstant(
-              details.source === "keyboard" || details.reason === "focus-out"
-            );
-          });
-          onOpenChange?.(open, details);
-        }}
-        {...props}
-      />
-    </InstantContext>
+    <SkipMotion value={skip}>
+      <PopoverPrimitive onOpenChange={handleOpenChange} {...props} />
+    </SkipMotion>
   );
 }
 
-/** Whether the popover's last open or close skips its motion; apply `popoverStyles.instant` while it does. */
-function usePopoverInstant() {
-  return use(InstantContext);
+/** Whether the popover's last open or close skips its motion, for a part that draws its own popup. */
+function usePopoverSkipMotion() {
+  return use(SkipMotion);
 }
 
 function PopoverTrigger({
@@ -150,15 +137,15 @@ function PopoverContent({
   sx,
   ...props
 }: PopoverContentProps) {
-  const instant = usePopoverInstant();
+  const skip = usePopoverSkipMotion();
   return (
     <PopoverContentPrimitive
+      data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.popup, styles.surface],
         styles.motion,
-        instant && styles.instant,
         sx
       )}
     />
@@ -208,7 +195,6 @@ function PopoverClose({
 
 /** The popup's reset, surface and motion, for a part that draws its own popup. */
 const popoverStyles = {
-  instant: styles.instant,
   motion: styles.motion,
   popup: styles.popup,
   surface: [typeStyles.textSm, styles.surface],
@@ -223,6 +209,6 @@ export {
   popoverStyles,
   PopoverTitle,
   PopoverTrigger,
-  usePopoverInstant,
+  usePopoverSkipMotion,
 };
 export type { PopoverContentProps };

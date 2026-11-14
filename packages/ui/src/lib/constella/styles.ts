@@ -140,7 +140,8 @@ const typeStyles = stylex.create({
 });
 
 // A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
-const popupOpen = ":is([data-popup-open], [aria-haspopup][data-open])";
+// `:where` holds both at one attribute's specificity, as Base UI's alone was.
+const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
 
 // The open state repeats inside the media block, which StyleX ranks above a bare condition.
 const interactive = <R, A>(rest: R, active: A) => ({

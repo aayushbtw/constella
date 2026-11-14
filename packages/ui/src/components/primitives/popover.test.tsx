@@ -62,6 +62,33 @@ test("Close closes it and returns focus to the trigger", async () => {
   expect(trigger.getAttribute("aria-expanded")).toBe("false");
 });
 
+// ui-sdk reads a change's source only from trusted events, so the keyboard path is checked in a browser.
+test("focus leaving closes it with no exit motion, after a click opened it with one", async () => {
+  render(
+    <>
+      <Popover>
+        <PopoverTrigger>Open popover</PopoverTrigger>
+        <PopoverContent keepMounted>
+          <PopoverTitle>Dimensions</PopoverTitle>
+          <PopoverClose>Done</PopoverClose>
+        </PopoverContent>
+      </Popover>
+      <button type="button">Elsewhere</button>
+    </>
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Open popover" }));
+  const content = await screen.findByRole("dialog", { name: "Dimensions" });
+  expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(false);
+
+  screen.getByRole("button", { name: "Done" }).focus();
+  screen.getByRole("button", { name: "Elsewhere" }).focus();
+
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+  expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(true);
+});
+
 test("an agent finds the popover by its trigger and presses its controls", async () => {
   render(<Dimensions />);
 

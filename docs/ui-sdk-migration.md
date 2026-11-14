@@ -100,19 +100,19 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Collapsible | 2 | collapsible | Collapsible | todo |  |  |
 | Tabs | 2 | tabs | Tabs | todo |  |  |
 | Tooltip | 3 | tooltip | Tooltip | todo |  |  |
-| Hover Card | 3 | preview-card | Hover Card | todo |  |  |
+| Hover Card | 3 | preview-card | Hover Card | todo |  | Drop the `popupVars` copy. ui-sdk's hover card trigger lists only `data-open`; check Button's open style when it ports |
 | Dialog | 3 | dialog | Dialog | todo |  |  |
 | Sheet | 3 | dialog | Drawer | todo |  | Or Dialog with `presentation="sheet"`; decide in the PR |
 | Side Panel | 3 | dialog | Drawer | todo |  |  |
 | Alert Dialog | 3 | alert-dialog | Alert Dialog | todo |  | Consider `createConfirm()` |
 | Toast | 3 | toast | Toast | todo |  | No anchored toasts; region placement is ours without `web.css` |
-| Select | 4 | select | Select | todo |  |  |
-| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input` |
+| Select | 4 | select | Select | todo |  | Drop the `popupVars` copy |
+| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy |
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
 | Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo |  | No Toggle Group documented; check |
 | Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  |  |
 | Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
-| Prompt Input | 5 | autocomplete |  | todo |  | After Command |
+| Prompt Input | 5 | autocomplete |  | todo |  | After Command. Drop the `popupVars` copy |
 | Citation | 5 | avatar |  | todo |  | After Avatar, Hover Card |
 | Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
 | Sidebar | 5 | via Sheet, render helpers |  | todo |  | Re-verify only |
@@ -130,6 +130,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Task | Status | PR |
 | --- | --- | --- |
 | Remove `@base-ui/react` from `packages/ui` and `apps/site` | todo |  |
+| Delete the `popupVars` token, the Base UI branch of `useSkipMotion` and the `[data-popup-open]` half of the open-state selector | todo |  |
 | Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | todo |  |
 | Registry build and every docs page checked | todo |  |
 | Land `ui-sdk` on `main` | todo |  |
@@ -149,10 +150,10 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Popover | ui-sdk registers `--available-height` and `--available-width` without inheritance as soon as a popover mounts, so every Base UI popup on the page lost its max height and width. Their positioners now copy the values into `popupVars` |
 | 2026-11-14 | Popover | The open content rendered in place counted as a ButtonGroup part and squared the trigger's end corners. The joins skip `[popover]` |
 | 2026-11-14 | Popover | The content inherits from where it sits: an addon's weight, cursor and `user-select`, a group's joins. `popoverStyles.popup` resets them. ui-sdk's runtime layer, not `web.css`, resets the browser's `[popover]` box |
-| 2026-11-14 | Popover | No `data-instant`. `Popover` keeps the keyboard and focus-out skip from `onOpenChange`'s `details` and commits it with `flushSync`; without it an Escape after a pointer open ran the 120ms exit |
+| 2026-11-14 | Popover | No documented ui-sdk hook tells popup content how a change came about (`data-instant` is Tooltip-only). `useSkipMotion` gained a ui-sdk branch: it skips on `details.source === "keyboard"` or `reason === "focus-out"`, and Popover and Model Picker content stamp `data-skip-motion`. It commits with `flushSync`, since ui-sdk reads the content's transitions right after `onOpenChange`; without it an Escape after a pointer open ran the 120ms exit. A `flushSync` inside a React commit (like `controller.close()` in an effect) is skipped with a logged error; it runs only when the value changes, which avoids most of those. `source` is read from trusted events only, so jsdom tests see `programmatic` and the keyboard path is checked in a browser. Remove the branch once ui-sdk ships `data-instant` on popup content |
 | 2026-11-14 | Popover | `initialFocus` takes no open type, so Date Range Picker picks `"auto"` or `"content"` from `details.source` in `onOpenChange` |
 | 2026-11-14 | Popover | Base UI's `actionsRef` is ui-sdk's controller: Model Picker closes on pick with `createPopoverController().close()` |
-| 2026-11-14 | Popover | Not on `main`: Model Picker's docs still link Base UI `useRender` for `render`, left from #16 |
+| 2026-11-14 | Popover | Not on `main`: Model Picker's docs linked Base UI `useRender` for `render`, left from #16; it now links ui-sdk's Parts and Composition. Empty, Kbd, Breadcrumb, Shimmer, Item, Card and Alert still link Base UI `useRender` |
 | 2026-11-14 | Render helpers | `SidebarGroupAction` and `SidebarMenuAction` forced `type="button"` onto a `render` element on `main`. Found by the slop review of #16, filed and fixed on `main` as [#17](https://github.com/aayushbtw/constella/issues/17), then merged in |
 | 2026-11-14 | Render helpers | A handler on a `render` element that calls `preventDefault()` now skips the part's own handler (ui-sdk `mergeProps`). Base UI needed `event.preventBaseUIHandler()` for that |
 | 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |
