@@ -107,4 +107,4 @@ Use `AlertAction` for a button at the alert's end.
 | `Alert` | `color`: `"success"`, `"info"`, `"warning"` or `"danger"`; `role="alert"` |
 | `AlertTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last, and renders a `div`. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

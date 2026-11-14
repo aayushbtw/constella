@@ -51,5 +51,5 @@ Takes every prop of `<span>`, plus:
 
 | Prop | Type |
 | --- | --- |
-| `render` | `ReactElement \| function`; see [Base UI useRender](https://base-ui.com/react/utils/use-render) |
+| `render` | `ReactElement \| function`; see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |
 | `sx` | `Sx`, applied last |

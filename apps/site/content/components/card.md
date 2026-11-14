@@ -175,4 +175,4 @@ Small cards fit a grid of numbers, each with its change as a status badge.
 | `Card` | `size`: `"sm"`, `"default"` or `"flush"`; `variant`: `"default"`, `"well"` or `"filled"` |
 | `CardTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last, and renders a `div`. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last, and renders a `div`. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

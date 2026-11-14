@@ -114,4 +114,4 @@ The card opens at the list's `inline-end` by default. A picker at the end of a r
 | `ModelPickerDetails` | The highlighted model's card, hidden until reached |
 | `ModelPickerTitle`, `ModelPickerDescription` | The card's name row and muted text; the title takes `render` |
 
-Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).
