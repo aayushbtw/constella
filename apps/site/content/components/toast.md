@@ -125,7 +125,7 @@ toast.dismiss();
 
 ## API Reference
 
-`Toaster` sits at the bottom end of the page, in the browser's top layer, and takes `ToastRegion`'s props.
+`Toaster` sits at the bottom end of the page, in the browser's top layer, and takes UI SDK `ToastRegion`'s props except `side`, `align` and `children`.
 
 | Behavior | Value |
 | --- | --- |

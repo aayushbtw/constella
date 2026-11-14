@@ -51,7 +51,6 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-// ui-sdk measures the stack and swipe; these turn its variables into motion.
 const edge = `calc(${space.md} + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)))`;
 const gap = space.sm;
 const peek = space.sm;
@@ -327,7 +326,10 @@ const styles = stylex.create({
   },
 });
 
-function ToastRegion({ sx, ...props }: Styled<ToastRegionProps>) {
+function ToastRegion({
+  sx,
+  ...props
+}: Styled<Omit<ToastRegionProps, "align" | "side">>) {
   return (
     <ToastRegionPrimitive {...props} {...stylex.props(styles.region, sx)} />
   );
@@ -535,7 +537,7 @@ function ToastItem({ data }: { data: ToastData<ReactNode> }) {
   );
 }
 
-function Toaster(props: Omit<Styled<ToastRegionProps>, "children">) {
+function Toaster(props: Omit<ComponentProps<typeof ToastRegion>, "children">) {
   return (
     <ToastRegion {...props}>{(data) => <ToastItem data={data} />}</ToastRegion>
   );

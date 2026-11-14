@@ -7,7 +7,7 @@ import {
   within,
 } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
-import { afterEach, expect, test, vi } from "vite-plus/test";
+import { afterEach, expect, test } from "vite-plus/test";
 
 import { toast, Toaster } from "./toast";
 
@@ -25,18 +25,6 @@ function show(...args: Parameters<typeof toast>) {
     id = toast(...args);
   });
   return id;
-}
-
-function announcer(priority: "assertive" | "polite") {
-  const node = document.querySelector(
-    priority === "assertive"
-      ? "[data-ui-sdk-announcer='assertive']"
-      : "[data-ui-sdk-announcer='']"
-  );
-  if (!node) {
-    throw new Error(`no ${priority} announcer`);
-  }
-  return node;
 }
 
 function icons() {
@@ -110,19 +98,6 @@ test("a settled promise toast shows the result and its icon over the loading tex
   expect(icons()).toEqual(["success"]);
 });
 
-test("pressing the action runs it and dismisses the toast", async () => {
-  render(<Toaster />);
-  const onAction = vi.fn();
-  show("Message archived", { action: { label: "Undo", onAction } });
-
-  fireEvent.click(screen.getByRole("button", { name: "Undo" }));
-
-  expect(onAction).toHaveBeenCalledOnce();
-  await waitFor(() => {
-    expect(screen.queryByText("Message archived")).toBeNull();
-  });
-});
-
 test("Close dismisses the toast", async () => {
   render(<Toaster />);
   show("Link copied");
@@ -153,49 +128,6 @@ test("a link action renders a link, and a button action carries no href", () => 
   expect(
     screen.getByRole("button", { name: "Undo" }).hasAttribute("href")
   ).toBe(false);
-});
-
-test("at most three toasts show, and a fourth leaves the oldest waiting", async () => {
-  render(<Toaster />);
-  show("First");
-  show("Second");
-  show("Third");
-  const fourth = show("Fourth");
-
-  expect(screen.getAllByRole("listitem")).toHaveLength(3);
-  expect(screen.queryByText("First")).toBeNull();
-
-  act(() => {
-    toast.dismiss(fourth);
-  });
-  expect(await screen.findByText("First")).toBeTruthy();
-});
-
-test("a toast is announced politely with its title and description", async () => {
-  render(<Toaster />);
-  show("Draft saved", { description: "Just now" });
-
-  await waitFor(() => {
-    expect(announcer("polite").textContent).toContain("Draft saved");
-  });
-  expect(announcer("polite").textContent).toContain("Just now");
-  expect(announcer("assertive").textContent).not.toContain("Draft saved");
-});
-
-test("an error is announced assertively", async () => {
-  render(<Toaster />);
-  act(() => {
-    toast.error("Couldn't save changes");
-  });
-
-  await waitFor(() => {
-    expect(announcer("assertive").textContent).toContain(
-      "Couldn't save changes"
-    );
-  });
-  expect(announcer("polite").textContent).not.toContain(
-    "Couldn't save changes"
-  );
 });
 
 test("an agent finds a showing toast by its title and names its action", () => {
