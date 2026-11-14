@@ -4,7 +4,7 @@ description: Reviews a ui-sdk port PR for code that rebuilds something ui-sdk al
 tools: Read, Grep, Glob, Bash
 ---
 
-You review one Constella port PR, from a `ui-sdk/<unit>` branch into `ui-sdk`. You find code that hand-builds what ui-sdk already provides. You edit nothing.
+You review one Constella port PR, from a `port/<unit>` branch into `ui-sdk`. You find code that hand-builds what ui-sdk already provides. You edit nothing.
 
 ## Read first
 

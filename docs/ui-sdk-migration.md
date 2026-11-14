@@ -7,7 +7,7 @@ The tracker for moving `packages/ui` from Base UI to ui-sdk. Read it first in an
 | What | Rule |
 | --- | --- |
 | Integration branch | `ui-sdk`, long-lived. Lands on `main` once, when [Done](#done) holds. Draft PR `ui-sdk` → `main` shows the whole diff |
-| Unit branch | `ui-sdk/<unit>` off `ui-sdk`, one row of the tracker (or one phase-0 task) per branch |
+| Unit branch | `port/<unit>` off `ui-sdk`, one row of the tracker (or one phase-0 task) per branch |
 | Unit PR | Base `ui-sdk`, label `ui-sdk`, title `feat(<component>): port to ui-sdk`. Squash-merged once its checklist passes |
 | Tracker | The unit PR sets its row's status and PR link. No other place tracks status |
 | Syncing `main` | Merge `main` into `ui-sdk` (never rebase; unit branches sit on it) at least weekly and before each phase starts. A `main` change to a ported component gets ported in the same merge. Record the merge below |
