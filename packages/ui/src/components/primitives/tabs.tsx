@@ -1,7 +1,15 @@
 "use client";
 
-import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
+import {
+  TabsIndicator as TabsIndicatorPrimitive,
+  TabsList as TabsListPrimitive,
+  TabsPanel,
+  Tabs as TabsPrimitive,
+  TabsTab,
+} from "@ui-sdk/react/tabs";
+import type { TabsOrientation } from "@ui-sdk/react/tabs";
+import type { ComponentProps, ReactNode } from "react";
 import { createContext, use, useLayoutEffect, useMemo, useRef } from "react";
 
 import { relayWheel } from "@/lib/constella/relay-wheel";
@@ -31,7 +39,10 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type TabsListProps = Styled<TabsPrimitive.List.Props> & {
+type TabsListProps = Styled<
+  Omit<ComponentProps<typeof TabsListPrimitive>, "children">
+> & {
+  children?: ReactNode;
   size?: TabsListSize;
   variant?: TabsListVariant;
 };
@@ -95,11 +106,11 @@ const styles = stylex.create({
     borderInlineStartWidth: 0,
     color: {
       default: colors.textSecondary,
-      ":is([data-active])": colors.textPrimary,
+      ":is([data-selected])": colors.textPrimary,
       [media.hover]: {
         default: colors.textSecondary,
         ":hover:not([data-disabled])": colors.textPrimary,
-        ":is([data-active])": colors.textPrimary,
+        ":is([data-selected])": colors.textPrimary,
       },
       ":active:not([data-disabled])": colors.textPrimary,
     },
@@ -136,14 +147,17 @@ const styles = stylex.create({
     borderEndStartRadius: 0,
     borderEndEndRadius: 0,
   },
-  // Base UI measures from the physical left, so the indicator anchors there too.
+  // ui-sdk measures `--active-tab-left` from the physical left, so the indicator anchors there too.
   indicator: {
     left: 0,
     position: "absolute",
     top: 0,
-    // Arrow keys move focus visibly and a click doesn't, so only the pointer slides it.
+    // Arrow keys focus visibly and a click doesn't, so only a pointer pick slides. The first placement doesn't
+    // slide either; ui-sdk moves the box before `data-activation-direction` leaves `none`, hence the focus check.
     transitionDuration: {
       default: durations.move,
+      ":is([data-slot='tabs-list']:not(:focus-within) > [data-activation-direction='none'])":
+        "0s",
       ":is([data-slot='tabs-list']:has(:focus-visible) > *)": "0s",
       [media.reducedMotion]: "0s",
     },
@@ -208,8 +222,7 @@ const TabsListContext = createContext<{
   variant: TabsListVariant;
 }>({ size: "default", variant: "default" });
 
-const TabsOrientationContext =
-  createContext<TabsPrimitive.Root.Orientation>("horizontal");
+const TabsOrientationContext = createContext<TabsOrientation>("horizontal");
 
 // Not scrollIntoView: it scrolls the page as well as the list.
 const reveal = (list: HTMLElement, tab: HTMLElement) => {
@@ -226,15 +239,14 @@ const reveal = (list: HTMLElement, tab: HTMLElement) => {
   );
 };
 
-function Tabs({
+function Tabs<Value extends string = string>({
   orientation = "horizontal",
   sx,
   ...props
-}: Styled<TabsPrimitive.Root.Props>) {
+}: Styled<ComponentProps<typeof TabsPrimitive<Value>>>) {
   return (
     <TabsOrientationContext value={orientation}>
-      <TabsPrimitive.Root
-        data-slot="tabs"
+      <TabsPrimitive<Value>
         orientation={orientation}
         {...props}
         {...stylex.props(styles.tabs, sx)}
@@ -287,11 +299,8 @@ function TabsList({
 
   return (
     <TabsListContext value={context}>
-      <TabsPrimitive.List
-        // Panels show at once, so arrows switch tabs instead of only moving focus.
-        activateOnFocus
+      <TabsListPrimitive
         data-size={size}
-        data-slot="tabs-list"
         data-variant={variant}
         ref={list}
         {...props}
@@ -304,16 +313,15 @@ function TabsList({
       >
         {children}
         <TabsIndicator sx={indicatorVariantStyles[variant]} />
-      </TabsPrimitive.List>
+      </TabsListPrimitive>
     </TabsListContext>
   );
 }
 
-function TabsTrigger({ sx, ...props }: Styled<TabsPrimitive.Tab.Props>) {
+function TabsTrigger({ sx, ...props }: Styled<ComponentProps<typeof TabsTab>>) {
   const { size, variant } = use(TabsListContext);
   return (
-    <TabsPrimitive.Tab
-      data-slot="tabs-trigger"
+    <TabsTab
       {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.tab],
@@ -328,25 +336,20 @@ function TabsTrigger({ sx, ...props }: Styled<TabsPrimitive.Tab.Props>) {
 function TabsIndicator({
   sx,
   ...props
-}: Styled<TabsPrimitive.Indicator.Props>) {
+}: Styled<ComponentProps<typeof TabsIndicatorPrimitive>>) {
   return (
-    <TabsPrimitive.Indicator
-      data-slot="tabs-indicator"
-      renderBeforeHydration
+    <TabsIndicatorPrimitive
       {...props}
       {...stylex.props(styles.indicator, sx)}
     />
   );
 }
 
-function TabsContent({ sx, ...props }: Styled<TabsPrimitive.Panel.Props>) {
-  return (
-    <TabsPrimitive.Panel
-      data-slot="tabs-content"
-      {...props}
-      {...stylex.props(styles.panel, sx)}
-    />
-  );
+function TabsContent({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof TabsPanel>>) {
+  return <TabsPanel {...props} {...stylex.props(styles.panel, sx)} />;
 }
 
 export {

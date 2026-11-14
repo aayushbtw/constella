@@ -193,13 +193,15 @@ function MotionEasingDemo() {
             </span>
           </Caption>
           <Tabs
-            onValueChange={(value: EasingName) => {
-              setName(value);
+            onValueChange={(value) => {
+              if (value !== null) {
+                setName(value);
+              }
             }}
             sx={styles.span}
             value={name}
           >
-            <TabsList sx={styles.span}>
+            <TabsList aria-label="Easing" sx={styles.span}>
               {easingNames.map((easingName) => (
                 <TabsTrigger key={easingName} value={easingName}>
                   {easingName}

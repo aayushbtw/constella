@@ -275,7 +275,7 @@ It is Base UI's Toast, not Sonner. Don't install `sonner`; there's no `toast.suc
 
 ```tsx
 <Tabs defaultValue="account">
-  <TabsList>
+  <TabsList aria-label="Settings">
     <TabsTrigger value="account">Account</TabsTrigger>
   </TabsList>
   <TabsContent value="account">…</TabsContent>

@@ -665,7 +665,7 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Views of the same content, with an indicator that slides to the active tab.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/scroll-fade.json",
