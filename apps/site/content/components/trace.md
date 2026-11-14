@@ -368,4 +368,4 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger the same way
 | `TraceCollapsibleContent` | The panel; it stays mounted while shut |
 | `traceActionStyles()` | Styles for a link or trigger that wraps a `TraceLine` |
 
-Every part takes `sx`, applied last. The collapsible parts take Base UI [Collapsible](https://base-ui.com/react/components/collapsible) props.
+Every part takes `sx`, applied last. The collapsible parts take [UI SDK Collapsible](https://ui-sdk.dev/docs/components/collapsible) props.
