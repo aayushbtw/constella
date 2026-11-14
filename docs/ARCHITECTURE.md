@@ -173,6 +173,8 @@ The bridge sees only UI SDK and `definePrimitive` components, and the docs give 
 
 ### Port notes
 
+Status and PRs are tracked in [ui-sdk-migration.md](ui-sdk-migration.md).
+
 From the 0.1.0-beta.1 docs in `node_modules/@ui-sdk/react/docs` and the `ui-sdk` skill, before any spike. Each one still needs a spike to prove it.
 
 | Topic | Note |
