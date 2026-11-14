@@ -1,7 +1,8 @@
 "use client";
 
-import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import * as stylex from "@stylexjs/stylex";
+import { Toggle as TogglePrimitive } from "@ui-sdk/react/toggle";
+import type { ComponentProps } from "react";
 
 import { buttonStyles } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
@@ -21,7 +22,10 @@ const toggleSizes = [
 type ToggleVariant = (typeof toggleVariants)[number];
 type ToggleSize = (typeof toggleSizes)[number];
 
-type ToggleProps = Omit<TogglePrimitive.Props, "className" | "style"> & {
+type ToggleProps = Omit<
+  ComponentProps<typeof TogglePrimitive>,
+  "className" | "style"
+> & {
   size?: ToggleSize;
   sx?: Sx;
   variant?: ToggleVariant;
@@ -55,7 +59,6 @@ function Toggle({
   return (
     <TogglePrimitive
       data-size={size}
-      data-slot="toggle"
       data-variant={variant}
       {...props}
       {...stylex.props(toggleStyles({ size, variant }), sx)}
