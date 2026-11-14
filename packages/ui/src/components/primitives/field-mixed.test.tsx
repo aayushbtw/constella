@@ -71,12 +71,36 @@ test("a Select in a ui-sdk Field takes its label, description, name and state, f
   expect(trigger.matches("[aria-invalid='true'][data-invalid]")).toBe(true);
 });
 
-test("a Slider in a ui-sdk Field takes its description, name and state on its group", () => {
+test("a Slider in a ui-sdk Field describes its group and each thumb, from the server's HTML on", () => {
+  const server = document.createElement("div");
+  server.innerHTML = renderToString(<Price />);
+  const serverDescription = server.querySelector(
+    "[data-slot='field-description']"
+  )?.id;
+  expect(serverDescription).toBeTruthy();
+  const serverThumbs = server.querySelectorAll("input[type='range']");
+  expect(serverThumbs).toHaveLength(2);
+  for (const thumb of serverThumbs) {
+    expect(thumb.getAttribute("aria-describedby")).toBe(serverDescription);
+  }
+
+  render(<Price />);
+  const description = screen.getByText("Set your budget.").id;
+  const thumbs = screen.getAllByRole("slider");
+  expect(thumbs).toHaveLength(2);
+  for (const thumb of thumbs) {
+    expect(thumb.getAttribute("aria-describedby")).toBe(description);
+  }
+  expect(
+    screen
+      .getByRole("group", { name: "Price" })
+      .getAttribute("aria-describedby")
+  ).toBe(description);
+});
+
+test("a Slider in a ui-sdk Field takes its name and state on its group", () => {
   const { rerender } = render(<Price />);
   const slider = screen.getByRole("group", { name: "Price" });
-  expect(slider.getAttribute("aria-describedby")).toBe(
-    screen.getByText("Set your budget.").id
-  );
   expect(document.querySelectorAll("input[name='price']")).not.toHaveLength(0);
   expect(slider.dataset.disabled).toBeUndefined();
 

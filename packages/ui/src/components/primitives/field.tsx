@@ -285,7 +285,7 @@ function FieldContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
 function FieldLabel({
   sx,
   ...props
-}: Styled<ComponentProps<typeof FieldLabelPrimitive>>) {
+}: Styled<Omit<ComponentProps<typeof FieldLabelPrimitive>, "htmlFor">>) {
   return (
     <FieldLabelPrimitive
       {...props}

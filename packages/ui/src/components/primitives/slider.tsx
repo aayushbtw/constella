@@ -3,6 +3,7 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
 import { useFieldControl } from "@ui-sdk/react/field";
+import { createContext, use } from "react";
 
 import { labelStyles } from "@/components/primitives/label";
 import type { Sx } from "@/lib/constella/styles";
@@ -23,6 +24,8 @@ import {
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
+
+const SliderDescriptionContext = createContext<string | undefined>(undefined);
 
 const halfThumb = `calc(${sizes.thumb} / 2)`;
 const halfThumbOut = `calc(${sizes.thumb} / -2)`;
@@ -126,17 +129,13 @@ function Slider<Value extends number | readonly number[]>({
 }: Styled<SliderPrimitive.Root.Props<Value>>) {
   // Joins a ui-sdk Field until Slider ports.
   const field = useFieldControl(props);
-  const root = {
-    "data-slot": "slider",
-    disabled: field?.disabled,
-    name: field?.name,
-    ...props,
-  };
+  const root = { "data-slot": "slider", name: field?.name, ...props };
+  const joined: SliderPrimitive.Root.Props<Value> = field?.props(root) ?? root;
+  // Base UI's Field described each thumb's input as well as the group.
   return (
-    <SliderPrimitive.Root
-      {...(field?.props(root) ?? root)}
-      {...stylex.props(styles.slider, sx)}
-    />
+    <SliderDescriptionContext value={joined["aria-describedby"]}>
+      <SliderPrimitive.Root {...joined} {...stylex.props(styles.slider, sx)} />
+    </SliderDescriptionContext>
   );
 }
 
@@ -205,9 +204,17 @@ function SliderIndicator({
   );
 }
 
-function SliderThumb({ sx, ...props }: Styled<SliderPrimitive.Thumb.Props>) {
+function SliderThumb({
+  "aria-describedby": ownDescribedBy,
+  sx,
+  ...props
+}: Styled<SliderPrimitive.Thumb.Props>) {
+  const fieldDescribedBy = use(SliderDescriptionContext);
+  const describedBy =
+    [ownDescribedBy, fieldDescribedBy].filter(Boolean).join(" ") || undefined;
   return (
     <SliderPrimitive.Thumb
+      aria-describedby={describedBy}
       data-slot="slider-thumb"
       {...props}
       {...stylex.props(styles.thumb, sx)}

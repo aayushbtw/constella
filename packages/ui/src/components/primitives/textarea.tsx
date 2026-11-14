@@ -25,7 +25,7 @@ type TextareaSize = (typeof textareaSizes)[number];
 
 type TextareaProps = Omit<
   ComponentProps<typeof TextareaPrimitive>,
-  "className" | "style"
+  "autoResize" | "className" | "style"
 > & {
   size?: TextareaSize;
   sx?: Sx;
@@ -113,6 +113,7 @@ function textareaStyles({
 function Textarea({ size = "default", sx, ...props }: TextareaProps) {
   return (
     <TextareaPrimitive
+      autoResize
       data-size={size}
       {...props}
       {...stylex.props(textareaStyles({ size }), sx)}

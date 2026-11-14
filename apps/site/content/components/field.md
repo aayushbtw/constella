@@ -307,19 +307,22 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 <!-- ::demo name="field-radio" -->
 
 ```tsx
-const legend = useId();
-
-<FieldSet>
-  <FieldLegend id={legend} variant="label">
-    Subscription Plan
-  </FieldLegend>
-  <RadioGroup aria-labelledby={legend} defaultValue="monthly">
-    <Field orientation="horizontal">
-      <RadioGroupItem value="monthly" />
-      <FieldLabel>Monthly ($9.99/month)</FieldLabel>
-    </Field>
-  </RadioGroup>
-</FieldSet>;
+function SubscriptionPlan() {
+  const legend = useId();
+  return (
+    <FieldSet>
+      <FieldLegend id={legend} variant="label">
+        Subscription Plan
+      </FieldLegend>
+      <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+        <Field orientation="horizontal">
+          <RadioGroupItem value="monthly" />
+          <FieldLabel>Monthly ($9.99/month)</FieldLabel>
+        </Field>
+      </RadioGroup>
+    </FieldSet>
+  );
+}
 ```
 
 ## Switch

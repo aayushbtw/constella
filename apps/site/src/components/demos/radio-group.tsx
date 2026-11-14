@@ -202,7 +202,7 @@ function RadioGroupInvalidDemo() {
         <RadioGroup aria-labelledby={legend} defaultValue="email">
           {channels.map((item) => (
             <Field invalid key={item.value} orientation="horizontal">
-              <RadioGroupItem aria-invalid value={item.value} />
+              <RadioGroupItem value={item.value} />
               <FieldLabel sx={styles.regular}>{item.label}</FieldLabel>
             </Field>
           ))}

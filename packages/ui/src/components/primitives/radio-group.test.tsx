@@ -76,8 +76,11 @@ function Settings() {
   );
 }
 
-test("items carry their size, and the dot shows on the checked one", () => {
+test("the group and items carry their slots and size, and the dot shows on the checked one", () => {
   render(<Settings />);
+  expect(
+    screen.getByRole("radiogroup", { name: "Plan" }).dataset
+  ).toMatchObject({ slot: "radio-group" });
   const small = screen.getByRole("radio", { name: "Default" });
   expect(small.dataset).toMatchObject({ size: "sm", slot: "radio" });
   const comfortable = screen.getByRole("radio", { name: "Comfortable" });
@@ -110,10 +113,6 @@ test("arrow keys move the choice, and a label or a card's description picks one"
 
 test("a disabled field skips its item, and an invalid one marks it", () => {
   render(<Settings />);
-  expect(
-    screen.getByRole("radiogroup", { name: "Plan" }).dataset
-  ).toMatchObject({ slot: "radio-group" });
-
   const hourly = screen.getByRole("radio", { name: "Hourly" });
   expect(hourly.matches(":disabled[data-disabled]")).toBe(true);
   fireEvent.keyDown(screen.getByRole("radio", { name: "Daily" }), {

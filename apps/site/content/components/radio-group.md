@@ -112,22 +112,25 @@ Use `FieldSet` and `FieldLegend` to group the choices. The legend names the set,
 <!-- ::demo name="radio-group-fieldset" -->
 
 ```tsx
-const legend = useId();
-
-<FieldSet>
-  <FieldLegend id={legend} variant="label">
-    Subscription Plan
-  </FieldLegend>
-  <FieldDescription>
-    Yearly and lifetime plans offer significant savings.
-  </FieldDescription>
-  <RadioGroup aria-labelledby={legend} defaultValue="monthly">
-    <Field orientation="horizontal">
-      <RadioGroupItem value="monthly" />
-      <FieldLabel>Monthly ($9.99/month)</FieldLabel>
-    </Field>
-  </RadioGroup>
-</FieldSet>;
+function SubscriptionPlan() {
+  const legend = useId();
+  return (
+    <FieldSet>
+      <FieldLegend id={legend} variant="label">
+        Subscription Plan
+      </FieldLegend>
+      <FieldDescription>
+        Yearly and lifetime plans offer significant savings.
+      </FieldDescription>
+      <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+        <Field orientation="horizontal">
+          <RadioGroupItem value="monthly" />
+          <FieldLabel>Monthly ($9.99/month)</FieldLabel>
+        </Field>
+      </RadioGroup>
+    </FieldSet>
+  );
+}
 ```
 
 ## Disabled
@@ -145,13 +148,13 @@ Add `disabled` to an item's `Field`, so the item and its label fade together.
 
 ## Invalid
 
-Add `invalid` to each `Field`, and `aria-invalid` to its item.
+Add `invalid` to each `Field`.
 
 <!-- ::demo name="radio-group-invalid" -->
 
 ```tsx
 <Field invalid orientation="horizontal">
-  <RadioGroupItem aria-invalid value="email" />
+  <RadioGroupItem value="email" />
   <FieldLabel>Email only</FieldLabel>
 </Field>
 ```

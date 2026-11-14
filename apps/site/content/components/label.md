@@ -43,8 +43,8 @@ For form fields, use [Field](/docs/components/field). Its `FieldLabel` comes wit
 
 ```tsx
 <Field>
-  <FieldLabel htmlFor="email">Your email address</FieldLabel>
-  <Input id="email" />
+  <FieldLabel>Your email address</FieldLabel>
+  <Input />
 </Field>
 ```
 

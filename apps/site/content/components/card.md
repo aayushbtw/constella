@@ -19,8 +19,8 @@ description: Groups related content and actions on one surface.
   <CardContent>
     <FieldGroup>
       <Field>
-        <FieldLabel htmlFor="email">Email</FieldLabel>
-        <Input id="email" placeholder="m@acme.com" type="email" />
+        <FieldLabel>Email</FieldLabel>
+        <Input placeholder="m@acme.com" type="email" />
       </Field>
     </FieldGroup>
   </CardContent>

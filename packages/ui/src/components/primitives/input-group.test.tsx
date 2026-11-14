@@ -45,7 +45,7 @@ function Profile() {
   );
 }
 
-test("the group's control carries the slots and state its styles key on", () => {
+test("the control sits where the group's child selectors look for it", () => {
   render(<Profile />);
   const website = screen.getByRole("textbox", { name: "Website" });
   expect(website.dataset).toMatchObject({ slot: "input" });
@@ -55,26 +55,37 @@ test("the group's control carries the slots and state its styles key on", () => 
   expect(
     website.closest<HTMLElement>("[data-slot='input-group']")?.dataset.size
   ).toBe("sm");
-  expect(website.getAttribute("name")).toBe("website");
-  expect(website.getAttribute("aria-describedby")).toBe(
-    screen.getByText("Shown on your profile.").id
-  );
-
-  const email = screen.getByRole("textbox", { name: "Email" });
-  expect(email.matches(":disabled[data-disabled]")).toBe(true);
-  expect(email.closest("[data-slot='input-group']")?.getAttribute("role")).toBe(
-    "none"
-  );
 
   const bio = screen.getByRole("textbox", { name: "Bio" });
   expect(bio.dataset).toMatchObject({ slot: "textarea" });
   expect(bio.parentElement?.dataset).toMatchObject({ slot: "input-group" });
-  expect(bio.matches("[aria-invalid='true'][data-invalid]")).toBe(true);
 
   const search = screen.getByRole("textbox", { name: "Search" });
   expect(
     search.closest<HTMLElement>("[data-slot='input-group']")?.dataset.size
   ).toBe("lg");
+  expect(
+    search.closest("[data-slot='input-group']")?.getAttribute("role")
+  ).toBe("none");
+});
+
+test("a Field names, describes, disables and invalidates the group's control", () => {
+  render(<Profile />);
+  const website = screen.getByRole("textbox", { name: "Website" });
+  expect(website.getAttribute("name")).toBe("website");
+  expect(website.getAttribute("aria-describedby")).toBe(
+    screen.getByText("Shown on your profile.").id
+  );
+  expect(
+    screen
+      .getByRole("textbox", { name: "Email" })
+      .matches(":disabled[data-disabled]")
+  ).toBe(true);
+  expect(
+    screen
+      .getByRole("textbox", { name: "Bio" })
+      .matches("[aria-invalid='true'][data-invalid]")
+  ).toBe(true);
 });
 
 test("pressing an addon's text focuses the control", () => {
