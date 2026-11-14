@@ -55,7 +55,7 @@ const inState = (state: AttachmentState) =>
 const vertical = `:is(${root}[data-orientation='vertical'] *)`;
 const withMedia = ":has(> [data-slot='attachment-media'])";
 const withContent = ":has(> [data-slot='attachment-content'])";
-const pressable = ":has(> [data-slot='attachment-trigger'])";
+const pressable = ":has(> [data-slot$='-trigger'])";
 
 // The media's corner plus the inset around it, so the two stay concentric.
 const corner = {

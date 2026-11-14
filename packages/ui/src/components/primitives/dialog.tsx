@@ -108,7 +108,6 @@ const styles = stylex.create({
     transitionTimingFunction: easings.out,
     width: `min(100%, ${sizes.dialog})`,
   },
-  // Centered in the window, `space.md` clear of every edge, whatever width or height a size or `sx` gives it.
   centered: {
     height: "fit-content",
     insetBlockEnd: 0,
@@ -124,7 +123,6 @@ const styles = stylex.create({
   },
   sm: { width: `min(100%, ${sizes.dialogSm})` },
   lg: { width: `min(100%, ${sizes.dialogLg})` },
-  // The centering gutter stays around it, so it still reads as a dialog over the page.
   full: { height: "100%", width: "100%" },
   header: {
     display: "flex",
