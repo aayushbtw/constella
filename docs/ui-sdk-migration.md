@@ -47,65 +47,65 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Task | Status | PR | Notes |
 | --- | --- | --- | --- |
-| `ui-sdk` first in `useCSSLayers.before`; `@layer ui-sdk;` in the site's global CSS | todo | | |
-| `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | todo | | 22 files: alert, badge, breadcrumb, button-group, card, empty, field, input-group, item, kbd, sidebar, textarea, the 5 typography parts, attachment, code-block, marker, model-picker, shimmer |
-| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo | | |
+| `ui-sdk` first in `useCSSLayers.before`; `@layer ui-sdk;` in the site's global CSS | todo |  |  |
+| `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | todo |  | 22 files: alert, badge, breadcrumb, button-group, card, empty, field, input-group, item, kbd, sidebar, textarea, the 5 typography parts, attachment, code-block, marker, model-picker, shimmer |
+| Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | todo |  |  |
 
 ### Phases 1 to 5
 
 | Unit | Phase | Base UI parts | ui-sdk | Status | PR | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Popover | 1 | popover | Popover | todo | | The spike |
-| Button | 2 | button | Button | todo | | |
-| Separator | 2 | separator | Separator | todo | | |
-| Toggle | 2 | toggle | Toggle | todo | | |
-| Checkbox | 2 | checkbox | Checkbox | todo | | |
-| Switch | 2 | switch | Switch | todo | | |
-| Radio Group | 2 | radio-group, radio | Radio | todo | | |
-| Progress | 2 | progress | Progress | todo | | |
-| Meter | 2 | meter | Meter | todo | | |
-| Slider | 2 | slider | Slider | todo | | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold |
-| Avatar | 2 | avatar | Avatar | todo | | Citation uses it too |
-| Field | 2 | field, fieldset | Field | todo | | No Fieldset documented; check |
-| Input Group | 2 | input | Input | todo | | |
-| Textarea | 2 | field | Textarea | todo | | |
-| Scroll Area | 2 | scroll-area | Scroll Area | todo | | |
-| Collapsible | 2 | collapsible | Collapsible | todo | | |
-| Tabs | 2 | tabs | Tabs | todo | | |
-| Tooltip | 3 | tooltip | Tooltip | todo | | |
-| Hover Card | 3 | preview-card | Hover Card | todo | | |
-| Dialog | 3 | dialog | Dialog | todo | | |
-| Sheet | 3 | dialog | Drawer | todo | | Or Dialog with `presentation="sheet"`; decide in the PR |
-| Side Panel | 3 | dialog | Drawer | todo | | |
-| Alert Dialog | 3 | alert-dialog | Alert Dialog | todo | | Consider `createConfirm()` |
-| Toast | 3 | toast | Toast | todo | | No anchored toasts; region placement is ours without `web.css` |
-| Select | 4 | select | Select | todo | | |
-| Dropdown Menu | 4 | menu | Menu | todo | | No search input part documented; ours ships `dropdown-menu-input` |
-| Command | 4 | autocomplete | Command | todo | | Ours is Base UI Autocomplete; ui-sdk ships a Command |
-| Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo | | No Toggle Group documented; check |
-| Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo | | |
-| Model Picker | 5 | popover, render helpers | | todo | | After Popover, Command |
-| Prompt Input | 5 | autocomplete | | todo | | After Command |
-| Citation | 5 | avatar | | todo | | After Avatar, Hover Card |
-| Settings Dialog | 5 | via Dialog | | todo | | Re-verify only |
-| Sidebar | 5 | via Sheet, render helpers | | todo | | Re-verify only |
+| Popover | 1 | popover | Popover | todo |  | The spike |
+| Button | 2 | button | Button | todo |  |  |
+| Separator | 2 | separator | Separator | todo |  |  |
+| Toggle | 2 | toggle | Toggle | todo |  |  |
+| Checkbox | 2 | checkbox | Checkbox | todo |  |  |
+| Switch | 2 | switch | Switch | todo |  |  |
+| Radio Group | 2 | radio-group, radio | Radio | todo |  |  |
+| Progress | 2 | progress | Progress | todo |  |  |
+| Meter | 2 | meter | Meter | todo |  |  |
+| Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold |
+| Avatar | 2 | avatar | Avatar | todo |  | Citation uses it too |
+| Field | 2 | field, fieldset | Field | todo |  | No Fieldset documented; check |
+| Input Group | 2 | input | Input | todo |  |  |
+| Textarea | 2 | field | Textarea | todo |  |  |
+| Scroll Area | 2 | scroll-area | Scroll Area | todo |  |  |
+| Collapsible | 2 | collapsible | Collapsible | todo |  |  |
+| Tabs | 2 | tabs | Tabs | todo |  |  |
+| Tooltip | 3 | tooltip | Tooltip | todo |  |  |
+| Hover Card | 3 | preview-card | Hover Card | todo |  |  |
+| Dialog | 3 | dialog | Dialog | todo |  |  |
+| Sheet | 3 | dialog | Drawer | todo |  | Or Dialog with `presentation="sheet"`; decide in the PR |
+| Side Panel | 3 | dialog | Drawer | todo |  |  |
+| Alert Dialog | 3 | alert-dialog | Alert Dialog | todo |  | Consider `createConfirm()` |
+| Toast | 3 | toast | Toast | todo |  | No anchored toasts; region placement is ours without `web.css` |
+| Select | 4 | select | Select | todo |  |  |
+| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input` |
+| Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
+| Toggle Group | 4 | toggle-group, toggle | Toolbar? | todo |  | No Toggle Group documented; check |
+| Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  |  |
+| Model Picker | 5 | popover, render helpers |  | todo |  | After Popover, Command |
+| Prompt Input | 5 | autocomplete |  | todo |  | After Command |
+| Citation | 5 | avatar |  | todo |  | After Avatar, Hover Card |
+| Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
+| Sidebar | 5 | via Sheet, render helpers |  | todo |  | Re-verify only |
 
 ### Phase 6
 
 | Unit | Status | PR | Notes |
 | --- | --- | --- | --- |
-| Agent bridge on the docs site (dev only) | todo | | `createAgent` in the client entry |
-| `definePrimitive` with `agent` key: Prompt Input, Attachment, Approval, Questionnaire | todo | | Split per part when started |
-| `definePrimitive` with `agent` key: Data Table, Chart | todo | | |
+| Agent bridge on the docs site (dev only) | todo |  | `createAgent` in the client entry |
+| `definePrimitive` with `agent` key: Prompt Input, Attachment, Approval, Questionnaire | todo |  | Split per part when started |
+| `definePrimitive` with `agent` key: Data Table, Chart | todo |  |  |
 
 ### Phase 7
 
 | Task | Status | PR |
 | --- | --- | --- |
-| Remove `@base-ui/react` from `packages/ui` and `apps/site` | todo | |
-| Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | todo | |
-| Registry build and every docs page checked | todo | |
-| Land `ui-sdk` on `main` | todo | |
+| Remove `@base-ui/react` from `packages/ui` and `apps/site` | todo |  |
+| Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | todo |  |
+| Registry build and every docs page checked | todo |  |
+| Land `ui-sdk` on `main` | todo |  |
 
 ## Done
 
@@ -116,7 +116,7 @@ The port lands on `main` when every row is `merged`, the ARCHITECTURE.md "Ready 
 Gaps and surprises found while porting, newest first. Move a settled one into ARCHITECTURE.md.
 
 | Date | Unit | Finding |
-| --- | --- | --- |
+| ---- | ---- | ------- |
 
 ## Log
 
