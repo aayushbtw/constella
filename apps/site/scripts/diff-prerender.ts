@@ -2,6 +2,7 @@
 // differs between two builds of the same source. See docs/ui-sdk-migration.md, Checks.
 
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import {
   mkdir,
   mkdtemp,
@@ -89,7 +90,8 @@ function normalize(html: string) {
   const open: string[] = [];
   const push = (text: string) => {
     lines.push(
-      "  ".repeat(open.length) + text.replaceAll("\n", String.raw`\n`)
+      "  ".repeat(open.length) +
+        text.replaceAll("\\", "\\\\").replaceAll("\n", String.raw`\n`)
     );
   };
   let i = 0;
@@ -182,6 +184,12 @@ if (!dirA || !dirB) {
   console.error(
     "Usage: node apps/site/scripts/diff-prerender.ts <dirA> <dirB>"
   );
+  process.exit(2);
+}
+
+const missing = [dirA, dirB].filter((dir) => !existsSync(dir));
+if (missing.length > 0) {
+  console.error(`Not found: ${missing.join(", ")}`);
   process.exit(2);
 }
 
