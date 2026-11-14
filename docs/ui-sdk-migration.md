@@ -149,7 +149,7 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | Render helpers | `AttachmentTrigger render={<DialogTrigger />}` rendered a button with no `type` on `main`, so it submitted a surrounding form. Filed and fixed on `main` as [#15](https://github.com/aayushbtw/constella/issues/15), then merged in |
 | 2026-11-14 | Test setup | The skill's `testing.md` assigns the jsdom stubs and says not to use `??=`, since jsdom has some of them without the parts that matter; `core.md` "Testing in a Framework" uses `??=`. We follow the skill |
 | 2026-11-14 | Test setup | The skill imports from `vitest`; Vite+ ships Vitest as `vite-plus/test`, and `vite-plus/prefer-vite-plus-imports` enforces it |
-| 2026-11-14 | Test setup | `@stylexjs/unplugin` 0.19.1 leaves a polling interval running under Vitest, so each run hung 10 s on exit. 0.19.2 unrefs it. Both `packages/ui` and the site take ^0.19.2 |
+| 2026-11-14 | Test setup | `@stylexjs/unplugin` 0.19.1 leaves a polling interval running under Vitest, so each run hung 10 s on exit. 0.19.2 unrefs it. `packages/ui` takes ^0.19.2 for tests. The site stays on 0.19.1: 0.19.2 regroups StyleX's CSS layers and flips the cascade order of 63 rule pairs, so it gets its own upgrade with a popup-state check |
 
 ## Log
 
