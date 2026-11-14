@@ -40,18 +40,17 @@ ScrollArea
 
 ## Scroll Bar
 
-`ScrollArea` brings a vertical scrollbar. Add a `ScrollBar` with `orientation="horizontal"` for content that scrolls sideways.
+`ScrollArea` brings a vertical scrollbar. Pass `scrollbar="horizontal"` for content that only scrolls sideways.
 
 <!-- ::demo name="scroll-area-horizontal" -->
 
 ```tsx
-<ScrollArea sx={styles.gallery}>
+<ScrollArea scrollbar="horizontal" sx={styles.gallery}>
   <div {...stylex.props(styles.row)}>{tiles}</div>
-  <ScrollBar orientation="horizontal" />
 </ScrollArea>
 ```
 
-Add both for content wider and taller than the area, like a wide table. The corner between them stays clear.
+For content wider and taller than the area, like a sheet, keep the vertical one and add a `ScrollBar` with `orientation="horizontal"`. The corner between them stays clear.
 
 <!-- ::demo name="scroll-area-both" -->
 
@@ -72,10 +71,10 @@ Pass [Scroll Fade](/docs/components/scroll-fade) to `viewportSx` to fade the edg
 <ScrollArea viewportSx={scrollFade.y}>{children}</ScrollArea>
 ```
 
-Pass `hideScrollbar` to drop the vertical scrollbar when the fade already shows there's more, like the docs sidebar.
+Pass `scrollbar="none"` to drop the scrollbar when the fade already shows there's more, like the docs sidebar.
 
 ```tsx
-<ScrollArea hideScrollbar sx={styles.list} viewportSx={scrollFade.y}>
+<ScrollArea scrollbar="none" sx={styles.list} viewportSx={scrollFade.y}>
   {items}
 </ScrollArea>
 ```
@@ -84,7 +83,7 @@ Pass `hideScrollbar` to drop the vertical scrollbar when the fade already shows 
 
 | Part | Adds |
 | --- | --- |
-| `ScrollArea` | Renders the viewport, a vertical `ScrollBar` unless `hideScrollbar`, and the corner; `viewportRef` and `viewportSx` reach the element that scrolls, for a virtualizer, a data table's `scrollRef` or a [Scroll Fade](/docs/components/scroll-fade) |
+| `ScrollArea` | Renders the viewport, a `ScrollBar` on the `scrollbar` axis (`vertical`, `horizontal` or `none`; vertical by default), and the corner; `viewportRef` and `viewportSx` reach the element that scrolls, for a virtualizer, a data table's `scrollRef` or a [Scroll Fade](/docs/components/scroll-fade) |
 | `ScrollBar` | Shows while the area is hovered or scrolling |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Scroll Area](https://base-ui.com/react/components/scroll-area).

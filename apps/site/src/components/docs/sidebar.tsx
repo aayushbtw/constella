@@ -97,7 +97,7 @@ function Sidebar({ groups, name }: { groups: SidebarGroup[]; name: string }) {
   return (
     <nav aria-label={name} {...stylex.props(styles.sidebar)}>
       <ScrollArea
-        hideScrollbar
+        scrollbar="none"
         sx={styles.scroller}
         viewportSx={[scrollFade.y, styles.viewport]}
       >

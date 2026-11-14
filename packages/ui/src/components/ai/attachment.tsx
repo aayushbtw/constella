@@ -9,6 +9,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Shimmer } from "@/components/ai/shimmer";
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
+import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -433,43 +434,18 @@ function AttachmentAction({
 function AttachmentTrigger({
   render,
   sx,
-  type,
   ...props
 }: Styled<useRender.ComponentProps<"button">>) {
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
-      { type: render ? type : (type ?? "button") },
+      render ? {} : { type: "button" },
       props,
       stylex.props(styles.trigger, sx)
     ),
     render,
     state: { slot: "attachment-trigger" },
   });
-}
-
-// A mouse wheel sends only deltaY, which a sideways scroller ignores; React's onWheel is passive.
-function relayWheel(group: HTMLDivElement) {
-  const onWheel = (event: WheelEvent) => {
-    if (event.ctrlKey || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-      return;
-    }
-    const sign = getComputedStyle(group).direction === "rtl" ? -1 : 1;
-    const travelled = group.scrollLeft * sign;
-    const atEdge =
-      event.deltaY > 0
-        ? travelled >= group.scrollWidth - group.clientWidth - 1
-        : travelled < 1;
-    if (atEdge) {
-      return;
-    }
-    event.preventDefault();
-    group.scrollBy({ left: event.deltaY * sign });
-  };
-  group.addEventListener("wheel", onWheel, { passive: false });
-  return () => {
-    group.removeEventListener("wheel", onWheel);
-  };
 }
 
 /** A row of attachments that scrolls and snaps, its edges fading while there's more. */

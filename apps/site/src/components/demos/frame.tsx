@@ -27,6 +27,7 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
+    position: "relative",
   },
   // With controls, the demo's frame is the one edge; the controls panel carries its own.
   bare: {

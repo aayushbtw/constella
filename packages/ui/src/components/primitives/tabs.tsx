@@ -4,6 +4,7 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as stylex from "@stylexjs/stylex";
 import { createContext, use, useLayoutEffect, useMemo, useRef } from "react";
 
+import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -270,14 +271,17 @@ function TabsList({
         }
       }
     });
+    let unrelay: (() => void) | undefined;
     if (element !== null && orientation === "horizontal") {
       picks.observe(element, {
         attributeFilter: ["aria-selected"],
         subtree: true,
       });
+      unrelay = relayWheel(element);
     }
     return () => {
       picks.disconnect();
+      unrelay?.();
     };
   }, [orientation]);
 

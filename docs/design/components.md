@@ -77,7 +77,7 @@ A pill capped at `sizes.citation`, its first publication's name truncating, with
 
 ## Code Block
 
-A `fillSubtle` tray, read left to right. Long lines scroll sideways with no scrollbar. The end fades while there's more, drawn around the scroller so the numbers stay clear. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them; the end fade then stops where the floating action starts, so scrolled code never shows beside it. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks sit in the header icon's column, so the code starts under the title. Line numbers stay put beside the code, never over it. With `wrap`, a marked line's gutter fill covers only its first row. Numbers and marks are `textMuted` (marks `successText` and `dangerText`) and never copy. A highlighted line takes `fill`, an added one `successSubtle` and a removed one `dangerSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerSubtle` and its text `danger`. A tall block is capped by a `maxHeight` and `overflowY` through `CodeBlockContent`'s `sx`, with no scrollbar; never with `lineNumbers`, since the numbers sit on that wrapper and would scroll and clip.
+A `fillSubtle` tray, read left to right. Long lines scroll sideways under Scroll Area's overlay scrollbar, shown on hover or while scrolling, so a mouse can drag them. The end fades while there's more, drawn around the scroller so the numbers stay clear, and stops short of the scrollbar. Its actions are ghost buttons always shown: at the header's end, or floating centered on the first line with the code's end padding clearing them; the end fade then stops where the floating action starts, so scrolled code never shows beside it. A header holds a `textSecondary` icon and a medium sans title cut short. Line numbers and diff marks sit in the header icon's column, so the code starts under the title. Line numbers stay put beside the code, never over it. With `wrap`, a marked line's gutter fill covers only its first row. Numbers and marks are `textMuted` (marks `successText` and `dangerText`) and never copy. A highlighted line takes `fill`, an added one `successSubtle` and a removed one `dangerSubtle`, each reaching the tray's edges. `danger` turns the tray `dangerSubtle` and its text `danger`. A tall block is capped by a `maxHeight` and `overflowY` through `CodeBlockContent`'s `sx`, with no scrollbar; never with `lineNumbers`, since the numbers sit on that wrapper and would scroll and clip.
 
 ## Collapsible
 
@@ -145,6 +145,10 @@ A row of media, text and actions, the shape a list or a settings row takes. It r
 
 A `fill` chip with `textSecondary` type in the surrounding font, not monospace, so a shortcut reads as part of the sentence. Inside a button or input group it sits as far from the side as from the top and bottom, and its corner nests in the box's up to `default`; at `lg` the inset reaches the radius, so it keeps its own. Inside a tooltip it takes `invertedFill` and `invertedOnSolid`, and the tooltip's end padding drops to `space.xxs` around a trailing key so the corners stay concentric.
 
+## Loading bar
+
+A `strokes.indicator` line in `accentSolid` along the window's top, on `layers.loadingBar` above everything; it covers nothing and lets the pointer through. A load must outlast `durations.loadingDelay` before it shows, so a fast one never flashes. Shown, its fill creeps from a tenth toward nine tenths over `durations.trickle` on `out`, slowing as it goes, so a long load still moves without looking done. When the load ends it completes from wherever it reached on `move` + `out`, then fades on `popoverExit`; a load starting during the finish restarts the creep. The finish alone keeps a shown bar up about 370ms, so it never blinks. Under reduced motion it sits full width and breathes like an indeterminate progress bar, on `pulse`, and finishes with the fade alone.
+
 ## Model picker
 
 A popover whose popup is no surface: it holds two cards, a Command list at `sizes.modelPicker` and the highlighted model's details, opening and closing together on the popover's motion. The card shows once a row is reached by arrow key or the pointer rests on it for `hoverCardDelay`, then follows the highlight, so skimming the list never flashes it. A pick closes the picker at once, with no exit. The card opens at the list's `inline-end`, or `inline-start` for a picker at a row's end; opening upward it lines up with the list's bottom, nearest the trigger, and it wraps under the list when both don't fit. Logos are one-color masks painted in the text color. While the card shows, each row is described by it (`aria-describedby`), so a screen reader hears the highlighted model's details after its name.
@@ -179,9 +183,13 @@ One question at a time, each answer a choice card. The card is Field's: `border`
 
 A round checkbox with a dot that grows from the center, from half its size, a touch past full on `overshoot`.
 
+## Relay wheel
+
+A mouse wheel sends only a vertical delta, which a sideways row ignores. A one-line strip with nothing to read past it (tabs, suggestions, an attachment group) takes the wheel and scrolls sideways until its end, then hands it to the page. A block with height, like a table or code, doesn't: it sits in the reading flow, and taking the wheel there would stall the page's scroll.
+
 ## Scroll area
 
-Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. Where a scroll fade already shows there's more, like the docs sidebar, `hideScrollbar` drops the scrollbar.
+Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows takes Tab, and the area draws its ring, since the fade would mask the scroller's own.
 
 ## Scroll fade
 
@@ -241,7 +249,7 @@ The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`pres
 
 ## Suggestions
 
-`outline` `sm` pill buttons in one row that scrolls sideways with no scrollbar; `scrollFade.x` shows there's more. The row keeps `space.xxs` around the pills so the viewport doesn't clip a focus ring.
+`outline` `sm` pill buttons in one row that scrolls sideways with no scrollbar; `scrollFade.x` shows there's more, and a vertical wheel scrolls it sideways until its end, then the page. The row keeps `space.xxs` around the pills so the viewport doesn't clip a focus ring.
 
 ## Switch
 
@@ -249,11 +257,11 @@ A checkbox that slides: `fillStrong` track off, `infoSolid` on. Off, the thumb t
 
 ## Table
 
-Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Cells read at `textMd` with `space.sm` at their sides; the header is regular `textSecondary`, so the data leads. Its container scrolls sideways with no scrollbar and fades its edges (`scrollFade.x`). A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
+Rows are divided by `borderSubtle` and its footer sits on `fillSubtle`. Cells read at `textMd` with `space.sm` at their sides; the header is regular `textSecondary`, so the data leads. Its container is a Scroll Area that scrolls sideways under the overlay scrollbar, shown on hover or while scrolling, and fades its edges (`scrollFade.x`). A selected row takes `fill`. Hover and press light a row `fillSubtle`, except in a reference table (`interactive={false}`, as in docs), where nothing answers the pointer. The cells draw the dividers on separate borders: collapsed, Chrome hid them under a selected row in a cell that clips its text.
 
 ## Tabs
 
-The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline. A row too long for its container scrolls sideways with no scrollbar and fades the edge with more past it (`scrollFade.x`); a picked tab, by the keys or from elsewhere, scrolls in `space.xl` clear of that edge. A vertical list never fades, as the mask would clip its line indicator, drawn just outside it.
+The default list has no track: a `fill` pill on full corners slides between `semimedium` tabs, as a segmented control's does. The line variant keeps an `accentSolid` line on a `borderSubtle` baseline. A row too long for its container scrolls sideways with no scrollbar and fades the edge with more past it (`scrollFade.x`), and a vertical wheel scrolls it sideways until its end, then the page; a picked tab, by the keys or from elsewhere, scrolls in `space.xl` clear of that edge. A vertical list never fades, as the mask would clip its line indicator, drawn just outside it.
 
 ## Textarea
 

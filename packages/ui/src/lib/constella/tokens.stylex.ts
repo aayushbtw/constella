@@ -305,6 +305,8 @@ export const layers = stylex.defineConsts({
   popover: "45",
   toast: "50",
   tooltip: "60",
+  // A 2px line along the window's top edge that covers nothing, so it sits above everything.
+  loadingBar: "70",
 } as const);
 
 export const opacities = stylex.defineConsts({
@@ -357,6 +359,8 @@ export const durations = stylex.defineConsts({
   spin: "1s",
   // One breath of a skeleton: slow, so loading reads as calm.
   pulse: "2s",
+  // One creep of the loading bar toward its end: long, so a slow load still reads as moving; read in JS.
+  trickle: "10000ms",
   // One sweep of a shimmer across working text.
   shimmer: "2s",
   crossfade: crossfadeFor,
@@ -370,6 +374,8 @@ export const durations = stylex.defineConsts({
   stagger: "50ms",
   // How long an image may load before its fallback shows; read in JS.
   fallbackDelay: "600ms",
+  // How long a load runs before the loading bar shows; read in JS.
+  loadingDelay: "150ms",
   // Half Base UI's 600ms, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",

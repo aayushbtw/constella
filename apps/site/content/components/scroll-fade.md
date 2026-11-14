@@ -38,9 +38,8 @@ Pass it to a [Scroll Area](/docs/components/scroll-area)'s `viewportSx`, since i
 <!-- ::demo name="scroll-fade-horizontal" -->
 
 ```tsx
-<ScrollArea viewportSx={scrollFade.x}>
+<ScrollArea scrollbar="horizontal" viewportSx={scrollFade.x}>
   {tiles}
-  <ScrollBar orientation="horizontal" />
 </ScrollArea>
 ```
 

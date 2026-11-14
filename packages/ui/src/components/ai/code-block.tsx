@@ -1,8 +1,11 @@
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { mergeProps } from "@base-ui/react/merge-props";
+import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps, ReactNode } from "react";
 
+import { ScrollBar } from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { scrollFadeVars } from "@/lib/constella/scroll-fade.stylex";
 import type { Sx } from "@/lib/constella/styles";
@@ -45,7 +48,7 @@ const markedSelf = `:is(${marks})`;
 const wrapped = ":is([data-wrap] *)";
 const onBlock = ":is([data-slot='code-block'] > *)";
 const besideFloating =
-  ":is([data-slot='code-block']:has(> [data-slot='code-block-actions']) > * > *)";
+  ":is([data-slot='code-block']:has(> [data-slot='code-block-actions']) pre)";
 const underHeader =
   ":is([data-slot='code-block']:has(> [data-slot='code-block-header']) > *)";
 const overFooter =
@@ -116,7 +119,7 @@ const styles = stylex.create({
     right: { default: null, [onBlock]: space.xs },
     position: { default: null, [onBlock]: "absolute" },
   },
-  // The numbers' containing block, outside the scroller.
+  // The numbers' containing block, outside the scroller; the scroll area's root, which sets its position inline.
   content: {
     flexGrow: 1,
     fontFamily: fonts.mono,
@@ -132,7 +135,6 @@ const styles = stylex.create({
       default: codeBlockVars.padBlock,
       [underHeader]: space.xxs,
     },
-    position: "relative",
   },
   // The fade ends where the floating action starts, so code never shows beside it.
   contentBesideActions: {
@@ -151,9 +153,6 @@ const styles = stylex.create({
       [markedSelf]: gutter,
     },
     minWidth: 0,
-    overflow: "auto",
-    // The scroll fade shows there's more, as in Suggestions.
-    scrollbarWidth: "none",
     paddingInlineEnd: { default: pad, [besideFloating]: clearActions },
     paddingInlineStart: { default: pad, [numberedSelf]: 0, [markedSelf]: 0 },
     tabSize: 2,
@@ -316,7 +315,7 @@ function CodeBlockActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** The code, scrolling sideways on its own (never down) and always left to right. A string with `lineNumbers` splits into lines; `sx` styles the wrapper, `ref` and the rest reach the `pre`. */
+/** The code, scrolling sideways on its own (never down) under an overlay scrollbar, and always left to right. A string with `lineNumbers` splits into lines; `sx` styles the wrapper, `ref` and the rest reach the `pre`. */
 function CodeBlockContent({
   children,
   lineNumbers = false,
@@ -331,41 +330,47 @@ function CodeBlockContent({
   wrap?: boolean;
 }) {
   return (
-    <div
-      data-slot="code-block-content"
-      dir="ltr"
-      {...stylex.props(
-        styles.content,
-        scrollFade.xEndAround,
-        styles.contentBesideActions,
-        sx
-      )}
-    >
-      <pre
-        data-numbered={lineNumbers || undefined}
-        data-wrap={wrap || undefined}
-        {...props}
-        {...stylex.props(
-          styles.pre,
-          scrollFade.source,
-          styles.start(startLine - 1),
-          wrap && styles.wrap
-        )}
+    // Base UI places the thumb by the provider's direction, not `dir`.
+    <DirectionProvider direction="ltr">
+      <ScrollAreaPrimitive.Root
+        data-slot="code-block-content"
+        dir="ltr"
+        {...stylex.props(styles.content, styles.contentBesideActions, sx)}
       >
-        <code data-slot="code-block-code" {...stylex.props(styles.code)}>
-          {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
-          {lineNumbers && typeof children === "string"
-            ? children
-                .replace(/\n$/u, "")
-                .split("\n")
-                .map((line, index) => (
-                  // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
-                  <CodeBlockLine key={index}>{line}</CodeBlockLine>
-                ))
-            : children}
-        </code>
-      </pre>
-    </div>
+        {/* The fade draws here, so the scrollbar beside it stays clear. */}
+        <div {...stylex.props(scrollFade.xEndAround)}>
+          <ScrollAreaPrimitive.Viewport
+            render={
+              <pre
+                data-numbered={lineNumbers || undefined}
+                data-wrap={wrap || undefined}
+                {...props}
+              />
+            }
+            {...stylex.props(
+              styles.pre,
+              scrollFade.source,
+              styles.start(startLine - 1),
+              wrap && styles.wrap
+            )}
+          >
+            <code data-slot="code-block-code" {...stylex.props(styles.code)}>
+              {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- `children` is documented as plain text or lines */}
+              {lineNumbers && typeof children === "string"
+                ? children
+                    .replace(/\n$/u, "")
+                    .split("\n")
+                    .map((line, index) => (
+                      // oxlint-disable-next-line react/no-array-index-key -- a line's place is its identity
+                      <CodeBlockLine key={index}>{line}</CodeBlockLine>
+                    ))
+                : children}
+            </code>
+          </ScrollAreaPrimitive.Viewport>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollAreaPrimitive.Root>
+    </DirectionProvider>
   );
 }
 
