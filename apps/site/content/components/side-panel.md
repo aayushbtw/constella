@@ -6,24 +6,23 @@ description: A panel floating beside the page for details, a form or anything el
 <!-- ::demo name="side-panel" -->
 
 ```tsx
-const [slot, setSlot] = useState<HTMLDivElement | null>(null);
-
 <div {...stylex.props(styles.row)}>
   <Page onSelect={setSelected} />
-  <SidePanelSlot ref={setSlot} />
   <SidePanel
     onOpenChange={(open) => !open && setSelected(null)}
     open={selected !== null}
   >
-    <SidePanelContent container={slot}>
-      <SidePanelHeader>
-        <SidePanelTitle>Signed in</SidePanelTitle>
-      </SidePanelHeader>
-      <SidePanelBody>…</SidePanelBody>
-      <SidePanelFooter>…</SidePanelFooter>
-    </SidePanelContent>
+    <SidePanelSlot>
+      <SidePanelContent>
+        <SidePanelHeader>
+          <SidePanelTitle>Signed in</SidePanelTitle>
+        </SidePanelHeader>
+        <SidePanelBody>…</SidePanelBody>
+        <SidePanelFooter>…</SidePanelFooter>
+      </SidePanelContent>
+    </SidePanelSlot>
   </SidePanel>
-</div>;
+</div>
 ```
 
 ## Installation
@@ -47,9 +46,9 @@ import {
 
 The panel floats beside the page, lifted off it as the composer is: inset from the content and the window's edges, rounded, on the `raised` fill, its edge a ring in its `shadows.panel` shadow.
 
-Put a `SidePanelSlot` after the whole page, header included, in a flex row. Keep its element in state through its `ref`, and pass that to `SidePanelContent` as `container`. **Not a `useRef`:** a panel inside the page that's open on load mounts before the slot's ref is set, and opens at the end of the body instead. Given null, the panel waits for the slot. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
+Put a `SidePanelSlot` after the whole page, header included, in a flex row, with `SidePanelContent` inside it. The slot is sticky below the header row and the window's height less that row, so the panel stays in view while the page scrolls the window. In a box of its own height, reset that with the slot's `sx`.
 
-The panel opens there, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, and Escape or Close shuts it.
+The panel opens there, in the page's flow, so the content narrows beside it instead of being covered. It's a non-modal dialog: the content stays usable, Close shuts it, and so does Escape while focus is in the panel.
 
 The header is one row, so a `SidePanelDescription` goes first in the body. It names the panel's description for screen readers, as a dialog's does.
 
@@ -58,14 +57,14 @@ On a narrow window, show the same details in a [Sheet](/docs/components/sheet) i
 ## Composition
 
 ```
-SidePanelSlot
 SidePanel
-└── SidePanelContent
-    ├── SidePanelHeader
-    │   └── SidePanelTitle
-    ├── SidePanelBody
-    │   └── SidePanelDescription
-    └── SidePanelFooter
+└── SidePanelSlot
+    └── SidePanelContent
+        ├── SidePanelHeader
+        │   └── SidePanelTitle
+        ├── SidePanelBody
+        │   └── SidePanelDescription
+        └── SidePanelFooter
 
 Panel
 ├── PanelHeader
@@ -75,7 +74,7 @@ Panel
 
 ## Panel
 
-Use `Panel` for a panel that's always on the page, such as a project's files beside its chat. It has the side panel's look without the dialog: no Close, no Escape, and the page sizes and places it. Use `SidePanel` for details that open from a row and Escape or Close shuts.
+Use `Panel` for a panel that's always on the page, such as a project's files beside its chat. It has the side panel's look without the dialog: no Close, no Escape, and the page sizes and places it. Use `SidePanel` for details that open from a row and Close shuts.
 
 <!-- ::demo name="side-panel-panel" -->
 
@@ -95,9 +94,9 @@ Use `Panel` for a panel that's always on the page, such as a project's files bes
 
 | Part | Adds |
 | --- | --- |
-| `SidePanel` | Base UI Dialog, non-modal, not closed by an outside click |
-| `SidePanelContent` | `container`: the slot's element, null until it mounts; renders the portal and popup |
-| `SidePanelSlot` | Sticky below the header row, the window's height less it |
+| `SidePanel` | UI SDK Dialog, `modal={false}` and `closeOnOutsidePress={false}`: Escape closes it only while focus is in it |
+| `SidePanelContent` | UI SDK `DialogContent` with `inline`, so it renders where it sits, in the slot, not in the top layer |
+| `SidePanelSlot` | Holds `SidePanelContent`; sticky below the header row, the window's height less it |
 | `SidePanelHeader` | A strip `sizes.header` less the panel's inset (44px), pinned: the title, any actions, then Close |
 | `SidePanelDescription` | Muted text first in the body; the panel's accessible description |
 | `SidePanelBody` | Scrolls on its own |
@@ -107,4 +106,4 @@ Use `Panel` for a panel that's always on the page, such as a project's files bes
 | `PanelTitle` | The panel's heading, an `h2` |
 | `PanelBody` | Scrolls on its own |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Dialog](https://base-ui.com/react/components/dialog).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/react/components/dialog).

@@ -754,7 +754,6 @@ const clickColumns = column.columns([
 ]);
 
 function DataTableRowClickDemo() {
-  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const main = useRef<HTMLDivElement>(null);
   const [openId, setOpenId] = useState<string | undefined>();
   const table = useTable({
@@ -787,7 +786,6 @@ function DataTableRowClickDemo() {
             </OpenPayment>
           </div>
         </ScrollArea>
-        <SidePanelSlot ref={setSlot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {
@@ -796,23 +794,25 @@ function DataTableRowClickDemo() {
           }}
           open={payment !== undefined}
         >
-          <SidePanelContent container={slot} sx={styles.panel}>
-            <SidePanelHeader>
-              <SidePanelTitle>{payment?.email}</SidePanelTitle>
-            </SidePanelHeader>
-            <SidePanelBody>
-              <dl {...stylex.props(styles.facts)}>
-                <dt {...stylex.props(styles.term)}>Amount</dt>
-                <dd {...stylex.props(styles.value)}>
-                  {payment && money.format(payment.amount)}
-                </dd>
-                <dt {...stylex.props(styles.term)}>Status</dt>
-                <dd {...stylex.props(styles.value)}>{payment?.status}</dd>
-                <dt {...stylex.props(styles.term)}>ID</dt>
-                <dd {...stylex.props(styles.value)}>{payment?.id}</dd>
-              </dl>
-            </SidePanelBody>
-          </SidePanelContent>
+          <SidePanelSlot>
+            <SidePanelContent sx={styles.panel}>
+              <SidePanelHeader>
+                <SidePanelTitle>{payment?.email}</SidePanelTitle>
+              </SidePanelHeader>
+              <SidePanelBody>
+                <dl {...stylex.props(styles.facts)}>
+                  <dt {...stylex.props(styles.term)}>Amount</dt>
+                  <dd {...stylex.props(styles.value)}>
+                    {payment && money.format(payment.amount)}
+                  </dd>
+                  <dt {...stylex.props(styles.term)}>Status</dt>
+                  <dd {...stylex.props(styles.value)}>{payment?.status}</dd>
+                  <dt {...stylex.props(styles.term)}>ID</dt>
+                  <dd {...stylex.props(styles.value)}>{payment?.id}</dd>
+                </dl>
+              </SidePanelBody>
+            </SidePanelContent>
+          </SidePanelSlot>
         </SidePanel>
       </div>
     </DemoRow>
