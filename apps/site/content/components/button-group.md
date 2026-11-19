@@ -217,11 +217,10 @@ Put an `InputGroup` in the group for an input with its own addons.
     <InputGroup>
       <InputGroupInput aria-label="Message" placeholder="Send a message..." />
       <InputGroupAddon align="inline-end">
-        <Tooltip>
+        <Tooltip type="label">
           <TooltipTrigger
             render={
               <InputGroupButton
-                aria-label="Voice mode"
                 aria-pressed={voice}
                 onClick={() => setVoice(!voice)}
                 size="icon-xs"

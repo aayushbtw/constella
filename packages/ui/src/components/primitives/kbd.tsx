@@ -17,7 +17,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const inTooltip = ":where([data-slot='tooltip-popup'] *)";
+const inTooltip = ":where([data-slot='tooltip-content'] *)";
 
 const inButton = (size: string) =>
   `:where([data-slot='button'][data-size='${size}'] > *)`;

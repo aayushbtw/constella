@@ -38,7 +38,6 @@ import { Skeleton } from "@/components/primitives/skeleton";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
 import { scrollFade } from "@/lib/constella/scroll-fade";
@@ -208,14 +207,12 @@ const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 const item = "[data-slot='sidebar-menu-item']";
 // Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
 const action = "[data-sidebar-menu-action]";
-// Its own children only, so a sub-row doesn't light its parent.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub']):hover)`;
+// Its own children only, so a sub-row or the row's tooltip, rendered in place, doesn't light it.
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
-// The action's menu only: the row's own tooltip writes the same attribute.
 const actionOpen = `${item}:has(> ${action}[data-popup-open])`;
-// Or the row's own popup, as a menu's trigger: its tooltip also writes `data-popup-open`,
-// and a collapsible's trigger is expanded without one.
+// Or the row's own popup, as a menu's trigger; a collapsible's trigger is expanded without one.
 const rowOpen = `:is(${actionOpen} > *, [aria-haspopup][aria-expanded='true'])`;
 const idle = ":not([data-active])";
 const rowFill = {
@@ -934,17 +931,14 @@ function SidebarProvider({
 
   return (
     <SidebarContext value={context}>
-      {/* One group, so once a row's tooltip is open, the next opens at once. */}
-      <TooltipProvider>
-        <KeyboardToggleContext value={toggleFromKeyboard}>
-          <div
-            data-instant={instant || undefined}
-            data-slot="sidebar-wrapper"
-            {...props}
-            {...stylex.props(styles.wrapper, sx)}
-          />
-        </KeyboardToggleContext>
-      </TooltipProvider>
+      <KeyboardToggleContext value={toggleFromKeyboard}>
+        <div
+          data-instant={instant || undefined}
+          data-slot="sidebar-wrapper"
+          {...props}
+          {...stylex.props(styles.wrapper, sx)}
+        />
+      </KeyboardToggleContext>
     </SidebarContext>
   );
 }
@@ -1116,7 +1110,7 @@ function SidebarTrigger({
     label = "Open sidebar";
   }
   return (
-    <Tooltip>
+    <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
@@ -1394,36 +1388,44 @@ function SidebarMenuButton({
 }) {
   const { rail, tooltipSide } = use(RailContext);
   const [truncated, setTruncated] = useState(false);
-  const button = renderElement(
-    "button",
-    mergeProps(
-      {
-        "data-active": isActive ? "" : undefined,
-        "data-size": size,
-        "data-slot": "sidebar-menu-button",
-        "data-variant": variant,
-        type: render ? undefined : "button",
-      },
-      props,
-      stylex.props(
-        [typeStyles.textMd, styles.button],
-        variant === "outline" && styles.buttonOutline,
-        buttonSizeStyles[size],
-        withEnd && styles.buttonWithEnd,
-        sx
-      )
-    ),
-    tooltip === undefined ? render : <TooltipTrigger render={render} />
+  const own = mergeProps(
+    {
+      "data-active": isActive ? "" : undefined,
+      "data-size": size,
+      "data-slot": "sidebar-menu-button",
+      "data-variant": variant,
+      type: render ? undefined : "button",
+    },
+    props,
+    stylex.props(
+      [typeStyles.textMd, styles.button],
+      variant === "outline" && styles.buttonOutline,
+      buttonSizeStyles[size],
+      withEnd && styles.buttonWithEnd,
+      sx
+    )
   );
 
   if (tooltip === undefined) {
-    return <LabelContext value={null}>{button}</LabelContext>;
+    return (
+      <LabelContext value={null}>
+        {renderElement("button", own, render)}
+      </LabelContext>
+    );
   }
 
   return (
     <LabelContext value={setTruncated}>
       <Tooltip disabled={!(rail || truncated)}>
-        {button}
+        <TooltipTrigger
+          // The row's label stays in the accessibility tree, even in the rail, so the tooltip only repeats it; `own` sets `type` on a native row.
+          render={({
+            "aria-describedby": _describedBy,
+            "aria-labelledby": _labelledBy,
+            type: _type,
+            ...trigger
+          }) => renderElement("button", mergeProps(trigger, own), render)}
+        />
         <TooltipContent align="center" side={tooltipSide}>
           {tooltip}
         </TooltipContent>

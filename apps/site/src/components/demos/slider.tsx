@@ -257,8 +257,14 @@ function SliderTooltipDemo() {
         <SliderControl>
           <SliderTrack>
             <SliderIndicator />
-            <Tooltip onOpenChange={setHovered} open={hovered || dragging}>
-              <TooltipTrigger delay={0} render={<SliderThumb />} />
+            <Tooltip
+              closeOnPress={false}
+              delay={0}
+              onOpenChange={setHovered}
+              open={hovered || dragging}
+              type="description"
+            >
+              <TooltipTrigger render={<SliderThumb />} />
               <TooltipContent>
                 <SliderValue sx={styles.bubble}>
                   {(formatted) => `${formatted[0] ?? ""}%`}

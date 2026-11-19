@@ -206,7 +206,7 @@ Use the `disabled` prop to disable the slider.
 
 ## Tooltip
 
-Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content. Keep it open while dragging, since the pointer can leave the thumb.
+Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content, and `type="description"` so the label still names it. Keep it open while dragging, since the pointer can leave the thumb, and on press with `closeOnPress={false}`.
 
 <!-- ::demo name="slider-tooltip" -->
 
@@ -233,8 +233,14 @@ function VolumeSlider() {
       <SliderControl>
         <SliderTrack>
           <SliderIndicator />
-          <Tooltip onOpenChange={setHovered} open={hovered || dragging}>
-            <TooltipTrigger delay={0} render={<SliderThumb />} />
+          <Tooltip
+            closeOnPress={false}
+            delay={0}
+            onOpenChange={setHovered}
+            open={hovered || dragging}
+            type="description"
+          >
+            <TooltipTrigger render={<SliderThumb />} />
             <TooltipContent>
               <SliderValue sx={styles.value}>
                 {(formatted) => `${formatted[0] ?? ""}%`}

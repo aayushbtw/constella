@@ -18,14 +18,15 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-// A group's own parts: not the focus guards Base UI drops beside an open popup's trigger,
-// nor an open popover's content, which renders in place beside it.
-const notFirst = ":not(:nth-child(1 of [data-slot]:not([popover])))";
-const notLast = ":not(:nth-last-child(1 of [data-slot]:not([popover])))";
+// A group's own parts: not the focus guards Base UI drops beside an open popup's trigger, nor
+// ui-sdk popup content, which renders in place beside it, `popover` while shown and `hidden` while closed.
+const notFirst = ":not(:nth-child(1 of [data-slot]:not([popover], [hidden])))";
+const notLast =
+  ":not(:nth-last-child(1 of [data-slot]:not([popover], [hidden])))";
 
 // The neighbor before draws the shared edge, or the separator does.
 const joined =
-  ":not(:nth-child(1 of [data-slot]:not([popover])), [data-slot='separator'] + *)";
+  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden])), [data-slot='separator'] + *)";
 
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: Values<typeof radii>) => ({
@@ -71,6 +72,23 @@ const joinStyles = stylex.create({
   md: corners(radii.md),
   sm: corners(radii.sm),
   xs: corners(radii.xs),
+});
+
+const popupReset = stylex.create({
+  // A ui-sdk popup renders in place, so it drops what it would inherit from there: a group's joins,
+  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box.
+  base: {
+    [joins.block]: "1",
+    [joins.either]: "1",
+    [joins.inline]: "1",
+    color: colors.textPrimary,
+    cursor: "auto",
+    fontVariantNumeric: "normal",
+    fontWeight: fontWeights.regular,
+    textAlign: "start",
+    userSelect: "text",
+    whiteSpace: "normal",
+  },
 });
 
 const visuallyHidden = stylex.create({
@@ -423,6 +441,7 @@ type Sx = stylex.StyleXStyles<
 export {
   controlIconSize,
   joinStyles,
+  popupReset,
   stateStyles,
   textColors,
   textColorStyles,

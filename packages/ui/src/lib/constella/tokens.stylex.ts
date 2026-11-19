@@ -312,7 +312,6 @@ export const layers = stylex.defineConsts({
   // Above a dialog, so a select or menu opened from one sits on top of it.
   popover: "45",
   toast: "50",
-  tooltip: "60",
   // A 2px line along the window's top edge that covers nothing, so it sits above everything.
   loadingBar: "70",
 } as const);
@@ -384,7 +383,7 @@ export const durations = stylex.defineConsts({
   fallbackDelay: "600ms",
   // How long a load runs before the loading bar shows; read in JS.
   loadingDelay: "150ms",
-  // Half Base UI's 600ms, for a tooltip and a hover card alike.
+  // Half the 600ms default of ui-sdk and Base UI, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",
