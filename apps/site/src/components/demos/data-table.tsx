@@ -448,11 +448,10 @@ function DataTableFilterDemo() {
           <div {...stylex.props(styles.controls)}>
             <ToggleGroup
               aria-label="Status"
+              deselectable={false}
               onValueChange={(next) => {
                 const [picked] = next;
-                if (picked !== undefined) {
-                  setStatus(picked);
-                }
+                setStatus(picked);
               }}
               spacing={0}
               value={[status]}

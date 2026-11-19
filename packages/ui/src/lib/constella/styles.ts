@@ -180,10 +180,13 @@ const interactive = <R, A>(rest: R, active: A) => ({
   [activeIdle]: active,
 });
 
+const off = ":disabled, [data-disabled]";
 const pressed = ":is([data-pressed])";
-const hoverUnpressed = ":hover:not(:disabled, [data-pressed])";
-const activeUnpressed = ":active:not(:disabled, [data-pressed])";
-const hoverPressed = ":is([data-pressed]):hover:not(:disabled, :active)";
+const hoverUnpressed = `:hover:not(${off}, [data-pressed])`;
+const activeUnpressed = `:active:not(${off}, [data-pressed])`;
+const hoverPressed = `:is([data-pressed]):hover:not(${off}, :active)`;
+const hoverLifted = `:hover:not(${off}, :active)`;
+const activeLifted = `:active:not(${off})`;
 
 // Selected is `fill`; hover stays a step under, and hovering a selected part stacks
 // `fillSubtle` on its fill as an inset shadow, so the two never read alike.
@@ -227,11 +230,11 @@ const stateStyles = stylex.create({
       default: `${unlit}, ${shadows.default}`,
       [media.hover]: {
         default: `${unlit}, ${shadows.default}`,
-        ":hover:not(:disabled, :active)": `${unlit}, ${shadows.defaultHover}`,
+        [hoverLifted]: `${unlit}, ${shadows.defaultHover}`,
         [hoverPressed]: `${lit}, ${shadows.defaultHover}`,
-        ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+        [activeLifted]: `${unlit}, ${shadows.defaultPressed}`,
       },
-      ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+      [activeLifted]: `${unlit}, ${shadows.defaultPressed}`,
     },
   },
 });

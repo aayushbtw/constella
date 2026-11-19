@@ -247,9 +247,10 @@ function QuestionnaireShortcutsDemo() {
         <div>
           <ToggleGroup
             aria-label="Shortcuts"
+            deselectable={false}
             onValueChange={(next) => {
               const [picked] = next;
-              if (picked !== undefined && isShortcutMode(picked)) {
+              if (isShortcutMode(picked)) {
                 setMode(picked);
               }
             }}
@@ -473,11 +474,10 @@ function QuestionnaireControlledDemo() {
         <div>
           <ToggleGroup
             aria-label="Active question"
+            deselectable={false}
             onValueChange={(next) => {
               const [picked] = next;
-              if (picked !== undefined) {
-                setItem(picked);
-              }
+              setItem(picked);
             }}
             size="sm"
             spacing={0}

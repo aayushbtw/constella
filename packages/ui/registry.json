@@ -351,7 +351,7 @@
       "type": "registry:ui",
       "title": "Toggle Group",
       "description": "Toggles that sit apart or join into one row.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/toggle.json"
