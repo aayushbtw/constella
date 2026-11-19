@@ -114,14 +114,16 @@ const anchor = useComboboxAnchor();
 
 ### Creatable
 
-To let people add values that aren't in the list, add the typed text to `items` when nothing matches it, and label that item as new. Enter with no item highlighted, or a comma, adds the typed text as a chip.
+To let people add values that aren't in the list, add the typed text to `items` when nothing matches it, and label that item as new. `autoHighlight` highlights the first match once something is typed, so Enter picks it. A comma, or Enter with nothing highlighted, adds the typed text as a chip.
+
+Opening the list also highlights a picked chip, with the reason `"none"`. Enter on an empty input would remove it, so the handler only lets Enter through for a highlight made by typing, the arrow keys or the pointer. It forgets the highlight when the list closes, so Enter after Escape never submits a surrounding form.
 
 <!-- ::demo name="combobox-creatable" -->
 
 ```tsx
 const [value, setValue] = useState<string[]>([]);
 const [query, setQuery] = useState("");
-const highlighted = useRef<string | undefined>(undefined);
+const highlight = useRef<string | undefined>(undefined);
 
 const typed = query.trim();
 const known = [...new Set([...tags, ...value])];
@@ -129,11 +131,13 @@ const match = known.find((tag) => tag.toLowerCase() === typed.toLowerCase());
 const items = typed !== "" && match === undefined ? [...known, typed] : known;
 
 function handleKeyDown(event) {
-  const adds =
-    event.key === "," ||
-    (event.key === "Enter" && highlighted.current === undefined);
-  if (!adds) return;
+  const picks =
+    event.key === "Enter" &&
+    highlight.current !== undefined &&
+    (typed !== "" || highlight.current !== "none");
+  if (picks || (event.key !== "Enter" && event.key !== ",")) return;
   event.preventDefault();
+  event.preventBaseUIHandler();
   if (typed === "") return;
   const tag = match ?? typed;
   setValue((current) => (current.includes(tag) ? current : [...current, tag]));
@@ -146,8 +150,11 @@ function handleKeyDown(event) {
   items={items}
   multiple
   onInputValueChange={setQuery}
-  onItemHighlighted={(item) => {
-    highlighted.current = item;
+  onItemHighlighted={(item, { reason }) => {
+    highlight.current = item === undefined ? undefined : reason;
+  }}
+  onOpenChange={(open) => {
+    if (!open) highlight.current = undefined;
   }}
   onValueChange={(next) => {
     setValue(next);
@@ -177,6 +184,19 @@ function handleKeyDown(event) {
     </ComboboxList>
   </ComboboxContent>
 </Combobox>;
+```
+
+Escape with the list closed clears every chip. To keep them, ignore that change and let Escape reach the parent, so a dialog around the field closes instead:
+
+```tsx
+onValueChange={(next, details) => {
+  if (details.reason === "escape-key") {
+    details.allowPropagation();
+    return;
+  }
+  setValue(next);
+  setQuery("");
+}}
 ```
 
 ## Clear Button

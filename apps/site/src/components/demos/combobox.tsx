@@ -1,6 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
 import { useRef, useState } from "react";
-import type { KeyboardEvent } from "react";
 
 import {
   Combobox,
@@ -120,30 +119,12 @@ function ComboboxCreatableDemo() {
   const anchor = useComboboxAnchor();
   const [value, setValue] = useState(["design"]);
   const [query, setQuery] = useState("");
-  const highlighted = useRef<string | undefined>(undefined);
+  const highlight = useRef<string | undefined>(undefined);
 
   const typed = query.trim();
   const known = [...new Set([...tags, ...value])];
   const match = known.find((tag) => tag.toLowerCase() === typed.toLowerCase());
   const items = typed !== "" && match === undefined ? [...known, typed] : known;
-
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    const adds =
-      event.key === "," ||
-      (event.key === "Enter" && highlighted.current === undefined);
-    if (!adds) {
-      return;
-    }
-    event.preventDefault();
-    if (typed === "") {
-      return;
-    }
-    const tag = match ?? typed;
-    setValue((current) =>
-      current.includes(tag) ? current : [...current, tag]
-    );
-    setQuery("");
-  }
 
   return (
     <DemoRow>
@@ -153,8 +134,13 @@ function ComboboxCreatableDemo() {
         items={items}
         multiple
         onInputValueChange={setQuery}
-        onItemHighlighted={(item) => {
-          highlighted.current = item;
+        onItemHighlighted={(item, { reason }) => {
+          highlight.current = item === undefined ? undefined : reason;
+        }}
+        onOpenChange={(open) => {
+          if (!open) {
+            highlight.current = undefined;
+          }
         }}
         onValueChange={(next) => {
           setValue(next);
@@ -171,7 +157,26 @@ function ComboboxCreatableDemo() {
                 ))}
                 <ComboboxChipsInput
                   aria-label="Tags"
-                  onKeyDown={handleKeyDown}
+                  onKeyDown={(event) => {
+                    // Opening the list highlights a picked chip ("none"); Enter there would remove it.
+                    const picks =
+                      event.key === "Enter" &&
+                      highlight.current !== undefined &&
+                      (typed !== "" || highlight.current !== "none");
+                    if (picks || (event.key !== "Enter" && event.key !== ",")) {
+                      return;
+                    }
+                    event.preventDefault();
+                    event.preventBaseUIHandler();
+                    if (typed === "") {
+                      return;
+                    }
+                    const tag = match ?? typed;
+                    setValue((current) =>
+                      current.includes(tag) ? current : [...current, tag]
+                    );
+                    setQuery("");
+                  }}
                   placeholder={values.length > 0 ? "" : "Add a tag"}
                 />
               </>
