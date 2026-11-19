@@ -6,8 +6,8 @@ allowBuilds:
   sharp: true
   workerd: true
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@1.1.0
-  vite-plus: 1.1.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
+  vite-plus: 1.7.0
 minimumReleaseAgeExclude:
   - "@tanstack/intent@0.5.5"
   - "@voidzero-dev/vite-plus-core@1.1.0"
@@ -35,8 +35,3 @@ overrides:
 # Input registered a commit before its Choices, which loops hydration on React 19.3; drop once shadcn ships the fix.
 patchedDependencies:
   "@shadcn/react@0.3.1": patches/@shadcn__react@0.3.1.patch
-peerDependencyRules:
-  allowAny:
-    - vite
-  allowedVersions:
-    vite: "*"
