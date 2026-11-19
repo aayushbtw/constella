@@ -157,6 +157,50 @@ test("focus leaving the open card for the next trigger moves the card at once", 
   expect(Object.hasOwn(emil.dataset, "open")).toBe(true);
 });
 
+test("focus moving straight to another trigger moves the open card at once", async () => {
+  vi.useFakeTimers();
+  const controller = createHoverCardController<Person>();
+  render(<Mentions controller={controller} />);
+  const shadcn = screen.getByRole("link", { name: "shadcn" });
+  const emil = screen.getByRole("link", { name: "emil" });
+
+  tabTo(emil);
+  await wait(Number.parseFloat(durations.hoverCardDelay));
+  fireEvent.keyDown(emil, { key: "Tab", shiftKey: true });
+  fireEvent.focusOut(emil, { relatedTarget: shadcn });
+  act(() => {
+    shadcn.focus();
+  });
+
+  expect(screen.getByText("Building shadcn/ui.")).toBeTruthy();
+  expect(Object.hasOwn(shadcn.dataset, "open")).toBe(true);
+  expect(Object.hasOwn(emil.dataset, "open")).toBe(false);
+  expect(Object.hasOwn(content()?.dataset ?? {}, "endingStyle")).toBe(false);
+});
+
+test("focus leaving for good leaves the next open on the full delay", async () => {
+  vi.useFakeTimers();
+  const controller = createHoverCardController<Person>();
+  render(<Mentions controller={controller} />);
+  const shadcn = screen.getByRole("link", { name: "shadcn" });
+  const emil = screen.getByRole("link", { name: "emil" });
+
+  tabTo(shadcn);
+  await wait(Number.parseFloat(durations.hoverCardDelay));
+  expect(Object.hasOwn(shadcn.dataset, "open")).toBe(true);
+  act(() => {
+    shadcn.blur();
+  });
+  expect(Object.hasOwn(shadcn.dataset, "open")).toBe(false);
+  await wait(Number.parseFloat(durations.hoverCardCloseDelay));
+
+  fireEvent.pointerEnter(emil, { pointerType: "mouse" });
+  await wait(Number.parseFloat(durations.hoverCardDelay) - 1);
+  expect(Object.hasOwn(emil.dataset, "open")).toBe(false);
+  await wait(1);
+  expect(Object.hasOwn(emil.dataset, "open")).toBe(true);
+});
+
 test("closing mid-move drops the glide", () => {
   vi.useFakeTimers();
   const controller = createHoverCardController<Person>();
