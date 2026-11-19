@@ -141,7 +141,6 @@ const files = [
 ];
 
 function SidePanelDemo() {
-  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const event = selected === null ? undefined : events[selected];
   return (
@@ -172,7 +171,6 @@ function SidePanelDemo() {
             ))}
           </div>
         </div>
-        <SidePanelSlot ref={setSlot} sx={styles.slot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {
@@ -181,31 +179,33 @@ function SidePanelDemo() {
           }}
           open={event !== undefined}
         >
-          <SidePanelContent container={slot}>
-            <SidePanelHeader>
-              <SidePanelTitle>{event?.action}</SidePanelTitle>
-            </SidePanelHeader>
-            <SidePanelBody>
-              <dl {...stylex.props(styles.facts)}>
-                <dt {...stylex.props(styles.term)}>User</dt>
-                <dd {...stylex.props(styles.value)}>{event?.actor}</dd>
-                <dt {...stylex.props(styles.term)}>Time</dt>
-                <dd {...stylex.props(styles.value)}>{event?.time}</dd>
-                <dt {...stylex.props(styles.term)}>Status</dt>
-                <dd {...stylex.props(styles.value)}>
-                  <Badge
-                    color={event?.status === "Denied" ? "danger" : "success"}
-                    variant="secondary"
-                  >
-                    {event?.status}
-                  </Badge>
-                </dd>
-              </dl>
-            </SidePanelBody>
-            <SidePanelFooter>
-              <Button variant="outline">Copy event ID</Button>
-            </SidePanelFooter>
-          </SidePanelContent>
+          <SidePanelSlot sx={styles.slot}>
+            <SidePanelContent>
+              <SidePanelHeader>
+                <SidePanelTitle>{event?.action}</SidePanelTitle>
+              </SidePanelHeader>
+              <SidePanelBody>
+                <dl {...stylex.props(styles.facts)}>
+                  <dt {...stylex.props(styles.term)}>User</dt>
+                  <dd {...stylex.props(styles.value)}>{event?.actor}</dd>
+                  <dt {...stylex.props(styles.term)}>Time</dt>
+                  <dd {...stylex.props(styles.value)}>{event?.time}</dd>
+                  <dt {...stylex.props(styles.term)}>Status</dt>
+                  <dd {...stylex.props(styles.value)}>
+                    <Badge
+                      color={event?.status === "Denied" ? "danger" : "success"}
+                      variant="secondary"
+                    >
+                      {event?.status}
+                    </Badge>
+                  </dd>
+                </dl>
+              </SidePanelBody>
+              <SidePanelFooter>
+                <Button variant="outline">Copy event ID</Button>
+              </SidePanelFooter>
+            </SidePanelContent>
+          </SidePanelSlot>
         </SidePanel>
       </div>
     </DemoRow>

@@ -1,9 +1,16 @@
 "use client";
 
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  DialogClose as DialogClosePrimitive,
+  DialogContent as DialogContentPrimitive,
+  DialogDescription as DialogDescriptionPrimitive,
+  Dialog as DialogPrimitive,
+  DialogTitle as DialogTitlePrimitive,
+} from "@ui-sdk/react/dialog";
+import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -26,10 +33,9 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SidePanelContentProps = Styled<DialogPrimitive.Popup.Props> & {
-  /** The `SidePanelSlot` to open in, beside the content; null until it mounts, and the panel waits for it. */
-  container: HTMLElement | null;
-};
+type SidePanelContentProps = Styled<
+  Omit<ComponentProps<typeof DialogContentPrimitive>, "container" | "inline">
+>;
 
 const entering = ":is([data-starting-style])";
 
@@ -43,13 +49,6 @@ const styles = stylex.create({
     height: `calc(100svh - ${sizes.header})`,
     insetBlockStart: sizes.header,
     position: "sticky",
-  },
-  // Base UI wraps the popup in the portal's own element, which has to fill the slot too.
-  portal: {
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: 1,
-    minHeight: 0,
   },
   // Beside the content, lifted off it as the composer is: its fill and its edge a ring in its shadow.
   surface: {
@@ -77,6 +76,8 @@ const styles = stylex.create({
   },
   // Shrinks to the slot's height, so a long body scrolls instead of stretching the page.
   popup: {
+    // Gone at once, so the content widens in one step; unrendered, it also cancels inner transitions ui-sdk would wait out.
+    display: { default: "flex", ":is([data-ending-style])": "none" },
     flexGrow: 1,
     flexShrink: 1,
     opacity: { default: 1, [entering]: 0 },
@@ -88,11 +89,7 @@ const styles = stylex.create({
         [media.reducedMotion]: "none",
       },
     },
-    // Closes at once, so the content beside it widens in one step.
-    transitionDuration: {
-      default: durations.dialog,
-      ":is([data-ending-style])": "0s",
-    },
+    transitionDuration: durations.dialog,
     transitionProperty: "opacity, transform",
     transitionTimingFunction: easings.layout,
   },
@@ -199,14 +196,14 @@ function PanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** A non-modal dialog: clicking the content beside it leaves it open; Escape or Close shuts it. */
-function SidePanel(props: DialogPrimitive.Root.Props) {
+/** A non-modal dialog: clicking the content beside it leaves it open; Close shuts it, and so does Escape while focus is in it. */
+function SidePanel(props: DialogProps) {
   return (
-    <DialogPrimitive.Root disablePointerDismissal modal={false} {...props} />
+    <DialogPrimitive closeOnOutsidePress={false} modal={false} {...props} />
   );
 }
 
-/** Where the panel opens: after the content it sits beside, in a flex row. */
+/** Holds `SidePanelContent` after the content it sits beside, in a flex row. */
 function SidePanelSlot({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
@@ -217,21 +214,16 @@ function SidePanelSlot({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function SidePanelContent({ container, sx, ...props }: SidePanelContentProps) {
+function SidePanelContent({ sx, ...props }: SidePanelContentProps) {
   return (
-    <DialogPrimitive.Portal
-      container={container}
-      {...stylex.props(styles.portal)}
-    >
-      <DialogPrimitive.Popup
-        data-slot="side-panel"
-        {...props}
-        {...stylex.props(
-          [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
-          sx
-        )}
-      />
-    </DialogPrimitive.Portal>
+    <DialogContentPrimitive
+      inline
+      {...props}
+      {...stylex.props(
+        [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
+        sx
+      )}
+    />
   );
 }
 
@@ -248,7 +240,7 @@ function SidePanelHeader({
       {...stylex.props(styles.header, sx)}
     >
       {children}
-      <DialogPrimitive.Close
+      <DialogClosePrimitive
         aria-label="Close"
         render={<Button size="icon-sm" variant="ghost" />}
       >
@@ -258,15 +250,17 @@ function SidePanelHeader({
           size={sizes.icon}
           strokeWidth={Number(strokes.icon)}
         />
-      </DialogPrimitive.Close>
+      </DialogClosePrimitive>
     </div>
   );
 }
 
-function SidePanelTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
+function SidePanelTitle({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DialogTitlePrimitive>>) {
   return (
-    <DialogPrimitive.Title
-      data-slot="side-panel-title"
+    <DialogTitlePrimitive
       {...props}
       {...stylex.props([typeStyles.textLg, styles.title], sx)}
     />
@@ -276,10 +270,9 @@ function SidePanelTitle({ sx, ...props }: Styled<DialogPrimitive.Title.Props>) {
 function SidePanelDescription({
   sx,
   ...props
-}: Styled<DialogPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof DialogDescriptionPrimitive>>) {
   return (
-    <DialogPrimitive.Description
-      data-slot="side-panel-description"
+    <DialogDescriptionPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, styles.description], sx)}
     />

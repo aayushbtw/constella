@@ -574,10 +574,10 @@
       "title": "Side Panel",
       "description": "A full-height, non-modal panel that opens beside the page, for details, a form or anything else.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
