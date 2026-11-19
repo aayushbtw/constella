@@ -182,7 +182,6 @@ const styles = stylex.create({
   checkableLg: {
     paddingInlineEnd: `calc(${sizes.icon} + ${space.md})`,
   },
-  // Checkbox's tick: draws in from its start, fades out quickly, and rewinds its clip once faded.
   indicator: {
     alignItems: "center",
     clipPath: {
@@ -272,7 +271,6 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
-// The base styles are `default`'s.
 const sizeStyles = {
   default: {
     checkable: null,
