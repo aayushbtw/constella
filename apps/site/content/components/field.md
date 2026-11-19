@@ -269,7 +269,7 @@ Use the `disabled` prop on `Field` to disable its control and dim its label.
 ```tsx
 <Field>
   <FieldLabel>Department</FieldLabel>
-  <Select items={departments}>
+  <Select items={departments} placeholder="Choose department">
     <SelectTrigger>
       <SelectValue />
     </SelectTrigger>
