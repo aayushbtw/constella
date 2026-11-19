@@ -1,15 +1,26 @@
 "use client";
 
-import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  CommandEmpty as CommandEmptyPrimitive,
+  CommandGroupLabel as CommandGroupLabelPrimitive,
+  CommandGroup as CommandGroupPrimitive,
+  CommandInput as CommandInputPrimitive,
+  CommandItem as CommandItemPrimitive,
+  CommandList as CommandListPrimitive,
+  Command as CommandPrimitive,
+  CommandSeparator as CommandSeparatorPrimitive,
+  CommandShortcut as CommandShortcutPrimitive,
+} from "@ui-sdk/react/command";
+import type { CommandProps as CommandPrimitiveProps } from "@ui-sdk/react/command";
 import type { ComponentProps } from "react";
 
 import {
   InputGroup,
   InputGroupAddon,
-  InputGroupInput,
+  inputGroupInputStyles,
 } from "@/components/primitives/input-group";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -27,10 +38,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type CommandProps = Omit<
-  AutocompletePrimitive.Root.Props<unknown>,
-  "inline"
-> & { "data-slot"?: string; sx?: Sx };
+type CommandProps = Styled<CommandPrimitiveProps>;
 
 const highlighted = ":is([data-highlighted])";
 const off = ":is([data-disabled])";
@@ -144,31 +152,39 @@ const styles = stylex.create({
   },
 });
 
-/** A searchable list, always open, built on Base UI's inline Autocomplete. Pass `items`. */
-function Command({
-  "data-slot": slot = "command",
-  sx,
-  ...props
-}: CommandProps) {
+/** The command's look, for parts another library renders (Prompt Input's list). */
+const commandStyles = {
+  empty: [typeStyles.textMd, styles.empty],
+  item: [typeStyles.textMd, styles.item],
+  list: styles.list,
+  surface: styles.command,
+};
+
+/** A searchable list, always open, on ui-sdk's Command. Typing keeps the items whose text contains it. */
+function Command({ filter = "contains", sx, ...props }: CommandProps) {
   return (
-    <div data-slot={slot} {...stylex.props(styles.command, sx)}>
-      <AutocompletePrimitive.Root
-        autoHighlight="always"
-        inline
-        open
-        {...props}
-      />
-    </div>
+    <CommandPrimitive
+      filter={filter}
+      {...props}
+      {...stylex.props(commandStyles.surface, sx)}
+    />
   );
 }
 
 function CommandInput({
   sx,
   ...props
-}: Omit<Styled<AutocompletePrimitive.Input.Props>, "render">) {
+}: Omit<Styled<ComponentProps<typeof CommandInputPrimitive>>, "render">) {
+  const input = inputGroupInputStyles();
   return (
-    <InputGroup data-slot="command-input" size="lg" sx={[styles.input, sx]}>
-      <AutocompletePrimitive.Input render={<InputGroupInput />} {...props} />
+    <InputGroup
+      data-slot="command-input-group"
+      size="lg"
+      sx={[styles.input, sx]}
+    >
+      <span data-slot="input-group-input" {...stylex.props(input.slot)}>
+        <CommandInputPrimitive {...props} {...stylex.props(input.input)} />
+      </span>
       <InputGroupAddon>
         <span {...stylex.props(styles.icon)}>
           <HugeiconsIcon
@@ -186,12 +202,11 @@ function CommandInput({
 function CommandList({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.List.Props>) {
+}: Styled<ComponentProps<typeof CommandListPrimitive>>) {
   return (
-    <AutocompletePrimitive.List
-      data-slot="command-list"
+    <CommandListPrimitive
       {...props}
-      {...stylex.props(styles.list, sx)}
+      {...stylex.props(commandStyles.list, sx)}
     />
   );
 }
@@ -199,12 +214,11 @@ function CommandList({
 function CommandEmpty({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Empty.Props>) {
+}: Styled<ComponentProps<typeof CommandEmptyPrimitive>>) {
   return (
-    <AutocompletePrimitive.Empty
-      data-slot="command-empty"
+    <CommandEmptyPrimitive
       {...props}
-      {...stylex.props([typeStyles.textMd, styles.empty], sx)}
+      {...stylex.props(commandStyles.empty, sx)}
     />
   );
 }
@@ -212,42 +226,32 @@ function CommandEmpty({
 function CommandGroup({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Group.Props>) {
+}: Styled<ComponentProps<typeof CommandGroupPrimitive>>) {
   return (
-    <AutocompletePrimitive.Group
-      data-slot="command-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
-    />
+    <CommandGroupPrimitive {...props} {...stylex.props(styles.group, sx)} />
   );
 }
 
 function CommandGroupLabel({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.GroupLabel.Props>) {
+}: Styled<ComponentProps<typeof CommandGroupLabelPrimitive>>) {
   return (
-    <AutocompletePrimitive.GroupLabel
-      data-slot="command-group-label"
+    <CommandGroupLabelPrimitive
       {...props}
       {...stylex.props([typeStyles.captionLg, styles.groupLabel], sx)}
     />
   );
 }
 
-function CommandCollection(props: AutocompletePrimitive.Collection.Props) {
-  return <AutocompletePrimitive.Collection {...props} />;
-}
-
 function CommandItem({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Item.Props>) {
+}: Styled<ComponentProps<typeof CommandItemPrimitive>>) {
   return (
-    <AutocompletePrimitive.Item
-      data-slot="command-item"
+    <CommandItemPrimitive
       {...props}
-      {...stylex.props([typeStyles.textMd, styles.item], sx)}
+      {...stylex.props(commandStyles.item, sx)}
     />
   );
 }
@@ -255,20 +259,21 @@ function CommandItem({
 function CommandSeparator({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Separator.Props>) {
+}: Styled<ComponentProps<typeof CommandSeparatorPrimitive>>) {
   return (
-    <AutocompletePrimitive.Separator
-      data-slot="command-separator"
+    <CommandSeparatorPrimitive
       {...props}
       {...stylex.props(styles.separator, sx)}
     />
   );
 }
 
-function CommandShortcut({ sx, ...props }: Styled<ComponentProps<"span">>) {
+function CommandShortcut({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CommandShortcutPrimitive>>) {
   return (
-    <span
-      data-slot="command-shortcut"
+    <CommandShortcutPrimitive
       {...props}
       {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
     />
@@ -285,16 +290,10 @@ function CommandFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** The command's surface, for a part that draws its own popup around a command list. */
-const commandStyles = {
-  surface: styles.command,
-};
-
 export { CommandDialog } from "@/components/primitives/command-dialog";
 
 export {
   Command,
-  CommandCollection,
   CommandEmpty,
   CommandFooter,
   CommandGroup,

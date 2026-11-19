@@ -279,12 +279,12 @@
       "name": "command",
       "type": "registry:ui",
       "title": "Command",
-      "description": "A searchable command list on Base UI's inline Autocomplete, inline or in a dialog.",
+      "description": "A searchable command list on ui-sdk's Command, inline or in a dialog.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",

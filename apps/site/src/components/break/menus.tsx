@@ -11,7 +11,6 @@ import { Fragment, useEffect } from "react";
 import { Button } from "@/components/primitives/button";
 import {
   Command,
-  CommandCollection,
   CommandEmpty,
   CommandGroup,
   CommandGroupLabel,
@@ -184,34 +183,35 @@ function groupsFor(data: Dataset): Group[] {
 
 function CommandBreak({ data }: { data: Dataset }) {
   return (
-    <Command items={groupsFor(data)} sx={styles.command}>
-      <CommandInput placeholder="Type a command or search..." />
+    <Command sx={styles.command}>
+      <CommandInput
+        aria-label="Search commands"
+        placeholder="Type a command or search..."
+      />
       <CommandEmpty>No results found.</CommandEmpty>
       <CommandList>
-        {(group: Group, index: number) => (
+        {groupsFor(data).map((group, index) => (
           <Fragment key={group.value}>
             {index > 0 && <CommandSeparator />}
-            <CommandGroup items={group.items}>
+            <CommandGroup>
               <CommandGroupLabel>{group.value}</CommandGroupLabel>
-              <CommandCollection>
-                {(entry: Entry) => (
-                  <CommandItem key={entry.value} value={entry}>
-                    <HugeiconsIcon
-                      aria-hidden
-                      icon={entry.icon}
-                      size={sizes.icon}
-                      strokeWidth={Number(strokes.icon)}
-                    />
-                    {entry.label}
-                    {entry.shortcut !== undefined && (
-                      <CommandShortcut>{entry.shortcut}</CommandShortcut>
-                    )}
-                  </CommandItem>
-                )}
-              </CommandCollection>
+              {group.items.map((entry) => (
+                <CommandItem key={entry.value} value={entry.value}>
+                  <HugeiconsIcon
+                    aria-hidden
+                    icon={entry.icon}
+                    size={sizes.icon}
+                    strokeWidth={Number(strokes.icon)}
+                  />
+                  {entry.label}
+                  {entry.shortcut !== undefined && (
+                    <CommandShortcut>{entry.shortcut}</CommandShortcut>
+                  )}
+                </CommandItem>
+              ))}
             </CommandGroup>
           </Fragment>
-        )}
+        ))}
       </CommandList>
     </Command>
   );

@@ -6,7 +6,7 @@
 - A link that looks like a button
 - Dialog, Sheet and AlertDialog need a Title
 - Choosing an overlay
-- Select and Command take `items`
+- Select takes `items`, Command picks with `onSelect`
 - Groups
 - Card structure
 - Button states
@@ -112,9 +112,9 @@ To hide it visually: `<DialogTitle sx={visuallyHidden.base}>` (from `@/lib/const
 
 ---
 
-## Select and Command take `items`
+## Select takes `items`, Command picks with `onSelect`
 
-Pass `items` so the trigger shows the picked item's label and the list filters what it renders.
+Pass `items` to `Select` so the trigger shows the picked item's label.
 
 **Incorrect:**
 
@@ -149,14 +149,16 @@ const items = [
 
 An item with `value: null` is the placeholder.
 
-`Command` is Base UI's Autocomplete, not cmdk. It filters the `items` it's given and renders each through a function child. Mapping your own children shows them unfiltered.
+`Command` is ui-sdk's Command, not cmdk. Map your items as children, each with a unique string `value`; typing filters what it renders. Handle a pick with the item's `onSelect`: Enter runs the highlighted item without a click, so `onClick` misses it.
 
 **Incorrect:**
 
 ```tsx
 <CommandList>
   {entries.map((e) => (
-    <CommandItem key={e.value}>{e.label}</CommandItem>
+    <CommandItem key={e.value} onClick={() => run(e)}>
+      {e.label}
+    </CommandItem>
   ))}
 </CommandList>
 ```
@@ -164,20 +166,22 @@ An item with `value: null` is the placeholder.
 **Correct:**
 
 ```tsx
-<Command items={entries}>
-  <CommandInput placeholder="Search..." />
+<Command>
+  <CommandInput aria-label="Search commands" placeholder="Search..." />
   <CommandEmpty>No results found.</CommandEmpty>
   <CommandList>
-    {(entry) => (
-      <CommandItem key={entry.value} value={entry}>
+    {entries.map((entry) => (
+      <CommandItem
+        key={entry.value}
+        onSelect={() => run(entry)}
+        value={entry.value}
+      >
         {entry.label}
       </CommandItem>
-    )}
+    ))}
   </CommandList>
 </Command>
 ```
-
-Handle a pick with the item's `onClick`; Enter fires it too. Grouped commands nest `CommandGroup items={group.items}` and `CommandCollection`: read the page.
 
 ---
 
@@ -185,7 +189,7 @@ Handle a pick with the item's `onClick`; Enter fires it too. Grouped commands ne
 
 A group is for a label or a section, not a requirement. Items sit directly in `SelectContent` or `DropdownMenuContent`. Add `SelectGroup` + `SelectLabel`, or `DropdownMenuGroup` + `DropdownMenuLabel`, when the list has headed sections, with a `*Separator` between them.
 
-`Command` is the exception: grouped entries go through `CommandGroup` and `CommandCollection` so filtering still works.
+`Command` groups the same way: `CommandGroup` + `CommandGroupLabel`, with a `CommandSeparator` between groups.
 
 ---
 

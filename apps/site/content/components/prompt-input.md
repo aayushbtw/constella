@@ -59,14 +59,14 @@ PromptInputCommand
 │   ├── PromptInputCommandTextarea
 │   └── PromptInputFooter
 └── PromptInputCommandContent
-    ├── CommandEmpty
-    └── CommandList
-        └── CommandItem
+    ├── PromptInputCommandEmpty
+    └── PromptInputCommandList
+        └── PromptInputCommandItem
 ```
 
 ## Prompt Input Command
 
-Wrap the prompt input in a `PromptInputCommand`, swap its textarea for `PromptInputCommandTextarea`, and put a [Command](/docs/components/command) list in a `PromptInputCommandContent` to open slash commands over the composer. You set `open` and `query` from the draft, and a pick runs the item's `onClick` and leaves the draft to you.
+Wrap the prompt input in a `PromptInputCommand`, swap its textarea for `PromptInputCommandTextarea`, and put a `PromptInputCommandList` in a `PromptInputCommandContent` to open slash commands over the composer. The list looks like a [Command](/docs/components/command). You set `open` and `query` from the draft, and a pick runs the item's `onClick` and leaves the draft to you.
 
 <!-- ::demo name="prompt-input-command" -->
 
@@ -90,18 +90,18 @@ Wrap the prompt input in a `PromptInputCommand`, swap its textarea for `PromptIn
     <PromptInputFooter>…</PromptInputFooter>
   </PromptInput>
   <PromptInputCommandContent>
-    <CommandEmpty>No commands found.</CommandEmpty>
-    <CommandList>
+    <PromptInputCommandEmpty>No commands found.</PromptInputCommandEmpty>
+    <PromptInputCommandList>
       {(command: SlashCommand) => (
-        <CommandItem
+        <PromptInputCommandItem
           key={command.value}
           onClick={() => setText(`/${command.value} `)}
           value={command}
         >
           {command.label}
-        </CommandItem>
+        </PromptInputCommandItem>
       )}
-    </CommandList>
+    </PromptInputCommandList>
   </PromptInputCommandContent>
 </PromptInputCommand>
 ```
@@ -170,6 +170,9 @@ Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to 
 | `PromptInputCommand` | Base UI's [Autocomplete](https://base-ui.com/react/components/autocomplete) root, its first item highlighted. `open`, `query` and `value` are required, and a pick never writes the item into `value` |
 | `PromptInputCommandTextarea` | `PromptInputTextarea` as the autocomplete's input, a plain textarea while closed. While open, the arrows move the highlight, Enter, Cmd/Ctrl/Alt+Enter and Tab pick, and Esc closes the list and keeps the text. Enter with no match closes the list and sends the draft |
 | `PromptInputCommandContent` | The popup on the composer, as wide as it, above it or below it when there's no room. Takes `side` (default `"top"`), `align` (default `"start"`) and `sideOffset` |
+| `PromptInputCommandList` | Base UI's Autocomplete list, drawn as a Command list. Renders each of the command's `items` through a function child |
+| `PromptInputCommandItem` | A Command row; a pick runs its `onClick` |
+| `PromptInputCommandEmpty` | Command's empty message, shown when nothing matches the query |
 | `PromptInputHeader` | Above the text, for attachments |
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |

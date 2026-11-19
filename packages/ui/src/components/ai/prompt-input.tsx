@@ -461,7 +461,7 @@ function PromptInputCommandTextarea(props: TextareaProps) {
   );
 }
 
-/** The command's popup on the composer's edge, above it unless there's no room. Holds a `CommandList` and `CommandEmpty`. */
+/** The command's popup on the composer's edge, above it unless there's no room. Holds a `PromptInputCommandList` and `PromptInputCommandEmpty`. */
 function PromptInputCommandContent({
   align = "start",
   side = "top",
@@ -493,12 +493,54 @@ function PromptInputCommandContent({
   );
 }
 
+function PromptInputCommandList({
+  sx,
+  ...props
+}: Styled<AutocompletePrimitive.List.Props>) {
+  return (
+    <AutocompletePrimitive.List
+      data-slot="command-list"
+      {...props}
+      {...stylex.props(commandStyles.list, sx)}
+    />
+  );
+}
+
+function PromptInputCommandItem({
+  sx,
+  ...props
+}: Styled<AutocompletePrimitive.Item.Props>) {
+  return (
+    <AutocompletePrimitive.Item
+      data-slot="command-item"
+      {...props}
+      {...stylex.props(commandStyles.item, sx)}
+    />
+  );
+}
+
+function PromptInputCommandEmpty({
+  sx,
+  ...props
+}: Styled<AutocompletePrimitive.Empty.Props>) {
+  return (
+    <AutocompletePrimitive.Empty
+      data-slot="command-empty"
+      {...props}
+      {...stylex.props(commandStyles.empty, sx)}
+    />
+  );
+}
+
 export {
   PromptInput,
   PromptInputBar,
   PromptInputBarButton,
   PromptInputCommand,
   PromptInputCommandContent,
+  PromptInputCommandEmpty,
+  PromptInputCommandItem,
+  PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
   PromptInputHeader,
