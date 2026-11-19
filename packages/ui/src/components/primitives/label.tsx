@@ -15,7 +15,7 @@ const styles = stylex.create({
     // The control fades itself, so the label steps down instead of stacking a second fade.
     color: {
       default: colors.textPrimary,
-      ":is([data-disabled], :has([data-disabled], :disabled))":
+      ":is([data-disabled], [data-disabled] > *, :has([data-disabled], :disabled))":
         colors.textMuted,
     },
     display: "flex",
@@ -26,7 +26,7 @@ const styles = stylex.create({
   },
 });
 
-/** For a field's own label part (`SliderLabel`), so every field labels alike. */
+/** For a field's own label parts (`FieldLabel`, `FieldTitle`), so every field labels alike. */
 function labelStyles() {
   return [typeStyles.textSm, styles.label];
 }

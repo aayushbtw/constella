@@ -245,7 +245,7 @@ Breathes, `fill` dimming to `opacities.pulse` and back over `durations.pulse` on
 
 ## Slider
 
-The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which Base UI sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
+The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which ui-sdk sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
 
 ## Suggestions
 

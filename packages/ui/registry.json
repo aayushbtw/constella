@@ -658,11 +658,8 @@
       "type": "registry:ui",
       "title": "Slider",
       "description": "A thin track and a solid thumb, with its label and value above.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex", "@ui-sdk/react"],
-      "registryDependencies": [
-        "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/label.json"
-      ],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
           "path": "src/components/primitives/slider.tsx",

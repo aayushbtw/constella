@@ -283,22 +283,25 @@ Use the `disabled` prop on `Field` to disable its control and dim its label.
 
 ## Slider
 
-Use `FieldTitle` for a control that isn't labelled by a `<label>`.
+A range's `FieldLabel` and `FieldDescription` name and describe the slider as a group. Give each thumb its own `aria-label`.
 
 <!-- ::demo name="field-slider" -->
 
 ```tsx
 <Field>
-  <FieldTitle>Price Range</FieldTitle>
+  <FieldLabel>Price Range</FieldLabel>
   <FieldDescription>
     Set your budget range (${range[0]} - {range[1]}).
   </FieldDescription>
-  <Slider
-    aria-label="Price Range"
-    max={1000}
-    onValueChange={setRange}
-    value={range}
-  />
+  <Slider max={1000} onValueChange={setRange} step={10} value={range}>
+    <SliderControl>
+      <SliderTrack>
+        <SliderIndicator />
+        <SliderThumb aria-label="Minimum price" index={0} />
+        <SliderThumb aria-label="Maximum price" index={1} />
+      </SliderTrack>
+    </SliderControl>
+  </Slider>
 </Field>
 ```
 

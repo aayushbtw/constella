@@ -9,7 +9,7 @@
 - Choice cards
 - InputGroup for addons and buttons
 - Option sets use ToggleGroup
-- Controls with no label element
+- Slider labels name thumbs
 
 ---
 
@@ -241,19 +241,35 @@ The value is always an array, even for one choice. Without `multiple`, one item 
 
 ---
 
-## Controls with no label element
+## Slider labels name thumbs
 
-A `Slider` has no `<label>`, so use `FieldTitle` and give the control an `aria-label`.
+Put the `FieldLabel` inside the `Slider`. In a `Field`, it names a single thumb.
 
 ```tsx
 <Field>
-  <FieldTitle>Price range</FieldTitle>
-  <Slider
-    aria-label="Price range"
-    max={1000}
-    value={range}
-    onValueChange={setRange}
-  />
+  <Slider defaultValue={40}>
+    <FieldLabel>Volume</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+  </Slider>
+</Field>
+```
+
+In a range, the `FieldLabel` or an `aria-label` on `Slider` names only the group. Compose the track and give each thumb its own `aria-label`.
+
+```tsx
+<Field>
+  <Slider max={1000} value={range} onValueChange={setRange}>
+    <FieldLabel>Price</FieldLabel>
+    <SliderValue />
+    <SliderControl>
+      <SliderTrack>
+        <SliderIndicator />
+        <SliderThumb aria-label="Minimum price" index={0} />
+        <SliderThumb aria-label="Maximum price" index={1} />
+      </SliderTrack>
+    </SliderControl>
+  </Slider>
 </Field>
 ```
 

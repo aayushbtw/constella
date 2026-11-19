@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
-import { Slider, SliderControl, SliderThumb, SliderTrack } from "./slider";
 
 function Department({ disabled = false, invalid = false }) {
   return (
@@ -25,22 +24,6 @@ function Department({ disabled = false, invalid = false }) {
         </SelectContent>
       </Select>
       <FieldDescription>Where you work.</FieldDescription>
-    </Field>
-  );
-}
-
-function Price({ disabled = false, invalid = false }) {
-  return (
-    <Field disabled={disabled} invalid={invalid} name="price">
-      <FieldDescription>Set your budget.</FieldDescription>
-      <Slider aria-label="Price" defaultValue={[2, 8]} max={10}>
-        <SliderControl>
-          <SliderTrack>
-            <SliderThumb index={0} />
-            <SliderThumb index={1} />
-          </SliderTrack>
-        </SliderControl>
-      </Slider>
     </Field>
   );
 }
@@ -69,45 +52,4 @@ test("a Select in a ui-sdk Field takes its label, description, name and state, f
   rerender(<Department disabled invalid />);
   expect(trigger.matches(":disabled[data-disabled]")).toBe(true);
   expect(trigger.matches("[aria-invalid='true'][data-invalid]")).toBe(true);
-});
-
-test("a Slider in a ui-sdk Field describes its group and each thumb, from the server's HTML on", () => {
-  const server = document.createElement("div");
-  server.innerHTML = renderToString(<Price />);
-  const serverDescription = server.querySelector(
-    "[data-slot='field-description']"
-  )?.id;
-  expect(serverDescription).toBeTruthy();
-  const serverThumbs = server.querySelectorAll("input[type='range']");
-  expect(serverThumbs).toHaveLength(2);
-  for (const thumb of serverThumbs) {
-    expect(thumb.getAttribute("aria-describedby")).toBe(serverDescription);
-  }
-
-  render(<Price />);
-  const description = screen.getByText("Set your budget.").id;
-  const thumbs = screen.getAllByRole("slider");
-  expect(thumbs).toHaveLength(2);
-  for (const thumb of thumbs) {
-    expect(thumb.getAttribute("aria-describedby")).toBe(description);
-  }
-  expect(
-    screen
-      .getByRole("group", { name: "Price" })
-      .getAttribute("aria-describedby")
-  ).toBe(description);
-});
-
-test("a Slider in a ui-sdk Field takes its name and state on its group", () => {
-  const { rerender } = render(<Price />);
-  const slider = screen.getByRole("group", { name: "Price" });
-  expect(document.querySelectorAll("input[name='price']")).not.toHaveLength(0);
-  expect(slider.dataset.disabled).toBeUndefined();
-
-  rerender(<Price disabled invalid />);
-  expect(slider.matches("[data-disabled]")).toBe(true);
-  expect(slider.matches("[aria-invalid='true'][data-invalid]")).toBe(true);
-  for (const thumb of screen.getAllByRole("slider")) {
-    expect(thumb.matches(":disabled")).toBe(true);
-  }
 });

@@ -24,7 +24,6 @@ import {
 import {
   Slider,
   SliderControl,
-  SliderLabel,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Switch } from "@/components/primitives/switch";
@@ -317,11 +316,13 @@ function ThemeBuilderDemo() {
               Remember me
             </Label>
           </div>
-          <Slider defaultValue={60}>
-            <SliderLabel>Volume</SliderLabel>
-            <SliderValue />
-            <SliderControl />
-          </Slider>
+          <Field>
+            <Slider defaultValue={60}>
+              <FieldLabel>Volume</FieldLabel>
+              <SliderValue />
+              <SliderControl />
+            </Slider>
+          </Field>
           <Input placeholder="Email" />
         </div>
       </Stage>
