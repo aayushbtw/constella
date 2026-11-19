@@ -120,6 +120,11 @@ test("ArrowRight opens a submenu at the parent's size, and ArrowLeft closes it",
   render(<Account />);
   await open();
   const subTrigger = screen.getByRole("menuitem", { name: "Invite users" });
+  const chevron = subTrigger.querySelector<HTMLElement>(
+    "[data-slot='menu-item-icon']"
+  );
+  expect(chevron?.dataset).toHaveProperty("mirror");
+  expect(chevron?.getAttribute("aria-hidden")).toBe("true");
 
   subTrigger.focus();
   fireEvent.keyDown(subTrigger, { key: "ArrowRight" });

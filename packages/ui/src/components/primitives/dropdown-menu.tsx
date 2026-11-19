@@ -10,6 +10,7 @@ import {
   MenuGroup,
   MenuGroupLabel,
   MenuItem,
+  MenuItemIcon,
   MenuItemIndicator,
   MenuRadioGroup,
   MenuRadioItem,
@@ -85,7 +86,6 @@ const highlighted = ":is([data-highlighted], [data-open])";
 const danger = ":is([data-color='danger'])";
 const off = ":is([data-disabled])";
 const unchecked = ":is([data-unchecked])";
-const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
 
 // An inset row starts where the text of a row with an icon does.
@@ -218,7 +218,6 @@ const styles = stylex.create({
     color: colors.textMuted,
     display: "flex",
     marginInlineStart: "auto",
-    transform: { default: null, [rtl]: "scaleX(-1)" },
   },
   label: {
     color: colors.textMuted,
@@ -448,9 +447,9 @@ function DropdownMenuSubTrigger({
       {...stylex.props([size.text, styles.item], size.item, sx)}
     >
       {children}
-      <span {...stylex.props(styles.chevron)}>
+      <MenuItemIcon mirror {...stylex.props(styles.chevron)}>
         <Glyph icon={ArrowRight01Icon} />
-      </span>
+      </MenuItemIcon>
     </MenuSubTrigger>
   );
 }
