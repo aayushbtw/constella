@@ -7,32 +7,34 @@ section: AI
 <!-- ::demo name="model-picker" -->
 
 ```tsx
-<ModelPicker>
+<ModelPicker
+  onOpenChange={(open) => {
+    if (open) setHighlightedValue(models[0].value);
+  }}
+>
   <ModelPickerTrigger>
     <ModelPickerLogo src={picked.logo} />
     {picked.label}
   </ModelPickerTrigger>
   <ModelPickerContent>
     <ModelPickerCommand
-      items={models}
-      onItemHighlighted={(item) =>
-        setHighlighted(models.find((model) => model === item))
-      }
+      onValueChange={setHighlightedValue}
+      value={highlightedValue}
     >
-      <CommandInput placeholder="Search models..." />
+      <CommandInput aria-label="Search models" placeholder="Search models..." />
       <CommandEmpty>No models found.</CommandEmpty>
       <CommandList>
-        {(model) => (
+        {models.map((model) => (
           <ModelPickerItem
             key={model.value}
-            onClick={() => setValue(model.value)}
+            onSelect={() => setValue(model.value)}
             selected={model.value === value}
-            value={model}
+            value={model.value}
           >
             <ModelPickerLogo src={model.logo} />
             {model.label}
           </ModelPickerItem>
-        )}
+        ))}
       </CommandList>
     </ModelPickerCommand>
     {highlighted && (
@@ -65,7 +67,7 @@ import {
 import { CommandInput, CommandList } from "@/components/primitives/command";
 ```
 
-The list is a [Command](/docs/components/command). Pass the models as `items`, and group them as Command shows. Picking a model calls the item's `onClick` and closes the picker.
+The list is a [Command](/docs/components/command). Render a `ModelPickerItem` for each model, and group them as Command shows. Picking a model, by click or Enter, calls the item's `onSelect` and closes the picker.
 
 ## Composition
 
@@ -87,7 +89,7 @@ ModelPicker
 
 ## Details
 
-`ModelPickerDetails` shows the highlighted model once a row is reached by arrow key or rested on for 300ms, then follows the highlight. Keep the highlighted model in state from the command's `onItemHighlighted`. The card wraps under the list when the window is too narrow for both.
+`ModelPickerDetails` shows the highlighted model once a row is reached by arrow key or rested on for 300ms, then follows the highlight. Control the highlight with the command's `value` and `onValueChange`, which take the highlighted item's `value`, and start it at the first model on each open. ui-sdk doesn't report its first highlight through `onValueChange`, so without that the card has no model until the highlight moves. The card wraps under the list when the window is too narrow for both.
 
 ### Side
 
@@ -108,7 +110,7 @@ The card opens at the list's `inline-end` by default. A picker at the end of a r
 | `ModelPicker` | A [Popover](/docs/components/popover) root |
 | `ModelPickerTrigger` | A ghost `sm` [Button](/docs/components/button) ending in a chevron; takes the button's props |
 | `ModelPickerContent` | The popover's popup without a surface, so the list and the details are two cards; opens `align="start"`; `detailsSide` is `inline-end` or `inline-start` |
-| `ModelPickerCommand` | A `Command` 240px wide, as its own surface, with `keepHighlight` on |
+| `ModelPickerCommand` | A `Command` 240px wide, as its own surface |
 | `ModelPickerItem` | A `CommandItem` that closes the picker at once on pick; `selected` adds a tick and `aria-checked` |
 | `ModelPickerLogo` | A one-color logo from `src`, painted in the text color |
 | `ModelPickerDetails` | The highlighted model's card, hidden until reached |

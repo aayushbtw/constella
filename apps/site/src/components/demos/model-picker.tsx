@@ -14,7 +14,6 @@ import {
   ModelPickerTrigger,
 } from "@/components/ai/model-picker";
 import {
-  CommandCollection,
   CommandEmpty,
   CommandGroup,
   CommandGroupLabel,
@@ -179,6 +178,7 @@ const groups: Group[] = [
 ];
 
 const models = groups.flatMap((group) => group.items);
+const [first] = models;
 
 function Rating({ label, value }: { label: string; value: number }) {
   return (
@@ -201,47 +201,55 @@ function Picker({
   detailsSide?: (typeof modelPickerDetailsSides)[number];
 }) {
   const [value, setValue] = useState("gpt-5");
-  const [highlighted, setHighlighted] = useState<Model>();
+  const [highlightedValue, setHighlightedValue] = useState<string | null>(
+    first.value
+  );
   const picked = models.find((model) => model.value === value);
+  const highlighted = models.find((model) => model.value === highlightedValue);
   return (
-    <ModelPicker>
+    <ModelPicker
+      onOpenChange={(open) => {
+        if (open) {
+          setHighlightedValue(first.value);
+        }
+      }}
+    >
       <ModelPickerTrigger>
         {picked && <ModelPickerLogo src={picked.logo} />}
         {picked?.label}
       </ModelPickerTrigger>
       <ModelPickerContent align={align} detailsSide={detailsSide}>
         <ModelPickerCommand
-          items={groups}
-          onItemHighlighted={(item) => {
-            setHighlighted(models.find((model) => model === item));
-          }}
+          onValueChange={setHighlightedValue}
+          value={highlightedValue}
         >
-          <CommandInput placeholder="Search models..." />
+          <CommandInput
+            aria-label="Search models"
+            placeholder="Search models..."
+          />
           <CommandEmpty>No models found.</CommandEmpty>
           <CommandList>
-            {(group: Group, index: number) => (
+            {groups.map((group, index) => (
               <Fragment key={group.value}>
                 {index > 0 && <CommandSeparator />}
-                <CommandGroup items={group.items}>
+                <CommandGroup>
                   <CommandGroupLabel>{group.value}</CommandGroupLabel>
-                  <CommandCollection>
-                    {(model: Model) => (
-                      <ModelPickerItem
-                        key={model.value}
-                        onClick={() => {
-                          setValue(model.value);
-                        }}
-                        selected={model.value === value}
-                        value={model}
-                      >
-                        <ModelPickerLogo src={model.logo} />
-                        {model.label}
-                      </ModelPickerItem>
-                    )}
-                  </CommandCollection>
+                  {group.items.map((model) => (
+                    <ModelPickerItem
+                      key={model.value}
+                      onSelect={() => {
+                        setValue(model.value);
+                      }}
+                      selected={model.value === value}
+                      value={model.value}
+                    >
+                      <ModelPickerLogo src={model.logo} />
+                      {model.label}
+                    </ModelPickerItem>
+                  ))}
                 </CommandGroup>
               </Fragment>
-            )}
+            ))}
           </CommandList>
         </ModelPickerCommand>
         {highlighted && (

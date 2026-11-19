@@ -9,7 +9,6 @@ import { flushSync } from "react-dom";
 import { Button } from "@/components/primitives/button";
 import {
   Command,
-  CommandCollection,
   CommandDialog,
   CommandEmpty,
   CommandFooter,
@@ -52,6 +51,7 @@ interface Entry {
   label: string;
   params: { slug: string };
   to: SidebarGroup["to"];
+  value: string;
 }
 
 interface Group {
@@ -90,6 +90,7 @@ function Search() {
         label: title,
         params: { slug },
         to,
+        value: `${to}:${slug}`,
       })),
       label,
     }))
@@ -160,35 +161,36 @@ function Search() {
         open={open}
         title="Search documentation"
       >
-        <Command items={groups}>
-          <CommandInput placeholder="Search documentation..." />
+        <Command>
+          <CommandInput
+            aria-label="Search pages"
+            placeholder="Search documentation..."
+          />
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandList>
-            {(group: Group, index: number) => (
+            {groups.map((group, index) => (
               <Fragment key={group.label}>
                 {index > 0 && <CommandSeparator />}
-                <CommandGroup items={group.items}>
+                <CommandGroup>
                   <CommandGroupLabel>{group.label}</CommandGroupLabel>
-                  <CommandCollection>
-                    {(entry: Entry) => (
-                      <CommandItem
-                        key={`${entry.to}:${entry.params.slug}`}
-                        onClick={() => {
-                          setOpen(false);
-                          void navigate({ params: entry.params, to: entry.to });
-                        }}
-                        value={entry}
-                      >
-                        <span {...stylex.props(styles.arrow)}>
-                          {icon(ArrowRight02Icon)}
-                        </span>
-                        {entry.label}
-                      </CommandItem>
-                    )}
-                  </CommandCollection>
+                  {group.items.map((entry) => (
+                    <CommandItem
+                      key={entry.value}
+                      onSelect={() => {
+                        setOpen(false);
+                        void navigate({ params: entry.params, to: entry.to });
+                      }}
+                      value={entry.value}
+                    >
+                      <span {...stylex.props(styles.arrow)}>
+                        {icon(ArrowRight02Icon)}
+                      </span>
+                      {entry.label}
+                    </CommandItem>
+                  ))}
                 </CommandGroup>
               </Fragment>
-            )}
+            ))}
           </CommandList>
           <CommandFooter>
             <span {...stylex.props(styles.hint)}>

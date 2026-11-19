@@ -71,7 +71,7 @@ type InputGroupInputProps = Omit<
 };
 
 const control =
-  ":is([data-slot='input-group-input'] > [data-slot='input'], [data-slot='input-group'] > [data-slot='textarea'], [data-slot='input-group-control'])";
+  ":is([data-slot='input-group-input'] > input, [data-slot='input-group'] > [data-slot='textarea'], [data-slot='input-group-control'])";
 const invalid = `:has(${control}:is([aria-invalid='true'], [data-invalid]))`;
 const disabled = `:has(${control}:is(:disabled, [data-disabled]))`;
 const controlDisabled = ":is(:disabled, [data-disabled])";
@@ -489,13 +489,19 @@ function inputGroupTextareaStyles() {
   return [...textareaStyles(), styles.control, styles.textarea];
 }
 
+/** The input's styles for another library's input; put it in a `data-slot="input-group-input"` span with the `slot` styles. */
+function inputGroupInputStyles() {
+  return { input: styles.input, slot: styles.inputSlot };
+}
+
 function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
+  const input = inputGroupInputStyles();
   return (
-    <span data-slot="input-group-input" {...stylex.props(styles.inputSlot)}>
+    <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <InputPrimitive
         type={type}
         {...props}
-        {...stylex.props(styles.input, type === "file" && styles.file, sx)}
+        {...stylex.props(input.input, type === "file" && styles.file, sx)}
       />
     </span>
   );
@@ -512,6 +518,7 @@ export {
   InputGroupButton,
   inputGroupButtonSizes,
   InputGroupInput,
+  inputGroupInputStyles,
   inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,

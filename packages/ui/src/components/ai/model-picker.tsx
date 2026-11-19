@@ -239,29 +239,22 @@ function ModelPickerContent({
 }
 
 /**
- * A `Command` at `sizes.modelPicker` that keeps its highlight when the pointer leaves for the details card.
- * The card shows once a row is reached by arrow key, or rested on with the pointer.
+ * A `Command` at `sizes.modelPicker`. The details card shows once a row is reached by arrow key,
+ * or rested on with the pointer.
  */
-function ModelPickerCommand({
-  keepHighlight = true,
-  onItemHighlighted,
-  sx,
-  ...props
-}: CommandProps) {
+function ModelPickerCommand({ onValueChange, sx, ...props }: CommandProps) {
   const { setShown } = usePicker();
   return (
     <Command
-      data-slot="model-picker-command"
-      keepHighlight={keepHighlight}
-      onItemHighlighted={(value, details) => {
-        if (value === undefined) {
+      {...props}
+      onValueChange={(value, details) => {
+        if (value === null) {
           setShown(false);
-        } else if (details.reason === "keyboard") {
+        } else if (details.reason === "list-navigation") {
           setShown(true);
         }
-        onItemHighlighted?.(value, details);
+        onValueChange?.(value, details);
       }}
-      {...props}
       sx={[styles.command, sx]}
     />
   );
@@ -273,20 +266,23 @@ function ModelPickerCommand({
  */
 function ModelPickerItem({
   children,
-  onClick,
+  onSelect,
   onPointerEnter,
   onPointerLeave,
   selected = false,
   ...props
-}: ComponentProps<typeof CommandItem> & { selected?: boolean }) {
+}: Omit<ComponentProps<typeof CommandItem>, "children"> & {
+  children?: ReactNode;
+  selected?: boolean;
+}) {
   const { cancelShow, controller, detailsId, setPicked, showAfterRest, shown } =
     usePicker();
   return (
     <CommandItem
       aria-checked={selected}
       aria-describedby={shown ? detailsId : undefined}
-      onClick={(event) => {
-        onClick?.(event);
+      onSelect={(event) => {
+        onSelect?.(event);
         // Lands before close(); see useSkipMotion in motion.ts.
         flushSync(() => {
           setPicked(true);

@@ -51,7 +51,7 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 import { Chat } from "~/components/demos/chat";
-import { groups, Palette } from "~/components/demos/command";
+import { Palette } from "~/components/demos/command";
 import { Formatting } from "~/components/demos/toggle";
 import { entrance } from "~/lib/entrance";
 import {
@@ -275,7 +275,7 @@ const tiles: Tile[] = [
   },
   {
     content: (
-      <Command items={groups} sx={styles.command}>
+      <Command sx={styles.command}>
         <Palette />
       </Command>
     ),

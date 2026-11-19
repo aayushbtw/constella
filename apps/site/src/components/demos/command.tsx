@@ -14,7 +14,6 @@ import { Fragment, useEffect, useState } from "react";
 import { Button } from "@/components/primitives/button";
 import {
   Command,
-  CommandCollection,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -86,38 +85,39 @@ const groups: Group[] = [
 function Palette({ onRun }: { onRun?: (entry: Entry) => void }) {
   return (
     <>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput
+        aria-label="Search commands"
+        placeholder="Type a command or search..."
+      />
       <CommandEmpty>No results found.</CommandEmpty>
       <CommandList>
-        {(group: Group, index: number) => (
+        {groups.map((group, index) => (
           <Fragment key={group.value}>
             {index > 0 && <CommandSeparator />}
-            <CommandGroup items={group.items}>
+            <CommandGroup>
               <CommandGroupLabel>{group.value}</CommandGroupLabel>
-              <CommandCollection>
-                {(entry: Entry) => (
-                  <CommandItem
-                    disabled={entry.disabled}
-                    key={entry.value}
-                    onClick={() => onRun?.(entry)}
-                    value={entry}
-                  >
-                    <HugeiconsIcon
-                      aria-hidden
-                      icon={entry.icon}
-                      size={sizes.icon}
-                      strokeWidth={Number(strokes.icon)}
-                    />
-                    {entry.label}
-                    {entry.shortcut !== undefined && (
-                      <CommandShortcut>{entry.shortcut}</CommandShortcut>
-                    )}
-                  </CommandItem>
-                )}
-              </CommandCollection>
+              {group.items.map((entry) => (
+                <CommandItem
+                  disabled={entry.disabled}
+                  key={entry.value}
+                  onSelect={() => onRun?.(entry)}
+                  value={entry.value}
+                >
+                  <HugeiconsIcon
+                    aria-hidden
+                    icon={entry.icon}
+                    size={sizes.icon}
+                    strokeWidth={Number(strokes.icon)}
+                  />
+                  {entry.label}
+                  {entry.shortcut !== undefined && (
+                    <CommandShortcut>{entry.shortcut}</CommandShortcut>
+                  )}
+                </CommandItem>
+              ))}
             </CommandGroup>
           </Fragment>
-        )}
+        ))}
       </CommandList>
     </>
   );
@@ -127,7 +127,7 @@ function CommandDemo() {
   const [ran, setRan] = useState("Nothing yet");
   return (
     <DemoRow sx={styles.stack}>
-      <Command items={groups} sx={styles.command}>
+      <Command sx={styles.command}>
         <Palette
           onRun={(entry) => {
             setRan(entry.label);
@@ -170,7 +170,7 @@ function CommandDialogDemo() {
         </KbdGroup>
       </Button>
       <CommandDialog onOpenChange={setOpen} open={open}>
-        <Command items={groups}>
+        <Command>
           <Palette
             onRun={() => {
               setOpen(false);
@@ -182,4 +182,4 @@ function CommandDialogDemo() {
   );
 }
 
-export { CommandDemo, CommandDialogDemo, groups, Palette };
+export { CommandDemo, CommandDialogDemo, Palette };

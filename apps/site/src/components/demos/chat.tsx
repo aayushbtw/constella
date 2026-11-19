@@ -48,6 +48,9 @@ import {
   PromptInputBarButton,
   PromptInputCommand,
   PromptInputCommandContent,
+  PromptInputCommandEmpty,
+  PromptInputCommandItem,
+  PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
   PromptInputHeader,
@@ -58,11 +61,6 @@ import {
 } from "@/components/ai/prompt-input";
 import type { PromptInputState } from "@/components/ai/prompt-input";
 import { Button } from "@/components/primitives/button";
-import {
-  CommandEmpty,
-  CommandItem,
-  CommandList,
-} from "@/components/primitives/command";
 import { CopyButton } from "@/components/primitives/copy-button";
 import { InputGroupButton } from "@/components/primitives/input-group";
 import {
@@ -474,10 +472,12 @@ function PromptInputCommandDemo() {
             </PromptInputFooter>
           </PromptInput>
           <PromptInputCommandContent>
-            <CommandEmpty>No commands found.</CommandEmpty>
-            <CommandList>
+            <PromptInputCommandEmpty>
+              No commands found.
+            </PromptInputCommandEmpty>
+            <PromptInputCommandList>
               {(command: SlashCommand) => (
-                <CommandItem
+                <PromptInputCommandItem
                   key={command.value}
                   onClick={() => {
                     setText(`/${command.value} `);
@@ -486,9 +486,9 @@ function PromptInputCommandDemo() {
                 >
                   <Glyph icon={command.icon} />
                   {command.label}
-                </CommandItem>
+                </PromptInputCommandItem>
               )}
-            </CommandList>
+            </PromptInputCommandList>
           </PromptInputCommandContent>
         </PromptInputCommand>
       </div>

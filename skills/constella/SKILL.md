@@ -43,7 +43,7 @@ Each links to a file with Incorrect/Correct pairs.
 - **A custom trigger takes `render`, not `asChild`.** `<DialogTrigger render={<Button />}>`.
 - **A link that looks like a button spreads `buttonStyles`** onto an `<a>`. Not `<Button render={<a />}>`.
 - **Dialog, Sheet and AlertDialog always need a Title.** Hide it with `sx={visuallyHidden.base}`.
-- **`Select` and `Command` take `items`.** Don't map your own children into `Command`.
+- **`Select` takes `items`; `Command` picks with `onSelect`.** Map `CommandItem`s as children, each with a string `value`. Enter doesn't fire `onClick`.
 - **Button has no `isLoading`.** Compose `Spinner` + `data-icon` + `aria-busy` + `disabled`.
 - **Full Card composition**, `TabsTrigger` inside `TabsList`, `Avatar` always with `AvatarFallback`.
 - **Don't wrap a component to restyle it.** Pass `sx`, or use the variant.
@@ -104,7 +104,7 @@ Each links to a file with Incorrect/Correct pairs.
 ## References
 
 - [rules/styling.md](./rules/styling.md): `sx`, tokens, shorthands, hover, type, dark mode
-- [rules/composition.md](./rules/composition.md): triggers, groups, overlays, Card, Button states, Select and Command `items`, Toast
+- [rules/composition.md](./rules/composition.md): triggers, groups, overlays, Card, Button states, Select `items`, Command picks, Toast
 - [rules/forms.md](./rules/forms.md): Field, InputGroup, ToggleGroup, validation
 - [rules/icons.md](./rules/icons.md): Hugeicons, sizes, `data-icon`, RTL
 - [rules/ai.md](./rules/ai.md): chat parts, Trace, PromptInput, DataTable, Chart

@@ -151,7 +151,7 @@
     :focus-visible,
     [data-slot="input-group"]:has(
       :is(
-        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group-input"] > input,
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):focus-visible
@@ -169,7 +169,7 @@
     [data-invalid],
     [data-slot="input-group"]:has(
       :is(
-        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group-input"] > input,
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):is([aria-invalid="true"], [data-invalid])
@@ -178,7 +178,7 @@
     :focus-visible,
     :has(
       :is(
-        [data-slot="input-group-input"] > [data-slot="input"],
+        [data-slot="input-group-input"] > input,
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):focus-visible
@@ -377,7 +377,7 @@
   /* An input group rings its whole box, so the borderless control inside draws none. */
   :where(
     :is(
-      [data-slot="input-group-input"] > [data-slot="input"],
+      [data-slot="input-group-input"] > input,
       [data-slot="input-group"] > [data-slot="textarea"],
       [data-slot="input-group-control"]
     ):focus-visible
