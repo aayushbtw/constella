@@ -60,13 +60,13 @@ function SheetSideDemo() {
   return (
     <DemoRow>
       {sheetSides.map((side) => (
-        <Sheet key={side}>
+        <Sheet key={side} side={side}>
           <SheetTrigger
             render={<Button sx={styles.capitalize} variant="outline" />}
           >
             {side}
           </SheetTrigger>
-          <SheetContent side={side}>
+          <SheetContent>
             <SheetHeader>
               <SheetTitle>Edit profile</SheetTitle>
               <SheetDescription>

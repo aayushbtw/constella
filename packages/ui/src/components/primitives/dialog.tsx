@@ -67,12 +67,14 @@ const styles = stylex.create({
     insetBlockStart: 0,
     insetInlineEnd: 0,
     insetInlineStart: 0,
-    opacity: { default: 1, [offstage]: 0 },
     position: "fixed",
+    zIndex: layers.dialog,
+  },
+  backdropMotion: {
+    opacity: { default: 1, [offstage]: 0 },
     transitionDuration: { default: durations.dialog, [instant]: 0 },
     transitionProperty: "opacity",
     transitionTimingFunction: easings.out,
-    zIndex: layers.dialog,
   },
   popup: {
     backgroundColor: colors.raised,
@@ -205,14 +207,15 @@ function DialogBackdrop({
   return (
     <DialogBackdropPrimitive
       {...props}
-      {...stylex.props(styles.backdrop, sx)}
+      {...stylex.props(styles.backdrop, styles.backdropMotion, sx)}
     />
   );
 }
 
 // Shared with Alert Dialog and Sheet, type included, so they never drift apart.
 const dialogStyles = {
-  backdrop: styles.backdrop,
+  backdrop: [styles.backdrop, styles.backdropMotion],
+  backdropSurface: styles.backdrop,
   closeButton: styles.closeButton,
   description: [typeStyles.textSm, styles.description],
   footer: styles.footer,

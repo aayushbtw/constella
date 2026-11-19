@@ -209,7 +209,7 @@ A 1px `borderSubtle` line: it groups content, it doesn't bound a control. A vert
 
 ## Sheet
 
-Travels the whole way in from its edge on `layout` (the drawer curve, `durations.layout`), and leaves the same way, faster, on `dialog`: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. Under reduced motion it fades in place. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
+Travels the whole way in from its edge on a critically damped spring, `motion.sheetResponse`, that settles inside 300ms, and leaves the same way: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. A swipe toward its edge from the header or footer carries it along and closes it; pulled the other way it stretches a little and springs back, with its fill drawn past the edge so no gap opens. The body doesn't swipe, so its text selects. Under reduced motion it fades in, and on close it leaves at once while the backdrop fades. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
 
 ## Settings dialog
 
