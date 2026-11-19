@@ -75,7 +75,7 @@ test("leading a badge, the avatar matches the selectors the badge rounds by", ()
 
   expect(
     container.querySelector(
-      "[data-slot='badge'] > [data-slot='avatar'][data-corners='pill']:first-child"
+      "[data-badge] > [data-slot='avatar'][data-corners='pill']:first-child"
     )
   ).not.toBeNull();
 });

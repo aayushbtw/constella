@@ -61,7 +61,7 @@ When one state replaces another in place, both stay on screen and cross-fade, so
 
 ## Layout animation
 
-When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a shared hover card's height, a toast's height (ui-sdk's stack measures the content freely) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a toast's height (ui-sdk's stack measures the content freely) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
 
 ## Reduced motion
 

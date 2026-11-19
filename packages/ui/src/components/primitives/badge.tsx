@@ -271,6 +271,7 @@ function Badge({
     "span",
     mergeProps(
       {
+        "data-badge": "",
         "data-color": color,
         "data-size": size,
         "data-slot": "badge",

@@ -13,11 +13,12 @@ import type { ReactNode } from "react";
 
 import { Badge } from "@/components/primitives/badge";
 import {
-  createHoverCardHandle,
+  createHoverCardController,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
+import type { HoverCardController } from "@/components/primitives/hover-card";
 import type { Sx } from "@/lib/constella/styles";
 import { stateStyles, typeStyles } from "@/lib/constella/styles";
 import {
@@ -203,20 +204,20 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
   );
 }
 
-const CitationsContext = createContext<ReturnType<
-  typeof createHoverCardHandle<Sources>
-> | null>(null);
+const CitationsContext = createContext<HoverCardController<Sources> | null>(
+  null
+);
 
 /** Holds the one card every `Citation` inside opens, so it moves to each citation as you hover it. */
 function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
-  const handle = useMemo(() => createHoverCardHandle<Sources>(), []);
+  const controller = useMemo(() => createHoverCardController<Sources>(), []);
   return (
-    <CitationsContext value={handle}>
+    <CitationsContext value={controller}>
       {children}
-      <HoverCard handle={handle}>
-        {({ payload }) => (
-          <HoverCardContent sx={[styles.card, sx]}>
-            {payload === undefined ? null : (
+      <HoverCard controller={controller}>
+        <HoverCardContent<Sources> sx={[styles.card, sx]}>
+          {({ payload }) =>
+            payload === undefined ? null : (
               <div {...stylex.props(styles.list)}>
                 {payload.map((source) => (
                   <a
@@ -254,9 +255,9 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
                   </a>
                 ))}
               </div>
-            )}
-          </HoverCardContent>
-        )}
+            )
+          }
+        </HoverCardContent>
       </HoverCard>
     </CitationsContext>
   );
@@ -264,8 +265,8 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
 
 /** A Badge linking to the first source, counting the rest; it opens the `Citations` card. */
 function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
-  const handle = use(CitationsContext);
-  if (handle === null) {
+  const controller = use(CitationsContext);
+  if (controller === null) {
     throw new Error("Citation must be inside Citations.");
   }
   const [first] = sources;
@@ -273,7 +274,7 @@ function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
     <Badge
       render={
         <HoverCardTrigger
-          handle={handle}
+          controller={controller}
           href={first.url}
           payload={sources}
           rel="noreferrer"

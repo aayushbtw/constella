@@ -5,9 +5,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import { Button, buttonStyles } from "@/components/primitives/button";
+import { buttonStyles } from "@/components/primitives/button";
 import {
-  createHoverCardHandle,
+  createHoverCardController,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
@@ -116,13 +116,13 @@ function HoverCardDemo() {
   );
 }
 
-const mentions = createHoverCardHandle<Profile>();
+const mentions = createHoverCardController<Profile>();
 
 function Mention({ id }: { id: keyof typeof profiles }) {
   const profile = profiles[id];
   return (
     <HoverCardTrigger
-      handle={mentions}
+      controller={mentions}
       href={profile.href}
       payload={profile}
       {...stylex.props(styles.mention)}
@@ -139,12 +139,12 @@ function HoverCardTriggersDemo() {
         Follow <Mention id="shadcn" />, <Mention id="emilkowalski" /> and{" "}
         <Mention id="acme" /> for updates.
       </Text>
-      <HoverCard handle={mentions}>
-        {({ payload }) => (
-          <HoverCardContent>
-            {payload === undefined ? null : <ProfileCard profile={payload} />}
-          </HoverCardContent>
-        )}
+      <HoverCard controller={mentions}>
+        <HoverCardContent<Profile>>
+          {({ payload }) =>
+            payload === undefined ? null : <ProfileCard profile={payload} />
+          }
+        </HoverCardContent>
       </HoverCard>
     </DemoRow>
   );
@@ -152,12 +152,14 @@ function HoverCardTriggersDemo() {
 
 const sides = ["left", "top", "bottom", "right"] as const;
 
+const outline = stylex.props(buttonStyles({ variant: "outline" }));
+
 function HoverCardSideDemo() {
   return (
     <DemoRow>
       {sides.map((side) => (
         <HoverCard key={side}>
-          <HoverCardTrigger render={<Button variant="outline" />}>
+          <HoverCardTrigger href={profiles.shadcn.href} {...outline}>
             {side}
           </HoverCardTrigger>
           <HoverCardContent side={side}>

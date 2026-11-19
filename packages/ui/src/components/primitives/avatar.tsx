@@ -55,7 +55,7 @@ const groupOf = (size: AvatarSize) =>
 // Leading a badge, it takes the size the badge sets for it.
 const inBadge = (size: string) => ({
   default: size,
-  ":is([data-slot='badge'] > :first-child)": badgeVars.avatar,
+  ":is([data-badge] > :first-child)": badgeVars.avatar,
 });
 
 const gap = `calc(2 * ${strokes.border})`;
@@ -160,7 +160,7 @@ const styles = stylex.create({
     [avatarVars.corner]: {
       default: radii.sm,
       ":is([data-size='sm'])": radii.xs,
-      ":is([data-slot='badge'] > :first-child)": radii.xs,
+      ":is([data-badge] > :first-child)": radii.xs,
     },
   },
   image: {
@@ -190,12 +190,12 @@ const styles = stylex.create({
     fontSize: {
       default: fontSizes.textSm,
       ":is([data-size='sm'] *)": fontSizes.captionLg,
-      ":is([data-slot='badge'] > :first-child > *)": fontSizes.captionLg,
+      ":is([data-badge] > :first-child > *)": fontSizes.captionLg,
     },
     lineHeight: {
       default: lineHeights.textSm,
       ":is([data-size='sm'] *)": lineHeights.captionLg,
-      ":is([data-slot='badge'] > :first-child > *)": lineHeights.captionLg,
+      ":is([data-badge] > :first-child > *)": lineHeights.captionLg,
     },
     fontWeight: fontWeights.medium,
     height: "100%",

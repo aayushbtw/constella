@@ -157,10 +157,12 @@ const typeStyles = stylex.create({
   },
 });
 
-// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`.
-// `:where` holds both at one attribute's specificity, as Base UI's alone was. StyleX can't
-// share a selector key across files, so button.tsx and prompt-input.tsx repeat it.
-const popupOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
+// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`
+// (a hover card trigger has no `aria-haspopup`, so it's named by slot). `:where` holds all
+// at one attribute's specificity, as Base UI's alone was. StyleX can't share a selector key
+// across files, so button.tsx and prompt-input.tsx repeat it.
+const popupOpen =
+  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'])[data-open])";
 
 // button.tsx's `hoverIdle` and `activeIdle`; keep in step.
 const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
