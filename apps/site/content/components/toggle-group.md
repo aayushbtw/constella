@@ -112,7 +112,7 @@ Use the `size` prop on `ToggleGroup`; every item takes it.
 
 ## Disabled
 
-Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for all of them.
+Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for all of them. A disabled item ignores presses, but the arrow keys still reach it.
 
 <!-- ::demo name="toggle-group-disabled" -->
 
@@ -128,4 +128,4 @@ Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for a
 | --- | --- |
 | `ToggleGroup` | `variant` and `size`, passed to every item; `spacing`: `0`, `1` or `2` |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Toggle Group](https://base-ui.com/react/components/toggle-group).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Toggle Group](https://ui-sdk.dev/docs/components/toggle#group).

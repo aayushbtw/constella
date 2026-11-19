@@ -1,12 +1,16 @@
 "use client";
 
-import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
-import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
 import * as stylex from "@stylexjs/stylex";
+import { ToggleGroup as ToggleGroupPrimitive } from "@ui-sdk/react/toggle";
+import type { ComponentProps } from "react";
 import { createContext, use, useMemo } from "react";
 
-import { toggleStyles } from "@/components/primitives/toggle";
-import type { ToggleSize, ToggleVariant } from "@/components/primitives/toggle";
+import { Toggle } from "@/components/primitives/toggle";
+import type {
+  ToggleProps,
+  ToggleSize,
+  ToggleVariant,
+} from "@/components/primitives/toggle";
 import type { Sx } from "@/lib/constella/styles";
 import { joins, space } from "@/lib/constella/tokens.stylex";
 
@@ -19,12 +23,17 @@ type Styled<T> = Omit<T, "className" | "style"> & {
 };
 
 type ToggleGroupProps<Value extends string = string> = Styled<
-  ToggleGroupPrimitive.Props<Value>
+  ComponentProps<typeof ToggleGroupPrimitive<Value>>
 > & {
   size?: ToggleSize;
   spacing?: ToggleGroupSpacing;
   variant?: ToggleVariant;
 };
+
+type ToggleGroupItemProps = Omit<
+  ToggleProps,
+  "defaultPressed" | "pressed" | "size" | "variant"
+>;
 
 const vertical = ":is([data-orientation='vertical'])";
 
@@ -45,9 +54,6 @@ const styles = stylex.create({
     [joins.inline]: { default: "0", [vertical]: "1" },
     gap: 0,
   },
-  item: {
-    flexShrink: 0,
-  },
 });
 
 const spacingStyles = {
@@ -61,7 +67,7 @@ const ToggleGroupContext = createContext<{
   variant: ToggleVariant;
 }>({ size: "default", variant: "default" });
 
-function ToggleGroup<Value extends string>({
+function ToggleGroup<Value extends string = string>({
   size = "default",
   spacing = 2,
   sx,
@@ -71,9 +77,8 @@ function ToggleGroup<Value extends string>({
   const context = useMemo(() => ({ size, variant }), [size, variant]);
   return (
     <ToggleGroupContext value={context}>
-      <ToggleGroupPrimitive
+      <ToggleGroupPrimitive<Value>
         data-size={size}
-        data-slot="toggle-group"
         data-spacing={spacing}
         data-variant={variant}
         {...props}
@@ -83,17 +88,9 @@ function ToggleGroup<Value extends string>({
   );
 }
 
-function ToggleGroupItem({ sx, ...props }: Styled<TogglePrimitive.Props>) {
+function ToggleGroupItem(props: ToggleGroupItemProps) {
   const { size, variant } = use(ToggleGroupContext);
-  return (
-    <TogglePrimitive
-      data-size={size}
-      data-slot="toggle-group-item"
-      data-variant={variant}
-      {...props}
-      {...stylex.props(toggleStyles({ size, variant }), styles.item, sx)}
-    />
-  );
+  return <Toggle {...props} size={size} variant={variant} />;
 }
 
 export { ToggleGroup, ToggleGroupItem, toggleGroupSpacings };
