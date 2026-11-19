@@ -12,8 +12,8 @@ import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectGroupLabel,
   SelectItem,
-  SelectLabel,
   SelectSeparator,
   selectSizes,
   SelectTrigger,
@@ -38,7 +38,7 @@ const styles = stylex.create({
 interface Option {
   disabled?: boolean;
   label: string;
-  value: string | null;
+  value: string;
 }
 
 const fruits: Option[] = [
@@ -47,11 +47,6 @@ const fruits: Option[] = [
   { label: "Blueberry", value: "blueberry" },
   { label: "Grapes", value: "grapes" },
   { label: "Pineapple", value: "pineapple" },
-];
-
-const fruitItems: Option[] = [
-  { label: "Select a fruit", value: null },
-  ...fruits,
 ];
 
 const vegetables: Option[] = [
@@ -115,10 +110,7 @@ const timezones = [
   },
 ];
 
-const timezoneItems: Option[] = [
-  { label: "Select a timezone", value: null },
-  ...timezones.flatMap((group) => group.items),
-];
+const timezoneItems = timezones.flatMap((group) => group.items);
 
 const sizeLabels = {
   default: "Default",
@@ -128,7 +120,7 @@ const sizeLabels = {
 
 function Items({ items }: { items: Option[] }) {
   return items.map((item) => (
-    <SelectItem disabled={item.disabled} key={item.label} value={item.value}>
+    <SelectItem disabled={item.disabled} key={item.value} value={item.value}>
       {item.label}
     </SelectItem>
   ));
@@ -137,13 +129,13 @@ function Items({ items }: { items: Option[] }) {
 function SelectDemo() {
   return (
     <DemoRow>
-      <Select items={fruitItems}>
+      <Select items={fruits} placeholder="Select a fruit">
         <SelectTrigger aria-label="Fruit" sx={styles.trigger}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
+            <SelectGroupLabel>Fruits</SelectGroupLabel>
             <Items items={fruits} />
           </SelectGroup>
         </SelectContent>
@@ -169,7 +161,11 @@ function SelectAlignItemDemo() {
             onCheckedChange={setAlignItemWithTrigger}
           />
         </Field>
-        <Select defaultValue="banana" items={fruitItems}>
+        <Select
+          defaultValue="banana"
+          items={fruits}
+          placeholder="Select a fruit"
+        >
           <SelectTrigger aria-label="Fruit" sx={styles.narrow}>
             <SelectValue />
           </SelectTrigger>
@@ -188,23 +184,20 @@ function SelectGroupsDemo() {
   return (
     <DemoRow>
       <Select
-        items={[
-          { label: "Select a fruit", value: null },
-          ...fruits.slice(0, 3),
-          ...vegetables,
-        ]}
+        items={[...fruits.slice(0, 3), ...vegetables]}
+        placeholder="Select a fruit"
       >
         <SelectTrigger aria-label="Produce" sx={styles.trigger}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Fruits</SelectLabel>
+            <SelectGroupLabel>Fruits</SelectGroupLabel>
             <Items items={fruits.slice(0, 3)} />
           </SelectGroup>
           <SelectSeparator />
           <SelectGroup>
-            <SelectLabel>Vegetables</SelectLabel>
+            <SelectGroupLabel>Vegetables</SelectGroupLabel>
             <Items items={vegetables} />
           </SelectGroup>
         </SelectContent>
@@ -216,14 +209,14 @@ function SelectGroupsDemo() {
 function SelectScrollableDemo() {
   return (
     <DemoRow>
-      <Select items={timezoneItems}>
+      <Select items={timezoneItems} placeholder="Select a timezone">
         <SelectTrigger aria-label="Timezone" sx={styles.wide}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {timezones.map((group) => (
             <SelectGroup key={group.label}>
-              <SelectLabel>{group.label}</SelectLabel>
+              <SelectGroupLabel>{group.label}</SelectGroupLabel>
               <Items items={group.items} />
             </SelectGroup>
           ))}
@@ -234,18 +227,18 @@ function SelectScrollableDemo() {
 }
 
 function SelectDisabledDemo() {
-  const items = fruitItems.map((item) =>
+  const items = fruits.map((item) =>
     item.value === "grapes" ? { ...item, disabled: true } : item
   );
   return (
     <DemoRow>
-      <Select disabled items={items}>
+      <Select disabled items={items} placeholder="Select a fruit">
         <SelectTrigger aria-label="Fruit" sx={styles.trigger}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <Items items={items.slice(1)} />
+            <Items items={items} />
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -258,7 +251,7 @@ function SelectInvalidDemo() {
     <DemoRow sx={styles.trigger}>
       <Field invalid>
         <FieldLabel>Fruit</FieldLabel>
-        <Select items={fruitItems}>
+        <Select items={fruits} placeholder="Select a fruit">
           <SelectTrigger sx={styles.trigger}>
             <SelectValue />
           </SelectTrigger>
@@ -278,7 +271,12 @@ function SelectSizesDemo() {
   return (
     <DemoRow sx={styles.stack}>
       {selectSizes.map((size) => (
-        <Select defaultValue="apple" items={fruitItems} key={size}>
+        <Select
+          defaultValue="apple"
+          items={fruits}
+          key={size}
+          placeholder="Select a fruit"
+        >
           <SelectTrigger aria-label={sizeLabels[size]} size={size}>
             <SelectValue />
           </SelectTrigger>

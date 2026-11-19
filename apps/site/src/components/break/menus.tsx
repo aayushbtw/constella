@@ -34,8 +34,8 @@ import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectGroupLabel,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
@@ -59,7 +59,7 @@ const styles = stylex.create({
 
 interface Option {
   label: string;
-  value: string | null;
+  value: string;
 }
 
 const options = {
@@ -86,22 +86,22 @@ function optionsFor(data: Dataset): Option[] {
 
 function SelectBreak({ data, open }: { data: Dataset; open: boolean }) {
   const items = optionsFor(data);
-  const all = [{ label: "Select an option", value: null }, ...items];
   return (
     <div {...stylex.props(styles.row)}>
       <Select
         defaultOpen={open}
         defaultValue={items[0]?.value ?? null}
-        items={all}
+        items={items}
+        placeholder="Select an option"
       >
         <SelectTrigger aria-label="Option" sx={styles.trigger}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>
+            <SelectGroupLabel>
               {data === "worst" ? text.jobTitle : "Fruits"}
-            </SelectLabel>
+            </SelectGroupLabel>
             {items.map((item) => (
               <SelectItem key={item.label} value={item.value}>
                 {item.label}
@@ -110,7 +110,11 @@ function SelectBreak({ data, open }: { data: Dataset; open: boolean }) {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select defaultValue={items[0]?.value ?? null} items={all}>
+      <Select
+        defaultValue={items[0]?.value ?? null}
+        items={items}
+        placeholder="Select an option"
+      >
         <SelectTrigger aria-label="Option" size="sm">
           <SelectValue />
         </SelectTrigger>

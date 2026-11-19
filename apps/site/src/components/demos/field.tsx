@@ -65,27 +65,20 @@ const styles = stylex.create({
 
 interface Option {
   label: string;
-  value: string | null;
+  value: string;
 }
 
-const months: Option[] = [
-  { label: "MM", value: null },
-  ...Array.from({ length: 12 }, (_, i) => {
-    const month = String(i + 1).padStart(2, "0");
-    return { label: month, value: month };
-  }),
-];
+const months: Option[] = Array.from({ length: 12 }, (_, i) => {
+  const month = String(i + 1).padStart(2, "0");
+  return { label: month, value: month };
+});
 
-const years: Option[] = [
-  { label: "YYYY", value: null },
-  ...Array.from({ length: 6 }, (_, i) => {
-    const year = String(2024 + i);
-    return { label: year, value: year };
-  }),
-];
+const years: Option[] = Array.from({ length: 6 }, (_, i) => {
+  const year = String(2024 + i);
+  return { label: year, value: year };
+});
 
 const departments: Option[] = [
-  { label: "Choose department", value: null },
   { label: "Engineering", value: "engineering" },
   { label: "Design", value: "design" },
   { label: "Marketing", value: "marketing" },
@@ -99,18 +92,26 @@ const plans = [
   { label: "Lifetime ($299.99)", value: "lifetime" },
 ];
 
-function Picker({ label, options }: { label: string; options: Option[] }) {
+function Picker({
+  label,
+  options,
+  placeholder,
+}: {
+  label: string;
+  options: Option[];
+  placeholder: string;
+}) {
   return (
     <Field>
       <FieldLabel>{label}</FieldLabel>
-      <Select items={options}>
+      <Select items={options} placeholder={placeholder}>
         <SelectTrigger sx={styles.full}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {options.slice(1).map((item) => (
-              <SelectItem key={item.label} value={item.value}>
+            {options.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
             ))}
@@ -144,8 +145,8 @@ function FieldFormDemo() {
                 </FieldDescription>
               </Field>
               <div {...stylex.props(styles.thirds)}>
-                <Picker label="Month" options={months} />
-                <Picker label="Year" options={years} />
+                <Picker label="Month" options={months} placeholder="MM" />
+                <Picker label="Year" options={years} placeholder="YYYY" />
                 <Field>
                   <FieldLabel>CVV</FieldLabel>
                   <Input placeholder="123" required />
@@ -229,14 +230,14 @@ function FieldSelectDemo() {
     <DemoRow sx={styles.narrow}>
       <Field>
         <FieldLabel>Department</FieldLabel>
-        <Select items={departments}>
+        <Select items={departments} placeholder="Choose department">
           <SelectTrigger sx={styles.full}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {departments.slice(1).map((item) => (
-                <SelectItem key={item.label} value={item.value}>
+              {departments.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
                   {item.label}
                 </SelectItem>
               ))}
