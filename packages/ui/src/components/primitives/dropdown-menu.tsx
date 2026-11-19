@@ -96,6 +96,11 @@ const styles = stylex.create({
   // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.raised,
+    // ui-sdk's runtime layer resets the browser's `[popover]` box for popover and dialog content, not a menu's.
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     borderStartStartRadius: radii.lg,
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,
