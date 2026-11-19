@@ -87,6 +87,10 @@ Animates its height, since what sits below it has to make room: the panel grows 
 
 A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `infoOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
 
+## Combobox
+
+An input group with a select's popup under it: the same rows, tick and sizes, as wide as the field, opening at once when typing opens it. With chips, the box grows a line at a time to hold them. A chip is a `fill` pill a step under the box's height, centered with an even inset so its corner is concentric with the box's, and its remove button is a square flush with its end, sharing its corners. Empty, the input's text sits where a plain input's does; the typed text keeps `sizes.chipsInput` beside the chips before it drops to the next line.
+
 ## Command
 
 A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.lg`, the field an `lg` input group a step above them, its corner `md` like theirs, nesting in the command's corner (a Command Dialog's popup is `lg` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).

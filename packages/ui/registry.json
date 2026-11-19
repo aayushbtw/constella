@@ -303,6 +303,30 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/command/index.md"
     },
     {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "An input that filters a list as you type, picking one value or many as chips.",
+      "dependencies": [
+        "@base-ui/react",
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/input-group.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/primitives/combobox.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/combobox/index.md"
+    },
+    {
       "name": "toggle",
       "type": "registry:ui",
       "title": "Toggle",

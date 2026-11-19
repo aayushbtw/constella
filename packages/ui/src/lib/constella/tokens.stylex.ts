@@ -240,6 +240,8 @@ export const sizes = stylex.defineConsts({
   attachmentWide: `calc(${spaceUnit} * 30)`,
   // A citation pill's widest; a longer publication name truncates.
   citation: `calc(${spaceUnit} * 40)`,
+  // The least a combobox's typed text keeps beside its chips before it drops to the next line.
+  chipsInput: `calc(${spaceUnit} * 16)`,
   dialog: `calc(${spaceUnit} * 96)`,
   dialogLg: `calc(${spaceUnit} * 128)`,
   dialogSm: `calc(${spaceUnit} * 80)`,
