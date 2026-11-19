@@ -104,7 +104,11 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
-import { CitationDemo, CitationGroupDemo } from "~/components/demos/citation";
+import {
+  CitationDemo,
+  CitationGroupDemo,
+  CitationSourceDemo,
+} from "~/components/demos/citation";
 import {
   CodeBlockActionsDemo,
   CodeBlockDangerDemo,
@@ -130,6 +134,16 @@ import {
   ColorSurfacesDemo,
   ColorTextDemo,
 } from "~/components/demos/color";
+import {
+  ComboboxClearDemo,
+  ComboboxCreatableDemo,
+  ComboboxDemo,
+  ComboboxDisabledDemo,
+  ComboboxGroupsDemo,
+  ComboboxInvalidDemo,
+  ComboboxMultipleDemo,
+  ComboboxSizeDemo,
+} from "~/components/demos/combobox";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
   DataTableActionBarDemo,
@@ -154,6 +168,7 @@ import {
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
   DropdownMenuFilterDemo,
+  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,
@@ -511,6 +526,7 @@ const demos = {
   chat: ChatDemo,
   citation: CitationDemo,
   "citation-group": CitationGroupDemo,
+  "citation-source": CitationSourceDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,
@@ -541,6 +557,14 @@ const demos = {
   "collapsible-controlled": CollapsibleControlledDemo,
   "collapsible-disabled": CollapsibleDisabledDemo,
   "collapsible-tree": CollapsibleTreeDemo,
+  combobox: ComboboxDemo,
+  "combobox-clear": ComboboxClearDemo,
+  "combobox-creatable": ComboboxCreatableDemo,
+  "combobox-disabled": ComboboxDisabledDemo,
+  "combobox-groups": ComboboxGroupsDemo,
+  "combobox-invalid": ComboboxInvalidDemo,
+  "combobox-multiple": ComboboxMultipleDemo,
+  "combobox-size": ComboboxSizeDemo,
   command: CommandDemo,
   "command-dialog": CommandDialogDemo,
   code: CodeDemo,
@@ -569,6 +593,7 @@ const demos = {
   "dropdown-menu-checkboxes": DropdownMenuCheckboxesDemo,
   "dropdown-menu-danger": DropdownMenuDangerDemo,
   "dropdown-menu-filter": DropdownMenuFilterDemo,
+  "dropdown-menu-handle": DropdownMenuHandleDemo,
   "dropdown-menu-icons": DropdownMenuIconsDemo,
   "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
   "dropdown-menu-sizes": DropdownMenuSizesDemo,

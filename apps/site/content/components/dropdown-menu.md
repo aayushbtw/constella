@@ -160,6 +160,29 @@ Wrap the menu in `DropdownMenuFilterProvider`, add `DropdownMenuInput`, and put 
 </DropdownMenuFilterProvider>
 ```
 
+## Handle
+
+Use `createDropdownMenuHandle` for one menu that several triggers share, like the actions on each row of a list. Pass it to `DropdownMenu` and each trigger as `handle`, with the row's data as `payload`. The page mounts one menu instead of one per row.
+
+<!-- ::demo name="dropdown-menu-handle" -->
+
+```tsx
+const rowMenu = createDropdownMenuHandle<Doc>();
+
+<DropdownMenuTrigger handle={rowMenu} payload={doc} render={<Button size="icon" variant="ghost" />}>
+  <HugeiconsIcon icon={MoreHorizontalIcon} />
+</DropdownMenuTrigger>
+
+<DropdownMenu handle={rowMenu}>
+  {({ payload }) => (
+    <DropdownMenuContent>
+      <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
+      <DropdownMenuItem>Rename</DropdownMenuItem>
+    </DropdownMenuContent>
+  )}
+</DropdownMenu>
+```
+
 ## Size
 
 Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes its parent's size unless it sets its own. Rows, labels and the tick sit the side inset in from the popup's edge, and separators stop at it, so their text and ends line up.
@@ -223,5 +246,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | `DropdownMenuFilterProvider` | `autoHighlight` defaults to `true` |
 | `DropdownMenuInput` | A search field sized with the content's `size`; label it with `aria-label` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
+| `DropdownMenu`, `DropdownMenuTrigger` | `handle`; `payload` on the trigger |
+| `createDropdownMenuHandle` | A handle shared by `DropdownMenu` and its triggers |
 
 Every part takes `sx`, applied last. For the rest, see [Base UI Menu](https://base-ui.com/react/components/menu).

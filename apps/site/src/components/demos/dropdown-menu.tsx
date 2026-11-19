@@ -2,6 +2,7 @@ import {
   CreditCardIcon,
   Delete02Icon,
   Logout01Icon,
+  MoreHorizontalIcon,
   PencilEdit01Icon,
   Settings01Icon,
   Share08Icon,
@@ -14,6 +15,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
+  createDropdownMenuHandle,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -35,11 +37,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
 import type { DropdownMenuSize } from "@/components/primitives/dropdown-menu";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from "@/components/primitives/item";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   wide: { width: 224 },
+  list: { maxWidth: "100%", width: 384 },
 });
 
 function Glyph(props: Omit<HugeiconsIconProps, "size" | "strokeWidth">) {
@@ -341,11 +352,79 @@ function DropdownMenuDangerDemo() {
   );
 }
 
+interface Doc {
+  edited: string;
+  name: string;
+}
+
+const docs: Doc[] = [
+  { edited: "Edited 2 hours ago", name: "Q3 roadmap" },
+  { edited: "Edited yesterday", name: "Launch checklist" },
+  { edited: "Edited last week", name: "Hiring plan" },
+];
+
+const rowMenu = createDropdownMenuHandle<Doc>();
+
+function DropdownMenuHandleDemo() {
+  return (
+    <DemoRow>
+      <ItemGroup render={<ul />} sx={styles.list}>
+        {docs.map((doc) => (
+          <Item key={doc.name} render={<li />} variant="outline">
+            <ItemContent>
+              <ItemTitle>{doc.name}</ItemTitle>
+              <ItemDescription>{doc.edited}</ItemDescription>
+            </ItemContent>
+            <ItemActions>
+              <DropdownMenuTrigger
+                handle={rowMenu}
+                payload={doc}
+                render={
+                  <Button
+                    aria-label={`More for ${doc.name}`}
+                    size="icon"
+                    variant="ghost"
+                  />
+                }
+              >
+                <Glyph icon={MoreHorizontalIcon} />
+              </DropdownMenuTrigger>
+            </ItemActions>
+          </Item>
+        ))}
+      </ItemGroup>
+      <DropdownMenu handle={rowMenu}>
+        {({ payload }) => (
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Glyph icon={PencilEdit01Icon} />
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Glyph icon={Share08Icon} />
+                Share
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem color="danger">
+              <Glyph icon={Delete02Icon} />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        )}
+      </DropdownMenu>
+    </DemoRow>
+  );
+}
+
 export {
   DropdownMenuCheckboxesDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
   DropdownMenuFilterDemo,
+  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,
