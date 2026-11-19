@@ -117,6 +117,35 @@ test("a citation's pill opens the shared card with a link to each source", async
   ]);
 });
 
+test("a citation passes its other props to the trigger link, which still opens the card", async () => {
+  vi.useFakeTimers();
+  const onClick = vi.fn((event: { preventDefault: () => void }) => {
+    event.preventDefault();
+  });
+  render(
+    <Citations>
+      <Citation aria-describedby="note" onClick={onClick} sources={[second]} />
+    </Citations>
+  );
+  const pill = screen.getByRole("link", { name: /Beta Times/u });
+  expect(pill.getAttribute("aria-describedby")).toContain("note");
+
+  fireEvent.click(pill);
+  expect(onClick).toHaveBeenCalledTimes(1);
+
+  fireEvent.pointerEnter(pill, { pointerType: "mouse" });
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(
+      Number.parseFloat(durations.hoverCardDelay)
+    );
+  });
+  expect(
+    document.querySelector<HTMLAnchorElement>(
+      "[data-slot='hover-card-content'] a"
+    )?.dataset.slot
+  ).toBe("citation-source");
+});
+
 test("an agent finds the citation's card by its pill", () => {
   render(
     <Citations>
