@@ -132,12 +132,9 @@ Pass `items` to `Select` so the trigger shows the picked item's label.
 **Correct:**
 
 ```tsx
-const items = [
-  { label: "Select a fruit", value: null },
-  { label: "Apple", value: "apple" },
-];
+const items = [{ label: "Apple", value: "apple" }];
 
-<Select items={items}>
+<Select items={items} placeholder="Select a fruit">
   <SelectTrigger>
     <SelectValue />
   </SelectTrigger>
@@ -147,7 +144,7 @@ const items = [
 </Select>;
 ```
 
-An item with `value: null` is the placeholder.
+`placeholder` on `Select` is the text the trigger shows while nothing is picked.
 
 `Command` is ui-sdk's Command, not cmdk. Map your items as children, each with a unique string `value`; typing filters what it renders. Handle a pick with the item's `onSelect`: Enter runs the highlighted item without a click, so `onClick` misses it.
 
@@ -187,7 +184,7 @@ An item with `value: null` is the placeholder.
 
 ## Groups
 
-A group is for a label or a section, not a requirement. Items sit directly in `SelectContent` or `DropdownMenuContent`. Add `SelectGroup` + `SelectLabel`, or `DropdownMenuGroup` + `DropdownMenuLabel`, when the list has headed sections, with a `*Separator` between them.
+A group is for a label or a section, not a requirement. Items sit directly in `SelectContent` or `DropdownMenuContent`. Add `SelectGroup` + `SelectGroupLabel`, or `DropdownMenuGroup` + `DropdownMenuLabel`, when the list has headed sections, with a `*Separator` between them.
 
 `Command` groups the same way: `CommandGroup` + `CommandGroupLabel`, with a `CommandSeparator` between groups.
 
