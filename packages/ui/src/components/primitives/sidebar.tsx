@@ -280,6 +280,8 @@ const styles = stylex.create({
     },
     transitionProperty: "width",
     transitionTimingFunction: easings.inOut,
+    // Navigation, not content: a drag across rows shouldn't select their labels.
+    userSelect: "none",
     width: sizes.sidebar,
   },
   offcanvas: { borderInlineEndWidth: 0, borderInlineStartWidth: 0, width: 0 },
@@ -310,10 +312,12 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     height: "100%",
+    userSelect: "none",
     width: sizes.sidebar,
   },
   sheet: {
     backgroundColor: colors.sidebar,
+    userSelect: "none",
     width: sizes.sidebar,
   },
   main: {
