@@ -54,8 +54,7 @@ const offstage =
   ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
 const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
-// ui-sdk sets `--dialog-stack`; Alert Dialog, still on Base UI, sets `--nested-dialogs`.
-const stack = "var(--dialog-stack, var(--nested-dialogs, 0))";
+const stack = "var(--dialog-stack, 0)";
 const gutter = `calc(100% - 2 * ${space.md})`;
 
 const styles = stylex.create({
@@ -220,7 +219,12 @@ const dialogStyles = {
   description: [typeStyles.textSm, styles.description],
   footer: styles.footer,
   header: styles.header,
-  popup: [typeStyles.textSm, styles.popup],
+  popup: [
+    popoverStyles.popup,
+    typeStyles.textSm,
+    styles.popup,
+    styles.centered,
+  ],
   sm: styles.sm,
   title: [typeStyles.textBase, styles.title],
 };
@@ -237,13 +241,7 @@ function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
     <DialogContentPrimitive
       data-size={size}
       {...props}
-      {...stylex.props(
-        popoverStyles.popup,
-        dialogStyles.popup,
-        styles.centered,
-        sizeStyles[size],
-        sx
-      )}
+      {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
     />
   );
 }

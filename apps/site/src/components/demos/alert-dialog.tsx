@@ -1,6 +1,5 @@
 import { Delete02Icon, UserRemove01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
 
 import {
   AlertDialog,
@@ -16,6 +15,7 @@ import {
 } from "@/components/primitives/alert-dialog";
 import { Button } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
+import { toast } from "@/components/primitives/toast";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -108,26 +108,17 @@ function AlertDialogDangerDemo() {
   );
 }
 
+async function revoke() {
+  const { promise, resolve } = Promise.withResolvers<null>();
+  setTimeout(resolve, 1500, null);
+  await promise;
+  toast({ title: "Key revoked" });
+}
+
 function AlertDialogAsyncDemo() {
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  function revoke() {
-    setBusy(true);
-    setTimeout(() => {
-      setBusy(false);
-      setOpen(false);
-    }, 1500);
-  }
   return (
     <DemoRow>
-      <AlertDialog
-        onOpenChange={(next) => {
-          if (!busy) {
-            setOpen(next);
-          }
-        }}
-        open={open}
-      >
+      <AlertDialog pendingAnnouncement="Revoking key">
         <AlertDialogTrigger render={<Button variant="outline" />}>
           Revoke API key
         </AlertDialogTrigger>
@@ -139,10 +130,18 @@ function AlertDialogAsyncDemo() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-            <AlertDialogAction aria-busy={busy} onClick={revoke} color="danger">
-              {busy && <Spinner data-icon="inline-start" />}
-              {busy ? "Revoking" : "Revoke"}
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction action={revoke} color="danger">
+              {(state) =>
+                state.pending ? (
+                  <>
+                    <Spinner data-icon="inline-start" />
+                    Revoking
+                  </>
+                ) : (
+                  "Revoke"
+                )
+              }
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
