@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger as AlertDialogTriggerPrimitive,
 } from "@ui-sdk/react/alert-dialog";
 import type { AlertDialogProps } from "@ui-sdk/react/alert-dialog";
+import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -46,9 +47,7 @@ type AlertDialogButtonProps = Omit<
   Pick<ButtonProps, "color" | "size" | "sx" | "variant">;
 
 const inSmall = ":is([data-slot='alert-dialog-content'][data-size='sm'] *)";
-// ui-sdk refuses the other Close parts while one's action runs, but marks only the running one; drop once it marks the refused ones.
-const refused =
-  ":is([data-slot='alert-dialog-content']:has([data-pending]) *):not([data-pending])";
+const refused = ":is([aria-disabled='true']):not([data-pending])";
 
 const styles = stylex.create({
   // A small confirm centers its text over two equal buttons.
@@ -85,6 +84,9 @@ const sizeStyles = {
   sm: dialogStyles.sm,
 } satisfies Record<AlertDialogSize, stylex.StyleXStyles | null>;
 
+// ui-sdk refuses the other Close parts while one's action runs, but marks only the running one; drop once it marks the refused ones.
+const Pending = createContext(false);
+
 function AlertDialog(props: AlertDialogProps) {
   return <AlertDialogPrimitive {...props} />;
 }
@@ -97,6 +99,7 @@ function AlertDialogTrigger({
 }
 
 function AlertDialogContent({
+  children,
   size = "default",
   sx,
   ...props
@@ -108,7 +111,14 @@ function AlertDialogContent({
         data-size={size}
         {...props}
         {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
-      />
+      >
+        {(state) => (
+          <Pending value={state.pending}>
+            {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- ui-sdk documents `children` as a node or a function of the state */}
+            {typeof children === "function" ? children(state) : children}
+          </Pending>
+        )}
+      </AlertDialogContentPrimitive>
     </>
   );
 }
@@ -174,8 +184,10 @@ function AlertDialogCancel({
   variant = "outline",
   ...props
 }: AlertDialogButtonProps) {
+  const pending = use(Pending);
   return (
     <AlertDialogClosePrimitive
+      aria-disabled={pending || undefined}
       render={
         <Button
           color={color}
@@ -197,8 +209,10 @@ function AlertDialogAction({
   variant = "primary",
   ...props
 }: AlertDialogButtonProps) {
+  const pending = use(Pending);
   return (
     <AlertDialogClosePrimitive
+      aria-disabled={pending || undefined}
       render={
         <Button
           color={color}

@@ -142,7 +142,7 @@ test("Escape closes it and returns focus to the trigger", async () => {
   expect(document.activeElement).toBe(trigger);
 });
 
-test("a pending action marks Action, shows its pending label, refuses Cancel and Escape, and closes once it resolves", async () => {
+test("a pending action marks Action, shows its pending label, marks Cancel disabled, refuses Cancel and Escape, and closes once it resolves", async () => {
   const work = Promise.withResolvers<null>();
   render(
     <RevokeKey
@@ -157,8 +157,11 @@ test("a pending action marks Action, shows its pending label, refuses Cancel and
   const action = await screen.findByRole("button", { name: "Revoking" });
   expect(Object.hasOwn(action.dataset, "pending")).toBe(true);
   expect(action.getAttribute("aria-busy")).toBe("true");
+  const cancel = screen.getByRole("button", { name: "Cancel" });
+  expect(cancel.getAttribute("aria-disabled")).toBe("true");
+  expect(Object.hasOwn(cancel.dataset, "pending")).toBe(false);
 
-  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  fireEvent.click(cancel);
   pressEscape();
   await act(async () => {
     await Promise.resolve();
@@ -170,6 +173,11 @@ test("a pending action marks Action, shows its pending label, refuses Cancel and
     await work.promise;
   });
   await expectClosed();
+
+  await open();
+  expect(
+    screen.getByRole("button", { name: "Cancel" }).hasAttribute("aria-disabled")
+  ).toBe(false);
 });
 
 test("a rejected action keeps it open and clears pending, and a retry that resolves closes it", async () => {
@@ -190,6 +198,9 @@ test("a rejected action keeps it open and clears pending, and a retry that resol
   const { dialog } = await open();
   fireEvent.click(screen.getByRole("button", { name: "Revoke" }));
   await screen.findByRole("button", { name: "Revoking" });
+  expect(
+    screen.getByRole("button", { name: "Cancel" }).getAttribute("aria-disabled")
+  ).toBe("true");
 
   await act(async () => {
     attempts[0].reject(new Error("Couldn't revoke the key."));
@@ -197,6 +208,10 @@ test("a rejected action keeps it open and clears pending, and a retry that resol
   });
   const action = await screen.findByRole("button", { name: "Revoke" });
   expect(Object.hasOwn(action.dataset, "pending")).toBe(false);
+  expect(action.hasAttribute("aria-disabled")).toBe(false);
+  expect(
+    screen.getByRole("button", { name: "Cancel" }).hasAttribute("aria-disabled")
+  ).toBe(false);
   expect(Object.hasOwn(dialog.dataset, "open")).toBe(true);
 
   fireEvent.click(action);
