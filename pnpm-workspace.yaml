@@ -30,6 +30,8 @@ minimumReleaseAgeExclude:
   - "@tanstack/router-utils@1.162.4"
   - "@tanstack/start-plugin-core@1.171.53"
   - "@tanstack/start-server-core@1.169.43"
+  - "@ui-sdk/core@0.1.0-beta.13"
+  - "@ui-sdk/react@0.1.0-beta.13"
 overrides:
   vite@*: "catalog:"
 # Input registered a commit before its Choices, which loops hydration on React 19.3; drop once shadcn ships the fix.

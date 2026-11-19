@@ -151,8 +151,7 @@ test("an agent finds a showing toast by its title and names its action", () => {
   );
 });
 
-// ui-sdk's ToastClose renders a plain button the bridge doesn't register, so an agent can't dismiss a toast.
-test.fails("an agent can press a toast's Close", async () => {
+test("an agent can press a toast's Close", async () => {
   render(<Toaster />);
   show("Link copied");
 
@@ -165,17 +164,12 @@ test.fails("an agent can press a toast's Close", async () => {
   });
 });
 
-// ui-sdk's bridge lists an empty region as an unnamed toast entry, and data-agent-hidden would hide showing toasts too.
-test.fails("an empty region shows no unnamed entry to an agent", () => {
+test("an empty region shows no entry to an agent", () => {
   render(<Toaster />);
 
-  const entries = agent
-    .snapshot()
-    .filter((entry) => entry.offPage !== true && entry.component !== "more");
-  for (const entry of entries) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
+  expect(
+    agent
+      .snapshot()
+      .filter((entry) => entry.offPage !== true && entry.component !== "more")
+  ).toEqual([]);
 });

@@ -65,11 +65,14 @@ test("an agent finds every textarea by its label and fills it", async () => {
       `${entry.component} ${entry.ref} has no name`
     ).toBeTruthy();
   }
-  expect(entries.map((entry) => entry.label)).toEqual([
-    "Feedback",
-    "Reply",
-    "Review",
-    "Message",
+  expect(
+    entries.map((entry) => [entry.component, entry.label, entry.text])
+  ).toEqual([
+    ["textarea", "Feedback", undefined],
+    ["textarea", "Reply", undefined],
+    ["textarea", "Review", undefined],
+    ["field", "Review", ["Write at least 20 characters."]],
+    ["textarea", "Message", undefined],
   ]);
 
   const result = await agent.act({

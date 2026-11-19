@@ -159,11 +159,14 @@ test("an agent finds every control in the set by its label", () => {
       `${entry.component} ${entry.ref} has no name`
     ).toBeTruthy();
   }
-  expect(entries.map((entry) => entry.label)).toEqual([
-    "Card Number",
-    "Email",
-    "Comments",
-    "Accept terms",
-    expect.stringContaining("Mentions"),
+  expect(
+    entries.map((entry) => [entry.component, entry.label, entry.text])
+  ).toEqual([
+    ["input", "Card Number", undefined],
+    ["input", "Email", undefined],
+    ["textarea", "Comments", undefined],
+    ["field", "Comments", ["Too short."]],
+    ["checkbox", "Accept terms", undefined],
+    ["switch", expect.stringContaining("Mentions"), undefined],
   ]);
 });
