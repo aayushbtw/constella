@@ -8,7 +8,7 @@ A box like a card, a control's radius and padding: `border` border, `raised` fil
 
 ## Alert dialog
 
-Wears the dialog's surface (`radii.xl`), motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
+Wears the dialog's surface (`radii.xl`), motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. Both buttons close it. An action with async work keeps it open while it runs: the action shows busy, and Cancel fades to the disabled look since it can't close it until the work settles.
 
 ## Approval
 
