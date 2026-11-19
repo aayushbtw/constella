@@ -91,7 +91,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Progress | 2 | progress | Progress | merged | [#33](https://github.com/aayushbtw/constella/pull/33) |  |
 | Loading Bar | 2 | progress | Progress | merged | [#42](https://github.com/aayushbtw/constella/pull/42) | Built on ui-sdk's Progress root and indicator, not ours |
 | Meter | 2 | meter | Meter | merged | [#34](https://github.com/aayushbtw/constella/pull/34) |  |
-| Slider | 2 | slider | Slider | todo |  | Needs Tooltip for its demo; port after Tooltip or keep the demo on hold. Drop its `useFieldControl` and its half of `field-mixed.test.tsx` |
+| Slider | 2 | slider | Slider | todo |  | Its demo's Tooltip is on ui-sdk since [#50](https://github.com/aayushbtw/constella/pull/50). Drop its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Avatar | 2 | avatar | Avatar | merged | [#36](https://github.com/aayushbtw/constella/pull/36) | Ports Citation's logo too |
 | Field | 2 | field, fieldset | Field | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
 | Input Group | 2 | input | Input | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`, so Command's `command-input` and Dropdown Menu's `dropdown-menu-input` would be lost. Revisit when we want `InputClear` |
@@ -99,21 +99,21 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Scroll Area | 2 | scroll-area | Scroll Area | merged | [#37](https://github.com/aayushbtw/constella/pull/37) | Ports Code Block's scroller too. Known gap: a viewport that overflows by under a pixel is a Tab stop |
 | Collapsible | 2 | collapsible | Collapsible | merged | [#40](https://github.com/aayushbtw/constella/pull/40) | Ports Trace's collapsibles too |
 | Tabs | 2 | tabs | Tabs | merged | [#41](https://github.com/aayushbtw/constella/pull/41) |  |
-| Tooltip | 3 | tooltip | Tooltip | todo |  | Hover and focus only, no tap to open on touch: leave the undocumented `toggleable` off (user call, 2026-11-15) |
-| Hover Card | 3 | preview-card | Hover Card | todo |  | Hover and focus only, as Tooltip. Drop the `popupVars` copy. ui-sdk's hover card trigger lists only `data-open`; check Button's open style when it ports |
-| Dialog | 3 | dialog | Dialog | todo |  |  |
-| Sheet | 3 | dialog | Drawer | todo |  | Or Dialog with `presentation="sheet"`; decide in the PR |
+| Tooltip | 3 | tooltip | Tooltip | merged | [#50](https://github.com/aayushbtw/constella/pull/50) | Hover and focus only, no tap to open on touch. `toggleable` is documented in beta.1's `tooltip.md`; we leave it off (user call, 2026-11-15) |
+| Hover Card | 3 | preview-card | Hover Card | blocked | [#46](https://github.com/aayushbtw/constella/pull/46) | Keyboard Tab from a Citation pill through its shared card's links to the next pill never opens the next card. Cause is ui-sdk: closing the card on `focus-out` runs `focus?.clear()` in `create-popup.js`, which cancels the next trigger's pending delayed open. Present in beta.1 and beta.13; delay 0 avoids it. Awaiting a decision |
+| Dialog | 3 | dialog | Dialog | merged | [#48](https://github.com/aayushbtw/constella/pull/48) | Keyboard open and Escape still animate, as on `main` ([#47](https://github.com/aayushbtw/constella/issues/47)) |
+| Sheet | 3 | dialog | Dialog or Drawer | todo |  | ui-sdk has no Sheet component: it is Dialog with `presentation="sheet"`, or Drawer. Decide in the PR |
 | Side Panel | 3 | dialog | Drawer | todo |  |  |
 | Alert Dialog | 3 | alert-dialog | Alert Dialog | todo |  | Consider `createConfirm()` |
-| Toast | 3 | toast | Toast | todo |  | No anchored toasts; region placement is ours without `web.css` |
+| Toast | 3 | toast | Toast | merged | [#49](https://github.com/aayushbtw/constella/pull/49) | No anchored toasts; region placement is ours without `web.css` |
 | Select | 4 | select | Select | todo |  | Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy |
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
-| Toggle Group | 4 | toggle-group, toggle | Toggle Group | todo |  | Undocumented, but beta.1 exports `ToggleGroup` from `@ui-sdk/react/toggle`, and spec-01 builds on it. Decide `ToggleIcon` here |
+| Toggle Group | 4 | toggle-group, toggle | Toggle Group | todo |  | Documented in beta.1's `toggle.md` (`## Group`), exported as `ToggleGroup` from `@ui-sdk/react/toggle`; spec-01 builds on it. Decide `ToggleIcon` here |
 | Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  | `SegmentedControlIndicator` measures the chosen item into `--segmented-control-indicator-*`, which replaces our Mutation and Resize observers |
 | Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
 | Prompt Input | 5 | autocomplete |  | todo |  | After Command. Drop the `popupVars` copy |
-| Citation | 5 | avatar |  | todo |  | Logo ported with Avatar ([#36](https://github.com/aayushbtw/constella/pull/36)); waits on Hover Card |
+| Citation | 5 | avatar |  | todo |  | Logo ported with Avatar ([#36](https://github.com/aayushbtw/constella/pull/36)); card ported in Hover Card's [#46](https://github.com/aayushbtw/constella/pull/46). Waits on Hover Card |
 | Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
 | Sidebar | 5 | via Sheet, render helpers |  | todo |  | Re-verify only |
 
@@ -145,6 +145,36 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-19 | Hover Card | Blocks [#46](https://github.com/aayushbtw/constella/pull/46). Keyboard Tab from a Citation pill through its shared card's links to the next pill never opens the next card. Closing the card on `focus-out` runs `focus?.clear()` in ui-sdk's `create-popup.js`, which cancels the next trigger's pending delayed open. Present in 0.1.0-beta.1 and beta.13; delay 0 avoids it. Awaiting a decision |
+| 2026-11-19 | Tooltip | A tooltip opened by keyboard now stays open after the pointer leaves. ui-sdk documents it |
+| 2026-11-19 | Tooltip | Sidebar rows remove ui-sdk's `aria-labelledby` and `aria-describedby` in a render function, since the row's own label stays in the accessibility tree |
+| 2026-11-19 | Tooltip | Shortcuts are a Kbd inside the content, not ui-sdk's `shortcut` prop and `TooltipShortcut`, so no trigger carries `aria-keyshortcuts` |
+| 2026-11-19 | Toast | `toast` re-exports beta.1's global toaster, while ui-sdk's live docs use `createToaster()` and `toaster` |
+| 2026-11-19 | Toast | Our `Toaster` component's name collides with ui-sdk's `Toaster` queue type |
+| 2026-11-19 | Toast | A toast focused by F6 shows no focus ring |
+| 2026-11-15 | Hover Card | `delay` and `closeDelay` move to the root, still 300ms by token. `createHoverCardController` and `controller` replace `createHoverCardHandle` and `handle`. `HoverCardTrigger` is generic, so `payload` is checked against the controller's type; ui-sdk types it `unknown` |
+| 2026-11-15 | Hover Card | The shared card glides to a new trigger only while `data-moving` is set, from `onPayloadChange`, cleared after `durations.move`. ui-sdk positions the content with an inline fixed `inset`, so an always-on `top, left` transition trailed the trigger by up to 124px on scroll. Two triggers that share a payload make the card jump, since `onPayloadChange` doesn't fire |
+| 2026-11-15 | Hover Card | Known regression, on the advisor's call: a takeover swaps the content at once and the height snaps. Base UI's Viewport cross-faded and grew to the new height. Rebuilding that keeps the old content mounted (duplicate links and agent entries) and animates a measured height against ui-sdk's positioner |
+| 2026-11-15 | Hover Card | ui-sdk's trigger writes `hover-card-trigger` over Badge's slot, so an Avatar in `<Badge render={<HoverCardTrigger />}>` measured 32px, not 12px. Badge writes `data-badge` beside its slot, and Avatar, Spinner and `base.css` read that. Citation's pill reads `badge` in server HTML and `hover-card-trigger` after hydration |
+| 2026-11-15 | Hover Card | ui-sdk's trigger is a link, so the Side demo's triggers are links styled with `buttonStyles`. A hover card trigger has no `aria-haspopup`, so `popupOpen` also reads `[data-slot='hover-card-trigger'][data-open]` |
+| 2026-11-15 | Hover Card | Escape on a card opened by hover moves focus to the trigger, with a visible ring; Base UI left focus on the body. ui-sdk's hover card has no `finalFocus`. Upstream note, not filed |
+| 2026-11-15 | Hover Card | Pre-existing on `main`, filed with `found-in-port`: [#43](https://github.com/aayushbtw/constella/issues/43) (docs said a 600ms delay; the token is 300ms), [#44](https://github.com/aayushbtw/constella/issues/44) (Citation's `+N` sources unreachable by keyboard or touch; keyboard fixed by the port), [#45](https://github.com/aayushbtw/constella/issues/45) (Side demo's `left` and `top` cards off-center; ui-sdk centers them) and [#52](https://github.com/aayushbtw/constella/issues/52) (demos spread `stylex.props` into `HoverCardTrigger` instead of `sx`) |
+| 2026-11-15 | Toast | Region, swipe and stack variables, the deleted height morph, `maxVisible` and the top-layer region: see ARCHITECTURE.md's Toast and `web.css` Port notes, and its Port cost rows |
+| 2026-11-15 | Toast | `Toaster` renders ui-sdk's `ToastRegion` after the content, not around it. `ToastProvider`, `ToastPortal`, `ToastViewport` and `useToastManager` are gone. Callers use `toast(...)`, `action: { label, onAction }`, `duration` (`Infinity` to keep) and `toast.dismiss()`; `toast.promise` returns an id. `Toaster` drops `side` and `align`, since the region's styles place it at the bottom end |
+| 2026-11-15 | Toast | ui-sdk's Close ignores `dismissible: false`, so such a toast renders no Close. A link action renders a link Button |
+| 2026-11-15 | Toast | Behavior changes: an Action dismisses the toast; a queued 4th toast mounts only when a slot frees; a loading toast stays until updated (the Types demo passes `duration: 5000`); in RTL a swipe toward the end edge dismisses; timers also pause on a hidden page; F6 focuses the newest toast, not the region |
+| 2026-11-15 | Toast | Agents can't press Close: ui-sdk's bridge doesn't register it. A `test.fails` pins it. Every prerendered page gains an empty, 0px toast region at the end of `body` |
+| 2026-11-15 | Toast | Until Sheet and Alert Dialog port, a Base UI modal hides the region from the accessibility tree, and Escape on a focused toast closes the modal too. See ARCHITECTURE.md's Mixed libraries row |
+| 2026-11-15 | Tooltip | Slot, motion, `[hidden]` joins, the Escape workaround over a Base UI Sheet, and Slider's `type="description"`: see ARCHITECTURE.md's `data-slot`, In-place popups, Motion and Mixed libraries rows |
+| 2026-11-15 | Tooltip | `TooltipProvider`, `TooltipPortal`, `TooltipPositioner` and `TooltipPopup` are gone, and so is `layers.tooltip`. The 300ms `delay` moves to `Tooltip`. Tooltips group page-wide, so the Kbd page's second tooltip opens at once; Base UI grouped only inside a provider |
+| 2026-11-15 | Tooltip | A tooltip taken over by its neighbor fades out while the next appears at once; Base UI cut it at once. Matching that needs an undocumented event check |
+| 2026-11-15 | Tooltip | Triggers with text gain a description where the tooltip adds something: "Add to library", "Save Changes S", Sidebar's trigger with a shortcut, and Slider's thumb ("40%", which repeats its value). A trigger whose tooltip equals its name (Sidebar's trigger without a `kbd`, Button Group's Voice mode) takes `type="label"` |
+| 2026-11-15 | Tooltip | Pre-existing on `main`: Base UI's tooltip trigger carries `data-popup-open`, so Sidebar's trigger showed Button's open fill (2.4% alpha) while its tooltip showed. Filed as [#51](https://github.com/aayushbtw/constella/issues/51); the port removes it |
+| 2026-11-15 | Tooltip | `TooltipArrow`, `TooltipShortcut` and the shared controller aren't wrapped; no demo needs them |
+| 2026-11-15 | Dialog | Structure, centering, slot and `--dialog-stack`: see ARCHITECTURE.md's Dialog row. Base UI popups inside a ported Dialog: see its Mixed libraries row |
+| 2026-11-15 | Dialog | ui-sdk's `DialogTrigger` writes `dialog-trigger` over `attachment-trigger`, so an attachment card's hover reads any `-trigger` child. Settings Dialog drops a `data-slot` ui-sdk overwrote. `DialogPopup` stays exported beside `DialogContent` |
+| 2026-11-15 | Dialog | The port traps Tab, where Base UI let it reach a focus guard |
+| 2026-11-15 | Dialog | Pre-existing on `main`: a Dialog opened from the keyboard or closed with Escape animates, though DESIGN.md says keyboard actions don't. Filed as [#47](https://github.com/aayushbtw/constella/issues/47); the port keeps it |
 | 2026-11-14 | Collapsible | ui-sdk owns `data-slot`, so the content is `collapsible-panel`, not `collapsible-content`. Trace's five `trace-*` collapsible slots are gone. Its selectors read `[data-slot='collapsible-trigger'][data-open]`, and a context tells the run trigger from a step trigger |
 | 2026-11-14 | Collapsible | ui-sdk holds `data-starting-style` for one frame, so the content skips it during a keyboard toggle (`data-collapsible-instant`) and under reduced motion. Without the skip, a 0s open painted 1 or 2 empty frames; the verifier caught it under reduced motion |
 | 2026-11-14 | Collapsible | A pointer close starts one frame sooner than on Base UI, which isn't visible. Trace's live run clips the same 54 frames on both builds |
@@ -250,3 +280,5 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-14 | #28 merged: Field, Checkbox, Switch, Radio Group, Input Group and Textarea on ui-sdk as one unit, since a ui-sdk control in a Base UI Field loses its wiring. Select and Slider use ui-sdk's `useFieldControl` until their rows. Phase 2 so far: Button, Separator, Toggle and the Field unit merged |
 | 2026-11-14 | The rest of phase 2 ran as parallel unit PRs, each with an independent reuse review and verifier: #33 Progress, #34 Meter, #36 Avatar, #37 Scroll Area, #41 Tabs, #42 Loading Bar and #40 Collapsible merged. Verifiers failed Progress once (value text exposed twice), Scroll Area twice (a phantom Tab stop, then a workaround that locked late-growing content) and Collapsible once (empty frames under reduced motion). Each was fixed before merge. Filed #35, #38 (fixed in #33) and #39 |
 | 2026-11-14 | Phase 2 done except Slider, which waits on Tooltip (phase 3). Open on `main`: #32, #35 and #39. Upstream drafts not filed: the scroll area sub-pixel Tab stop, the Tabs `preventScroll` docs, and the Progress and Meter value `aria-hidden` docs |
+| 2026-11-15 | Merged `main` into `ui-sdk` at 79e386a. Phase 3 wave 1 started: Dialog, Tooltip, Toast and Hover Card as parallel unit PRs. #48 merged: Dialog on ui-sdk. Filed #43, #44, #45, #47, #51 and #52 |
+| 2026-11-19 | #50 Tooltip and #49 Toast merged after re-verify on top of Dialog. #46 Hover Card blocked on the ui-sdk focus bug (see [Findings](#findings)). Decision: upgrade to 0.1.0-beta.13 as its own unit before wave 2 |
