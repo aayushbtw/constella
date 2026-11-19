@@ -93,9 +93,10 @@
     },
     "ui-sdk": {
       "source": "vercel-labs/ui",
+      "commit": "f01f1739644ce83a0ba09fafc591d4050a2bbe83",
       "sourceType": "github",
       "skillPath": "packages/core/skills/ui-sdk/SKILL.md",
-      "computedHash": "eb97c7bee8d312d062ab419e621835c9e8293cb321e3087f3430ac1cdf634fc4"
+      "computedHash": "9a60caf01da3d47beedf627bf1505d922dccc93b04f294c6aa64edf01c46b3ba"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
