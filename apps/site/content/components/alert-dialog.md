@@ -46,7 +46,7 @@ import {
 } from "@/components/primitives/alert-dialog";
 ```
 
-`AlertDialogAction` doesn't close the dialog, so you can close it once the action is done. `AlertDialogCancel` does.
+`AlertDialogCancel` and `AlertDialogAction` both close the dialog. Put Cancel first: opening the dialog focuses it.
 
 ## Composition
 
@@ -99,18 +99,26 @@ Use `AlertDialogMedia` for an icon above the title. Pass `color="danger"` to `Al
 
 ## Alert Dialog Action
 
-`AlertDialogAction` doesn't close the dialog, so it can stay open while the work runs. Mark the action `aria-busy` with a [Spinner](/docs/components/spinner), keep the dialog open until it's done, then close it.
+Pass `action` to `AlertDialogAction` for async work. A returned Promise keeps the dialog open and marks the action `data-pending`; Cancel and Escape do nothing until it settles. It closes once the Promise resolves, and a rejection keeps it open. Read `state.pending` in a function child to show a [Spinner](/docs/components/spinner), and set `pendingAnnouncement` for screen readers.
 
 <!-- ::demo name="alert-dialog-async" -->
 
 ```tsx
-<AlertDialog onOpenChange={(next) => !busy && setOpen(next)} open={open}>
+<AlertDialog pendingAnnouncement="Revoking key">
   …
   <AlertDialogFooter>
-    <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-    <AlertDialogAction aria-busy={busy} onClick={revoke} color="danger">
-      {busy && <Spinner data-icon="inline-start" />}
-      {busy ? "Revoking" : "Revoke"}
+    <AlertDialogCancel>Cancel</AlertDialogCancel>
+    <AlertDialogAction action={revoke} color="danger">
+      {(state) =>
+        state.pending ? (
+          <>
+            <Spinner data-icon="inline-start" />
+            Revoking
+          </>
+        ) : (
+          "Revoke"
+        )
+      }
     </AlertDialogAction>
   </AlertDialogFooter>
 </AlertDialog>
@@ -120,8 +128,8 @@ Use `AlertDialogMedia` for an icon above the title. Pass `color="danger"` to `Al
 
 | Part | Adds |
 | --- | --- |
-| `AlertDialogContent` | Renders the portal, backdrop, viewport and popup; `size`: `"sm"` or `"default"` |
-| `AlertDialogAction` | A `Button`, `primary` by default |
-| `AlertDialogCancel` | A `Button` that closes, `outline` by default |
+| `AlertDialogContent` | Renders the backdrop and the content in place, with no portal or viewport; `size`: `"sm"` or `"default"` |
+| `AlertDialogAction` | A Close part with `value="confirm"`, rendered as a `primary` `Button` |
+| `AlertDialogCancel` | A Close part, rendered as an `outline` `Button` |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Alert Dialog](https://base-ui.com/react/components/alert-dialog).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Alert Dialog](https://ui-sdk.dev/docs/react/components/alert-dialog).

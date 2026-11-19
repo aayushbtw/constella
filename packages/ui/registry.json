@@ -58,7 +58,7 @@
       "type": "registry:ui",
       "title": "Alert Dialog",
       "description": "A dialog that confirms an action, on the dialog's surface.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
