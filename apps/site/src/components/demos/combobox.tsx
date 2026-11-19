@@ -148,6 +148,7 @@ function ComboboxCreatableDemo() {
   return (
     <DemoRow>
       <Combobox
+        autoHighlight
         inputValue={query}
         items={items}
         multiple

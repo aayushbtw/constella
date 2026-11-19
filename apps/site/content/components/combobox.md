@@ -141,6 +141,7 @@ function handleKeyDown(event) {
 }
 
 <Combobox
+  autoHighlight
   inputValue={query}
   items={items}
   multiple
