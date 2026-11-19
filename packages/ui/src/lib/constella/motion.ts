@@ -9,6 +9,7 @@ interface OpenChangeDetails {
 function skipsMotion({ event, reason }: OpenChangeDetails) {
   switch (reason) {
     case "escape-key":
+    case "input-change":
     case "item-press":
     case "list-navigation": {
       return true;
@@ -18,7 +19,7 @@ function skipsMotion({ event, reason }: OpenChangeDetails) {
       return event instanceof UIEvent && event.detail === 0;
     }
     default: {
-      return false;
+      return event instanceof KeyboardEvent;
     }
   }
 }
