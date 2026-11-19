@@ -19,14 +19,16 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 // A group's own parts: not the focus guards Base UI drops beside an open popup's trigger, nor
-// ui-sdk popup content, which renders in place beside it, `popover` while shown and `hidden` while closed.
-const notFirst = ":not(:nth-child(1 of [data-slot]:not([popover], [hidden])))";
+// ui-sdk popup content, which renders in place beside it, `popover` while shown and `hidden` while closed,
+// nor ui-sdk's hidden form field beside a select's trigger.
+const notFirst =
+  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])))";
 const notLast =
-  ":not(:nth-last-child(1 of [data-slot]:not([popover], [hidden])))";
+  ":not(:nth-last-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])))";
 
 // The neighbor before draws the shared edge, or the separator does.
 const joined =
-  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden])), [data-slot='separator'] + *)";
+  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])), [data-slot='separator'] + *)";
 
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: Values<typeof radii>) => ({
