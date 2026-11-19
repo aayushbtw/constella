@@ -112,7 +112,8 @@ function HoverCard({
 }: HoverCardProps) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [moving, setMoving] = useState(false);
-  const isOpen = useRef(props.open ?? props.defaultOpen ?? false);
+  const [open, setOpen] = useState(props.defaultOpen ?? false);
+  const isOpen = useRef(props.open ?? open);
   const settle = useRef(0);
   const state = useMemo(() => ({ moving, skip }), [moving, skip]);
 
@@ -127,14 +128,16 @@ function HoverCard({
     <Motion value={state}>
       <HoverCardPrimitive
         closeDelay={closeDelay}
-        delay={delay}
-        onOpenChange={(open, details) => {
-          handleOpenChange(open, details);
+        // Drop once ui-sdk's focus path takes over an open card at once, as hover does.
+        delay={(props.open ?? open) ? 0 : delay}
+        onOpenChange={(nextOpen, details) => {
+          handleOpenChange(nextOpen, details);
           if (details.canceled) {
             return;
           }
-          isOpen.current = open;
-          if (!open) {
+          isOpen.current = nextOpen;
+          setOpen(nextOpen);
+          if (!nextOpen) {
             clearTimeout(settle.current);
             setMoving(false);
           }

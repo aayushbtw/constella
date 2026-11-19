@@ -56,7 +56,7 @@ function Mentions({ controller }: { controller: HoverCardController<Person> }) {
       ))}
       <HoverCard controller={controller}>
         <HoverCardContent<Person>>
-          {({ payload }) => <p>{payload?.bio}</p>}
+          {({ payload }) => <a href={`#${payload?.name}`}>{payload?.bio}</a>}
         </HoverCardContent>
       </HoverCard>
     </>
@@ -65,6 +65,13 @@ function Mentions({ controller }: { controller: HoverCardController<Person> }) {
 
 const content = () =>
   document.querySelector<HTMLElement>("[data-slot='hover-card-content']");
+
+function tabTo(element: HTMLElement) {
+  fireEvent.keyDown(document.activeElement ?? document.body, { key: "Tab" });
+  act(() => {
+    element.focus();
+  });
+}
 
 async function wait(time: number) {
   await act(async () => {
@@ -130,6 +137,24 @@ test("the open card glides to a new trigger for one move, and doesn't on its fir
 
   await wait(1);
   expect(Object.hasOwn(content()?.dataset ?? {}, "moving")).toBe(false);
+});
+
+test("focus leaving the open card for the next trigger moves the card at once", async () => {
+  vi.useFakeTimers();
+  const controller = createHoverCardController<Person>();
+  render(<Mentions controller={controller} />);
+  const emil = screen.getByRole("link", { name: "emil" });
+
+  tabTo(screen.getByRole("link", { name: "shadcn" }));
+  await wait(Number.parseFloat(durations.hoverCardDelay) - 1);
+  expect(content()).toBeNull();
+  await wait(1);
+  tabTo(screen.getByRole("link", { name: "Building shadcn/ui." }));
+  tabTo(emil);
+  await wait(0);
+
+  expect(screen.getByText("Design engineer.")).toBeTruthy();
+  expect(Object.hasOwn(emil.dataset, "open")).toBe(true);
 });
 
 test("closing mid-move drops the glide", () => {

@@ -969,7 +969,7 @@
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
-      "description": "A popover that previews a link while the pointer rests on it.",
+      "description": "A popover that previews a link while the pointer rests on it or keyboard focus stays on it.",
       "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
