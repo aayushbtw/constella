@@ -104,7 +104,11 @@ import {
   CheckboxSizeDemo,
   CheckboxTableDemo,
 } from "~/components/demos/checkbox";
-import { CitationDemo, CitationGroupDemo } from "~/components/demos/citation";
+import {
+  CitationDemo,
+  CitationGroupDemo,
+  CitationSourceDemo,
+} from "~/components/demos/citation";
 import {
   CodeBlockActionsDemo,
   CodeBlockDangerDemo,
@@ -511,6 +515,7 @@ const demos = {
   chat: ChatDemo,
   citation: CitationDemo,
   "citation-group": CitationGroupDemo,
+  "citation-source": CitationSourceDemo,
   "button-group": ButtonGroupDemo,
   "button-group-dropdown": ButtonGroupDropdownDemo,
   "button-group-input": ButtonGroupInputDemo,

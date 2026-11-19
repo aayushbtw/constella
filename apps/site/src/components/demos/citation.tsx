@@ -5,14 +5,22 @@ import {
   CitationGroup,
   CitationGroupMore,
   Citations,
+  CitationSource,
 } from "@/components/ai/citation";
 import type { Source } from "@/components/ai/citation";
 import { Text } from "@/components/typography/text";
+import { sizes, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const styles = stylex.create({
   answer: {
     maxWidth: 448,
+  },
+  panel: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxs,
+    width: sizes.popover,
   },
 });
 
@@ -87,4 +95,20 @@ function CitationGroupDemo() {
   );
 }
 
-export { CitationDemo, CitationGroupDemo };
+function CitationSourceDemo() {
+  return (
+    <DemoRow>
+      <div {...stylex.props(styles.panel)}>
+        {found.map((source) => (
+          <CitationSource
+            aria-current={source === sources.newsroom ? "true" : undefined}
+            key={source.url}
+            source={source}
+          />
+        ))}
+      </div>
+    </DemoRow>
+  );
+}
+
+export { CitationDemo, CitationGroupDemo, CitationSourceDemo };
