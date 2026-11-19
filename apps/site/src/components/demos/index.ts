@@ -134,6 +134,16 @@ import {
   ColorSurfacesDemo,
   ColorTextDemo,
 } from "~/components/demos/color";
+import {
+  ComboboxClearDemo,
+  ComboboxCreatableDemo,
+  ComboboxDemo,
+  ComboboxDisabledDemo,
+  ComboboxGroupsDemo,
+  ComboboxInvalidDemo,
+  ComboboxMultipleDemo,
+  ComboboxSizeDemo,
+} from "~/components/demos/combobox";
 import { CommandDemo, CommandDialogDemo } from "~/components/demos/command";
 import {
   DataTableActionBarDemo,
@@ -547,6 +557,14 @@ const demos = {
   "collapsible-controlled": CollapsibleControlledDemo,
   "collapsible-disabled": CollapsibleDisabledDemo,
   "collapsible-tree": CollapsibleTreeDemo,
+  combobox: ComboboxDemo,
+  "combobox-clear": ComboboxClearDemo,
+  "combobox-creatable": ComboboxCreatableDemo,
+  "combobox-disabled": ComboboxDisabledDemo,
+  "combobox-groups": ComboboxGroupsDemo,
+  "combobox-invalid": ComboboxInvalidDemo,
+  "combobox-multiple": ComboboxMultipleDemo,
+  "combobox-size": ComboboxSizeDemo,
   command: CommandDemo,
   "command-dialog": CommandDialogDemo,
   code: CodeDemo,
