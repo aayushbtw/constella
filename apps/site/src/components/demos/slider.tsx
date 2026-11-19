@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
+import { Field, FieldLabel } from "@/components/primitives/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -11,7 +12,6 @@ import {
   Slider,
   SliderControl,
   SliderIndicator,
-  SliderLabel,
   SliderThumb,
   SliderTrack,
   SliderValue,
@@ -81,6 +81,9 @@ const styles = stylex.create({
     color: "inherit",
     fontSize: "inherit",
   },
+  gridPassthrough: {
+    display: "contents",
+  },
   field: {
     gridColumn: "2",
     width: `calc(${space.lg} * 3)`,
@@ -97,11 +100,13 @@ const styles = stylex.create({
 function SliderDemo() {
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={40}>
-        <SliderLabel>Volume</SliderLabel>
-        <SliderValue />
-        <SliderControl />
-      </Slider>
+      <Field>
+        <Slider defaultValue={40}>
+          <FieldLabel>Volume</FieldLabel>
+          <SliderValue />
+          <SliderControl />
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
@@ -109,17 +114,19 @@ function SliderDemo() {
 function SliderRangeDemo() {
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={[20, 80]}>
-        <SliderLabel>Price</SliderLabel>
-        <SliderValue />
-        <SliderControl>
-          <SliderTrack>
-            <SliderIndicator />
-            <SliderThumb index={0} />
-            <SliderThumb index={1} />
-          </SliderTrack>
-        </SliderControl>
-      </Slider>
+      <Field>
+        <Slider defaultValue={[20, 80]}>
+          <FieldLabel>Price</FieldLabel>
+          <SliderValue />
+          <SliderControl>
+            <SliderTrack>
+              <SliderIndicator />
+              <SliderThumb aria-label="Minimum price" index={0} />
+              <SliderThumb aria-label="Maximum price" index={1} />
+            </SliderTrack>
+          </SliderControl>
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
@@ -131,9 +138,9 @@ function SliderMultipleDemo() {
         <SliderControl>
           <SliderTrack>
             <SliderIndicator />
-            <SliderThumb index={0} />
-            <SliderThumb index={1} />
-            <SliderThumb index={2} />
+            <SliderThumb aria-label="First stop" index={0} />
+            <SliderThumb aria-label="Second stop" index={1} />
+            <SliderThumb aria-label="Third stop" index={2} />
           </SliderTrack>
         </SliderControl>
       </Slider>
@@ -145,20 +152,28 @@ function SliderVerticalDemo() {
   return (
     <DemoRow sx={styles.vertical}>
       <Slider
-        aria-label="Bass"
         defaultValue={60}
         orientation="vertical"
         sx={styles.verticalSlider}
       >
-        <SliderControl />
+        <SliderControl>
+          <SliderTrack>
+            <SliderIndicator />
+            <SliderThumb aria-label="Bass" />
+          </SliderTrack>
+        </SliderControl>
       </Slider>
       <Slider
-        aria-label="Treble"
         defaultValue={30}
         orientation="vertical"
         sx={styles.verticalSlider}
       >
-        <SliderControl />
+        <SliderControl>
+          <SliderTrack>
+            <SliderIndicator />
+            <SliderThumb aria-label="Treble" />
+          </SliderTrack>
+        </SliderControl>
       </Slider>
     </DemoRow>
   );
@@ -167,11 +182,13 @@ function SliderVerticalDemo() {
 function SliderDisabledDemo() {
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={40} disabled>
-        <SliderLabel>Volume</SliderLabel>
-        <SliderValue />
-        <SliderControl />
-      </Slider>
+      <Field>
+        <Slider defaultValue={40} disabled>
+          <FieldLabel>Volume</FieldLabel>
+          <SliderValue />
+          <SliderControl />
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
@@ -179,36 +196,38 @@ function SliderDisabledDemo() {
 function SliderStepsDemo() {
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={3} max={12}>
-        <SliderLabel>Duration (months)</SliderLabel>
-        <SliderValue />
-        <SliderControl />
-        <div aria-hidden {...stylex.props(styles.scale)}>
-          {months.map((month) => {
-            const major = month % 2 === 0;
-            return (
-              <span
-                key={month}
-                {...stylex.props(styles.mark(`${(month / 12) * 100}%`))}
-              >
+      <Field>
+        <Slider defaultValue={3} max={12}>
+          <FieldLabel>Duration (months)</FieldLabel>
+          <SliderValue />
+          <SliderControl />
+          <div aria-hidden {...stylex.props(styles.scale)}>
+            {months.map((month) => {
+              const major = month % 2 === 0;
+              return (
                 <span
-                  {...stylex.props(styles.tick, major && styles.tickMajor)}
-                />
-                {major && (
-                  <Text
-                    color="muted"
-                    render={<span />}
-                    size="sm"
-                    sx={styles.scaleLabel}
-                  >
-                    {month}
-                  </Text>
-                )}
-              </span>
-            );
-          })}
-        </div>
-      </Slider>
+                  key={month}
+                  {...stylex.props(styles.mark(`${(month / 12) * 100}%`))}
+                >
+                  <span
+                    {...stylex.props(styles.tick, major && styles.tickMajor)}
+                  />
+                  {major && (
+                    <Text
+                      color="muted"
+                      render={<span />}
+                      size="sm"
+                      sx={styles.scaleLabel}
+                    >
+                      {month}
+                    </Text>
+                  )}
+                </span>
+              );
+            })}
+          </div>
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
@@ -216,64 +235,64 @@ function SliderStepsDemo() {
 function SliderReferencesDemo() {
   return (
     <DemoRow sx={styles.slider}>
-      <Slider defaultValue={20} max={35} min={5}>
-        <SliderLabel>Storage</SliderLabel>
-        <SliderValue>{(formatted) => `${formatted[0] ?? ""} GB`}</SliderValue>
-        <SliderControl />
-        <Text
-          aria-hidden
-          color="muted"
-          render={<div />}
-          size="sm"
-          sx={styles.references}
+      <Field>
+        <Slider
+          defaultValue={20}
+          format={{ style: "unit", unit: "gigabyte" }}
+          max={35}
+          min={5}
         >
-          <span>5 GB</span>
-          <span>20 GB</span>
-          <span {...stylex.props(styles.referenceEnd)}>35 GB</span>
-        </Text>
-      </Slider>
+          <FieldLabel>Storage</FieldLabel>
+          <SliderValue />
+          <SliderControl />
+          <Text
+            aria-hidden
+            color="muted"
+            render={<div />}
+            size="sm"
+            sx={styles.references}
+          >
+            <span>5 GB</span>
+            <span>20 GB</span>
+            <span {...stylex.props(styles.referenceEnd)}>35 GB</span>
+          </Text>
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
 
 function SliderTooltipDemo() {
   const [hovered, setHovered] = useState(false);
-  const [dragging, setDragging] = useState(false);
 
   return (
     <DemoRow sx={styles.slider}>
-      <Slider
-        defaultValue={40}
-        onValueChange={(_, details) => {
-          if (details.reason === "drag" || details.reason === "track-press") {
-            setDragging(true);
-          }
-        }}
-        onValueCommitted={() => {
-          setDragging(false);
-        }}
-      >
-        <SliderLabel>Volume</SliderLabel>
-        <SliderControl>
-          <SliderTrack>
-            <SliderIndicator />
-            <Tooltip
-              closeOnPress={false}
-              delay={0}
-              onOpenChange={setHovered}
-              open={hovered || dragging}
-              type="description"
-            >
-              <TooltipTrigger render={<SliderThumb />} />
-              <TooltipContent>
-                <SliderValue sx={styles.bubble}>
-                  {(formatted) => `${formatted[0] ?? ""}%`}
-                </SliderValue>
-              </TooltipContent>
-            </Tooltip>
-          </SliderTrack>
-        </SliderControl>
-      </Slider>
+      <Field>
+        <Slider defaultValue={40} format={{ style: "unit", unit: "percent" }}>
+          {(state) => (
+            <>
+              <FieldLabel>Volume</FieldLabel>
+              <SliderControl>
+                <SliderTrack>
+                  <SliderIndicator />
+                  <Tooltip
+                    closeOnPress={false}
+                    delay={0}
+                    onOpenChange={setHovered}
+                    open={hovered || state.dragging}
+                    type="description"
+                  >
+                    <TooltipTrigger render={<SliderThumb />} />
+                    <TooltipContent>
+                      <SliderValue sx={styles.bubble} />
+                    </TooltipContent>
+                  </Tooltip>
+                </SliderTrack>
+              </SliderControl>
+            </>
+          )}
+        </Slider>
+      </Field>
     </DemoRow>
   );
 }
@@ -291,32 +310,38 @@ function SliderInputDemo() {
         }}
         value={value}
       >
-        <SliderLabel>Opacity</SliderLabel>
-        <InputGroup size="sm" sx={styles.field}>
-          <InputGroupInput
-            aria-label="Opacity"
-            inputMode="numeric"
-            max={100}
-            min={0}
-            onBlur={() => {
-              setDraft(String(value));
-            }}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              const next = event.target.valueAsNumber;
-              if (Number.isFinite(next)) {
-                setValue(Math.min(100, Math.max(0, Math.round(next))));
-              }
-            }}
-            type="number"
-            value={draft}
-            sx={styles.input}
-          />
-          <InputGroupAddon align="inline-end">
-            <InputGroupText>%</InputGroupText>
-          </InputGroupAddon>
-        </InputGroup>
-        <SliderControl />
+        <Field sx={styles.gridPassthrough}>
+          <FieldLabel>Opacity</FieldLabel>
+          <InputGroup size="sm" sx={styles.field}>
+            <InputGroupInput
+              inputMode="numeric"
+              max={100}
+              min={0}
+              onBlur={() => {
+                setDraft(String(value));
+              }}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                const next = event.target.valueAsNumber;
+                if (Number.isFinite(next)) {
+                  setValue(Math.min(100, Math.max(0, Math.round(next))));
+                }
+              }}
+              type="number"
+              value={draft}
+              sx={styles.input}
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupText>%</InputGroupText>
+            </InputGroupAddon>
+          </InputGroup>
+        </Field>
+        <SliderControl>
+          <SliderTrack>
+            <SliderIndicator />
+            <SliderThumb aria-label="Opacity" />
+          </SliderTrack>
+        </SliderControl>
       </Slider>
     </DemoRow>
   );

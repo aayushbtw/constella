@@ -252,18 +252,17 @@ function FieldSelectDemo() {
 }
 
 function FieldSliderDemo() {
-  const [range, setRange] = useState<readonly number[]>([200, 800]);
+  const [range, setRange] = useState([200, 800]);
   return (
     <DemoRow sx={styles.narrow}>
       <Field>
-        <FieldTitle>Price Range</FieldTitle>
+        <FieldLabel>Price Range</FieldLabel>
         <FieldDescription>
           Set your budget range ($
           <span {...stylex.props(styles.value)}>{range[0]}</span> -{" "}
           <span {...stylex.props(styles.value)}>{range[1]}</span>).
         </FieldDescription>
         <Slider
-          aria-label="Price Range"
           max={1000}
           min={0}
           onValueChange={setRange}
@@ -273,8 +272,8 @@ function FieldSliderDemo() {
           <SliderControl>
             <SliderTrack>
               <SliderIndicator />
-              <SliderThumb index={0} />
-              <SliderThumb index={1} />
+              <SliderThumb aria-label="Minimum price" index={0} />
+              <SliderThumb aria-label="Maximum price" index={1} />
             </SliderTrack>
           </SliderControl>
         </Slider>

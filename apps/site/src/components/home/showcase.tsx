@@ -27,7 +27,6 @@ import {
 import {
   Slider,
   SliderControl,
-  SliderLabel,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Spinner } from "@/components/primitives/spinner";
@@ -246,16 +245,20 @@ const tiles: Tile[] = [
   {
     content: (
       <div {...stylex.props(styles.fill, styles.sliders)}>
-        <Slider defaultValue={64}>
-          <SliderLabel>Volume</SliderLabel>
-          <SliderValue />
-          <SliderControl />
-        </Slider>
-        <Slider defaultValue={[20, 80]}>
-          <SliderLabel>Price</SliderLabel>
-          <SliderValue />
-          <SliderControl />
-        </Slider>
+        <Field>
+          <Slider defaultValue={64}>
+            <FieldLabel>Volume</FieldLabel>
+            <SliderValue />
+            <SliderControl />
+          </Slider>
+        </Field>
+        <Field>
+          <Slider defaultValue={[20, 80]}>
+            <FieldLabel>Price</FieldLabel>
+            <SliderValue />
+            <SliderControl />
+          </Slider>
+        </Field>
       </div>
     ),
     slug: "slider",

@@ -12,52 +12,61 @@ description: Picks a value from a range.
 ## Usage
 
 ```tsx
+import { Field, FieldLabel } from "@/components/primitives/field";
 import {
   Slider,
   SliderControl,
-  SliderLabel,
   SliderValue,
 } from "@/components/primitives/slider";
 ```
 
 ```tsx
-<Slider defaultValue={40}>
-  <SliderLabel>Volume</SliderLabel>
-  <SliderValue />
-  <SliderControl />
-</Slider>
+<Field>
+  <Slider defaultValue={40}>
+    <FieldLabel>Volume</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+  </Slider>
+</Field>
 ```
+
+A `Field` names a single thumb with its `FieldLabel`. Without a `Field`, give each thumb an `aria-label`.
+
+**Name each thumb of a range.** The `FieldLabel` or an `aria-label` on `Slider` names the group, not its thumbs.
 
 ## Composition
 
 ```
-Slider
-├── SliderLabel
-├── SliderValue
-└── SliderControl
-    └── SliderTrack
-        ├── SliderIndicator
-        └── SliderThumb
+Field
+└── Slider
+    ├── FieldLabel
+    ├── SliderValue
+    └── SliderControl
+        └── SliderTrack
+            ├── SliderIndicator
+            └── SliderThumb
 ```
 
 ## Range
 
-Pass an array to `defaultValue` and compose the track with a thumb per value.
+Pass an array to `defaultValue` and compose the track with a thumb per value, each with its own `aria-label`.
 
 <!-- ::demo name="slider-range" -->
 
 ```tsx
-<Slider defaultValue={[20, 80]}>
-  <SliderLabel>Price</SliderLabel>
-  <SliderValue />
-  <SliderControl>
-    <SliderTrack>
-      <SliderIndicator />
-      <SliderThumb index={0} />
-      <SliderThumb index={1} />
-    </SliderTrack>
-  </SliderControl>
-</Slider>
+<Field>
+  <Slider defaultValue={[20, 80]}>
+    <FieldLabel>Price</FieldLabel>
+    <SliderValue />
+    <SliderControl>
+      <SliderTrack>
+        <SliderIndicator />
+        <SliderThumb aria-label="Minimum price" index={0} />
+        <SliderThumb aria-label="Maximum price" index={1} />
+      </SliderTrack>
+    </SliderControl>
+  </Slider>
+</Field>
 ```
 
 ## Multiple Thumbs
@@ -71,9 +80,9 @@ Add a value and a `SliderThumb` for each thumb.
   <SliderControl>
     <SliderTrack>
       <SliderIndicator />
-      <SliderThumb index={0} />
-      <SliderThumb index={1} />
-      <SliderThumb index={2} />
+      <SliderThumb aria-label="First stop" index={0} />
+      <SliderThumb aria-label="Second stop" index={1} />
+      <SliderThumb aria-label="Third stop" index={2} />
     </SliderTrack>
   </SliderControl>
 </Slider>
@@ -90,13 +99,13 @@ const styles = stylex.create({
   slider: { height: 160 },
 });
 
-<Slider
-  aria-label="Bass"
-  defaultValue={60}
-  orientation="vertical"
-  sx={styles.slider}
->
-  <SliderControl />
+<Slider defaultValue={60} orientation="vertical" sx={styles.slider}>
+  <SliderControl>
+    <SliderTrack>
+      <SliderIndicator />
+      <SliderThumb aria-label="Bass" />
+    </SliderTrack>
+  </SliderControl>
 </Slider>;
 ```
 
@@ -138,30 +147,32 @@ const styles = stylex.create({
   },
 });
 
-<Slider defaultValue={3} max={12}>
-  <SliderLabel>Duration (months)</SliderLabel>
-  <SliderValue />
-  <SliderControl />
-  <div aria-hidden {...stylex.props(styles.scale)}>
-    {months.map((month) => {
-      const major = month % 2 === 0;
-      return (
-        <span
-          key={month}
-          {...stylex.props(styles.mark(`${(month / 12) * 100}%`))}
-        >
-          <span {...stylex.props(styles.tick, major && styles.tickMajor)} />
-          {major && <span {...stylex.props(styles.label)}>{month}</span>}
-        </span>
-      );
-    })}
-  </div>
-</Slider>;
+<Field>
+  <Slider defaultValue={3} max={12}>
+    <FieldLabel>Duration (months)</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+    <div aria-hidden {...stylex.props(styles.scale)}>
+      {months.map((month) => {
+        const major = month % 2 === 0;
+        return (
+          <span
+            key={month}
+            {...stylex.props(styles.mark(`${(month / 12) * 100}%`))}
+          >
+            <span {...stylex.props(styles.tick, major && styles.tickMajor)} />
+            {major && <span {...stylex.props(styles.label)}>{month}</span>}
+          </span>
+        );
+      })}
+    </div>
+  </Slider>
+</Field>;
 ```
 
 ## Reference Labels
 
-Add a row of labels under the control. A `1fr auto 1fr` grid keeps the middle one centered.
+Add a row of labels under the control. A `1fr auto 1fr` grid keeps the middle one centered. Set `format` so `SliderValue` and screen readers read the same unit.
 
 <!-- ::demo name="slider-references" -->
 
@@ -178,16 +189,23 @@ const styles = stylex.create({
   end: { justifySelf: "end" },
 });
 
-<Slider defaultValue={20} max={35} min={5}>
-  <SliderLabel>Storage</SliderLabel>
-  <SliderValue>{(formatted) => `${formatted[0] ?? ""} GB`}</SliderValue>
-  <SliderControl />
-  <div aria-hidden {...stylex.props(styles.references)}>
-    <span>5 GB</span>
-    <span>20 GB</span>
-    <span {...stylex.props(styles.end)}>35 GB</span>
-  </div>
-</Slider>;
+<Field>
+  <Slider
+    defaultValue={20}
+    format={{ style: "unit", unit: "gigabyte" }}
+    max={35}
+    min={5}
+  >
+    <FieldLabel>Storage</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+    <div aria-hidden {...stylex.props(styles.references)}>
+      <span>5 GB</span>
+      <span>20 GB</span>
+      <span {...stylex.props(styles.end)}>35 GB</span>
+    </div>
+  </Slider>
+</Field>;
 ```
 
 ## Disabled
@@ -197,16 +215,18 @@ Use the `disabled` prop to disable the slider.
 <!-- ::demo name="slider-disabled" -->
 
 ```tsx
-<Slider defaultValue={40} disabled>
-  <SliderLabel>Volume</SliderLabel>
-  <SliderValue />
-  <SliderControl />
-</Slider>
+<Field>
+  <Slider defaultValue={40} disabled>
+    <FieldLabel>Volume</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+  </Slider>
+</Field>
 ```
 
 ## Tooltip
 
-Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content, and `type="description"` so the label still names it. Keep it open while dragging, since the pointer can leave the thumb, and on press with `closeOnPress={false}`.
+Render the thumb as a [Tooltip](/docs/components/tooltip) trigger with a `SliderValue` inside the content. Pass `type="description"`, since the thumb's name sits on its inner input: the tooltip then describes the thumb and the `FieldLabel` still names it. Pass the slider's children as a function and keep the tooltip open while `state.dragging`, since the pointer can leave the thumb, and on press with `closeOnPress={false}`.
 
 <!-- ::demo name="slider-tooltip" -->
 
@@ -217,50 +237,49 @@ const styles = stylex.create({
 
 function VolumeSlider() {
   const [hovered, setHovered] = useState(false);
-  const [dragging, setDragging] = useState(false);
 
   return (
-    <Slider
-      defaultValue={40}
-      onValueChange={(_, details) => {
-        if (details.reason === "drag" || details.reason === "track-press") {
-          setDragging(true);
-        }
-      }}
-      onValueCommitted={() => setDragging(false)}
-    >
-      <SliderLabel>Volume</SliderLabel>
-      <SliderControl>
-        <SliderTrack>
-          <SliderIndicator />
-          <Tooltip
-            closeOnPress={false}
-            delay={0}
-            onOpenChange={setHovered}
-            open={hovered || dragging}
-            type="description"
-          >
-            <TooltipTrigger render={<SliderThumb />} />
-            <TooltipContent>
-              <SliderValue sx={styles.value}>
-                {(formatted) => `${formatted[0] ?? ""}%`}
-              </SliderValue>
-            </TooltipContent>
-          </Tooltip>
-        </SliderTrack>
-      </SliderControl>
-    </Slider>
+    <Field>
+      <Slider defaultValue={40} format={{ style: "unit", unit: "percent" }}>
+        {(state) => (
+          <>
+            <FieldLabel>Volume</FieldLabel>
+            <SliderControl>
+              <SliderTrack>
+                <SliderIndicator />
+                <Tooltip
+                  closeOnPress={false}
+                  delay={0}
+                  onOpenChange={setHovered}
+                  open={hovered || state.dragging}
+                  type="description"
+                >
+                  <TooltipTrigger render={<SliderThumb />} />
+                  <TooltipContent>
+                    <SliderValue sx={styles.value} />
+                  </TooltipContent>
+                </Tooltip>
+              </SliderTrack>
+            </SliderControl>
+          </>
+        )}
+      </Slider>
+    </Field>
   );
 }
 ```
 
 ## Input Group
 
-Control the slider with `value` and `onValueChange`, and keep a number [Input Group](/docs/components/input-group) in sync. The input holds a draft while typing and snaps back to the slider's value on blur.
+Control the slider with `value` and `onValueChange`, and keep a number [Input Group](/docs/components/input-group) in sync. The input holds a draft while typing and snaps back to the slider's value on blur. Put the `FieldLabel` and the input in a `Field` inside the slider, so the label names the input, and give the thumb its own `aria-label`. `display: contents` keeps them in the slider's grid.
 
 <!-- ::demo name="slider-input" -->
 
 ```tsx
+const styles = stylex.create({
+  field: { display: "contents" },
+});
+
 const [value, setValue] = useState(100);
 const [draft, setDraft] = useState("100");
 
@@ -271,31 +290,39 @@ const [draft, setDraft] = useState("100");
   }}
   value={value}
 >
-  <SliderLabel>Opacity</SliderLabel>
-  <InputGroup size="sm">
-    <InputGroupInput
-      aria-label="Opacity"
-      max={100}
-      min={0}
-      onBlur={() => setDraft(String(value))}
-      onChange={(event) => {
-        setDraft(event.target.value);
-        const next = event.target.valueAsNumber;
-        if (Number.isFinite(next)) {
-          setValue(Math.min(100, Math.max(0, Math.round(next))));
-        }
-      }}
-      type="number"
-      value={draft}
-    />
-    <InputGroupAddon align="inline-end">
-      <InputGroupText>%</InputGroupText>
-    </InputGroupAddon>
-  </InputGroup>
-  <SliderControl />
+  <Field sx={styles.field}>
+    <FieldLabel>Opacity</FieldLabel>
+    <InputGroup size="sm">
+      <InputGroupInput
+        max={100}
+        min={0}
+        onBlur={() => setDraft(String(value))}
+        onChange={(event) => {
+          setDraft(event.target.value);
+          const next = event.target.valueAsNumber;
+          if (Number.isFinite(next)) {
+            setValue(Math.min(100, Math.max(0, Math.round(next))));
+          }
+        }}
+        type="number"
+        value={draft}
+      />
+      <InputGroupAddon align="inline-end">
+        <InputGroupText>%</InputGroupText>
+      </InputGroupAddon>
+    </InputGroup>
+  </Field>
+  <SliderControl>
+    <SliderTrack>
+      <SliderIndicator />
+      <SliderThumb aria-label="Opacity" />
+    </SliderTrack>
+  </SliderControl>
 </Slider>;
 ```
 
+**Keep the slider outside that `Field`.** One `Field` hands its control id to both the input and the thumb.
+
 ## API Reference
 
-`SliderControl` renders the track, indicator and one thumb when it has no children. Every part takes `sx`, applied last. For the rest, see [Base UI Slider](https://base-ui.com/react/components/slider).
+`SliderControl` renders the track, indicator and one thumb when it has no children. Every part takes `sx`, applied last. For the rest, see [ui-sdk Slider](https://ui-sdk.dev/docs/react/components/slider).

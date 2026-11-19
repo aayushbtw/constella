@@ -4,10 +4,10 @@ import * as stylex from "@stylexjs/stylex";
 import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
+import { Field, FieldLabel } from "@/components/primitives/field";
 import {
   Slider,
   SliderControl,
-  SliderLabel,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
@@ -210,22 +210,21 @@ function MotionEasingDemo() {
             </TabsList>
           </Tabs>
           <div {...stylex.props(styles.replayRow)}>
-            <Slider
-              format={{ maximumFractionDigits: 0, style: "decimal" }}
-              max={8}
-              min={1}
-              onValueChange={(value) => {
-                setSlow(value);
-              }}
-              sx={styles.grow}
-              value={slow}
-            >
-              <SliderLabel>Slow down</SliderLabel>
-              <SliderValue>
-                {(formatted) => `${formatted[0] ?? ""}×`}
-              </SliderValue>
-              <SliderControl />
-            </Slider>
+            <Field sx={styles.grow}>
+              <Slider
+                format={(value) => `${value}×`}
+                max={8}
+                min={1}
+                onValueChange={(value) => {
+                  setSlow(value);
+                }}
+                value={slow}
+              >
+                <FieldLabel>Slow down</FieldLabel>
+                <SliderValue />
+                <SliderControl />
+              </Slider>
+            </Field>
             <Button
               onClick={() => {
                 setRun((value) => value + 1);
