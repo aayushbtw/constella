@@ -15,6 +15,7 @@ function skipsMotion({ event, reason, source }: OpenChangeDetails) {
   // Base UI marks only some keyboard changes `data-instant`, and differently per primitive.
   switch (reason) {
     case "escape-key":
+    case "input-change":
     case "item-press":
     case "list-navigation": {
       return true;
@@ -24,7 +25,7 @@ function skipsMotion({ event, reason, source }: OpenChangeDetails) {
       return event instanceof UIEvent && event.detail === 0;
     }
     default: {
-      return false;
+      return event instanceof KeyboardEvent;
     }
   }
 }

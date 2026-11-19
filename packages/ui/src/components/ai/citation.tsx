@@ -9,7 +9,7 @@ import {
   Avatar as AvatarPrimitive,
 } from "@ui-sdk/react/avatar";
 import { createContext, use, useMemo } from "react";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Badge } from "@/components/primitives/badge";
 import {
@@ -114,6 +114,9 @@ const styles = stylex.create({
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
   },
+  current: {
+    backgroundColor: colors.fillSubtle,
+  },
   publication: {
     alignItems: "center",
     color: colors.textSecondary,
@@ -204,6 +207,52 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
   );
 }
 
+type CitationSourceProps = Omit<
+  ComponentProps<"a">,
+  "children" | "className" | "href" | "rel" | "style" | "target"
+> & { source: Source; sx?: Sx };
+
+/** One source's row, linked to its page: the card lists them, and so can a panel. */
+function CitationSource({ source, sx, ...props }: CitationSourceProps) {
+  const current =
+    props["aria-current"] === true || props["aria-current"] === "true";
+  return (
+    <a
+      data-slot="citation-source"
+      {...props}
+      href={source.url}
+      rel="noreferrer"
+      target="_blank"
+      {...stylex.props(
+        styles.source,
+        stateStyles.ghost,
+        current && styles.current,
+        sx
+      )}
+    >
+      <span {...stylex.props(styles.publication)}>
+        <Logo source={source} sx={styles.logoCard} />
+        {source.name}
+      </span>
+      <span {...stylex.props(styles.body)}>
+        <span
+          {...stylex.props(typeStyles.textBase, styles.clamp, styles.title)}
+        >
+          {source.title}
+        </span>
+        {source.description === undefined ? null : (
+          <span {...stylex.props(styles.clamp, styles.description)}>
+            {source.description}
+          </span>
+        )}
+      </span>
+      {source.date === undefined ? null : (
+        <span {...stylex.props(styles.date)}>{source.date}</span>
+      )}
+    </a>
+  );
+}
+
 const CitationsContext = createContext<HoverCardController<Sources> | null>(
   null
 );
@@ -220,39 +269,7 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
             payload === undefined ? null : (
               <div {...stylex.props(styles.list)}>
                 {payload.map((source) => (
-                  <a
-                    href={source.url}
-                    key={source.url}
-                    rel="noreferrer"
-                    target="_blank"
-                    {...stylex.props(styles.source, stateStyles.ghost)}
-                  >
-                    <span {...stylex.props(styles.publication)}>
-                      <Logo source={source} sx={styles.logoCard} />
-                      {source.name}
-                    </span>
-                    <span {...stylex.props(styles.body)}>
-                      <span
-                        {...stylex.props(
-                          typeStyles.textBase,
-                          styles.clamp,
-                          styles.title
-                        )}
-                      >
-                        {source.title}
-                      </span>
-                      {source.description === undefined ? null : (
-                        <span
-                          {...stylex.props(styles.clamp, styles.description)}
-                        >
-                          {source.description}
-                        </span>
-                      )}
-                    </span>
-                    {source.date === undefined ? null : (
-                      <span {...stylex.props(styles.date)}>{source.date}</span>
-                    )}
-                  </a>
+                  <CitationSource key={source.url} source={source} />
                 ))}
               </div>
             )
@@ -263,8 +280,20 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
   );
 }
 
+type CitationProps = Omit<
+  ComponentProps<typeof HoverCardTrigger<Sources>>,
+  | "children"
+  | "controller"
+  | "href"
+  | "payload"
+  | "rel"
+  | "render"
+  | "sx"
+  | "target"
+> & { sources: Sources; sx?: Sx };
+
 /** A Badge linking to the first source, counting the rest; it opens the `Citations` card. */
-function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
+function Citation({ sources, sx, ...props }: CitationProps) {
   const controller = use(CitationsContext);
   if (controller === null) {
     throw new Error("Citation must be inside Citations.");
@@ -274,6 +303,7 @@ function Citation({ sources, sx }: { sources: Sources; sx?: Sx }) {
     <Badge
       render={
         <HoverCardTrigger
+          {...props}
           controller={controller}
           href={first.url}
           payload={sources}
@@ -324,5 +354,11 @@ function CitationGroupMore({
   );
 }
 
-export { Citation, CitationGroup, CitationGroupMore, Citations };
+export {
+  Citation,
+  CitationGroup,
+  CitationGroupMore,
+  Citations,
+  CitationSource,
+};
 export type { Source };

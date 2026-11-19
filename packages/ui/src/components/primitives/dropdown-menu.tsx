@@ -345,7 +345,13 @@ function useSizeStyles() {
   return sizeStyles[use(Size)];
 }
 
-function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
+/** One menu several triggers share: pass it to `DropdownMenu` and each `DropdownMenuTrigger` as `handle`. */
+const createDropdownMenuHandle = MenuPrimitive.createHandle;
+
+function DropdownMenu<Payload>({
+  onOpenChange,
+  ...props
+}: MenuPrimitive.Root.Props<Payload>) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
     <SkipMotion value={skip}>
@@ -371,10 +377,10 @@ function DropdownMenuPortal({
   );
 }
 
-function DropdownMenuTrigger({
+function DropdownMenuTrigger<Payload>({
   sx,
   ...props
-}: Styled<MenuPrimitive.Trigger.Props>) {
+}: Styled<MenuPrimitive.Trigger.Props<Payload>>) {
   return (
     <MenuPrimitive.Trigger
       data-slot="dropdown-menu-trigger"
@@ -683,6 +689,7 @@ function DropdownMenuShortcut({
 }
 
 export {
+  createDropdownMenuHandle,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,

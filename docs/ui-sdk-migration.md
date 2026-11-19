@@ -108,7 +108,8 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Alert Dialog | 3 | alert-dialog | Alert Dialog | merged | [#59](https://github.com/aayushbtw/constella/pull/59) | Action is a Close with `value="confirm"` and closes. `createConfirm()` works via `controller`; export when a caller exists |
 | Toast | 3 | toast | Toast | merged | [#49](https://github.com/aayushbtw/constella/pull/49) | No anchored toasts; region placement is ours without `web.css` |
 | Select | 4 | select | Select | todo |  | Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
-| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy |
+| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy. `createDropdownMenuHandle` (from `main`) shares one menu across triggers; ui-sdk's Menu needs the same |
+| Combobox | 4 | combobox | Combobox | todo |  | From `main` ([#55](https://github.com/aayushbtw/constella/pull/55)). ui-sdk's documents chips, a create option, clear and trigger, and groups. Needs Input Group, Button and Field, all ported. Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
 | Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
 | Toggle Group | 4 | toggle-group, toggle | Toggle Group | todo |  | Documented in beta.1's `toggle.md` (`## Group`), exported as `ToggleGroup` from `@ui-sdk/react/toggle`; spec-01 builds on it. Decide `ToggleIcon` here |
 | Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  | `SegmentedControlIndicator` measures the chosen item into `--segmented-control-indicator-*`, which replaces our Mutation and Resize observers |
@@ -149,6 +150,8 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-20 | Merge `main` | Base UI's Combobox in a ui-sdk Field: the rendered ui-sdk Input joined the field, but Base UI's own id won, so the server's label `for` pointed at an id no element had. `FieldInput` hands Base UI the field's id through `useFieldControl`; the root takes the field's `disabled` and `name`, as Select's does. Passing all of `field.props()` doubled `aria-describedby`, since the Input joins again. `field-mixed.test.tsx` checks it |
+| 2026-11-20 | Merge `main` | `main`'s d018473 skips motion for Base UI popups opened by typing (`input-change`) or any key. ui-sdk's branch of `useSkipMotion` already skips on `source: "keyboard"`, and no ported ui-sdk popup opens by typing, so nothing changed there |
 | 2026-11-20 | Side Panel | `inline` ignores `container`. The content goes inside `SidePanelSlot`, and `container` and the slot ref are gone |
 | 2026-11-20 | Side Panel | Escape from outside no longer closes the panel. ui-sdk still calls `preventDefault()` on that Escape |
 | 2026-11-20 | Side Panel | ui-sdk waits on descendant transitions before unmount, though `styling-and-animation.md` names only "its exit transition". `display: none` on `[data-ending-style]` avoids it. Upstream note drafted, not filed |
@@ -317,3 +320,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-19 | #46 unblocked by a `warm` window: `delay={0}` while open and for `closeDelay` after a `focus-out` close. One blank frame on trigger-to-trigger focus accepted on the advisor's rule. Upstream draft in #46, not filed |
 | 2026-11-20 | #65 Side Panel open: ui-sdk Dialog, non-modal and inline; `inline` with `container` failed, so the content nests in `SidePanelSlot` |
 | 2026-11-20 | Filed this wave: #56, #57, #58, #61 (Slider) and #64 (Side Panel). #56 and #58 fixed in #62; all five open on GitHub. Phase 6 gains WebMCP, `agentTools` and agent-mark audit rows from ui-sdk's agent docs |
+| 2026-11-20 | Merged `main` at b650d4f into `ui-sdk` before phase 4. Combobox added on Base UI (row added) with the `popupVars` copy and Field binding. Citation's `CitationSource` and trigger props ported onto the ui-sdk Hover Card trigger. Dropdown Menu's `createDropdownMenuHandle` merged as-is. Also Sidebar drag-select, SwapText perf, Vite+ 1.7.0 and dependency advisories; the ui-sdk beta.13 release-age excludes stay |
