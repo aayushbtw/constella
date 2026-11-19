@@ -1,22 +1,30 @@
 "use client";
 
-import { Select as SelectPrimitive } from "@base-ui/react/select";
-import {
-  ArrowDown01Icon,
-  ArrowUp01Icon,
-  Tick02Icon,
-  UnfoldMoreIcon,
-} from "@hugeicons/core-free-icons";
+import { Tick02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useFieldControl } from "@ui-sdk/react/field";
-import { createContext, use, useContext } from "react";
+import {
+  SelectContent as SelectContentPrimitive,
+  SelectGroupLabel as SelectGroupLabelPrimitive,
+  SelectGroup as SelectGroupPrimitive,
+  SelectItemIndicator as SelectItemIndicatorPrimitive,
+  SelectItem as SelectItemPrimitive,
+  SelectLabel as SelectLabelPrimitive,
+  Select as SelectPrimitive,
+  SelectSeparator as SelectSeparatorPrimitive,
+  SelectTrigger as SelectTriggerPrimitive,
+  SelectValue as SelectValuePrimitive,
+} from "@ui-sdk/react/select";
+import type { SelectProps } from "@ui-sdk/react/select";
+import { createContext, use } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
   joinStyles,
+  popupReset,
   stateStyles,
   typeStyles,
 } from "@/lib/constella/styles";
@@ -25,12 +33,10 @@ import {
   durations,
   easings,
   fontWeights,
-  layers,
   media,
   motion,
   offsets,
   opacities,
-  popupVars,
   radii,
   shadows,
   sizes,
@@ -46,27 +52,25 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SelectTriggerProps = Styled<SelectPrimitive.Trigger.Props> & {
+type SelectTriggerProps = Omit<
+  Styled<ComponentProps<typeof SelectTriggerPrimitive>>,
+  "children"
+> & {
+  children?: ReactNode;
   size?: SelectSize;
 };
 
-type SelectContentProps = Styled<SelectPrimitive.Popup.Props> &
-  Pick<
-    SelectPrimitive.Positioner.Props,
-    "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset"
-  > & { size?: SelectSize };
+type SelectContentProps = Styled<
+  ComponentProps<typeof SelectContentPrimitive>
+> & { size?: SelectSize };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
 const disabled = ":is(:disabled, [data-disabled])";
-const offstage = ":is([data-starting-style], [data-ending-style])";
-// Over the trigger, the popup opens in place, so it doesn't travel.
-const aligned = ":is([data-side='none'])";
-const closing =
-  ":is([data-ending-style]):not([data-side='none'], [data-skip-motion])";
+// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
+const offstage =
+  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
+const closing = ":is([data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
-
-// Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
-const maxHeight = `min(${popupVars.availableHeight}, ${sizes.menuHeight})`;
 
 const styles = stylex.create({
   // An input's surface, so a select and an input in one form read as one family.
@@ -89,11 +93,11 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     boxShadow: {
       default: shadows.default,
-      [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
+      [`:is([data-open]):not(${invalid})`]: shadows.defaultHover,
       // Repeated inside the media block, which StyleX ranks above the bare conditions.
       [media.hover]: {
         default: shadows.default,
-        [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
+        [`:is([data-open]):not(${invalid})`]: shadows.defaultHover,
         [`:hover:not(:disabled, :active):not(${invalid})`]:
           shadows.defaultHover,
         [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
@@ -143,31 +147,39 @@ const styles = stylex.create({
     display: "flex",
     flexShrink: 0,
   },
-  positioner: {
-    [popupVars.availableHeight]: "var(--available-height)",
-    [popupVars.availableWidth]: "var(--available-width)",
-    zIndex: layers.popover,
-  },
-  popup: {
+  // ui-sdk's select leaves the browser's `[popover]` border and margin.
+  content: {
     backgroundColor: colors.raised,
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     borderStartStartRadius: radii.lg,
     borderStartEndRadius: radii.lg,
     borderEndStartRadius: radii.lg,
     borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
     color: colors.textPrimary,
-    maxHeight,
-    maxWidth: popupVars.availableWidth,
+    marginBlock: 0,
+    marginInline: 0,
+    maxHeight: `min(var(--available-height), ${sizes.menuHeight})`,
+    maxWidth: "var(--available-width)",
     minWidth: sizes.menu,
+    overflowX: "hidden",
+    overflowY: "auto",
+    paddingBlock: space.xxs,
+    paddingInlineEnd: space.xxs,
+    paddingInlineStart: space.xxs,
+    scrollPaddingBlock: sizes.controlXs,
+    width: "var(--anchor-width)",
+  },
+  motion: {
     opacity: { default: 1, [offstage]: 0 },
     transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    // Holds the scroll arrows, which Base UI positions absolutely.
-    position: "relative",
     transformOrigin: "var(--transform-origin)",
     transitionDuration: {
       default: durations.popover,
       [closing]: durations.popoverExit,
-      [aligned]: "0s",
       [instant]: "0s",
     },
     transitionProperty: {
@@ -175,17 +187,6 @@ const styles = stylex.create({
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
-    width: "var(--anchor-width)",
-  },
-  list: {
-    maxHeight,
-    overflowX: "hidden",
-    overflowY: "auto",
-    paddingBlock: space.xxs,
-    paddingInlineEnd: space.xxs,
-    paddingInlineStart: space.xxs,
-    position: "relative",
-    scrollPaddingBlock: sizes.controlXs,
   },
   item: {
     alignItems: "center",
@@ -235,15 +236,15 @@ const styles = stylex.create({
   },
   indicatorSm: { insetInlineEnd: space.row },
   indicatorLg: { insetInlineEnd: space.md },
-  label: {
+  groupLabel: {
     color: colors.textMuted,
     fontWeight: fontWeights.medium,
     paddingBlock: space.xxs,
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
   },
-  labelSm: { paddingInlineEnd: space.row, paddingInlineStart: space.row },
-  labelLg: { paddingInlineEnd: space.md, paddingInlineStart: space.md },
+  groupLabelSm: { paddingInlineEnd: space.row, paddingInlineStart: space.row },
+  groupLabelLg: { paddingInlineEnd: space.md, paddingInlineStart: space.md },
   // In line with the rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
@@ -253,23 +254,6 @@ const styles = stylex.create({
   },
   separatorSm: { marginInline: space.row },
   separatorLg: { marginInline: space.md },
-  scrollArrow: {
-    alignItems: "center",
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    insetBlockEnd: { default: null, ":is([data-direction='down'])": 0 },
-    insetBlockStart: { default: null, ":is([data-direction='up'])": 0 },
-    color: colors.textMuted,
-    cursor: "default",
-    display: "flex",
-    height: sizes.controlXs,
-    justifyContent: "center",
-    width: "100%",
-    zIndex: 1,
-  },
 });
 
 const sizeStyles = {
@@ -298,30 +282,30 @@ function Glyph({
 // The popup's rows by `SelectContent`'s size; the base styles are `default`'s.
 const contentSizeStyles = {
   default: {
+    groupLabel: null,
     indicator: null,
     item: null,
-    label: null,
     separator: null,
     text: typeStyles.textMd,
   },
   lg: {
+    groupLabel: styles.groupLabelLg,
     indicator: styles.indicatorLg,
     item: styles.itemLg,
-    label: styles.labelLg,
     separator: styles.separatorLg,
     text: typeStyles.textBase,
   },
   sm: {
+    groupLabel: styles.groupLabelSm,
     indicator: styles.indicatorSm,
     item: styles.itemSm,
-    label: styles.labelSm,
     separator: styles.separatorSm,
     text: typeStyles.textSm,
   },
 } satisfies Record<
   SelectSize,
   Record<
-    "indicator" | "item" | "label" | "separator" | "text",
+    "groupLabel" | "indicator" | "item" | "separator" | "text",
     stylex.StyleXStyles | null
   >
 >;
@@ -329,42 +313,41 @@ const contentSizeStyles = {
 const SkipMotion = createContext(false);
 const Size = createContext<SelectSize>("default");
 
-function Select<Value, Multiple extends boolean | undefined = false>({
-  onOpenChange,
-  ...props
-}: SelectPrimitive.Root.Props<Value, Multiple>) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
-  // Joins a ui-sdk Field until Select ports.
-  const field = useFieldControl();
+function Select<T = string, Multiple extends boolean | undefined = false>(
+  props: SelectProps<T, Multiple>
+) {
+  const [skip, handleOpenChange] = useSkipMotion(props.onOpenChange);
   return (
     <SkipMotion value={skip}>
-      <SelectPrimitive.Root
-        disabled={field?.disabled}
-        name={field?.name}
-        onOpenChange={handleOpenChange}
+      <SelectPrimitive<T, Multiple>
         {...props}
+        loop={props.loop ?? false}
+        onOpenChange={handleOpenChange}
       />
     </SkipMotion>
   );
 }
 
-function SelectGroup({ sx, ...props }: Styled<SelectPrimitive.Group.Props>) {
-  return (
-    <SelectPrimitive.Group
-      data-slot="select-group"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+function SelectLabel({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectLabelPrimitive>>) {
+  return <SelectLabelPrimitive {...props} {...stylex.props(sx)} />;
 }
 
-function SelectValue({ sx, ...props }: Styled<SelectPrimitive.Value.Props>) {
+function SelectGroup({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectGroupPrimitive>>) {
+  return <SelectGroupPrimitive {...props} {...stylex.props(sx)} />;
+}
+
+function SelectValue({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectValuePrimitive>>) {
   return (
-    <SelectPrimitive.Value
-      data-slot="select-value"
-      {...props}
-      {...stylex.props(styles.value, sx)}
-    />
+    <SelectValuePrimitive {...props} {...stylex.props(styles.value, sx)} />
   );
 }
 
@@ -374,15 +357,10 @@ function SelectTrigger({
   sx,
   ...props
 }: SelectTriggerProps) {
-  const field = useFieldControl(props);
-  const trigger = {
-    "data-size": size,
-    "data-slot": "select-trigger",
-    ...props,
-  };
   return (
-    <SelectPrimitive.Trigger
-      {...(field?.props(trigger) ?? trigger)}
+    <SelectTriggerPrimitive
+      data-size={size}
+      {...props}
       {...stylex.props(
         [typeStyles.textSm, styles.trigger],
         stateStyles.outline,
@@ -393,135 +371,88 @@ function SelectTrigger({
       )}
     >
       {children}
-      <SelectPrimitive.Icon {...stylex.props(styles.icon)}>
+      <span aria-hidden {...stylex.props(styles.icon)}>
         <Glyph icon={UnfoldMoreIcon} size={size} />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
+      </span>
+    </SelectTriggerPrimitive>
   );
 }
 
-function SelectScrollUpButton({
-  sx,
-  ...props
-}: Styled<SelectPrimitive.ScrollUpArrow.Props>) {
-  return (
-    <SelectPrimitive.ScrollUpArrow
-      data-slot="select-scroll-up-button"
-      {...props}
-      {...stylex.props(styles.scrollArrow, sx)}
-    >
-      <Glyph icon={ArrowUp01Icon} />
-    </SelectPrimitive.ScrollUpArrow>
-  );
-}
-
-function SelectScrollDownButton({
-  sx,
-  ...props
-}: Styled<SelectPrimitive.ScrollDownArrow.Props>) {
-  return (
-    <SelectPrimitive.ScrollDownArrow
-      data-slot="select-scroll-down-button"
-      {...props}
-      {...stylex.props(styles.scrollArrow, sx)}
-    >
-      <Glyph icon={ArrowDown01Icon} />
-    </SelectPrimitive.ScrollDownArrow>
-  );
-}
-
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
 function SelectContent({
   align = "start",
   alignItemWithTrigger = false,
   alignOffset = 0,
-  children,
   side = "bottom",
   sideOffset = Number(offsets.popover),
   size = "default",
   sx,
   ...props
 }: SelectContentProps) {
-  const skip = useContext(SkipMotion);
+  const skip = use(SkipMotion);
+  const opensInPlace = alignItemWithTrigger;
   return (
     <Size value={size}>
-      <SelectPrimitive.Portal>
-        <SelectPrimitive.Positioner
-          align={align}
-          alignItemWithTrigger={alignItemWithTrigger}
-          alignOffset={alignOffset}
-          side={side}
-          sideOffset={sideOffset}
-          {...stylex.props(styles.positioner)}
-        >
-          <SelectPrimitive.Popup
-            data-size={size}
-            data-skip-motion={skip || undefined}
-            data-slot="select-content"
-            {...props}
-            {...stylex.props(styles.popup, sx)}
-          >
-            <SelectScrollUpButton />
-            <SelectPrimitive.List {...stylex.props(styles.list)}>
-              {children}
-            </SelectPrimitive.List>
-            <SelectScrollDownButton />
-          </SelectPrimitive.Popup>
-        </SelectPrimitive.Positioner>
-      </SelectPrimitive.Portal>
+      <SelectContentPrimitive
+        align={align}
+        alignItemWithTrigger={alignItemWithTrigger}
+        alignOffset={alignOffset}
+        data-size={size}
+        data-skip-motion={skip || opensInPlace || undefined}
+        side={side}
+        sideOffset={sideOffset}
+        {...props}
+        {...stylex.props(popupReset.base, styles.content, styles.motion, sx)}
+      />
     </Size>
   );
 }
 
-function SelectLabel({
+function SelectGroupLabel({
   sx,
   ...props
-}: Styled<SelectPrimitive.GroupLabel.Props>) {
+}: Styled<ComponentProps<typeof SelectGroupLabelPrimitive>>) {
   return (
-    <SelectPrimitive.GroupLabel
-      data-slot="select-label"
+    <SelectGroupLabelPrimitive
       {...props}
       {...stylex.props(
-        [typeStyles.captionLg, styles.label],
-        contentSizeStyles[use(Size)].label,
+        [typeStyles.captionLg, styles.groupLabel],
+        contentSizeStyles[use(Size)].groupLabel,
         sx
       )}
     />
   );
 }
 
-function SelectItem({
+function SelectItem<T = string>({
   children,
   sx,
   ...props
-}: Styled<SelectPrimitive.Item.Props>) {
+}: Omit<Styled<ComponentProps<typeof SelectItemPrimitive<T>>>, "children"> & {
+  children?: ReactNode;
+}) {
   const size = use(Size);
   const sized = contentSizeStyles[size];
   return (
-    <SelectPrimitive.Item
-      data-slot="select-item"
+    <SelectItemPrimitive<T>
       {...props}
       {...stylex.props([sized.text, styles.item], sized.item, sx)}
     >
-      <SelectPrimitive.ItemText {...stylex.props(styles.itemText)}>
-        {children}
-      </SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator
+      <span {...stylex.props(styles.itemText)}>{children}</span>
+      <SelectItemIndicatorPrimitive
         {...stylex.props(styles.indicator, sized.indicator)}
       >
         <Glyph icon={Tick02Icon} size={size} />
-      </SelectPrimitive.ItemIndicator>
-    </SelectPrimitive.Item>
+      </SelectItemIndicatorPrimitive>
+    </SelectItemPrimitive>
   );
 }
 
 function SelectSeparator({
   sx,
   ...props
-}: Styled<SelectPrimitive.Separator.Props>) {
+}: Styled<ComponentProps<typeof SelectSeparatorPrimitive>>) {
   return (
-    <SelectPrimitive.Separator
-      data-slot="select-separator"
+    <SelectSeparatorPrimitive
       {...props}
       {...stylex.props(
         styles.separator,
@@ -536,10 +467,9 @@ export {
   Select,
   SelectContent,
   SelectGroup,
+  SelectGroupLabel,
   SelectItem,
   SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectSeparator,
   selectSizes,
   SelectTrigger,

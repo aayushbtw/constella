@@ -8,13 +8,13 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useId } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
   Select,
   SelectContent,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
@@ -110,7 +110,6 @@ function DataTablePagination({
   sx?: Sx;
   table: PaginatedTable;
 }) {
-  const rowsLabel = useId();
   const { pageIndex, pageSize } = table.state.pagination;
   const count = table.getRowCount();
   if (count === 0) {
@@ -131,8 +130,12 @@ function DataTablePagination({
       </div>
       <div {...stylex.props(styles.pageControls)}>
         <div {...stylex.props([typeStyles.textSm, styles.pageSize])}>
-          <span id={rowsLabel}>Rows per page</span>
           <Select
+            itemToValue={String}
+            items={pageSizes.map((option) => ({
+              label: String(option),
+              value: option,
+            }))}
             onValueChange={(value) => {
               if (value !== null) {
                 table.setPageSize(value);
@@ -140,7 +143,8 @@ function DataTablePagination({
             }}
             value={pageSize}
           >
-            <SelectTrigger aria-labelledby={rowsLabel} size="sm">
+            <SelectLabel>Rows per page</SelectLabel>
+            <SelectTrigger size="sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
