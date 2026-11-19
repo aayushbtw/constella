@@ -10,7 +10,9 @@ interface OpenChangeDetails {
 function skipsMotion({ event, reason, source }: OpenChangeDetails) {
   // ui-sdk marks no change `data-instant` outside Tooltip, but reports how each one came about.
   if (source !== undefined) {
-    return source === "keyboard" || reason === "focus-out";
+    return (
+      source === "keyboard" || reason === "focus-out" || reason === "item-press"
+    );
   }
   // Base UI marks only some keyboard changes `data-instant`, and differently per primitive.
   switch (reason) {

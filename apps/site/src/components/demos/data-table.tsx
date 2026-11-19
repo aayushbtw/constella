@@ -344,7 +344,7 @@ function RowActions({ payment }: { payment: Payment }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => {
+          onSelect={() => {
             void navigator.clipboard.writeText(payment.id);
           }}
         >

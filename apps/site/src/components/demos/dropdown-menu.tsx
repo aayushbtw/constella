@@ -15,17 +15,13 @@ import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
-  createDropdownMenuHandle,
+  createDropdownMenuController,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuEmpty,
-  DropdownMenuFilterProvider,
   DropdownMenuGroup,
-  DropdownMenuInput,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuList,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -205,6 +201,7 @@ function DropdownMenuCheckboxesDemo() {
             <DropdownMenuCheckboxItem
               checked={statusBar}
               onCheckedChange={setStatusBar}
+              value="status-bar"
             >
               Status Bar
             </DropdownMenuCheckboxItem>
@@ -212,12 +209,14 @@ function DropdownMenuCheckboxesDemo() {
               checked={activityBar}
               disabled
               onCheckedChange={setActivityBar}
+              value="activity-bar"
             >
               Activity Bar
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={panel}
               onCheckedChange={setPanel}
+              value="panel"
             >
               Panel
             </DropdownMenuCheckboxItem>
@@ -289,44 +288,6 @@ function DropdownMenuSizesDemo() {
   );
 }
 
-function DropdownMenuFilterDemo() {
-  return (
-    <DemoRow>
-      <DropdownMenuFilterProvider>
-        <DropdownMenu>
-          <Trigger />
-          <DropdownMenuContent sx={styles.wide}>
-            <DropdownMenuInput
-              aria-label="Filter actions"
-              placeholder="Filter..."
-            />
-            <DropdownMenuEmpty>No actions found.</DropdownMenuEmpty>
-            <DropdownMenuList>
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>File</DropdownMenuLabel>
-                <DropdownMenuItem>New file</DropdownMenuItem>
-                <DropdownMenuItem>Open file</DropdownMenuItem>
-                <DropdownMenuItem>Save</DropdownMenuItem>
-                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                <DropdownMenuItem>Rename</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Share</DropdownMenuLabel>
-                <DropdownMenuItem>Copy link</DropdownMenuItem>
-                <DropdownMenuItem>Invite people</DropdownMenuItem>
-                <DropdownMenuItem>Publish to web</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuGroup>
-                <DropdownMenuItem color="danger">Delete</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuList>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </DropdownMenuFilterProvider>
-    </DemoRow>
-  );
-}
-
 function DropdownMenuDangerDemo() {
   return (
     <DemoRow>
@@ -363,9 +324,9 @@ const docs: Doc[] = [
   { edited: "Edited last week", name: "Hiring plan" },
 ];
 
-const rowMenu = createDropdownMenuHandle<Doc>();
+const rowMenu = createDropdownMenuController<Doc>();
 
-function DropdownMenuHandleDemo() {
+function DropdownMenuControllerDemo() {
   return (
     <DemoRow>
       <ItemGroup render={<ul />} sx={styles.list}>
@@ -377,7 +338,7 @@ function DropdownMenuHandleDemo() {
             </ItemContent>
             <ItemActions>
               <DropdownMenuTrigger
-                handle={rowMenu}
+                controller={rowMenu}
                 payload={doc}
                 render={
                   <Button
@@ -393,27 +354,29 @@ function DropdownMenuHandleDemo() {
           </Item>
         ))}
       </ItemGroup>
-      <DropdownMenu handle={rowMenu}>
-        {({ payload }) => (
-          <DropdownMenuContent align="end">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Glyph icon={PencilEdit01Icon} />
-                Rename
+      <DropdownMenu controller={rowMenu}>
+        <DropdownMenuContent<Doc> align="end">
+          {({ payload }) => (
+            <>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
+                <DropdownMenuItem>
+                  <Glyph icon={PencilEdit01Icon} />
+                  Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Glyph icon={Share08Icon} />
+                  Share
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem color="danger">
+                <Glyph icon={Delete02Icon} />
+                Delete
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Glyph icon={Share08Icon} />
-                Share
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem color="danger">
-              <Glyph icon={Delete02Icon} />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        )}
+            </>
+          )}
+        </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
   );
@@ -421,10 +384,9 @@ function DropdownMenuHandleDemo() {
 
 export {
   DropdownMenuCheckboxesDemo,
+  DropdownMenuControllerDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
-  DropdownMenuFilterDemo,
-  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,

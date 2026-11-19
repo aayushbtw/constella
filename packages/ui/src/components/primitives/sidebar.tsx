@@ -207,11 +207,13 @@ const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 const item = "[data-slot='sidebar-menu-item']";
 // Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
 const action = "[data-sidebar-menu-action]";
-// Its own children only, so a sub-row or the row's tooltip, rendered in place, doesn't light it.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content']):hover)`;
+// Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
-const actionOpen = `${item}:has(> ${action}[data-popup-open])`;
+// A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
+const menuOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
+const actionOpen = `${item}:has(> ${action}${menuOpen})`;
 // Or the row's own popup, as a menu's trigger; a collapsible's trigger is expanded without one.
 const rowOpen = `:is(${actionOpen} > *, [aria-haspopup][aria-expanded='true'])`;
 const idle = ":not([data-active])";
@@ -461,11 +463,11 @@ const styles = stylex.create({
     // Stays lit while its menu is open, as a button's trigger does.
     backgroundColor: {
       default: "transparent",
-      ":is([data-popup-open])": colors.fillSubtle,
+      [menuOpen]: colors.fillSubtle,
       [media.hover]: {
         default: "transparent",
         ":hover": colors.fillSubtle,
-        ":is([data-popup-open])": colors.fillSubtle,
+        [menuOpen]: colors.fillSubtle,
       },
     },
     borderBlockEndWidth: 0,
@@ -662,7 +664,7 @@ const styles = stylex.create({
       [media.hover]: {
         default: 0,
         [`:is(${ownHover} *, ${ownFocus} *)`]: 1,
-        ":is([data-popup-open])": 1,
+        [menuOpen]: 1,
       },
     },
   },

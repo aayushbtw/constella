@@ -165,10 +165,9 @@ import {
 } from "~/components/demos/dialog";
 import {
   DropdownMenuCheckboxesDemo,
+  DropdownMenuControllerDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
-  DropdownMenuFilterDemo,
-  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,
@@ -591,9 +590,8 @@ const demos = {
   "dialog-size": DialogSizeDemo,
   "dropdown-menu": DropdownMenuDemo,
   "dropdown-menu-checkboxes": DropdownMenuCheckboxesDemo,
+  "dropdown-menu-controller": DropdownMenuControllerDemo,
   "dropdown-menu-danger": DropdownMenuDangerDemo,
-  "dropdown-menu-filter": DropdownMenuFilterDemo,
-  "dropdown-menu-handle": DropdownMenuHandleDemo,
   "dropdown-menu-icons": DropdownMenuIconsDemo,
   "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
   "dropdown-menu-sizes": DropdownMenuSizesDemo,
