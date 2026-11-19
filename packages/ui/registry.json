@@ -207,10 +207,10 @@
       "title": "Toast",
       "description": "Quiet notifications that stack, follow a promise and swipe away.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -223,7 +223,7 @@
           "type": "registry:component"
         }
       ],
-      "docs": "Render <Toaster /> once near the root, then call toast.add({ title }) from anywhere. Usage: https://constella.aayush.cv/docs/components/toast/index.md"
+      "docs": "Render <Toaster /> once near the root, then call toast({ title }) from anywhere. Usage: https://constella.aayush.cv/docs/components/toast/index.md"
     },
     {
       "name": "card",

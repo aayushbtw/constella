@@ -2,23 +2,16 @@ import { Button } from "@/components/primitives/button";
 import { toast } from "@/components/primitives/toast";
 import { DemoRow } from "~/components/demos/frame";
 
-async function wait(fails: boolean) {
+function upload(fails: boolean) {
   // oxlint-disable-next-line promise/avoid-new -- the demo fakes a slow upload
-  return await new Promise((resolve, reject) => {
+  const done = new Promise((resolve, reject) => {
     setTimeout(fails ? reject : resolve, 1500);
   });
-}
-
-async function upload(fails: boolean) {
-  try {
-    await toast.promise(wait(fails), {
-      error: { description: "The connection dropped.", title: "Upload failed" },
-      loading: { title: "Uploading…" },
-      success: { description: "3 files uploaded.", title: "Done" },
-    });
-  } catch {
-    // The toast already shows the failure.
-  }
+  toast.promise(done, {
+    error: { description: "The connection dropped.", title: "Upload failed" },
+    loading: { title: "Uploading…" },
+    success: { description: "3 files uploaded.", title: "Done" },
+  });
 }
 
 function ToastDemo() {
@@ -27,10 +20,9 @@ function ToastDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({
+          toast.success({
             description: "Your changes are live.",
             title: "Saved",
-            type: "success",
           });
         }}
       >
@@ -39,7 +31,7 @@ function ToastDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          void upload(false);
+          upload(false);
         }}
       >
         Promise
@@ -54,7 +46,7 @@ function ToastTypesDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({ title: "Event created" });
+          toast({ title: "Event created" });
         }}
       >
         Default
@@ -62,7 +54,7 @@ function ToastTypesDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({ title: "Saved", type: "success" });
+          toast.success({ title: "Saved" });
         }}
       >
         Success
@@ -70,10 +62,9 @@ function ToastTypesDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({
+          toast.error({
             description: "Check your connection and try again.",
             title: "Couldn’t save",
-            type: "error",
           });
         }}
       >
@@ -81,10 +72,9 @@ function ToastTypesDemo() {
       </Button>
       <Button
         onClick={() => {
-          toast.add({
+          toast.warning({
             description: "You’ve used 90% of your storage.",
             title: "Running low on space",
-            type: "warning",
           });
         }}
         variant="outline"
@@ -94,7 +84,7 @@ function ToastTypesDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({ title: "A new version is available", type: "info" });
+          toast.info({ title: "A new version is available" });
         }}
       >
         Info
@@ -102,7 +92,7 @@ function ToastTypesDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({ title: "Syncing…", type: "loading" });
+          toast.loading({ duration: 5000, title: "Syncing…" });
         }}
       >
         Loading
@@ -117,11 +107,11 @@ function ToastActionDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({
-            actionProps: {
-              children: "Undo",
-              onClick: () => {
-                toast.add({ title: "File restored", type: "success" });
+          toast({
+            action: {
+              label: "Undo",
+              onAction: () => {
+                toast.success({ title: "File restored" });
               },
             },
             description: "It’s in the trash for 30 days.",
@@ -141,7 +131,7 @@ function ToastPromiseDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          void upload(false);
+          upload(false);
         }}
       >
         Succeeds
@@ -149,7 +139,7 @@ function ToastPromiseDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          void upload(true);
+          upload(true);
         }}
       >
         Fails
@@ -164,9 +154,9 @@ function ToastDismissDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.add({
+          toast({
             description: "It stays until you close it or swipe it away.",
-            timeout: 0,
+            duration: Infinity,
             title: "Read this",
           });
         }}
@@ -176,7 +166,7 @@ function ToastDismissDemo() {
       <Button
         variant="outline"
         onClick={() => {
-          toast.close();
+          toast.dismiss();
         }}
       >
         Dismiss all

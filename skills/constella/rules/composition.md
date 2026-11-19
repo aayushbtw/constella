@@ -254,12 +254,12 @@ Neighbors group on their own, so once one is open the next opens at once. An ico
 
 ## Toast
 
-Render `Toaster` once around the app, then call `toast` from anywhere.
+Render `<Toaster />` once near the app's root, as a sibling of the content, then call `toast` from anywhere.
 
 ```tsx
 import { toast } from "@/components/primitives/toast";
 
-toast.add({ title: "Saved", type: "success" });
+toast.success({ title: "Saved" });
 toast.promise(upload(files), {
   loading: { title: "Uploading…" },
   success: { title: "Done" },
@@ -267,7 +267,7 @@ toast.promise(upload(files), {
 });
 ```
 
-It is Base UI's Toast, not Sonner. Don't install `sonner`; there's no `toast.success()`. One action at most: `actionProps: { children: "Undo", onClick }`.
+It is ui-sdk's Toast, not Sonner. Don't install `sonner`. One action at most: `action: { label: "Undo", onAction }`; pressing it dismisses the toast.
 
 ---
 

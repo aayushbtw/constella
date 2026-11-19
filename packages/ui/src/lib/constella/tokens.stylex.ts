@@ -107,6 +107,10 @@ export const inputVars = stylex.defineVars({
   scale: "1",
 });
 
+export const toastVars = stylex.defineVars({
+  contentOpacity: "1",
+});
+
 export const codeBlockVars = stylex.defineVars({
   padBlock: "0px",
   padInline: "0px",
@@ -311,7 +315,6 @@ export const layers = stylex.defineConsts({
   dialog: "40",
   // Above a dialog, so a select or menu opened from one sits on top of it.
   popover: "45",
-  toast: "50",
   // A 2px line along the window's top edge that covers nothing, so it sits above everything.
   loadingBar: "70",
 } as const);

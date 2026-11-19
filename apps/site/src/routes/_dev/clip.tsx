@@ -39,22 +39,26 @@ const styles = stylex.create({
   bottom: { top: `calc(50% + ${frameHeight} / 2)` },
   left: { left: `calc(50% - ${frameWidth} / 2)` },
   right: { left: `calc(50% + ${frameWidth} / 2)` },
-  // The viewport anchors toasts by their bottom edge; this centres the settled toast in the frame.
-  viewport: {
+  // The region anchors toasts by their bottom edge; this centres the settled toast in the frame.
+  region: {
     bottom: "calc(50% - 34px)",
     insetInlineEnd: `calc(50% - ${sizes.toast} / 2)`,
   },
 });
 
-async function play() {
+function play() {
   // oxlint-disable-next-line promise/avoid-new -- the clip fakes a slow upload
   const upload = new Promise((resolve) => {
     setTimeout(resolve, 1800);
   });
-  await toast.promise(upload, {
+  toast.promise(upload, {
     error: { title: "Upload failed" },
     loading: { title: "Uploading…" },
-    success: { description: "3 files uploaded.", timeout: 1500, title: "Done" },
+    success: {
+      description: "3 files uploaded.",
+      duration: 1500,
+      title: "Done",
+    },
   });
 }
 
@@ -65,13 +69,14 @@ function ClipPage() {
   }, []);
 
   return (
-    <Toaster sx={styles.viewport}>
+    <>
       <main {...stylex.props(styles.main)}>
         <div {...stylex.props(styles.line, styles.horizontal, styles.top)} />
         <div {...stylex.props(styles.line, styles.horizontal, styles.bottom)} />
         <div {...stylex.props(styles.line, styles.vertical, styles.left)} />
         <div {...stylex.props(styles.line, styles.vertical, styles.right)} />
       </main>
-    </Toaster>
+      <Toaster sx={styles.region} />
+    </>
   );
 }

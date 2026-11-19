@@ -263,18 +263,17 @@ const toasts = {
 };
 
 function showToasts(data: Dataset) {
-  toast.close();
+  toast.dismiss();
   if (data === "empty") {
     return;
   }
   const rows = data === "worst" ? toasts.worst : toasts.demo;
   for (const row of rows) {
-    toast.add({
-      actionProps: { children: data === "worst" ? text.french : "Undo" },
+    toast.warning({
+      action: { label: data === "worst" ? text.french : "Undo" },
       description: row.description,
-      timeout: 0,
+      duration: Infinity,
       title: row.title,
-      type: "warning",
     });
   }
 }
