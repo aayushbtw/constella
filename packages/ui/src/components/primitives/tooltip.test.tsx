@@ -6,8 +6,6 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
-import { createTooltipController } from "@ui-sdk/react/tooltip";
-import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
 import { durations } from "@/lib/constella/tokens.stylex";
@@ -139,24 +137,7 @@ async function focusOpen() {
   return { content: await screen.findByRole("tooltip"), trigger };
 }
 
-test("Escape on a focused trigger closes the tooltip without reaching the document", async () => {
-  const onKeyDown = vi.fn<() => void>();
-  document.addEventListener("keydown", onKeyDown);
-  render(<CopyLink />);
-  const { content, trigger } = await focusOpen();
-
-  fireEvent.keyDown(trigger, { key: "Escape" });
-  await waitFor(() => {
-    expect(content.hidden).toBe(true);
-  });
-  expect(onKeyDown).not.toHaveBeenCalled();
-
-  fireEvent.keyDown(trigger, { key: "Escape" });
-  expect(onKeyDown).toHaveBeenCalledOnce();
-  document.removeEventListener("keydown", onKeyDown);
-});
-
-test("in a Base UI sheet, the first Escape closes the tooltip and the second the sheet", async () => {
+test("in a sheet, the first Escape closes the tooltip and the second the sheet", async () => {
   const onOpenChange = vi.fn<(open: boolean) => void>();
   render(
     <Sheet defaultOpen onOpenChange={onOpenChange}>
@@ -220,35 +201,6 @@ test("in a popover, the first Escape closes the tooltip and the second the popov
 
   fireEvent.keyDown(trigger, { key: "Escape" });
   expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
-});
-
-function SharedCopyLink() {
-  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
-  const [controller] = useState(() => createTooltipController());
-  return (
-    <>
-      <TooltipTrigger controller={controller} render={<Button />}>
-        Copy link
-      </TooltipTrigger>
-      <Tooltip controller={controller}>
-        <TooltipContent>Anyone with the link can view</TooltipContent>
-      </Tooltip>
-    </>
-  );
-}
-
-test("Escape on a trigger connected by its own controller stops at the trigger", async () => {
-  const onKeyDown = vi.fn<() => void>();
-  document.addEventListener("keydown", onKeyDown);
-  render(<SharedCopyLink />);
-  const { content, trigger } = await focusOpen();
-
-  fireEvent.keyDown(trigger, { key: "Escape" });
-  await waitFor(() => {
-    expect(content.hidden).toBe(true);
-  });
-  expect(onKeyDown).not.toHaveBeenCalled();
-  document.removeEventListener("keydown", onKeyDown);
 });
 
 // StyleX CSS never reaches jsdom, so this checks the hidden content the corner join skips.

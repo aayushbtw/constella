@@ -415,6 +415,7 @@ export const motion = stylex.defineConsts({
   crossfadeBlur: "4px",
   crossfadeScale: "0.25",
   crossfadeTextBlur: "2px",
+  sheetResponse: "0.19",
 });
 
 export const blurs = stylex.defineConsts({

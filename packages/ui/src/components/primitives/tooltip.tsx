@@ -2,13 +2,12 @@
 
 import * as stylex from "@stylexjs/stylex";
 import {
-  createTooltipController,
   TooltipContent as TooltipContentPrimitive,
   Tooltip as TooltipPrimitive,
   TooltipTrigger as TooltipTriggerPrimitive,
 } from "@ui-sdk/react/tooltip";
-import type { TooltipController, TooltipProps } from "@ui-sdk/react/tooltip";
-import { createContext, use, useMemo, useState } from "react";
+import type { TooltipProps } from "@ui-sdk/react/tooltip";
+import { createContext, use, useMemo } from "react";
 import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
@@ -70,26 +69,18 @@ const styles = stylex.create({
   },
 });
 
-const TooltipContext = createContext<{
-  controller?: TooltipController;
-  skip: boolean;
-}>({ skip: false });
+const TooltipContext = createContext<{ skip: boolean }>({ skip: false });
 
 function Tooltip({
-  controller: given,
   delay = Number.parseFloat(durations.tooltipDelay),
   onOpenChange,
   ...props
 }: TooltipProps) {
-  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
-  const [own] = useState(() => createTooltipController());
-  const controller = given ?? own;
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
-  const context = useMemo(() => ({ controller, skip }), [controller, skip]);
+  const context = useMemo(() => ({ skip }), [skip]);
   return (
     <TooltipContext value={context}>
       <TooltipPrimitive
-        controller={controller}
         delay={delay}
         onOpenChange={handleOpenChange}
         {...props}
@@ -99,31 +90,10 @@ function Tooltip({
 }
 
 function TooltipTrigger({
-  controller: given,
-  onKeyDown,
   sx,
   ...props
 }: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
-  const context = use(TooltipContext);
-  const controller = given ?? context.controller;
-  return (
-    <TooltipTriggerPrimitive
-      controller={given}
-      onKeyDown={(event) => {
-        onKeyDown?.(event);
-        // ui-sdk hears Escape on the document, after a Base UI Sheet or Alert Dialog closed on it; drop once those port.
-        if (
-          event.key === "Escape" &&
-          controller?.isOpen() === true &&
-          controller.close({ event: event.nativeEvent, reason: "escape-key" })
-        ) {
-          event.stopPropagation();
-        }
-      }}
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+  return <TooltipTriggerPrimitive {...props} {...stylex.props(sx)} />;
 }
 
 function TooltipContent({

@@ -984,7 +984,6 @@ function Sidebar({
     () => ({ collapsing, rail, tooltipSide }),
     [collapsing, rail, tooltipSide]
   );
-  // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
   const sectionChange = sectionChanging ? "" : undefined;
   const triggerName = `sidebar-trigger${useId()}`;
 
@@ -1003,13 +1002,10 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet onOpenChange={setOpenMobile} open={openMobile}>
+      <Sheet onOpenChange={setOpenMobile} open={openMobile} side={side}>
         <SheetContent
-          data-mobile
           data-section-change={sectionChange}
-          data-slot="sidebar"
           showCloseButton={false}
-          side={side}
           sx={[styles.sheet, sx]}
         >
           <SheetTitle sx={visuallyHidden.base}>Sidebar</SheetTitle>
