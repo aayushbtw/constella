@@ -105,9 +105,7 @@ test("a disabled item stays reachable but ignores presses", () => {
   expect(isPressed("Underline")).toBe(false);
 
   button("Italic").focus();
-  fireEvent.keyDown(document.activeElement ?? document.body, {
-    key: "ArrowRight",
-  });
+  fireEvent.keyDown(button("Italic"), { key: "ArrowRight" });
   expect(document.activeElement).toBe(underline);
 });
 
