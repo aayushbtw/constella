@@ -65,6 +65,7 @@ function DataTableViewOptions({
               onCheckedChange={(checked) => {
                 column.toggleVisibility(checked);
               }}
+              value={column.id}
             >
               {labels[column.id] ?? column.id}
             </DropdownMenuCheckboxItem>

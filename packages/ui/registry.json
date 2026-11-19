@@ -893,17 +893,14 @@
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Dropdown Menu",
-      "description": "A menu of actions from a button, with groups, toggles, choices, submenus and filtering.",
+      "description": "A menu of actions from a button, with groups, toggles, choices and submenus.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
-      "registryDependencies": [
-        "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/input-group.json"
-      ],
+      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
           "path": "src/components/primitives/dropdown-menu.tsx",

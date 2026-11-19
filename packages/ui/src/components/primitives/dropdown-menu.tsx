@@ -1,36 +1,45 @@
 "use client";
 
-import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import {
-  ArrowRight01Icon,
-  Search01Icon,
-  Tick02Icon,
-} from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, use, useContext } from "react";
-import type { ComponentProps } from "react";
-
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/primitives/input-group";
-import type { InputGroupSize } from "@/components/primitives/input-group";
+  Menu,
+  MenuCheckboxItem,
+  MenuContent,
+  MenuGroup,
+  MenuGroupLabel,
+  MenuItem,
+  MenuItemIndicator,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuSeparator,
+  MenuShortcut,
+  MenuSub,
+  MenuSubContent,
+  MenuSubTrigger,
+  MenuTrigger,
+} from "@ui-sdk/react/menu";
+import type {
+  MenuController,
+  MenuProps,
+  MenuSubProps,
+} from "@ui-sdk/react/menu";
+import { createContext, use } from "react";
+import type { ComponentProps, ReactNode } from "react";
+
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fontWeights,
-  layers,
   media,
   motion,
   offsets,
   opacities,
-  popupVars,
   radii,
   shadows,
   sizes,
@@ -42,6 +51,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
+type WithChildren<T> = Omit<T, "children"> & { children?: ReactNode };
+
 interface Inset {
   inset?: boolean;
 }
@@ -50,37 +61,38 @@ const dropdownMenuSizes = ["sm", "default", "lg"] as const;
 
 type DropdownMenuSize = (typeof dropdownMenuSizes)[number];
 
-type DropdownMenuContentProps = Styled<MenuPrimitive.Popup.Props> &
-  Pick<
-    MenuPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
-  > & { size?: DropdownMenuSize };
+type DropdownMenuTriggerProps<Payload> = Styled<
+  Omit<ComponentProps<typeof MenuTrigger>, "controller" | "payload">
+> & {
+  controller?: MenuController<Payload>;
+  payload?: NoInfer<Payload>;
+};
+
+type DropdownMenuContentProps<Payload = unknown> = Styled<
+  ComponentProps<typeof MenuContent<Payload>>
+> & { size?: DropdownMenuSize };
 
 const dropdownMenuItemColors = ["danger"] as const;
 
 type DropdownMenuItemColor = (typeof dropdownMenuItemColors)[number];
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing =
-  ":is([data-ending-style]):not([data-instant], [data-skip-motion])";
-const instant = ":is([data-instant], [data-skip-motion])";
-const highlighted = ":is([data-highlighted], [data-popup-open])";
+// `[data-skip-motion]` is never offstage, so an instant open paints no blank frame while ui-sdk holds `data-starting-style`.
+const offstage =
+  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
+const closing = ":is([data-ending-style]):not([data-skip-motion])";
+const instant = ":is([data-skip-motion])";
+const highlighted = ":is([data-highlighted], [data-open])";
 const danger = ":is([data-color='danger'])";
 const off = ":is([data-disabled])";
+const unchecked = ":is([data-unchecked])";
 const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
 const inset = ":is([data-inset])";
-const filtering = ":has(> [data-slot='dropdown-menu-list'])";
 
 // An inset row starts where the text of a row with an icon does.
 const insetStart = (padding: string) =>
   `calc(${padding} + ${sizes.icon} + ${space.row})`;
 
 const styles = stylex.create({
-  positioner: {
-    [popupVars.availableHeight]: "var(--available-height)",
-    [popupVars.availableWidth]: "var(--available-width)",
-    zIndex: layers.popover,
-  },
   // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.raised,
@@ -89,16 +101,12 @@ const styles = stylex.create({
     borderEndStartRadius: radii.lg,
     borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
-    color: colors.textPrimary,
-    // A filtered popup keeps its field in place and scrolls the list instead.
-    display: { default: null, [filtering]: "flex" },
-    flexDirection: { default: null, [filtering]: "column" },
-    maxHeight: popupVars.availableHeight,
-    maxWidth: popupVars.availableWidth,
+    maxHeight: "var(--available-height)",
+    maxWidth: "var(--available-width)",
     // Wide enough for a label beside its value.
     minWidth: `max(var(--anchor-width), ${sizes.menuLg})`,
     opacity: { default: 1, [offstage]: 0 },
-    overflowY: { default: "auto", [filtering]: "hidden" },
+    overflowY: "auto",
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
@@ -108,7 +116,7 @@ const styles = stylex.create({
     transitionDuration: {
       default: durations.popover,
       [closing]: durations.popoverExit,
-      [instant]: 0,
+      [instant]: "0s",
     },
     transitionProperty: {
       default: "opacity, transform",
@@ -119,46 +127,9 @@ const styles = stylex.create({
   popupSm: {
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
   },
-  // Inside the popup's padding, so its corner nests in the popup's.
-  input: {
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    flexShrink: 0,
-  },
-  searchIcon: {
-    color: colors.textMuted,
-    display: "flex",
-  },
-  list: {
-    maxHeight: sizes.menuHeight,
-    minHeight: 0,
-    overflowX: "hidden",
-    overflowY: "auto",
-    // Filtered-out groups stay mounted with `hidden`.
-    paddingBlockStart: {
-      default: space.xxs,
-      ":not(:has(> :not([hidden])))": 0,
-    },
-    scrollPaddingBlock: space.xxs,
-  },
-  empty: {
-    color: colors.textSecondary,
-    paddingBlockEnd: { default: space.lg, ":empty": 0 },
-    paddingBlockStart: { default: space.lg, ":empty": 0 },
-    textAlign: "center",
-  },
-  // Its first item level with the trigger, or its last when it flips to `end`. A translate,
-  // not Base UI's px `alignOffset`, so it follows the padding in rem.
   submenu: {
     transform: "none",
-    translate: {
-      default: null,
-      ":is([data-align='start'])": `0 calc(-1 * ${space.xxs})`,
-      ":is([data-align='end'])": `0 ${space.xxs}`,
-    },
-    transitionDuration: { default: durations.popoverExit, [instant]: 0 },
+    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
     transitionProperty: "opacity",
   },
   // Select's item, so a menu and a select read as one family.
@@ -206,25 +177,29 @@ const styles = stylex.create({
   checkableLg: {
     paddingInlineEnd: `calc(${sizes.icon} + ${space.md})`,
   },
-  // Checkbox's tick: draws in from its start, fades out quickly.
+  // Checkbox's tick: draws in from its start, fades out quickly, and rewinds its clip once faded.
   indicator: {
     alignItems: "center",
     clipPath: {
       default: "inset(0)",
-      ":is([data-starting-style])": "inset(0 100% 0 0)",
+      [unchecked]: {
+        default: "inset(0 100% 0 0)",
+        [media.reducedMotion]: "inset(0)",
+      },
     },
     display: "flex",
     insetInlineEnd: space.sm,
     justifyContent: "center",
-    opacity: { default: 1, ":is([data-ending-style])": 0 },
+    opacity: { default: 1, [unchecked]: 0 },
     pointerEvents: "none",
     position: "absolute",
+    transitionDelay: { default: "0s", [unchecked]: `0s, ${durations.hover}` },
     transitionDuration: {
-      default: durations.move,
-      ":is([data-ending-style])": durations.hover,
+      default: `0s, ${durations.move}`,
+      [unchecked]: `${durations.hover}, 0s`,
     },
     transitionProperty: {
-      default: "clip-path, opacity",
+      default: "opacity, clip-path",
       [media.reducedMotion]: "opacity",
     },
     transitionTimingFunction: easings.out,
@@ -292,12 +267,11 @@ function Glyph({ icon }: { icon: typeof Tick02Icon }) {
   );
 }
 
-// The base styles are `default`'s. The field sits a step above the rows, up to `lg`.
+// The base styles are `default`'s.
 const sizeStyles = {
   default: {
     checkable: null,
     indicator: null,
-    input: "lg",
     item: null,
     label: null,
     popup: null,
@@ -307,7 +281,6 @@ const sizeStyles = {
   lg: {
     checkable: styles.checkableLg,
     indicator: styles.indicatorLg,
-    input: "lg",
     item: styles.itemLg,
     label: styles.labelLg,
     popup: null,
@@ -317,7 +290,6 @@ const sizeStyles = {
   sm: {
     checkable: styles.checkableSm,
     indicator: styles.indicatorSm,
-    input: "default",
     item: styles.itemSm,
     label: styles.labelSm,
     popup: styles.popupSm,
@@ -335,7 +307,7 @@ const sizeStyles = {
     | "separator"
     | "text",
     stylex.StyleXStyles | null
-  > & { input: InputGroupSize }
+  >
 >;
 
 const SkipMotion = createContext(false);
@@ -345,136 +317,61 @@ function useSizeStyles() {
   return sizeStyles[use(Size)];
 }
 
-/** One menu several triggers share: pass it to `DropdownMenu` and each `DropdownMenuTrigger` as `handle`. */
-const createDropdownMenuHandle = MenuPrimitive.createHandle;
-
-function DropdownMenu<Payload>({
-  onOpenChange,
-  ...props
-}: MenuPrimitive.Root.Props<Payload>) {
+function DropdownMenu({ onOpenChange, ...props }: MenuProps) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
     <SkipMotion value={skip}>
-      <MenuPrimitive.Root
-        data-slot="dropdown-menu"
-        onOpenChange={handleOpenChange}
-        {...props}
-      />
+      <Menu onOpenChange={handleOpenChange} {...props} />
     </SkipMotion>
   );
 }
 
-function DropdownMenuPortal({
+function DropdownMenuTrigger<Payload = unknown>({
   sx,
   ...props
-}: Styled<MenuPrimitive.Portal.Props>) {
-  return (
-    <MenuPrimitive.Portal
-      data-slot="dropdown-menu-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: DropdownMenuTriggerProps<Payload>) {
+  return <MenuTrigger {...props} {...stylex.props(sx)} />;
 }
 
-function DropdownMenuTrigger<Payload>({
-  sx,
-  ...props
-}: Styled<MenuPrimitive.Trigger.Props<Payload>>) {
-  return (
-    <MenuPrimitive.Trigger
-      data-slot="dropdown-menu-trigger"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
-function DropdownMenuContent({
-  align = "start",
-  alignOffset = 0,
-  side = "bottom",
-  sideOffset = Number(offsets.popover),
+function Popup<Payload>({
+  nested = false,
   size: ownSize,
   sx,
   ...props
-}: DropdownMenuContentProps) {
-  const skip = useContext(SkipMotion);
+}: DropdownMenuContentProps<Payload> & { nested?: boolean }) {
+  const skip = use(SkipMotion);
   // A submenu takes its parent's size unless it sets its own.
   const size = ownSize ?? use(Size);
+  const Part = nested ? MenuSubContent : MenuContent;
   return (
     <Size value={size}>
-      <MenuPrimitive.Portal>
-        <MenuPrimitive.Positioner
-          align={align}
-          alignOffset={alignOffset}
-          side={side}
-          sideOffset={sideOffset}
-          {...stylex.props(styles.positioner)}
-        >
-          <MenuPrimitive.Popup
-            data-size={size}
-            data-skip-motion={skip || undefined}
-            data-slot="dropdown-menu-content"
-            {...props}
-            {...stylex.props(styles.popup, sizeStyles[size].popup, sx)}
-          />
-        </MenuPrimitive.Positioner>
-      </MenuPrimitive.Portal>
+      <Part<Payload>
+        data-size={size}
+        data-skip-motion={skip || undefined}
+        {...props}
+        {...stylex.props(
+          [popupReset.base, styles.popup],
+          sizeStyles[size].popup,
+          nested && styles.submenu,
+          sx
+        )}
+      />
     </Size>
   );
 }
 
-/** Makes the `DropdownMenu` or `DropdownMenuSub` directly inside it filterable. Highlights the first match while filtering, so Enter runs it. */
-function DropdownMenuFilterProvider({
-  autoHighlight = true,
+function DropdownMenuContent<Payload = unknown>({
+  align = "start",
+  side = "bottom",
+  sideOffset = Number(offsets.popover),
   ...props
-}: MenuPrimitive.FilterProvider.Props) {
+}: DropdownMenuContentProps<Payload>) {
   return (
-    <MenuPrimitive.FilterProvider autoHighlight={autoHighlight} {...props} />
-  );
-}
-
-function DropdownMenuInput({
-  sx,
-  ...props
-}: Omit<Styled<MenuPrimitive.Input.Props>, "render">) {
-  return (
-    <InputGroup
-      data-slot="dropdown-menu-input"
-      size={useSizeStyles().input}
-      sx={[styles.input, sx]}
-    >
-      <MenuPrimitive.Input render={<InputGroupInput />} {...props} />
-      <InputGroupAddon>
-        <span {...stylex.props(styles.searchIcon)}>
-          <Glyph icon={Search01Icon} />
-        </span>
-      </InputGroupAddon>
-    </InputGroup>
-  );
-}
-
-function DropdownMenuList({ sx, ...props }: Styled<MenuPrimitive.List.Props>) {
-  return (
-    <MenuPrimitive.List
-      data-slot="dropdown-menu-list"
+    <Popup<Payload>
+      align={align}
+      side={side}
+      sideOffset={sideOffset}
       {...props}
-      {...stylex.props(styles.list, sx)}
-    />
-  );
-}
-
-function DropdownMenuEmpty({
-  sx,
-  ...props
-}: Styled<MenuPrimitive.Empty.Props>) {
-  return (
-    <MenuPrimitive.Empty
-      data-slot="dropdown-menu-empty"
-      {...props}
-      {...stylex.props([useSizeStyles().text, styles.empty], sx)}
     />
   );
 }
@@ -482,25 +379,18 @@ function DropdownMenuEmpty({
 function DropdownMenuGroup({
   sx,
   ...props
-}: Styled<MenuPrimitive.Group.Props>) {
-  return (
-    <MenuPrimitive.Group
-      data-slot="dropdown-menu-group"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: Styled<ComponentProps<typeof MenuGroup>>) {
+  return <MenuGroup {...props} {...stylex.props(sx)} />;
 }
 
 function DropdownMenuLabel({
   inset: isInset,
   sx,
   ...props
-}: Styled<MenuPrimitive.GroupLabel.Props> & Inset) {
+}: Styled<ComponentProps<typeof MenuGroupLabel>> & Inset) {
   return (
-    <MenuPrimitive.GroupLabel
+    <MenuGroupLabel
       data-inset={isInset}
-      data-slot="dropdown-menu-label"
       {...props}
       {...stylex.props(
         [typeStyles.captionLg, styles.label],
@@ -516,33 +406,27 @@ function DropdownMenuItem({
   color,
   sx,
   ...props
-}: Styled<MenuPrimitive.Item.Props> &
+}: Styled<
+  Omit<ComponentProps<typeof MenuItem>, "color" | "destructive" | "shortcut">
+> &
   Inset & { color?: DropdownMenuItemColor }) {
   const size = useSizeStyles();
   return (
-    <MenuPrimitive.Item
-      data-inset={isInset}
-      data-slot="dropdown-menu-item"
+    <MenuItem
       data-color={color}
+      data-inset={isInset}
       {...props}
       {...stylex.props([size.text, styles.item], size.item, sx)}
     />
   );
 }
 
-function DropdownMenuSub({
-  onOpenChange,
-  ...props
-}: MenuPrimitive.SubmenuRoot.Props) {
-  const inherited = useContext(SkipMotion);
+function DropdownMenuSub({ onOpenChange, ...props }: MenuSubProps) {
+  const inherited = use(SkipMotion);
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   return (
     <SkipMotion value={inherited || skip}>
-      <MenuPrimitive.SubmenuRoot
-        data-slot="dropdown-menu-sub"
-        onOpenChange={handleOpenChange}
-        {...props}
-      />
+      <MenuSub onOpenChange={handleOpenChange} {...props} />
     </SkipMotion>
   );
 }
@@ -552,12 +436,11 @@ function DropdownMenuSubTrigger({
   inset: isInset,
   sx,
   ...props
-}: Styled<MenuPrimitive.SubmenuTrigger.Props> & Inset) {
+}: Styled<WithChildren<ComponentProps<typeof MenuSubTrigger>>> & Inset) {
   const size = useSizeStyles();
   return (
-    <MenuPrimitive.SubmenuTrigger
+    <MenuSubTrigger
       data-inset={isInset}
-      data-slot="dropdown-menu-sub-trigger"
       {...props}
       {...stylex.props([size.text, styles.item], size.item, sx)}
     >
@@ -565,27 +448,26 @@ function DropdownMenuSubTrigger({
       <span {...stylex.props(styles.chevron)}>
         <Glyph icon={ArrowRight01Icon} />
       </span>
-    </MenuPrimitive.SubmenuTrigger>
+    </MenuSubTrigger>
   );
 }
 
-/** A submenu's popup: opens beside its trigger, with its first item level with it. */
 function DropdownMenuSubContent({
-  align = "start",
-  side = "inline-end",
   sideOffset = 0,
-  sx,
   ...props
 }: DropdownMenuContentProps) {
+  return <Popup nested sideOffset={sideOffset} {...props} />;
+}
+
+function Indicator() {
+  const size = useSizeStyles();
   return (
-    <DropdownMenuContent
-      align={align}
-      data-slot="dropdown-menu-sub-content"
-      side={side}
-      sideOffset={sideOffset}
-      sx={[styles.submenu, sx]}
-      {...props}
-    />
+    <MenuItemIndicator
+      keepMounted
+      {...stylex.props(styles.indicator, size.indicator)}
+    >
+      <Glyph icon={Tick02Icon} />
+    </MenuItemIndicator>
   );
 }
 
@@ -594,12 +476,11 @@ function DropdownMenuCheckboxItem({
   inset: isInset,
   sx,
   ...props
-}: Styled<MenuPrimitive.CheckboxItem.Props> & Inset) {
+}: Styled<WithChildren<ComponentProps<typeof MenuCheckboxItem>>> & Inset) {
   const size = useSizeStyles();
   return (
-    <MenuPrimitive.CheckboxItem
+    <MenuCheckboxItem
       data-inset={isInset}
-      data-slot="dropdown-menu-checkbox-item"
       {...props}
       {...stylex.props(
         [size.text, styles.item],
@@ -610,26 +491,16 @@ function DropdownMenuCheckboxItem({
       )}
     >
       {children}
-      <MenuPrimitive.CheckboxItemIndicator
-        {...stylex.props(styles.indicator, size.indicator)}
-      >
-        <Glyph icon={Tick02Icon} />
-      </MenuPrimitive.CheckboxItemIndicator>
-    </MenuPrimitive.CheckboxItem>
+      <Indicator />
+    </MenuCheckboxItem>
   );
 }
 
-function DropdownMenuRadioGroup({
+function DropdownMenuRadioGroup<T extends string = string>({
   sx,
   ...props
-}: Styled<MenuPrimitive.RadioGroup.Props>) {
-  return (
-    <MenuPrimitive.RadioGroup
-      data-slot="dropdown-menu-radio-group"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: Styled<ComponentProps<typeof MenuRadioGroup<T>>>) {
+  return <MenuRadioGroup<T> {...props} {...stylex.props(sx)} />;
 }
 
 function DropdownMenuRadioItem({
@@ -637,12 +508,11 @@ function DropdownMenuRadioItem({
   inset: isInset,
   sx,
   ...props
-}: Styled<MenuPrimitive.RadioItem.Props> & Inset) {
+}: Styled<WithChildren<ComponentProps<typeof MenuRadioItem>>> & Inset) {
   const size = useSizeStyles();
   return (
-    <MenuPrimitive.RadioItem
+    <MenuRadioItem
       data-inset={isInset}
-      data-slot="dropdown-menu-radio-item"
       {...props}
       {...stylex.props(
         [size.text, styles.item],
@@ -653,22 +523,17 @@ function DropdownMenuRadioItem({
       )}
     >
       {children}
-      <MenuPrimitive.RadioItemIndicator
-        {...stylex.props(styles.indicator, size.indicator)}
-      >
-        <Glyph icon={Tick02Icon} />
-      </MenuPrimitive.RadioItemIndicator>
-    </MenuPrimitive.RadioItem>
+      <Indicator />
+    </MenuRadioItem>
   );
 }
 
 function DropdownMenuSeparator({
   sx,
   ...props
-}: Styled<MenuPrimitive.Separator.Props>) {
+}: Styled<ComponentProps<typeof MenuSeparator>>) {
   return (
-    <MenuPrimitive.Separator
-      data-slot="dropdown-menu-separator"
+    <MenuSeparator
       {...props}
       {...stylex.props(styles.separator, useSizeStyles().separator, sx)}
     />
@@ -678,10 +543,9 @@ function DropdownMenuSeparator({
 function DropdownMenuShortcut({
   sx,
   ...props
-}: Styled<ComponentProps<"span">>) {
+}: Styled<ComponentProps<typeof MenuShortcut>>) {
   return (
-    <span
-      data-slot="dropdown-menu-shortcut"
+    <MenuShortcut
       {...props}
       {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
     />
@@ -689,20 +553,14 @@ function DropdownMenuShortcut({
 }
 
 export {
-  createDropdownMenuHandle,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuEmpty,
-  DropdownMenuFilterProvider,
   DropdownMenuGroup,
-  DropdownMenuInput,
   DropdownMenuItem,
   dropdownMenuItemColors,
   dropdownMenuSizes,
   DropdownMenuLabel,
-  DropdownMenuList,
-  DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -712,8 +570,11 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 };
+export { createMenuController as createDropdownMenuController } from "@ui-sdk/react/menu";
+export type { MenuController as DropdownMenuController } from "@ui-sdk/react/menu";
 export type {
   DropdownMenuContentProps,
   DropdownMenuItemColor,
   DropdownMenuSize,
+  DropdownMenuTriggerProps,
 };

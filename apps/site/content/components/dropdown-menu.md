@@ -55,17 +55,6 @@ import {
 ## Composition
 
 ```
-DropdownMenuFilterProvider (optional)
-└── DropdownMenu
-    ├── DropdownMenuTrigger
-    └── DropdownMenuContent
-        ├── DropdownMenuInput
-        ├── DropdownMenuEmpty
-        └── DropdownMenuList
-            └── items, as below
-```
-
-```
 DropdownMenu
 ├── DropdownMenuTrigger
 └── DropdownMenuContent
@@ -81,6 +70,8 @@ DropdownMenu
         ├── DropdownMenuSubTrigger
         └── DropdownMenuSubContent
 ```
+
+Put item actions in `onSelect`, which runs for the pointer and the keyboard. A plain item closes the menu; `closeOnSelect={false}` keeps it open. A `DropdownMenuLabel` goes inside a group or a radio group, which it names. A menu holds items only. For a searchable list, put a [Command](/docs/components/command) in a [Popover](/docs/components/popover), as [Model Picker](/docs/components/model-picker) does.
 
 ## Submenu
 
@@ -113,19 +104,23 @@ Put an icon before the label for quick scanning. Add `inset` to a row without on
 
 ## Checkboxes
 
-Use `DropdownMenuCheckboxItem` for toggles.
+Use `DropdownMenuCheckboxItem` for toggles. Give each a `value` unique in the menu.
 
 <!-- ::demo name="dropdown-menu-checkboxes" -->
 
 ```tsx
-<DropdownMenuCheckboxItem checked={statusBar} onCheckedChange={setStatusBar}>
+<DropdownMenuCheckboxItem
+  checked={statusBar}
+  onCheckedChange={setStatusBar}
+  value="status-bar"
+>
   Status Bar
 </DropdownMenuCheckboxItem>
 ```
 
 ## Radio Group
 
-Use `DropdownMenuRadioGroup` for one choice out of several.
+Use `DropdownMenuRadioGroup` for one choice out of several. Each radio item's `value` is unique in the menu.
 
 <!-- ::demo name="dropdown-menu-radio-group" -->
 
@@ -136,50 +131,28 @@ Use `DropdownMenuRadioGroup` for one choice out of several.
 </DropdownMenuRadioGroup>
 ```
 
-## Filter
+## Controller
 
-Wrap the menu in `DropdownMenuFilterProvider`, add `DropdownMenuInput`, and put the items in `DropdownMenuList`. Typing narrows the items and highlights the first match, so Enter runs it. Filtering is a [Base UI preview](https://base-ui.com/react/components/menu), so its API may change.
+Use `createDropdownMenuController` for one menu that several triggers share, like the actions on each row of a list. Pass it to `DropdownMenu` and each trigger as `controller`, with the row's data as `payload`, and render the content from a function of its state. The page mounts one menu instead of one per row.
 
-<!-- ::demo name="dropdown-menu-filter" -->
-
-```tsx
-<DropdownMenuFilterProvider>
-  <DropdownMenu>
-    <DropdownMenuTrigger render={<Button variant="outline" />}>
-      Open
-    </DropdownMenuTrigger>
-    <DropdownMenuContent>
-      <DropdownMenuInput aria-label="Filter actions" placeholder="Filter..." />
-      <DropdownMenuEmpty>No actions found.</DropdownMenuEmpty>
-      <DropdownMenuList>
-        <DropdownMenuItem>New file</DropdownMenuItem>
-        <DropdownMenuItem>Save</DropdownMenuItem>
-      </DropdownMenuList>
-    </DropdownMenuContent>
-  </DropdownMenu>
-</DropdownMenuFilterProvider>
-```
-
-## Handle
-
-Use `createDropdownMenuHandle` for one menu that several triggers share, like the actions on each row of a list. Pass it to `DropdownMenu` and each trigger as `handle`, with the row's data as `payload`. The page mounts one menu instead of one per row.
-
-<!-- ::demo name="dropdown-menu-handle" -->
+<!-- ::demo name="dropdown-menu-controller" -->
 
 ```tsx
-const rowMenu = createDropdownMenuHandle<Doc>();
+const rowMenu = createDropdownMenuController<Doc>();
 
-<DropdownMenuTrigger handle={rowMenu} payload={doc} render={<Button size="icon" variant="ghost" />}>
+<DropdownMenuTrigger controller={rowMenu} payload={doc} render={<Button size="icon" variant="ghost" />}>
   <HugeiconsIcon icon={MoreHorizontalIcon} />
 </DropdownMenuTrigger>
 
-<DropdownMenu handle={rowMenu}>
-  {({ payload }) => (
-    <DropdownMenuContent>
-      <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
-      <DropdownMenuItem>Rename</DropdownMenuItem>
-    </DropdownMenuContent>
-  )}
+<DropdownMenu controller={rowMenu}>
+  <DropdownMenuContent<Doc>>
+    {({ payload }) => (
+      <DropdownMenuGroup>
+        <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
+        <DropdownMenuItem>Rename</DropdownMenuItem>
+      </DropdownMenuGroup>
+    )}
+  </DropdownMenuContent>
 </DropdownMenu>
 ```
 
@@ -241,12 +214,10 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 
 | Part | Adds |
 | --- | --- |
-| `DropdownMenuContent` | Renders the portal, positioner and popup; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
+| `DropdownMenuContent` | Renders in place, beside its trigger, in the browser's top layer; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
 | `DropdownMenuItem` | `color`: `"danger"` |
-| `DropdownMenuFilterProvider` | `autoHighlight` defaults to `true` |
-| `DropdownMenuInput` | A search field sized with the content's `size`; label it with `aria-label` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
-| `DropdownMenu`, `DropdownMenuTrigger` | `handle`; `payload` on the trigger |
-| `createDropdownMenuHandle` | A handle shared by `DropdownMenu` and its triggers |
+| `DropdownMenu`, `DropdownMenuTrigger` | `controller`; `payload` on the trigger |
+| `createDropdownMenuController` | A controller shared by `DropdownMenu` and its triggers |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Menu](https://base-ui.com/react/components/menu).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Menu](https://ui-sdk.dev/docs/react/components/menu).
