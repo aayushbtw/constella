@@ -48,7 +48,7 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: space.xs,
-    maxWidth: sizes.tooltip,
+    maxWidth: `min(${sizes.tooltip}, var(--available-width))`,
     opacity: { default: 1, [offstage]: 0 },
     paddingBlock: space.xxs,
     paddingInlineEnd: {
