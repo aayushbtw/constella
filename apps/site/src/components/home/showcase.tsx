@@ -27,6 +27,9 @@ import {
 import {
   Slider,
   SliderControl,
+  SliderIndicator,
+  SliderThumb,
+  SliderTrack,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Spinner } from "@/components/primitives/spinner";
@@ -256,7 +259,13 @@ const tiles: Tile[] = [
           <Slider defaultValue={[20, 80]}>
             <FieldLabel>Price</FieldLabel>
             <SliderValue />
-            <SliderControl />
+            <SliderControl>
+              <SliderTrack>
+                <SliderIndicator />
+                <SliderThumb aria-label="Minimum price" index={0} />
+                <SliderThumb aria-label="Maximum price" index={1} />
+              </SliderTrack>
+            </SliderControl>
           </Slider>
         </Field>
       </div>
