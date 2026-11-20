@@ -37,7 +37,7 @@ A unit PR merges when all hold:
 
 Zero diff is the gate only for units that must keep markup unchanged, such as the render helper swap. For every other unit, the output shows which markup changed, and only the expected changes may appear.
 
-**Tests.** `vpr test` runs the `packages/ui` and `apps/site` tests in jsdom, with StyleX compiled and strict mode on (`packages/ui/vite.config.ts`, `apps/site/vitest.config.ts`, both with `packages/ui/test/setup.ts`). Put a unit's test beside its component as `<name>.test.tsx`, importing from `vite-plus/test`. `packages/ui/test/agent.test.tsx` is the agent test template.
+**Tests.** `vpr test` runs the `packages/ui` and `apps/site` tests in jsdom, with StyleX compiled and strict mode on (`packages/ui/vite.config.ts`, `apps/site/vitest.config.ts`, both with `packages/ui/test/setup.ts`). Put a unit's test beside its component as `<name>.test.tsx`, importing from `vite-plus/test`. `packages/ui/test/agent.test.tsx` is the agent test template. A test that needs the compiled CSS goes in `<name>.css.test.tsx`, in the `ui-css` project (`packages/ui/vitest.css.config.ts`), which injects StyleX's rules into jsdom. The plain run excludes it, since injected styles change what testing-library sees.
 
 ## Pre-existing problems
 
