@@ -185,43 +185,68 @@ These don't gate landing. A read-only sweep of `ui-sdk` at 64581de (four workers
 | Site prose copy buttons all read "Copy code" | low | `apps/site/src/components/docs/prose.tsx`. They collide on every docs page. A site unit, not an AI part ([#100](https://github.com/aayushbtw/constella/pull/100)) |
 | Focus leaves the staged-edits card | low | On `/agent-staged`, focus drops to `body` (keyboard) or the Region trigger (pointer) while the review card is open. A keyboard user must Tab back to Discard or Keep changes ([#103](https://github.com/aayushbtw/constella/pull/103)) |
 | Cleanup | low | `type Styled<T>` in 49 files, `Glyph` in 4 primitives and more demos, three duration parsers, the SkipMotion root pattern in 5 popups (`createSkipMotion`), unused `ComboboxTrigger`, `swap-icon.tsx` lacks `"use client"` ([#96](https://github.com/aayushbtw/constella/issues/96)), demo intervals that never stop in `progress`, `markdown`, `trace` ([#97](https://github.com/aayushbtw/constella/issues/97)), beta.1 comments in `progress.tsx:109`, `meter.tsx:223`, `scroll-area.test.tsx:144`. ARCHITECTURE.md Stack omits `torph` and react-day-picker; "`initialFocus` takes no ref" is wrong on beta.13 |
-| Data Table virtualizer on `@tanstack/react-virtual` | med | `use-data-table-virtualizer.ts`. ui-sdk core exports `createVirtualizer`; reference `examples/behaviors/react/virtualizer*.tsx`. Drops the dep |
-| Message Scroller on `@shadcn/react` | med | `message-scroller.tsx`. ui-sdk core exports `StickToBottom`; reference `examples/behaviors/react/stick-chat.tsx`, `stick-to-bottom.tsx`, `examples/experiments/react/chat.tsx`. `@shadcn/react` stays while Questionnaire's choices need it |
+| Data Table virtualizer stays on `@tanstack/react-virtual` | decided | Core `createVirtualizer` (experimental) connects to an element only, has no initial size for server rows, and takes a fixed `scrollMargin` (`virtualizer.ts:355,95,51`). Window mode would still need the dep. Upstream draft: window `connect`, `scrollMargin` getter, initial viewport size |
+| Message Scroller stays on `@shadcn/react` | decided | Core `createStickToBottom` (experimental) covers follow, jump and prepend only. No `scrollToStart`, `scrollToMessage`, `scrollAnchor` or first-frame position, all documented in `message-scroller.md:47,64-66`. Upstream draft: message registry with `scrollToMessage`, anchored turns, `defaultScrollPosition`, edge state |
 
-| Popover | `components/popover` | doing |  |
-| Button | `components/button` | doing |  |
-| Separator | `components/separator` | doing |  |
-| Toggle | `components/toggle` | doing |  |
-| Checkbox | `components/checkbox` | doing |  |
-| Switch | `components/switch` | doing |  |
-| Radio Group | `components/radio` | doing |  |
-| Progress and Loading Bar | `components/progress` | doing |  |
-| Meter | `components/meter` | doing |  |
-| Slider | `components/slider` | doing |  |
-| Avatar | `components/avatar` | doing |  |
-| Field | `components/field`, sink `forms.tsx` | doing |  |
-| Label | `components/label` | doing |  |
-| Input Group | `components/input` | doing | Also settles the beta.1-evidence Follow-ups row |
-| Textarea | `components/textarea` | doing |  |
-| Scroll Area | `components/scroll-area` | doing |  |
-| Collapsible | `components/collapsible` | doing |  |
-| Tabs | `components/tabs` | doing |  |
-| Tooltip | `components/tooltip` | doing |  |
-| Hover Card | `components/hover-card` | doing | Check the `delay={0}` workaround |
-| Dialog | `components/dialog`, sink `overlays.tsx` | doing |  |
-| Sheet | `components/drawer` | doing |  |
-| Side Panel | `components/dialog` | doing |  |
-| Alert Dialog | `components/alert-dialog` | doing |  |
-| Toast | `components/toast` | doing |  |
-| Select | `components/select` | doing |  |
-| Dropdown Menu | `components/menu` | doing |  |
-| Combobox | `components/combobox` | doing |  |
-| Command | `components/command` | doing |  |
-| Toggle Group | `components/toggle`, `components/toolbar` | doing |  |
-| Segmented Control | `components/segmented-control` | doing |  |
-| Prompt Input | `components/trigger-menu` | doing |  |
-| Sidebar buttons | `components/button` | doing |  |
-| Agent bridge, confirm, activity and staged edits | sink `records.tsx` (agent, history, observe) | doing |  |
+## Reference review
+
+Every part above was ported with no worked examples to copy. ui-sdk's repo has them, so each ported unit gets one read against them. Pinned to the installed release: [vercel-labs/ui at `@ui-sdk/react@0.1.0-beta.13`](https://github.com/vercel-labs/ui/tree/%40ui-sdk/react%400.1.0-beta.13) (`f01f173`). Bump the tag with the dependency.
+
+| Source | What it shows |
+| --- | --- |
+| `examples/components/<part>/` | Each part's documented usages: parts, props, controllers |
+| `apps/docs/app/sink/tiles/*.tsx` | The kitchen sink: parts composed into real screens (records, studio, motion, collections, pickers, overlays, forms) |
+| `examples/behaviors/react/` | Core behaviors: virtualizer, stick-to-bottom, grid focus, roving focus, announce, presence, undo stack |
+| `examples/experiments/react/` | Larger builds: chat, data grid, spreadsheet, week calendar, kanban |
+
+**How to review one.** Read our wrapper, its demos and its docs page against the reference. Look for:
+
+1. Props, state or markup we hand-roll that the part or a core behavior already provides.
+2. Workarounds the reference shows aren't needed, or a pattern it uses that we don't.
+3. Demos that use the part differently from its examples without a reason in [Findings](#findings).
+
+Read only. Set the row to `doing` before starting so parallel sessions skip it. Record the verdict here: `clean`, or `fix` with each finding in Result. A fix goes through a normal unit PR into `ui-sdk`, and the row moves to `fixed` with its link. One reviewer per row.
+
+Status: `todo`, `doing`, `clean`, `fix`, `fixed`.
+
+| Unit | Reference | Status | Result |
+| --- | --- | --- | --- |
+| Popover | `components/popover` | clean | `useSkipMotion` still has no core replacement |
+| Button | `components/button` | fix | Busy demos (`demos/button.tsx:151`, `home/showcase.tsx:171`, `button.md:122`) hand-roll `aria-busy` and a timer; ui-sdk Button does pending from a Promise-returning `onClick` (`button/react/pending.tsx`). Drop redundant `type="button"` (`demos/input.tsx:292`, `field.tsx:185`, `questionnaire.tsx:853`) |
+| Separator | `components/separator` | fix | `FieldSeparator`'s two lines beside "or" should be `decorative` (`field.tsx:376`; ref `separator/react/decorative.tsx`) |
+| Toggle | `components/toggle` | clean | Faked Toggles in demos are `main` (Follow-ups, Demos that fake a part) |
+| Checkbox | `components/checkbox` | fix | Indeterminate and table demos hand-roll select-all; wrap `CheckboxGroup` and use `<Checkbox parent>` with `allValues` (`checkbox/react/group-parent.tsx`, `table.tsx`; ours `demos/checkbox.tsx:101,157`, `checkbox.md:130,186`) |
+| Switch | `components/switch` | clean | `readOnly` unstyled, as on `main` |
+| Radio Group | `components/radio` | fix | Fieldset description not wired to the group; ref passes `aria-describedby` (`radio/react/legend.tsx:22`). Ours `demos/radio-group.tsx:153,198`, `demos/field.tsx:297`, `radio-group.md:125` |
+| Progress and Loading Bar | `components/progress` | clean | `ProgressValue` `aria-hidden` still needed on beta.13 (core sets none); comment says beta.1 |
+| Meter | `components/meter` | clean | Same stale beta.1 comment |
+| Slider | `components/slider` | clean | Tooltip-on-thumb is a recorded tradeoff; focus ring is #57, number input #61 |
+| Avatar | `components/avatar` | clean | Fallback-only avatars unnamed, same on `main` |
+| Field | `components/field`, sink `forms.tsx` | fix | Same `aria-describedby` finding as Radio Group. Note: `FieldError errors` sets no `aria-invalid`, as on `main` |
+| Label | `components/label` | clean | `userSelect: none` redundant on plain Label only |
+| Input Group | `components/input` | fix | Keep ours over ui-sdk `InputGroup`, re-measured on beta.13: it picks Select's hidden textarea as its control and overwrites `data-slot` (Command's #69 wrapper). `InputClear` throws outside its group. Fix: the demo's TextareaAutosize becomes `InputGroupTextarea` (our Textarea already auto-resizes), drop `react-textarea-autosize`, record the exception in ARCHITECTURE.md |
+| Textarea | `components/textarea` | clean | `fieldSizing` stays for server HTML |
+| Scroll Area | `components/scroll-area` | clean | No viewport `role="region"` pass-through; no agent gain proven |
+| Collapsible | `components/collapsible` | clean | Keyboard-skip has no core hook |
+| Tabs | `components/tabs` | clean | Reveal observer proved needed: core `reveal()` returns while focus is inside |
+| Tooltip | `components/tooltip` | fix | Disabled demo wraps a disabled Button in an unfocusable span; use `TooltipTrigger render={<Button disabled focusableWhenDisabled/>}` (`tooltip/react/disabled-button.tsx`). Ours `demos/tooltip.tsx:70`, `tooltip.md:65` |
+| Hover Card | `components/hover-card` | clean | `delay={0}` workaround still needed: hover preset has no `focusDelay` |
+| Dialog | `components/dialog`, sink `overlays.tsx` | fix | `DialogContent` drops the `Payload` generic (`dialog/react/payload.tsx:78`; ours `dialog.tsx:46,239`). Controlled demo closes with a plain Button, not a Close part (`demos/dialog.tsx:138`, `dialog.md:101`) |
+| Sheet | `components/drawer` | clean | Demo's Save could be `SheetClose value="submit"` |
+| Side Panel | `components/dialog` | fix | Demo drives `open` by hand per row; rebuild on controller, `DialogTrigger payload` and `SidePanelContent<Row>` (`dialog/react/payload.tsx:58`; ours `demos/side-panel.tsx:144`, `side-panel.md:9`). `closeOnOutsidePress={false}` is already the non-modal default (`side-panel.tsx:202`) |
+| Alert Dialog | `components/alert-dialog` | fix | `AlertDialogContent` drops `Payload`; `AgentConfirm` reads `controller.getPayload()` instead of `state.payload` (`alert-dialog/react/confirm.tsx:63`; ours `alert-dialog.tsx:37`, `agent-loop.tsx:98`) |
+| Toast | `components/toast` | clean | Collapsed toasts behind the front one aren't `inert`, same on `main` (`toast/react/custom.tsx:43`) |
+| Select | `components/select` | clean |  |
+| Dropdown Menu | `components/menu` | fix | Wrapper omits `shortcut`, so demos hand-type glyphs and no `aria-keyshortcuts` (`menu/react/shortcuts.tsx:19`; ours `dropdown-menu.tsx:412`). `color="danger"` duplicates the part's `destructive` / `data-destructive` |
+| Combobox | `components/combobox` | fix | Trigger and clear names are hard-coded "Show options" and "Clear", so every combobox collides in `snapshot()` (`combobox/react/clear.tsx:49`; ours `combobox.tsx:458,484`) |
+| Command | `components/command` | fix | Site search detects keyboard with `event.detail === 0` plus `flushSync`; read `details.source` as Sidebar does (`search.tsx:81,93`, `command-dialog.tsx:38`) |
+| Toggle Group | `components/toggle`, `components/toolbar` | clean | Theme picker Buttons and unnamed groups are `main` (#67) |
+| Segmented Control | `components/segmented-control` | fix | Root lacks `isolation: isolate` the docs require (`segmented-control.css:9`; ours `segmented-control.tsx:46`). Lead demo holds unread controlled state; use `defaultValue` |
+| Prompt Input | `components/trigger-menu` | clean | Command items could pass `label` |
+| Sidebar buttons | `components/button` | fix | `SidebarMenuSubButton` is a native `<a>`; render through `SidebarButton` with `render={<a/>}` if the bridge lists it (`button/react/link.tsx`; ours `sidebar.tsx:1572`) |
+| Agent bridge, confirm, activity and staged edits | sink `records.tsx` (agent, history, observe) | fix | `AgentConfirm` reads `state.payload` once Alert Dialog is generic. `AgentFeed` hand-rolls a change log with `subscribe`; read `history.entries()` filtered to `source: "agent"` (`records.tsx:582,740`; ours `agent-loop.tsx:122`) |
+
+## Findings
 
 Gaps and surprises found while porting, newest first. Move a settled one into ARCHITECTURE.md.
 
