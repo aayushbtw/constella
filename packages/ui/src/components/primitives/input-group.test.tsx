@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import { useState } from "react";
 import { expect, test } from "vite-plus/test";
 
 import { Field, FieldDescription, FieldLabel } from "./field";
@@ -131,4 +132,63 @@ test("an agent finds every input by its label and fills it", async () => {
   expect(
     screen.getByRole<HTMLTextAreaElement>("textbox", { name: "Bio" }).value
   ).toBe("Builds things.");
+});
+
+interface ValueChange {
+  source: string;
+  value: string;
+}
+
+function Website({
+  changes,
+  reject = false,
+}: {
+  changes: ValueChange[];
+  reject?: boolean;
+}) {
+  const [text, setText] = useState("old.dev");
+  return (
+    <InputGroup>
+      <InputGroupInput
+        aria-label="Website"
+        onValueChange={(value, details) => {
+          changes.push({ source: details.source, value });
+          if (reject) {
+            details.cancel();
+            return;
+          }
+          setText(value);
+        }}
+        value={text}
+      />
+    </InputGroup>
+  );
+}
+
+const website = () =>
+  screen.getByRole<HTMLInputElement>("textbox", { name: "Website" });
+
+test("an agent's setValue reaches a controlled input's onValueChange as the agent's", async () => {
+  const changes: ValueChange[] = [];
+  render(<Website changes={changes} />);
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["constella.dev"], ref: "Website" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(changes).toEqual([{ source: "agent", value: "constella.dev" }]);
+  expect(website().value).toBe("constella.dev");
+});
+
+test("a controlled input whose onValueChange cancels the agent's setValue keeps its value and tells the agent", async () => {
+  const changes: ValueChange[] = [];
+  render(<Website changes={changes} reject />);
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["constella.dev"], ref: "Website" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.steps.map((step) => step.result)).toEqual([false]);
+  expect(changes).toEqual([{ source: "agent", value: "constella.dev" }]);
+  expect(website().value).toBe("old.dev");
 });

@@ -8,10 +8,7 @@ section: AI
 
 ```tsx
 <PromptInput onSubmit={send}>
-  <PromptInputTextarea
-    onChange={(event) => setText(event.target.value)}
-    value={text}
-  />
+  <PromptInputTextarea onValueChange={setText} value={text} />
   <PromptInputFooter>
     <PromptInputTools>
       <InputGroupButton aria-label="Attach" size="icon-sm">

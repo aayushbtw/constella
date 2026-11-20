@@ -320,9 +320,9 @@ function SliderInputDemo() {
               onBlur={() => {
                 setDraft(String(value));
               }}
-              onChange={(event) => {
-                setDraft(event.target.value);
-                const next = event.target.valueAsNumber;
+              onValueChange={(text) => {
+                setDraft(text);
+                const next = text === "" ? Number.NaN : Number(text);
                 if (Number.isFinite(next)) {
                   setValue(Math.min(100, Math.max(0, Math.round(next))));
                 }

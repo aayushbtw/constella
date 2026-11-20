@@ -184,9 +184,7 @@ function EmptyContentDemo() {
           </InputGroupAddon>
           <InputGroupInput
             aria-label="Search files"
-            onChange={(event) => {
-              setQuery(event.target.value);
-            }}
+            onValueChange={setQuery}
             placeholder="Search files"
             value={query}
           />

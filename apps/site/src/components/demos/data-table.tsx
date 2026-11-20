@@ -455,9 +455,7 @@ function DataTableFilterDemo() {
             </InputGroupAddon>
             <InputGroupInput
               aria-label="Filter payments"
-              onChange={(event) => {
-                setSearch(event.target.value);
-              }}
+              onValueChange={setSearch}
               placeholder="Search emails"
               value={search}
             />
@@ -573,9 +571,7 @@ function PaymentsQuery() {
           </InputGroupAddon>
           <InputGroupInput
             aria-label="Search payments"
-            onChange={(event) => {
-              setSearch(event.target.value);
-            }}
+            onValueChange={setSearch}
             placeholder="Search emails"
             value={search}
           />
