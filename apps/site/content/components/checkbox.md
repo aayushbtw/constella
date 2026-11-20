@@ -92,7 +92,7 @@ function DesktopItems() {
       <CheckboxGroup
         aria-describedby={description}
         aria-labelledby={legend}
-        defaultValue={["hard-disks"]}
+        defaultValue={["hard-disks", "external-disks"]}
       >
         <Label>
           <Checkbox value="hard-disks" />

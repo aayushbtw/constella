@@ -166,7 +166,7 @@ function CheckboxGroupDemo() {
         <CheckboxGroup
           aria-describedby={description}
           aria-labelledby={legend}
-          defaultValue={["hard-disks"]}
+          defaultValue={["hard-disks", "external-disks"]}
         >
           {desktopItems.map((item) => (
             <Label key={item.value}>
