@@ -89,7 +89,7 @@ A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside th
 
 ## Combobox
 
-An input group with a select's popup under it: the same rows, tick and sizes, as wide as the field, opening at once when typing opens it. With chips, the box grows a line at a time to hold them. A chip is a `fill` pill a step under the box's height, centered with an even inset so its corner is concentric with the box's, and its remove button is a square flush with its end, sharing its corners. Empty, the input's text sits where a plain input's does; the typed text keeps `sizes.chipsInput` beside the chips before it drops to the next line.
+An input group with a select's popup under it: the same rows, tick and sizes, as wide as the field, opening at once when typing opens it. The clear button and the trigger share the end slot, and clear stands in while there's a value or typed text. The create row reads as one more item row. With chips, the box grows a line at a time to hold them. A chip is a `fill` pill a step under the box's height, centered with an even inset so its corner is concentric with the box's, and its remove button is a square flush with its end, sharing its corners. Empty, the input's text sits where a plain input's does; the typed text keeps `sizes.chipsInput` beside the chips before it drops to the next line.
 
 ## Command
 

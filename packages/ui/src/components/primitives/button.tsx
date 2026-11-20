@@ -67,11 +67,11 @@ const loading = `:is(${busy}${disabled}, [data-pending])`;
 const hoverIdle = `:hover:not(${disabled}, [data-pending])`;
 const activeIdle = `:active:not(${disabled}, [data-pending])`;
 // A trigger opens something on press, so it doesn't give.
-const press = `:active:not([aria-haspopup], ${disabled}, [data-pending])`;
+const press = `:active:not([aria-haspopup], [data-slot='combobox-trigger'], ${disabled}, [data-pending])`;
 
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen =
-  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'])[data-open])";
+  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open])";
 
 // At rest, and while hovered or while its popup is open.
 const interactive = <R, A>(rest: R, active: A) => ({

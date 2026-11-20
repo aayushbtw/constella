@@ -80,14 +80,15 @@ const sm = ":is([data-size='sm'])";
 const rtl = ":is([dir='rtl'] *)";
 // The first button in a run, inside a block addon.
 const leadingBlockButton =
-  ":where([data-slot='input-group-addon'][data-align^='block'] > :not([data-slot='button'] + *))";
+  ":where([data-slot='input-group-addon'][data-align^='block'] > :not(:is([data-slot='button'], [data-input-group-button]) + *))";
 // A text prefix like `https://` or `$`, or a suffix like `%`, reads as part of the value. `:is`, not `:where`, so it outranks the inline padding.
 const afterPrefix =
   ":is([data-slot='input-group']:has(> [data-align='inline-start'] > [data-slot='input-group-text']:only-child) *)";
 const beforeSuffix =
   ":is([data-slot='input-group']:has(> [data-align='inline-end'] > [data-slot='input-group-text']:only-child) *)";
 // A trailing button sits as far from the side as from the edge it rests on.
-const trailingButton = ":has(> [data-slot='button']:last-child)";
+const trailingButton =
+  ":has(> :is([data-slot='button'], [data-input-group-button]):last-child)";
 const stacked = ":has(> [data-align^='block'], > textarea)";
 
 // Conditions on the control, read from the group around it.
@@ -112,7 +113,7 @@ const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 // An xs button or a keycap sits in the box with an even inset on three sides.
 const insetEdge = {
   default: null,
-  ":has(> [data-slot='button'])": bySize({
+  ":has(> :is([data-slot='button'], [data-input-group-button]))": bySize({
     lg: insetMargin(sizes.controlLg, sizes.controlXs),
     default: insetMargin(sizes.controlMd, sizes.controlXs),
     sm: insetMargin(sizes.controlSm, sizes.controlXs),
@@ -463,6 +464,8 @@ function InputGroupButton({
 }: InputGroupButtonProps) {
   return (
     <Button
+      // A ui-sdk part rendered through it writes its own slot over `button`.
+      data-input-group-button=""
       size={size}
       type={type}
       variant={variant}
