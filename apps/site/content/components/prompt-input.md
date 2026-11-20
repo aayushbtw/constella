@@ -62,51 +62,44 @@ PromptInputCommand
     ├── PromptInputCommandEmpty
     └── PromptInputCommandList
         └── PromptInputCommandItem
+            └── PromptInputCommandItemIcon
 ```
 
 ## Prompt Input Command
 
-Wrap the prompt input in a `PromptInputCommand`, swap its textarea for `PromptInputCommandTextarea`, and put a `PromptInputCommandList` in a `PromptInputCommandContent` to open slash commands over the composer. The list looks like a [Command](/docs/components/command). You set `open` and `query` from the draft, and a pick runs the item's `onClick` and leaves the draft to you.
+Wrap the prompt input in a `PromptInputCommand`, swap its textarea for `PromptInputCommandTextarea`, and put a `PromptInputCommandList` in a `PromptInputCommandContent` to open slash commands over the composer. The list looks like a [Command](/docs/components/command). A `/` at the start of the draft opens it, and typing narrows it. Enter, Tab or a click inserts the pick into the draft, and undo brings the query back. Esc closes the list until the `/` is typed again. The `triggers` are ui-sdk Trigger Menu's, so `@` mentions work the same way.
 
 <!-- ::demo name="prompt-input-command" -->
 
 ```tsx
-// query = /^\/(?<query>\S*)$/u.exec(text)?.groups?.query
 <PromptInputCommand
-  items={commands}
-  onOpenChange={(open) => {
-    if (!open) setDismissed(true);
-  }}
-  onValueChange={(value) => {
-    setText(value);
-    setDismissed(false);
-  }}
-  open={query !== undefined && !dismissed}
-  query={query ?? ""}
-  value={text}
+  triggers={[
+    { boundary: "start", char: "/", insert: (item) => `/${item.value} ` },
+  ]}
 >
   <PromptInput onSubmit={send}>
-    <PromptInputCommandTextarea placeholder="Ask anything, or type / for commands…" />
+    <PromptInputCommandTextarea
+      onValueChange={setText}
+      placeholder="Ask anything, or type / for commands…"
+      value={text}
+    />
     <PromptInputFooter>…</PromptInputFooter>
   </PromptInput>
   <PromptInputCommandContent>
-    <PromptInputCommandEmpty>No commands found.</PromptInputCommandEmpty>
     <PromptInputCommandList>
-      {(command: SlashCommand) => (
+      {commands.map((command) => (
         <PromptInputCommandItem
           key={command.value}
-          onClick={() => setText(`/${command.value} `)}
-          value={command}
+          label={command.label}
+          value={command.value}
         >
           {command.label}
         </PromptInputCommandItem>
-      )}
+      ))}
     </PromptInputCommandList>
   </PromptInputCommandContent>
 </PromptInputCommand>
 ```
-
-**Find the textarea by its label, not its role:** while the list is open it's a `combobox`, with `aria-expanded` and the highlighted item as `aria-activedescendant`; closed, it's a plain `textbox`.
 
 ## Prompt Input Header
 
@@ -167,12 +160,13 @@ Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to 
 | Part | Adds |
 | --- | --- |
 | `PromptInputTextarea` | Submits on Enter |
-| `PromptInputCommand` | Base UI's [Autocomplete](https://base-ui.com/react/components/autocomplete) root, its first item highlighted. `open`, `query` and `value` are required, and a pick never writes the item into `value` |
-| `PromptInputCommandTextarea` | `PromptInputTextarea` as the autocomplete's input, a plain textarea while closed. While open, the arrows move the highlight, Enter, Cmd/Ctrl/Alt+Enter and Tab pick, and Esc closes the list and keeps the text. Enter with no match closes the list and sends the draft |
+| `PromptInputCommand` | ui-sdk's [Trigger Menu](https://ui-sdk.dev/docs/react/components/trigger-menu) root. Takes `triggers`, and holds a visually hidden status that tells screen readers how many commands match |
+| `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |
 | `PromptInputCommandContent` | The popup on the composer, as wide as it, above it or below it when there's no room. Takes `side` (default `"top"`), `align` (default `"start"`) and `sideOffset` |
-| `PromptInputCommandList` | Base UI's Autocomplete list, drawn as a Command list. Renders each of the command's `items` through a function child |
-| `PromptInputCommandItem` | A Command row; a pick runs its `onClick` |
-| `PromptInputCommandEmpty` | Command's empty message, shown when nothing matches the query |
+| `PromptInputCommandList` | Trigger Menu's list, drawn as a Command list |
+| `PromptInputCommandItem` | A Command row. A pick runs its `onSelect`, then inserts what the trigger's `insert` returns, or `/`, its `label` and a space |
+| `PromptInputCommandItemIcon` | The command's icon, before its text and kept from shrinking. Screen readers, filtering and the inserted text skip it. `mirror` flips it in right-to-left text |
+| `PromptInputCommandEmpty` | Command's empty message, shown while nothing matches. Rendered, it keeps the list open with no match, so Enter doesn't send until Esc closes the list. Without it, the list closes and Enter sends |
 | `PromptInputHeader` | Above the text, for attachments |
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |

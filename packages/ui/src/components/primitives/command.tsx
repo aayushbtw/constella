@@ -152,7 +152,6 @@ const styles = stylex.create({
   },
 });
 
-/** The command's look, for parts another library renders (Prompt Input's list). */
 const commandStyles = {
   empty: [typeStyles.textMd, styles.empty],
   item: [typeStyles.textMd, styles.item],

@@ -48,8 +48,8 @@ import {
   PromptInputBarButton,
   PromptInputCommand,
   PromptInputCommandContent,
-  PromptInputCommandEmpty,
   PromptInputCommandItem,
+  PromptInputCommandItemIcon,
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
@@ -59,7 +59,10 @@ import {
   PromptInputTools,
   PromptInputWell,
 } from "@/components/ai/prompt-input";
-import type { PromptInputState } from "@/components/ai/prompt-input";
+import type {
+  PromptInputCommandProps,
+  PromptInputState,
+} from "@/components/ai/prompt-input";
 import { Button } from "@/components/primitives/button";
 import { CopyButton } from "@/components/primitives/copy-button";
 import { InputGroupButton } from "@/components/primitives/input-group";
@@ -429,29 +432,16 @@ const commands: SlashCommand[] = [
   { icon: TranslateIcon, label: "Translate", value: "translate" },
 ];
 
+const commandTriggers: PromptInputCommandProps["triggers"] = [
+  { boundary: "start", char: "/", insert: (item) => `/${item.value} ` },
+];
+
 function PromptInputCommandDemo() {
   const [text, setText] = useState("");
-  const [dismissed, setDismissed] = useState(false);
-  // Open while the draft is a `/` and one word.
-  const query = /^\/(?<query>\S*)$/u.exec(text)?.groups?.query;
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <PromptInputCommand
-          items={commands}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDismissed(true);
-            }
-          }}
-          onValueChange={(value) => {
-            setText(value);
-            setDismissed(false);
-          }}
-          open={query !== undefined && !dismissed}
-          query={query ?? ""}
-          value={text}
-        >
+        <PromptInputCommand triggers={commandTriggers}>
           <PromptInput
             onSubmit={(event) => {
               event.preventDefault();
@@ -460,7 +450,9 @@ function PromptInputCommandDemo() {
           >
             <PromptInputCommandTextarea
               aria-label="Message"
+              onValueChange={setText}
               placeholder="Ask anything, or type / for commands…"
+              value={text}
             />
             <PromptInputFooter>
               <PromptInputTools>
@@ -472,22 +464,18 @@ function PromptInputCommandDemo() {
             </PromptInputFooter>
           </PromptInput>
           <PromptInputCommandContent>
-            <PromptInputCommandEmpty>
-              No commands found.
-            </PromptInputCommandEmpty>
             <PromptInputCommandList>
-              {(command: SlashCommand) => (
+              {commands.map((command) => (
                 <PromptInputCommandItem
                   key={command.value}
-                  onClick={() => {
-                    setText(`/${command.value} `);
-                  }}
-                  value={command}
+                  value={command.value}
                 >
-                  <Glyph icon={command.icon} />
+                  <PromptInputCommandItemIcon>
+                    <Glyph icon={command.icon} />
+                  </PromptInputCommandItemIcon>
                   {command.label}
                 </PromptInputCommandItem>
-              )}
+              ))}
             </PromptInputCommandList>
           </PromptInputCommandContent>
         </PromptInputCommand>

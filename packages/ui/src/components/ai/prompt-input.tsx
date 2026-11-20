@@ -1,11 +1,21 @@
 "use client";
 
-import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { ArrowUp02Icon, StopIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, use, useMemo, useRef } from "react";
-import type { ComponentProps, RefObject } from "react";
+import {
+  TriggerMenu,
+  TriggerMenuContent,
+  TriggerMenuEmpty,
+  TriggerMenuInput,
+  TriggerMenuItem,
+  TriggerMenuItemIcon,
+  TriggerMenuList,
+  TriggerMenuStatus,
+} from "@ui-sdk/react/trigger-menu";
+import type { TriggerMenuProps } from "@ui-sdk/react/trigger-menu";
+import { createContext, use, useMemo, useState } from "react";
+import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -23,15 +33,13 @@ import type {
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
   fontSizes,
-  layers,
   lineHeights,
   media,
   offsets,
-  popupVars,
   radii,
   shadows,
   sizes,
@@ -157,21 +165,32 @@ const styles = stylex.create({
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
   },
-  commandPositioner: {
-    [popupVars.availableHeight]: "var(--available-height)",
-    zIndex: layers.popover,
-  },
-  // As wide as the composer; a list pads its own top.
+  // ui-sdk's trigger menu leaves the browser's `[popover]` border.
   commandContent: {
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     boxShadow: shadows.lg,
-    maxHeight: popupVars.availableHeight,
+    maxHeight: "var(--available-height)",
     paddingBlockStart: {
       default: space.xxs,
-      ":has(> [data-slot='command-list'])": 0,
+      ":has(> [data-slot='trigger-menu-list'])": 0,
     },
     width: "var(--anchor-width)",
   },
+  commandIcon: {
+    display: "flex",
+    flexShrink: 0,
+  },
 });
+
+interface Anchor {
+  anchor: HTMLDivElement | null;
+  setAnchor: (element: HTMLDivElement | null) => void;
+}
+
+const AnchorContext = createContext<Anchor | null>(null);
 
 /** A form around an input group: submit it with Enter or the submit button. */
 function PromptInput({
@@ -185,14 +204,15 @@ function PromptInput({
       {...props}
       {...stylex.props(styles.form, sx)}
     >
-      <InputGroup sx={styles.group}>{children}</InputGroup>
+      <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
+        {children}
+      </InputGroup>
     </form>
   );
 }
 
-/** Submits its form on Enter; Shift+Enter, and Enter while an IME is composing, add a line. */
+/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
 function PromptInputTextarea({
-  onKeyDown,
   placeholder = "Ask anything…",
   sx,
   ...props
@@ -200,21 +220,9 @@ function PromptInputTextarea({
   return (
     <InputGroupTextarea
       data-prompt-input-textarea=""
-      onKeyDown={(event) => {
-        onKeyDown?.(event);
-        if (
-          event.defaultPrevented ||
-          event.key !== "Enter" ||
-          event.shiftKey ||
-          event.nativeEvent.isComposing
-        ) {
-          return;
-        }
-        event.preventDefault();
-        event.currentTarget.form?.requestSubmit();
-      }}
       placeholder={placeholder}
       rows={1}
+      submitShortcut="enter"
       {...props}
       sx={[styles.textarea, sx]}
     />
@@ -353,182 +361,103 @@ function PromptInputSubmit({
   );
 }
 
-interface CommandFrame {
-  /** Takes the textarea, and keeps the composer around it as the popup's anchor. */
-  attach: (input: Element | null) => void;
-  frame: RefObject<Element | null>;
-  open: boolean;
-}
+type PromptInputCommandProps<T = string> = TriggerMenuProps<T>;
 
-const CommandFrameContext = createContext<CommandFrame | null>(null);
-
-function useCommandFrame() {
-  const frame = use(CommandFrameContext);
-  if (frame === null) {
-    throw new Error(
-      "Prompt input command parts must be inside a PromptInputCommand."
-    );
-  }
-  return frame;
-}
-
-type PromptInputCommandProps = Omit<
-  AutocompletePrimitive.Root.Props<unknown>,
-  | "defaultOpen"
-  | "defaultValue"
-  | "filter"
-  | "inline"
-  | "mode"
-  | "open"
-  | "value"
-> & {
-  open: boolean;
-  /** The text the items are filtered by, like the draft after its `/`. */
-  query: string;
-  /** The draft; controlled, since Base UI keeps a pick's label as its own value. */
-  value: string;
-};
-
-/** A command list the prompt input opens over itself; the app sets `open` and `query` from the draft. */
-function PromptInputCommand({
-  onValueChange,
-  open,
-  query,
+/** A command list the prompt input opens over itself when the draft matches one of its `triggers`, like a `/` at the start. */
+function PromptInputCommand<T = string>({
+  children,
   ...props
-}: PromptInputCommandProps) {
-  const frame = useRef<Element | null>(null);
-  const { contains } = AutocompletePrimitive.useFilter();
-  const context = useMemo(
-    () => ({
-      attach: (input: Element | null) => {
-        frame.current = input?.closest("[data-slot='input-group']") ?? null;
-      },
-      frame,
-      open,
-    }),
-    [open]
-  );
+}: PromptInputCommandProps<T>) {
+  const [anchor, setAnchor] = useState<HTMLDivElement | null>(null);
+  const anchorContext = useMemo(() => ({ anchor, setAnchor }), [anchor]);
   return (
-    <CommandFrameContext value={context}>
-      <AutocompletePrimitive.Root
-        autoHighlight="always"
-        filter={(item, _value, itemToString) =>
-          contains(item, query, itemToString)
-        }
-        onValueChange={(value, details) => {
-          // A pick runs the item's `onClick`; it never writes the item into the draft.
-          if (details.reason !== "item-press") {
-            onValueChange?.(value, details);
-          }
-        }}
-        open={open}
-        {...props}
-      />
-    </CommandFrameContext>
+    <AnchorContext value={anchorContext}>
+      <TriggerMenu<T> {...props}>
+        {children}
+        <TriggerMenuStatus {...stylex.props(visuallyHidden.base)} />
+      </TriggerMenu>
+    </AnchorContext>
   );
 }
 
-/** The prompt input's textarea as the command's input: while the list is open, arrows move, Enter, Cmd/Ctrl/Alt+Enter and Tab pick, Esc closes. */
-function PromptInputCommandTextarea(props: TextareaProps) {
-  const { attach, open } = useCommandFrame();
-  return (
-    <AutocompletePrimitive.Input
-      onKeyDown={(event) => {
-        // Closed, or moving the caret, it stays a plain textarea.
-        if (!open || event.key === "Home" || event.key === "End") {
-          event.preventBaseUIHandler();
-          return;
-        }
-        // Base UI picks on a plain Enter only; Tab and Cmd/Ctrl/Alt+Enter pick too, rather than submit.
-        const modifiedEnter =
-          event.key === "Enter" &&
-          (event.metaKey || event.ctrlKey || event.altKey);
-        if ((event.key === "Tab" && !event.shiftKey) || modifiedEnter) {
-          const highlighted = event.currentTarget.getAttribute(
-            "aria-activedescendant"
-          );
-          if (highlighted !== null) {
-            event.preventDefault();
-            event.currentTarget.ownerDocument
-              .querySelector<HTMLElement>(`#${CSS.escape(highlighted)}`)
-              ?.click();
-          }
-        }
-      }}
-      ref={attach}
-      render={<PromptInputTextarea {...props} />}
-    />
+type PromptInputCommandTextareaProps = Omit<
+  TextareaProps,
+  "onValueChange" | "value"
+> &
+  (
+    | { onValueChange?: TextareaProps["onValueChange"]; value?: undefined }
+    | {
+        onValueChange: NonNullable<TextareaProps["onValueChange"]>;
+        value: string;
+      }
   );
+
+/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. Control it with `value` and `onValueChange`. */
+function PromptInputCommandTextarea(props: PromptInputCommandTextareaProps) {
+  return <TriggerMenuInput render={<PromptInputTextarea {...props} />} />;
 }
 
-/** The command's popup on the composer's edge, above it unless there's no room. Holds a `PromptInputCommandList` and `PromptInputCommandEmpty`. */
+/** The command's popup on the composer's edge, above it unless there's no room. Holds a `PromptInputCommandList`. */
 function PromptInputCommandContent({
   align = "start",
   side = "top",
   sideOffset = Number(offsets.popover),
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Popup.Props> &
-  Pick<
-    AutocompletePrimitive.Positioner.Props,
-    "align" | "side" | "sideOffset"
-  >) {
-  const { frame } = useCommandFrame();
+}: Styled<ComponentProps<typeof TriggerMenuContent>>) {
   return (
-    <AutocompletePrimitive.Portal>
-      <AutocompletePrimitive.Positioner
-        align={align}
-        anchor={frame}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(styles.commandPositioner)}
-      >
-        <AutocompletePrimitive.Popup
-          data-slot="prompt-input-command-content"
-          {...props}
-          {...stylex.props(commandStyles.surface, styles.commandContent, sx)}
-        />
-      </AutocompletePrimitive.Positioner>
-    </AutocompletePrimitive.Portal>
+    <TriggerMenuContent
+      align={align}
+      anchor={use(AnchorContext)?.anchor}
+      side={side}
+      sideOffset={sideOffset}
+      {...props}
+      {...stylex.props(
+        popupReset.base,
+        commandStyles.surface,
+        styles.commandContent,
+        sx
+      )}
+    />
   );
 }
 
 function PromptInputCommandList({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.List.Props>) {
+}: Styled<ComponentProps<typeof TriggerMenuList>>) {
   return (
-    <AutocompletePrimitive.List
-      data-slot="command-list"
-      {...props}
-      {...stylex.props(commandStyles.list, sx)}
-    />
+    <TriggerMenuList {...props} {...stylex.props(commandStyles.list, sx)} />
   );
 }
 
-function PromptInputCommandItem({
+/** A command. A pick runs its `onSelect`, then inserts what the trigger's `insert` returns. */
+function PromptInputCommandItem<T = string>({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Item.Props>) {
+}: Styled<ComponentProps<typeof TriggerMenuItem<T>>>) {
   return (
-    <AutocompletePrimitive.Item
-      data-slot="command-item"
-      {...props}
-      {...stylex.props(commandStyles.item, sx)}
-    />
+    <TriggerMenuItem<T> {...props} {...stylex.props(commandStyles.item, sx)} />
   );
 }
 
+/** A command's icon, before its text. Screen readers, filtering and insertion skip it; `mirror` flips it in right-to-left text. */
+function PromptInputCommandItemIcon({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof TriggerMenuItemIcon>>) {
+  return (
+    <TriggerMenuItemIcon {...props} {...stylex.props(styles.commandIcon, sx)} />
+  );
+}
+
+/** Shown while nothing matches. Rendered, it keeps the list open with no matches, so Enter submits only once Esc closes it. */
 function PromptInputCommandEmpty({
   sx,
   ...props
-}: Styled<AutocompletePrimitive.Empty.Props>) {
+}: Styled<ComponentProps<typeof TriggerMenuEmpty>>) {
   return (
-    <AutocompletePrimitive.Empty
-      data-slot="command-empty"
-      {...props}
-      {...stylex.props(commandStyles.empty, sx)}
-    />
+    <TriggerMenuEmpty {...props} {...stylex.props(commandStyles.empty, sx)} />
   );
 }
 
@@ -540,6 +469,7 @@ export {
   PromptInputCommandContent,
   PromptInputCommandEmpty,
   PromptInputCommandItem,
+  PromptInputCommandItemIcon,
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
