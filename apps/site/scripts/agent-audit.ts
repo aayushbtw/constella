@@ -4,14 +4,9 @@ import { createServer } from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 
-import type { createAgent } from "@ui-sdk/react/agent";
 import { chromium, errors } from "playwright";
 import type { Page } from "playwright";
 import { z } from "zod";
-
-declare global {
-  var agent: ReturnType<typeof createAgent> | undefined;
-}
 
 type Kind = string;
 type PagePath = string;
@@ -127,7 +122,7 @@ async function settle(page: Page, state: Settling): Promise<void> {
   }
   await page.waitForTimeout(100);
   const length = await page.evaluate(
-    () => globalThis.agent?.snapshot().length ?? 0
+    () => globalThis.agentBridge?.agent.snapshot().length ?? 0
   );
   await settle(page, {
     length,
@@ -138,15 +133,15 @@ async function settle(page: Page, state: Settling): Promise<void> {
 
 async function scan(page: Page, url: string): Promise<Scan> {
   await page.goto(url, { waitUntil: "load" });
-  await page.waitForFunction(() => globalThis.agent !== undefined, null, {
+  await page.waitForFunction(() => globalThis.agentBridge !== undefined, null, {
     timeout: 10_000,
   });
   await settle(page, { length: -1, reads: 0, stable: 0 });
   return await page.evaluate(async () => {
-    const { agent } = globalThis;
-    if (agent === undefined) {
+    if (globalThis.agentBridge === undefined) {
       throw new Error("agent bridge left the page");
     }
+    const { agent } = globalThis.agentBridge;
     type Entry = ReturnType<typeof agent.snapshot>[number];
     const listed = (list: Entry[]) =>
       list.filter((entry) => entry.component !== "more");
