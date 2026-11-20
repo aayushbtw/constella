@@ -124,8 +124,7 @@ function renderComposer(props: { empty?: boolean } = {}) {
   return onSubmit;
 }
 
-// Accessible names, which leave out the icons.
-function optionNames() {
+function accessibleOptions() {
   const names = new Map<Element, string>();
   return screen
     .queryAllByRole("option", {
@@ -139,9 +138,9 @@ function optionNames() {
       name: names.get(option),
     }));
 }
-const options = () => optionNames().map((option) => option.name);
+const options = () => accessibleOptions().map((option) => option.name);
 const highlighted = () =>
-  optionNames().find((option) => option.highlighted)?.name;
+  accessibleOptions().find((option) => option.highlighted)?.name;
 const isOpen = () => screen.queryAllByRole("listbox").length > 0;
 const send = () =>
   screen.getByRole<HTMLButtonElement>("button", { name: "Send" });

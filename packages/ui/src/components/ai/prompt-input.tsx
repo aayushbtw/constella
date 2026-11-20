@@ -211,7 +211,7 @@ function PromptInput({
   );
 }
 
-/** Submits its form on Enter, through ui-sdk Textarea's `submitShortcut`; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
+/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
 function PromptInputTextarea({
   placeholder = "Ask anything…",
   sx,
