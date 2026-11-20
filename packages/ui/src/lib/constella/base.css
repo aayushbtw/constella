@@ -282,7 +282,8 @@
       [data-slot="menu-trigger"][role="menuitem"],
       [data-slot="menu-checkbox-item"],
       [data-slot="menu-radio-item"],
-      [data-slot="command-item"]
+      [data-slot="command-item"],
+      [data-slot="trigger-menu-item"]
     )
     > :where(svg) {
     flex-shrink: 0;

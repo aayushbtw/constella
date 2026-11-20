@@ -78,7 +78,7 @@ const joinStyles = stylex.create({
 
 const popupReset = stylex.create({
   // A ui-sdk popup renders in place, so it drops what it would inherit from there: a group's joins,
-  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box, except a menu's, a select's and a combobox's.
+  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box, except a menu's, a select's, a combobox's and a trigger menu's.
   base: {
     [joins.block]: "1",
     [joins.either]: "1",

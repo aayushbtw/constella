@@ -1009,10 +1009,10 @@
       "title": "Prompt Input",
       "description": "The chat composer on an input group: grows with its text, submits on Enter, turns into Stop while streaming, and opens a command list over itself.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
