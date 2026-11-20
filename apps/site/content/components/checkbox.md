@@ -78,6 +78,13 @@ Use `CheckboxGroup` to keep one list of checked values. Each checkbox supplies i
 <!-- ::demo name="checkbox-group" -->
 
 ```tsx
+const desktopItems = [
+  { label: "Hard disks", value: "hard-disks" },
+  { label: "External disks", value: "external-disks" },
+  { label: "CDs, DVDs, and iPods", value: "media" },
+  { label: "Connected servers", value: "servers" },
+];
+
 function DesktopItems() {
   const legend = useId();
   const description = useId();
@@ -94,14 +101,12 @@ function DesktopItems() {
         aria-labelledby={legend}
         defaultValue={["hard-disks", "external-disks"]}
       >
-        <Label>
-          <Checkbox value="hard-disks" />
-          Hard disks
-        </Label>
-        <Label>
-          <Checkbox value="servers" />
-          Connected servers
-        </Label>
+        {desktopItems.map((item) => (
+          <Label key={item.value}>
+            <Checkbox value={item.value} />
+            {item.label}
+          </Label>
+        ))}
       </CheckboxGroup>
     </FieldSet>
   );
@@ -155,18 +160,26 @@ Add a checkbox with `parent` to a `CheckboxGroup` to check or uncheck the whole 
 ```tsx
 const fruits = ["Apples", "Oranges", "Pears"];
 
-<CheckboxGroup aria-label="Fruits" allValues={fruits} defaultValue={["Apples"]}>
-  <Label>
-    <Checkbox parent />
-    All fruits
-  </Label>
-  {fruits.map((fruit) => (
-    <Label key={fruit}>
-      <Checkbox value={fruit} />
-      {fruit}
-    </Label>
-  ))}
-</CheckboxGroup>;
+function Fruits() {
+  return (
+    <CheckboxGroup
+      aria-label="Fruits"
+      allValues={fruits}
+      defaultValue={["Apples"]}
+    >
+      <Label>
+        <Checkbox parent />
+        All fruits
+      </Label>
+      {fruits.map((fruit) => (
+        <Label key={fruit}>
+          <Checkbox value={fruit} />
+          {fruit}
+        </Label>
+      ))}
+    </CheckboxGroup>
+  );
+}
 ```
 
 A checkbox outside a group takes `checked="indeterminate"` directly.
@@ -204,38 +217,46 @@ Wrap the table in a `CheckboxGroup`. Put a checkbox with the row's `value` in th
 <!-- ::demo name="checkbox-table" -->
 
 ```tsx
-const [selected, setSelected] = useState(["1"]);
+function TeamMembers() {
+  const [selected, setSelected] = useState(["1"]);
 
-<CheckboxGroup
-  allValues={people.map((row) => row.id)}
-  aria-label="Team members"
-  onValueChange={setSelected}
-  value={selected}
->
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead>
-          <Checkbox aria-label="Select all" parent />
-        </TableHead>
-        <TableHead>Name</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {people.map((row) => (
-        <TableRow
-          data-state={selected.includes(row.id) ? "selected" : undefined}
-          key={row.id}
-        >
-          <TableCell>
-            <Checkbox aria-label={`Select ${row.name}`} value={row.id} />
-          </TableCell>
-          <TableCell>{row.name}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-</CheckboxGroup>;
+  return (
+    <CheckboxGroup
+      allValues={people.map((row) => row.id)}
+      aria-label="Team members"
+      onValueChange={setSelected}
+      value={selected}
+    >
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Checkbox aria-label="Select all" parent />
+            </TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {people.map((row) => (
+            <TableRow
+              data-state={selected.includes(row.id) ? "selected" : undefined}
+              key={row.id}
+            >
+              <TableCell>
+                <Checkbox aria-label={`Select ${row.name}`} value={row.id} />
+              </TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.email}</TableCell>
+              <TableCell>{row.role}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </CheckboxGroup>
+  );
+}
 ```
 
 ## API Reference
