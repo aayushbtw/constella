@@ -139,8 +139,8 @@ const typeUnit = "0.25rem";
 const leadingUnit = "0.25rem";
 
 // The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
-// `textBase`. Each size has a line height of the same name; set them together. 15, 13 and
-// 11 add 1px to a step, as Interfere's do.
+// `textBase`. Each size has a line height of the same name; set them together. 13 and 11
+// add 1px to a step, as Interfere's do; reading copy is 16, a step over Interfere's 15.
 export const fontSizes = stylex.defineConsts({
   heading1: `calc(${typeUnit} * 14)`,
   heading2: `calc(${typeUnit} * 11)`,
@@ -150,7 +150,9 @@ export const fontSizes = stylex.defineConsts({
   heading6: `calc(${typeUnit} * 5)`,
   textLg: `calc(${typeUnit} * 4.5)`,
   // Reading copy.
-  textBase: `calc(${typeUnit} * 3.5 + 1px)`,
+  textBase: `calc(${typeUnit} * 4)`,
+  // Running prose, like a chat's answer: `textBase` with room between lines.
+  textProse: `calc(${typeUnit} * 4)`,
   // A sidebar's rows.
   textMd: `calc(${typeUnit} * 3.5)`,
   // Controls and the text inside components.
@@ -173,6 +175,7 @@ export const lineHeights = stylex.defineConsts({
   heading6: `calc(${leadingUnit} * 6)`,
   textLg: `calc(${leadingUnit} * 6)`,
   textBase: `calc(${leadingUnit} * 6)`,
+  textProse: `calc(${leadingUnit} * 7)`,
   textMd: `calc(${leadingUnit} * 5)`,
   textSm: `calc(${leadingUnit} * 5)`,
   captionLg: `calc(${leadingUnit} * 4)`,
