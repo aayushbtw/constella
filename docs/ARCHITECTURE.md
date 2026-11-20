@@ -43,7 +43,7 @@ Alert
 └── AlertAction
 ```
 
-- **One part, one element.** Each part wraps a single element or ui-sdk part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part. The exception is ui-sdk's item `shortcut`, which renders its own span; `base.css` styles it by slot (`menu-shortcut`). A part that announces (Copy Button's "Copied") renders its live region as a slot-less sibling, since inside the control its text would join the control's name and a slot would make it a group's last part.
+- **One part, one element.** Each part wraps a single element or ui-sdk part and is a named export (`Alert`, `AlertTitle`). No config-object props that hide structure; if it renders, it's a part. The exception is ui-sdk's item `shortcut`, which renders its own span; `base.css` styles it by slot (`menu-shortcut`).
 - **A text input is three elements.** `Input` is an `InputGroup` box around `InputGroupInput`, a slot holding a bare `<input>`, after Interfere's. On a touch screen the input renders at 16px, so iOS doesn't zoom on focus, and scales by `inputVars.scale` back to the box's text size. It outgrows its slot in layout, and the slot keeps that from pushing the addons. `sx` styles the box; every other prop goes to the `<input>`.
 - **Customizing a part, in this order.** Each kind of part takes one kind of customization:
   1. **Inline marks** (Shimmer, Code, Link, Swap Text) take their font and size from the text around them and have no size or color props. They set a color only when the color is what they mean (Link's `textPrimary`, Shimmer's sweep). To size one, put it in a `Text`: `<Text color="muted"><Shimmer>…</Shimmer></Text>`.

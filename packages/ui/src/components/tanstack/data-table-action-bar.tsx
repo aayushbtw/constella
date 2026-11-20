@@ -1,12 +1,13 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { announce } from "@ui-sdk/core";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -109,37 +110,41 @@ function DataTableActionBar({
   if (count > 0 && count !== held) {
     setHeld(count);
   }
+  const announced = useRef(count);
+  useEffect(() => {
+    if (count === announced.current) {
+      return;
+    }
+    announced.current = count;
+    if (count > 0) {
+      announce(`${count} selected`);
+    }
+  }, [count]);
   return (
-    <>
-      <div
-        aria-label={label}
-        data-closed={count === 0 ? "" : undefined}
-        data-slot="data-table-action-bar"
-        inert={count === 0}
-        role="toolbar"
-        {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
+    <div
+      aria-label={label}
+      data-closed={count === 0 ? "" : undefined}
+      data-slot="data-table-action-bar"
+      inert={count === 0}
+      role="toolbar"
+      {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
+    >
+      <span {...stylex.props(styles.count)}>
+        {count > 0 ? count : held} selected
+      </span>
+      {children}
+      <Button
+        aria-label="Clear selection"
+        corners="rounded"
+        onClick={() => {
+          table.resetRowSelection(true);
+        }}
+        size="sm"
+        variant="ghost"
       >
-        <span {...stylex.props(styles.count)}>
-          {count > 0 ? count : held} selected
-        </span>
-        {children}
-        <Button
-          aria-label="Clear selection"
-          corners="rounded"
-          onClick={() => {
-            table.resetRowSelection(true);
-          }}
-          size="sm"
-          variant="ghost"
-        >
-          Clear
-        </Button>
-      </div>
-      {/* Outside the bar, which is hidden while empty: a hidden region isn't announced. */}
-      <output aria-live="polite" {...stylex.props(visuallyHidden.base)}>
-        {count > 0 && `${count} selected`}
-      </output>
-    </>
+        Clear
+      </Button>
+    </div>
   );
 }
 

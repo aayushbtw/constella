@@ -2,14 +2,14 @@
 
 import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import * as stylex from "@stylexjs/stylex";
+import { announce } from "@ui-sdk/core";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
-import { controlIconSize, visuallyHidden } from "@/lib/constella/styles";
+import { controlIconSize } from "@/lib/constella/styles";
 import { durations, strokes } from "@/lib/constella/tokens.stylex";
 
 type CopyButtonProps = Omit<ButtonProps, "children" | "onClick" | "value"> & {
@@ -41,8 +41,7 @@ function CopyButton({
   variant = "ghost",
   ...props
 }: CopyButtonProps) {
-  const [copies, setCopies] = useState(0);
-  const copied = copies > 0;
+  const [copied, setCopied] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(
@@ -54,18 +53,24 @@ function CopyButton({
 
   async function copy() {
     const text = read(value);
-    await (html === undefined
-      ? navigator.clipboard.writeText(text)
-      : navigator.clipboard.write([
-          new ClipboardItem({
-            "text/html": new Blob([read(html)], { type: "text/html" }),
-            "text/plain": new Blob([text], { type: "text/plain" }),
-          }),
-        ]));
-    setCopies((count) => count + 1);
+    try {
+      await (html === undefined
+        ? navigator.clipboard.writeText(text)
+        : navigator.clipboard.write([
+            new ClipboardItem({
+              "text/html": new Blob([read(html)], { type: "text/html" }),
+              "text/plain": new Blob([text], { type: "text/plain" }),
+            }),
+          ]));
+    } catch {
+      announce("Couldn't copy", { priority: "assertive" });
+      return;
+    }
+    announce("Copied");
+    setCopied(true);
     clearTimeout(timeout.current ?? undefined);
     timeout.current = setTimeout(() => {
-      setCopies(0);
+      setCopied(false);
     }, confirmFor);
   }
 
@@ -74,45 +79,38 @@ function CopyButton({
   const iconSize = glyph ?? controlIconSize[buttonSize];
 
   return (
-    <>
-      <Button
-        aria-label={label ?? (labelled ? undefined : "Copy")}
-        data-slot="copy-button"
-        onClick={() => {
-          void copy();
-        }}
-        size={buttonSize}
-        variant={variant}
-        {...props}
+    <Button
+      aria-label={label ?? (labelled ? undefined : "Copy")}
+      data-slot="copy-button"
+      onClick={() => {
+        void copy();
+      }}
+      size={buttonSize}
+      variant={variant}
+      {...props}
+    >
+      <SwapIcon
+        aria-hidden
+        data-icon={labelled ? "inline-start" : undefined}
+        value={copied ? "copied" : "copy"}
       >
-        <SwapIcon
-          aria-hidden
-          data-icon={labelled ? "inline-start" : undefined}
-          value={copied ? "copied" : "copy"}
-        >
-          <SwapIconItem value="copied">
-            <HugeiconsIcon
-              icon={Tick02Icon}
-              size={iconSize}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </SwapIconItem>
-          <SwapIconItem value="copy">
-            <HugeiconsIcon
-              icon={Copy01Icon}
-              size={iconSize}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </SwapIconItem>
-        </SwapIcon>
-        {children}
-      </Button>
-      {/* Outside the button, or its text would join the button's name. */}
-      <output aria-live="polite" {...stylex.props(visuallyHidden.base)}>
-        {/* A fresh node per press, so a repeat press is announced again. */}
-        {copied && <span key={copies}>Copied</span>}
-      </output>
-    </>
+        <SwapIconItem value="copied">
+          <HugeiconsIcon
+            icon={Tick02Icon}
+            size={iconSize}
+            strokeWidth={Number(strokes.icon)}
+          />
+        </SwapIconItem>
+        <SwapIconItem value="copy">
+          <HugeiconsIcon
+            icon={Copy01Icon}
+            size={iconSize}
+            strokeWidth={Number(strokes.icon)}
+          />
+        </SwapIconItem>
+      </SwapIcon>
+      {children}
+    </Button>
   );
 }
 

@@ -147,7 +147,7 @@
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@ui-sdk/core"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -1163,7 +1163,8 @@
         "@stylexjs/stylex",
         "@tanstack/react-query",
         "@tanstack/react-table",
-        "@tanstack/react-virtual"
+        "@tanstack/react-virtual",
+        "@ui-sdk/core"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",

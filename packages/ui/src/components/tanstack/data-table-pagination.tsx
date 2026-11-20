@@ -8,6 +8,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { announce } from "@ui-sdk/core";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -112,22 +114,27 @@ function DataTablePagination({
 }) {
   const { pageIndex, pageSize } = table.state.pagination;
   const count = table.getRowCount();
+  const first = pageIndex * pageSize + 1;
+  const last = Math.min(first + pageSize - 1, count);
+  const range = count === 0 ? "" : `${first}–${last} of ${count}`;
+  const announced = useRef(range);
+  useEffect(() => {
+    const previous = announced.current;
+    announced.current = range;
+    // The first range arrives with the data, not from the user.
+    if (previous && range && range !== previous) {
+      announce(range);
+    }
+  }, [range]);
   if (count === 0) {
     return null;
   }
-  const first = pageIndex * pageSize + 1;
-  const last = Math.min(first + pageSize - 1, count);
   return (
     <div
       data-slot="data-table-pagination"
       {...stylex.props(styles.pagination, sx)}
     >
-      <div
-        aria-live="polite"
-        {...stylex.props([typeStyles.textSm, styles.range])}
-      >
-        {first}–{last} of {count}
-      </div>
+      <div {...stylex.props([typeStyles.textSm, styles.range])}>{range}</div>
       <div {...stylex.props(styles.pageControls)}>
         <div {...stylex.props([typeStyles.textSm, styles.pageSize])}>
           <Select

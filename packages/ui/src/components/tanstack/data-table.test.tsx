@@ -23,7 +23,7 @@ import { createAgent } from "@ui-sdk/react/agent";
 import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { beforeEach, expect, test } from "vite-plus/test";
+import { beforeEach, expect, test, vi } from "vite-plus/test";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -115,6 +115,14 @@ function emails() {
         .map((cell) => cell.textContent)
         .find((text) => text?.endsWith("@acme.com"))
     );
+}
+
+async function heard(text: string) {
+  await vi.waitFor(() => {
+    expect(
+      screen.getAllByRole("status").map((region) => region.textContent)
+    ).toContain(text);
+  });
 }
 
 function checkboxIn(email: string) {
@@ -447,12 +455,14 @@ test("an agent pages through the rows and changes how many show", async () => {
 
   await run({ action: "press", ref: "Next page" });
   expect(screen.getByText("11–20 of 25")).toBeTruthy();
+  await heard("11–20 of 25");
 
   await run({ action: "setValue", args: ["20"], ref: "Rows per page" });
   expect(screen.getByText("1–20 of 25")).toBeTruthy();
 
   await run({ action: "press", ref: "Last page" });
   expect(screen.getByText("21–25 of 25")).toBeTruthy();
+  await heard("21–25 of 25");
 });
 
 function Bar() {
@@ -483,6 +493,7 @@ test("an agent acts on the selected rows from the action bar, deleting only once
   render(<Bar />);
   await run({ action: "setChecked", args: [true], ref: "abe@acme.com" });
   expectNamed(["Copy emails", "Delete", "Clear selection"]);
+  await heard("1 selected");
 
   const remove = { steps: [{ action: "press", ref: "Delete" }] };
   const refused = await agent.act(remove);
@@ -495,6 +506,8 @@ test("an agent acts on the selected rows from the action bar, deleting only once
   expect(emails()).toEqual(["ken@acme.com", "dee@acme.com"]);
 
   await run({ action: "setChecked", args: [true], ref: "ken@acme.com" });
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  await heard("2 selected");
   await run({ action: "press", ref: "Clear selection" });
   expect(checkboxIn("ken@acme.com").getAttribute("aria-checked")).toBe("false");
 });
@@ -569,7 +582,7 @@ function RowClick() {
         }}
         table={table}
       />
-      <output>{openId}</output>
+      <output aria-label="Open payment">{openId}</output>
     </OpenPayment>
   );
 }
@@ -630,5 +643,7 @@ test("an agent opens a row through its named link, as a row click would", async 
   expectNamed(["Open abe@acme.com"]);
 
   await run({ action: "press", ref: "Open abe@acme.com" });
-  expect(screen.getByRole("status").textContent).toBe("p2");
+  expect(screen.getByRole("status", { name: "Open payment" }).textContent).toBe(
+    "p2"
+  );
 });

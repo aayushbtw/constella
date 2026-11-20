@@ -26,4 +26,10 @@ document.head.append(
   })
 );
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  // ui-sdk's announce() keeps its live regions on body across tests. It recreates removed ones.
+  for (const region of document.querySelectorAll("[data-ui-sdk-announcer]")) {
+    region.remove();
+  }
+});
