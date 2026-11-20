@@ -1,7 +1,8 @@
-import { Activity01Icon, ContrastIcon } from "@hugeicons/core-free-icons";
+import { ContrastIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 import { Button, buttonStyles } from "@/components/primitives/button";
 import { typeStyles } from "@/lib/constella/styles";
@@ -103,13 +104,23 @@ function currentSection(pathname: string) {
   )?.to;
 }
 
-function Header({
-  activity,
-}: {
-  activity?: { onOpenChange: (open: boolean) => void; open: boolean };
-}) {
+function Header({ actions }: { actions?: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const current = currentSection(pathname);
+  const themeToggle = (
+    <Button
+      aria-label="Toggle theme"
+      onClick={toggleTheme}
+      size="icon"
+      variant="ghost"
+    >
+      <HugeiconsIcon
+        icon={ContrastIcon}
+        size={sizes.icon}
+        strokeWidth={Number(strokes.icon)}
+      />
+    </Button>
+  );
 
   return (
     <header {...stylex.props(styles.header)}>
@@ -143,36 +154,15 @@ function Header({
         </div>
         <div {...stylex.props(styles.end)}>
           <Search />
-          {activity && (
-            <Button
-              aria-expanded={activity.open}
-              aria-label="Assistant activity"
-              data-agent-hidden
-              onClick={() => {
-                activity.onOpenChange(!activity.open);
-              }}
-              size="icon"
-              variant="ghost"
-            >
-              <HugeiconsIcon
-                icon={Activity01Icon}
-                size={sizes.icon}
-                strokeWidth={Number(strokes.icon)}
-              />
-            </Button>
+          {/* Three children without actions, so NavMenu's useId matches builds that never pass them. */}
+          {actions === undefined ? (
+            themeToggle
+          ) : (
+            <>
+              {actions}
+              {themeToggle}
+            </>
           )}
-          <Button
-            aria-label="Toggle theme"
-            onClick={toggleTheme}
-            size="icon"
-            variant="ghost"
-          >
-            <HugeiconsIcon
-              icon={ContrastIcon}
-              size={sizes.icon}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </Button>
           <NavMenu />
         </div>
       </div>

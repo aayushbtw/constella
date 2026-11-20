@@ -1,3 +1,5 @@
+import { Activity01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { AgentAction, ObservedChange } from "@ui-sdk/react/agent";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -35,6 +37,7 @@ import {
   SidePanelHeader,
   SidePanelTitle,
 } from "@/components/primitives/side-panel";
+import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { agent, confirm, history, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
 
@@ -174,6 +177,33 @@ function AgentFeed() {
   );
 }
 
+function AgentActivityButton({
+  onOpenChange,
+  open,
+}: {
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+}) {
+  return (
+    <Button
+      aria-expanded={open}
+      aria-label="Assistant activity"
+      data-agent-hidden
+      onClick={() => {
+        onOpenChange(!open);
+      }}
+      size="icon"
+      variant="ghost"
+    >
+      <HugeiconsIcon
+        icon={Activity01Icon}
+        size={sizes.icon}
+        strokeWidth={Number(strokes.icon)}
+      />
+    </Button>
+  );
+}
+
 function AgentLoop({
   onOpenChange,
   open,
@@ -200,4 +230,4 @@ function AgentLoop({
   );
 }
 
-export { AgentLoop };
+export { AgentActivityButton, AgentLoop };
