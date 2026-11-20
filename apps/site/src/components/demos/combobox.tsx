@@ -90,6 +90,7 @@ function ComboboxDemo() {
           aria-label="Fruit"
           placeholder="Select a fruit"
           sx={styles.field}
+          triggerLabel="Show fruits"
         />
         <ComboboxContent>
           <FruitList />
@@ -175,7 +176,13 @@ function ComboboxClearDemo() {
   return (
     <DemoRow>
       <Combobox defaultValue="Banana">
-        <ComboboxInput aria-label="Fruit" showClear sx={styles.field} />
+        <ComboboxInput
+          aria-label="Fruit"
+          clearLabel="Clear fruit"
+          showClear
+          sx={styles.field}
+          triggerLabel="Show fruits"
+        />
         <ComboboxContent>
           <FruitList />
         </ComboboxContent>
@@ -192,6 +199,7 @@ function ComboboxGroupsDemo() {
           aria-label="Produce"
           placeholder="Select produce"
           sx={styles.field}
+          triggerLabel="Show produce"
         />
         <ComboboxContent>
           <ComboboxEmpty>No produce found.</ComboboxEmpty>
@@ -230,7 +238,11 @@ function ComboboxDisabledDemo() {
   return (
     <DemoRow>
       <Combobox defaultValue="Banana" disabled>
-        <ComboboxInput aria-label="Fruit" sx={styles.field} />
+        <ComboboxInput
+          aria-label="Fruit"
+          sx={styles.field}
+          triggerLabel="Show fruits"
+        />
         <ComboboxContent>
           <FruitList />
         </ComboboxContent>
@@ -245,7 +257,10 @@ function ComboboxInvalidDemo() {
       <Field invalid>
         <FieldLabel>Fruit</FieldLabel>
         <Combobox>
-          <ComboboxInput placeholder="Select a fruit" />
+          <ComboboxInput
+            placeholder="Select a fruit"
+            triggerLabel="Show fruits"
+          />
           <ComboboxContent>
             <FruitList />
           </ComboboxContent>

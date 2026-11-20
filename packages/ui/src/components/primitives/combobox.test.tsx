@@ -71,7 +71,11 @@ function Fruit({
       onValueChange={onValueChange}
     >
       <ComboboxLabel>Fruit</ComboboxLabel>
-      <ComboboxInput showClear />
+      <ComboboxInput
+        clearLabel="Clear fruit"
+        showClear
+        triggerLabel="Show fruits"
+      />
       <ComboboxContent>
         <FruitItems />
       </ComboboxContent>
@@ -82,7 +86,7 @@ function Fruit({
 function Produce() {
   return (
     <Combobox>
-      <ComboboxInput aria-label="Produce" />
+      <ComboboxInput aria-label="Produce" triggerLabel="Show produce" />
       <ComboboxContent>
         <ComboboxEmpty>No produce found.</ComboboxEmpty>
         <ComboboxList>
@@ -218,15 +222,15 @@ async function type(name: string, text: string) {
   await flush();
 }
 
-test("ComboboxLabel names the input, and the bundled trigger and clear have names", () => {
+test("ComboboxLabel names the input, and the bundled trigger and clear take the names they're given", () => {
   render(<Fruit defaultValue="Banana" />);
   expect(input("Fruit")).toHaveProperty("value", "Banana");
   expect(screen.getByText("Fruit").dataset.slot).toBe("combobox-label");
   expect(
-    screen.getByRole("button", { hidden: true, name: "Show options" }).dataset
+    screen.getByRole("button", { hidden: true, name: "Show fruits" }).dataset
       .slot
   ).toBe("combobox-trigger");
-  expect(screen.getByRole("button", { name: "Clear" }).dataset.slot).toBe(
+  expect(screen.getByRole("button", { name: "Clear fruit" }).dataset.slot).toBe(
     "combobox-clear"
   );
 });
@@ -245,10 +249,10 @@ test("the input sits in an input group's slot, with the addon after it", () => {
 
 test("the clear button empties the input and the value, and hides once there's nothing to clear", async () => {
   render(<Fruit defaultValue="Banana" />);
-  fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+  fireEvent.click(screen.getByRole("button", { name: "Clear fruit" }));
   await flush();
   expect(input("Fruit")).toHaveProperty("value", "");
-  expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Clear fruit" })).toBeNull();
 });
 
 test("the content anchors to the input group's box, so it's as wide as the box", async () => {
@@ -285,7 +289,7 @@ test("typing keeps the items that contain it, and hides a group left empty with 
 test("a pointer open animates, and a pointer pick closes at once", async () => {
   render(<Fruit />);
   fireEvent.click(
-    screen.getByRole("button", { hidden: true, name: "Show options" })
+    screen.getByRole("button", { hidden: true, name: "Show fruits" })
   );
   await flush();
   const popup = content();
@@ -414,7 +418,7 @@ function Department({ disabled = false, invalid = false }) {
     <Field disabled={disabled} invalid={invalid} name="fruit">
       <FieldLabel>Fruit</FieldLabel>
       <Combobox>
-        <ComboboxInput />
+        <ComboboxInput triggerLabel="Show fruits" />
         <ComboboxContent>
           <FruitItems />
         </ComboboxContent>
@@ -449,7 +453,7 @@ test("in a Field, the combobox takes its label, description, name and state, fro
   expect(combobox.matches(":disabled")).toBe(true);
   expect(
     screen
-      .getByRole("button", { hidden: true, name: "Show options" })
+      .getByRole("button", { hidden: true, name: "Show fruits" })
       .matches(":disabled")
   ).toBe(true);
 });
@@ -458,6 +462,7 @@ test("an agent finds every control by name, and picks a value by label", async (
   render(
     <>
       <Fruit defaultValue="Banana" />
+      <Produce />
       <Fruits />
     </>
   );
@@ -472,10 +477,12 @@ test("an agent finds every control by name, and picks a value by label", async (
     ).toBeTruthy();
   }
   const labels = entries.map((entry) => entry.label);
+  expect(new Set(labels).size, labels.join(", ")).toBe(labels.length);
   for (const label of [
     "Fruit",
-    "Show options",
-    "Clear",
+    "Show fruits",
+    "Clear fruit",
+    "Show produce",
     "Fruits",
     "Remove Apple",
     "Remove Banana",
