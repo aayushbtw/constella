@@ -571,12 +571,16 @@ function TraceTitle({ children, sx }: { children: ReactNode; sx?: Sx }) {
 
 /** What the step acted on: "Swedish orders". */
 function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
+  // The flex row doesn't draw the space; it keeps the row's words apart for the agent bridge.
   return (
-    <span
-      data-slot="trace-subject"
-      {...props}
-      {...stylex.props(styles.subject, sx)}
-    />
+    <>
+      {" "}
+      <span
+        data-slot="trace-subject"
+        {...props}
+        {...stylex.props(styles.subject, sx)}
+      />
+    </>
   );
 }
 
@@ -585,16 +589,19 @@ function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
   const { state } = use(Step);
   const inRun = use(InTrigger) === "run";
   return (
-    <span
-      data-slot="trace-description"
-      {...props}
-      {...stylex.props(
-        styles.description,
-        inRun && styles.descriptionInRun,
-        state === "error" && styles.descriptionError,
-        sx
-      )}
-    />
+    <>
+      {" "}
+      <span
+        data-slot="trace-description"
+        {...props}
+        {...stylex.props(
+          styles.description,
+          inRun && styles.descriptionInRun,
+          state === "error" && styles.descriptionError,
+          sx
+        )}
+      />
+    </>
   );
 }
 
