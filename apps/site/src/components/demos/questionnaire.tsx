@@ -850,7 +850,7 @@ function QuestionnaireDialogDemo() {
               </QuestionnaireItem>
             ))}
             <DialogFooter>
-              <DialogClose render={<Button type="button" variant="outline" />}>
+              <DialogClose render={<Button variant="outline" />}>
                 Cancel
               </DialogClose>
               <QuestionnaireActions>

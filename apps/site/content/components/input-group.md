@@ -316,30 +316,6 @@ Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header 
 </InputGroup>
 ```
 
-## Custom Input
-
-Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` on it for the control's look. Here, a textarea from `react-textarea-autosize`:
-
-<!-- ::demo name="input-group-custom" -->
-
-```tsx
-import TextareaAutosize from "react-textarea-autosize";
-
-<InputGroup>
-  <TextareaAutosize
-    aria-label="Message"
-    data-slot="input-group-control"
-    placeholder="Autoresize textarea..."
-    {...stylex.props(inputGroupTextareaStyles())}
-  />
-  <InputGroupAddon align="block-end">
-    <InputGroupButton size="sm" variant="primary">
-      Submit
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>;
-```
-
 ## Dropdown Menu
 
 Render a button as a [Dropdown Menu](/docs/components/dropdown-menu) trigger for more actions.
@@ -401,7 +377,7 @@ Put a [Spinner](/docs/components/spinner) in an addon while something loads.
 
 ## API Reference
 
-`InputGroup` is a `<div role="group">` that takes `size`: `"sm"` (12px text), `"default"` or `"lg"` (13px). It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
+`InputGroup` is a `<div role="group">` that takes `size`: `"sm"` (12px text), `"default"` or `"lg"` (13px). It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own. A control of your own gets the ring, invalid edge and disabled fade with `data-slot="input-group-control"`; its look is yours to style.
 
 `InputGroupAddon` takes `align`: `"inline-start"` (default), `"inline-end"`, `"block-start"` or `"block-end"`. Use the inline ones with an input and the block ones with a textarea. In a block addon, buttons sit at the end, after any text; `separated` draws an edge between it and the control. Clicking an addon focuses the control, unless the click lands on a button.
 

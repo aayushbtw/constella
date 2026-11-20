@@ -14,6 +14,12 @@ import { Spinner } from "@/components/primitives/spinner";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
+async function save() {
+  const { promise, resolve } = Promise.withResolvers<undefined>();
+  setTimeout(resolve, 1500);
+  await promise;
+}
+
 const labels = {
   ghost: "Ghost",
   link: "Link",
@@ -151,9 +157,13 @@ function ButtonDisabledDemo() {
 function ButtonBusyDemo() {
   return (
     <DemoRow>
-      <Button aria-busy disabled variant="outline">
-        <Spinner data-icon="inline-start" />
-        Saving
+      <Button onClick={save} pendingAnnouncement="Saving" variant="outline">
+        {(state) => (
+          <>
+            {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+            Save
+          </>
+        )}
       </Button>
       <GenerateButton />
     </DemoRow>

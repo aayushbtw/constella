@@ -7,7 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -60,6 +60,12 @@ import {
   shadows,
   surfaces,
 } from "~/lib/tokens.stylex";
+
+async function wait(ms: number) {
+  const { promise, resolve } = Promise.withResolvers<undefined>();
+  setTimeout(resolve, ms);
+  await promise;
+}
 
 // Concentric with the chat's composer, which sits its `xs` inset from the tile's edge.
 const corner = `calc(${radii.xl} + ${space.xs})`;
@@ -171,36 +177,30 @@ const plans = [
 function SaveButtons() {
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const done = saving
-      ? setTimeout(() => {
-          setSaving(false);
-          toast.success({
-            description: "Your changes are live.",
-            title: "Saved",
-          });
-        }, 1200)
-      : undefined;
-    return () => {
-      clearTimeout(done);
-    };
-  }, [saving]);
-
   return (
     <div {...stylex.props(styles.row)}>
       <Button disabled={saving} variant="outline">
         Discard
       </Button>
       <Button
-        aria-busy={saving}
-        disabled={saving}
-        onClick={() => {
+        onClick={async () => {
           setSaving(true);
+          await wait(1200);
+          setSaving(false);
+          toast.success({
+            description: "Your changes are live.",
+            title: "Saved",
+          });
         }}
+        pendingAnnouncement="Saving"
         variant="primary"
       >
-        {saving && <Spinner data-icon="inline-start" />}
-        Save changes
+        {(state) => (
+          <>
+            {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+            Save changes
+          </>
+        )}
       </Button>
     </div>
   );

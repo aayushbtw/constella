@@ -8,7 +8,7 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
-import { Textarea, textareaStyles } from "@/components/primitives/textarea";
+import { Textarea } from "@/components/primitives/textarea";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
 import { joinStyles, typeStyles } from "@/lib/constella/styles";
@@ -487,11 +487,6 @@ function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
   );
 }
 
-/** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */
-function inputGroupTextareaStyles() {
-  return [...textareaStyles(), styles.control, styles.textarea];
-}
-
 /** The input's styles for another library's input; put it in a `data-slot="input-group-input"` span with the `slot` styles. */
 function inputGroupInputStyles() {
   return { input: styles.input, slot: styles.inputSlot };
@@ -525,7 +520,6 @@ export {
   inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,
-  inputGroupTextareaStyles,
 };
 export type {
   InputGroupAddonAlign,

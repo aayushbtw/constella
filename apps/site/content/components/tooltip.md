@@ -62,16 +62,16 @@ Use the `side` prop on `TooltipContent` to place the tooltip. Neighbors group on
 
 ## Disabled Button
 
-A disabled button takes no pointer events, so put the trigger on a wrapper around it.
+A natively disabled button can't take focus, so its tooltip never shows. Add `focusableWhenDisabled`: the button stays in the Tab order, reads as dimmed to screen readers and ignores presses, and its tooltip can say why.
 
 <!-- ::demo name="tooltip-disabled" -->
 
 ```tsx
 <Tooltip>
-  <TooltipTrigger render={<span />}>
-    <Button disabled variant="outline">
-      Disabled
-    </Button>
+  <TooltipTrigger
+    render={<Button disabled focusableWhenDisabled variant="outline" />}
+  >
+    Disabled
   </TooltipTrigger>
   <TooltipContent>This feature is currently unavailable</TooltipContent>
 </Tooltip>

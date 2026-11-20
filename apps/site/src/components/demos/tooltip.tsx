@@ -68,10 +68,10 @@ function TooltipDisabledDemo() {
   return (
     <DemoRow>
       <Tooltip>
-        <TooltipTrigger render={<span />}>
-          <Button disabled variant="outline">
-            Disabled
-          </Button>
+        <TooltipTrigger
+          render={<Button disabled focusableWhenDisabled variant="outline" />}
+        >
+          Disabled
         </TooltipTrigger>
         <TooltipContent>This feature is currently unavailable</TooltipContent>
       </Tooltip>

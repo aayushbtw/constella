@@ -103,23 +103,16 @@ const sizeStyles = {
   sm: styles.sm,
 } satisfies Record<TextareaSize, stylex.StyleXStyles | null>;
 
-/** A textarea's styles for another element, like a third-party autosizing textarea. */
-function textareaStyles({
-  size = "default",
-}: Pick<TextareaProps, "size"> = {}) {
-  return [styles.textarea, sizeStyles[size]];
-}
-
 function Textarea({ size = "default", sx, ...props }: TextareaProps) {
   return (
     <TextareaPrimitive
       autoResize
       data-size={size}
       {...props}
-      {...stylex.props(textareaStyles({ size }), sx)}
+      {...stylex.props(styles.textarea, sizeStyles[size], sx)}
     />
   );
 }
 
-export { Textarea, textareaSizes, textareaStyles };
+export { Textarea, textareaSizes };
 export type { TextareaProps, TextareaSize };

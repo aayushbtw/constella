@@ -124,9 +124,7 @@ Inputs with a [Select](/docs/components/select) in a `FieldGroup`, for a whole f
       </Select>
     </Field>
     <Field orientation="horizontal">
-      <Button type="button" variant="outline">
-        Cancel
-      </Button>
+      <Button variant="outline">Cancel</Button>
       <Button type="submit" variant="primary">
         Submit
       </Button>

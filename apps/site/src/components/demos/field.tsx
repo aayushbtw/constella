@@ -182,9 +182,7 @@ function FieldFormDemo() {
             <Button type="submit" variant="primary">
               Submit
             </Button>
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
+            <Button variant="outline">Cancel</Button>
           </Field>
         </FieldGroup>
       </form>
