@@ -299,7 +299,7 @@ Staging and reverting both go through `allow`, so a marked control asks the pers
 Constella's AI and TanStack components are tested against the bridge. Each component's page lists what the agent sees in its Agent section.
 
 - Every control has a name, except the [Known Gaps](#known-gaps).
-- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, skipping the state update keeps it, and `cancel()` tells the agent the change was refused. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
+- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, skipping the state update keeps it, and with `cancel()` the agent's step comes back with `result: false`. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
 - `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` work on the primitives, such as Button, `AlertDialogAction`, `DropdownMenuItem`, Field and Input.
 - Data Table's action bar is inert while no row is selected, so the agent can't press its buttons.
 
