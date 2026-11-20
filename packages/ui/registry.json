@@ -1426,7 +1426,7 @@
       "type": "registry:ui",
       "title": "Suggestions",
       "description": "Starter prompts as a scrolling row of pills, for an empty chat.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",

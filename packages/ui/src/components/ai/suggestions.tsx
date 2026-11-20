@@ -1,9 +1,11 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
+import type { ButtonActionDetails } from "@ui-sdk/react/button";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
+import type { ButtonProps } from "@/components/primitives/button";
 import { ScrollArea } from "@/components/primitives/scroll-area";
 import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
@@ -43,7 +45,10 @@ function Suggestions({ sx, ...props }: Styled<ComponentProps<"div">>) {
 }
 
 type SuggestionProps = Omit<ComponentProps<typeof Button>, "onClick"> & {
-  onClick?: (suggestion: string) => void;
+  onClick?: (
+    suggestion: string,
+    details: ButtonActionDetails
+  ) => ReturnType<NonNullable<ButtonProps["onClick"]>>;
   suggestion: string;
 };
 
@@ -58,9 +63,7 @@ function Suggestion({
 }: SuggestionProps) {
   return (
     <Button
-      onClick={() => {
-        onClick?.(suggestion);
-      }}
+      onClick={(_event, details) => onClick?.(suggestion, details)}
       size={size}
       variant={variant}
       {...props}
