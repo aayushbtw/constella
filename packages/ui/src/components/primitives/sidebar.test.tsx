@@ -152,12 +152,16 @@ test("an agent presses rows to switch pages, presses the actions, and collapses 
   expect(toInbox.ok, toInbox.error?.message).toBe(true);
   expect(page.textContent).toBe("Inbox");
   expect(Object.hasOwn(row("Inbox").dataset, "active")).toBe(true);
+  expect(row("Inbox").getAttribute("aria-current")).toBe("page");
   expect(Object.hasOwn(row("Home").dataset, "active")).toBe(false);
+  expect(row("Home").hasAttribute("aria-current")).toBe(false);
 
   const toHome = await agent.act({ steps: [{ action: "press", ref: "Home" }] });
   expect(toHome.ok, toHome.error?.message).toBe(true);
   expect(page.textContent).toBe("Home");
   expect(Object.hasOwn(row("Home").dataset, "active")).toBe(true);
+  expect(row("Home").getAttribute("aria-current")).toBe("page");
+  expect(row("Inbox").hasAttribute("aria-current")).toBe(false);
 
   const actions = await agent.act({
     steps: [
@@ -213,7 +217,7 @@ test("a link row stays a link, with its own slot and no type", () => {
           <SidebarMenu>
             <SidebarMenuItem>
               {/* oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link */}
-              <SidebarMenuButton render={<a href="#docs" />}>
+              <SidebarMenuButton isActive render={<a href="#docs" />}>
                 Docs
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -226,6 +230,52 @@ test("a link row stays a link, with its own slot and no type", () => {
   const docs = screen.getByRole("link", { name: "Docs" });
   expect(docs.dataset.slot).toBe("sidebar-menu-button");
   expect(docs.hasAttribute("type")).toBe(false);
+  expect(docs.getAttribute("aria-current")).toBe("page");
+});
+
+test("a provider given only onOpenChange still toggles, and reports each change", async () => {
+  const onOpenChange = vi.fn<(open: boolean) => void>();
+  render(
+    <SidebarProvider onOpenChange={onOpenChange}>
+      <Sidebar collapsible="icon">
+        <SidebarContent />
+      </Sidebar>
+      <main>
+        <SidebarTrigger />
+      </main>
+    </SidebarProvider>
+  );
+  const sidebar = document.querySelector<HTMLElement>("[data-slot='sidebar']");
+
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Collapse sidebar" })
+  );
+  expect(sidebar?.dataset.collapsible).toBe("icon");
+  expect(onOpenChange).toHaveBeenLastCalledWith(false);
+
+  fireEvent.click(await screen.findByRole("button", { name: "Expand sidebar" }));
+  expect(sidebar?.dataset.collapsible).toBeUndefined();
+  expect(onOpenChange).toHaveBeenLastCalledWith(true);
+});
+
+test("a controlled provider stays where its open prop puts it", async () => {
+  const onOpenChange = vi.fn<(open: boolean) => void>();
+  render(
+    <SidebarProvider onOpenChange={onOpenChange} open>
+      <Sidebar collapsible="icon">
+        <SidebarContent />
+      </Sidebar>
+      <main>
+        <SidebarTrigger />
+      </main>
+    </SidebarProvider>
+  );
+
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Collapse sidebar" })
+  );
+  expect(onOpenChange).toHaveBeenCalledWith(false);
+  expect(collapsed()).toBe(false);
 });
 
 test("an agent finds and presses a sub row link, which stays a link", async () => {
@@ -262,6 +312,7 @@ test("an agent finds and presses a sub row link, which stays a link", async () =
   expect(link.getAttribute("href")).toBe("#installation");
   expect(link.dataset.slot).toBe("sidebar-menu-sub-button");
   expect(Object.hasOwn(link.dataset, "active")).toBe(true);
+  expect(link.getAttribute("aria-current")).toBe("page");
   expect(link.hasAttribute("type")).toBe(false);
 
   const entry = entries().find(
