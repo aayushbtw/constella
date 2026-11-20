@@ -95,7 +95,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Slider | 2 | slider | Slider | merged | [#62](https://github.com/aayushbtw/constella/pull/62) | `SliderLabel` is gone; a `Field`'s `FieldLabel` names a single thumb, range thumbs take `aria-label`s |
 | Avatar | 2 | avatar | Avatar | merged | [#36](https://github.com/aayushbtw/constella/pull/36) | Ports Citation's logo too |
 | Field | 2 | field, fieldset | Field | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | Carries Checkbox, Switch, Radio Group, Input Group and Textarea: no one of them could port alone without temporary code in the Field demos. `FieldSetDescription` is gone; `FieldDescription` describes a set |
-| Input Group | 2 | input | Input | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`, so Command's `command-input` and Dropdown Menu's `dropdown-menu-input` would be lost. Revisit when we want `InputClear` |
+| Input Group | 2 | input | Input | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR. Keeps our `InputGroup` over ui-sdk's, which lacks the #23 guard against clicks from portaled content, takes the first input or textarea anywhere in its subtree, sets `data-disabled` only after mount, and owns `data-slot`. Command renders ours around a plain ui-sdk input ([#73](https://github.com/aayushbtw/constella/pull/73)); Dropdown Menu has no input since [#74](https://github.com/aayushbtw/constella/pull/74). Revisit when we want `InputClear` |
 | Textarea | 2 | field | Textarea | merged | [#28](https://github.com/aayushbtw/constella/pull/28) | In the Field PR |
 | Scroll Area | 2 | scroll-area | Scroll Area | merged | [#37](https://github.com/aayushbtw/constella/pull/37) | Ports Code Block's scroller too. Known gap: a viewport that overflows by under a pixel is a Tab stop |
 | Collapsible | 2 | collapsible | Collapsible | merged | [#40](https://github.com/aayushbtw/constella/pull/40) | Ports Trace's collapsibles too |
@@ -104,17 +104,17 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Hover Card | 3 | preview-card | Hover Card | merged | [#46](https://github.com/aayushbtw/constella/pull/46) | Focus moving to another trigger of a shared card, from its links or straight from its trigger, takes it over at once, through a `delay={0}` workaround (see Findings) |
 | Dialog | 3 | dialog | Dialog | merged | [#48](https://github.com/aayushbtw/constella/pull/48) | Keyboard open and Escape still animate, as on `main` ([#47](https://github.com/aayushbtw/constella/issues/47)) |
 | Sheet | 3 | dialog | Drawer | merged | [#63](https://github.com/aayushbtw/constella/pull/63) | On ui-sdk Drawer, not Dialog's `presentation="sheet"`. `side` moves to `Sheet`. Drops Tooltip's Escape workaround |
-| Side Panel | 3 | dialog | Dialog (non-modal, inline) | pr | [#65](https://github.com/aayushbtw/constella/pull/65) | Escape closes it only while focus is inside; closes with `display: none` since ui-sdk waits on inner transitions |
+| Side Panel | 3 | dialog | Dialog (non-modal, inline) | merged | [#65](https://github.com/aayushbtw/constella/pull/65) | Escape closes it only while focus is inside; closes with `display: none` since ui-sdk waits on inner transitions |
 | Alert Dialog | 3 | alert-dialog | Alert Dialog | merged | [#59](https://github.com/aayushbtw/constella/pull/59) | Action is a Close with `value="confirm"` and closes. `createConfirm()` works via `controller`; export when a caller exists |
 | Toast | 3 | toast | Toast | merged | [#49](https://github.com/aayushbtw/constella/pull/49) | No anchored toasts; region placement is ours without `web.css` |
-| Select | 4 | select | Select | todo |  | Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
-| Dropdown Menu | 4 | menu | Menu | todo |  | No search input part documented; ours ships `dropdown-menu-input`. Drop the `popupVars` copy. `createDropdownMenuHandle` (from `main`) shares one menu across triggers; ui-sdk's Menu needs the same |
-| Combobox | 4 | combobox | Combobox | todo |  | From `main` ([#55](https://github.com/aayushbtw/constella/pull/55)). ui-sdk's documents chips, a create option, clear and trigger, and groups. Needs Input Group, Button and Field, all ported. Drop the `popupVars` copy, its `useFieldControl` and its half of `field-mixed.test.tsx` |
-| Command | 4 | autocomplete | Command | todo |  | Ours is Base UI Autocomplete; ui-sdk ships a Command |
-| Toggle Group | 4 | toggle-group, toggle | Toggle Group | todo |  | Documented in beta.1's `toggle.md` (`## Group`), exported as `ToggleGroup` from `@ui-sdk/react/toggle`; spec-01 builds on it. Decide `ToggleIcon` here |
-| Segmented Control | 4 | toggle-group, toggle | Segmented Control | todo |  | `SegmentedControlIndicator` measures the chosen item into `--segmented-control-indicator-*`, which replaces our Mutation and Resize observers |
-| Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; waits on Command |
-| Prompt Input | 5 | autocomplete |  | todo |  | After Command. Drop the `popupVars` copy |
+| Select | 4 | select | Select | merged | [#75](https://github.com/aayushbtw/constella/pull/75) | `SelectLabel` names the trigger, the group heading is `SelectGroupLabel`; no scroll arrows; `loop` defaults to `false` |
+| Dropdown Menu | 4 | menu | Menu | merged | [#74](https://github.com/aayushbtw/constella/pull/74) | Filter parts removed (Menu takes no text field). `createDropdownMenuController` replaces the handle. Checkbox and radio items take `value`; actions in `onSelect` |
+| Combobox | 4 | combobox | Combobox | merged | [#78](https://github.com/aayushbtw/constella/pull/78) | From `main` ([#55](https://github.com/aayushbtw/constella/pull/55)). `popupVars` copy, `useFieldControl` bridge and `field-mixed.test.tsx` gone. `ComboboxCreate` replaces the creatable workaround. Keyboard open highlights the first item; arrows wrap |
+| Command | 4 | autocomplete | Command | merged | [#73](https://github.com/aayushbtw/constella/pull/73) | Ours was Base UI Autocomplete; filter defaults to `contains`; server HTML hides composed groups (ui-sdk bug, gate before `main`, see [Phase 7](#phase-7)). Follow-up: a searchable menu demo as Command in a Popover ([#74](https://github.com/aayushbtw/constella/pull/74)) |
+| Toggle Group | 4 | toggle-group, toggle | Toggle Group | merged | [#68](https://github.com/aayushbtw/constella/pull/68) | On ui-sdk Toggle Group; items render the ported Toggle; `ToggleIcon` decided, not wrapped |
+| Segmented Control | 4 | toggle-group, toggle | Segmented Control | merged | [#77](https://github.com/aayushbtw/constella/pull/77) | On ui-sdk Segmented Control, a radio group; root props pass through; vertical styled |
+| Model Picker | 5 | popover, render helpers |  | todo |  | Popover parts ported with Popover; Command parts ported in [#73](https://github.com/aayushbtw/constella/pull/73). Re-verify pending |
+| Prompt Input | 5 | autocomplete | Autocomplete | doing |  | Targets ui-sdk Autocomplete; replaces the bridge `PromptInputCommandList`, `-Item` and `-Empty` from [#73](https://github.com/aayushbtw/constella/pull/73). Drop the `popupVars` copy |
 | Citation | 5 | avatar |  | todo |  | Logo ported with Avatar ([#36](https://github.com/aayushbtw/constella/pull/36)); card ported in Hover Card's [#46](https://github.com/aayushbtw/constella/pull/46). Hover Card dependency satisfied (merged) |
 | Settings Dialog | 5 | via Dialog |  | todo |  | Re-verify only |
 | Sidebar | 5 | via Sheet, render helpers |  | todo |  | Re-verify only |
@@ -137,12 +137,16 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 | Remove `@base-ui/react` from `packages/ui` and `apps/site` | todo |  |
 | Delete the `popupVars` token, the Base UI branch of `useSkipMotion` and the `[data-popup-open]` half of the open-state selector | todo |  |
 | Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | todo |  |
+| Delete the stale "until Alert Dialog ports" sentences in ARCHITECTURE.md's Mixed libraries row (Alert Dialog merged in [#59](https://github.com/aayushbtw/constella/pull/59)) | todo |  |
+| Fix `popupReset`'s comment in `packages/ui/src/lib/constella/styles.ts`: it says ui-sdk resets every popup's `[popover]` box, which is false for Select and Menu ([#74](https://github.com/aayushbtw/constella/pull/74), [#75](https://github.com/aayushbtw/constella/pull/75)) | todo |  |
+| Blocks landing: composed `CommandGroup`s render `hidden` in server HTML (ui-sdk beta.13), so `/` and `/docs/components/command` show no grouped items before hydration. Fixed upstream or worked around, and the `test.fails` pin flipped ([#73](https://github.com/aayushbtw/constella/pull/73)) | todo |  |
+| File the upstream drafts once the user OKs each: Hover Card focus delay ([#46](https://github.com/aayushbtw/constella/pull/46)), Command SSR hidden groups ([#73](https://github.com/aayushbtw/constella/pull/73)), Scroll Area sub-pixel Tab stop, Tabs `preventScroll`, Progress and Meter value `aria-hidden`, the [vercel-labs/ui#763](https://github.com/vercel-labs/ui/pull/763) clamp loop, Alert Dialog's blocked Close unmarked | todo |  |
 | Registry build and every docs page checked | todo |  |
 | Land `ui-sdk` on `main` | todo |  |
 
 ## Done
 
-The port lands on `main` when every row is `merged`, the ARCHITECTURE.md "Ready when" table is met, and no `@base-ui/react` import is left.
+The port lands on `main` when every row is `merged`, the ARCHITECTURE.md "Ready when" table is met, no `@base-ui/react` import is left, and the Command server HTML shows its groups (the blocking [Phase 7](#phase-7) row).
 
 ## Findings
 
@@ -150,6 +154,42 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-20 | Combobox | `ComboboxValue` state `value` is `unknown` (core `combobox.d.ts:511`) and the part isn't generic, so typed chip lists map a controlled value. Arrows wrap last to first in one press. Base UI stopped on the input between |
+| 2026-11-20 | Combobox | Behavior vs Base UI: a keyboard open highlights the first item, not the selected one (ui-sdk default; `autoHighlight="always"` would restore it, not adopted). Clear loses its open-state tint (ui-sdk's clear has no `data-open`) and is a Tab stop (ui-sdk takes only the trigger out of the tab order). Escape with the list closed keeps a single value as well as chips |
+| 2026-11-20 | Combobox | On `ui-sdk` before [#78](https://github.com/aayushbtw/constella/pull/78): Base UI's list opened under a ui-sdk Dialog (no option at its own point). Fixed by the port |
+| 2026-11-20 | Input Group | ui-sdk triggers (Popover, Menu, Tooltip) rendered as `InputGroupButton` miss the addon's edge inset, since their slot replaces `button`, so they sit 9px from the edge. `main` has the same 9px. `data-input-group-button` moves them to 4px, the even inset plain buttons and Combobox's trigger have. Deliberate visual change ([#78](https://github.com/aayushbtw/constella/pull/78)) |
+| 2026-11-20 | Segmented Control | A radio group, not toggle buttons. Arrows move and pick and follow `dir`. Enter submits a form instead of picking. A disabled item isn't focusable. A disabled root marks items only `aria-disabled` and `data-disabled`, so styles read `[data-disabled]` |
+| 2026-11-20 | Segmented Control | Each item's hidden native radio is a sibling after its button (`segmented-control-input`), not inside it |
+| 2026-11-20 | Segmented Control | `onValueChange` gets `T \| null`. Null comes only from a controller or a browser restore, since a controlled root with no `defaultValue` keeps its value on reset |
+| 2026-11-20 | Segmented Control | The pre-hydration fill reads where ui-sdk writes `--segmented-control-indicator-width` (inline on the indicator), not a documented contract. Upstream ask, not filed: a placed-state attribute on the indicator. The verifier noted the test pins the inline variable but not the selector that reads it, and that Enter submitting a form and `controller` weren't driven live |
+| 2026-11-20 | Segmented Control | ui-sdk sets `data-activation-direction` before it remeasures, unlike Tabs, so `none` alone gates the first placement |
+| 2026-11-20 | Segmented Control | Pre-existing on `main`, filed as [#76](https://github.com/aayushbtw/constella/issues/76): the pill stays put when `dir` changes after load, until the next pick. ui-sdk behaves the same |
+| 2026-11-20 | Select | Pointer open with nothing selected highlights the first item. That is ui-sdk's initial focus with no prop. Base UI highlighted none |
+| 2026-11-20 | Select | Aligned content sits at the trigger's x, so item text lands 5px right of the trigger's text. Base UI lined them up. ui-sdk aligns vertically only. Upstream note not filed |
+| 2026-11-20 | Select | `alignItemWithTrigger` stamps `data-skip-motion` from the prop, so the fallback below the trigger (no value, touch, no room) also opens without motion. Inferred from source, not measured |
+| 2026-11-20 | Select | A trigger named by `aria-label` carries an `aria-labelledby` in server HTML that points at a missing label id. Hydration removes it |
+| 2026-11-20 | Select | The hidden form field is a `<textarea data-slot="select-form-input">` after the trigger. It squared a last-in-group trigger's corners until the joins skipped it |
+| 2026-11-20 | Select | ui-sdk's select preset leaves the browser's `[popover]` border and margin. `popupReset`'s comment in `styles.ts` says ui-sdk resets the box for every popup, which isn't true for Select or Menu. Fixed in [Phase 7](#phase-7) |
+| 2026-11-20 | Select | `SelectItemText` drops element children, so items wrap their text in a plain span |
+| 2026-11-20 | Select | Typeahead now matches the item's `label` from `items`: the currency select picks "US Dollar" on "u", which Base UI missed |
+| 2026-11-20 | Dropdown Menu | `menu-content` keeps the browser's 3px `[popover]` border, since ui-sdk's runtime reset skips it. The popup zeroes it |
+| 2026-11-20 | Dropdown Menu | `MenuItemIndicator` unmounts at once on uncheck. `keepMounted` with `data-unchecked` keeps the tick's fade |
+| 2026-11-20 | Dropdown Menu | `MenuGroupLabel` throws outside a group or radio group. The docs say so |
+| 2026-11-20 | Dropdown Menu | Fixed by the port: in RTL, Base UI opened submenus to the right; ui-sdk follows `dir`. The menu inside Sidebar's ui-sdk Sheet rendered under the sheet; it now paints on top |
+| 2026-11-20 | Dropdown Menu | `destructive` is unused until ui-sdk reads it (agent or sheet) |
+| 2026-11-20 | Dropdown Menu | No scroll lock while open (`modal="pointer"`) |
+| 2026-11-20 | Command | Known regression, on the advisor's call: ui-sdk beta.13 server-renders every composed `CommandGroup` `hidden`, so prerendered `/` and `/docs/components/command` show no grouped items before hydration (CLS 0.0445 at 6x throttle on the Command page, 0 on `/`). A `test.fails` pins it. Blocks landing on `main` ([Phase 7](#phase-7)). Upstream draft in [#73](https://github.com/aayushbtw/constella/pull/73), not filed |
+| 2026-11-20 | Command | Escape clears the search first; a second Escape closes a Command Dialog (ui-sdk's documented order). Separators hide while filtering. Arrows skip disabled items |
+| 2026-11-20 | Command | Pre-existing on `main`, filed `found-in-port`: [#69](https://github.com/aayushbtw/constella/issues/69) (input ring and padding, look kept), [#70](https://github.com/aayushbtw/constella/issues/70) (demo ⌘ glyphs), [#71](https://github.com/aayushbtw/constella/issues/71) (search results not links), [#72](https://github.com/aayushbtw/constella/issues/72) (search arrows don't flip in RTL). All four open on GitHub |
+| 2026-11-20 | Command | `CommandShortcut` is display-only; `shortcut` formats per platform with a Ctrl-to-⌘ swap after mount |
+| 2026-11-20 | Toggle Group | ui-sdk owns the slots: `toggle-group-item` became `toggle`, and Chart Legend's `chart-legend` and `chart-legend-item` became `toggle-group` and `toggle`. The legend's hollow dot reads `data-chart-legend-item` |
+| 2026-11-20 | Toggle Group | A disabled item in a group is `aria-disabled` and `data-disabled`, not `:disabled`, and arrows reach it. The selected-fill hover and press guards read `[data-disabled]` too. Base UI skipped it with arrows |
+| 2026-11-20 | Toggle Group | Arrows follow a `dir` set after load. Base UI kept left to right |
+| 2026-11-20 | Toggle Group | `ToggleIcon` isn't wrapped: demos mark glyphs `aria-hidden`, and Button's padding reads a direct `[data-icon]` child. Revisit when a toggle needs an icon that points a way |
+| 2026-11-20 | Toggle Group | `agent.snapshot()` lists a group's toggles before the group |
+| 2026-11-20 | Toggle Group | Pre-existing on `main`, filed as [#67](https://github.com/aayushbtw/constella/issues/67): Toggle Group demos render unnamed groups |
+| 2026-11-20 | Toggle Group | For Segmented Control's unit: `deselectable={false}` replaces its hand-written guard that keeps one item picked |
+| 2026-11-20 | Side Panel | After a pointer swap to another row, Close returns focus to the row that first opened the panel (ui-sdk default); the keyboard path is unchanged. Found by the verifier on [#65](https://github.com/aayushbtw/constella/pull/65) |
 | 2026-11-20 | Merge `main` | Base UI's Combobox in a ui-sdk Field: the rendered ui-sdk Input joined the field, but Base UI's own id won, so the server's label `for` pointed at an id no element had. `FieldInput` hands Base UI the field's id through `useFieldControl`; the root takes the field's `disabled` and `name`, as Select's does. Passing all of `field.props()` doubled `aria-describedby`, since the Input joins again. `field-mixed.test.tsx` checks it |
 | 2026-11-20 | Merge `main` | `main`'s d018473 skips motion for Base UI popups opened by typing (`input-change`) or any key. ui-sdk's branch of `useSkipMotion` already skips on `source: "keyboard"`, and no ported ui-sdk popup opens by typing, so nothing changed there |
 | 2026-11-20 | Side Panel | `inline` ignores `container`. The content goes inside `SidePanelSlot`, and `container` and the slot ref are gone |
@@ -320,4 +360,8 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-19 | #46 unblocked by a `warm` window: `delay={0}` while open and for `closeDelay` after a `focus-out` close. One blank frame on trigger-to-trigger focus accepted on the advisor's rule. Upstream draft in #46, not filed |
 | 2026-11-20 | #65 Side Panel open: ui-sdk Dialog, non-modal and inline; `inline` with `container` failed, so the content nests in `SidePanelSlot` |
 | 2026-11-20 | Filed this wave: #56, #57, #58, #61 (Slider) and #64 (Side Panel). #56 and #58 fixed in #62; all five open on GitHub. Phase 6 gains WebMCP, `agentTools` and agent-mark audit rows from ui-sdk's agent docs |
-| 2026-11-20 | Merged `main` at b650d4f into `ui-sdk` before phase 4. Combobox added on Base UI (row added) with the `popupVars` copy and Field binding. Citation's `CitationSource` and trigger props ported onto the ui-sdk Hover Card trigger. Dropdown Menu's `createDropdownMenuHandle` merged as-is. Also Sidebar drag-select, SwapText perf, Vite+ 1.7.0 and dependency advisories; the ui-sdk beta.13 release-age excludes stay |
+| 2026-11-20 | [#66](https://github.com/aayushbtw/constella/pull/66) merged `main` at b650d4f into `ui-sdk` before phase 4, with a merge commit. Combobox added on Base UI (row added) with the `popupVars` copy and Field binding. Citation's `CitationSource` and trigger props ported onto the ui-sdk Hover Card trigger. Dropdown Menu's `createDropdownMenuHandle` merged as-is. Also Sidebar drag-select, SwapText perf, Vite+ 1.7.0 and dependency advisories; the ui-sdk beta.13 release-age excludes stay |
+| 2026-11-20 | #65 Side Panel merged. Phase 3 done |
+| 2026-11-20 | Phase 4 merged as parallel unit PRs, each with a reuse review and verifier: #68 Toggle Group, #73 Command, #74 Dropdown Menu, #75 Select, #77 Segmented Control and #78 Combobox. Phase 4 done. The verifier failed Select once on the agent skill's docs, fixed before merge. Command's server HTML hides composed groups, accepted on the advisor's call and blocking the landing on `main` |
+| 2026-11-20 | Filed this phase: #67 (Toggle Group), #69, #70, #71, #72 (Command) and #76 (Segmented Control); all six open on GitHub |
+| 2026-11-20 | Phase 5 started: Prompt Input `doing`. Model Picker's Command parts ported in #73; re-verify pending. Phase 7 gains the Command server HTML gate, the `popupReset` comment fix, the stale Alert Dialog sentences and the upstream drafts awaiting the user's OK |
