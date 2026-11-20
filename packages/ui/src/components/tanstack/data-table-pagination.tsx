@@ -119,11 +119,12 @@ function DataTablePagination({
   const range = count === 0 ? "" : `${first}–${last} of ${count}`;
   const announced = useRef(range);
   useEffect(() => {
-    if (range === announced.current) {
-      return;
-    }
+    const previous = announced.current;
     announced.current = range;
-    announce(range);
+    // The first range arrives with the data, not from the user.
+    if (previous && range && range !== previous) {
+      announce(range);
+    }
   }, [range]);
   if (count === 0) {
     return null;
