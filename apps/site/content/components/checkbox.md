@@ -147,7 +147,7 @@ const [checked, setChecked] = useState(true);
     checked={checked}
     onCheckedChange={(next) => setChecked(next === true)}
   />
-  {checked ? "Notifications on" : "Notifications off"}
+  Notifications
 </Label>;
 ```
 
@@ -212,7 +212,7 @@ Add `aria-invalid` to mark the checkbox as needing attention.
 
 ## Table
 
-Wrap the table in a `CheckboxGroup`. Put a checkbox with the row's `value` in the first cell of each row, and a `parent` checkbox in the header to select them all. Mark a picked row with `data-state="selected"`.
+Wrap the table in a `CheckboxGroup`. Put a checkbox with the row's `value` in the first cell of each row, and a `parent` checkbox in the header to select them all. Mark a picked row with `data-state="selected"`. Name the table with a `TableCaption`, visually hidden when the page already shows what it lists.
 
 <!-- ::demo name="checkbox-table" -->
 
@@ -228,6 +228,7 @@ function TeamMembers() {
       value={selected}
     >
       <Table>
+        <TableCaption sx={visuallyHidden.base}>Team members</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>

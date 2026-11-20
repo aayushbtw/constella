@@ -114,7 +114,7 @@ function EmptyAvatarDemo() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia>
-            <Avatar size="lg">
+            <Avatar aria-hidden size="lg">
               <AvatarImage alt="" src="/avatars/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>

@@ -144,6 +144,7 @@ function Demo({ name }: { name?: string }) {
 
   return (
     <div
+      data-demo={name}
       data-slot="demo"
       {...stylex.props(styles.demo, plain.has(name) && styles.plain)}
     >

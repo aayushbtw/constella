@@ -323,6 +323,8 @@ function AvatarFallback({
 }: Styled<ComponentProps<typeof AvatarFallbackPrimitive>>) {
   return (
     <AvatarFallbackPrimitive
+      // A span drops its aria-label. As an image, the initials read as the person's name.
+      role={props["aria-label"] === undefined ? undefined : "img"}
       {...props}
       {...stylex.props(styles.fallback, sx)}
     />

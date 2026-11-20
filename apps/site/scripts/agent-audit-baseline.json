@@ -6,6 +6,10 @@
     }
   },
   "/docs/components/attachment": {
+    "ambiguous": {
+      "count": 1,
+      "why": "attachment-size shows one chip per size, so its Remove buttons share a name on purpose"
+    },
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
@@ -24,6 +28,10 @@
     }
   },
   "/docs/components/code-block": {
+    "ambiguous": {
+      "count": 1,
+      "why": "code-block-size shows one block per size, so its Copy command buttons share a name on purpose"
+    },
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
@@ -70,6 +78,10 @@
     }
   },
   "/docs/components/prompt-input": {
+    "ambiguous": {
+      "count": 2,
+      "why": "prompt-input-well shows the bar above and below the composer, so the two composers share Message and Attach on purpose"
+    },
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"

@@ -17,12 +17,17 @@ type Kind = string;
 type PagePath = string;
 type Unnamed = Record<Kind, number>;
 interface Scan {
+  ambiguous: string[];
   unnamed: Unnamed;
   unseen: number;
 }
 
-const withUnseen = ({ unnamed, unseen }: Scan): Unnamed =>
-  unseen > 0 ? { ...unnamed, unseen } : unnamed;
+const countsOf = ({ ambiguous, unnamed, unseen }: Scan) =>
+  Object.fromEntries([
+    ...Object.entries(unnamed),
+    ...(ambiguous.length > 0 ? [["ambiguous", ambiguous.length] as const] : []),
+    ...(unseen > 0 ? [["unseen", unseen] as const] : []),
+  ]);
 
 const baselineSchema = z.record(
   z.string(),
@@ -64,9 +69,119 @@ async function listPages() {
   return [home, ...pages].toSorted();
 }
 
+interface Named {
+  actions: string[];
+  component: string;
+  label: string;
+  row?: string;
+}
+
+// Mirrors how the agent finds a component by name: the same folded label, or its
+// words inside another's label and row. Two it finds that take the same action
+// can't be told apart by that action, so the name isn't an address. A button and a
+// popup of one name are a trigger and what it opens, which the agent tells apart.
+const fold = (text: string) =>
+  text
+    .replaceAll(/[ßẞ]/gu, "ss")
+    .normalize("NFKD")
+    .replaceAll(/\p{M}/gu, "")
+    .toLowerCase();
+const wordsOf = (text: string) =>
+  ` ${fold(text)} `.replaceAll(/[^\p{L}\p{N}]+/gu, " ");
+const addressOf = ({ label, row }: Named) =>
+  [label, row].filter(Boolean).join(" ");
+const finds = (entry: Named, other: Named) =>
+  fold(other.label) === fold(addressOf(entry)) ||
+  wordsOf(addressOf(other)).includes(wordsOf(addressOf(entry)));
+const triggerAndPopup = (entry: Named, other: Named) =>
+  (entry.component === "button") !== (other.component === "button") &&
+  fold(entry.label) === fold(other.label);
+const sameAction = (entry: Named, other: Named) =>
+  !triggerAndPopup(entry, other) &&
+  entry.actions.some((action) => other.actions.includes(action));
+
+function ambiguousIn(named: Named[]) {
+  const same = Object.values(
+    Object.groupBy(named, (entry) => fold(addressOf(entry)))
+  ).flatMap((group = []) =>
+    group.some((entry) =>
+      group.some((other) => other !== entry && sameAction(entry, other))
+    )
+      ? [`"${addressOf(group[0])}"×${group.length}`]
+      : []
+  );
+  const inside = named.flatMap((entry) =>
+    named
+      .filter(
+        (other) =>
+          fold(addressOf(other)) !== fold(addressOf(entry)) &&
+          finds(entry, other) &&
+          sameAction(entry, other)
+      )
+      .map((other) => `"${addressOf(entry)}" in "${addressOf(other)}"`)
+  );
+  return [...same, ...new Set(inside)];
+}
+
+const hiddenMark = "data-agent-audit-hidden";
+
+// A docs page repeats a component across demos on purpose, so names are compared
+// within one demo: the others and the page around it are hidden from the agent.
+async function namedInDemo(page: Page, index: number): Promise<Named[]> {
+  await page.evaluate(
+    ({ at, mark }) => {
+      const demo = document.querySelectorAll("[data-slot='demo']")[at];
+      for (let el = demo; el?.parentElement; el = el.parentElement) {
+        for (const sibling of el.parentElement.children) {
+          if (sibling !== el && !sibling.hasAttribute("aria-hidden")) {
+            sibling.setAttribute("aria-hidden", "true");
+            sibling.setAttribute(mark, "");
+          }
+        }
+      }
+    },
+    { at: index, mark: hiddenMark }
+  );
+  const named = await page.evaluate(() =>
+    (globalThis.agentBridge?.agent.snapshot() ?? []).flatMap(
+      ({ actions, component, label, offPage, row }) =>
+        component === "more" || offPage === true || (label?.trim() ?? "") === ""
+          ? []
+          : [{ actions, component, label: label?.trim() ?? "", row }]
+    )
+  );
+  await page.evaluate((mark) => {
+    for (const el of document.querySelectorAll(`[${mark}]`)) {
+      el.removeAttribute("aria-hidden");
+      el.removeAttribute(mark);
+    }
+  }, hiddenMark);
+  return named;
+}
+
+async function ambiguousInDemos(
+  page: Page,
+  [name, ...rest]: string[],
+  index = 0
+): Promise<string[]> {
+  if (name === undefined) {
+    return [];
+  }
+  const clashes = ambiguousIn(await namedInDemo(page, index)).map(
+    (clash) => `${name}: ${clash}`
+  );
+  return [...clashes, ...(await ambiguousInDemos(page, rest, index + 1))];
+}
+
 async function scan(page: Page, url: string): Promise<Scan> {
   await openBridgePage(page, url);
-  return await page.evaluate(async () => {
+  const demos = await page.$$eval("[data-slot='demo']", (found) =>
+    found.map((demo) =>
+      demo instanceof HTMLElement ? (demo.dataset.demo ?? "demo") : "demo"
+    )
+  );
+  const ambiguous = await ambiguousInDemos(page, demos);
+  const counted = await page.evaluate(async () => {
     if (globalThis.agentBridge === undefined) {
       throw new Error("agent bridge left the page");
     }
@@ -106,6 +221,7 @@ async function scan(page: Page, url: string): Promise<Scan> {
       unseen: listed(entries).length + more - all.length,
     };
   });
+  return { ambiguous, ...counted };
 }
 
 function judge(
@@ -115,7 +231,7 @@ function judge(
   if (scanned === undefined) {
     return [{ kind: "stale", text: "remove the page, it isn't built" }];
   }
-  const counts = withUnseen(scanned);
+  const counts = countsOf(scanned);
   const kinds = new Set([...Object.keys(counts), ...Object.keys(pinned)]);
   return [...kinds].toSorted().map((kind): Verdict => {
     const actual = counts[kind] ?? 0;
@@ -145,8 +261,8 @@ function status(verdicts: Verdict[]) {
   return verdicts.length > 0 ? "pinned" : "ok";
 }
 
-const formatUnnamed = (unnamed: Unnamed) =>
-  Object.entries(unnamed)
+const formatCounts = (counts: Unnamed) =>
+  Object.entries(counts)
     .toSorted(([a], [b]) => a.localeCompare(b))
     .map(([kind, count]) => `${kind}×${count}`)
     .join(" ");
@@ -216,31 +332,35 @@ const rows = [...new Set([...pages, ...Object.keys(baseline)])]
   .flatMap((pagePath) => {
     const scanned = results.get(pagePath);
     const verdicts = verdictsFor(pagePath);
-    const unnamed = formatUnnamed(
-      scanned === undefined ? {} : withUnseen(scanned)
-    );
-    if (unnamed === "" && verdicts.length === 0) {
+    const counts = formatCounts(scanned === undefined ? {} : countsOf(scanned));
+    if (counts === "" && verdicts.length === 0) {
       return [];
     }
     const line = [
       pagePath,
       gated.has(pagePath) ? "gate" : "report",
-      unnamed === "" ? "-" : unnamed,
+      counts === "" ? "-" : counts,
       status(verdicts),
     ];
+    const ambiguous = scanned?.ambiguous ?? [];
     return [
       {
+        ambiguous: ambiguous.length > 0,
         failing: verdicts.some((verdict) => verdict.kind !== "pinned"),
-        line: line.join("  "),
-        unnamed: unnamed !== "",
+        lines: [
+          line.join("  "),
+          ...ambiguous.map((pair) => `    ambiguous: ${pair}`),
+        ],
+        unnamed: Object.keys(scanned?.unnamed ?? {}).length > 0,
       },
     ];
   });
 
 const failures = rows.filter((row) => row.failing).length;
 const withUnnamed = rows.filter((row) => row.unnamed).length;
-console.log(rows.map((row) => row.line).join("\n"));
+const withAmbiguous = rows.filter((row) => row.ambiguous).length;
+console.log(rows.flatMap((row) => row.lines).join("\n"));
 console.log(
-  `\n${pages.length} pages scanned, ${withUnnamed} with unnamed entries, ${failures} gated failures.`
+  `\n${pages.length} pages scanned, ${withUnnamed} with unnamed entries, ${withAmbiguous} with ambiguous names, ${failures} gated failures.`
 );
 process.exitCode = failures > 0 ? 1 : 0;

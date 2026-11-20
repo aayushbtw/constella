@@ -285,7 +285,7 @@ const tiles: Tile[] = [
   },
   {
     content: (
-      <RadioGroup defaultValue="Pro" sx={styles.fill}>
+      <RadioGroup aria-label="Plan" defaultValue="Pro" sx={styles.fill}>
         {plans.map((plan) => (
           <Field key={plan.label}>
             <FieldLabel>
@@ -312,6 +312,7 @@ const tiles: Tile[] = [
     content: (
       <div {...stylex.props(styles.row)}>
         <ToggleGroup
+          aria-label="Text formatting"
           defaultValue={["bold"]}
           multiple
           size="icon"
@@ -319,7 +320,12 @@ const tiles: Tile[] = [
         >
           <Formatting />
         </ToggleGroup>
-        <ToggleGroup defaultValue={["left"]} size="icon" variant="outline">
+        <ToggleGroup
+          aria-label="Alignment"
+          defaultValue={["left"]}
+          size="icon"
+          variant="outline"
+        >
           <ToggleGroupItem aria-label="Align left" value="left">
             <Glyph icon={TextAlignLeftIcon} />
           </ToggleGroupItem>

@@ -166,7 +166,7 @@ Use `ItemHeader` and `ItemFooter` for full-width rows above and below the conten
   </ItemContent>
   <ItemFooter>
     Today
-    <Button size="sm" variant="ghost">
+    <Button aria-label="Read notes for v0.9.0" size="sm" variant="ghost">
       Read notes
     </Button>
   </ItemFooter>
@@ -195,7 +195,7 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 
 ```tsx
 <ItemMedia>
-  <Avatar size="lg">
+  <Avatar aria-hidden size="lg">
     <AvatarImage alt="" src="/avatars/shadcn.png" />
     <AvatarFallback>CN</AvatarFallback>
   </Avatar>

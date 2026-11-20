@@ -53,6 +53,34 @@ test("a broken photo keeps the initials", () => {
   expect(initials()).not.toBeNull();
 });
 
+test("initials named with aria-label read as one picture of the person", () => {
+  render(
+    <Avatar>
+      <AvatarFallback aria-label="Ada Lovelace">AL</AvatarFallback>
+    </Avatar>
+  );
+
+  expect(screen.getByRole("img", { name: "Ada Lovelace" }).textContent).toBe(
+    "AL"
+  );
+  expect(
+    agent
+      .snapshot()
+      .filter((entry) => entry.offPage !== true)
+      .map(({ component, label }) => ({ component, label }))
+  ).toEqual([{ component: "avatar", label: "Ada Lovelace" }]);
+});
+
+test("unnamed initials stay plain text", () => {
+  render(
+    <Avatar>
+      <AvatarFallback>AL</AvatarFallback>
+    </Avatar>
+  );
+
+  expect(screen.queryByRole("img")).toBeNull();
+});
+
 test("size and corners are carried for styling", () => {
   const { container } = render(
     <Avatar corners="rounded" size="lg">

@@ -15,11 +15,13 @@ import { Label } from "@/components/primitives/label";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/primitives/table";
+import { visuallyHidden } from "@/lib/constella/styles";
 import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -119,7 +121,7 @@ function CheckboxControlledDemo() {
             setChecked(next === true);
           }}
         />
-        {checked ? "Notifications on" : "Notifications off"}
+        Notifications
       </Label>
     </DemoRow>
   );
@@ -218,6 +220,7 @@ function CheckboxTableDemo() {
         value={selected}
       >
         <Table>
+          <TableCaption sx={visuallyHidden.base}>Team members</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>

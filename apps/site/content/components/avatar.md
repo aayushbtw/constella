@@ -78,13 +78,13 @@ Use `corners="rounded"` for a logo or an app icon. Avatar groups take the defaul
 
 ## Fallback
 
-`AvatarFallback` shows while the image loads, and stays when it fails.
+`AvatarFallback` shows while the image loads, and stays when it fails. With no image, pass `aria-label` with the person's name: the initials then read as a picture of them.
 
 <!-- ::demo name="avatar-fallback" -->
 
 ```tsx
 <Avatar>
-  <AvatarFallback>AY</AvatarFallback>
+  <AvatarFallback aria-label="aayushbtw">AY</AvatarFallback>
 </Avatar>
 ```
 
