@@ -1,4 +1,4 @@
-import { addDays } from "@ui-sdk/core/date";
+import { addDays } from "@ui-sdk/react/date";
 
 import { Calendar } from "@/components/primitives/calendar";
 import { DemoRow } from "~/components/demos/frame";

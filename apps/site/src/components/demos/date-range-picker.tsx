@@ -1,4 +1,4 @@
-import { addDays, endOfMonth, startOfMonth } from "@ui-sdk/core/date";
+import { addDays, endOfMonth, startOfMonth } from "@ui-sdk/react/date";
 import { useState } from "react";
 
 import {
