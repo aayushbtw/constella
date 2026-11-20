@@ -20,21 +20,58 @@ import {
 } from "@/components/primitives/command";
 import { DialogTrigger } from "@/components/primitives/dialog";
 import { Kbd, KbdGroup } from "@/components/primitives/kbd";
-import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
+import {
+  colors,
+  sizes,
+  space,
+  strokes,
+  media,
+} from "@/lib/constella/tokens.stylex";
 import type { SidebarGroup } from "~/components/docs/sidebar";
 import { blocksGroups, docsGroups } from "~/lib/nav";
-import { layout, media } from "~/lib/tokens.stylex";
+import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
+// styles.ts's `interactive`; keep in step.
+const popupOpen =
+  ":where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open]";
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+const interactive = <const R, const A>(rest: R, active: A) => ({
+  default: rest,
+  [popupOpen]: active,
+  [media.hover]: {
+    default: rest,
+    [popupOpen]: active,
+    [hoverIdle]: active,
+  },
+  [activeIdle]: active,
+});
+
+// One trigger for both looks: a dialog with two has no name for the agent while closed.
 const styles = stylex.create({
+  trigger: {
+    backgroundColor: {
+      ...interactive("transparent", colors.fillSubtle),
+      [siteMedia.sidebar]: interactive(colors.fillSubtle, colors.fill),
+    },
+    color: {
+      default: colors.textPrimary,
+      [siteMedia.sidebar]: colors.textMuted,
+    },
+    marginInlineEnd: { default: null, [siteMedia.sidebar]: space.xs },
+    paddingInlineEnd: { default: 0, [siteMedia.sidebar]: space.popup },
+    paddingInlineStart: { default: 0, [siteMedia.sidebar]: space.popup },
+    width: { default: sizes.controlMd, [siteMedia.sidebar]: layout.search },
+  },
   icon: {
-    display: { default: "flex", [media.sidebar]: "none" },
+    display: { default: "flex", [siteMedia.sidebar]: "none" },
   },
   field: {
-    color: colors.textMuted,
-    display: { default: "none", [media.sidebar]: "flex" },
+    alignItems: "center",
+    display: { default: "none", [siteMedia.sidebar]: "flex" },
+    flexGrow: 1,
+    gap: space.row,
     justifyContent: "space-between",
-    marginInlineEnd: space.xs,
-    width: layout.search,
   },
   arrow: {
     color: colors.textMuted,
@@ -127,19 +164,19 @@ function Search() {
           <Button
             aria-label="Search documentation"
             size="icon"
-            sx={styles.icon}
+            sx={styles.trigger}
             variant="ghost"
           />
         }
       >
-        {icon(Search01Icon)}
-      </DialogTrigger>
-      <DialogTrigger controller={search} render={<Button sx={styles.field} />}>
-        Search documentation...
-        <KbdGroup>
-          <Kbd>⌘</Kbd>
-          <Kbd>K</Kbd>
-        </KbdGroup>
+        <span {...stylex.props(styles.icon)}>{icon(Search01Icon)}</span>
+        <span {...stylex.props(styles.field)}>
+          Search documentation...
+          <KbdGroup>
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </KbdGroup>
+        </span>
       </DialogTrigger>
       <CommandDialog
         controller={search}
