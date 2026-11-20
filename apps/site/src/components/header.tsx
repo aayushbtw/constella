@@ -1,4 +1,4 @@
-import { ContrastIcon } from "@hugeicons/core-free-icons";
+import { Activity01Icon, ContrastIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
@@ -103,7 +103,11 @@ function currentSection(pathname: string) {
   )?.to;
 }
 
-function Header() {
+function Header({
+  activity,
+}: {
+  activity?: { onOpenChange: (open: boolean) => void; open: boolean };
+}) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const current = currentSection(pathname);
 
@@ -139,6 +143,24 @@ function Header() {
         </div>
         <div {...stylex.props(styles.end)}>
           <Search />
+          {activity && (
+            <Button
+              aria-expanded={activity.open}
+              aria-label="Assistant activity"
+              data-agent-hidden
+              onClick={() => {
+                activity.onOpenChange(!activity.open);
+              }}
+              size="icon"
+              variant="ghost"
+            >
+              <HugeiconsIcon
+                icon={Activity01Icon}
+                size={sizes.icon}
+                strokeWidth={Number(strokes.icon)}
+              />
+            </Button>
+          )}
           <Button
             aria-label="Toggle theme"
             onClick={toggleTheme}
