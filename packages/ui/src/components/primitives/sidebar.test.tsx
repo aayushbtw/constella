@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import { withSource } from "@ui-sdk/react/observe";
 import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
@@ -137,8 +138,11 @@ test("an agent presses rows to switch pages, presses the actions, and collapses 
   const { onAddProject, onMarkRead } = renderApp();
   const page = screen.getByTestId("page");
 
+  // The row action's row text holds "Inbox" too, so a step names that row by its ref.
+  const inbox = entries().find((entry) => entry.label === "Inbox")?.ref;
+  expect(inbox, "Inbox is missing from the snapshot").toBeDefined();
   const toInbox = await agent.act({
-    steps: [{ action: "press", ref: "Inbox" }],
+    steps: [{ action: "press", ref: inbox ?? "" }],
   });
   expect(toInbox.ok, toInbox.error?.message).toBe(true);
   expect(page.textContent).toBe("Inbox");
@@ -170,6 +174,30 @@ test("an agent presses rows to switch pages, presses the actions, and collapses 
   expect(
     await screen.findByRole("button", { name: "Expand sidebar" })
   ).toBeTruthy();
+});
+
+test("a keyboard press on the trigger toggles at once, an agent's press animates", async () => {
+  renderApp();
+  const wrapper = document.querySelector<HTMLElement>(
+    "[data-slot='sidebar-wrapper']"
+  );
+  const sidebar = document.querySelector<HTMLElement>("[data-slot='sidebar']");
+
+  const collapse = await screen.findByRole("button", {
+    name: "Collapse sidebar",
+  });
+  withSource("keyboard", () => {
+    fireEvent.click(collapse);
+  });
+  expect(sidebar?.dataset.collapsible).toBe("icon");
+  expect(Object.hasOwn(wrapper?.dataset ?? {}, "instant")).toBe(true);
+
+  const expanded = await agent.act({
+    steps: [{ action: "press", ref: "Expand sidebar" }],
+  });
+  expect(expanded.ok, expanded.error?.message).toBe(true);
+  expect(sidebar?.dataset.collapsible).toBeUndefined();
+  expect(Object.hasOwn(wrapper?.dataset ?? {}, "instant")).toBe(false);
 });
 
 test("a link row stays a link, with its own slot and no type", () => {
