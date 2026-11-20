@@ -33,6 +33,7 @@ import {
   usePopoverSkipMotion,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
+import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { visuallyHidden } from "@/lib/constella/styles";
 import {
@@ -235,7 +236,7 @@ function ModelPickerContent({
       {...props}
       {...stylex.props(
         popoverStyles.popup,
-        popoverStyles.motion,
+        popupMotion.popover,
         styles.content,
         detailsSide === "inline-start" && styles.detailsStart,
         sx

@@ -37,7 +37,7 @@ import {
   InputGroupButton,
   inputGroupInputStyles,
 } from "@/components/primitives/input-group";
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
@@ -46,14 +46,10 @@ import {
 } from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
   fontSizes,
   fontWeights,
   inputVars,
   lineHeights,
-  media,
-  motion,
   offsets,
   opacities,
   radii,
@@ -105,12 +101,6 @@ type ComboboxChipProps<T = string> = Omit<
   children?: ReactNode;
   showRemove?: boolean;
 };
-
-// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
 
 // Read from the chips box, which carries the size as `data-size`.
 const inBox = (size: ComboboxSize) =>
@@ -179,21 +169,6 @@ const styles = stylex.create({
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
     width: "var(--anchor-width)",
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   list: {
     minHeight: 0,
@@ -528,7 +503,12 @@ function ComboboxContent({
         side={side}
         sideOffset={sideOffset}
         {...props}
-        {...stylex.props(popupReset.base, styles.content, styles.motion, sx)}
+        {...stylex.props(
+          popupReset.base,
+          styles.content,
+          popupMotion.popover,
+          sx
+        )}
       />
     </Size>
   );

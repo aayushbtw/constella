@@ -22,15 +22,12 @@ import type { ComponentProps } from "react";
 import { flushSync } from "react-dom";
 
 import { popoverStyles } from "@/components/primitives/popover";
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  easings,
-  media,
-  motion,
   offsets,
   radii,
   shadows,
@@ -56,12 +53,6 @@ type HoverCardContentProps<Payload = unknown> = Styled<
   ComponentProps<typeof HoverCardContentPrimitive<Payload>>
 >;
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-const gliding =
-  ":is([data-moving]):not([data-ending-style], [data-skip-motion])";
-
 const styles = stylex.create({
   surface: {
     backgroundColor: colors.raised,
@@ -74,26 +65,6 @@ const styles = stylex.create({
     paddingBlock: space.popup,
     paddingInline: space.popup,
     width: sizes.popover,
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-      [gliding]: `${durations.popover}, ${durations.popover}, ${durations.move}, ${durations.move}`,
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-      [gliding]: {
-        default: "opacity, transform, top, left",
-        [media.reducedMotion]: "opacity",
-      },
-    },
-    transitionTimingFunction: easings.out,
   },
 });
 
@@ -198,7 +169,8 @@ function HoverCardContent<Payload = unknown>({
       {...props}
       {...stylex.props(
         [typeStyles.textSm, popoverStyles.popup, styles.surface],
-        styles.motion,
+        popupMotion.popover,
+        popupMotion.glide,
         sx
       )}
     />

@@ -16,7 +16,11 @@ import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/primitives/button";
 import { CalendarMonths } from "@/components/primitives/calendar";
 import { popoverStyles } from "@/components/primitives/popover";
-import { skipsMotion, useSkipMotion } from "@/lib/constella/motion";
+import {
+  popupMotion,
+  skipsMotion,
+  useSkipMotion,
+} from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
@@ -248,7 +252,7 @@ function DateRangePickerContent({
       {...props}
       {...stylex.props(
         [popoverStyles.popup, popoverStyles.surface, styles.content],
-        popoverStyles.motion,
+        popupMotion.popover,
         sx
       )}
     />
