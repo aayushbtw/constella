@@ -106,7 +106,7 @@ Use `variant="image"` on `AttachmentMedia` for a picture, with `orientation="ver
 
 ## Trigger
 
-Add `AttachmentTrigger` to open the file from anywhere on the card. Use its `render` prop for a link or a [Dialog](/docs/components/dialog)'s trigger; the actions stay their own buttons above it.
+Add `AttachmentTrigger` to open the file from anywhere on the card. It's a ui-sdk Button, so the agent bridge lists it. It has no text, so give it an `aria-label`. Use its `render` prop for a link or a [Dialog](/docs/components/dialog)'s trigger; the actions stay their own buttons above it.
 
 <!-- ::demo name="attachment-trigger" -->
 
@@ -171,6 +171,6 @@ Use the `state` prop to show where an upload is. Say why a file failed in `Attac
 | `AttachmentMedia` | `variant`: `"default"` or `"image"` |
 | `AttachmentTitle` | Shimmers while `uploading` or `processing` |
 | `AttachmentAction` | A [Button](/docs/components/button), `ghost` at `icon-xs` by default |
-| `AttachmentTrigger` | [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |
+| `AttachmentTrigger` | A transparent [UI SDK Button](https://ui-sdk.dev/docs/react/components/button) over the whole card; name it with `aria-label` |
 
 Every part takes `sx`, applied last. `AttachmentTitle` and `AttachmentDescription` render a `span`, `AttachmentTrigger` a `button`, the rest a `div`.

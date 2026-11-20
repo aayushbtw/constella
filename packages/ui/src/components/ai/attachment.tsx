@@ -1,8 +1,8 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
-import type { PartProps } from "@ui-sdk/react/primitive";
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
@@ -435,18 +435,21 @@ function AttachmentTrigger({
   render,
   sx,
   ...props
-}: Styled<PartProps<"button">>) {
-  return renderElement(
-    "button",
-    mergeProps(
-      {
-        "data-slot": "attachment-trigger",
-        type: render ? undefined : "button",
-      },
-      props,
-      stylex.props(styles.trigger, sx)
-    ),
-    render
+}: Styled<ComponentProps<typeof ButtonPrimitive>>) {
+  return (
+    <ButtonPrimitive
+      {...props}
+      {...stylex.props(styles.trigger, sx)}
+      // ui-sdk writes `button` over a passed slot; the card's `pressable` hover needs a `-trigger` one.
+      render={(rendered, state) =>
+        renderElement(
+          "button",
+          { ...rendered, "data-slot": "attachment-trigger" },
+          render,
+          state
+        )
+      }
+    />
   );
 }
 
