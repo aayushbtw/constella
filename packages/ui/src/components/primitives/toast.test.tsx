@@ -164,6 +164,48 @@ test("an agent can press a toast's Close", async () => {
   });
 });
 
+function stack() {
+  render(<Toaster />);
+  for (const title of ["First", "Second", "Third"]) {
+    show(title, { action: { label: "Undo" } });
+  }
+}
+
+function reachableTitles() {
+  return [...document.querySelectorAll<HTMLElement>("[data-slot='toast']")]
+    .filter((item) => item.closest("[inert]") === null)
+    .map((item) => within(item).getByText(/First|Second|Third/u).textContent)
+    .toSorted();
+}
+
+function pressableRows() {
+  return agent
+    .snapshot()
+    .filter((entry) => entry.component === "button" && entry.disabled !== true)
+    .map((entry) => String(entry.row))
+    .toSorted((a, b) => a.localeCompare(b));
+}
+
+test("a collapsed stack keeps the toasts behind the front one out of reach", () => {
+  stack();
+
+  expect(reachableTitles()).toEqual(["Third"]);
+  expect(pressableRows()).toEqual(["Third"]);
+});
+
+test("an expanded stack makes every toast reachable", async () => {
+  stack();
+
+  act(() => {
+    screen.getAllByRole("button", { name: "Close" })[0].focus();
+  });
+
+  await waitFor(() => {
+    expect(reachableTitles()).toEqual(["First", "Second", "Third"]);
+  });
+  expect(pressableRows()).toEqual(["First", "Second", "Third"]);
+});
+
 test("an empty region shows no entry to an agent", () => {
   render(<Toaster />);
 
