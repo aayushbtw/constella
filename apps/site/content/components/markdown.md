@@ -28,7 +28,7 @@ import { Markdown } from "@/components/ai/markdown";
 <Markdown>{answer}</Markdown>
 ```
 
-Tables render on [Table](/docs/components/table). Code blocks get a [Copy Button](/docs/components/copy-button). Links open in a new tab.
+Tables render on [Table](/docs/components/table). Code blocks get a [Copy Button](/docs/components/copy-button), named "Copy code, ts" for a `ts` block and "Copy code" for one with no language. Links open in a new tab.
 
 ## Streaming
 

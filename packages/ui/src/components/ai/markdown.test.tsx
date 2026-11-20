@@ -43,7 +43,7 @@ test("an agent finds Copy code by name and copies the block, and sees only the t
     entries()
       .filter((entry) => entry.component === "button")
       .map((entry) => entry.label)
-  ).toEqual(["Copy code"]);
+  ).toEqual(["Copy code, ts"]);
   expect(
     entries()
       .filter((entry) => entry.label === undefined)
@@ -59,14 +59,64 @@ test("an agent finds Copy code by name and copies the block, and sees only the t
   ]);
 });
 
+const blocks = `\`\`\`ts
+const users = 1;
+\`\`\`
+
+\`\`\`sh
+vp install
+\`\`\`
+
+\`\`\`
+plain text
+\`\`\`
+`;
+
+test("each code block's copy button names its language, and an agent copies the one it names", async () => {
+  const writeText = stubClipboard();
+  render(<Markdown>{blocks}</Markdown>);
+
+  expect(
+    entries()
+      .filter((entry) => entry.component === "button")
+      .map((entry) => entry.label)
+  ).toEqual(["Copy code, ts", "Copy code, sh", "Copy code"]);
+
+  const result = await agent.act({
+    steps: [{ action: "press", ref: "Copy code, sh" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(writeText.mock.calls).toEqual([["vp install"]]);
+});
+
+test("two blocks of the same language share a name, so a press by it is ambiguous", async () => {
+  stubClipboard();
+  render(
+    <Markdown>
+      {"```ts\nconst a = 1;\n```\n\n```ts\nconst b = 2;\n```\n"}
+    </Markdown>
+  );
+  const refs = entries()
+    .filter((entry) => entry.component === "button")
+    .map((entry) => entry.ref);
+  expect(refs).toHaveLength(2);
+
+  const result = await agent.act({
+    steps: [{ action: "press", ref: "Copy code, ts" }],
+  });
+  expect(result.ok).toBe(false);
+  for (const ref of refs) {
+    expect(result.error?.message).toContain(ref);
+  }
+});
+
 // ui-sdk 0.1.0-beta.13 lists every scroll area with no actions.
-test.fails("every snapshot entry is named", () => {
+test.fails("the table's scroll area has a name", () => {
   render(<Markdown>{answer}</Markdown>);
 
-  for (const entry of entries()) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
+  expect(
+    entries()
+      .filter((entry) => entry.component === "scroll-area")
+      .map((entry) => entry.label)
+  ).toEqual([expect.any(String)]);
 });

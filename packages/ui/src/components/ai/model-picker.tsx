@@ -34,6 +34,7 @@ import {
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
 import type { Sx } from "@/lib/constella/styles";
+import { visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -188,15 +189,20 @@ function ModelPicker({
 /** A ghost button by default, ending in the picker's chevron. */
 function ModelPickerTrigger({
   children,
+  label = "Model",
   size = "sm",
   variant = "ghost",
   ...props
-}: Omit<ButtonProps, "children"> & { children?: ReactNode }) {
+}: Omit<ButtonProps, "children"> & {
+  children?: ReactNode;
+  /** Read before the model's name by screen readers and agents, so two pickers on a page have names of their own. */
+  label?: string;
+}) {
   return (
     <PopoverTrigger
       render={<Button size={size} variant={variant} {...props} />}
     >
-      {children}
+      <span {...stylex.props(visuallyHidden.base)}>{label}:</span> {children}
       <HugeiconsIcon
         aria-hidden
         icon={UnfoldMoreIcon}

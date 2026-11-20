@@ -7,7 +7,7 @@ section: AI
 <!-- ::demo name="citation" -->
 
 ```tsx
-<Citations>
+<Citations aria-label="Sources for this answer">
   <p>
     Revenue grew 12% last quarter <Citation sources={[acme, newsroom]} />.
   </p>

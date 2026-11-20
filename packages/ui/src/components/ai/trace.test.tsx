@@ -187,13 +187,12 @@ test("an agent opens a shut step and shuts the run by name", async () => {
 });
 
 // ui-sdk 0.1.0-beta.13 names a Collapsible only from a trigger, a label part or an accessible name on its root; a step with no trigger has none.
-test.fails("every snapshot entry is named", () => {
+test.fails("the collapsibles of steps with no trigger have names", () => {
   render(<Run />);
 
-  for (const entry of entries()) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
+  expect(
+    entries().filter(
+      (entry) => entry.component === "collapsible" && entry.label === undefined
+    )
+  ).toEqual([]);
 });

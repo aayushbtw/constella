@@ -68,7 +68,7 @@ async function openPicker() {
       </ModelPickerContent>
     </ModelPicker>
   );
-  fireEvent.click(screen.getByRole("button", { name: "Pick a model" }));
+  fireEvent.click(screen.getByRole("button", { name: "Model: Pick a model" }));
   await screen.findByRole("option", { name: "GPT-5" });
   return { onPick, skipOnClose };
 }
@@ -116,13 +116,19 @@ const catalog = [
   { label: "Gemini Pro", value: "gemini-pro" },
 ];
 
-function Picker({ onPick }: { onPick?: (model: string) => void }) {
+function Picker({
+  label,
+  onPick,
+}: {
+  label?: string;
+  onPick?: (model: string) => void;
+}) {
   const [value, setValue] = useState("gpt-5");
   const [highlighted, setHighlighted] = useState<string | null>("claude-opus");
   const picked = catalog.find((model) => model.value === value);
   return (
     <ModelPicker>
-      <ModelPickerTrigger>{picked?.label}</ModelPickerTrigger>
+      <ModelPickerTrigger label={label}>{picked?.label}</ModelPickerTrigger>
       <ModelPickerContent>
         <ModelPickerCommand onValueChange={setHighlighted} value={highlighted}>
           <CommandInput aria-label="Search models" />
@@ -172,13 +178,14 @@ function expectNamed(labels: string[]) {
 test("an agent opens the picker, finds its search by name and picks a model", async () => {
   const onPick = vi.fn<(model: string) => void>();
   render(<Picker onPick={onPick} />);
-  expectNamed(["GPT-5"]);
+  expectNamed(["Model: GPT-5"]);
+  expect(screen.getByRole("button", { name: "Model: GPT-5" })).toBeDefined();
 
   const opened = await agent.act({
     steps: [{ action: "setOpen", args: [true], ref: "GPT-5" }],
   });
   expect(opened.ok, opened.error?.message).toBe(true);
-  expectNamed(["GPT-5", "Search models"]);
+  expectNamed(["Model: GPT-5", "Search models"]);
 
   const result = await agent.act({
     steps: [{ action: "run", args: ["Claude Opus"], ref: "Search models" }],
@@ -190,9 +197,37 @@ test("an agent opens the picker, finds its search by name and picks a model", as
   });
   expect(
     screen
-      .getByRole("button", { name: "Claude Opus" })
+      .getByRole("button", { name: "Model: Claude Opus" })
       .getAttribute("aria-expanded")
   ).toBe("false");
+});
+
+test("two pickers named by their labels each open by name, and only their own", async () => {
+  render(
+    <>
+      <Picker />
+      <Picker label="Fallback" />
+    </>
+  );
+  const model = screen.getByRole("button", { name: "Model: GPT-5" });
+  const fallback = screen.getByRole("button", { name: "Fallback: GPT-5" });
+
+  const opened = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "Model" }],
+  });
+  expect(opened.ok, opened.error?.message).toBe(true);
+  expect(model.getAttribute("aria-expanded")).toBe("true");
+  expect(fallback.getAttribute("aria-expanded")).toBe("false");
+
+  const swapped = await agent.act({
+    steps: [
+      { action: "setOpen", args: [false], ref: "Model" },
+      { action: "setOpen", args: [true], ref: "Fallback" },
+    ],
+  });
+  expect(swapped.ok, swapped.error?.message).toBe(true);
+  expect(model.getAttribute("aria-expanded")).toBe("false");
+  expect(fallback.getAttribute("aria-expanded")).toBe("true");
 });
 
 function UncontrolledPicker({
@@ -231,7 +266,7 @@ function UncontrolledPicker({
 }
 
 async function openUncontrolled() {
-  fireEvent.click(screen.getByRole("button", { name: "Pick a model" }));
+  fireEvent.click(screen.getByRole("button", { name: "Model: Pick a model" }));
   await screen.findByRole("option", { name: "GPT-5" });
 }
 

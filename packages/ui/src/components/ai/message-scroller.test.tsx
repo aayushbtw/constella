@@ -106,6 +106,24 @@ test("at the end, Scroll to end is the scroller's only entry: named, with nothin
   ]);
 });
 
+test("an aria-label on the button names it for agents and screen readers", () => {
+  const { getByRole } = render(
+    <MessageScrollerProvider>
+      <MessageScroller>
+        <MessageScrollerButton aria-label="Scroll chat to end" />
+      </MessageScroller>
+    </MessageScrollerProvider>
+  );
+
+  expect(entries()).toEqual([
+    expect.objectContaining({
+      component: "button",
+      label: "Scroll chat to end",
+    }),
+  ]);
+  expect(getByRole("button", { name: "Scroll chat to end" })).toBeDefined();
+});
+
 test("with more below, an agent presses Scroll to end and the thread scrolls to its end", async () => {
   const scrollTo = stubLayout();
   await waitFor(() => {

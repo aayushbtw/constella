@@ -92,13 +92,12 @@ test("an agent's press waits for a Promise from onClick, and the suggestion is p
 });
 
 // ui-sdk 0.1.0-beta.13 lists every scroll area with no actions.
-test.fails("every snapshot entry is named", () => {
+test.fails("the row's scroll area has a name", () => {
   render(<Row />);
 
-  for (const entry of entries()) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
+  expect(
+    entries()
+      .filter((entry) => entry.component === "scroll-area")
+      .map((entry) => entry.label)
+  ).toEqual([expect.any(String)]);
 });

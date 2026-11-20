@@ -51,7 +51,7 @@ const sources = {
 function CitationDemo() {
   return (
     <DemoRow>
-      <Citations>
+      <Citations aria-label="Sources for this answer">
         <Text color="primary" size="lg" sx={styles.answer}>
           Acme’s revenue grew 12% last quarter, ahead of forecasts{" "}
           <Citation sources={[sources.acme, sources.newsroom]} />. Its new
@@ -79,7 +79,7 @@ function CitationGroupDemo() {
   const last = found.at(-1);
   return (
     <DemoRow>
-      <Citations>
+      <Citations aria-label="Sources found">
         <CitationGroup sx={styles.answer}>
           {found.slice(0, -1).map((source) => (
             <Citation key={source.url} sources={[source]} />
