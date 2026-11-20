@@ -14,6 +14,9 @@ export function getRouter() {
 
   if (typeof document !== "undefined") {
     markNavigations(router);
+    if (import.meta.env.DEV || import.meta.env.VITE_AGENT_BRIDGE === "1") {
+      void import("~/lib/agent");
+    }
   }
 
   return router;
