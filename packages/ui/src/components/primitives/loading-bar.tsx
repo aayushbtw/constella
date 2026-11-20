@@ -9,6 +9,7 @@ import type { ComponentProps } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -148,9 +149,8 @@ function LoadingBar({ loading, sx, ...props }: LoadingBarProps) {
   return (
     <ProgressPrimitive
       data-state={phase}
-      {...props}
+      {...withStyles(props, stylex.props(styles.root, sx))}
       value={null}
-      {...stylex.props(styles.root, sx)}
     >
       <ProgressIndicatorPrimitive
         ref={indicator}

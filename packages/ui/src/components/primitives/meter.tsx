@@ -11,7 +11,7 @@ import {
 import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { trackStyles, typeStyles } from "@/lib/constella/styles";
+import { trackStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -134,8 +134,7 @@ function Meter({ children, color, sx, variant = "bar", ...props }: MeterProps) {
     <MeterPrimitive
       data-color={color}
       data-variant={variant}
-      {...props}
-      {...stylex.props(rootStyles[variant], sx)}
+      {...withStyles(props, stylex.props(rootStyles[variant], sx))}
     >
       {({ percent }) => (
         <>
@@ -186,7 +185,9 @@ function MeterTrack({
   ...props
 }: Styled<ComponentProps<typeof MeterTrackPrimitive>>) {
   return (
-    <MeterTrackPrimitive {...props} {...stylex.props(trackStyles.track, sx)} />
+    <MeterTrackPrimitive
+      {...withStyles(props, stylex.props(trackStyles.track, sx))}
+    />
   );
 }
 
@@ -196,8 +197,7 @@ function MeterIndicator({
 }: Styled<ComponentProps<typeof MeterIndicatorPrimitive>>) {
   return (
     <MeterIndicatorPrimitive
-      {...props}
-      {...stylex.props(trackStyles.indicator, sx)}
+      {...withStyles(props, stylex.props(trackStyles.indicator, sx))}
     />
   );
 }
@@ -208,8 +208,10 @@ function MeterLabel({
 }: Styled<ComponentProps<typeof MeterLabelPrimitive>>) {
   return (
     <MeterLabelPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, trackStyles.label], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, trackStyles.label], sx)
+      )}
     />
   );
 }
@@ -222,8 +224,10 @@ function MeterValue({
     <MeterValuePrimitive
       // ui-sdk 0.1.0-beta.13 relies on the meter role hiding its children, which Chromium doesn't; drop once ui-sdk hides it.
       aria-hidden
-      {...props}
-      {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, trackStyles.value], sx)
+      )}
     />
   );
 }

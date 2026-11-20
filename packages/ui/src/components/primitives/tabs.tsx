@@ -15,7 +15,7 @@ import { createContext, use, useLayoutEffect, useMemo, useRef } from "react";
 import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -248,8 +248,7 @@ function Tabs<Value extends string = string>({
     <TabsOrientationContext value={orientation}>
       <TabsPrimitive<Value>
         orientation={orientation}
-        {...props}
-        {...stylex.props(styles.tabs, sx)}
+        {...withStyles(props, stylex.props(styles.tabs, sx))}
       />
     </TabsOrientationContext>
   );
@@ -303,12 +302,14 @@ function TabsList({
         data-size={size}
         data-variant={variant}
         ref={list}
-        {...props}
-        {...stylex.props(
-          styles.list,
-          listVariantStyles[variant],
-          orientation === "horizontal" && scrollFade.x,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(
+            styles.list,
+            listVariantStyles[variant],
+            orientation === "horizontal" && scrollFade.x,
+            sx
+          )
         )}
       >
         {children}
@@ -322,12 +323,14 @@ function TabsTrigger({ sx, ...props }: Styled<ComponentProps<typeof TabsTab>>) {
   const { size, variant } = use(TabsListContext);
   return (
     <TabsTab
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.tab],
-        tabSizeStyles[size],
-        variant === "line" && styles.tabLine,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.tab],
+          tabSizeStyles[size],
+          variant === "line" && styles.tabLine,
+          sx
+        )
       )}
     />
   );
@@ -339,8 +342,7 @@ function TabsIndicator({
 }: Styled<ComponentProps<typeof TabsIndicatorPrimitive>>) {
   return (
     <TabsIndicatorPrimitive
-      {...props}
-      {...stylex.props(styles.indicator, sx)}
+      {...withStyles(props, stylex.props(styles.indicator, sx))}
     />
   );
 }
@@ -349,7 +351,7 @@ function TabsContent({
   sx,
   ...props
 }: Styled<ComponentProps<typeof TabsPanel>>) {
-  return <TabsPanel {...props} {...stylex.props(styles.panel, sx)} />;
+  return <TabsPanel {...withStyles(props, stylex.props(styles.panel, sx))} />;
 }
 
 export {

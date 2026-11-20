@@ -25,7 +25,7 @@ import {
   inputGroupInputStyles,
 } from "@/components/primitives/input-group";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -166,8 +166,7 @@ function Command({ filter = "contains", sx, ...props }: CommandProps) {
   return (
     <CommandPrimitive
       filter={filter}
-      {...props}
-      {...stylex.props(commandStyles.surface, sx)}
+      {...withStyles(props, stylex.props(commandStyles.surface, sx))}
     />
   );
 }
@@ -184,7 +183,9 @@ function CommandInput({
       sx={[styles.input, sx]}
     >
       <span data-slot="input-group-input" {...stylex.props(input.slot)}>
-        <CommandInputPrimitive {...props} {...stylex.props(input.input)} />
+        <CommandInputPrimitive
+          {...withStyles(props, stylex.props(input.input))}
+        />
       </span>
       <InputGroupAddon>
         <span {...stylex.props(styles.icon)}>
@@ -206,8 +207,7 @@ function CommandList({
 }: Styled<ComponentProps<typeof CommandListPrimitive>>) {
   return (
     <CommandListPrimitive
-      {...props}
-      {...stylex.props(commandStyles.list, sx)}
+      {...withStyles(props, stylex.props(commandStyles.list, sx))}
     />
   );
 }
@@ -218,8 +218,7 @@ function CommandEmpty({
 }: Styled<ComponentProps<typeof CommandEmptyPrimitive>>) {
   return (
     <CommandEmptyPrimitive
-      {...props}
-      {...stylex.props(commandStyles.empty, sx)}
+      {...withStyles(props, stylex.props(commandStyles.empty, sx))}
     />
   );
 }
@@ -248,8 +247,7 @@ function CommandGroup({
   const hydrated = useHydrated();
   return (
     <CommandGroupPrimitive
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
       // ui-sdk's server HTML hides every composed group; remove when it stops.
       render={
         hydrated
@@ -267,8 +265,10 @@ function CommandGroupLabel({
 }: Styled<ComponentProps<typeof CommandGroupLabelPrimitive>>) {
   return (
     <CommandGroupLabelPrimitive
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.groupLabel], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.groupLabel], sx)
+      )}
     />
   );
 }
@@ -279,8 +279,7 @@ function CommandItem({
 }: Styled<ComponentProps<typeof CommandItemPrimitive>>) {
   return (
     <CommandItemPrimitive
-      {...props}
-      {...stylex.props(commandStyles.item, sx)}
+      {...withStyles(props, stylex.props(commandStyles.item, sx))}
     />
   );
 }
@@ -291,8 +290,7 @@ function CommandSeparator({
 }: Styled<ComponentProps<typeof CommandSeparatorPrimitive>>) {
   return (
     <CommandSeparatorPrimitive
-      {...props}
-      {...stylex.props(styles.separator, sx)}
+      {...withStyles(props, stylex.props(styles.separator, sx))}
     />
   );
 }
@@ -303,8 +301,10 @@ function CommandShortcut({
 }: Styled<ComponentProps<typeof CommandShortcutPrimitive>>) {
   return (
     <CommandShortcutPrimitive
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.shortcut], sx)
+      )}
     />
   );
 }
@@ -313,8 +313,10 @@ function CommandFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="command-footer"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.footer], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.footer], sx)
+      )}
     />
   );
 }

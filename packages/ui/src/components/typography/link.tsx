@@ -3,6 +3,7 @@ import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, durations, media, space } from "@/lib/constella/tokens.stylex";
 
 type LinkProps = Omit<PartProps<"a">, "className" | "style"> & {
@@ -32,7 +33,10 @@ const styles = stylex.create({
 function Link({ render, sx, ...props }: LinkProps) {
   return renderElement(
     "a",
-    mergeProps({ "data-slot": "link" }, props, stylex.props(styles.base, sx)),
+    mergeProps(
+      { "data-slot": "link" },
+      withStyles(props, stylex.props(styles.base, sx))
+    ),
     render
   );
 }

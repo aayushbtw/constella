@@ -17,7 +17,7 @@ import type { ComponentProps } from "react";
 import { labelStyles } from "@/components/primitives/label";
 import { Separator } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -230,7 +230,9 @@ function FieldSet({
   sx,
   ...props
 }: Styled<ComponentProps<typeof FieldSetPrimitive>>) {
-  return <FieldSetPrimitive {...props} {...stylex.props(styles.set, sx)} />;
+  return (
+    <FieldSetPrimitive {...withStyles(props, stylex.props(styles.set, sx))} />
+  );
 }
 
 function FieldLegend({
@@ -243,8 +245,10 @@ function FieldLegend({
   return (
     <FieldLegendPrimitive
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.legend, legendStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.legend, legendStyles[variant], sx)
+      )}
     />
   );
 }
@@ -253,7 +257,11 @@ function FieldGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof FieldGroupPrimitive>>) {
-  return <FieldGroupPrimitive {...props} {...stylex.props(styles.group, sx)} />;
+  return (
+    <FieldGroupPrimitive
+      {...withStyles(props, stylex.props(styles.group, sx))}
+    />
+  );
 }
 
 function Field({
@@ -266,8 +274,10 @@ function Field({
   return (
     <FieldPrimitive
       data-orientation={orientation}
-      {...props}
-      {...stylex.props(styles.field, orientationStyles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.field, orientationStyles[orientation], sx)
+      )}
     />
   );
 }
@@ -276,8 +286,7 @@ function FieldContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="field-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -288,8 +297,7 @@ function FieldLabel({
 }: Styled<Omit<ComponentProps<typeof FieldLabelPrimitive>, "htmlFor">>) {
   return (
     <FieldLabelPrimitive
-      {...props}
-      {...stylex.props(labelStyles(), styles.label, sx)}
+      {...withStyles(props, stylex.props(labelStyles(), styles.label, sx))}
     />
   );
 }
@@ -300,8 +308,7 @@ function FieldTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "field-title" },
-      props,
-      stylex.props(labelStyles(), sx)
+      withStyles(props, stylex.props(labelStyles(), sx))
     ),
     render
   );
@@ -313,8 +320,10 @@ function FieldDescription({
 }: Styled<ComponentProps<typeof FieldDescriptionPrimitive>>) {
   return (
     <FieldDescriptionPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -329,8 +338,10 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
   if (errors === undefined) {
     return (
       <FieldErrorPrimitive
-        {...props}
-        {...stylex.props([typeStyles.textSm, styles.error], sx)}
+        {...withStyles(
+          props,
+          stylex.props([typeStyles.textSm, styles.error], sx)
+        )}
       />
     );
   }
@@ -354,8 +365,10 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
   return (
     <FieldErrorPrimitive
       match
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.error], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.error], sx)
+      )}
     >
       {children}
     </FieldErrorPrimitive>
@@ -371,8 +384,10 @@ function FieldSeparator({
     <div
       data-content={children !== undefined}
       data-slot="field-separator"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.separator], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.separator], sx)
+      )}
     >
       {children === undefined ? (
         <Separator sx={styles.separatorLine} />

@@ -7,6 +7,7 @@ import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 
 const headingSizes = [1, 2, 3, 4, 5, 6] as const;
@@ -56,13 +57,15 @@ function Heading({
         "data-slot": "heading",
         "data-weight": weight,
       },
-      props,
-      stylex.props(
-        styles.base,
-        sizeStyles[size],
-        textWeightStyles[weight],
-        textColorStyles[color],
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          styles.base,
+          sizeStyles[size],
+          textWeightStyles[weight],
+          textColorStyles[color],
+          sx
+        )
       )
     ),
     render

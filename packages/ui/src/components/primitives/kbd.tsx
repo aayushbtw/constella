@@ -4,7 +4,7 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -94,8 +94,7 @@ function Kbd({ render, sx, ...props }: Styled<PartProps<"kbd">>) {
     "kbd",
     mergeProps(
       { "data-slot": "kbd" },
-      props,
-      stylex.props([typeStyles.captionLg, styles.kbd], sx)
+      withStyles(props, stylex.props([typeStyles.captionLg, styles.kbd], sx))
     ),
     render
   );
@@ -103,7 +102,10 @@ function Kbd({ render, sx, ...props }: Styled<PartProps<"kbd">>) {
 
 function KbdGroup({ sx, ...props }: Styled<ComponentProps<"kbd">>) {
   return (
-    <kbd data-slot="kbd-group" {...props} {...stylex.props(styles.group, sx)} />
+    <kbd
+      data-slot="kbd-group"
+      {...withStyles(props, stylex.props(styles.group, sx))}
+    />
   );
 }
 

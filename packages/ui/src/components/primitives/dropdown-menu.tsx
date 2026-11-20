@@ -30,7 +30,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -296,7 +296,7 @@ function DropdownMenuTrigger<Payload = unknown>({
   sx,
   ...props
 }: DropdownMenuTriggerProps<Payload>) {
-  return <MenuTrigger {...props} {...stylex.props(sx)} />;
+  return <MenuTrigger {...withStyles(props, stylex.props(sx))} />;
 }
 
 function Popup<Payload>({
@@ -314,13 +314,15 @@ function Popup<Payload>({
       <Part<Payload>
         data-size={size}
         data-skip-motion={skip || undefined}
-        {...props}
-        {...stylex.props(
-          [popupReset.base, styles.popup],
-          sizeStyles[size].popup,
-          popupMotion.popover,
-          nested && popupMotion.submenu,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(
+            [popupReset.base, styles.popup],
+            sizeStyles[size].popup,
+            popupMotion.popover,
+            nested && popupMotion.submenu,
+            sx
+          )
         )}
       />
     </Size>
@@ -347,7 +349,7 @@ function DropdownMenuGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuGroup>>) {
-  return <MenuGroup {...props} {...stylex.props(sx)} />;
+  return <MenuGroup {...withStyles(props, stylex.props(sx))} />;
 }
 
 function DropdownMenuLabel({
@@ -358,11 +360,13 @@ function DropdownMenuLabel({
   return (
     <MenuGroupLabel
       data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.label],
-        useSizeStyles().label,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.label],
+          useSizeStyles().label,
+          sx
+        )
       )}
     />
   );
@@ -377,8 +381,10 @@ function DropdownMenuItem({
   return (
     <MenuItem
       data-inset={isInset}
-      {...props}
-      {...stylex.props([size.text, styles.item], size.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([size.text, styles.item], size.item, sx)
+      )}
     />
   );
 }
@@ -403,8 +409,10 @@ function DropdownMenuSubTrigger({
   return (
     <MenuSubTrigger
       data-inset={isInset}
-      {...props}
-      {...stylex.props([size.text, styles.item], size.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([size.text, styles.item], size.item, sx)
+      )}
     >
       {children}
       <MenuItemIcon mirror {...stylex.props(styles.chevron)}>
@@ -443,13 +451,15 @@ function DropdownMenuCheckboxItem({
   return (
     <MenuCheckboxItem
       data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [size.text, styles.item],
-        size.item,
-        styles.checkable,
-        size.checkable,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [size.text, styles.item],
+          size.item,
+          styles.checkable,
+          size.checkable,
+          sx
+        )
       )}
     >
       {children}
@@ -462,7 +472,7 @@ function DropdownMenuRadioGroup<T extends string = string>({
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuRadioGroup<T>>>) {
-  return <MenuRadioGroup<T> {...props} {...stylex.props(sx)} />;
+  return <MenuRadioGroup<T> {...withStyles(props, stylex.props(sx))} />;
 }
 
 function DropdownMenuRadioItem({
@@ -475,13 +485,15 @@ function DropdownMenuRadioItem({
   return (
     <MenuRadioItem
       data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [size.text, styles.item],
-        size.item,
-        styles.checkable,
-        size.checkable,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [size.text, styles.item],
+          size.item,
+          styles.checkable,
+          size.checkable,
+          sx
+        )
       )}
     >
       {children}
@@ -496,8 +508,10 @@ function DropdownMenuSeparator({
 }: Styled<ComponentProps<typeof MenuSeparator>>) {
   return (
     <MenuSeparator
-      {...props}
-      {...stylex.props(styles.separator, useSizeStyles().separator, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.separator, useSizeStyles().separator, sx)
+      )}
     />
   );
 }

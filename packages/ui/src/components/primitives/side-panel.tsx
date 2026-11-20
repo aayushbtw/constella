@@ -16,7 +16,7 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -161,8 +161,10 @@ function Panel({ sx, ...props }: Styled<ComponentProps<"aside">>) {
   return (
     <aside
       data-slot="panel"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.surface], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.surface], sx)
+      )}
     />
   );
 }
@@ -172,8 +174,7 @@ function PanelHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="panel-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -182,10 +183,9 @@ function PanelTitle({ children, sx, ...props }: Styled<ComponentProps<"h2">>) {
   return (
     <h2
       data-slot="panel-title"
-      {...props}
-      {...stylex.props(
-        [typeStyles.textBase, styles.title, styles.panelTitle],
-        sx
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textBase, styles.title, styles.panelTitle], sx)
       )}
     >
       {children}
@@ -196,7 +196,10 @@ function PanelTitle({ children, sx, ...props }: Styled<ComponentProps<"h2">>) {
 /** Scrolls on its own once the panel's height can't hold it. */
 function PanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div data-slot="panel-body" {...props} {...stylex.props(styles.body, sx)} />
+    <div
+      data-slot="panel-body"
+      {...withStyles(props, stylex.props(styles.body, sx))}
+    />
   );
 }
 
@@ -209,7 +212,7 @@ function SidePanelTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof DialogTriggerPrimitive>>) {
-  return <DialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <DialogTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 /** Holds `SidePanelContent` after the content it sits beside, in a flex row. */
@@ -217,8 +220,7 @@ function SidePanelSlot({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="side-panel-slot"
-      {...props}
-      {...stylex.props(styles.slot, sx)}
+      {...withStyles(props, stylex.props(styles.slot, sx))}
     />
   );
 }
@@ -230,10 +232,12 @@ function SidePanelContent<Payload = unknown>({
   return (
     <DialogContentPrimitive<Payload>
       inline
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
+          sx
+        )
       )}
     />
   );
@@ -248,8 +252,7 @@ function SidePanelHeader({
   return (
     <div
       data-slot="side-panel-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     >
       {children}
       <DialogClosePrimitive
@@ -273,8 +276,10 @@ function SidePanelTitle({
 }: Styled<ComponentProps<typeof DialogTitlePrimitive>>) {
   return (
     <DialogTitlePrimitive
-      {...props}
-      {...stylex.props([typeStyles.textLg, styles.title], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textLg, styles.title], sx)
+      )}
     />
   );
 }
@@ -285,8 +290,10 @@ function SidePanelDescription({
 }: Styled<ComponentProps<typeof DialogDescriptionPrimitive>>) {
   return (
     <DialogDescriptionPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -295,8 +302,7 @@ function SidePanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="side-panel-body"
-      {...props}
-      {...stylex.props(styles.body, sx)}
+      {...withStyles(props, stylex.props(styles.body, sx))}
     />
   );
 }
@@ -306,8 +312,7 @@ function SidePanelFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="side-panel-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }

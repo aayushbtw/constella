@@ -12,7 +12,7 @@ import type { ComponentProps } from "react";
 
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -73,7 +73,7 @@ function TooltipTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
-  return <TooltipTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <TooltipTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function TooltipContent({
@@ -86,11 +86,13 @@ function TooltipContent({
     <TooltipContentPrimitive
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, popupReset.base, styles.content],
-        popupMotion.tooltip,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, popupReset.base, styles.content],
+          popupMotion.tooltip,
+          sx
+        )
       )}
     />
   );

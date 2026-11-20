@@ -20,7 +20,7 @@ import {
 } from "@/components/primitives/hover-card";
 import type { HoverCardController } from "@/components/primitives/hover-card";
 import type { Sx } from "@/lib/constella/styles";
-import { stateStyles, typeStyles } from "@/lib/constella/styles";
+import { stateStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -219,16 +219,18 @@ function CitationSource({ source, sx, ...props }: CitationSourceProps) {
   return (
     <a
       data-slot="citation-source"
-      {...props}
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.source,
+          stateStyles.ghost,
+          current && styles.current,
+          sx
+        )
+      )}
       href={source.url}
       rel="noreferrer"
       target="_blank"
-      {...stylex.props(
-        styles.source,
-        stateStyles.ghost,
-        current && styles.current,
-        sx
-      )}
     >
       <span {...stylex.props(styles.publication)}>
         <Logo source={source} sx={styles.logoCard} />

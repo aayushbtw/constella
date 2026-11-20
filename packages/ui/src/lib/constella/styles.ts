@@ -444,6 +444,29 @@ type Sx = stylex.StyleXStyles<
     TokenStyles
 >;
 
+type StyleProps = ReturnType<typeof stylex.props>;
+
+/** A part's own styles on its props. Class names join across `render`, so one part in a chain draws, and a className from an outer part beside one of its own throws. Inline styles merge, its own last. */
+const withStyles = <P extends object>(
+  props: P & StyleProps & { "data-slot"?: string },
+  own: StyleProps
+): P & StyleProps => {
+  if ((props.className ?? "") !== "" && (own.className ?? "") !== "") {
+    const slot =
+      props["data-slot"] === undefined
+        ? ""
+        : ` [data-slot="${props["data-slot"]}"]`;
+    throw new Error(
+      `Two parts style one element${slot}. Put \`sx\` on the part that draws and leave the others unstyled.`
+    );
+  }
+  const merged = { ...props, ...own };
+  if (props.style !== undefined && own.style !== undefined) {
+    return { ...merged, style: { ...props.style, ...own.style } };
+  }
+  return merged;
+};
+
 export {
   controlIconSize,
   joinStyles,
@@ -456,5 +479,6 @@ export {
   trackStyles,
   typeStyles,
   visuallyHidden,
+  withStyles,
 };
 export type { Sx, TextColor, TextWeight };

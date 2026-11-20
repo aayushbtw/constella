@@ -8,6 +8,7 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   durations,
   easings,
@@ -90,8 +91,7 @@ function MessageScroller({
   return (
     <MessageScrollerPrimitive.Root
       data-slot="message-scroller"
-      {...props}
-      {...stylex.props(styles.root, sx)}
+      {...withStyles(props, stylex.props(styles.root, sx))}
     />
   );
 }
@@ -103,8 +103,7 @@ function MessageScrollerViewport({
   return (
     <MessageScrollerPrimitive.Viewport
       data-slot="message-scroller-viewport"
-      {...props}
-      {...stylex.props(styles.viewport, sx)}
+      {...withStyles(props, stylex.props(styles.viewport, sx))}
     />
   );
 }
@@ -116,8 +115,7 @@ function MessageScrollerContent({
   return (
     <MessageScrollerPrimitive.Content
       data-slot="message-scroller-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -131,8 +129,7 @@ function MessageScrollerItem({
     <MessageScrollerPrimitive.Item
       data-slot="message-scroller-item"
       scrollAnchor={scrollAnchor}
-      {...props}
-      {...stylex.props(styles.item, sx)}
+      {...withStyles(props, stylex.props(styles.item, sx))}
     />
   );
 }

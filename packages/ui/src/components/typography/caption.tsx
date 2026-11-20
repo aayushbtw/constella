@@ -7,6 +7,7 @@ import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import { letterSpacings } from "@/lib/constella/tokens.stylex";
 
@@ -57,14 +58,16 @@ function Caption({
         "data-slot": "caption",
         "data-weight": weight,
       },
-      props,
-      stylex.props(
-        styles.base,
-        sizeStyles[size],
-        uppercase && styles.uppercase,
-        textWeightStyles[weight],
-        textColorStyles[color],
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          styles.base,
+          sizeStyles[size],
+          uppercase && styles.uppercase,
+          textWeightStyles[weight],
+          textColorStyles[color],
+          sx
+        )
       )
     ),
     render

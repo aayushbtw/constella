@@ -6,7 +6,7 @@ import type { ComponentProps } from "react";
 import { Separator } from "@/components/primitives/separator";
 import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -92,8 +92,10 @@ function ButtonGroup({
       data-slot="button-group"
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
-      {...props}
-      {...stylex.props(styles.group, orientationStyles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.group, orientationStyles[orientation], sx)
+      )}
     />
   );
 }
@@ -103,12 +105,14 @@ function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
     "div",
     mergeProps(
       { "data-slot": "button-group-text" },
-      props,
-      stylex.props(
-        [typeStyles.textSm, styles.text],
-        joinStyles.sm,
-        joinStyles.edges,
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.text],
+          joinStyles.sm,
+          joinStyles.edges,
+          sx
+        )
       )
     ),
     render

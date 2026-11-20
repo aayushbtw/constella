@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/primitives/scroll-area";
 import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -37,8 +38,7 @@ function Suggestions({ sx, ...props }: Styled<ComponentProps<"div">>) {
         data-slot="suggestions"
         // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
         role="group"
-        {...props}
-        {...stylex.props(styles.list, sx)}
+        {...withStyles(props, stylex.props(styles.list, sx))}
       />
     </ScrollArea>
   );

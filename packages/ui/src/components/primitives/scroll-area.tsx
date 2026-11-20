@@ -11,6 +11,7 @@ import {
 import type { ComponentProps, Ref } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -81,8 +82,7 @@ function ScrollArea({
   return (
     <ScrollAreaPrimitive
       scrollHideDelay={scrollHideDelay}
-      {...props}
-      {...stylex.props(sx)}
+      {...withStyles(props, stylex.props(sx))}
     >
       <ScrollAreaViewport
         ref={viewportRef}
@@ -108,8 +108,7 @@ function ScrollBar({
   return (
     <ScrollAreaScrollbar
       orientation={orientation}
-      {...props}
-      {...stylex.props(styles.scrollbar, sx)}
+      {...withStyles(props, stylex.props(styles.scrollbar, sx))}
     >
       <ScrollAreaThumb {...stylex.props(styles.thumb)} />
     </ScrollAreaScrollbar>

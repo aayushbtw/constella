@@ -15,7 +15,7 @@ import type { ComponentProps } from "react";
 
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -89,7 +89,7 @@ function PopoverTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof PopoverTriggerPrimitive>>) {
-  return <PopoverTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <PopoverTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function PopoverContent({
@@ -102,11 +102,13 @@ function PopoverContent({
     <PopoverContentPrimitive
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, popupReset.base, styles.surface],
-        popupMotion.popover,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, popupReset.base, styles.surface],
+          popupMotion.popover,
+          sx
+        )
       )}
     />
   );
@@ -116,8 +118,7 @@ function PopoverHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="popover-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -128,8 +129,10 @@ function PopoverTitle({
 }: Styled<ComponentProps<typeof PopoverTitlePrimitive>>) {
   return (
     <PopoverTitlePrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.title], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.title], sx)
+      )}
     />
   );
 }
@@ -140,8 +143,10 @@ function PopoverDescription({
 }: Styled<ComponentProps<typeof PopoverDescriptionPrimitive>>) {
   return (
     <PopoverDescriptionPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -150,7 +155,7 @@ function PopoverClose({
   sx,
   ...props
 }: Styled<ComponentProps<typeof PopoverClosePrimitive>>) {
-  return <PopoverClosePrimitive {...props} {...stylex.props(sx)} />;
+  return <PopoverClosePrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 /** The popup's reset and surface, for a part that draws its own popup. */
