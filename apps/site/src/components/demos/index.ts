@@ -318,6 +318,7 @@ import {
 import {
   SegmentedControlDemo,
   SegmentedControlDisabledDemo,
+  SegmentedControlVerticalDemo,
 } from "~/components/demos/segmented-control";
 import {
   SelectAlignItemDemo,
@@ -787,6 +788,7 @@ const demos = {
   "swap-text": SwapTextDemo,
   "segmented-control": SegmentedControlDemo,
   "segmented-control-disabled": SegmentedControlDisabledDemo,
+  "segmented-control-vertical": SegmentedControlVerticalDemo,
   switch: SwitchDemo,
   "switch-card": SwitchCardDemo,
   "switch-description": SwitchDescriptionDemo,

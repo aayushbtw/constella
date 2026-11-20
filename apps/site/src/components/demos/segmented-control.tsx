@@ -14,7 +14,11 @@ function SegmentedControlDemo() {
     <DemoRow>
       <SegmentedControl
         aria-label="Range"
-        onValueChange={setRange}
+        onValueChange={(next) => {
+          if (next !== null) {
+            setRange(next);
+          }
+        }}
         value={range}
       >
         <SegmentedControlItem value="day">Day</SegmentedControlItem>
@@ -25,11 +29,26 @@ function SegmentedControlDemo() {
   );
 }
 
-function SegmentedControlDisabledDemo() {
-  const [view, setView] = useState("list");
+function SegmentedControlVerticalDemo() {
   return (
     <DemoRow>
-      <SegmentedControl aria-label="View" onValueChange={setView} value={view}>
+      <SegmentedControl
+        aria-label="Vertical alignment"
+        defaultValue="middle"
+        orientation="vertical"
+      >
+        <SegmentedControlItem value="top">Top</SegmentedControlItem>
+        <SegmentedControlItem value="middle">Middle</SegmentedControlItem>
+        <SegmentedControlItem value="bottom">Bottom</SegmentedControlItem>
+      </SegmentedControl>
+    </DemoRow>
+  );
+}
+
+function SegmentedControlDisabledDemo() {
+  return (
+    <DemoRow>
+      <SegmentedControl aria-label="View" defaultValue="list">
         <SegmentedControlItem value="list">List</SegmentedControlItem>
         <SegmentedControlItem value="board">Board</SegmentedControlItem>
         <SegmentedControlItem disabled value="calendar">
@@ -40,4 +59,8 @@ function SegmentedControlDisabledDemo() {
   );
 }
 
-export { SegmentedControlDemo, SegmentedControlDisabledDemo };
+export {
+  SegmentedControlDemo,
+  SegmentedControlDisabledDemo,
+  SegmentedControlVerticalDemo,
+};

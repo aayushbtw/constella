@@ -1,9 +1,12 @@
 "use client";
 
-import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
-import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
 import * as stylex from "@stylexjs/stylex";
-import { useLayoutEffect, useRef, useState } from "react";
+import {
+  SegmentedControlIndicator,
+  SegmentedControlItem as SegmentedControlItemPrimitive,
+  SegmentedControl as SegmentedControlPrimitive,
+} from "@ui-sdk/react/segmented-control";
+import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
@@ -23,24 +26,26 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SegmentedControlProps<Value extends string> = Styled<
-  Omit<
-    ToggleGroupPrimitive.Props<Value>,
-    "multiple" | "onValueChange" | "value"
-  >
+type SegmentedControlProps<Value extends string = string> = Styled<
+  Omit<ComponentProps<typeof SegmentedControlPrimitive<Value>>, "children">
 > & {
-  value: Value;
-  onValueChange: (value: Value) => void;
+  children?: ReactNode;
 };
 
-interface Place {
-  x: number;
-  width: number;
-}
+const vertical = ":is([data-orientation='vertical'])";
+
+const pickedBeforePillPlaced =
+  ":is([data-checked]):not([data-slot='segmented-control-indicator'][style*='--segmented-control-indicator-width'] ~ *)";
+
+const pickedByKeyboard =
+  ":is([data-slot='segmented-control']:has(:focus-visible) > *)";
+
+const firstPlacement = ":is([data-activation-direction='none'])";
 
 const styles = stylex.create({
   root: {
     display: "flex",
+    flexDirection: { default: "row", [vertical]: "column" },
     position: "relative",
     width: "fit-content",
   },
@@ -49,7 +54,7 @@ const styles = stylex.create({
     alignItems: "center",
     backgroundColor: {
       default: "transparent",
-      ":is([data-pressed]):not([data-placed] *)": colors.fill,
+      [pickedBeforePillPlaced]: colors.fill,
     },
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
@@ -61,18 +66,18 @@ const styles = stylex.create({
     borderInlineStartWidth: 0,
     color: {
       default: colors.textSecondary,
-      ":is([data-pressed])": colors.textPrimary,
+      ":is([data-checked])": colors.textPrimary,
       [media.hover]: {
         default: colors.textSecondary,
-        ":hover:not(:disabled)": colors.textPrimary,
-        ":is([data-pressed])": colors.textPrimary,
+        ":hover:not([data-disabled])": colors.textPrimary,
+        ":is([data-checked])": colors.textPrimary,
       },
     },
-    cursor: { default: "pointer", ":disabled": "not-allowed" },
+    cursor: { default: "pointer", ":is([data-disabled])": "not-allowed" },
     display: "inline-flex",
     fontWeight: fontWeights.semimedium,
     height: sizes.controlSm,
-    opacity: { default: 1, ":disabled": opacities.disabled },
+    opacity: { default: 1, ":is([data-disabled])": opacities.disabled },
     paddingInline: space.sm,
     position: "relative",
     transitionDuration: durations.hover,
@@ -82,102 +87,54 @@ const styles = stylex.create({
     whiteSpace: "nowrap",
     zIndex: 1,
   },
+  // ui-sdk measures `--segmented-control-indicator-left` from the physical left, so the pill anchors there too.
   indicator: {
     backgroundColor: colors.fill,
     borderStartStartRadius: radii.full,
     borderStartEndRadius: radii.full,
     borderEndStartRadius: radii.full,
     borderEndEndRadius: radii.full,
-    height: sizes.controlSm,
+    height: "var(--segmented-control-indicator-height)",
     left: 0,
     position: "absolute",
     top: 0,
-    // Arrow keys move focus visibly and a click doesn't, so only the pointer slides it.
+    transform:
+      "translate(var(--segmented-control-indicator-left), var(--segmented-control-indicator-top))",
     transitionDuration: {
       default: durations.move,
-      ":is([data-slot='segmented-control']:has(:focus-visible) > *)": "0s",
+      [firstPlacement]: "0s",
+      [pickedByKeyboard]: "0s",
       [media.reducedMotion]: "0s",
     },
-    transitionProperty: "transform, width",
+    transitionProperty: "transform, width, height",
     transitionTimingFunction: easings.inOut,
+    width: "var(--segmented-control-indicator-width)",
   },
-  place: (x: number, width: number) => ({
-    transform: `translateX(${x}px)`,
-    width,
-  }),
 });
 
 /** One pick among a few, marked by a pill that slides to it, as a tab's does. */
-function SegmentedControl<Value extends string>({
+function SegmentedControl<Value extends string = string>({
   children,
-  onValueChange,
   sx,
-  value,
   ...props
 }: SegmentedControlProps<Value>) {
-  const root = useRef<HTMLDivElement>(null);
-  const [place, setPlace] = useState<Place | null>(null);
-
-  useLayoutEffect(() => {
-    const element = root.current;
-    const measure = () => {
-      const pressed = element?.querySelector<HTMLElement>("[data-pressed]");
-      setPlace(
-        pressed === null || pressed === undefined
-          ? null
-          : { x: pressed.offsetLeft, width: pressed.offsetWidth }
-      );
-    };
-    measure();
-    // A new pick moves the pill; webfonts and container changes move the items.
-    const picks = new MutationObserver(measure);
-    const resizes = new ResizeObserver(measure);
-    if (element !== null) {
-      picks.observe(element, {
-        attributeFilter: ["data-pressed"],
-        subtree: true,
-      });
-      resizes.observe(element);
-    }
-    return () => {
-      picks.disconnect();
-      resizes.disconnect();
-    };
-  }, []);
-
   return (
-    <ToggleGroupPrimitive
-      data-placed={place === null ? undefined : ""}
-      data-slot="segmented-control"
-      onValueChange={(next) => {
-        const [picked] = next;
-        if (picked !== undefined) {
-          onValueChange(picked);
-        }
-      }}
-      ref={root}
-      value={[value]}
+    <SegmentedControlPrimitive<Value>
       {...props}
       {...stylex.props([typeStyles.textSm, styles.root], sx)}
     >
-      {place === null ? null : (
-        <span
-          aria-hidden
-          {...stylex.props(
-            styles.indicator,
-            styles.place(place.x, place.width)
-          )}
-        />
-      )}
+      <SegmentedControlIndicator {...stylex.props(styles.indicator)} />
       {children}
-    </ToggleGroupPrimitive>
+    </SegmentedControlPrimitive>
   );
 }
 
-function SegmentedControlItem({ sx, ...props }: Styled<TogglePrimitive.Props>) {
+function SegmentedControlItem({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SegmentedControlItemPrimitive>>) {
   return (
-    <TogglePrimitive
-      data-slot="segmented-control-item"
+    <SegmentedControlItemPrimitive
       {...props}
       {...stylex.props(styles.item, sx)}
     />

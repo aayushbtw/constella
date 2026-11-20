@@ -369,7 +369,7 @@
       "type": "registry:ui",
       "title": "Segmented Control",
       "description": "One pick among a few, marked by a pill that slides to it.",
-      "dependencies": ["@base-ui/react", "@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
