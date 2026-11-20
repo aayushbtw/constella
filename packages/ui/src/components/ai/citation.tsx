@@ -258,13 +258,25 @@ const CitationsContext = createContext<HoverCardController<Sources> | null>(
 );
 
 /** Holds the one card every `Citation` inside opens, so it moves to each citation as you hover it. */
-function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
+function Citations({
+  "aria-label": label = "Sources",
+  children,
+  sx,
+}: {
+  "aria-label"?: string;
+  children: ReactNode;
+  sx?: Sx;
+}) {
   const controller = useMemo(() => createHoverCardController<Sources>(), []);
   return (
     <CitationsContext value={controller}>
       {children}
       <HoverCard controller={controller}>
-        <HoverCardContent<Sources> sx={[styles.card, sx]}>
+        <HoverCardContent<Sources>
+          aria-label={label}
+          keepMounted
+          sx={[styles.card, sx]}
+        >
           {({ payload }) =>
             payload === undefined ? null : (
               <div {...stylex.props(styles.list)}>

@@ -101,7 +101,13 @@ Use `DataTableActionBar` for actions on the selected rows. It floats at the bott
   <Button corners="rounded" size="sm" variant="ghost">
     Copy emails
   </Button>
-  <Button color="danger" corners="rounded" size="sm" variant="ghost">
+  <Button
+    color="danger"
+    corners="rounded"
+    data-agent-confirm={`Deletes ${selected} selected payments`}
+    size="sm"
+    variant="ghost"
+  >
     Delete
   </Button>
 </DataTableActionBar>
@@ -140,6 +146,8 @@ const table = useTable({
 ## Row Click
 
 `onRowClick` gets a click anywhere on a row except its controls, so a checkbox or menu in the row keeps its own click. Open the row from there, here in a [Side Panel](/docs/components/side-panel), and pass its id as `activeRowId` to mark it. Enter on a focused row opens it the same way.
+
+An agent can't click a row or press Enter on it, so put a control in the row that opens it the same way, named with a verb, like the example's `Open <email>` link. Named by the bare email, it would also match the row's checkbox.
 
 With Cmd, Ctrl or Shift, a click on a row selects it instead, Shift through to the last one. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
 

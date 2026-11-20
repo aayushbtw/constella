@@ -332,6 +332,7 @@ function CodeBlockContent({
 }) {
   return (
     <ScrollArea
+      data-agent-hidden
       dir="ltr"
       scrollHideDelay={scrollHideDelay}
       {...stylex.props(styles.content, styles.contentBesideActions, sx)}

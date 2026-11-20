@@ -15,6 +15,8 @@ import {
   CommandShortcut as CommandShortcutPrimitive,
 } from "@ui-sdk/react/command";
 import type { CommandProps as CommandPrimitiveProps } from "@ui-sdk/react/command";
+import { renderElement } from "@ui-sdk/react/primitive";
+import { useSyncExternalStore } from "react";
 import type { ComponentProps } from "react";
 
 import {
@@ -222,12 +224,40 @@ function CommandEmpty({
   );
 }
 
+function unsubscribeNothing() {
+  return null;
+}
+
+function subscribeNever() {
+  return unsubscribeNothing;
+}
+
+function useHydrated() {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  );
+}
+
 function CommandGroup({
+  render,
   sx,
   ...props
 }: Styled<ComponentProps<typeof CommandGroupPrimitive>>) {
+  const hydrated = useHydrated();
   return (
-    <CommandGroupPrimitive {...props} {...stylex.props(styles.group, sx)} />
+    <CommandGroupPrimitive
+      {...props}
+      {...stylex.props(styles.group, sx)}
+      // ui-sdk's server HTML hides every composed group; remove when it stops.
+      render={
+        hydrated
+          ? render
+          : ({ hidden: _hidden, ...rendered }, state) =>
+              renderElement("div", rendered, render, state)
+      }
+    />
   );
 }
 
