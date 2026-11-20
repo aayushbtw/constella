@@ -289,16 +289,21 @@ function FieldSliderDemo() {
 
 function FieldRadioDemo() {
   const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
         <FieldLegend id={legend} variant="label">
           Subscription Plan
         </FieldLegend>
-        <FieldDescription>
+        <FieldDescription id={description}>
           Yearly and lifetime plans offer significant savings.
         </FieldDescription>
-        <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="monthly"
+        >
           {plans.map((plan) => (
             <Field key={plan.value} orientation="horizontal">
               <RadioGroupItem value={plan.value} />

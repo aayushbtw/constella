@@ -374,11 +374,13 @@ function FieldSeparator({
       {...props}
       {...stylex.props([typeStyles.textSm, styles.separator], sx)}
     >
-      <Separator sx={styles.separatorLine} />
-      {children !== undefined && (
+      {children === undefined ? (
+        <Separator sx={styles.separatorLine} />
+      ) : (
         <>
+          <Separator decorative sx={styles.separatorLine} />
           <span data-slot="field-separator-content">{children}</span>
-          <Separator sx={styles.separatorLine} />
+          <Separator decorative sx={styles.separatorLine} />
         </>
       )}
     </div>

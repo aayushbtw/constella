@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test } from "vite-plus/test";
 
@@ -151,4 +151,34 @@ test("an agent finds every group by its name and picks a choice", async () => {
   expect(
     screen.getByRole("radio", { name: /Pro/u }).getAttribute("aria-checked")
   ).toBe("true");
+});
+
+test("a group in a set takes the legend as its name and the set's description as its description", async () => {
+  render(
+    <FieldSet>
+      <FieldLegend id="billing-legend">Billing period</FieldLegend>
+      <FieldDescription id="billing-description">
+        Yearly billing gets you two months free.
+      </FieldDescription>
+      <RadioGroup
+        aria-describedby="billing-description"
+        aria-labelledby="billing-legend"
+        defaultValue="monthly"
+      >
+        <Field orientation="horizontal">
+          <RadioGroupItem value="monthly" />
+          <FieldLabel>Monthly</FieldLabel>
+        </Field>
+      </RadioGroup>
+    </FieldSet>
+  );
+  const group = screen.getByRole("radiogroup", { name: "Billing period" });
+  expect(group.getAttribute("aria-describedby")).toBe("billing-description");
+  await waitFor(() => {
+    expect(
+      screen
+        .getByRole("group", { name: "Billing period" })
+        .getAttribute("aria-describedby")
+    ).toBe("billing-description");
+  });
 });
