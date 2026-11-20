@@ -59,7 +59,7 @@ function SeparatorDemo() {
       </div>
       <Separator />
       <div>
-        Accessible components built on Base UI and StyleX, ready to copy into
+        Accessible components built on ui-sdk and StyleX, ready to copy into
         your app.
       </div>
     </DemoRow>

@@ -58,7 +58,7 @@ function llmsTxt() {
 
   return [
     `# ${config.name}`,
-    `> ${config.description} React components on Base UI, styled with StyleX (not Tailwind), installed with the shadcn CLI from the \`${config.registry}\` registry.`,
+    `> ${config.description} React components on ui-sdk, styled with StyleX (not Tailwind), installed with the shadcn CLI from the \`${config.registry}\` registry.`,
     [
       `Every page is Markdown at its URL plus \`/index.md\`. All of them in one file: ${
         new URL("/llms-full.txt", config.url).href
@@ -69,7 +69,7 @@ function llmsTxt() {
     [
       "## When to use",
       "",
-      "- A React app that wants shadcn-style components without Tailwind: StyleX, Base UI underneath.",
+      "- A React app that wants shadcn-style components without Tailwind: StyleX, ui-sdk underneath.",
       "- Chat and AI interfaces: prompt input, messages, citations, suggestions, model picker.",
       "- Data views on TanStack: data table, chart, markdown.",
       "",

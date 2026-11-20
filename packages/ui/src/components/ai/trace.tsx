@@ -75,7 +75,8 @@ const instant =
 const rtl = ":is([dir='rtl'] *)";
 const inAction = ":is(a > *, button > *)";
 const hovered = ":is(a:hover > *, button:hover > *)";
-const pressed = ":is(a:active > *, button:active > *, [data-popup-open] > *)";
+const pressed =
+  ":is(a:active > *, button:active > *, :where([aria-haspopup], [data-slot='hover-card-trigger'])[data-open] > *)";
 const triggerHovered = ":is([data-slot='collapsible-trigger']:hover *)";
 const triggerFocused = ":is([data-slot='collapsible-trigger']:focus-visible *)";
 

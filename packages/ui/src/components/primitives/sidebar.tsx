@@ -212,7 +212,7 @@ const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot=
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
 // A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
-const menuOpen = ":is([data-popup-open], :where([aria-haspopup])[data-open])";
+const menuOpen = ":where([aria-haspopup])[data-open]";
 const actionOpen = `${item}:has(> ${action}${menuOpen})`;
 // Or the row's own popup, as a menu's trigger; a collapsible's trigger is expanded without one.
 const rowOpen = `:is(${actionOpen} > *, [aria-haspopup][aria-expanded='true'])`;

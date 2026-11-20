@@ -139,7 +139,7 @@ function Glyph(props: Omit<HugeiconsIconProps, "strokeWidth">) {
 }
 
 const reply =
-  "Constella is a component library on Base UI and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
+  "Constella is a component library on ui-sdk and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
 
 const threadId = "chat-demo";
 

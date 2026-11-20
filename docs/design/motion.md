@@ -51,7 +51,7 @@ Interface motion stays at or under 300ms. A spinner, a pulse, a shimmer and the 
 
 ## Entrances
 
-Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via Base UI's `--transform-origin`. A dialog belongs to no trigger, so it scales from its own center (`motion.dialogScale`).
+Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via ui-sdk's `--transform-origin`. A dialog belongs to no trigger, so it scales from its own center (`motion.dialogScale`).
 
 ## Crossfades
 
@@ -61,7 +61,7 @@ When one state replaces another in place, both stay on screen and cross-fade, so
 
 ## Layout animation
 
-When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a toast's height (ui-sdk's stack measures the content freely) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (ui-sdk does, for a toast stack and a collapsible) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a toast's height (ui-sdk's stack measures the content freely) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
 
 ## Reduced motion
 

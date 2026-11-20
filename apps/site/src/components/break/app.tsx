@@ -102,7 +102,7 @@ const turns = {
     { from: "user", text: "What is Constella?" },
     {
       from: "assistant",
-      text: "Constella is a component library on Base UI and StyleX. Every value comes from a token, so a theme is one file.",
+      text: "Constella is a component library on ui-sdk and StyleX. Every value comes from a token, so a theme is one file.",
     },
   ],
   worst: [

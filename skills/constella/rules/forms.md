@@ -8,7 +8,7 @@
 - FieldSet for related controls
 - Choice cards
 - InputGroup for addons and buttons
-- Option sets use ToggleGroup
+- Option sets use SegmentedControl or ToggleGroup
 - Slider labels name thumbs
 
 ---
@@ -200,9 +200,9 @@ Put `InputGroupAddon` after the input in the DOM and place it with `align` (`inl
 
 ---
 
-## Option sets use ToggleGroup
+## Option sets use SegmentedControl or ToggleGroup
 
-For two to seven options, use `ToggleGroup`. Don't loop `Button`s and track the active one.
+To pick one of a few options, use `SegmentedControl`. Don't loop `Button`s and track the active one.
 
 **Incorrect:**
 
@@ -223,21 +223,31 @@ For two to seven options, use `ToggleGroup`. Don't loop `Button`s and track the 
 **Correct:**
 
 ```tsx
-<ToggleGroup
-  value={[align]}
-  onValueChange={([next]) => next && setAlign(next)}
-  variant="outline"
+<SegmentedControl
+  aria-label="Alignment"
+  onValueChange={(next) => next !== null && setAlign(next)}
+  value={align}
 >
-  <ToggleGroupItem value="left" aria-label="Align left">
+  <SegmentedControlItem value="left">Left</SegmentedControlItem>
+  <SegmentedControlItem value="center">Center</SegmentedControlItem>
+  <SegmentedControlItem value="right">Right</SegmentedControlItem>
+</SegmentedControl>
+```
+
+Name it with `aria-label`, or a `FieldLabel` in a `Field`. `onValueChange` gets `null` only when a form reset or a controller clears the pick.
+
+When none or several can be on, use `ToggleGroup`. Its value is always an array, even for one choice, and without `multiple` one item is on at a time. An icon-only item needs an `aria-label`.
+
+```tsx
+<ToggleGroup multiple value={formats} onValueChange={setFormats}>
+  <ToggleGroupItem value="bold" aria-label="Bold">
     …
   </ToggleGroupItem>
-  <ToggleGroupItem value="center" aria-label="Align center">
+  <ToggleGroupItem value="italic" aria-label="Italic">
     …
   </ToggleGroupItem>
 </ToggleGroup>
 ```
-
-The value is always an array, even for one choice. Without `multiple`, one item is on at a time. An icon-only item needs an `aria-label`.
 
 ---
 

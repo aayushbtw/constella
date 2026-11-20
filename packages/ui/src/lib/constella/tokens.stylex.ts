@@ -74,14 +74,6 @@ export const joins = stylex.defineVars({
   inline: "1",
 });
 
-// A Base UI popup's room to the viewport edge, copied on its positioner, where Base UI sets
-// `--available-height` and `--available-width`: ui-sdk registers both page-wide without
-// inheritance, so the popup inside can't read them. Gone once no Base UI popup is left.
-export const popupVars = stylex.defineVars({
-  availableHeight: "100dvh",
-  availableWidth: "100dvw",
-});
-
 // An avatar's diameter, its badge's, the hole its photo leaves for the badge, and its
 // corner. Avatar sets them per size, so the masks that cut it apart from its neighbors and
 // badge can do math on them.
@@ -305,7 +297,7 @@ export const strokes = stylex.defineConsts({
   track: spaceUnit,
 });
 
-// Popup distances from their trigger, read in JS by Base UI, so bare numbers.
+// Popup distances from their trigger, read in JS as ui-sdk's `sideOffset`, so bare numbers.
 export const offsets = stylex.defineConsts({
   popover: "4",
   tooltip: "8",
@@ -315,8 +307,6 @@ export const layers = stylex.defineConsts({
   // Floats over the page, under a dialog's backdrop.
   bar: "30",
   dialog: "40",
-  // Above a dialog, so a select or menu opened from one sits on top of it.
-  popover: "45",
   // A 2px line along the window's top edge that covers nothing, so it sits above everything.
   loadingBar: "70",
 } as const);
@@ -388,7 +378,6 @@ export const durations = stylex.defineConsts({
   fallbackDelay: "600ms",
   // How long a load runs before the loading bar shows; read in JS.
   loadingDelay: "150ms",
-  // Half the 600ms default of ui-sdk and Base UI, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",

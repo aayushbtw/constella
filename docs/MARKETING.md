@@ -4,7 +4,7 @@ What we say about Constella, and the proof behind each line. A claim goes in onl
 
 ## Positioning
 
-In one line, Constella is shadcn-style components on Base UI and StyleX that nobody, person or agent, can restyle from outside.
+In one line, Constella is shadcn-style components on ui-sdk and StyleX that nobody, person or agent, can restyle from outside.
 
 Two teams arrived at the same rule from different directions:
 
@@ -35,7 +35,7 @@ It's for React apps on the shadcn CLI that want a finished look their agents can
 | CI checks every push | Polar (rules in CI, not docs) | `.github/workflows/ci.yml` runs check and build on each push to `main` and each PR | CI |
 | No rule of ours is switched off in code | Polar (audit `oxlint-disable`) | `rg 'oxlint-disable.*constella/'` returns nothing; the only override is `vite.config.ts`'s, for the `sx` type-test fixtures | Lint |
 | Agents read docs, not guesses | Polar (docs alone drift) | `llms.txt`, `/index.md` on every page, `Accept: text/markdown`, `skills/constella`, `<name>-demo` items for shadcn's MCP | Site |
-| Accessibility comes from the primitive | None | Base UI under every interactive part | Architecture |
+| Accessibility comes from the primitive | None | ui-sdk under every interactive part (`docs/ARCHITECTURE.md`, Stack) | Architecture |
 
 ### Numbers
 
@@ -74,9 +74,9 @@ The home page sets one tagline and one line under it (`docs/design/site.md`). To
 
 |  | Tagline | Line under it | Lead with | Risk |
 | --- | --- | --- | --- | --- |
-| **A (recommended)** | Components, crafted with care. | shadcn-style components on Base UI and StyleX, with no `className` to restyle them from outside, for you or your agent. | Craft first, guardrails second | Two ideas in one hero |
+| **A (recommended)** | Components, crafted with care. | shadcn-style components on ui-sdk and StyleX, with no `className` to restyle them from outside, for you or your agent. | Craft first, guardrails second | Two ideas in one hero |
 | B | Components your agent can't restyle. | No `className`, no `style`. Each part exposes its variants and tokens, and `sx` for the rest. | Agent safety | Easy to hear as "can't go off-brand", which `sx` still allows |
-| C | shadcn, without `className`. | The same CLI and composition, on Base UI and StyleX, with nothing to restyle from outside. | Familiarity | Reads as a negative; undersells the look |
+| C | shadcn, without `className`. | The same CLI and composition, on ui-sdk and StyleX, with nothing to restyle from outside. | Familiarity | Reads as a negative; undersells the look |
 | D | The decisions, not the values. | Every color, size and curve in a part is a named token. | Design-system thinking | Abstract for a first visit |
 
 A keeps the personality in `DESIGN.md` ("quiet, crisp, and finished") as the headline and lets the guardrail story sell in the subline, the Agents page and tweets. B is the strongest hook for a tweet, too narrow for a hero.

@@ -12,7 +12,7 @@ description: Divides content, across or down.
 </div>
 <Separator />
 <div>
-  Accessible components built on Base UI and StyleX, ready to copy into your
+  Accessible components built on ui-sdk and StyleX, ready to copy into your
   app.
 </div>
 ```
