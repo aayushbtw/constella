@@ -109,14 +109,14 @@ function useDataTableVirtualizer({
   const items = virtualizer.getVirtualItems();
   const last = items.at(-1);
   return {
-    spaceBefore: items.map(
-      (item, at) => item.start - (items[at - 1]?.end ?? scrollMargin)
-    ),
     items,
     padAfter:
       last === undefined
         ? 0
         : virtualizer.getTotalSize() - (last.end - scrollMargin),
+    spaceBefore: items.map(
+      (item, at) => item.start - (items[at - 1]?.end ?? scrollMargin)
+    ),
     virtualizer,
   };
 }

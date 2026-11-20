@@ -183,7 +183,7 @@ const { Row: DataTableRow } = createParts(dataTable, { row: "tr" });
 
 const noColumns = {};
 
-const noIds: string[] = [];
+const noSelection: Readonly<Record<string, boolean>> = {};
 
 const noFocus = () => null;
 
@@ -211,9 +211,13 @@ function useRows<
   );
   const rowOf = (id: string) => rows[indexOf.get(id) ?? -1];
   const selectable = isSelectable(table) ? table : undefined;
+  const rowSelection = selectable?.atoms.rowSelection?.get() ?? noSelection;
   const handle = usePrimitive(dataTable, {
     ids,
-    multiple: selectable?.options.enableMultiRowSelection !== false,
+    multiple: (id) => {
+      const row = rowOf(id);
+      return hasSelection(row) && row.getCanMultiSelect();
+    },
     onRowOpen:
       onRowClick &&
       ((id) => {
@@ -233,7 +237,7 @@ function useRows<
         const row = rowOf(id);
         return hasSelection(row) && row.getCanSelect();
       }),
-    selected: selectable?.getSelectedRowIds() ?? noIds,
+    selected: Object.keys(rowSelection).filter((id) => rowSelection[id]),
   });
   // A key that moves to an unrendered row waits one task for it, so this re-renders on the move.
   const focused = useSyncExternalStore(

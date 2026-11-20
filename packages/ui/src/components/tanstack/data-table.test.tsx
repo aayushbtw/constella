@@ -594,14 +594,18 @@ function RowClick() {
   );
 }
 
+const noneSelected: RowSelectionState = {};
+
 function Selection({
   apply,
+  initial = noneSelected,
   selections,
 }: {
   apply: boolean;
+  initial?: RowSelectionState;
   selections: RowSelectionState[];
 }) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowSelection, setRowSelection] = useState(initial);
   const table = useTable({
     columns,
     data: payments,
@@ -675,6 +679,46 @@ test("a controlled table that ignores the agent's row check leaves the row unche
   expect(selections).toEqual([{ p3: true }]);
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("false");
   expect(rowWith("dee@acme.com").getAttribute("aria-selected")).toBe("false");
+});
+
+test("a row the controlled selection maps to false stays unselected when another row is selected", () => {
+  const selections: RowSelectionState[] = [];
+  // A v8 table's saved state could map a row to `false`, which v9's type rules out.
+  const restored: RowSelectionState = {};
+  Reflect.set(restored, "p1", false);
+  render(<Selection apply initial={restored} selections={selections} />);
+
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  expect(selections.at(-1)?.p1).not.toBe(true);
+  expect(selections.at(-1)?.p2).toBe(true);
+  expect(rowWith("ken@acme.com").getAttribute("aria-selected")).toBe("false");
+  expect(rowWith("ken@acme.com").dataset.state).toBeUndefined();
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+});
+
+function MultiRule() {
+  const table = useTable({
+    columns,
+    data: payments,
+    enableMultiRowSelection: (row) => row.id !== "p2",
+    features,
+    getRowId,
+  });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+test("a row enableMultiRowSelection rules out replaces the selection, and a range skips it", () => {
+  render(<MultiRule />);
+  rowWith("ken@acme.com").focus();
+  press(" ");
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
 });
 
 test("an agent opens a row through its named link, as a row click would", async () => {

@@ -11,6 +11,7 @@ import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 // What the row selection feature adds to a row and a table.
 interface SelectableRow {
+  getCanMultiSelect: () => boolean;
   getCanSelect: () => boolean;
   getDisplayIndex: () => number;
   getIsSelected: () => boolean;
@@ -26,11 +27,11 @@ interface ToggleEvent {
 }
 
 interface SelectableTable {
+  // Read for the ids mapped to `true`, as `getSelectedRowIds` also returns those mapped to `false`.
+  atoms: { rowSelection?: { get: () => Readonly<Record<string, boolean>> } };
   getIsAllRowsSelected: () => boolean;
   getIsSomeRowsSelected: () => boolean;
   getRowModel: () => { rows: readonly unknown[] };
-  getSelectedRowIds: () => string[];
-  options: { enableMultiRowSelection?: unknown };
   setRowSelection: (selection: Record<string, true>) => void;
   toggleAllRowsSelected: (value?: boolean) => void;
 }

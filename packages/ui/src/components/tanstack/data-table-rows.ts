@@ -13,7 +13,7 @@ type DataTableSelectionReason = "item-press" | "list-navigation";
 
 interface DataTableOptions {
   ids: string[];
-  multiple: boolean;
+  multiple: (id: string) => boolean;
   onRowOpen?: (id: string) => void;
   onSelectedChange: (
     selected: string[],
@@ -60,7 +60,7 @@ const dataTable = definePrimitive({
   name: "data-table",
   options: {
     ids: "list",
-    multiple: "boolean",
+    multiple: "value",
     onRowOpen: "callback",
     onSelectedChange: "callback",
     selectable: "value",
@@ -87,14 +87,44 @@ const dataTable = definePrimitive({
         slot: "row",
       }
     );
+    const canMultiSelect = (id: string) => context.options().multiple(id);
     const change = createChange(context);
-    const selection = createSelection(context, {
+    const list = createSelection(context, {
       key: "selected",
-      multiple: () => context.options().multiple,
+      multiple: () => true,
       order: () => context.options().ids,
-      selectable: canSelect,
+      // TanStack's ranges skip a row it won't select alongside others.
+      selectable: (id) => canSelect(id) && canMultiSelect(id),
       set: (value, details) => change("selected", value, details),
     });
+    // Matches TanStack's `enableMultiRowSelection`, where such a row replaces the selection and a range from or to it toggles it alone.
+    const selection = {
+      anchor: list.anchor,
+      extend(id: string, why: Parameters<typeof list.extend>[1]) {
+        const start = list.anchor() ?? why.from ?? null;
+        if (canMultiSelect(id) && (start === null || canMultiSelect(start))) {
+          list.extend(id, why);
+        } else {
+          selection.toggle(id, why);
+        }
+      },
+      setAnchor: list.setAnchor,
+      toggle(id: string, why: Parameters<typeof list.toggle>[1]) {
+        if (canMultiSelect(id)) {
+          list.toggle(id, why);
+          return;
+        }
+        if (!canSelect(id)) {
+          return;
+        }
+        const { selected } = context.store.get();
+        change(
+          "selected",
+          selected.includes(id) ? selected.filter((key) => key !== id) : [id],
+          why
+        );
+      },
+    };
     return {
       canSelect,
       interactive: () =>
@@ -102,7 +132,7 @@ const dataTable = definePrimitive({
         context.options().onRowOpen !== undefined,
       multiselectable: () =>
         context.options().selectable !== undefined &&
-        context.options().multiple,
+        context.options().ids.some(canMultiSelect),
       roving,
       rowClick(event: MouseEvent, el: HTMLElement, id: string) {
         const { onRowOpen } = context.options();
