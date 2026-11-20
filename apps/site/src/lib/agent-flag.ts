@@ -3,5 +3,6 @@ export const agentFlag =
     ? {
         loadBridge: async () => await import("~/lib/agent"),
         loadLoop: async () => await import("~/components/agent-loop"),
+        loadStaged: async () => await import("~/components/agent-staged"),
       }
     : undefined;
