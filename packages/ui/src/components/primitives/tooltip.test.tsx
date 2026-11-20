@@ -118,6 +118,31 @@ test("focus leaving closes it with no exit motion, after a hover opened it with 
   expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(true);
 });
 
+test("a disabled Button that stays focusable opens its tooltip on focus and ignores presses", async () => {
+  const onClick = vi.fn();
+  render(
+    <Tooltip delay={0}>
+      <TooltipTrigger
+        render={<Button disabled focusableWhenDisabled onClick={onClick} />}
+      >
+        Publish
+      </TooltipTrigger>
+      <TooltipContent>Add a title to publish</TooltipContent>
+    </Tooltip>
+  );
+  const trigger = screen.getByRole("button", { name: "Publish" });
+  expect(trigger.getAttribute("aria-disabled")).toBe("true");
+  expect(trigger.hasAttribute("disabled")).toBe(false);
+
+  act(() => {
+    trigger.focus();
+  });
+  const content = await screen.findByRole("tooltip");
+  expect(content.textContent).toBe("Add a title to publish");
+  fireEvent.click(trigger);
+  expect(onClick).not.toHaveBeenCalled();
+});
+
 function CopyLink() {
   return (
     <Tooltip>

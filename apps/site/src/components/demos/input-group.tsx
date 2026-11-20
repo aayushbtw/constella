@@ -18,7 +18,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "react";
-import TextareaAutosize from "react-textarea-autosize";
 
 import {
   DropdownMenu,
@@ -40,7 +39,6 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-  inputGroupTextareaStyles,
 } from "@/components/primitives/input-group";
 import { Kbd } from "@/components/primitives/kbd";
 import {
@@ -577,32 +575,11 @@ function InputGroupTextareaDemo() {
   );
 }
 
-function InputGroupCustomDemo() {
-  return (
-    <DemoRow sx={styles.narrow}>
-      <InputGroup>
-        <TextareaAutosize
-          aria-label="Message"
-          data-slot="input-group-control"
-          placeholder="Autoresize textarea..."
-          {...stylex.props(inputGroupTextareaStyles())}
-        />
-        <InputGroupAddon align="block-end">
-          <InputGroupButton size="sm" variant="primary">
-            Submit
-          </InputGroupButton>
-        </InputGroupAddon>
-      </InputGroup>
-    </DemoRow>
-  );
-}
-
 export {
   InputGroupDropdownDemo,
   InputGroupBlockEndDemo,
   InputGroupBlockStartDemo,
   InputGroupButtonDemo,
-  InputGroupCustomDemo,
   InputGroupDemo,
   InputGroupIconDemo,
   InputGroupInlineEndDemo,

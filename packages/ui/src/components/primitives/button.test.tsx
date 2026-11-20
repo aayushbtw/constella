@@ -5,6 +5,7 @@ import { expect, test, vi } from "vite-plus/test";
 import { Button } from "./button";
 import { Dialog, DialogTrigger } from "./dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { Spinner } from "./spinner";
 
 const slot = (name: string) =>
   screen.getByRole("button", { name }).dataset.slot;
@@ -72,7 +73,16 @@ test("a render function with a slot gets the state and keeps the slot", () => {
 test("a Promise from onClick keeps it pending and unpressable until it settles", async () => {
   const { promise, resolve } = Promise.withResolvers<null>();
   const onClick = vi.fn(async () => await promise);
-  render(<Button onClick={onClick}>Save</Button>);
+  render(
+    <Button onClick={onClick}>
+      {(state) => (
+        <>
+          {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+          Save
+        </>
+      )}
+    </Button>
+  );
   const button = screen.getByRole("button", { name: "Save" });
 
   fireEvent.click(button);
@@ -80,6 +90,8 @@ test("a Promise from onClick keeps it pending and unpressable until it settles",
     expect(button.dataset.pending).toBeDefined();
   });
   expect(button.getAttribute("aria-busy")).toBe("true");
+  expect(screen.getByRole("button", { name: "Save" })).toBe(button);
+  expect(button.querySelector("[data-slot='spinner']")).not.toBeNull();
   fireEvent.click(button);
   expect(onClick).toHaveBeenCalledOnce();
 

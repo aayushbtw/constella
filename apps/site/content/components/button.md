@@ -121,17 +121,20 @@ Use `disabled` when the action isn't available. It fades the button and shows a 
 
 ## Busy
 
-Add `aria-busy` while something runs. It shows a busy cursor, so working reads differently from unavailable. What goes inside is up to you.
+Return a Promise from `onClick`, and the button stays pending until it settles. It sets `aria-busy` and `data-pending`, fades less than disabled, shows a busy cursor and ignores presses, so the action can't run twice. It keeps focus, and after a second it announces `pendingAnnouncement` ("Loading" by default). Read `state.pending` in a function child to show a [Spinner](/docs/components/spinner); keep the label, so the button's name doesn't change while it's focused.
 
-- With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
-- Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
+For a button that acts on the running work, set `aria-busy` yourself. It shows the busy cursor but stays pressable at full strength: press Generate, and the same button becomes Stop generating.
 
 <!-- ::demo name="button-busy" -->
 
 ```tsx
-<Button aria-busy disabled>
-  <Spinner data-icon="inline-start" />
-  Saving
+<Button onClick={save} pendingAnnouncement="Saving">
+  {(state) => (
+    <>
+      {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+      Save
+    </>
+  )}
 </Button>
 <Button aria-busy={generating} onClick={() => setGenerating(!generating)}>
   {generating && <Spinner data-icon="inline-start" />}

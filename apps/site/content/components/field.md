@@ -41,9 +41,7 @@ description: Lays out a control with its label, description and error.
       <Button type="submit" variant="primary">
         Submit
       </Button>
-      <Button type="button" variant="outline">
-        Cancel
-      </Button>
+      <Button variant="outline">Cancel</Button>
     </Field>
   </FieldGroup>
 </form>
