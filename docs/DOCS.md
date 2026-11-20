@@ -6,6 +6,8 @@ Every page is also Markdown for agents, at its URL plus `/index.md`, or at its U
 
 A page marked `draft: true` in its frontmatter is built in dev only, badged "Draft" in the sidebar, until the component has had its full design pass. A page whose component or demos use a draft is a draft too. A page built on a library names it in `section` (`TanStack`), which lists it under its own sidebar section instead of Components; chat parts take `section: AI`. The section matches the component's folder in `packages/ui/src/components`; a component without one lives in `primitives`.
 
+In dev, run `window.agent.snapshot()` in the console to see the controls an agent sees on the page; an entry without a `label` is a control with no accessible name, so give a demo's controls one. `vpr agent-audit` builds the site with the bridge and counts unnamed entries on every page, but fails only on `AI` and `TanStack` pages whose counts differ from `apps/site/scripts/agent-audit-baseline.json`. A PR that names more entries lowers that page's count in the baseline, or the audit fails it as stale.
+
 ## Writing a page
 
 Pages read like shadcn's, written for someone using the component, not for us:
