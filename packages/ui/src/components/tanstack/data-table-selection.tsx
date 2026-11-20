@@ -222,10 +222,13 @@ function DataTableSelectAll({
 
 /** A row's checkbox (needs `rowSelectionFeature`); Shift selects the range from the last one. `numbered` shows the row's number until the row is pointed at or any row is selected. */
 function DataTableSelectRow({
+  label,
   numbered = false,
   row,
   sx,
 }: {
+  /** Names the checkbox by its row, such as "Select ken@acme.com". */
+  label: string;
   numbered?: boolean;
   row: SelectableRow;
   sx?: Sx;
@@ -233,7 +236,7 @@ function DataTableSelectRow({
   const toggle = row.getToggleSelectedHandler();
   const checkbox = (
     <Checkbox
-      aria-label="Select row"
+      aria-label={label}
       checked={row.getIsSelected()}
       data-row-select=""
       disabled={!row.getCanSelect()}

@@ -21,7 +21,9 @@ const columns = column.columns([
     id: "select",
     meta: { skeleton: "checkbox" },
     header: ({ table }) => <DataTableSelectAll table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
     enableSorting: false,
   }),
   column.accessor("email", {
@@ -86,7 +88,9 @@ column.display({
   id: "select",
   meta: { skeleton: "checkbox" },
   header: ({ table }) => <DataTableSelectAll table={table} />,
-  cell: ({ row }) => <DataTableSelectRow row={row} />,
+  cell: ({ row }) => (
+    <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+  ),
 });
 ```
 
@@ -238,4 +242,4 @@ const table = useTable({
 | `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |
 | `DataTableViewOptions` | `table`; `labels`, each column's name by id |
-| `DataTableSelectRow` | `row`; `numbered`, the row's number until it's pointed at or any row is selected |
+| `DataTableSelectRow` | `row`, `label`, its name, such as "Select ken@acme.com"; `numbered`, the row's number until it's pointed at or any row is selected |

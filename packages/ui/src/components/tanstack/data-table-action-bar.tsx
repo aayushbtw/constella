@@ -77,7 +77,7 @@ const styles = stylex.create({
     },
     transitionProperty: "opacity, transform, visibility",
     transitionTimingFunction: easings.out,
-    // Hidden once it has faded, so a bar that has left is out of the tab order.
+    // Hidden once it has faded, which drops the bar from an agent's snapshot; `inert` alone lists its buttons as disabled.
     visibility: { default: "visible", [closed]: "hidden" },
   },
   count: {
@@ -115,6 +115,7 @@ function DataTableActionBar({
         aria-label={label}
         data-closed={count === 0 ? "" : undefined}
         data-slot="data-table-action-bar"
+        inert={count === 0}
         role="toolbar"
         {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
       >
