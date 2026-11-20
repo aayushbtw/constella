@@ -507,7 +507,7 @@
       "type": "registry:ui",
       "title": "Label",
       "description": "Names a control, in the same voice for every field.",
-      "dependencies": ["@stylexjs/stylex"],
+      "dependencies": ["@stylexjs/stylex", "@ui-sdk/react"],
       "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
       "files": [
         {
