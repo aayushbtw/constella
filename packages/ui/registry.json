@@ -1317,7 +1317,8 @@
         "@tanstack/react-query",
         "@tanstack/react-table",
         "@tanstack/react-virtual",
-        "@ui-sdk/core@0.1.0-beta.13"
+        "@ui-sdk/core@0.1.0-beta.13",
+        "@ui-sdk/react@0.1.0-beta.13"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -1343,15 +1344,15 @@
           "type": "registry:component"
         },
         {
+          "path": "src/components/tanstack/data-table-rows.ts",
+          "type": "registry:component"
+        },
+        {
           "path": "src/components/tanstack/data-table-selection.tsx",
           "type": "registry:component"
         },
         {
           "path": "src/components/tanstack/data-table-view-options.tsx",
-          "type": "registry:component"
-        },
-        {
-          "path": "src/components/tanstack/use-data-table-keys.ts",
           "type": "registry:component"
         },
         {

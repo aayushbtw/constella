@@ -153,7 +153,7 @@ const table = useTable({
 
 An agent can't click a row or press Enter on it, so put a control in the row that opens it the same way, named with a verb, like the example's `Open <email>` link. Named by the bare email, it would also match the row's checkbox.
 
-With Cmd, Ctrl or Shift, a click on a row selects it instead, Shift through to the last one. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
+With Cmd or Ctrl, a click on a row selects it instead. With Shift, a click on a row or its checkbox selects every row from the last one you picked or reached with the arrow keys. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
 
 <!-- ::demo name="data-table-row-click" -->
 
@@ -170,15 +170,15 @@ With Cmd, Ctrl or Shift, a click on a row selects it instead, Shift through to t
 
 ## Keyboard
 
-When rows can be selected or clicked, one row takes Tab and the arrow keys move between them.
+When rows can be selected or clicked, the table is a grid. One row takes Tab, and the arrow keys move between them. Tab returns to the row focused last, even after it scrolls out of view.
 
-| Key       | Does                                           |
-| --------- | ---------------------------------------------- |
-| ↑ ↓       | The previous or next row                       |
-| Home, End | The first or last row                          |
-| X, Space  | Selects the row, or clears it                  |
-| Shift ↑ ↓ | Extends the selection; back over it shrinks it |
-| Enter     | Opens the row through `onRowClick`             |
+| Key                  | Does                                           |
+| -------------------- | ---------------------------------------------- |
+| ↑ ↓                  | The previous or next row                       |
+| Home, End            | The first or last row                          |
+| X, Space             | Selects the row, or clears it                  |
+| Shift ↑ ↓, Home, End | Extends the selection; back over it shrinks it |
+| Enter                | Opens the row through `onRowClick`             |
 
 ## Query
 
@@ -243,8 +243,9 @@ What `agent.snapshot()` lists for the preview example:
 | Amount                           | button      | `press`      |
 | Select ken99@acme.com and 5 more | checkbox    | `setChecked` |
 | No name                          | scroll-area | None         |
+| Payments                         | data-table  | None         |
 
-"Select ken99@acme.com and 5 more" stands for six row checkboxes, each named by `DataTableSelectRow`'s `label`. Email and Amount are the column headers that sort. **Press a header by its `ref` from the snapshot, not by its title.** ui-sdk reads the header row's text as row text for every header, so "Email" names more than one control and the step fails. The scroll area around the table is listed with no name and no actions.
+"Select ken99@acme.com and 5 more" stands for six row checkboxes, each named by `DataTableSelectRow`'s `label`. Email and Amount are the column headers that sort. **Press a header by its `ref` from the snapshot, not by its title.** ui-sdk reads the header row's text as row text for every header, so "Email" names more than one control and the step fails. The scroll area around the table is listed with no name and no actions, and the table itself by its `label`, with no actions.
 
 While no row is selected, the action bar is inert, so the agent can't press its buttons. In the examples, the action bar's Delete and each row menu's Delete carry `data-agent-confirm`.
 

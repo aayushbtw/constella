@@ -1,6 +1,11 @@
 "use client";
 
-import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual";
+import {
+  defaultRangeExtractor,
+  useVirtualizer,
+  useWindowVirtualizer,
+} from "@tanstack/react-virtual";
+import type { Range } from "@tanstack/react-virtual";
 import { useEffect, useLayoutEffect, useState } from "react";
 import type { RefObject } from "react";
 
@@ -26,11 +31,13 @@ const keepMargin = () => null;
 // as hooks can't be conditional, and only the one in use is enabled.
 function useDataTableVirtualizer({
   body,
+  keep,
   rowHeight,
   rows,
   scrollRef,
 }: {
   body: RefObject<HTMLTableSectionElement | null>;
+  keep: number | undefined;
   rowHeight: number;
   rows: readonly { id: string }[];
   scrollRef: RefObject<HTMLElement | null> | undefined;
@@ -77,6 +84,13 @@ function useDataTableVirtualizer({
     estimateSize: () => rowHeight,
     getItemKey: (index: number) => rows[index]?.id ?? index,
     overscan: 8,
+    // New each render, as the virtualizer recomputes its rows only when this changes.
+    rangeExtractor: (range: Range) => {
+      const indexes = defaultRangeExtractor(range);
+      return keep === undefined || indexes.includes(keep)
+        ? indexes
+        : [...indexes, keep].toSorted((a, b) => a - b);
+    },
     scrollMargin,
   };
   // oxlint-disable-next-line react/incompatible-library -- the virtualizer re-renders on scroll by design
@@ -93,16 +107,16 @@ function useDataTableVirtualizer({
   });
   const virtualizer = scrollRef === undefined ? onWindow : inElement;
   const items = virtualizer.getVirtualItems();
-  const [first] = items;
   const last = items.at(-1);
   return {
+    spaceBefore: items.map(
+      (item, at) => item.start - (items[at - 1]?.end ?? scrollMargin)
+    ),
     items,
-    // The height of the rows not rendered above and below the ones that are.
     padAfter:
       last === undefined
         ? 0
         : virtualizer.getTotalSize() - (last.end - scrollMargin),
-    padBefore: first === undefined ? 0 : first.start - scrollMargin,
     virtualizer,
   };
 }

@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { settle } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
@@ -632,7 +633,38 @@ test("an agent's row check reaches onRowSelectionChange, and the bridge reports 
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("true");
   expect(
     changes.map(({ key, source, value }) => ({ key, source, value }))
-  ).toEqual([{ key: "checked", source: "agent", value: true }]);
+  ).toEqual([
+    { key: "selected", source: "agent", value: ["p3"] },
+    { key: "checked", source: "agent", value: true },
+  ]);
+});
+
+// jsdom's untrusted keydown reports `programmatic`; a browser reports `keyboard`.
+test("Space on a focused row reports one selected change, as a press", () => {
+  const changes: ObservedChange[] = [];
+  const stop = agent.subscribe((change) => {
+    changes.push(change);
+  });
+  render(<Selection apply selections={[]} />);
+
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  stop();
+  expect(
+    changes.map(({ key, reason, source, value }) => ({
+      key,
+      reason,
+      source,
+      value,
+    }))
+  ).toEqual([
+    {
+      key: "selected",
+      reason: "item-press",
+      source: "programmatic",
+      value: ["p2"],
+    },
+  ]);
 });
 
 test("a controlled table that ignores the agent's row check leaves the row unchecked", async () => {
@@ -642,6 +674,7 @@ test("a controlled table that ignores the agent's row check leaves the row unche
   await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
   expect(selections).toEqual([{ p3: true }]);
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(rowWith("dee@acme.com").getAttribute("aria-selected")).toBe("false");
 });
 
 test("an agent opens a row through its named link, as a row click would", async () => {
@@ -704,9 +737,9 @@ function focusedEmail() {
     : focused?.nodeName;
 }
 
-function press(key: string) {
+function press(key: string, { shiftKey = false } = {}) {
   if (document.activeElement !== null) {
-    fireEvent.keyDown(document.activeElement, { key });
+    fireEvent.keyDown(document.activeElement, { key, shiftKey });
   }
 }
 
@@ -774,4 +807,160 @@ test("the focused row stays focused when the page scrolls it out of view", async
     },
     { timeout: 1000 }
   );
+});
+
+test("the table is one agent entry, named by its label, with no actions of its own", () => {
+  render(<Basic />);
+  expect(
+    onPage()
+      .filter((entry) => entry.component === "data-table")
+      .map(({ actions, component, label }) => ({ actions, component, label }))
+  ).toEqual([{ actions: [], component: "data-table", label: "Payments" }]);
+});
+
+function selectedEmails() {
+  return screen
+    .getAllByRole("row")
+    .filter((row) => row.getAttribute("aria-selected") === "true")
+    .map(emailIn);
+}
+
+test("Shift with the arrows extends the selection, and back over it shrinks it", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+
+  press("ArrowDown", { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  press("ArrowDown", { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+  press("ArrowUp", { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  expect(focusedEmail()).toBe("abe@acme.com");
+});
+
+test("a Shift-click on a checkbox ranges from the row the arrows left off on", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+  press("ArrowDown");
+  expect(focusedEmail()).toBe("abe@acme.com");
+
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+  expect(checkboxIn("ken@acme.com").getAttribute("aria-checked")).toBe("false");
+});
+
+const shiftPress = { button: 0, pointerType: "mouse", shiftKey: true };
+
+// jsdom's click moves no focus, so these send what a browser does: pointerdown, then focus to a row pressed, then click.
+test("a Shift-click on a row ranges from the row Tab reached", () => {
+  render(<RowClick />);
+  rowWith("ken@acme.com").focus();
+
+  const target = within(rowWith("dee@acme.com")).getByText("837");
+  fireEvent.pointerDown(target, shiftPress);
+  rowWith("dee@acme.com").focus();
+  fireEvent.click(target, { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+});
+
+test("a Shift-click on a checkbox ranges from the row Tab reached", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+
+  fireEvent.pointerDown(checkboxIn("dee@acme.com"), shiftPress);
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+});
+
+test("a Shift-click on a checkbox in an untouched table selects only its row", () => {
+  render(<Basic />);
+
+  fireEvent.pointerDown(checkboxIn("dee@acme.com"), shiftPress);
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+});
+
+test("Space on a row selects it, and Space on its checkbox is the checkbox's alone", () => {
+  render(<Basic />);
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+
+  fireEvent.keyDown(checkboxIn("dee@acme.com"), { key: " " });
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+});
+
+test("the rows not rendered keep their height, around the focused row kept far from view", () => {
+  layOutRows(41);
+  onTestFinished(() => {
+    scrollWindowTo(0);
+  });
+  const { container } = render(<LongLedger />);
+  rowWith("user1@acme.com").focus();
+  scrollWindowTo(41 * 200);
+
+  const rendered = [...container.querySelectorAll("tbody > tr")];
+  const spacers = rendered.filter((row) => row.hasAttribute("aria-hidden"));
+  expect(spacers.length).toBeGreaterThan(1);
+  const spaced = spacers
+    .map((row) =>
+      Number(
+        /(?<height>[\d.]+)px/u.exec(row.getAttribute("style") ?? "")?.groups
+          ?.height
+      )
+    )
+    .reduce((sum, height) => sum + height, 0);
+  expect(spaced + (rendered.length - spacers.length) * 41).toBe(500 * 41);
+});
+
+test("Cmd-click selects a row instead of opening it, and Shift-click ranges from there", () => {
+  render(<RowClick />);
+  fireEvent.click(within(rowWith("ken@acme.com")).getAllByRole("cell")[2], {
+    metaKey: true,
+  });
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+  fireEvent.click(within(rowWith("dee@acme.com")).getAllByRole("cell")[2], {
+    shiftKey: true,
+  });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+  expect(screen.getByRole("status", { name: "Open payment" }).textContent).toBe(
+    ""
+  );
+});
+
+test("a drag across the checkboxes selects the rows, back over them restores them, and a Shift-click ranges from where it ended", async () => {
+  render(<RowClick />);
+  const mouse = { button: 0, pointerType: "mouse" };
+  fireEvent.pointerDown(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("abe@acme.com"), mouse);
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  fireEvent.pointerOver(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerUp(window, mouse);
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+  await act(settle);
+
+  fireEvent.click(within(rowWith("dee@acme.com")).getAllByRole("cell")[2], {
+    shiftKey: true,
+  });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
 });
