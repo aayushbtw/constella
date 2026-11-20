@@ -10,7 +10,7 @@ import {
   DialogPopup,
   DialogTitle,
 } from "@/components/primitives/dialog";
-import { useSkipMotion } from "@/lib/constella/motion";
+import { skipsMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { visuallyHidden } from "@/lib/constella/styles";
 import { radii, space } from "@/lib/constella/tokens.stylex";
@@ -39,8 +39,10 @@ type CommandDialogProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
   title?: string;
 };
 
-const closedByController = (open: boolean, { reason }: { reason: string }) =>
-  !open && reason === "imperative";
+const skipsDialogMotion = (
+  open: boolean,
+  details: { reason: string; source: string }
+) => skipsMotion(open, details) || (!open && details.reason === "imperative");
 
 /** Renders a dialog with a command inside, named for screen readers by `title` and `description`. Lives apart from `command.tsx` so an app can lazy-load the command under this frame. */
 function CommandDialog({
@@ -53,7 +55,7 @@ function CommandDialog({
 }: CommandDialogProps) {
   const [skip, handleOpenChange] = useSkipMotion(
     onOpenChange,
-    closedByController
+    skipsDialogMotion
   );
   return (
     <Dialog onOpenChange={handleOpenChange} {...props}>

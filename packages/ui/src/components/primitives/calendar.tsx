@@ -3,21 +3,31 @@
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useEffect, useRef } from "react";
-import type { ComponentProps } from "react";
-import { DayPicker } from "react-day-picker";
-import type { DayButton, DayPickerProps } from "react-day-picker";
+import {
+  CalendarDay as CalendarDayPrimitive,
+  CalendarGrid as CalendarGridPrimitive,
+  CalendarHeading as CalendarHeadingPrimitive,
+  CalendarNext as CalendarNextPrimitive,
+  CalendarPrevious as CalendarPreviousPrimitive,
+  Calendar as CalendarPrimitive,
+  CalendarWeekday as CalendarWeekdayPrimitive,
+  CalendarWeekdays as CalendarWeekdaysPrimitive,
+  CalendarWeeks as CalendarWeeksPrimitive,
+} from "@ui-sdk/react/calendar";
+import type { CalendarGridCell } from "@ui-sdk/react/calendar";
+import type { ComponentProps, ReactNode } from "react";
 
 import { buttonStyles } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
-  stateStyles,
   typeStyles,
+  visuallyHidden,
 } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
+  media,
   opacities,
   radii,
   sizes,
@@ -25,234 +35,328 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
+type Styled<T> = Omit<T, "className" | "style"> & {
+  sx?: Sx;
+};
+
+type StepProps = Styled<
+  Omit<ComponentProps<typeof CalendarPreviousPrimitive>, "render">
+>;
+
+const rtl = ":is([dir='rtl'], [dir='rtl'] *)";
+const inMonths = ":is([data-slot='calendar-months'] > *)";
+
+const solid =
+  ":is([data-range-start], [data-range-end], [data-selected]:not([data-range-middle]))";
+const band = ":is([data-range-middle])";
+const startOnly = ":is([data-range-start]):not([data-range-end])";
+const endOnly = ":is([data-range-end]):not([data-range-start])";
+const muted = ":is([data-outside], [data-disabled]):not([data-selected])";
+const idle = ":not([data-disabled], [data-selected])";
+
+const dayFill = {
+  default: "transparent",
+  [band]: colors.infoSubtle,
+  [solid]: colors.infoSolid,
+  [`:active${idle}`]: colors.fillSubtle,
+};
+
 const styles = stylex.create({
   root: {
     width: "fit-content",
   },
   months: {
+    alignItems: "flex-start",
     display: "flex",
     gap: space.lg,
     position: "relative",
   },
-  month: {
-    display: "flex",
-    flexDirection: "column",
-    gap: space.sm,
+  heading: {
+    fontWeight: fontWeights.medium,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
+    marginInlineEnd: 0,
+    marginInlineStart: 0,
   },
-  // Over the captions, so its arrows sit beside the first and last month's names.
-  nav: {
-    alignItems: "center",
-    display: "flex",
-    height: sizes.controlMd,
-    insetBlockStart: 0,
-    insetInlineStart: 0,
-    insetInlineEnd: 0,
-    justifyContent: "space-between",
-    position: "absolute",
-    zIndex: 1,
+  step: {
+    insetBlockStart: {
+      default: null,
+      [inMonths]: `calc((${sizes.controlMd} - ${sizes.controlSm}) / 2)`,
+    },
+    position: { default: null, [inMonths]: "absolute" },
   },
-  navButton: {
-    // DayPicker marks an arrow past `startMonth`/`endMonth` aria-disabled, not disabled.
-    opacity: { default: 1, ":is([aria-disabled='true'])": opacities.disabled },
+  previous: {
+    insetInlineStart: { default: null, [inMonths]: 0 },
+  },
+  next: {
+    insetInlineEnd: { default: null, [inMonths]: 0 },
+  },
+  arrow: {
+    transform: { default: null, [rtl]: "scaleX(-1)" },
+  },
+  // Separate borders, so a day's corners round.
+  grid: {
+    borderCollapse: "separate",
+    borderSpacing: `0 ${space.xxs}`,
+    marginBlockEnd: `calc(-1 * ${space.xxs})`,
   },
   caption: {
-    alignItems: "center",
-    display: "flex",
-    height: sizes.controlMd,
-    justifyContent: "center",
-    paddingInlineStart: sizes.controlMd,
-    paddingInlineEnd: sizes.controlMd,
-  },
-  captionLabel: {
     fontWeight: fontWeights.medium,
-  },
-  grid: {
-    borderCollapse: "collapse",
-  },
-  row: {
-    display: "flex",
-  },
-  week: {
-    marginBlockStart: space.xxs,
+    height: sizes.controlMd,
+    lineHeight: sizes.controlMd,
+    marginBlockEnd: `calc(${space.sm} - ${space.xxs})`,
+    paddingInlineEnd: sizes.controlMd,
+    paddingInlineStart: sizes.controlMd,
+    textAlign: "center",
   },
   weekday: {
-    alignItems: "center",
     color: colors.textSecondary,
-    display: "flex",
     fontWeight: fontWeights.regular,
     height: sizes.controlMd,
-    justifyContent: "center",
+    paddingBlockEnd: 0,
+    paddingBlockStart: 0,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
+    textAlign: "center",
+    verticalAlign: "middle",
     width: sizes.controlMd,
   },
   day: {
-    height: sizes.controlMd,
-    paddingBlockStart: 0,
-    paddingBlockEnd: 0,
-    paddingInlineStart: 0,
-    paddingInlineEnd: 0,
-    width: sizes.controlMd,
-  },
-  rangeMiddle: {
-    backgroundColor: colors.infoSubtle,
-  },
-  // The fill runs on under the solid end, so the band reaches its edge.
-  rangeStart: {
-    backgroundColor: colors.infoSubtle,
-    borderEndStartRadius: radii.sm,
-    borderStartStartRadius: radii.sm,
-  },
-  rangeEnd: {
-    backgroundColor: colors.infoSubtle,
-    borderEndEndRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-  },
-  hidden: {
-    visibility: "hidden",
-  },
-  dayButton: {
-    alignItems: "center",
-    borderBlockStyle: "none",
-    borderInlineStyle: "none",
-    borderStartStartRadius: radii.sm,
-    borderStartEndRadius: radii.sm,
-    borderEndStartRadius: radii.sm,
-    borderEndEndRadius: radii.sm,
-    color: "inherit",
-    cursor: { default: "pointer", ":disabled": "default" },
-    display: "flex",
+    backgroundColor: {
+      ...dayFill,
+      [media.hover]: {
+        ...dayFill,
+        [`:hover${idle}`]: colors.fillSubtle,
+      },
+    },
+    borderEndEndRadius: { default: radii.sm, [band]: 0, [startOnly]: 0 },
+    borderEndStartRadius: { default: radii.sm, [band]: 0, [endOnly]: 0 },
+    borderStartEndRadius: { default: radii.sm, [band]: 0, [startOnly]: 0 },
+    borderStartStartRadius: { default: radii.sm, [band]: 0, [endOnly]: 0 },
+    color: {
+      default: "inherit",
+      [muted]: colors.textMuted,
+      [solid]: colors.infoOnSolid,
+    },
+    cursor: { default: "pointer", "[data-disabled]": "not-allowed" },
     fontVariantNumeric: "tabular-nums",
-    height: "100%",
-    justifyContent: "center",
-    paddingBlockStart: 0,
+    fontWeight: { default: null, "[data-today]": fontWeights.medium },
+    height: sizes.controlMd,
+    opacity: { default: null, "[data-disabled]": opacities.disabled },
     paddingBlockEnd: 0,
-    paddingInlineStart: 0,
+    paddingBlockStart: 0,
     paddingInlineEnd: 0,
-    width: "100%",
-  },
-  today: {
-    fontWeight: fontWeights.medium,
-  },
-  outside: {
-    color: colors.textMuted,
-  },
-  disabled: {
-    color: colors.textMuted,
-    opacity: opacities.disabled,
-  },
-  // These replace the ghost fill whole, hover and press included, so the band and the ends stay put.
-  inRange: {
-    backgroundColor: "transparent",
-  },
-  solid: {
-    backgroundColor: colors.infoSolid,
-    color: colors.infoOnSolid,
-  },
-  // An end square on the side the band continues from.
-  startEdge: {
-    borderEndEndRadius: 0,
-    borderStartEndRadius: 0,
-  },
-  endEdge: {
-    borderEndStartRadius: 0,
-    borderStartStartRadius: 0,
+    paddingInlineStart: 0,
+    textAlign: "center",
+    userSelect: "none",
+    verticalAlign: "middle",
+    width: sizes.controlMd,
   },
 });
 
-const className = (...style: stylex.StyleXStyles[]) =>
-  stylex.props(...style).className ?? "";
+/** ui-sdk's Calendar root; every option passes through. Shows one month, or `months` side by side, unless given parts. */
+function Calendar({
+  children,
+  months = 1,
+  showOutsideDays = false,
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarPrimitive>>) {
+  return (
+    <CalendarPrimitive
+      months={months}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- ui-sdk renders a div; a fieldset would bring its own border and padding
+      role="group"
+      showOutsideDays={showOutsideDays}
+      {...props}
+      {...stylex.props(styles.root, sx)}
+    >
+      {children ?? <CalendarMonths months={months} />}
+    </CalendarPrimitive>
+  );
+}
 
-const classNames = {
-  root: className(styles.root),
-  months: className(styles.months),
-  month: className(styles.month),
-  nav: className(styles.nav),
-  button_previous: className(
-    buttonStyles({ size: "icon-sm", variant: "ghost" }),
-    styles.navButton
-  ),
-  button_next: className(
-    buttonStyles({ size: "icon-sm", variant: "ghost" }),
-    styles.navButton
-  ),
-  month_caption: className(styles.caption),
-  caption_label: className(typeStyles.textSm, styles.captionLabel),
-  month_grid: className(styles.grid),
-  weekdays: className(styles.row),
-  weekday: className(typeStyles.captionLg, styles.weekday),
-  week: className(styles.row, styles.week),
-  day: className(typeStyles.textSm, styles.day),
-  range_start: className(styles.rangeStart),
-  range_middle: className(styles.rangeMiddle),
-  range_end: className(styles.rangeEnd),
-  hidden: className(styles.hidden),
-};
+/** The months side by side, their arrows over the first and last month's names; the heading stays for screen readers. */
+function CalendarMonths({
+  months = 1,
+  sx,
+  ...props
+}: Styled<Omit<ComponentProps<"div">, "children">> & { months?: number }) {
+  const offsets = Array.from({ length: months }, (_, offset) => offset);
+  return (
+    <div
+      data-slot="calendar-months"
+      {...props}
+      {...stylex.props(styles.months, sx)}
+    >
+      <CalendarPrevious />
+      <CalendarHeading sx={visuallyHidden.base} />
+      <CalendarNext />
+      {offsets.map((offset) => (
+        <CalendarGrid key={offset} offset={offset} />
+      ))}
+    </div>
+  );
+}
 
-function Chevron({ orientation }: { orientation?: string }) {
+function CalendarHeading({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarHeadingPrimitive>>) {
+  return (
+    <CalendarHeadingPrimitive
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.heading], sx)}
+    />
+  );
+}
+
+function Arrow({ icon }: { icon: typeof ArrowLeft01Icon }) {
   return (
     <HugeiconsIcon
       aria-hidden
-      icon={orientation === "left" ? ArrowLeft01Icon : ArrowRight01Icon}
-      size={controlIconSize.sm}
+      icon={icon}
+      size={controlIconSize["icon-sm"]}
       strokeWidth={Number(strokes.icon)}
+      {...stylex.props(styles.arrow)}
     />
   );
 }
 
-function CalendarDayButton({
-  day: _day,
-  modifiers,
-  ...props
-}: ComponentProps<typeof DayButton>) {
-  const ref = useRef<HTMLButtonElement>(null);
-  // A custom day button takes over focus from DayPicker's own.
-  useEffect(() => {
-    if (modifiers.focused) {
-      ref.current?.focus();
-    }
-  }, [modifiers.focused]);
-
-  const {
-    range_end: end,
-    range_middle: middle,
-    range_start: start,
-  } = modifiers;
+function CalendarPrevious({ children, sx, ...props }: StepProps) {
   return (
-    <button
-      ref={ref}
-      type="button"
+    <CalendarPreviousPrimitive
       {...props}
       {...stylex.props(
-        styles.dayButton,
-        stateStyles.ghost,
-        modifiers.today && styles.today,
-        modifiers.outside && styles.outside,
-        modifiers.disabled && styles.disabled,
-        middle && styles.inRange,
-        (start || end || (modifiers.selected && !middle)) && styles.solid,
-        start && !end && styles.startEdge,
-        end && !start && styles.endEdge
+        buttonStyles({ size: "icon-sm", variant: "ghost" }),
+        styles.step,
+        styles.previous,
+        sx
       )}
-    />
+    >
+      {children ?? <Arrow icon={ArrowLeft01Icon} />}
+    </CalendarPreviousPrimitive>
   );
 }
 
-/** react-day-picker's DayPicker in Constella's look; every DayPicker prop passes through. */
-function Calendar({
-  showOutsideDays = false,
-  components,
+function CalendarNext({ children, sx, ...props }: StepProps) {
+  return (
+    <CalendarNextPrimitive
+      {...props}
+      {...stylex.props(
+        buttonStyles({ size: "icon-sm", variant: "ghost" }),
+        styles.step,
+        styles.next,
+        sx
+      )}
+    >
+      {children ?? <Arrow icon={ArrowRight01Icon} />}
+    </CalendarNextPrimitive>
+  );
+}
+
+/** One month's table, named by ui-sdk; its caption shows the month and stays out of the accessibility tree. */
+function CalendarGrid({
+  children,
   sx,
   ...props
-}: DayPickerProps & { sx?: Sx }) {
+}: Styled<Omit<ComponentProps<typeof CalendarGridPrimitive>, "children">> & {
+  children?: ReactNode;
+}) {
   return (
-    <DayPicker
-      className={stylex.props(sx).className}
-      classNames={classNames}
-      components={{ Chevron, DayButton: CalendarDayButton, ...components }}
-      data-slot="calendar"
-      showOutsideDays={showOutsideDays}
+    <CalendarGridPrimitive {...props} {...stylex.props(styles.grid, sx)}>
+      {(state) => (
+        <>
+          <caption
+            aria-hidden
+            data-slot="calendar-caption"
+            {...stylex.props(typeStyles.textSm, styles.caption)}
+          >
+            {state.label}
+          </caption>
+          {children ?? (
+            <>
+              <CalendarWeekdays />
+              <CalendarWeeks />
+            </>
+          )}
+        </>
+      )}
+    </CalendarGridPrimitive>
+  );
+}
+
+function weekday(index: number) {
+  return <CalendarWeekday index={index} />;
+}
+
+function CalendarWeekdays({
+  children = weekday,
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarWeekdaysPrimitive>>) {
+  return (
+    <CalendarWeekdaysPrimitive {...props} {...stylex.props(sx)}>
+      {children}
+    </CalendarWeekdaysPrimitive>
+  );
+}
+
+function CalendarWeekday({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarWeekdayPrimitive>>) {
+  return (
+    <CalendarWeekdayPrimitive
       {...props}
+      {...stylex.props([typeStyles.captionLg, styles.weekday], sx)}
     />
   );
 }
 
-export { Calendar };
+function day(cell: CalendarGridCell) {
+  return <CalendarDay value={cell.date} />;
+}
+
+function CalendarWeeks({
+  children = day,
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarWeeksPrimitive>>) {
+  return (
+    <CalendarWeeksPrimitive {...props} {...stylex.props(sx)}>
+      {children}
+    </CalendarWeeksPrimitive>
+  );
+}
+
+function CalendarDay({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof CalendarDayPrimitive>>) {
+  return (
+    <CalendarDayPrimitive
+      {...props}
+      {...stylex.props([typeStyles.textSm, styles.day], sx)}
+    />
+  );
+}
+
+export { createCalendarController } from "@ui-sdk/react/calendar";
+export type {
+  CalendarController,
+  CalendarValue,
+  DateMatchers,
+} from "@ui-sdk/react/calendar";
+export {
+  Calendar,
+  CalendarDay,
+  CalendarGrid,
+  CalendarHeading,
+  CalendarMonths,
+  CalendarNext,
+  CalendarPrevious,
+  CalendarWeekday,
+  CalendarWeekdays,
+  CalendarWeeks,
+};

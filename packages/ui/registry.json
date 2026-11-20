@@ -848,7 +848,7 @@
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex",
-        "react-day-picker"
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
@@ -871,7 +871,8 @@
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex",
-        "react-day-picker"
+        "@ui-sdk/core",
+        "@ui-sdk/react"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
