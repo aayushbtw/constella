@@ -865,11 +865,8 @@ function SidebarProvider({
   const setOpen = useCallback(
     (next: boolean) => {
       setInstant(false);
-      if (onOpenChange) {
-        onOpenChange(next);
-      } else {
-        setOwnOpen(next);
-      }
+      setOwnOpen(next);
+      onOpenChange?.(next);
     },
     [onOpenChange]
   );
@@ -1425,6 +1422,7 @@ function SidebarMenuButton({
   const [truncated, setTruncated] = useState(false);
   const own = mergeProps(
     {
+      "aria-current": isActive ? "page" : undefined,
       "data-active": isActive ? "" : undefined,
       "data-size": size,
       "data-variant": variant,
@@ -1586,7 +1584,10 @@ function SidebarMenuSubButton({
   return (
     <SidebarButton
       {...mergeProps(
-        { "data-active": isActive ? "" : undefined },
+        {
+          "aria-current": isActive ? "page" : undefined,
+          "data-active": isActive ? "" : undefined,
+        },
         props,
         stylex.props([typeStyles.textMd, styles.subButton], sx)
       )}

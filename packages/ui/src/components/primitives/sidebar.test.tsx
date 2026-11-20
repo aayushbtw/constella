@@ -253,7 +253,9 @@ test("a provider given only onOpenChange still toggles, and reports each change"
   expect(sidebar?.dataset.collapsible).toBe("icon");
   expect(onOpenChange).toHaveBeenLastCalledWith(false);
 
-  fireEvent.click(await screen.findByRole("button", { name: "Expand sidebar" }));
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Expand sidebar" })
+  );
   expect(sidebar?.dataset.collapsible).toBeUndefined();
   expect(onOpenChange).toHaveBeenLastCalledWith(true);
 });
@@ -275,7 +277,10 @@ test("a controlled provider stays where its open prop puts it", async () => {
     await screen.findByRole("button", { name: "Collapse sidebar" })
   );
   expect(onOpenChange).toHaveBeenCalledWith(false);
-  expect(collapsed()).toBe(false);
+  expect(
+    document.querySelector<HTMLElement>("[data-slot='sidebar']")?.dataset
+      .collapsible
+  ).toBeUndefined();
 });
 
 test("an agent finds and presses a sub row link, which stays a link", async () => {
