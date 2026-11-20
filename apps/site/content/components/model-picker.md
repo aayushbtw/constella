@@ -16,7 +16,7 @@ section: AI
     <ModelPickerLogo src={picked.logo} />
     {picked.label}
   </ModelPickerTrigger>
-  <ModelPickerContent>
+  <ModelPickerContent align="end" detailsSide="inline-start">
     <ModelPickerCommand
       onValueChange={setHighlightedValue}
       value={highlightedValue}
@@ -93,14 +93,15 @@ ModelPicker
 
 ### Side
 
-The card opens at the list's `inline-end` by default. A picker at the end of a row, like the composer above, takes `align="end"` and `detailsSide="inline-start"`, so the card opens into the page. Opening upward, the card lines up with the list's bottom, nearest the trigger.
+The card opens at the list's `inline-end` by default, as below. A picker at the end of a row, like the composer above, takes `align="end"` and `detailsSide="inline-start"`, so the card opens into the page. Opening upward, the card lines up with the list's bottom, nearest the trigger.
 
 <!-- ::demo name="model-picker-side" -->
 
 ```tsx
-<ModelPickerContent align="end" detailsSide="inline-start">
-  …
-</ModelPickerContent>
+<ModelPicker>
+  <ModelPickerTrigger label="Fallback">…</ModelPickerTrigger>
+  <ModelPickerContent detailsSide="inline-end">…</ModelPickerContent>
+</ModelPicker>
 ```
 
 ## Agent

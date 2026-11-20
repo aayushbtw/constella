@@ -96,13 +96,15 @@ List the sources a search found in a `CitationGroup`, a row that wraps. To count
 <!-- ::demo name="citation-group" -->
 
 ```tsx
-<CitationGroup>
-  <Citation sources={[acme]} />
-  <Citation sources={[newsroom]} />
-  <CitationGroupMore count={42}>
-    <Citation sources={[docs]} />
-  </CitationGroupMore>
-</CitationGroup>
+<Citations aria-label="Sources found">
+  <CitationGroup>
+    <Citation sources={[acme]} />
+    <Citation sources={[newsroom]} />
+    <CitationGroupMore count={42}>
+      <Citation sources={[docs]} />
+    </CitationGroupMore>
+  </CitationGroup>
+</Citations>
 ```
 
 ## Agent

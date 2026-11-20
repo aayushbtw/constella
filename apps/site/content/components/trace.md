@@ -386,4 +386,4 @@ The run and each step are named by their words on screen, like "Worked for 14s" 
 | `TraceCollapsibleContent` | The panel; it stays mounted while shut |
 | `traceActionStyles()` | Styles for a link or trigger that wraps a `TraceLine` |
 
-Every part takes `sx`, applied last. The collapsible parts take [UI SDK Collapsible](https://ui-sdk.dev/docs/components/collapsible) props.
+Every part takes `sx`, applied last. The collapsible parts take [UI SDK Collapsible](https://ui-sdk.dev/docs/react/components/collapsible) props.

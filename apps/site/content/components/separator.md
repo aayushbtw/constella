@@ -83,7 +83,7 @@ Horizontal separators between list items.
 
 ## API Reference
 
-`Separator` takes every prop of [UI SDK's Separator](https://ui-sdk.dev/docs/components/separator#api-reference), plus `sx`, applied last.
+`Separator` takes every prop of [UI SDK's Separator](https://ui-sdk.dev/docs/react/components/separator#api-reference), plus `sx`, applied last.
 
 | Prop          | Values                         | Default        |
 | ------------- | ------------------------------ | -------------- |

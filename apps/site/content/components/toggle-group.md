@@ -128,4 +128,4 @@ Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for a
 | --- | --- |
 | `ToggleGroup` | `variant` and `size`, passed to every item; `spacing`: `0`, `1` or `2` |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Toggle Group](https://ui-sdk.dev/docs/components/toggle#group).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Toggle Group](https://ui-sdk.dev/docs/react/components/toggle#group).

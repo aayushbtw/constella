@@ -134,7 +134,7 @@ toast.dismiss();
 | Timers pause | On hover, on focus, on a hidden page and on an inactive window |
 | Swipe | Down, or toward the end edge, which follows the writing direction |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Toast](https://ui-sdk.dev/docs/components/toast).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Toast](https://ui-sdk.dev/docs/react/components/toast).
 
 ### toast
 

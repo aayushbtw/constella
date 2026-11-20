@@ -131,4 +131,4 @@ const [open, setOpen] = useState(false);
 
 ## API Reference
 
-`DialogContent` is a `DialogBackdrop` and a `DialogPopup`, which render in place, in the browser's top layer; use the two parts for a dialog without a backdrop. Both are generic over the payload a trigger or `createDialogController` passes, so `DialogContent<Row>` gives a function child a typed `state.payload`. `DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/components/dialog).
+`DialogContent` is a `DialogBackdrop` and a `DialogPopup`, which render in place, in the browser's top layer; use the two parts for a dialog without a backdrop. Both are generic over the payload a trigger or `createDialogController` passes, so `DialogContent<Row>` gives a function child a typed `state.payload`. `DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/react/components/dialog).

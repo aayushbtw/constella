@@ -261,4 +261,4 @@ function TeamMembers() {
 
 ## API Reference
 
-`Checkbox` renders a button with the `checkbox` role, its tick, which turns into a dash while `checked` is `"indeterminate"`, and a hidden native checkbox for forms. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. `CheckboxGroup` stacks its children and takes `sx`. For the rest, see [UI SDK Checkbox](https://ui-sdk.dev/docs/components/checkbox).
+`Checkbox` renders a button with the `checkbox` role, its tick, which turns into a dash while `checked` is `"indeterminate"`, and a hidden native checkbox for forms. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. `CheckboxGroup` stacks its children and takes `sx`. For the rest, see [UI SDK Checkbox](https://ui-sdk.dev/docs/react/components/checkbox).

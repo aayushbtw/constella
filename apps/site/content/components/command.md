@@ -105,16 +105,16 @@ Add `keywords` to a `CommandItem` to match words that aren't in its text.
 
 ## Command Shortcut
 
-Put a `CommandShortcut` at the end of an item and give it a `shortcut`. It shows ⌘P on Apple devices and Ctrl+P elsewhere. It only shows the keys, so listen for them yourself.
+Give a `CommandItem` a `shortcut` to run it from the keyboard while the list is in the page, even when the search hides it. Put an empty `CommandShortcut` at the end of the item to show the keys: ⌘P on Apple devices and Ctrl+P elsewhere.
 
 ```tsx
-<CommandItem onSelect={openProfile} value="profile">
+<CommandItem onSelect={openProfile} shortcut="mod+p" value="profile">
   Profile
-  <CommandShortcut shortcut="mod+p" />
+  <CommandShortcut />
 </CommandItem>
 ```
 
-The server's HTML carries the Ctrl form. Apple devices switch to ⌘ after the page loads. Pass children instead of `shortcut` to show fixed text.
+The server's HTML carries the Ctrl form. Apple devices switch to ⌘ after the page loads. A `shortcut` on `CommandShortcut` itself only shows the keys and runs nothing. Pass children instead to show fixed text.
 
 ## Command Footer
 
@@ -167,7 +167,7 @@ window.addEventListener("keydown", (event) => {
 | --- | --- |
 | `Command` | ui-sdk Command, with `filter="contains"` by default |
 | `CommandInput` | ui-sdk's input in an `lg` Input Group with a search icon; `sx` styles the group |
-| `CommandShortcut` | Shows its `shortcut` for the platform (⌘P on Apple, Ctrl+P elsewhere), or its children, at the item's end; registers no keys |
+| `CommandShortcut` | Shows the item's `shortcut`, or its own, for the platform (⌘P on Apple, Ctrl+P elsewhere), or its children, at the item's end; only the item's `shortcut` runs it |
 | `CommandDialog` | A dialog for the palette; `title` and `description` for screen readers; no motion for a keyboard change or a pick |
 | `CommandFooter` | A tinted bar under the list, for key hints |
 

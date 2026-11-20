@@ -146,7 +146,7 @@ For a button that acts on the running work, set `aria-busy` yourself. It shows t
 
 ### Button
 
-Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/components/button), plus:
+Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/react/components/button), plus:
 
 | Prop | Type | Default |
 | --- | --- | --- |

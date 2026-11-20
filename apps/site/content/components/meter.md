@@ -103,4 +103,4 @@ Set `max` to measure in the quota's own units, and pass `format` a function of t
 | --- | --- |
 | `Meter` | Renders `MeterTrack` and `MeterIndicator` after its children; `variant` (`bar`, `ring`) swaps them for a ring before its children and sets `data-variant`; `color` (`success`, `info`, `warning`, `danger`) colors the fill and sets `data-color` |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Meter](https://ui-sdk.dev/docs/components/meter).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Meter](https://ui-sdk.dev/docs/react/components/meter).
