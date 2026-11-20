@@ -96,7 +96,7 @@
   "/docs/components/trace": {
     "collapsible": {
       "count": 15,
-      "why": "Agent-ready Trace unit: steps with no trigger show as unnamed collapsibles"
+      "why": "trace.test.tsx pins the unnamed collapsibles of steps with no trigger"
     },
     "scroll-area": {
       "count": 3,
