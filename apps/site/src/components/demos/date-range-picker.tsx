@@ -1,66 +1,78 @@
+import { addDays, endOfMonth, startOfMonth } from "@ui-sdk/core/date";
 import { useState } from "react";
 
-import { DateRangePicker } from "@/components/primitives/date-range-picker";
-import type {
-  DateRangePreset,
-  DayRange,
+import {
+  DateRangePicker,
+  DateRangePickerCalendar,
+  DateRangePickerContent,
+  DateRangePickerPreset,
+  DateRangePickerPresets,
+  DateRangePickerTrigger,
 } from "@/components/primitives/date-range-picker";
+import type { DateRange } from "@/components/primitives/date-range-picker";
 import { DemoRow } from "~/components/demos/frame";
 
-const day = (date: Date, offset = 0) =>
-  new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset);
+// Fixed, as the page is prerendered and a live date would differ from the build's on hydration.
+const today = "2026-06-18";
+const lastMonth = addDays(startOfMonth(today), -1);
+const defaultMonth = lastMonth.slice(0, 7);
 
-const presetsFor = (today: Date): DateRangePreset[] => [
-  { label: "Last 7 days", range: { from: day(today, -6), to: day(today) } },
-  { label: "Last 30 days", range: { from: day(today, -29), to: day(today) } },
-  {
-    label: "This month",
-    range: {
-      from: new Date(today.getFullYear(), today.getMonth(), 1),
-      to: day(today),
-    },
-  },
+const presets: { label: string; range: DateRange }[] = [
+  { label: "Last 7 days", range: [addDays(today, -6), today] },
+  { label: "Last 30 days", range: [addDays(today, -29), today] },
+  { label: "This month", range: [startOfMonth(today), today] },
   {
     label: "Last month",
-    range: {
-      from: new Date(today.getFullYear(), today.getMonth() - 1, 1),
-      to: new Date(today.getFullYear(), today.getMonth(), 0),
-    },
+    range: [startOfMonth(lastMonth), endOfMonth(lastMonth)],
   },
 ];
 
-// Fixed, as the page is prerendered and a live date would differ from the build's on hydration.
-const today = new Date(2026, 5, 18);
-const presets = presetsFor(today);
-
 function DateRangePickerDemo() {
-  const [value, setValue] = useState<DayRange>({
-    from: day(today, -6),
-    to: today,
-  });
+  const [value, setValue] = useState<DateRange | null>([
+    addDays(today, -6),
+    today,
+  ]);
   return (
     <DemoRow>
       <DateRangePicker
-        disabled={{ after: today }}
-        endMonth={today}
+        defaultMonth={defaultMonth}
+        max={today}
         onValueChange={setValue}
+        today={today}
         value={value}
-      />
+      >
+        <DateRangePickerTrigger aria-label="Billing period" />
+        <DateRangePickerContent>
+          <DateRangePickerCalendar />
+        </DateRangePickerContent>
+      </DateRangePicker>
     </DemoRow>
   );
 }
 
 function DateRangePickerPresetsDemo() {
-  const [value, setValue] = useState<DayRange>(presets[0].range);
+  const [value, setValue] = useState<DateRange | null>(presets[0].range);
   return (
     <DemoRow>
       <DateRangePicker
-        disabled={{ after: today }}
-        endMonth={today}
+        defaultMonth={defaultMonth}
+        max={today}
         onValueChange={setValue}
-        presets={presets}
+        today={today}
         value={value}
-      />
+      >
+        <DateRangePickerTrigger aria-label="Report period" />
+        <DateRangePickerContent>
+          <DateRangePickerPresets>
+            {presets.map((preset) => (
+              <DateRangePickerPreset key={preset.label} value={preset.range}>
+                {preset.label}
+              </DateRangePickerPreset>
+            ))}
+          </DateRangePickerPresets>
+          <DateRangePickerCalendar />
+        </DateRangePickerContent>
+      </DateRangePicker>
     </DemoRow>
   );
 }
