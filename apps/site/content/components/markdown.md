@@ -69,6 +69,17 @@ Use `components` to replace a tag, or render a custom tag from an extension, suc
 </Markdown>
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label         | Component   | Actions |
+| ------------- | ----------- | ------- |
+| No name       | scroll-area | None    |
+| Copy code, ts | button      | `press` |
+
+Each code block's copy button is named by its language, like "Copy code, ts", or "Copy code" for a block with none. **Two blocks in the same language share a name**, so a press by that name fails. Press by the `ref` from the snapshot instead. The unnamed entry is a table's scroll area, listed with no name and no actions.
+
 ## API Reference
 
 | Prop        | Adds                                                  |

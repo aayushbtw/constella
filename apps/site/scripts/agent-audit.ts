@@ -1,12 +1,17 @@
-import { once } from "node:events";
 import { readdir, readFile } from "node:fs/promises";
-import { createServer } from "node:http";
-import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 
-import { chromium, errors } from "playwright";
 import type { Page } from "playwright";
 import { z } from "zod";
+
+import {
+  builtAssetsDir,
+  gatedSlugs,
+  launch,
+  NoBridgeError,
+  openBridgePage,
+  serveSite,
+} from "./bridge-site.ts";
 
 type Kind = string;
 type PagePath = string;
@@ -35,47 +40,15 @@ type Verdict =
 
 const home = "/";
 const workers = 4;
-const siteDir = path.join(import.meta.dirname, "..");
 const baselinePath = path.join(
   import.meta.dirname,
   "agent-audit-baseline.json"
 );
-const assetsDir = path.resolve(
-  process.argv[2] ??
-    path.join(siteDir, ".cloudflare/output/v0/workers/default/assets")
-);
-
-const contentTypes = new Map([
-  [".css", "text/css; charset=utf-8"],
-  [".html", "text/html; charset=utf-8"],
-  [".ico", "image/x-icon"],
-  [".js", "text/javascript; charset=utf-8"],
-  [".json", "application/json; charset=utf-8"],
-  [".png", "image/png"],
-  [".svg", "image/svg+xml"],
-  [".txt", "text/plain; charset=utf-8"],
-  [".woff2", "font/woff2"],
-  [".xml", "application/xml; charset=utf-8"],
-]);
-
-const gatedSections = new Set(["AI", "TanStack"]);
+const assetsDir = path.resolve(process.argv[2] ?? builtAssetsDir);
 
 async function gatedPages() {
-  const dir = path.join(siteDir, "content/components");
-  const files = await readdir(dir);
-  const gated = await Promise.all(
-    files
-      .filter((file) => file.endsWith(".md"))
-      .map(async (file) => {
-        const text = await readFile(path.join(dir, file), "utf-8");
-        const section = /^section:\s*(?<section>.+?)\s*$/mu.exec(text)?.groups
-          ?.section;
-        return section !== undefined && gatedSections.has(section)
-          ? [`/docs/components/${path.basename(file, ".md")}`]
-          : [];
-      })
-  );
-  return new Set(gated.flat());
+  const slugs = await gatedSlugs();
+  return new Set(slugs.map((slug) => `/docs/components/${slug}`));
 }
 
 async function listPages() {
@@ -91,52 +64,8 @@ async function listPages() {
   return [home, ...pages].toSorted();
 }
 
-async function serve(req: IncomingMessage, res: ServerResponse) {
-  try {
-    const target = path.join(
-      assetsDir,
-      decodeURIComponent(new URL(req.url ?? home, "http://localhost").pathname)
-    );
-    const file =
-      path.extname(target) === "" ? path.join(target, "index.html") : target;
-    const type = contentTypes.get(path.extname(file));
-    if (type === undefined || !file.startsWith(assetsDir)) {
-      throw new Error("not served");
-    }
-    const body = await readFile(file);
-    res.writeHead(200, { "content-type": type }).end(body);
-  } catch {
-    res.writeHead(404).end();
-  }
-}
-
-interface Settling {
-  length: number;
-  reads: number;
-  stable: number;
-}
-
-async function settle(page: Page, state: Settling): Promise<void> {
-  if (state.stable >= 5 || state.reads >= 100) {
-    return;
-  }
-  await page.waitForTimeout(100);
-  const length = await page.evaluate(
-    () => globalThis.agentBridge?.agent.snapshot().length ?? 0
-  );
-  await settle(page, {
-    length,
-    reads: state.reads + 1,
-    stable: length === state.length ? state.stable + 1 : 0,
-  });
-}
-
 async function scan(page: Page, url: string): Promise<Scan> {
-  await page.goto(url, { waitUntil: "load" });
-  await page.waitForFunction(() => globalThis.agentBridge !== undefined, null, {
-    timeout: 10_000,
-  });
-  await settle(page, { length: -1, reads: 0, stable: 0 });
+  await openBridgePage(page, url);
   return await page.evaluate(async () => {
     if (globalThis.agentBridge === undefined) {
       throw new Error("agent bridge left the page");
@@ -227,15 +156,10 @@ const baseline = baselineSchema.parse(
 );
 const [gated, pages] = await Promise.all([gatedPages(), listPages()]);
 
-const server = createServer((req, res) => {
-  void serve(req, res);
-});
-server.listen(0, "127.0.0.1");
-await once(server, "listening");
-const { port } = z.object({ port: z.number() }).parse(server.address());
-const origin = `http://127.0.0.1:${port}`;
+const server = await serveSite(assetsDir);
+const { origin } = server;
 
-const browser = await chromium.launch({ headless: true });
+const browser = await launch();
 const results = new Map<PagePath, Scan>();
 const queue = pages.filter((pagePath) => pagePath !== home);
 
@@ -254,7 +178,7 @@ try {
   try {
     results.set(home, await scan(first, origin));
   } catch (error) {
-    if (!(error instanceof errors.TimeoutError)) {
+    if (!(error instanceof NoBridgeError)) {
       throw error;
     }
     bridgeMissing = true;

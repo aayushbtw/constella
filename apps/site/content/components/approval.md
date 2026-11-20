@@ -133,6 +133,18 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 | Resuming | Both disabled            | None                   |
 | Answered | None                     | A Badge: what happened |
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label     | Component | Actions                   |
+| --------- | --------- | ------------------------- |
+| Cancel    | button    | `press`                   |
+| Send mail | button    | `press` (asks the person) |
+| Ask again | button    | None while disabled       |
+
+`ApprovalConfirm` carries `data-agent-confirm`, so a press on Send mail waits for the person. Without a sentence of your own, it asks with "Allows this tool call". Cancel runs without asking. Ask again is the example's replay button, not part of Approval.
+
 ## API Reference
 
 | Part | Adds |

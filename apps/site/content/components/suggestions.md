@@ -37,6 +37,21 @@ Suggestions
 └── Suggestion
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                          | Component   | Actions |
+| ------------------------------ | ----------- | ------- |
+| Summarize this week's sales    | button      | `press` |
+| What changed since last month? | button      | `press` |
+| Where are we behind plan?      | button      | `press` |
+| Draft a reply to Alex          | button      | `press` |
+| Find invoices due this week    | button      | `press` |
+| No name                        | scroll-area | None    |
+
+Each chip is named by its text. A press reaches `onClick` with the press's details, whose `source` is `"agent"`. The unnamed entry is the row's scroll area, listed with no name and no actions.
+
 ## API Reference
 
 | Part | Adds |

@@ -1,5 +1,6 @@
 // The docs/DOCS.md rules that can drift, checked as each page is parsed, so a broken page fails dev and the build.
 
+import { agentSection } from "./rules/agent-section.ts";
 import { blockSkeleton } from "./rules/block-skeleton.ts";
 import { headingNames } from "./rules/heading-names.ts";
 import { nestByTopic } from "./rules/nest-by-topic.ts";
@@ -11,6 +12,7 @@ import { componentFolder, headings, parts } from "./shared.ts";
 import type { Page, PageRule } from "./shared.ts";
 
 const componentRules = {
+  "agent-section": agentSection,
   "heading-names": headingNames,
   "nest-by-topic": nestByTopic,
   "require-composition": requireComposition,
@@ -42,7 +44,8 @@ function run(rules: Record<string, PageRule>, page: Page) {
 
 function checkComponentPage(body: string, title: string, section?: string) {
   const found = headings(body);
-  const end = found.at(-1) === "Pending" ? -2 : -1;
+  const reference = found.at(-1) === "Pending" ? -2 : -1;
+  const end = found.at(reference - 1) === "Agent" ? reference - 1 : reference;
   const folder = componentFolder(title);
 
   run(componentRules, {

@@ -327,6 +327,17 @@ Put the questionnaire in a [Dialog](/docs/components/dialog) and close it from `
 </DialogContent>
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                 | Component | Actions             |
+| --------------------- | --------- | ------------------- |
+| Another agent feature | input     | `setValue`, `clear` |
+| Next                  | button    | `press`             |
+
+The agent fills the freeform answer, "Another agent feature" in the example, and moves between questions with Previous, Next, Skip and Submit. **The agent can't see or check the choices.** `@shadcn/react`'s choice needs a native input, which the agent bridge doesn't list. Questionnaire is built on `@shadcn/react`, so it doesn't pass ui-sdk's change `details` on.
+
 ## API Reference
 
 Every part takes `sx`, applied last. The rest is [shadcn's Questionnaire](https://ui.shadcn.com/docs/react/questionnaire#api-reference).

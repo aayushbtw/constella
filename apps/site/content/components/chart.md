@@ -290,6 +290,18 @@ defineChart({
 });
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label   | Component | Actions              |
+| ------- | --------- | -------------------- |
+| Desktop | toggle    | `setPressed`         |
+| Mobile  | toggle    | `setPressed`         |
+| Series  | toggle    | `setValue`, `toggle` |
+
+Only the legend joins the agent bridge. The plot adds no entry. The legend is the Series group, with a toggle named for each series. `setPressed` with `false` on a series hides it.
+
 ## API Reference
 
 `Chart` takes TanStack Charts' React `Chart` props, with `sx` for `className` and `style`. The rest wrap a single element and take `sx`.
