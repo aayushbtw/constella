@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { stageChanges } from "@ui-sdk/react/history";
 import type { StagedChange } from "@ui-sdk/react/history";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -214,6 +214,13 @@ function Settings() {
 
 function AgentStaged() {
   const [state, setState] = useState<State>({ kind: "idle" });
+  const suggestButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (state.kind === "kept" || state.kind === "discarded") {
+      suggestButton.current?.focus();
+    }
+  }, [state.kind]);
 
   const discard = async (
     review: Extract<State, { kind: "review" }>
@@ -244,6 +251,7 @@ function AgentStaged() {
           onClick={() => {
             void stage();
           }}
+          ref={suggestButton}
           variant="outline"
         >
           Suggest changes

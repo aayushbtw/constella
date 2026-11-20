@@ -87,6 +87,9 @@ test("Discard puts every control back and removes the card", async () => {
   expect(digest()).toBe("false");
   expect(screen.queryByText(/Couldn't put back/u)).toBeNull();
   expect(button("Suggest changes").hasAttribute("disabled")).toBe(false);
+  await waitFor(() => {
+    expect(document.activeElement).toBe(button("Suggest changes"));
+  });
 });
 
 test("Keep changes leaves the suggested values and removes the card", async () => {
@@ -100,6 +103,9 @@ test("Keep changes leaves the suggested values and removes the card", async () =
   expect(region()).toContain("North America");
   expect(digest()).toBe("true");
   expect(button("Suggest changes").hasAttribute("disabled")).toBe(false);
+  await waitFor(() => {
+    expect(document.activeElement).toBe(button("Suggest changes"));
+  });
 });
 
 test("the agent can't keep its own changes: Keep changes asks the person, and Cancel refuses it", async () => {
