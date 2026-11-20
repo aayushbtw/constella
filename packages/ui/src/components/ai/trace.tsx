@@ -461,7 +461,7 @@ function TraceStep({
         {...stylex.props(styles.step, growing && styles.growing, sx)}
       >
         <Collapsible
-          defaultOpen={defaultOpen}
+          defaultOpen={shown === undefined ? defaultOpen : undefined}
           onOpenChange={onOpenChange}
           open={shown}
           render={
