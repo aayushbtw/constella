@@ -606,6 +606,62 @@ test("an agent's setValue on Message lands on the textarea, not the command menu
   expect(onSubmit.mock.calls).toEqual([["Translate this"]]);
 });
 
+interface ValueChange {
+  source: string;
+  value: string;
+}
+
+function Draft({
+  changes,
+  reject = false,
+}: {
+  changes: ValueChange[];
+  reject?: boolean;
+}) {
+  const [text, setText] = useState("Hello");
+  return (
+    <PromptInput>
+      <PromptInputTextarea
+        aria-label="Message"
+        onValueChange={(value, details) => {
+          changes.push({ source: details.source, value });
+          if (reject) {
+            details.cancel();
+            return;
+          }
+          setText(value);
+        }}
+        value={text}
+      />
+    </PromptInput>
+  );
+}
+
+test("an agent's setValue reaches a controlled textarea's onValueChange as the agent's", async () => {
+  const changes: ValueChange[] = [];
+  render(<Draft changes={changes} />);
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["Summarize Q3"], ref: "Message" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(changes).toEqual([{ source: "agent", value: "Summarize Q3" }]);
+  expect(box().value).toBe("Summarize Q3");
+});
+
+test("a controlled textarea whose onValueChange cancels the agent's setValue keeps its text and tells the agent", async () => {
+  const changes: ValueChange[] = [];
+  render(<Draft changes={changes} reject />);
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["Summarize Q3"], ref: "Message" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.steps.map((step) => step.result)).toEqual([false]);
+  expect(changes).toEqual([{ source: "agent", value: "Summarize Q3" }]);
+  expect(box().value).toBe("Hello");
+});
+
 // ui-sdk 0.1.0-beta.13's trigger-menu `insert` puts the raw text in place of the query, skipping the trigger's own `insert`.
 test.fails("an agent inserts a slash command through the command menu", async () => {
   render(<CommandComposer />);
