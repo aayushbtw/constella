@@ -72,7 +72,7 @@ Say these plainly if asked; don't imply otherwise.
 - **The agent tests run by hand.** CI runs check and build (`.github/workflows/ci.yml`). `vpr test` and `vpr agent-audit` don't run there.
 - **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Questionnaire's choices and Trace's steps with no trigger.
 - **ui-sdk is beta.** Its agent key is experimental, and so are `createHistory` and `stageChanges`.
-- **The production site ships no agent bridge yet.** It loads in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
+- **The production site refuses marked steps.** It ships the bridge (`apps/site/src/router.tsx`) without the confirm dialog or the activity panel, so a step on a `data-agent-confirm` control is refused, not asked. The dialog and panel load in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
 
 ## Messaging options
 
