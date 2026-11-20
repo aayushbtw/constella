@@ -154,11 +154,13 @@ function PickerProvider({
   return <Picker value={state}>{children}</Picker>;
 }
 
-// A picked day closes with the popover's exit, unlike a menu's item.
+// A day picked by pointer closes with the popover's exit, unlike a menu's item.
 const skipsPickMotion = (
   open: boolean,
   details: { reason: string; source: string }
-) => details.reason !== "item-press" && skipsMotion(open, details);
+) =>
+  (details.reason !== "item-press" || details.source === "keyboard") &&
+  skipsMotion(open, details);
 
 /** ui-sdk's Date Picker picking a range across two months; its value is `[start, end]` as ISO dates, or `null`. */
 function DateRangePicker({

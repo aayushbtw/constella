@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import { withSource } from "@ui-sdk/react/observe";
 import { expect, test, vi } from "vite-plus/test";
 
 import {
@@ -157,6 +158,22 @@ test("a pointer picks two days, the later one first, and the picker reports one 
     expect(trigger().getAttribute("aria-expanded")).toBe("false");
   });
   expect(content.dataset).not.toHaveProperty("skipMotion");
+});
+
+test("a range picked by keyboard closes the picker with no exit", async () => {
+  render(<Report keepMounted />);
+  fireEvent.click(trigger());
+  const content = await screen.findByRole("dialog");
+
+  withSource("keyboard", () => {
+    fireEvent.click(screen.getByRole("gridcell", { name: /June 5,/u }));
+    fireEvent.click(screen.getByRole("gridcell", { name: /June 10,/u }));
+  });
+
+  await waitFor(() => {
+    expect(trigger().getAttribute("aria-expanded")).toBe("false");
+  });
+  expect(content.dataset).toHaveProperty("skipMotion");
 });
 
 test("a preset past max can't be pressed", async () => {
