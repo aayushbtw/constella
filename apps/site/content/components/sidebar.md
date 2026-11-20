@@ -172,6 +172,8 @@ For an account menu, render a `size="lg"` `SidebarMenuButton` as a `DropdownMenu
 
 Put a `SidebarMenuAction` after a row's button for an action of its own, like a menu. It's drawn over the row's end, and the label fades out before it. With `showOnHover` it shows only while its row is hovered or focused, or its menu is open, so the label keeps the full width the rest of the time. Show `SidebarMenuSkeleton` rows while the list loads.
 
+`SidebarMenuButton`, `SidebarMenuAction`, `SidebarGroupAction` and `SidebarRail` are ui-sdk Buttons, so the agent bridge lists each by its name. The bridge also matches a control by the text of the row it sits in, so a row's name matches its action too. An agent presses such a row by the `ref` that `snapshot()` gives it.
+
 <!-- ::demo name="sidebar-action" -->
 
 ```tsx
