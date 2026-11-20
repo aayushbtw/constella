@@ -11,6 +11,16 @@ import { createAgent } from "@ui-sdk/react/agent";
 import { StrictMode, useState } from "react";
 import { afterAll, expect, test, vi } from "vite-plus/test";
 
+import { InputGroupButton } from "@/components/primitives/input-group";
+
+import {
+  Attachment,
+  AttachmentAction,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentGroup,
+  AttachmentTitle,
+} from "./attachment";
 import {
   PromptInput,
   PromptInputCommand,
@@ -21,8 +31,10 @@ import {
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
+  PromptInputHeader,
   PromptInputSubmit,
   PromptInputTextarea,
+  PromptInputTools,
 } from "./prompt-input";
 import type { PromptInputCommandProps, PromptInputState } from "./prompt-input";
 
@@ -452,4 +464,159 @@ test("an agent finds the message field, its command menu and Send by name", () =
   expect(
     entries.map((entry) => `${entry.component} ${entry.label}`).toSorted()
   ).toEqual(["button Send", "textarea Message", "trigger-menu Message"]);
+});
+
+const onPage = () =>
+  agent
+    .snapshot()
+    .filter((entry) => entry.offPage !== true && entry.component !== "more");
+
+function expectNamedExactly(expected: string[]) {
+  for (const entry of onPage()) {
+    expect(
+      entry.label,
+      `${entry.component} ${entry.ref} has no name`
+    ).toBeTruthy();
+  }
+  expect(
+    onPage()
+      .map((entry) => `${entry.component} ${entry.label}`)
+      .toSorted()
+  ).toEqual(expected.toSorted());
+}
+
+const noFiles: string[] = [];
+
+function Composer({
+  files: initialFiles = noFiles,
+  onAttach,
+  onSubmit,
+}: {
+  files?: string[];
+  onAttach?: () => void;
+  onSubmit?: (text: string) => void;
+}) {
+  const [files, setFiles] = useState(initialFiles);
+  const [text, setText] = useState("");
+  return (
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (text.trim() === "") {
+          return;
+        }
+        onSubmit?.(text);
+        setText("");
+      }}
+    >
+      {files.length > 0 && (
+        <PromptInputHeader>
+          <AttachmentGroup>
+            {files.map((file) => (
+              <Attachment key={file} size="sm">
+                <AttachmentContent>
+                  <AttachmentTitle>{file}</AttachmentTitle>
+                </AttachmentContent>
+                <AttachmentActions>
+                  <AttachmentAction
+                    aria-label={`Remove ${file}`}
+                    onClick={() => {
+                      setFiles(files.filter((other) => other !== file));
+                    }}
+                  >
+                    x
+                  </AttachmentAction>
+                </AttachmentActions>
+              </Attachment>
+            ))}
+          </AttachmentGroup>
+        </PromptInputHeader>
+      )}
+      <PromptInputTextarea
+        aria-label="Message"
+        onChange={(event) => {
+          setText(event.target.value);
+        }}
+        value={text}
+      />
+      <PromptInputFooter>
+        <PromptInputTools>
+          <InputGroupButton
+            aria-label="Attach"
+            onClick={onAttach}
+            size="icon-sm"
+          >
+            +
+          </InputGroupButton>
+        </PromptInputTools>
+        <PromptInputSubmit disabled={text.trim() === ""} />
+      </PromptInputFooter>
+    </PromptInput>
+  );
+}
+
+test("an agent writes a message, attaches and sends it", async () => {
+  const onAttach = vi.fn<() => void>();
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<Composer onAttach={onAttach} onSubmit={onSubmit} />);
+  expectNamedExactly(["button Attach", "button Send", "textarea Message"]);
+
+  const result = await agent.act({
+    steps: [
+      { action: "setValue", args: ["Summarize Q3"], ref: "Message" },
+      { action: "press", ref: "Attach" },
+      { action: "press", ref: "Send" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(onAttach).toHaveBeenCalledOnce();
+  expect(onSubmit.mock.calls).toEqual([["Summarize Q3"]]);
+  expect(box().value).toBe("");
+});
+
+test("an agent finds each attachment's Remove by name and removes one", async () => {
+  render(<Composer files={["q3-report.xlsx", "brand-guidelines.pdf"]} />);
+  expectNamedExactly([
+    "button Attach",
+    "button Remove brand-guidelines.pdf",
+    "button Remove q3-report.xlsx",
+    "button Send",
+    "textarea Message",
+  ]);
+
+  const result = await agent.act({
+    steps: [{ action: "press", ref: "Remove q3-report.xlsx" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(screen.queryByText("q3-report.xlsx")).toBeNull();
+  expect(screen.getByText("brand-guidelines.pdf")).toBeTruthy();
+});
+
+test("an agent's setValue on Message lands on the textarea, not the command menu that shares its name", async () => {
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<CommandComposer onSubmit={onSubmit} />);
+
+  const result = await agent.act({
+    steps: [
+      { action: "setValue", args: ["Translate this"], ref: "Message" },
+      { action: "press", ref: "Send" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(onSubmit.mock.calls).toEqual([["Translate this"]]);
+});
+
+// ui-sdk 0.1.0-beta.13's trigger-menu `insert` puts the raw text in place of the query, skipping the trigger's own `insert`.
+test.fails("an agent inserts a slash command through the command menu", async () => {
+  render(<CommandComposer />);
+  box().focus();
+
+  const result = await agent.act({
+    steps: [
+      { action: "setValue", args: ["/"], ref: "Message" },
+      { action: "insert", args: ["translate"], ref: "Message" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(box().value).toBe("/translate ");
 });
