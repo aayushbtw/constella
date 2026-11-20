@@ -198,7 +198,7 @@ const components = {
   pre: ({ children }: ComponentPropsWithoutRef<"pre">): ReactNode => children,
   strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
   table: (props) => (
-    <div {...stylex.props(styles.p)}>
+    <div data-agent-hidden {...stylex.props(styles.p)}>
       <Table {...props} interactive={false} sx={styles.table} />
     </div>
   ),
