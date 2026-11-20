@@ -81,6 +81,7 @@ test("a press on the label reaches the control it names", () => {
 
 test("an agent finds every control a Label names and changes it", async () => {
   render(<Settings />);
+  await screen.findByRole("radiogroup", { name: "Shipping speed" });
 
   const components = agent
     .snapshot()

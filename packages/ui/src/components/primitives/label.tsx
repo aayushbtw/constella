@@ -1,11 +1,15 @@
 import * as stylex from "@stylexjs/stylex";
+import { Label as LabelPrimitive } from "@ui-sdk/react/label";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 
-type LabelProps = Omit<ComponentProps<"label">, "className" | "style"> & {
+type LabelProps = Omit<
+  ComponentProps<typeof LabelPrimitive>,
+  "className" | "style"
+> & {
   sx?: Sx;
 };
 
@@ -33,9 +37,7 @@ function labelStyles() {
 
 function Label({ sx, ...props }: LabelProps) {
   return (
-    // oxlint-disable-next-line jsx-a11y/label-has-associated-control -- the caller passes `htmlFor` or wraps the control
-    <label
-      data-slot="label"
+    <LabelPrimitive
       {...props}
       {...stylex.props([typeStyles.textSm, styles.label], sx)}
     />
