@@ -3,7 +3,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { createDialogController } from "@ui-sdk/react/dialog";
-import { Fragment, useEffect } from "react";
+import { useShortcut, useShortcutHint } from "@ui-sdk/react/shortcuts";
+import { Fragment } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -105,14 +106,6 @@ const icon = (glyph: typeof Search01Icon) => (
   />
 );
 
-function isTyping(target: EventTarget | null) {
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable ||
-      ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName))
-  );
-}
-
 const search = createDialogController();
 
 function Search() {
@@ -133,33 +126,20 @@ function Search() {
     }))
     .filter(({ items }) => items.length > 0);
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.repeat) {
-        return;
-      }
-      if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        search.toggle({ event, reason: "shortcut" });
-      } else if (
-        event.key === "/" &&
-        !(event.metaKey || event.ctrlKey || event.altKey) &&
-        !isTyping(event.target)
-      ) {
-        event.preventDefault();
-        search.setOpen(true, { event, reason: "shortcut" });
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
+  useShortcut(
+    "/",
+    (event) => {
+      search.setOpen(true, { event, reason: "shortcut" });
+    },
+    { description: "Search documentation" }
+  );
+  const hint = useShortcutHint("mod+k");
 
   return (
     <>
       <DialogTrigger
         controller={search}
+        shortcut="mod+k"
         render={
           <Button
             aria-label="Search documentation"
@@ -172,10 +152,7 @@ function Search() {
         <span {...stylex.props(styles.icon)}>{icon(Search01Icon)}</span>
         <span {...stylex.props(styles.field)}>
           Search documentation...
-          <KbdGroup>
-            <Kbd>⌘</Kbd>
-            <Kbd>K</Kbd>
-          </KbdGroup>
+          <Kbd>{hint.text}</Kbd>
         </span>
       </DialogTrigger>
       <CommandDialog

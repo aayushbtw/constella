@@ -133,21 +133,21 @@ Use `CommandFooter` for key hints in a bar under the list, set into the command'
 
 ## Command Dialog
 
-Use `CommandDialog` for a palette over the page. It sits near the top of the window so the list can grow downward. It's named for screen readers by `title` and `description`, so give its input a different `aria-label`. Open it with a `createDialogController` from `@ui-sdk/react/dialog`, passed to the dialog and to any `DialogTrigger`. For a shortcut you listen for, call `toggle` with the key's event and `reason: "shortcut"`. Close it with `close()` in the item's `onSelect`. Escape clears the search first, then closes the dialog. It skips its motion when the keyboard opens or closes it, and when a pick closes it.
+Use `CommandDialog` for a palette over the page. It sits near the top of the window so the list can grow downward. It's named for screen readers by `title` and `description`, so give its input a different `aria-label`. Open it with a `createDialogController` from `@ui-sdk/react/dialog`, passed to the dialog and to any `DialogTrigger`. Give the trigger a `shortcut` to open it from the keyboard: `mod+j` is ⌘J on Apple devices and Ctrl+J elsewhere, the trigger gets `aria-keyshortcuts`, and the shortcut pauses while a modal is open. Show the keys with `useShortcutHint` from `@ui-sdk/react/shortcuts`. Close it with `close()` in the item's `onSelect`. Escape clears the search first, then closes the dialog. It skips its motion when the keyboard opens or closes it, and when a pick closes it.
 
 <!-- ::demo name="command-dialog" -->
 
 ```tsx
 const palette = createDialogController();
+const hint = useShortcutHint("mod+j");
 
-window.addEventListener("keydown", (event) => {
-  if (event.key === "j" && (event.metaKey || event.ctrlKey)) {
-    palette.toggle({ event, reason: "shortcut" });
-  }
-});
-
-<DialogTrigger controller={palette} render={<Button variant="outline" />}>
+<DialogTrigger
+  controller={palette}
+  render={<Button variant="outline" />}
+  shortcut="mod+j"
+>
   Open Menu
+  <Kbd aria-hidden>{hint.text}</Kbd>
 </DialogTrigger>
 <CommandDialog controller={palette}>
   <Command>

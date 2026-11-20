@@ -10,7 +10,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { createDialogController } from "@ui-sdk/react/dialog";
-import { Fragment, useEffect, useState } from "react";
+import { useShortcutHint } from "@ui-sdk/react/shortcuts";
+import { Fragment, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -26,7 +27,7 @@ import {
   CommandShortcut,
 } from "@/components/primitives/command";
 import { DialogTrigger } from "@/components/primitives/dialog";
-import { Kbd, KbdGroup } from "@/components/primitives/kbd";
+import { Kbd } from "@/components/primitives/kbd";
 import { SwapText } from "@/components/primitives/swap-text";
 import { Text } from "@/components/typography/text";
 import { sizes, space, strokes } from "@/lib/constella/tokens.stylex";
@@ -66,17 +67,17 @@ const groups: Group[] = [
   },
   {
     items: [
-      { icon: UserIcon, label: "Profile", shortcut: "⌘P", value: "profile" },
+      { icon: UserIcon, label: "Profile", shortcut: "mod+p", value: "profile" },
       {
         icon: CreditCardIcon,
         label: "Billing",
-        shortcut: "⌘B",
+        shortcut: "mod+b",
         value: "billing",
       },
       {
         icon: Settings01Icon,
         label: "Settings",
-        shortcut: "⌘S",
+        shortcut: "mod+s",
         value: "settings",
       },
     ],
@@ -113,7 +114,7 @@ function Palette({ onRun }: { onRun?: (entry: Entry) => void }) {
                   />
                   {entry.label}
                   {entry.shortcut !== undefined && (
-                    <CommandShortcut>{entry.shortcut}</CommandShortcut>
+                    <CommandShortcut shortcut={entry.shortcut} />
                   )}
                 </CommandItem>
               ))}
@@ -146,26 +147,16 @@ function CommandDemo() {
 const palette = createDialogController();
 
 function CommandDialogDemo() {
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "j" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        palette.toggle({ event, reason: "shortcut" });
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
+  const hint = useShortcutHint("mod+j");
   return (
     <DemoRow>
-      <DialogTrigger controller={palette} render={<Button variant="outline" />}>
+      <DialogTrigger
+        controller={palette}
+        render={<Button variant="outline" />}
+        shortcut="mod+j"
+      >
         Open Menu
-        <KbdGroup>
-          <Kbd>⌘</Kbd>
-          <Kbd>J</Kbd>
-        </KbdGroup>
+        <Kbd aria-hidden>{hint.text}</Kbd>
       </DialogTrigger>
       <CommandDialog controller={palette}>
         <Command>

@@ -10,6 +10,7 @@ import * as stylex from "@stylexjs/stylex";
 import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
+import { useShortcut, useShortcutHint } from "@ui-sdk/react/shortcuts";
 import {
   createContext,
   use,
@@ -914,18 +915,7 @@ function SidebarProvider({
     []
   );
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "b" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        toggleFromKeyboard();
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [toggleFromKeyboard]);
+  useShortcut("mod+b", toggleFromKeyboard, { description: "Toggle sidebar" });
 
   const context = useMemo<SidebarContextValue>(
     () => ({
@@ -1101,6 +1091,7 @@ function SidebarTrigger({
   const triggerSx = [name !== null && styles.triggerName(name), sx];
   const toggleFromKeyboard = use(KeyboardToggleContext);
   const { rail, tooltipSide } = use(RailContext);
+  const hint = useShortcutHint("mod+b");
 
   if (inSheet) {
     return (
@@ -1132,6 +1123,7 @@ function SidebarTrigger({
         render={
           <Button
             aria-expanded={isMobile ? undefined : open}
+            aria-keyshortcuts={hint.ariaKeyshortcuts}
             aria-label={ariaLabel ?? label}
             data-slot="sidebar-trigger"
             onClick={(event, details) => {

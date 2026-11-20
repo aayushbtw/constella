@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { setPlatform } from "@ui-sdk/core/testing";
 import { renderToString } from "react-dom/server";
-import { afterEach, expect, test } from "vite-plus/test";
+import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
 import {
   Dialog,
@@ -11,8 +11,18 @@ import {
 
 import { CommandDemo, CommandDialogDemo } from "./command";
 
+beforeEach(() => {
+  vi.stubGlobal("matchMedia", (query: string) => ({
+    addEventListener: () => {},
+    matches: false,
+    media: query,
+    removeEventListener: () => {},
+  }));
+});
+
 afterEach(() => {
   setPlatform("other");
+  vi.unstubAllGlobals();
 });
 
 const isolates = /[⁦-⁩]/gu;
