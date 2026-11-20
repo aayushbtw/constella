@@ -71,7 +71,7 @@ const press = `:active:not([aria-haspopup], [data-slot='combobox-trigger'], ${di
 
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen =
-  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open])";
+  ":where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open]";
 
 // At rest, and while hovered or while its popup is open.
 const interactive = <R, A>(rest: R, active: A) => ({

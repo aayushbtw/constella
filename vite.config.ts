@@ -33,7 +33,6 @@ export default defineConfig({
       "constella/type-scale": "error",
       // Hoisting lets a route's `component:` sit above the component it names.
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
-      // Base UI's checkbox is a span with a hidden input, so the label wraps it rather than pointing at it.
       "jsx-a11y/label-has-associated-control": [
         "error",
         {

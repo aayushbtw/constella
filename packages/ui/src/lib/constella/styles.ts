@@ -18,9 +18,9 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-// A group's own parts: not the focus guards Base UI drops beside an open popup's trigger, nor
-// ui-sdk popup content, which renders in place beside it, `popover` while shown and `hidden` while closed,
-// nor ui-sdk's hidden form field beside a select's trigger.
+// A group's own parts: not ui-sdk popup content, which renders in place beside its trigger,
+// `popover` while shown and `hidden` while closed, nor ui-sdk's hidden form field beside a
+// select's trigger.
 const notFirst =
   ":not(:nth-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])))";
 const notLast =
@@ -77,8 +77,8 @@ const joinStyles = stylex.create({
 });
 
 const popupReset = stylex.create({
-  // A ui-sdk popup renders in place, so it drops what it would inherit from there: a group's joins,
-  // an addon's text, a table cell's wrapping. ui-sdk's own layer resets the browser's `[popover]` box, except a menu's, a select's, a combobox's and a trigger menu's.
+  // A ui-sdk popup renders in place, so it drops what it would inherit from there: a group's
+  // joins, an addon's text, a table cell's wrapping.
   base: {
     [joins.block]: "1",
     [joins.either]: "1",
@@ -159,12 +159,11 @@ const typeStyles = stylex.create({
   },
 });
 
-// A trigger while its popup is open: Base UI marks it `data-popup-open`, ui-sdk `data-open`
-// (a hover card or combobox trigger has no `aria-haspopup`, so it's named by slot). `:where`
-// holds all at one attribute's specificity, as Base UI's alone was. StyleX can't share a
-// selector key across files, so button.tsx and prompt-input.tsx repeat it.
+// ui-sdk sets `data-open` on a collapsible's trigger too, and gives a hover card or combobox
+// trigger no `aria-haspopup`. StyleX compiles an imported selector key to a descendant
+// selector, so button.tsx and prompt-input.tsx repeat this one.
 const popupOpen =
-  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open])";
+  ":where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open]";
 
 // button.tsx's `hoverIdle` and `activeIdle`; keep in step.
 const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
