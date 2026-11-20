@@ -9,6 +9,7 @@ import {
   DialogDescription as DialogDescriptionPrimitive,
   Dialog as DialogPrimitive,
   DialogTitle as DialogTitlePrimitive,
+  DialogTrigger as DialogTriggerPrimitive,
 } from "@ui-sdk/react/dialog";
 import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
@@ -33,8 +34,11 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SidePanelContentProps = Styled<
-  Omit<ComponentProps<typeof DialogContentPrimitive>, "container" | "inline">
+type SidePanelContentProps<Payload = unknown> = Styled<
+  Omit<
+    ComponentProps<typeof DialogContentPrimitive<Payload>>,
+    "container" | "inline"
+  >
 >;
 
 const entering = ":is([data-starting-style])";
@@ -198,9 +202,14 @@ function PanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
 
 /** A non-modal dialog: clicking the content beside it leaves it open; Close shuts it, and so does Escape while focus is in it. */
 function SidePanel(props: DialogProps) {
-  return (
-    <DialogPrimitive closeOnOutsidePress={false} modal={false} {...props} />
-  );
+  return <DialogPrimitive modal={false} {...props} />;
+}
+
+function SidePanelTrigger({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DialogTriggerPrimitive>>) {
+  return <DialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
 }
 
 /** Holds `SidePanelContent` after the content it sits beside, in a flex row. */
@@ -214,9 +223,12 @@ function SidePanelSlot({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-function SidePanelContent({ sx, ...props }: SidePanelContentProps) {
+function SidePanelContent<Payload = unknown>({
+  sx,
+  ...props
+}: SidePanelContentProps<Payload>) {
   return (
-    <DialogContentPrimitive
+    <DialogContentPrimitive<Payload>
       inline
       {...props}
       {...stylex.props(
@@ -300,6 +312,8 @@ function SidePanelFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
+export { createDialogController as createSidePanelController } from "@ui-sdk/react/dialog";
+export type { DialogController as SidePanelController } from "@ui-sdk/react/dialog";
 export {
   Panel,
   PanelBody,
@@ -313,5 +327,6 @@ export {
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
+  SidePanelTrigger,
 };
 export type { SidePanelContentProps };

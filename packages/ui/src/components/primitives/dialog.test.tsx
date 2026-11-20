@@ -5,6 +5,7 @@ import { expect, test } from "vite-plus/test";
 
 import { Button } from "./button";
 import {
+  createDialogController,
   Dialog,
   DialogClose,
   DialogCloseButton,
@@ -105,6 +106,46 @@ test.each(["Close", "Cancel"])(
     expect(document.activeElement).toBe(trigger);
   }
 );
+
+test("the content reads the payload of the trigger that opened it, and a Close's value comes back as returnValue", async () => {
+  const controller = createDialogController<{ name: string }>();
+  const closed: unknown[] = [];
+  render(
+    <>
+      {["Acme", "Globex"].map((name) => (
+        <DialogTrigger controller={controller} key={name} payload={{ name }}>
+          Remind {name}
+        </DialogTrigger>
+      ))}
+      <Dialog
+        controller={controller}
+        onOpenChange={(next, details) => {
+          if (!next) {
+            closed.push(details.returnValue);
+          }
+        }}
+      >
+        <DialogContent<{ name: string }>>
+          {(state) => (
+            <>
+              <DialogTitle>Remind {state.payload?.name}</DialogTitle>
+              <DialogClose value="send">Send</DialogClose>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Remind Globex" }));
+  await screen.findByRole("dialog", { name: "Remind Globex" });
+  fireEvent.click(screen.getByRole("button", { name: "Send" }));
+
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+  expect(closed).toEqual(["send"]);
+});
 
 test("a dialog opened from another marks the one behind so it can step back", async () => {
   render(

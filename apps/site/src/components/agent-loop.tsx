@@ -1,9 +1,9 @@
 import { Activity01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import type { AgentAction, ObservedChange } from "@ui-sdk/react/agent";
-import { createDialogController } from "@ui-sdk/react/dialog";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { AgentAction } from "@ui-sdk/react/agent";
+import type { HistoryEntry } from "@ui-sdk/react/history";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { Alert, AlertDescription } from "@/components/primitives/alert";
 import {
@@ -16,8 +16,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/primitives/alert-dialog";
+import { Badge } from "@/components/primitives/badge";
 import { Button } from "@/components/primitives/button";
-import { DialogTrigger } from "@/components/primitives/dialog";
 import {
   Empty,
   EmptyDescription,
@@ -26,26 +26,27 @@ import {
 } from "@/components/primitives/empty";
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemGroup,
   ItemTitle,
 } from "@/components/primitives/item";
 import {
+  createSidePanelController,
   SidePanel,
   SidePanelBody,
   SidePanelContent,
   SidePanelFooter,
   SidePanelHeader,
   SidePanelTitle,
+  SidePanelTrigger,
 } from "@/components/primitives/side-panel";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
-import { agent, confirm, history, mountConfirm } from "~/lib/agent";
+import { confirm, history, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
 
-const feedSize = 50;
-
-const activity = createDialogController();
+const activity = createSidePanelController();
 
 const styles = stylex.create({
   place: {
@@ -58,12 +59,7 @@ const styles = stylex.create({
   },
 });
 
-interface Row {
-  change: ObservedChange;
-  id: number;
-}
-
-const shift = ({ previous, value }: ObservedChange) =>
+const shift = ({ previous, value }: HistoryEntry) =>
   `${JSON.stringify(previous ?? null)} → ${JSON.stringify(value ?? null)}`;
 
 const sentence = (text: string) => (/[.!?]$/u.test(text) ? text : `${text}.`);
@@ -77,6 +73,12 @@ const question = (step: AgentAction) =>
     : `${sentence(step.confirm)} ${asked(step)}`;
 
 const onHistory = (listener: () => void) => history.subscribe(listener);
+
+const entries = () => history.entries();
+
+const noEntries: readonly HistoryEntry[] = [];
+
+const serverEntries = () => noEntries;
 
 const appliedAgentChanges = () =>
   history
@@ -94,9 +96,9 @@ function AgentConfirm() {
   return (
     <div data-agent-hidden>
       <AlertDialog controller={confirm.controller}>
-        <AlertDialogContent size="sm">
-          {() => {
-            const step = confirm.controller.getPayload();
+        <AlertDialogContent<AgentAction> size="sm">
+          {(state) => {
+            const step = state.payload;
             return (
               <>
                 <AlertDialogHeader>
@@ -119,21 +121,15 @@ function AgentConfirm() {
 }
 
 function AgentFeed() {
-  const [rows, setRows] = useState<Row[]>([]);
   const [missed, setMissed] = useState<string[]>([]);
-  const counted = useRef(0);
+  const recorded = useSyncExternalStore(onHistory, entries, serverEntries);
   const applied = useSyncExternalStore(onHistory, appliedAgentChanges, () => 0);
+  const rows = recorded
+    .filter((entry) => entry.source === "agent")
+    .toReversed();
 
   useEffect(() => {
     history.clear();
-    return agent.subscribe((change) => {
-      if (change.source !== "agent") {
-        return;
-      }
-      counted.current += 1;
-      const row = { change, id: counted.current };
-      setRows((previous) => [row, ...previous].slice(0, feedSize));
-    });
   }, []);
 
   const undo = async () => {
@@ -155,14 +151,19 @@ function AgentFeed() {
           </Empty>
         ) : (
           <ItemGroup render={<ol />}>
-            {rows.map(({ change, id }) => (
-              <Item key={id} render={<li />} size="sm">
+            {rows.map((entry) => (
+              <Item key={entry.id} render={<li />} size="sm">
                 <ItemContent>
-                  <ItemTitle>{change.label ?? change.component}</ItemTitle>
+                  <ItemTitle>{entry.label}</ItemTitle>
                   <ItemDescription>
-                    {shift(change)}, {change.reason}
+                    {shift(entry)}, {entry.reason}
                   </ItemDescription>
                 </ItemContent>
+                {entry.reverted === true && (
+                  <ItemActions>
+                    <Badge variant="secondary">Undone</Badge>
+                  </ItemActions>
+                )}
               </Item>
             ))}
           </ItemGroup>
@@ -193,7 +194,7 @@ function AgentFeed() {
 
 function AgentActivityButton() {
   return (
-    <DialogTrigger
+    <SidePanelTrigger
       aria-label="Assistant activity"
       controller={activity}
       data-agent-hidden
@@ -204,7 +205,7 @@ function AgentActivityButton() {
         size={sizes.icon}
         strokeWidth={Number(strokes.icon)}
       />
-    </DialogTrigger>
+    </SidePanelTrigger>
   );
 }
 

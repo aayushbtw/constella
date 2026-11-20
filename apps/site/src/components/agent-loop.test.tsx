@@ -320,6 +320,9 @@ test("undo puts back the assistant's change and keeps the person's", async () =>
   });
   expect(checked("Weekly digest")).toBe("false");
   expect(checked("Dark mode")).toBe("true");
+  expect(panel.getAllByText("Weekly digest")).toHaveLength(1);
+  expect(panel.getByText("Undone")).toBeTruthy();
+  expect(panel.queryByText(/true → false/u)).toBeNull();
   expect(done.getAttribute("aria-disabled")).toBe("true");
   expect(done.hasAttribute("disabled")).toBe(false);
   expect(document.activeElement).toBe(done);

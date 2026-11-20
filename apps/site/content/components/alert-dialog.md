@@ -141,7 +141,7 @@ Mark an action an agent must not take alone with `data-agent-confirm`, as above.
 
 | Part | Adds |
 | --- | --- |
-| `AlertDialogContent` | Renders the backdrop and the content in place, with no portal or viewport; `size`: `"sm"` or `"default"` |
+| `AlertDialogContent` | Renders the backdrop and the content in place, with no portal or viewport; `size`: `"sm"` or `"default"`. Generic over the payload, so a function child reads a typed `state.payload`: `AlertDialogContent<Row>` |
 | `AlertDialogAction` | A Close part with `value="confirm"`, rendered as a `primary` `Button` |
 | `AlertDialogCancel` | A Close part, rendered as an `outline` `Button` |
 

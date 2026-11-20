@@ -43,8 +43,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type DialogPopupProps = Styled<
-  ComponentProps<typeof DialogContentPrimitive>
+type DialogPopupProps<Payload = unknown> = Styled<
+  ComponentProps<typeof DialogContentPrimitive<Payload>>
 > & {
   size?: DialogSize;
 };
@@ -236,9 +236,13 @@ const sizeStyles = {
   sm: styles.sm,
 } satisfies Record<DialogSize, stylex.StyleXStyles | null>;
 
-function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
+function DialogPopup<Payload = unknown>({
+  size = "default",
+  sx,
+  ...props
+}: DialogPopupProps<Payload>) {
   return (
-    <DialogContentPrimitive
+    <DialogContentPrimitive<Payload>
       data-size={size}
       {...props}
       {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
@@ -246,11 +250,11 @@ function DialogPopup({ size = "default", sx, ...props }: DialogPopupProps) {
   );
 }
 
-function DialogContent(props: DialogPopupProps) {
+function DialogContent<Payload = unknown>(props: DialogPopupProps<Payload>) {
   return (
     <>
       <DialogBackdrop />
-      <DialogPopup {...props} />
+      <DialogPopup<Payload> {...props} />
     </>
   );
 }
@@ -347,6 +351,8 @@ function DialogCloseButton({
   );
 }
 
+export { createDialogController } from "@ui-sdk/react/dialog";
+export type { DialogController } from "@ui-sdk/react/dialog";
 export {
   Dialog,
   DialogBackdrop,

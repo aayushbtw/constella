@@ -34,8 +34,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type AlertDialogContentProps = Styled<
-  ComponentProps<typeof AlertDialogContentPrimitive>
+type AlertDialogContentProps<Payload = unknown> = Styled<
+  ComponentProps<typeof AlertDialogContentPrimitive<Payload>>
 > & {
   size?: AlertDialogSize;
 };
@@ -98,16 +98,16 @@ function AlertDialogTrigger({
   return <AlertDialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
 }
 
-function AlertDialogContent({
+function AlertDialogContent<Payload = unknown>({
   children,
   size = "default",
   sx,
   ...props
-}: AlertDialogContentProps) {
+}: AlertDialogContentProps<Payload>) {
   return (
     <>
       <AlertDialogBackdropPrimitive {...stylex.props(dialogStyles.backdrop)} />
-      <AlertDialogContentPrimitive
+      <AlertDialogContentPrimitive<Payload>
         data-size={size}
         {...props}
         {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
