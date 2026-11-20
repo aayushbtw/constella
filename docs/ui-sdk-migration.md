@@ -188,65 +188,40 @@ These don't gate landing. A read-only sweep of `ui-sdk` at 64581de (four workers
 | Data Table virtualizer on `@tanstack/react-virtual` | med | `use-data-table-virtualizer.ts`. ui-sdk core exports `createVirtualizer`; reference `examples/behaviors/react/virtualizer*.tsx`. Drops the dep |
 | Message Scroller on `@shadcn/react` | med | `message-scroller.tsx`. ui-sdk core exports `StickToBottom`; reference `examples/behaviors/react/stick-chat.tsx`, `stick-to-bottom.tsx`, `examples/experiments/react/chat.tsx`. `@shadcn/react` stays while Questionnaire's choices need it |
 
-## Reference review
-
-Every part above was ported with no worked examples to copy. ui-sdk's repo has them, so each ported unit gets one read against them. Pinned to the installed release: [vercel-labs/ui at `@ui-sdk/react@0.1.0-beta.13`](https://github.com/vercel-labs/ui/tree/%40ui-sdk/react%400.1.0-beta.13) (`f01f173`). Bump the tag with the dependency.
-
-| Source | What it shows |
-| --- | --- |
-| `examples/components/<part>/` | Each part's documented usages: parts, props, controllers |
-| `apps/docs/app/sink/tiles/*.tsx` | The kitchen sink: parts composed into real screens (records, studio, motion, collections, pickers, overlays, forms) |
-| `examples/behaviors/react/` | Core behaviors: virtualizer, stick-to-bottom, grid focus, roving focus, announce, presence, undo stack |
-| `examples/experiments/react/` | Larger builds: chat, data grid, spreadsheet, week calendar, kanban |
-
-**How to review one.** Read our wrapper, its demos and its docs page against the reference. Look for:
-
-1. Props, state or markup we hand-roll that the part or a core behavior already provides.
-2. Workarounds the reference shows aren't needed, or a pattern it uses that we don't.
-3. Demos that use the part differently from its examples without a reason in [Findings](#findings).
-
-Read only. Set the row to `doing` before starting so parallel sessions skip it. Record the verdict here: `clean`, or `fix` with each finding in Result. A fix goes through a normal unit PR into `ui-sdk`, and the row moves to `fixed` with its link. One reviewer per row.
-
-Status: `todo`, `doing`, `clean`, `fix`, `fixed`.
-
-| Unit | Reference | Status | Result |
-| --- | --- | --- | --- |
-| Popover | `components/popover` | todo |  |
-| Button | `components/button` | todo |  |
-| Separator | `components/separator` | todo |  |
-| Toggle | `components/toggle` | todo |  |
-| Checkbox | `components/checkbox` | todo |  |
-| Switch | `components/switch` | todo |  |
-| Radio Group | `components/radio` | todo |  |
-| Progress and Loading Bar | `components/progress` | todo |  |
-| Meter | `components/meter` | todo |  |
-| Slider | `components/slider` | todo |  |
-| Avatar | `components/avatar` | todo |  |
-| Field | `components/field`, sink `forms.tsx` | todo |  |
-| Label | `components/label` | todo |  |
-| Input Group | `components/input` | todo | Also settles the beta.1-evidence Follow-ups row |
-| Textarea | `components/textarea` | todo |  |
-| Scroll Area | `components/scroll-area` | todo |  |
-| Collapsible | `components/collapsible` | todo |  |
-| Tabs | `components/tabs` | todo |  |
-| Tooltip | `components/tooltip` | todo |  |
-| Hover Card | `components/hover-card` | todo | Check the `delay={0}` workaround |
-| Dialog | `components/dialog`, sink `overlays.tsx` | todo |  |
-| Sheet | `components/drawer` | todo |  |
-| Side Panel | `components/dialog` | todo |  |
-| Alert Dialog | `components/alert-dialog` | todo |  |
-| Toast | `components/toast` | todo |  |
-| Select | `components/select` | todo |  |
-| Dropdown Menu | `components/menu` | todo |  |
-| Combobox | `components/combobox` | todo |  |
-| Command | `components/command` | todo |  |
-| Toggle Group | `components/toggle`, `components/toolbar` | todo |  |
-| Segmented Control | `components/segmented-control` | todo |  |
-| Prompt Input | `components/trigger-menu` | todo |  |
-| Sidebar buttons | `components/button` | todo |  |
-| Agent bridge, confirm, activity and staged edits | sink `records.tsx` (agent, history, observe) | todo |  |
-
-## Findings
+| Popover | `components/popover` | doing |  |
+| Button | `components/button` | doing |  |
+| Separator | `components/separator` | doing |  |
+| Toggle | `components/toggle` | doing |  |
+| Checkbox | `components/checkbox` | doing |  |
+| Switch | `components/switch` | doing |  |
+| Radio Group | `components/radio` | doing |  |
+| Progress and Loading Bar | `components/progress` | doing |  |
+| Meter | `components/meter` | doing |  |
+| Slider | `components/slider` | doing |  |
+| Avatar | `components/avatar` | doing |  |
+| Field | `components/field`, sink `forms.tsx` | doing |  |
+| Label | `components/label` | doing |  |
+| Input Group | `components/input` | doing | Also settles the beta.1-evidence Follow-ups row |
+| Textarea | `components/textarea` | doing |  |
+| Scroll Area | `components/scroll-area` | doing |  |
+| Collapsible | `components/collapsible` | doing |  |
+| Tabs | `components/tabs` | doing |  |
+| Tooltip | `components/tooltip` | doing |  |
+| Hover Card | `components/hover-card` | doing | Check the `delay={0}` workaround |
+| Dialog | `components/dialog`, sink `overlays.tsx` | doing |  |
+| Sheet | `components/drawer` | doing |  |
+| Side Panel | `components/dialog` | doing |  |
+| Alert Dialog | `components/alert-dialog` | doing |  |
+| Toast | `components/toast` | doing |  |
+| Select | `components/select` | doing |  |
+| Dropdown Menu | `components/menu` | doing |  |
+| Combobox | `components/combobox` | doing |  |
+| Command | `components/command` | doing |  |
+| Toggle Group | `components/toggle`, `components/toolbar` | doing |  |
+| Segmented Control | `components/segmented-control` | doing |  |
+| Prompt Input | `components/trigger-menu` | doing |  |
+| Sidebar buttons | `components/button` | doing |  |
+| Agent bridge, confirm, activity and staged edits | sink `records.tsx` (agent, history, observe) | doing |  |
 
 Gaps and surprises found while porting, newest first. Move a settled one into ARCHITECTURE.md.
 
