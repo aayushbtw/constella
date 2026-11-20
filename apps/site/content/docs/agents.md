@@ -201,6 +201,14 @@ Put `data-agent-confirm` on the button that confirms, like `AlertDialogAction` o
 
 [Approval](/docs/components/approval)'s `ApprovalConfirm` carries the mark by default. The destructive actions in the [Alert Dialog](/docs/components/alert-dialog), [Dropdown Menu](/docs/components/dropdown-menu) and [Data Table](/docs/components/data-table) examples show it.
 
+For a component you build with `definePrimitive`, set `secret: true` in its `agent` key to redact its value wherever it renders. That's how ui-sdk's OTP Input is secret by default. See [ui-sdk's Your Components](https://ui-sdk.dev/docs/agents/connect-an-agent/your-components).
+
+```ts
+agent: { actions: ["setValue", "clear"], secret: true },
+```
+
+History can't put back a secret value, since it records `[redacted]`. Seeking or undoing leaves a secret field as it is and lists it among the changes it couldn't put back.
+
 **Don't put `data-agent-hidden` on the Toaster.** It hides every toast and its actions from the agent, and an empty Toaster already shows the agent nothing.
 
 ## WebMCP
@@ -227,7 +235,8 @@ Use `createHistory` and `stageChanges` from `@ui-sdk/react/history` to undo an a
 | Call | What it does | Pair it with |
 | --- | --- | --- |
 | `createHistory(agent)` | Records changes from people, agents and your app. | One history, created next to the bridge. |
-| `history.entries()`, `history.subscribe(listener)` | `entries()` lists the changes, oldest first, each with its `label`, `previous`, `value`, `source` and `reason`. `subscribe` calls the listener when they change. | A list of the assistant's changes, the entries whose `source` is `"agent"`. |
+| `history.entries()`, `history.position()`, `history.subscribe(listener)` | `entries()` lists the changes, oldest first, each with its `label`, `previous`, `value`, `source` and `reason`. `position()` is how many entries are applied, from `0` to `entries().length`. `subscribe` calls the listener when either changes. | A list of the assistant's changes, the entries whose `source` is `"agent"`. |
+| `history.seek(n)` | Puts the page back as it was after `n` entries, or forward again. A new change after seeking back drops the entries after that point. It resolves with the changes it couldn't put back. | A timeline or rewind slider over the entries. |
 | `history.undoSource("agent")` | Puts back only the agent's changes. It resolves with the changes it couldn't put back. | A button that undoes the assistant's changes and names what it couldn't put back. |
 | `stageChanges(agent, changes)` | Writes each `{ ref, key?, value }` onto the real controls. `applied` lists each change as `{ ref, key, before, value }`. | An [Approval](/docs/components/approval) card that lists each `before → value`. |
 | `staged.revert()` | Puts each `before` value back. It resolves with the changes it couldn't put back. | **Discard**, an `ApprovalCancel`. |
