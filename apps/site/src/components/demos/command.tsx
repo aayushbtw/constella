@@ -9,6 +9,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createDialogController } from "@ui-sdk/react/dialog";
 import { Fragment, useEffect, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -24,6 +25,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/primitives/command";
+import { DialogTrigger } from "@/components/primitives/dialog";
 import { Kbd, KbdGroup } from "@/components/primitives/kbd";
 import { SwapText } from "@/components/primitives/swap-text";
 import { Text } from "@/components/typography/text";
@@ -141,13 +143,14 @@ function CommandDemo() {
   );
 }
 
+const palette = createDialogController();
+
 function CommandDialogDemo() {
-  const [open, setOpen] = useState(false);
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "j" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setOpen((was) => !was);
+        palette.toggle({ event, reason: "shortcut" });
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -157,23 +160,18 @@ function CommandDialogDemo() {
   }, []);
   return (
     <DemoRow>
-      <Button
-        onClick={() => {
-          setOpen(true);
-        }}
-        variant="outline"
-      >
+      <DialogTrigger controller={palette} render={<Button variant="outline" />}>
         Open Menu
         <KbdGroup>
           <Kbd>⌘</Kbd>
           <Kbd>J</Kbd>
         </KbdGroup>
-      </Button>
-      <CommandDialog onOpenChange={setOpen} open={open}>
+      </DialogTrigger>
+      <CommandDialog controller={palette}>
         <Command>
           <Palette
             onRun={() => {
-              setOpen(false);
+              palette.close();
             }}
           />
         </Command>
