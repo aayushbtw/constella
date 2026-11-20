@@ -1,26 +1,13 @@
-import { useState } from "react";
-
 import {
   SegmentedControl,
   SegmentedControlItem,
 } from "@/components/primitives/segmented-control";
 import { DemoRow } from "~/components/demos/frame";
 
-type Range = "day" | "week" | "month";
-
 function SegmentedControlDemo() {
-  const [range, setRange] = useState<Range>("week");
   return (
     <DemoRow>
-      <SegmentedControl
-        aria-label="Range"
-        onValueChange={(next) => {
-          if (next !== null) {
-            setRange(next);
-          }
-        }}
-        value={range}
-      >
+      <SegmentedControl aria-label="Range" defaultValue="week">
         <SegmentedControlItem value="day">Day</SegmentedControlItem>
         <SegmentedControlItem value="week">Week</SegmentedControlItem>
         <SegmentedControlItem value="month">Month</SegmentedControlItem>
