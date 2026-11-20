@@ -125,8 +125,12 @@ function MarkdownCode({ className, ...props }: Props<"code">) {
   return <Code {...props} />;
 }
 
-function CodeBlock({ className: _className, ...props }: Props<"pre">) {
+function CodeBlock({
+  className: _className,
+  ...props
+}: Props<"pre"> & { "data-lang"?: string }) {
   const pre = useRef<HTMLPreElement>(null);
+  const lang = props["data-lang"];
   return (
     // The margin goes on a wrapper: `sx` takes only space tokens, and here 1em is the prose's.
     <div {...stylex.props(styles.block)}>
@@ -135,7 +139,11 @@ function CodeBlock({ className: _className, ...props }: Props<"pre">) {
         <CodeBlockContent ref={pre} {...props} />
         <CodeBlockActions>
           <CopyButton
-            aria-label="Copy code"
+            aria-label={
+              lang === undefined || lang === "plaintext"
+                ? "Copy code"
+                : `Copy code, ${lang}`
+            }
             value={() => pre.current?.textContent?.trimEnd() ?? ""}
           />
         </CodeBlockActions>

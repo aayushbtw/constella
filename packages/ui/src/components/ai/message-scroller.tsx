@@ -139,6 +139,7 @@ function MessageScrollerItem({
 
 /** Scrolls to the newest message; shown only while there's more below. */
 function MessageScrollerButton({
+  "aria-label": label = "Scroll to end",
   sx,
   ...props
 }: Styled<
@@ -153,7 +154,7 @@ function MessageScrollerButton({
       {...props}
       render={
         <Button
-          aria-label="Scroll to end"
+          aria-label={label}
           size="icon-sm"
           sx={[styles.button, sx]}
           variant="outline"

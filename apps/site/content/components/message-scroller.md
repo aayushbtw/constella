@@ -59,10 +59,10 @@ MessageScrollerProvider
 
 ## API Reference
 
-| Part                    | Adds                                              |
-| ----------------------- | ------------------------------------------------- |
-| `MessageScrollerItem`   | `messageId`; `scrollAnchor`                       |
-| `MessageScrollerButton` | A pill that rises in while there's more below     |
-| `useMessageScroller`    | `scrollToEnd`, `scrollToStart`, `scrollToMessage` |
+| Part | Adds |
+| --- | --- |
+| `MessageScrollerItem` | `messageId`; `scrollAnchor` |
+| `MessageScrollerButton` | A pill that rises in while there's more below; named "Scroll to end" unless given `aria-label` |
+| `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage` |
 
 Every part takes `sx`, applied last.

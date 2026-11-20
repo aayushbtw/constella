@@ -466,7 +466,7 @@ function TraceDemo() {
       controls={<Replay disabled={!finished} onClick={replay} />}
       sx={[styles.stage, styles.tall]}
     >
-      <Citations>
+      <Citations aria-label="Sources for this run">
         <TraceCollapsible
           key={take}
           onOpenChange={setOpen}
@@ -667,7 +667,7 @@ function TraceSourcesDemo() {
       controls={<Replay disabled={t < search.span[1]} onClick={replay} />}
       sx={styles.stage}
     >
-      <Citations>
+      <Citations aria-label="Sources found">
         <Trace sx={styles.width}>
           <SearchSources found={search.found} span={search.span} t={t} />
         </Trace>

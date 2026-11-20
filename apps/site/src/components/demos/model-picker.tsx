@@ -196,9 +196,11 @@ function Rating({ label, value }: { label: string; value: number }) {
 function Picker({
   align,
   detailsSide,
+  label,
 }: {
   align?: "start" | "end";
   detailsSide?: (typeof modelPickerDetailsSides)[number];
+  label?: string;
 }) {
   const [value, setValue] = useState("gpt-5");
   const [highlightedValue, setHighlightedValue] = useState<string | null>(
@@ -214,7 +216,7 @@ function Picker({
         }
       }}
     >
-      <ModelPickerTrigger>
+      <ModelPickerTrigger label={label}>
         {picked && <ModelPickerLogo src={picked.logo} />}
         {picked?.label}
       </ModelPickerTrigger>
@@ -296,7 +298,7 @@ function ModelPickerDemo() {
 function ModelPickerSideDemo() {
   return (
     <DemoRow>
-      <Picker />
+      <Picker label="Fallback" />
     </DemoRow>
   );
 }

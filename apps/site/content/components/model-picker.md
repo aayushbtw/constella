@@ -108,7 +108,7 @@ The card opens at the list's `inline-end` by default. A picker at the end of a r
 | Part | Adds |
 | --- | --- |
 | `ModelPicker` | A [Popover](/docs/components/popover) root |
-| `ModelPickerTrigger` | A ghost `sm` [Button](/docs/components/button) ending in a chevron; takes the button's props |
+| `ModelPickerTrigger` | A ghost `sm` [Button](/docs/components/button) ending in a chevron; takes the button's props; `label`, `"Model"` by default, is read before the model's name by screen readers and agents |
 | `ModelPickerContent` | The popover's popup without a surface, so the list and the details are two cards; opens `align="start"`; `detailsSide` is `inline-end` or `inline-start` |
 | `ModelPickerCommand` | A `Command` 240px wide, as its own surface |
 | `ModelPickerItem` | A `CommandItem` that closes the picker at once on pick; `selected` adds a tick and `aria-checked` |
