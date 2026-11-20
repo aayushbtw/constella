@@ -6,7 +6,7 @@ import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionn
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
-import { buttonStyles } from "@/components/primitives/button";
+import { Button } from "@/components/primitives/button";
 import type { ButtonStyleOptions } from "@/components/primitives/button";
 import { Input } from "@/components/primitives/input";
 import { Kbd } from "@/components/primitives/kbd";
@@ -295,11 +295,11 @@ const styles = stylex.create({
   },
   navigation: {
     display: { default: "inline-flex", [hidden]: "none" },
-    gridRowStart: 1,
+    gridRowStart: "1",
   },
-  previous: { gridColumnStart: 1, justifySelf: "start" },
-  skip: { gridColumnStart: 2, justifySelf: "end" },
-  forward: { gridColumnStart: 3, justifySelf: "end" },
+  previous: { gridColumnStart: "1", justifySelf: "start" },
+  skip: { gridColumnStart: "2", justifySelf: "end" },
+  forward: { gridColumnStart: "3", justifySelf: "end" },
 });
 
 function Questionnaire({
@@ -475,16 +475,15 @@ function QuestionnairePrevious({
 }: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Previous>>) {
   return (
     <QuestionnairePrimitive.Previous
-      data-size={size}
-      data-slot="questionnaire-previous"
-      data-variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.previous,
-        sx
-      )}
+      render={
+        <Button
+          data-slot="questionnaire-previous"
+          size={size}
+          sx={[styles.navigation, styles.previous, sx]}
+          variant={variant}
+        />
+      }
     >
       {children}
     </QuestionnairePrimitive.Previous>
@@ -500,16 +499,15 @@ function QuestionnaireSkip({
 }: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Skip>>) {
   return (
     <QuestionnairePrimitive.Skip
-      data-size={size}
-      data-slot="questionnaire-skip"
-      data-variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.skip,
-        sx
-      )}
+      render={
+        <Button
+          data-slot="questionnaire-skip"
+          size={size}
+          sx={[styles.navigation, styles.skip, sx]}
+          variant={variant}
+        />
+      }
     >
       {children}
     </QuestionnairePrimitive.Skip>
@@ -525,16 +523,15 @@ function QuestionnaireNext({
 }: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Next>>) {
   return (
     <QuestionnairePrimitive.Next
-      data-size={size}
-      data-slot="questionnaire-next"
-      data-variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.forward,
-        sx
-      )}
+      render={
+        <Button
+          data-slot="questionnaire-next"
+          size={size}
+          sx={[styles.navigation, styles.forward, sx]}
+          variant={variant}
+        />
+      }
     >
       {children}
     </QuestionnairePrimitive.Next>
@@ -550,16 +547,15 @@ function QuestionnaireSubmit({
 }: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Submit>>) {
   return (
     <QuestionnairePrimitive.Submit
-      data-size={size}
-      data-slot="questionnaire-submit"
-      data-variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.forward,
-        sx
-      )}
+      render={
+        <Button
+          data-slot="questionnaire-submit"
+          size={size}
+          sx={[styles.navigation, styles.forward, sx]}
+          variant={variant}
+        />
+      }
     >
       {children}
     </QuestionnairePrimitive.Submit>
