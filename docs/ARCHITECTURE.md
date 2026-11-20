@@ -157,6 +157,8 @@ The bridge sees only UI SDK and `definePrimitive` components, and the docs give 
 
 The docs site loads the bridge from `apps/site/src/lib/agent.ts` as `window.agentBridge` (the bridge is its `.agent`), in dev or in a build made with `VITE_AGENT_BRIDGE=1`. `apps/site/src/lib/agent-flag.ts` holds that check for the bridge (`loadBridge`, called from `router.tsx`), the activity panel with its confirm dialog (`loadLoop`, called from `site-chrome.tsx`), and the staged-edits dev page (`loadStaged`). `createAgent({ allow })` asks the person in that dialog for every step with `confirm`, and refuses the step when no dialog is mounted. WebMCP's tools register with `allow: () => true`, because the bridge's `allow` already asked, and `!step.confirm` would refuse a step the person allowed. Root `vpr agent-audit` builds flagged and counts unnamed `snapshot()` entries per page, against a baseline for AI and TanStack pages. The landing flip ships the bridge only: in `router.tsx`, replace `agentFlag?.loadBridge()` with `import("~/lib/agent")`. Don't drop the check in `agent-flag.ts`, since that also ships the activity button and panel, which stay out of production until the user's design pass. Until then, a production page has no confirm dialog, so every confirm step fails closed.
 
+`vpr agent-docs` writes each AI and TanStack page's Agent table from the flagged build's snapshot of its preview; `vpr agent-audit` runs it with `--check`.
+
 ### Same model as Base UI
 
 - Parts per component (`ToastRegion`, `Toast`, `ToastTitle`, `ToastDescription`, `ToastAction`, `ToastClose`), imported from `@ui-sdk/react/<component>`.
