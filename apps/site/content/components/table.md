@@ -129,13 +129,24 @@ Put a [Dropdown Menu](/docs/components/dropdown-menu) in the last cell for row a
 <TableCell sx={styles.end}>
   <DropdownMenu>
     <DropdownMenuTrigger
-      render={<Button aria-label="Open menu" size="icon" variant="ghost" />}
+      render={
+        <Button
+          aria-label={`Actions for ${product.name}`}
+          size="icon"
+          variant="ghost"
+        />
+      }
     >
       <HugeiconsIcon icon={MoreHorizontalIcon} />
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>Edit</DropdownMenuItem>
-      <DropdownMenuItem color="danger">Delete</DropdownMenuItem>
+      <DropdownMenuItem
+        color="danger"
+        data-agent-confirm={`Deletes ${product.name}`}
+      >
+        Delete
+      </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </TableCell>

@@ -137,12 +137,13 @@ function DialogControlledDemo() {
             </DialogClose>
             <Button
               color="danger"
+              data-agent-confirm="Deletes the project, its pages and its history"
               onClick={() => {
                 setOpen(false);
                 toast({ title: "Project deleted" });
               }}
             >
-              Delete
+              Delete forever
             </Button>
           </DialogFooter>
         </DialogContent>

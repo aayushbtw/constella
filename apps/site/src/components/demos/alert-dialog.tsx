@@ -36,7 +36,9 @@ function AlertDialogDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogAction data-agent-confirm="Deletes your account and its data">
+              Continue
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -68,7 +70,9 @@ function AlertDialogSizeDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Remove</AlertDialogAction>
+            <AlertDialogAction data-agent-confirm="Removes the member from this workspace">
+              Remove
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -100,7 +104,12 @@ function AlertDialogDangerDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction color="danger">Delete</AlertDialogAction>
+            <AlertDialogAction
+              color="danger"
+              data-agent-confirm="Deletes the chat and its files"
+            >
+              Delete forever
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -131,7 +140,11 @@ function AlertDialogAsyncDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction action={revoke} color="danger">
+            <AlertDialogAction
+              action={revoke}
+              color="danger"
+              data-agent-confirm="Revokes the API key, so apps using it stop working"
+            >
               {(state) =>
                 state.pending ? (
                   <>
@@ -139,7 +152,7 @@ function AlertDialogAsyncDemo() {
                     Revoking
                   </>
                 ) : (
-                  "Revoke"
+                  "Revoke now"
                 )
               }
             </AlertDialogAction>

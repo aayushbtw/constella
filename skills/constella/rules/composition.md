@@ -106,6 +106,8 @@ To hide it visually: `<DialogTitle sx={visuallyHidden.base}>` (from `@/lib/const
 | A label for an icon                | `Tooltip`       |
 | A command palette                  | `CommandDialog` |
 
+Mark the button that confirms a destructive action, and a destructive menu item, with `data-agent-confirm="<what it does>"`. Give it text the trigger doesn't hold, like "Delete forever" under "Delete chat". See [Agent Marks](https://constella.aayush.cv/docs/agents#agent-marks).
+
 ---
 
 ## Select takes `items`, Command picks with `onSelect`

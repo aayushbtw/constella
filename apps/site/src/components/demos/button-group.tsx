@@ -236,7 +236,10 @@ function ButtonGroupDropdownDemo() {
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem color="danger">
+            <DropdownMenuItem
+              color="danger"
+              data-agent-confirm="Deletes the conversation"
+            >
               <Glyph icon={Delete02Icon} />
               Delete Conversation
             </DropdownMenuItem>
