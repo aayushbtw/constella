@@ -166,4 +166,4 @@ Add `invalid` to each `Field`.
 
 ## API Reference
 
-`RadioGroupItem` takes `size` (`"sm"`, `"default"` or `"lg"`). `RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [UI SDK Radio](https://ui-sdk.dev/docs/components/radio).
+`RadioGroupItem` takes `size` (`"sm"`, `"default"` or `"lg"`). `RadioGroup` and `RadioGroupItem` take `sx`, applied last. For the rest, see [UI SDK Radio](https://ui-sdk.dev/docs/react/components/radio).

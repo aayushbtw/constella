@@ -104,7 +104,7 @@ Pass `today` on a page rendered on the server, so the server and the browser mar
 
 ### Calendar
 
-Takes every prop of [UI SDK Calendar](https://ui-sdk.dev/docs/components/calendar), plus:
+Takes every prop of [UI SDK Calendar](https://ui-sdk.dev/docs/react/components/calendar), plus:
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -124,4 +124,4 @@ Takes every prop of [UI SDK Calendar](https://ui-sdk.dev/docs/components/calenda
 | `offset` | `number` | `0` | Which of the months shown it is, from `0`. |
 | `children` | `ReactNode` | `CalendarWeekdays` and `CalendarWeeks` | The grid's rows, after its caption. |
 
-`CalendarWeekdays` takes a function of the column's index, and `CalendarWeeks` a function of each cell, as on ui-sdk. `CalendarDay` takes `value`, the day's ISO date. For the rest, see [UI SDK Calendar](https://ui-sdk.dev/docs/components/calendar).
+`CalendarWeekdays` takes a function of the column's index, and `CalendarWeeks` a function of each cell, as on ui-sdk. `CalendarDay` takes `value`, the day's ISO date. For the rest, see [UI SDK Calendar](https://ui-sdk.dev/docs/react/components/calendar).

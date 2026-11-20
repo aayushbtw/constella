@@ -76,4 +76,4 @@ Add `disabled` to a `SegmentedControlItem` to turn one off, or to `SegmentedCont
 
 `SegmentedControl` renders the pill that slides to the picked item. `onValueChange` gets `null` only when a form reset or a controller clears the pick.
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Segmented Control](https://ui-sdk.dev/docs/components/segmented-control).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Segmented Control](https://ui-sdk.dev/docs/react/components/segmented-control).

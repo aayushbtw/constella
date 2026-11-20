@@ -135,7 +135,7 @@ Every part takes `sx`, applied last.
 
 ### DateRangePicker
 
-Takes every prop of [UI SDK Date Picker](https://ui-sdk.dev/docs/components/date-picker) except `mode` and `months`, which are `"range"` and `2`, plus:
+Takes every prop of [UI SDK Date Picker](https://ui-sdk.dev/docs/react/components/date-picker) except `mode` and `months`, which are `"range"` and `2`, plus:
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -163,4 +163,4 @@ The popup, a row with the presets and the calendar. It takes `side`, `align` and
 | ------- | ----------- | ------- | ------------------- |
 | `value` | `DateRange` |         | The range it picks. |
 
-`DateRangePickerPresets` is a `div` around the presets. `DateRangePickerCalendar` is two months of [Calendar](/docs/components/calendar), with its parts. For the rest, see [UI SDK Date Picker](https://ui-sdk.dev/docs/components/date-picker).
+`DateRangePickerPresets` is a `div` around the presets. `DateRangePickerCalendar` is two months of [Calendar](/docs/components/calendar), with its parts. For the rest, see [UI SDK Date Picker](https://ui-sdk.dev/docs/react/components/date-picker).

@@ -343,4 +343,4 @@ function SubscriptionPlan() {
 
 ## API Reference
 
-`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`) and `FieldError` adds `errors` (an array of `{ message }`, in place of `match`). `FieldTitle` takes `render`. `FieldContent` is a plain element. A `FieldDescription` right inside a `FieldSet` describes the set. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [UI SDK Field](https://ui-sdk.dev/docs/components/field).
+`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`) and `FieldError` adds `errors` (an array of `{ message }`, in place of `match`). `FieldTitle` takes `render`. `FieldContent` is a plain element. A `FieldDescription` right inside a `FieldSet` describes the set. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [UI SDK Field](https://ui-sdk.dev/docs/react/components/field).

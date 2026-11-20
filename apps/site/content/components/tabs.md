@@ -114,4 +114,4 @@ Add `disabled` to a `TabsTrigger` to keep it in place but out of reach.
 | `variant` | `"default" \| "line"`       | `"default"` |
 | `size`    | `"sm" \| "default" \| "lg"` | `"default"` |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Tabs](https://ui-sdk.dev/docs/components/tabs).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Tabs](https://ui-sdk.dev/docs/react/components/tabs).

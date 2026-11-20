@@ -99,4 +99,4 @@ Put a [Kbd](/docs/components/kbd) last in the content; the popup tightens its en
 
 ## API Reference
 
-`Tooltip` opens after `300ms` (ui-sdk's default is `600ms`); pass `delay` to change it. `TooltipContent` renders in place beside the trigger and shows in the top layer; it takes the placement props `side`, `align`, `sideOffset` and `alignOffset`. `TooltipTrigger` and `TooltipContent` take `sx`, applied last. For the rest, see [ui-sdk Tooltip](https://ui-sdk.dev/docs/components/tooltip).
+`Tooltip` opens after `300ms` (ui-sdk's default is `600ms`); pass `delay` to change it. `TooltipContent` renders in place beside the trigger and shows in the top layer; it takes the placement props `side`, `align`, `sideOffset` and `alignOffset`. `TooltipTrigger` and `TooltipContent` take `sx`, applied last. For the rest, see [ui-sdk Tooltip](https://ui-sdk.dev/docs/react/components/tooltip).
