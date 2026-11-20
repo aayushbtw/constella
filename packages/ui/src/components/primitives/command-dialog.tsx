@@ -39,8 +39,7 @@ type CommandDialogProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
   title?: string;
 };
 
-// A pick closes it through the controller, which reports `imperative`; it closes at once, as a picked menu item does.
-const picked = (open: boolean, { reason }: { reason: string }) =>
+const closedByController = (open: boolean, { reason }: { reason: string }) =>
   !open && reason === "imperative";
 
 /** Renders a dialog with a command inside, named for screen readers by `title` and `description`. Lives apart from `command.tsx` so an app can lazy-load the command under this frame. */
@@ -52,7 +51,10 @@ function CommandDialog({
   title = "Command Palette",
   ...props
 }: CommandDialogProps) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange, picked);
+  const [skip, handleOpenChange] = useSkipMotion(
+    onOpenChange,
+    closedByController
+  );
   return (
     <Dialog onOpenChange={handleOpenChange} {...props}>
       <DialogBackdrop data-skip-motion={skip || undefined} />

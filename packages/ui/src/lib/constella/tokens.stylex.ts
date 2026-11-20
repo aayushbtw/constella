@@ -188,8 +188,7 @@ export const lineHeights = stylex.defineConsts({
   touch: `calc(${leadingUnit} * 6)`,
 });
 
-// The type CSS outside StyleX's reach reads (base.css), under literal names.
-export const typeVars = stylex.defineVars({
+export const baseCssTypeVars = stylex.defineVars({
   "--caption-lg-leading": captionLgLeading,
   "--caption-lg-size": captionLgSize,
 });

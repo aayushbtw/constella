@@ -76,7 +76,6 @@ type InputPrimitiveProps = Omit<
   "disabled" | "render" | "size"
 >;
 
-// Each bundled button needs a name of its own, so two comboboxes on a page don't share one.
 type TriggerLabel =
   | { showTrigger?: true; triggerLabel: string }
   | { showTrigger: false; triggerLabel?: never };

@@ -253,11 +253,10 @@ const palettePopup = () =>
 const skipsMotion = () =>
   Object.hasOwn(palettePopup()?.dataset ?? {}, "skipMotion");
 
-// Its key presses are trusted, as a person's are; ui-sdk reads a dispatched one as programmatic.
-const driver = mount(separator, {}, "<root></root>");
+const trustedKeys = mount(separator, {}, "<root></root>");
 
 afterAll(() => {
-  driver.unmount();
+  trustedKeys.unmount();
 });
 
 test("Command Dialog skips its motion for a shortcut and Escape, and when a pick closes it", async () => {
@@ -282,8 +281,8 @@ test("Command Dialog skips its motion for a shortcut and Escape, and when a pick
   window.addEventListener("keydown", onKeyDown);
   try {
     await act(async () => {
-      await driver.keys("Control+k");
-      await driver.settle();
+      await trustedKeys.keys("Control+k");
+      await trustedKeys.settle();
     });
     expect(seen.at(-1)).toEqual([true, "shortcut", "keyboard"]);
     expect(skipsMotion()).toBe(true);
