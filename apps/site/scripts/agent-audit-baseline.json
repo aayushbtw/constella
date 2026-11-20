@@ -1,41 +1,37 @@
 {
   "/docs/components/approval": {
     "scroll-area": {
-      "count": 9,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/attachment": {
     "scroll-area": {
-      "count": 14,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/chart": {
     "scroll-area": {
-      "count": 18,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/citation": {
-    "hover-card": {
-      "count": 2,
-      "why": "Agent-ready AI parts unit: Citations and Citation Group share one hover card across their pills, so it has no name"
-    },
     "scroll-area": {
-      "count": 11,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/code-block": {
     "scroll-area": {
-      "count": 25,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/data-table": {
     "scroll-area": {
-      "count": 21,
+      "count": 10,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     },
     "unseen": {
@@ -45,55 +41,55 @@
   },
   "/docs/components/markdown": {
     "scroll-area": {
-      "count": 11,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/marker": {
     "scroll-area": {
-      "count": 11,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/message": {
     "scroll-area": {
-      "count": 6,
+      "count": 2,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/message-scroller": {
     "scroll-area": {
-      "count": 6,
+      "count": 2,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/model-picker": {
     "scroll-area": {
-      "count": 7,
+      "count": 2,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/prompt-input": {
     "scroll-area": {
-      "count": 11,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/questionnaire": {
     "scroll-area": {
-      "count": 20,
+      "count": 2,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/shimmer": {
     "scroll-area": {
-      "count": 7,
+      "count": 2,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/suggestions": {
     "scroll-area": {
-      "count": 8,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
@@ -102,12 +98,8 @@
       "count": 15,
       "why": "Agent-ready Trace unit: steps with no trigger show as unnamed collapsibles"
     },
-    "hover-card": {
-      "count": 1,
-      "why": "Agent-ready AI parts unit: the Sources citation group shares one hover card across its pills, so it has no name"
-    },
     "scroll-area": {
-      "count": 21,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   }
