@@ -454,7 +454,6 @@ function ToastDescription({
   );
 }
 
-// The styles ride on the Button: it applies its own last. ui-sdk passes `href` for a link action.
 function ToastAction({
   sx,
   ...props

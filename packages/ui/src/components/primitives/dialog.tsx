@@ -295,7 +295,6 @@ function DialogClose({
   return <DialogClosePrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-// The styles ride on the Button: it applies its own last, over anything ui-sdk merges in.
 function DialogCloseButton({
   children,
   sx,

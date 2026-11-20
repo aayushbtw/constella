@@ -108,4 +108,4 @@ Add `disabled` to `Collapsible` so its trigger does nothing. The trigger stays i
 | --- | --- |
 | `CollapsibleContent` | Grows to its height and fades in as it opens, and shuts a little faster |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Collapsible](https://ui-sdk.dev/docs/react/components/collapsible).
+Every part takes `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Collapsible](https://ui-sdk.dev/docs/react/components/collapsible).

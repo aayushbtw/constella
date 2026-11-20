@@ -216,4 +216,4 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | `DropdownMenu`, `DropdownMenuTrigger` | `controller`; `payload` on the trigger |
 | `createDropdownMenuController` | A controller shared by `DropdownMenu` and its triggers |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Menu](https://ui-sdk.dev/docs/react/components/menu).
+Every part takes `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Menu](https://ui-sdk.dev/docs/react/components/menu).

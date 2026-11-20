@@ -89,4 +89,4 @@ Put a [Field](/docs/components/field) group under the header for a small form.
 
 ## API Reference
 
-`PopoverContent` renders in place, beside its trigger, in the browser's top layer, and takes `side`, `align` and their offsets. It's 288px wide; pass `sx` to change it. `PopoverClose` is a button that closes the popover. Every part takes `sx`, applied last. For the rest, see [UI SDK Popover](https://ui-sdk.dev/docs/react/components/popover).
+`PopoverContent` renders in place, beside its trigger, in the browser's top layer, and takes `side`, `align` and their offsets. It's 288px wide; pass `sx` to change it. `PopoverClose` is a button that closes the popover. Every part takes `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Popover](https://ui-sdk.dev/docs/react/components/popover).

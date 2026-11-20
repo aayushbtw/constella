@@ -86,6 +86,8 @@ Use the `render` prop to pass a router's link.
 <BreadcrumbLink render={<Link to="/settings" />}>Settings</BreadcrumbLink>
 ```
 
+Put `sx` on `BreadcrumbLink`, the part that draws, not on the router's link.
+
 ## API Reference
 
 | Part                  | Adds                             |
