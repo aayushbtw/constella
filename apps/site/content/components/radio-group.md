@@ -107,22 +107,27 @@ Put the content and the item inside a `FieldLabel` to make the whole card pick i
 
 ## Fieldset
 
-Use `FieldSet` and `FieldLegend` to group the choices. The legend names the set, so point the group at it with `aria-labelledby` too.
+Use `FieldSet` and `FieldLegend` to group the choices. The legend and description belong to the set, so point the group at them with `aria-labelledby` and `aria-describedby` too.
 
 <!-- ::demo name="radio-group-fieldset" -->
 
 ```tsx
 function SubscriptionPlan() {
   const legend = useId();
+  const description = useId();
   return (
     <FieldSet>
       <FieldLegend id={legend} variant="label">
         Subscription Plan
       </FieldLegend>
-      <FieldDescription>
+      <FieldDescription id={description}>
         Yearly and lifetime plans offer significant savings.
       </FieldDescription>
-      <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+      <RadioGroup
+        aria-describedby={description}
+        aria-labelledby={legend}
+        defaultValue="monthly"
+      >
         <Field orientation="horizontal">
           <RadioGroupItem value="monthly" />
           <FieldLabel>Monthly ($9.99/month)</FieldLabel>

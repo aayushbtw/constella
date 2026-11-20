@@ -5,6 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   Checkbox as CheckboxPrimitive,
+  CheckboxGroup as CheckboxGroupPrimitive,
   CheckboxIndicator,
 } from "@ui-sdk/react/checkbox";
 import type { ComponentProps } from "react";
@@ -21,6 +22,7 @@ import {
   radii,
   shadows,
   sizes,
+  space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
@@ -54,6 +56,11 @@ const box = (size: string) => ({
 });
 
 const styles = stylex.create({
+  group: {
+    display: "grid",
+    gap: space.sm,
+    width: "100%",
+  },
   checkbox: {
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
@@ -172,5 +179,20 @@ function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
   );
 }
 
-export { Checkbox, checkboxSizes };
+function CheckboxGroup<Value extends string = string>({
+  sx,
+  ...props
+}: Omit<
+  ComponentProps<typeof CheckboxGroupPrimitive<Value>>,
+  "className" | "style"
+> & { sx?: Sx }) {
+  return (
+    <CheckboxGroupPrimitive<Value>
+      {...props}
+      {...stylex.props(styles.group, sx)}
+    />
+  );
+}
+
+export { Checkbox, CheckboxGroup, checkboxSizes };
 export type { CheckboxProps, CheckboxSize };

@@ -11,6 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
   FieldLegend,
+  FieldSeparator,
   FieldSet,
   FieldTitle,
 } from "./field";
@@ -169,4 +170,24 @@ test("an agent finds every control in the set by its label", () => {
     ["checkbox", "Accept terms", undefined],
     ["switch", expect.stringContaining("Mentions"), undefined],
   ]);
+});
+
+test("a bare field separator is a separator, and one with text draws decorative lines around it", () => {
+  render(
+    <>
+      <FieldSeparator />
+      <FieldSeparator>Or continue with</FieldSeparator>
+    </>
+  );
+  const [bare, labeled] = [
+    ...document.querySelectorAll("[data-slot='field-separator']"),
+  ];
+  expect(screen.getAllByRole("separator")).toHaveLength(1);
+  expect(bare?.querySelector("[role='separator']")).not.toBeNull();
+  const lines = labeled?.querySelectorAll("[data-slot='separator']") ?? [];
+  expect([...lines].map((line) => line.getAttribute("role"))).toEqual([
+    "none",
+    "none",
+  ]);
+  expect(labeled?.textContent).toBe("Or continue with");
 });

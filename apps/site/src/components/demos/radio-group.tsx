@@ -145,16 +145,21 @@ function RadioGroupCardDemo() {
 
 function RadioGroupFieldsetDemo() {
   const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
         <FieldLegend id={legend} variant="label">
           Subscription Plan
         </FieldLegend>
-        <FieldDescription>
+        <FieldDescription id={description}>
           Yearly and lifetime plans offer significant savings.
         </FieldDescription>
-        <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="monthly"
+        >
           {billing.map((item) => (
             <Field key={item.value} orientation="horizontal">
               <RadioGroupItem value={item.value} />
@@ -190,16 +195,21 @@ function RadioGroupDisabledDemo() {
 
 function RadioGroupInvalidDemo() {
   const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
         <FieldLegend id={legend} variant="label">
           Notification Preferences
         </FieldLegend>
-        <FieldDescription>
+        <FieldDescription id={description}>
           Choose how you want to receive notifications.
         </FieldDescription>
-        <RadioGroup aria-labelledby={legend} defaultValue="email">
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="email"
+        >
           {channels.map((item) => (
             <Field invalid key={item.value} orientation="horizontal">
               <RadioGroupItem value={item.value} />

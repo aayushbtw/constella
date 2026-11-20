@@ -1,7 +1,16 @@
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { useId, useState } from "react";
 
-import { Checkbox, checkboxSizes } from "@/components/primitives/checkbox";
+import {
+  Checkbox,
+  CheckboxGroup,
+  checkboxSizes,
+} from "@/components/primitives/checkbox";
+import {
+  FieldDescription,
+  FieldLegend,
+  FieldSet,
+} from "@/components/primitives/field";
 import { Label } from "@/components/primitives/label";
 import {
   Table,
@@ -15,6 +24,13 @@ import { fontWeights, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const fruits = ["Apples", "Oranges", "Pears"];
+
+const desktopItems = [
+  { label: "Hard disks", value: "hard-disks" },
+  { label: "External disks", value: "external-disks" },
+  { label: "CDs, DVDs, and iPods", value: "media" },
+  { label: "Connected servers", value: "servers" },
+];
 
 const people = [
   {
@@ -44,6 +60,8 @@ const people = [
 ];
 
 const styles = stylex.create({
+  fit: { width: "fit-content" },
+  narrow: { maxWidth: 320, width: "100%" },
   wide: { maxWidth: 560, width: "100%" },
   strong: { fontWeight: fontWeights.medium },
   column: {
@@ -108,37 +126,56 @@ function CheckboxControlledDemo() {
 }
 
 function CheckboxIndeterminateDemo() {
-  const [selected, setSelected] = useState(["Apples"]);
-  const all = selected.length === fruits.length;
-
   return (
-    <DemoRow sx={styles.column}>
-      <Label>
-        <Checkbox
-          checked={all || (selected.length > 0 && "indeterminate")}
-          onCheckedChange={(checked) => {
-            setSelected(checked === true ? fruits : []);
-          }}
-        />
-        All fruits
-      </Label>
-      <div {...stylex.props(styles.children)}>
-        {fruits.map((fruit) => (
-          <Label key={fruit}>
-            <Checkbox
-              checked={selected.includes(fruit)}
-              onCheckedChange={(checked) => {
-                setSelected((current) =>
-                  checked === true
-                    ? [...current, fruit]
-                    : current.filter((item) => item !== fruit)
-                );
-              }}
-            />
-            {fruit}
-          </Label>
-        ))}
-      </div>
+    <DemoRow>
+      <CheckboxGroup
+        aria-label="Fruits"
+        allValues={fruits}
+        defaultValue={["Apples"]}
+        sx={styles.fit}
+      >
+        <Label>
+          <Checkbox parent />
+          All fruits
+        </Label>
+        <div {...stylex.props(styles.children)}>
+          {fruits.map((fruit) => (
+            <Label key={fruit}>
+              <Checkbox value={fruit} />
+              {fruit}
+            </Label>
+          ))}
+        </div>
+      </CheckboxGroup>
+    </DemoRow>
+  );
+}
+
+function CheckboxGroupDemo() {
+  const legend = useId();
+  const description = useId();
+  return (
+    <DemoRow sx={styles.narrow}>
+      <FieldSet>
+        <FieldLegend id={legend} variant="label">
+          Show these items on the desktop
+        </FieldLegend>
+        <FieldDescription id={description}>
+          Select the items you want to show on the desktop.
+        </FieldDescription>
+        <CheckboxGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue={["hard-disks", "external-disks"]}
+        >
+          {desktopItems.map((item) => (
+            <Label key={item.value}>
+              <Checkbox value={item.value} />
+              {item.label}
+            </Label>
+          ))}
+        </CheckboxGroup>
+      </FieldSet>
     </DemoRow>
   );
 }
@@ -170,60 +207,44 @@ function CheckboxDisabledDemo() {
 }
 
 function CheckboxTableDemo() {
-  const [selected, setSelected] = useState(() => new Set(["1"]));
-  const all = selected.size === people.length;
+  const [selected, setSelected] = useState(["1"]);
 
   return (
     <DemoRow sx={styles.wide}>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <Checkbox
-                aria-label="Select all"
-                checked={all || (selected.size > 0 && "indeterminate")}
-                onCheckedChange={(checked) => {
-                  setSelected(
-                    new Set(checked === true ? people.map((row) => row.id) : [])
-                  );
-                }}
-              />
-            </TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {people.map((row) => (
-            <TableRow
-              data-state={selected.has(row.id) ? "selected" : undefined}
-              key={row.id}
-            >
-              <TableCell>
-                <Checkbox
-                  aria-label={`Select ${row.name}`}
-                  checked={selected.has(row.id)}
-                  onCheckedChange={(checked) => {
-                    setSelected((current) => {
-                      const next = new Set(current);
-                      if (checked === true) {
-                        next.add(row.id);
-                      } else {
-                        next.delete(row.id);
-                      }
-                      return next;
-                    });
-                  }}
-                />
-              </TableCell>
-              <TableCell sx={styles.strong}>{row.name}</TableCell>
-              <TableCell>{row.email}</TableCell>
-              <TableCell>{row.role}</TableCell>
+      <CheckboxGroup
+        allValues={people.map((row) => row.id)}
+        aria-label="Team members"
+        onValueChange={setSelected}
+        value={selected}
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Checkbox aria-label="Select all" parent />
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {people.map((row) => (
+              <TableRow
+                data-state={selected.includes(row.id) ? "selected" : undefined}
+                key={row.id}
+              >
+                <TableCell>
+                  <Checkbox aria-label={`Select ${row.name}`} value={row.id} />
+                </TableCell>
+                <TableCell sx={styles.strong}>{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.role}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CheckboxGroup>
     </DemoRow>
   );
 }
@@ -232,6 +253,7 @@ export {
   CheckboxControlledDemo,
   CheckboxDemo,
   CheckboxDisabledDemo,
+  CheckboxGroupDemo,
   CheckboxIndeterminateDemo,
   CheckboxInvalidDemo,
   CheckboxSizeDemo,
