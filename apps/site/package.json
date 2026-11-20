@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "agent-audit": "node scripts/agent-audit.ts",
     "build": "node --import tomekit/register scripts/registry-examples.ts && vp build",
     "generate": "tomekit build",
     "deploy": "cf deploy",
@@ -44,6 +45,7 @@
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "cf": "1.0.0-beta.12",
+    "playwright": "^1.63.0",
     "shadcn": "^4.23.0",
     "vite": "catalog:",
     "vite-plus": "catalog:",

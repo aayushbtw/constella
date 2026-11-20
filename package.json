@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "agent-audit": "VITE_AGENT_BRIDGE=1 vp run -t site#build && vp run site#agent-audit",
     "build": "vp run -t site#build",
     "check": "vp run site#generate && vp check && node packages/ui/scripts/check-registry.ts",
     "deploy": "vp run -t site#build && vp run site#deploy",
