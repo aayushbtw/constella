@@ -2,9 +2,8 @@ import { ArrowRight02Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
-import { Fragment, useEffect, useState } from "react";
-import type { MouseEvent } from "react";
-import { flushSync } from "react-dom";
+import { createDialogController } from "@ui-sdk/react/dialog";
+import { Fragment, useEffect } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -19,6 +18,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/primitives/command";
+import { DialogTrigger } from "@/components/primitives/dialog";
 import { Kbd, KbdGroup } from "@/components/primitives/kbd";
 import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 import type { SidebarGroup } from "~/components/docs/sidebar";
@@ -76,9 +76,9 @@ function isTyping(target: EventTarget | null) {
   );
 }
 
+const search = createDialogController();
+
 function Search() {
-  const [open, setOpen] = useState(false);
-  const [instant, setInstant] = useState(false);
   const navigate = useNavigate();
   const { blocks, components, docs } = useLoaderData({ from: "__root__" });
   const groups: Group[] = [
@@ -103,16 +103,14 @@ function Search() {
       }
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setInstant(true);
-        setOpen((was) => !was);
+        search.toggle({ event, reason: "shortcut" });
       } else if (
         event.key === "/" &&
         !(event.metaKey || event.ctrlKey || event.altKey) &&
         !isTyping(event.target)
       ) {
         event.preventDefault();
-        setInstant(true);
-        setOpen(true);
+        search.setOpen(true, { event, reason: "shortcut" });
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -121,44 +119,31 @@ function Search() {
     };
   }, []);
 
-  const show = (event: MouseEvent<HTMLElement>) => {
-    // A click from Enter or Space has no click count.
-    setInstant(event.detail === 0);
-    setOpen(true);
-  };
-
   return (
     <>
-      <Button
-        aria-label="Search documentation"
-        onClick={show}
-        size="icon"
-        sx={styles.icon}
-        variant="ghost"
+      <DialogTrigger
+        controller={search}
+        render={
+          <Button
+            aria-label="Search documentation"
+            size="icon"
+            sx={styles.icon}
+            variant="ghost"
+          />
+        }
       >
         {icon(Search01Icon)}
-      </Button>
-      <Button onClick={show} sx={styles.field}>
+      </DialogTrigger>
+      <DialogTrigger controller={search} render={<Button sx={styles.field} />}>
         Search documentation...
         <KbdGroup>
           <Kbd>⌘</Kbd>
           <Kbd>K</Kbd>
         </KbdGroup>
-      </Button>
+      </DialogTrigger>
       <CommandDialog
+        controller={search}
         description="Search for a page to go to..."
-        instant={instant}
-        onOpenChange={(next, { reason }) => {
-          const skip = reason === "escape-key";
-          if (skip !== instant) {
-            // ui-sdk reads the content's transitions right after this callback, so the attribute lands first.
-            flushSync(() => {
-              setInstant(skip);
-            });
-          }
-          setOpen(next);
-        }}
-        open={open}
         title="Search documentation"
       >
         <Command>
@@ -177,7 +162,7 @@ function Search() {
                     <CommandItem
                       key={entry.value}
                       onSelect={() => {
-                        setOpen(false);
+                        search.close();
                         void navigate({ params: entry.params, to: entry.to });
                       }}
                       value={entry.value}

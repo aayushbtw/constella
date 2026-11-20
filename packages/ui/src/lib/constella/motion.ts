@@ -13,13 +13,14 @@ function skipsMotion({ reason, source }: OpenChangeDetails) {
   );
 }
 
-/** Wraps a popup root's `onOpenChange`; `skip` is true while the keyboard, Esc or a picked item moved it. */
+/** Wraps a popup root's `onOpenChange`; `skip` is true while the keyboard, Esc, a picked item or `alsoSkips` moved it. */
 function useSkipMotion<Details extends OpenChangeDetails>(
-  onOpenChange?: (open: boolean, details: Details) => void
+  onOpenChange?: (open: boolean, details: Details) => void,
+  alsoSkips?: (open: boolean, details: Details) => boolean
 ) {
   const [skip, setSkip] = useState(false);
   function handleOpenChange(open: boolean, details: Details) {
-    const next = skipsMotion(details);
+    const next = skipsMotion(details) || (alsoSkips?.(open, details) ?? false);
     if (next !== skip) {
       // ui-sdk reads the content's transitions right after this callback, so the attribute lands first.
       flushSync(() => {

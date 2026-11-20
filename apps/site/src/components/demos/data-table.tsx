@@ -365,7 +365,7 @@ function RowActions({ payment }: { payment: Payment }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          color="danger"
+          destructive
           data-agent-confirm={`Deletes the payment from ${payment.email}`}
         >
           <Glyph icon={Delete02Icon} />

@@ -288,6 +288,17 @@
     flex-shrink: 0;
   }
 
+  /* StyleX can't style a child it didn't render, so the shortcut ui-sdk renders in a menu
+     item sits at its end, muted, at caption size. */
+  :where([data-slot="menu-shortcut"]) {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-size: var(--caption-lg-size);
+    line-height: var(--caption-lg-leading);
+    margin-inline-start: auto;
+    white-space: nowrap;
+  }
+
   /* A view transition's snapshots hang off the root, out of StyleX's reach, so a sidebar's
      section change slides here, like a stack: the old section leaves and the new arrives
      from the other side, `motion.exitOffset` apart under `motion.crossfadeBlur`

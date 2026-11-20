@@ -1,9 +1,17 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { setPlatform } from "@ui-sdk/core/testing";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { separator } from "@ui-sdk/core/separator";
+import { mount, setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
+import { createDialogController } from "@ui-sdk/react/dialog";
 import { Fragment, useState } from "react";
 import { renderToString } from "react-dom/server";
-import { expect, test, vi } from "vite-plus/test";
+import { afterAll, expect, test, vi } from "vite-plus/test";
 
 import {
   Command,
@@ -238,4 +246,66 @@ test("Command Dialog is named by its title, and Escape clears the search before 
   await waitFor(() => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
+});
+
+const palettePopup = () =>
+  document.querySelector<HTMLElement>("[role='dialog'][aria-modal='true']");
+const skipsMotion = () =>
+  Object.hasOwn(palettePopup()?.dataset ?? {}, "skipMotion");
+
+const trustedKeys = mount(separator, {}, "<root></root>");
+
+afterAll(() => {
+  trustedKeys.unmount();
+});
+
+test("Command Dialog skips its motion for a shortcut and Escape, and when a pick closes it", async () => {
+  const palette = createDialogController();
+  const seen: [boolean, string, string][] = [];
+  render(
+    <CommandDialog
+      controller={palette}
+      onOpenChange={(open, { reason, source }) => {
+        seen.push([open, reason, source]);
+      }}
+      title="Command Palette"
+    >
+      <Palette />
+    </CommandDialog>
+  );
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.key === "k" && event.ctrlKey) {
+      palette.toggle({ event, reason: "shortcut" });
+    }
+  }
+  window.addEventListener("keydown", onKeyDown);
+  try {
+    await act(async () => {
+      await trustedKeys.keys("Control+k");
+      await trustedKeys.settle();
+    });
+    expect(seen.at(-1)).toEqual([true, "shortcut", "keyboard"]);
+    expect(skipsMotion()).toBe(true);
+  } finally {
+    window.removeEventListener("keydown", onKeyDown);
+  }
+
+  fireEvent.keyDown(input(), { key: "Escape" });
+  expect(seen.at(-1)?.slice(0, 2)).toEqual([false, "escape-key"]);
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  act(() => {
+    void palette.open();
+  });
+  await screen.findByRole("dialog", { name: "Command Palette" });
+  const popup = palettePopup();
+  expect(skipsMotion()).toBe(false);
+
+  act(() => {
+    palette.close();
+  });
+  expect(seen.at(-1)).toEqual([false, "imperative", "programmatic"]);
+  expect(Object.hasOwn(popup?.dataset ?? {}, "skipMotion")).toBe(true);
 });

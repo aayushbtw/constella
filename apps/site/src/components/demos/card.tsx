@@ -202,7 +202,7 @@ function CardActionDemo() {
                 <DropdownMenuItem>Edit recipients</DropdownMenuItem>
                 <DropdownMenuItem>Send now</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem color="danger">Turn off</DropdownMenuItem>
+                <DropdownMenuItem destructive>Turn off</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </CardAction>

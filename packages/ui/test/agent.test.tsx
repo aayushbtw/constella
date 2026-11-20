@@ -208,7 +208,7 @@ function Documents({ onDelete }: { onDelete: (name: string) => void }) {
         <DropdownMenuContent<Doc>>
           {({ payload }) => (
             <DropdownMenuItem
-              color="danger"
+              destructive
               data-agent-confirm={
                 payload ? `Deletes ${payload.name}` : "Deletes this document"
               }

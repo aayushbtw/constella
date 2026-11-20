@@ -257,7 +257,7 @@ Render the last button as a [Dropdown Menu](/docs/components/dropdown-menu) trig
     <DropdownMenuContent align="end">
       <DropdownMenuItem>Mute Conversation</DropdownMenuItem>
       <DropdownMenuItem
-        color="danger"
+        destructive
         data-agent-confirm="Deletes the conversation"
       >
         Delete Conversation

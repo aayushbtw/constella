@@ -10,6 +10,7 @@ import {
   DialogPopup,
   DialogTitle,
 } from "@/components/primitives/dialog";
+import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { visuallyHidden } from "@/lib/constella/styles";
 import { radii, space } from "@/lib/constella/tokens.stylex";
@@ -31,27 +32,34 @@ const styles = stylex.create({
   },
 });
 
+type CommandDialogProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
+  children: ReactNode;
+  description?: string;
+  sx?: Sx;
+  title?: string;
+};
+
+const closedByController = (open: boolean, { reason }: { reason: string }) =>
+  !open && reason === "imperative";
+
 /** Renders a dialog with a command inside, named for screen readers by `title` and `description`. Lives apart from `command.tsx` so an app can lazy-load the command under this frame. */
 function CommandDialog({
   children,
   description = "Search for a command to run...",
-  instant = false,
+  onOpenChange,
   sx,
   title = "Command Palette",
   ...props
-}: Omit<ComponentProps<typeof Dialog>, "children"> & {
-  children: ReactNode;
-  description?: string;
-  /** Opens and closes with no motion, for a change the keyboard made. */
-  instant?: boolean;
-  sx?: Sx;
-  title?: string;
-}) {
+}: CommandDialogProps) {
+  const [skip, handleOpenChange] = useSkipMotion(
+    onOpenChange,
+    closedByController
+  );
   return (
-    <Dialog {...props}>
-      <DialogBackdrop data-skip-motion={instant || undefined} />
+    <Dialog onOpenChange={handleOpenChange} {...props}>
+      <DialogBackdrop data-skip-motion={skip || undefined} />
       <DialogPopup
-        data-skip-motion={instant || undefined}
+        data-skip-motion={skip || undefined}
         size="lg"
         sx={[styles.dialog, sx]}
       >

@@ -76,12 +76,19 @@ type InputPrimitiveProps = Omit<
   "disabled" | "render" | "size"
 >;
 
+type TriggerLabel =
+  | { showTrigger?: true; triggerLabel: string }
+  | { showTrigger: false; triggerLabel?: never };
+
+type ClearLabel =
+  | { clearLabel: string; showClear: true }
+  | { clearLabel?: never; showClear?: false };
+
 // Native `size` counts characters; `size` here is the control scale.
 type ComboboxInputProps = InputPrimitiveProps & {
-  showClear?: boolean;
-  showTrigger?: boolean;
   size?: ComboboxSize;
-};
+} & TriggerLabel &
+  ClearLabel;
 
 type ComboboxContentProps = Styled<
   ComponentProps<typeof ComboboxContentPrimitive>
@@ -432,14 +439,11 @@ function ComboboxTrigger({
   sx,
   ...props
 }: Omit<Styled<ComponentProps<typeof ComboboxTriggerPrimitive>>, "children"> & {
+  "aria-label": string;
   children?: ReactNode;
 }) {
   return (
-    <ComboboxTriggerPrimitive
-      aria-label="Show options"
-      {...props}
-      {...stylex.props(sx)}
-    >
+    <ComboboxTriggerPrimitive {...props} {...stylex.props(sx)}>
       {children}
       <Glyph icon={ArrowDown01Icon} />
     </ComboboxTriggerPrimitive>
@@ -452,10 +456,9 @@ function ComboboxClear({
 }: Omit<
   Styled<ComponentProps<typeof ComboboxClearPrimitive>>,
   "children" | "render"
->) {
+> & { "aria-label": string }) {
   return (
     <ComboboxClearPrimitive
-      aria-label="Clear"
       {...props}
       render={<InputGroupButton size="icon-xs" sx={sx} variant="ghost" />}
     >
@@ -464,12 +467,14 @@ function ComboboxClear({
   );
 }
 
-/** An input group around the input, with a trigger and a clear button at its end. `sx` goes to the group. */
+/** An input group around the input, with a trigger and a clear button at its end, named by `triggerLabel` and `clearLabel`. `sx` goes to the group. */
 function ComboboxInput({
-  showClear = false,
-  showTrigger = true,
+  clearLabel,
+  showClear,
+  showTrigger,
   size = "default",
   sx,
+  triggerLabel,
   ...props
 }: ComboboxInputProps) {
   const input = inputGroupInputStyles();
@@ -479,9 +484,9 @@ function ComboboxInput({
         <ComboboxInputPrimitive {...props} {...stylex.props(input.input)} />
       </span>
       <InputGroupAddon align="inline-end">
-        {showTrigger && (
+        {showTrigger !== false && (
           <ComboboxTriggerPrimitive
-            aria-label="Show options"
+            aria-label={triggerLabel}
             render={
               <InputGroupButton
                 size="icon-xs"
@@ -493,7 +498,7 @@ function ComboboxInput({
             <Glyph icon={ArrowDown01Icon} size={size} />
           </ComboboxTriggerPrimitive>
         )}
-        {showClear && <ComboboxClear />}
+        {showClear === true && <ComboboxClear aria-label={clearLabel} />}
       </InputGroupAddon>
     </InputGroup>
   );

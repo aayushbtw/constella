@@ -142,7 +142,7 @@ Put a [Dropdown Menu](/docs/components/dropdown-menu) in the last cell for row a
     <DropdownMenuContent align="end">
       <DropdownMenuItem>Edit</DropdownMenuItem>
       <DropdownMenuItem
-        color="danger"
+        destructive
         data-agent-confirm={`Deletes ${product.name}`}
       >
         Delete

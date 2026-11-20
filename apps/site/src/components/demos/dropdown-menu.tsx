@@ -25,7 +25,6 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -76,18 +75,9 @@ function DropdownMenuDemo() {
         <DropdownMenuContent sx={styles.wide}>
           <DropdownMenuGroup>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Billing
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+shift+p">Profile</DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+b">Billing</DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+s">Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -101,10 +91,7 @@ function DropdownMenuDemo() {
                 <DropdownMenuItem>More...</DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
-            <DropdownMenuItem>
-              New Team
-              <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+t">New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -113,10 +100,7 @@ function DropdownMenuDemo() {
             <DropdownMenuItem disabled>API</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem shortcut="mod+shift+q">Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
@@ -148,10 +132,7 @@ function DropdownMenuSubmenuDemo() {
               <DropdownMenuItem>Advanced...</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuItem>
-            New Team
-            <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem shortcut="mod+t">New Team</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
@@ -303,10 +284,7 @@ function DropdownMenuDangerDemo() {
             Share
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            color="danger"
-            data-agent-confirm="Deletes this file"
-          >
+          <DropdownMenuItem destructive data-agent-confirm="Deletes this file">
             <Glyph icon={Delete02Icon} />
             Delete
           </DropdownMenuItem>
@@ -374,7 +352,7 @@ function DropdownMenuControllerDemo() {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                color="danger"
+                destructive
                 data-agent-confirm={
                   payload ? `Deletes ${payload.name}` : "Deletes this document"
                 }

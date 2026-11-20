@@ -9,7 +9,11 @@ description: An input that filters a list of options as you type, for one value 
 const fruits = ["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"];
 
 <Combobox>
-  <ComboboxInput aria-label="Fruit" placeholder="Select a fruit" />
+  <ComboboxInput
+    aria-label="Fruit"
+    placeholder="Select a fruit"
+    triggerLabel="Show fruits"
+  />
   <ComboboxContent>
     <ComboboxEmpty>No fruits found.</ComboboxEmpty>
     <ComboboxList>
@@ -46,7 +50,7 @@ Render a `ComboboxItem` for each option in `ComboboxList`. The list shows only t
 ```tsx
 <Combobox>
   <ComboboxLabel>Item</ComboboxLabel>
-  <ComboboxInput placeholder="Select an item" />
+  <ComboboxInput placeholder="Select an item" triggerLabel="Show items" />
   <ComboboxContent>
     <ComboboxEmpty>No items found.</ComboboxEmpty>
     <ComboboxList>
@@ -82,7 +86,7 @@ Combobox
         └── ComboboxCreate
 ```
 
-`ComboboxLabel` names the input. Inside a `Field`, use `FieldLabel` instead. With no visible label, put `aria-label` on `ComboboxInput`, or on both `ComboboxChips` and `ComboboxChipsInput`. `ComboboxGroupLabel` is the heading of a `ComboboxGroup`.
+`ComboboxLabel` names the input. Inside a `Field`, use `FieldLabel` instead. With no visible label, put `aria-label` on `ComboboxInput`, or on both `ComboboxChips` and `ComboboxChipsInput`. `ComboboxGroupLabel` is the heading of a `ComboboxGroup`. Name the trigger with `triggerLabel`, like "Show fruits", so each combobox's trigger has a name of its own; pass `showTrigger={false}` to leave it out.
 
 ## Multiple
 
@@ -177,12 +181,17 @@ function add(text: string) {
 
 ## Clear Button
 
-Add `showClear` to `ComboboxInput` to show a button that clears the value and the typed text. It shows while there's a value or typed text, in the trigger's place.
+Add `showClear` and a `clearLabel`, like "Clear fruit", to `ComboboxInput` to show a button that clears the value and the typed text. It shows while there's a value or typed text, in the trigger's place.
 
 <!-- ::demo name="combobox-clear" -->
 
 ```tsx
-<ComboboxInput aria-label="Fruit" showClear />
+<ComboboxInput
+  aria-label="Fruit"
+  clearLabel="Clear fruit"
+  showClear
+  triggerLabel="Show fruits"
+/>
 ```
 
 ## Groups
@@ -239,7 +248,7 @@ Add `disabled` to `Combobox` to disable it, or to a `ComboboxItem` to disable on
 
 ```tsx
 <Combobox defaultValue="Banana" disabled>
-  <ComboboxInput aria-label="Fruit" />
+  <ComboboxInput aria-label="Fruit" triggerLabel="Show fruits" />
   <ComboboxContent>…</ComboboxContent>
 </Combobox>
 ```
@@ -254,7 +263,7 @@ Add `invalid` to the `Field`, so the input takes the red edge.
 <Field invalid>
   <FieldLabel>Fruit</FieldLabel>
   <Combobox>
-    <ComboboxInput placeholder="Select a fruit" />
+    <ComboboxInput placeholder="Select a fruit" triggerLabel="Show fruits" />
     <ComboboxContent>…</ComboboxContent>
   </Combobox>
   <FieldDescription>Please select a fruit.</FieldDescription>
@@ -266,7 +275,7 @@ Add `invalid` to the `Field`, so the input takes the red edge.
 | Part | Adds |
 | --- | --- |
 | `ComboboxLabel` | Names the input or the chips; inside a `Field`, use `FieldLabel` |
-| `ComboboxInput` | An input group with a trigger and a clear button at its end, named "Show options" and "Clear" by default; `showTrigger` (default `true`), `showClear`, `size`: `"sm"`, `"default"` or `"lg"`; `sx` goes to the group |
+| `ComboboxInput` | An input group with a trigger and a clear button at its end, named by the required `triggerLabel` (unless `showTrigger={false}`) and `clearLabel` (with `showClear`); `size`: `"sm"`, `"default"` or `"lg"`; `sx` goes to the group |
 | `ComboboxChips` | An input group's box that wraps its chips and input onto new lines; `size`: `"sm"`, `"default"` or `"lg"`; `sx` goes to the box, and the other props, `ref` included, to ui-sdk's chips toolbar. Give it an `aria-label` when no `ComboboxLabel` names it |
 | `ComboboxChip` | `value` (required); without children it shows the value's label; `showRemove` (default `true`): a button that removes the chip, named after it ("Remove Apple") |
 | `ComboboxContent` | Anchors to the input group's box, so it's as wide as the box; takes `side`, `align`, `anchor` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
