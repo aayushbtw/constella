@@ -250,7 +250,11 @@ import {
   KbdGroupDemo,
   KbdTooltipDemo,
 } from "~/components/demos/kbd";
-import { LabelDemo, LabelWrapDemo } from "~/components/demos/label";
+import {
+  LabelDemo,
+  LabelRadioGroupDemo,
+  LabelWrapDemo,
+} from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { LoadingBarDemo } from "~/components/demos/loading-bar";
 import {
@@ -663,6 +667,7 @@ const demos = {
   "kbd-group": KbdGroupDemo,
   "kbd-tooltip": KbdTooltipDemo,
   label: LabelDemo,
+  "label-radio-group": LabelRadioGroupDemo,
   "label-wrap": LabelWrapDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
