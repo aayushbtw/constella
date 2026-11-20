@@ -169,7 +169,7 @@ The bridge sees only UI SDK and `definePrimitive` components, and the docs give 
 | CSS variable names differ (`--toast-swipe-x` vs `--toast-swipe-movement-x`, `--toast-offset` vs `--toast-offset-y`, `--toast-front-height` vs `--toast-frontmost-height`) | Every component's styles. Done by Toast |
 | Toast limit is `maxVisible` on the region, not `limit` on a provider; no `data-limited` | Toast. Done by Toast |
 | No shadcn style on it | The shadcn-first workflow; demos stop mirroring base-nova |
-| Our own components (Chat, Prompt Input, Attachment, Data Table, Chart) are invisible to the bridge unless rebuilt on `definePrimitive` with an `agent` key | Each AI and TanStack component |
+| The bridge lists only ui-sdk parts, so a control in our own components (Chat, Prompt Input, Attachment, Data Table, Chart) is invisible unless it renders one. Most already do; the rest move onto a ui-sdk part before `definePrimitive` | Each AI and TanStack component |
 | The bridge names components by accessible name | Every part needs a label an agent can type; distinct, since labels match by whole word ("Name" hits "Project name") |
 
 ### Port notes

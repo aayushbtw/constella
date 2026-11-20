@@ -207,8 +207,8 @@ To pick one of a few options, use `SegmentedControl`. Don't loop `Button`s and t
 **Incorrect:**
 
 ```tsx
-{
-  ["left", "center", "right"].map((a) => (
+<div>
+  {["left", "center", "right"].map((a) => (
     <Button
       key={a}
       variant={a === align ? "primary" : "outline"}
@@ -216,8 +216,8 @@ To pick one of a few options, use `SegmentedControl`. Don't loop `Button`s and t
     >
       {a}
     </Button>
-  ));
-}
+  ))}
+</div>
 ```
 
 **Correct:**

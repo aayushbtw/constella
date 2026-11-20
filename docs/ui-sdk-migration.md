@@ -62,7 +62,7 @@ Each phase starts after the one before it merges, except where a row says otherw
 | 3. Overlays | Popups and toasts | Rows merged |
 | 4. Lists | Select, menus, groups | Rows merged |
 | 5. Composites | AI and composite parts on top | Rows merged |
-| 6. Agent | Bridge for parts ui-sdk doesn't ship | Each AI and TanStack part shows in `snapshot()` |
+| 6. Agent | Bridge for parts ui-sdk doesn't ship | Every control in each AI and TanStack part's demos is in `snapshot()` with a name and its actions, proved by a test beside the part. Display-only parts add no entry |
 | 7. Land | Remove Base UI, rewrite docs | [Done](#done) holds |
 
 ## Tracker
@@ -123,22 +123,27 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`.
 
 | Unit | Status | PR | Notes |
 | --- | --- | --- | --- |
-| Agent bridge on the docs site (dev only) | todo |  | `createAgent` in the client entry |
-| `definePrimitive` with `agent` key: Prompt Input, Attachment, Approval, Questionnaire | todo |  | Split per part when started |
-| `definePrimitive` with `agent` key: Data Table, Chart | todo |  |  |
-| WebMCP: `registerTools(agent, { allow })` from `@ui-sdk/react/agent` exposes `snapshot`, `act` and `query` through `document.modelContext` | todo |  | Experimental: ui-sdk is beta and its agent APIs may change. Does nothing in a browser without `document.modelContext.registerTool`; the only host the docs name is ChatGPT's built-in browser (desktop app). Dev only or production is our call. `allow` is required: gate every step and leave `step.confirm` steps to the person (`allow: (step) => !step.confirm`) |
-| `agentTools` for our own chat: Prompt Input routes `snapshot`, `act` and `query` tool calls to the agent through AI SDK `onToolCall` | todo |  | Experimental, as above. `agentTools` gives each tool's name, description and JSON Schema; the docs leave the model SDK wiring to us |
-| Audit our parts for `data-agent-hidden`, `data-agent-secret` and `data-agent-confirm` | todo |  | Hidden leaves a subtree out of `snapshot` and `query`. Secret shows a filled value as `"[redacted]"`. Confirm takes a sentence the agent sees; without `allow` the press fails and asks the person. Example: a destructive Alert Dialog Action gets `data-agent-confirm` |
+| Almost every control in the AI and TanStack parts is already a ported ui-sdk part, so a unit makes its part agent-ready by composing ui-sdk parts (ARCHITECTURE.md's New controls row), not by wrapping it in `definePrimitive`. Each unit's PR body shows its demos' snapshot JSON. |
+
+| Unit | Status | PR | Notes |
+| --- | --- | --- | --- |
+| Agent bridge on the docs site, with WebMCP | todo |  | `apps/site/src/lib/agent.ts`, loaded from `router.tsx` in dev or with `VITE_AGENT_BRIDGE=1`. One bridge per page (no `destroy`, so HMR must not stack them). `registerTools(agent, { allow: (step) => !step.confirm })`, experimental: ui-sdk is beta, and it does nothing without `document.modelContext` (the docs name only ChatGPT's built-in browser). An audit script over a flagged build reports unnamed entries per page. Production is a one-line flip at landing |
+| Agent-ready AI parts: Prompt Input, Attachment, Approval, Message, Suggestions and the rest | todo |  | One agent test per part. `AttachmentTrigger` moves onto ui-sdk's Button. Approval's approve button carries `data-agent-confirm` by default |
+| Agent-ready Trace | todo |  | Steps with no trigger show as unnamed collapsibles. Name them from `TraceTitle` without changing the accessibility tree, or pin with `test.fails` and draft upstream |
+| Agent-ready Questionnaire | todo |  | Nav buttons render our Button. Choices are native inputs; rendering them as ui-sdk Radio or Checkbox is time-boxed, else `blocked` with the gap recorded |
+| Agent-ready Data Table and Chart | todo |  | Tests for Data Table, its satellites and Chart Legend. The plot adds no entry. Row click needs a named control in the row. A `data-table` primitive waits on the agent key leaving experimental (ARCHITECTURE.md, Ready when) |
+| `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` on primitives and destructive demos | todo |  | Hidden leaves a subtree out of `snapshot` and `query`. Secret shows a filled value as `"[redacted]"`. Confirm takes a sentence the person sees; without `allow` the press fails. Leave the toast region unhidden, since hiding it hides toasts. AI and TanStack marks go with their units |
+| `agentTools` for our own chat | deferred |  | The chat demo runs TanStack AI on `fakeText`, so no model ever calls a tool. Revisit when the site has a real model endpoint |
 
 ### Phase 7
 
 | Task | Status | PR |
 | --- | --- | --- |
-| Remove `@base-ui/react` from `packages/ui` and `apps/site` | todo |  |
-| Delete the `popupVars` token, the Base UI branch of `useSkipMotion` and the `[data-popup-open]` half of the open-state selector | todo |  |
-| Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | todo |  |
-| Delete the stale "until Alert Dialog ports" sentences in ARCHITECTURE.md's Mixed libraries row (Alert Dialog merged in [#59](https://github.com/aayushbtw/constella/pull/59)) | todo |  |
-| Fix `popupReset`'s comment in `packages/ui/src/lib/constella/styles.ts`: it says ui-sdk resets every popup's `[popover]` box, which is false for Select and Menu ([#74](https://github.com/aayushbtw/constella/pull/74), [#75](https://github.com/aayushbtw/constella/pull/75)) | todo |  |
+| Remove `@base-ui/react` from `packages/ui` and `apps/site` | merged | [#80](https://github.com/aayushbtw/constella/pull/80) |
+| Delete the `popupVars` token, the Base UI branch of `useSkipMotion` and the `[data-popup-open]` half of the open-state selector | merged | [#80](https://github.com/aayushbtw/constella/pull/80) |
+| Rewrite Base UI mentions in ARCHITECTURE.md, DESIGN.md, `docs/design/*` | merged | [#80](https://github.com/aayushbtw/constella/pull/80) |
+| Delete the stale "until Alert Dialog ports" sentences in ARCHITECTURE.md's Mixed libraries row, now Stacking (Alert Dialog merged in [#59](https://github.com/aayushbtw/constella/pull/59)) | merged | [#80](https://github.com/aayushbtw/constella/pull/80) |
+| Fix `popupReset`'s comment in `packages/ui/src/lib/constella/styles.ts`: it says ui-sdk resets every popup's `[popover]` box, which is false for Select and Menu ([#74](https://github.com/aayushbtw/constella/pull/74), [#75](https://github.com/aayushbtw/constella/pull/75)) | merged | [#80](https://github.com/aayushbtw/constella/pull/80) |
 | Blocks landing: composed `CommandGroup`s render `hidden` in server HTML (ui-sdk beta.13), so `/` and `/docs/components/command` show no grouped items before hydration. Fixed upstream or worked around, and the `test.fails` pin flipped ([#73](https://github.com/aayushbtw/constella/pull/73)) | todo |  |
 | File the upstream drafts once the user OKs each: Hover Card focus delay ([#46](https://github.com/aayushbtw/constella/pull/46)), Command SSR hidden groups ([#73](https://github.com/aayushbtw/constella/pull/73)), Scroll Area sub-pixel Tab stop, Tabs `preventScroll`, Progress and Meter value `aria-hidden`, the [vercel-labs/ui#763](https://github.com/vercel-labs/ui/pull/763) clamp loop, Alert Dialog's blocked Close unmarked, Trigger Menu's controlled `value` ([#79](https://github.com/aayushbtw/constella/pull/79)) | todo |  |
 | Registry build and every docs page checked | todo |  |
@@ -154,6 +159,7 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 
 | Date | Unit | Finding |
 | --- | --- | --- |
+| 2026-11-20 | Trace | A `TraceLine` inside an open Dialog or Sheet trigger lost `main`'s `textPrimary` in [#48](https://github.com/aayushbtw/constella/pull/48) and [#63](https://github.com/aayushbtw/constella/pull/63), since its selector read only Base UI's `data-popup-open`. Restored in [#80](https://github.com/aayushbtw/constella/pull/80) |
 | 2026-11-20 | Prompt Input | Fixed by the port, per the verifier (PASS+NOTES at 9e5d386): Cmd or Ctrl+Z restores the typed query. Escape keeps the list closed until "/" is typed again. Accepted: modified Enter, the empty message left out of the demo, and no `role="combobox"` |
 | 2026-11-20 | Prompt Input | On ui-sdk Trigger Menu, not the tracker's Autocomplete, on the advisor's call. Autocomplete's value is the whole text, so `main` had to control `open`, `query` and `value` from the draft. Trigger Menu opens on a typed trigger, filters, and inserts the pick at the caret with undo. `PromptInputCommand` takes `triggers` and drops the required `open`, `query` and `value` |
 | 2026-11-20 | Prompt Input | Upstream bug, not filed. Inside `TriggerMenuInput`, a controlled `value` synced in native `onChange` loses the typed trigger in Chromium. The menu opens and React re-renders with the old value before its root `onChange` reads the change, so `onChange` never fires for `/`. ui-sdk Textarea's `value` with `onValueChange` works. `PromptInputCommandTextarea`'s type requires `onValueChange` with `value` (`packages/ui/type-tests/prompt-input.tsx`). jsdom can't show it, so `~/.local/share/pw/tm-repro.mjs` is the removal check. Remove the type rule once native `onChange` survives |
@@ -251,14 +257,14 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-15 | Toast | ui-sdk's Close ignores `dismissible: false`, so such a toast renders no Close. A link action renders a link Button |
 | 2026-11-15 | Toast | Behavior changes: an Action dismisses the toast; a queued 4th toast mounts only when a slot frees; a loading toast stays until updated (the Types demo passes `duration: 5000`); in RTL a swipe toward the end edge dismisses; timers also pause on a hidden page; F6 focuses the newest toast, not the region |
 | 2026-11-15 | Toast | Superseded by beta.13 ([#54](https://github.com/aayushbtw/constella/pull/54)): ~~Agents can't press Close: ui-sdk's bridge doesn't register it. A `test.fails` pins it.~~ Every prerendered page gains an empty, 0px toast region at the end of `body` |
-| 2026-11-15 | Toast | Superseded: Sheet ([#63](https://github.com/aayushbtw/constella/pull/63)) and Alert Dialog ([#59](https://github.com/aayushbtw/constella/pull/59)) are ported. Until Sheet and Alert Dialog port, a Base UI modal hides the region from the accessibility tree, and Escape on a focused toast closes the modal too. See ARCHITECTURE.md's Mixed libraries row |
-| 2026-11-15 | Tooltip | Slot, motion, `[hidden]` joins, the Escape workaround over a Base UI Sheet, and Slider's `type="description"`: see ARCHITECTURE.md's `data-slot`, In-place popups, Motion and Mixed libraries rows |
+| 2026-11-15 | Toast | Superseded: Sheet ([#63](https://github.com/aayushbtw/constella/pull/63)) and Alert Dialog ([#59](https://github.com/aayushbtw/constella/pull/59)) are ported. Until Sheet and Alert Dialog port, a Base UI modal hides the region from the accessibility tree, and Escape on a focused toast closes the modal too. See ARCHITECTURE.md's Stacking row |
+| 2026-11-15 | Tooltip | Slot, motion, `[hidden]` joins, the Escape workaround over a Base UI Sheet, and Slider's `type="description"`: see ARCHITECTURE.md's `data-slot`, In-place popups, Motion and Stacking rows |
 | 2026-11-15 | Tooltip | `TooltipProvider`, `TooltipPortal`, `TooltipPositioner` and `TooltipPopup` are gone, and so is `layers.tooltip`. The 300ms `delay` moves to `Tooltip`. Tooltips group page-wide, so the Kbd page's second tooltip opens at once; Base UI grouped only inside a provider |
 | 2026-11-15 | Tooltip | A tooltip taken over by its neighbor fades out while the next appears at once; Base UI cut it at once. Matching that needs an undocumented event check |
 | 2026-11-15 | Tooltip | Triggers with text gain a description where the tooltip adds something: "Add to library", "Save Changes S", Sidebar's trigger with a shortcut, and Slider's thumb ("40%", which repeats its value). A trigger whose tooltip equals its name (Sidebar's trigger without a `kbd`, Button Group's Voice mode) takes `type="label"` |
 | 2026-11-15 | Tooltip | Pre-existing on `main`: Base UI's tooltip trigger carries `data-popup-open`, so Sidebar's trigger showed Button's open fill (2.4% alpha) while its tooltip showed. Filed as [#51](https://github.com/aayushbtw/constella/issues/51); the port removes it |
 | 2026-11-15 | Tooltip | `TooltipArrow`, `TooltipShortcut` and the shared controller aren't wrapped; no demo needs them |
-| 2026-11-15 | Dialog | Structure, centering, slot and `--dialog-stack`: see ARCHITECTURE.md's Dialog row. Base UI popups inside a ported Dialog: see its Mixed libraries row |
+| 2026-11-15 | Dialog | Structure, centering, slot and `--dialog-stack`: see ARCHITECTURE.md's Dialog row. Base UI popups inside a ported Dialog: see its Stacking row |
 | 2026-11-15 | Dialog | ui-sdk's `DialogTrigger` writes `dialog-trigger` over `attachment-trigger`, so an attachment card's hover reads any `-trigger` child. Settings Dialog drops a `data-slot` ui-sdk overwrote. `DialogPopup` stays exported beside `DialogContent` |
 | 2026-11-15 | Dialog | The port traps Tab, where Base UI let it reach a focus guard |
 | 2026-11-15 | Dialog | Pre-existing on `main`: a Dialog opened from the keyboard or closed with Escape animates, though DESIGN.md says keyboard actions don't. Filed as [#47](https://github.com/aayushbtw/constella/issues/47); the port keeps it |
@@ -380,3 +386,4 @@ Gaps and surprises found while porting, newest first. Move a settled one into AR
 | 2026-11-20 | Filed this phase: #67 (Toggle Group), #69, #70, #71, #72 (Command) and #76 (Segmented Control); all six open on GitHub |
 | 2026-11-20 | Phase 5 started: Prompt Input `doing`. Model Picker's Command parts ported in #73; re-verify pending. Phase 7 gains the Command server HTML gate, the `popupReset` comment fix, the stale Alert Dialog sentences and the upstream drafts awaiting the user's OK |
 | 2026-11-20 | [#79](https://github.com/aayushbtw/constella/pull/79) merged: Prompt Input on ui-sdk Trigger Menu, not Autocomplete. The re-verify sweep at e92d5ed against `main` b650d4f passed Model Picker, Citation, Settings Dialog and Sidebar with notes, so their rows are merged. Phase 5 done. No `@base-ui` import is left in `packages/ui/src` or `apps/site/src` after #79. Phase 7 cleanup started |
+| 2026-11-20 | [#80](https://github.com/aayushbtw/constella/pull/80) merged: Base UI removed, docs rewritten, so phase 7's cleanup rows are merged. Phase 6 reworded on the advisor's call: parts become agent-ready by composing ui-sdk parts, not through `definePrimitive`, and `agentTools` for the chat is deferred. Phase 6 started |
