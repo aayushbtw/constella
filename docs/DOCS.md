@@ -16,7 +16,7 @@ Pages read like shadcn's, written for someone using the component, not for us:
 - **Composition** comes right after Usage on any component with more than one part.
 - **Enforced:** `apps/site/src/lib/lint` checks them as each page parses, one rule per file in `rules/`, so a broken page fails dev and the build. A new rule that can be checked goes there, not only here. A new page that 404s in dev usually means the lint threw and dev shows nothing. The lint caches the component-name list at server start, so a heading that names a component created after start counts as the page's own section; restart dev.
 - **Drafts track their gaps** in a `## Pending` section at the end: each line names the missing component and what it unblocks. A page leaves draft only once that section is gone.
-- **Use the native term** (React, Base UI, CSS, shadcn) over a plain-English stand-in: "Controlled", not "Open from Code".
+- **Use the native term** (React, ui-sdk, CSS, shadcn) over a plain-English stand-in: "Controlled", not "Open from Code". Write "ui-sdk" in prose, the form upstream uses. A link to a ui-sdk component page keeps its "UI SDK <Component>" text.
 - **One or two plain sentences per section**, starting with what to do: "Use the `size` prop to…", "Add `data-icon` to…". No design reasoning; that lives in `docs/design/`.
 - **Show a variant matrix once.** All variants in Variant, all sizes in Size; every other example shows one representative.
 - **Previews:** place one with `<!-- ::demo name="…" -->`, and its code block right below it. Fences render as the Code Block component: every one gets a copy button, blocks of more than one line get line numbers, and `text` fences wrap.
@@ -25,4 +25,4 @@ Pages read like shadcn's, written for someone using the component, not for us:
 - **Avatar photos are the exception.** They are shadcn, emilkowalski, evilrabbit and aayushbtw, saved by handle in `apps/site/public/avatars`, and keep their own handle. A company shows its initials. Break fixtures keep their long and non-Latin names, on `acme.com`.
 - **AI providers are the exception too.** A model picker with invented providers reads as fake, so models and their logos are real (Anthropic, OpenAI, Google, DeepSeek, Mistral, xAI), saved by provider in `apps/site/public/logos`. Framework logos on the installation cards (Next.js, TanStack) are real too, saved there by name.
 - **Warn in bold** when the obvious way is wrong, and say why in one line.
-- **API Reference** lists only what's added on top of Base UI and links to Base UI for the rest.
+- **API Reference** lists only what's added on top of ui-sdk and links that component's ui-sdk page for the rest: "For the rest, see [UI SDK <Component>](…)" at the end, or "Takes every prop of [UI SDK <Component>](…), plus:" above a props table. A part with `render` and nothing of ui-sdk's under it links [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) instead.

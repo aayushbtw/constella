@@ -2,7 +2,7 @@
 
 **Components, crafted with care.**
 
-Components your LLM can't easily get wrong. shadcn-style parts on [Base UI](https://base-ui.com) and [StyleX](https://stylexjs.com), with no `className` or `style`, so an off-brand choice is hard to even write.
+Components your LLM can't easily get wrong. shadcn-style parts on [ui-sdk](https://ui-sdk.dev) and [StyleX](https://stylexjs.com), with no `className` or `style`, so an off-brand choice is hard to even write.
 
 [Docs](https://constella.aayush.cv) · [Installation](https://constella.aayush.cv/docs/installation) · [Components](https://constella.aayush.cv/docs/components) · [For agents](https://constella.aayush.cv/docs/agents)
 

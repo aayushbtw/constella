@@ -171,6 +171,6 @@ Use the `state` prop to show where an upload is. Say why a file failed in `Attac
 | `AttachmentMedia` | `variant`: `"default"` or `"image"` |
 | `AttachmentTitle` | Shimmers while `uploading` or `processing` |
 | `AttachmentAction` | A [Button](/docs/components/button), `ghost` at `icon-xs` by default |
-| `AttachmentTrigger` | Base UI [`render`](https://base-ui.com/react/handbook/composition) |
+| `AttachmentTrigger` | [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |
 
 Every part takes `sx`, applied last. `AttachmentTitle` and `AttachmentDescription` render a `span`, `AttachmentTrigger` a `button`, the rest a `div`.

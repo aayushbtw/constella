@@ -102,6 +102,6 @@ Render it as an `output` while work runs, so a screen reader announces each chan
 | Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `"default"`, `"border"`, `"separator"` | `"default"` |
-| `render` | Base UI [`render`](https://base-ui.com/react/handbook/composition) |  |
+| `render` | `ReactElement \| function`; see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |  |
 
 `MarkerIcon` is hidden from screen readers. Every part takes `sx`, applied last; `Marker` renders a `div`, the others a `span`.

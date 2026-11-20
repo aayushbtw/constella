@@ -46,7 +46,7 @@ Without the skill, add this to your `AGENTS.md` or `CLAUDE.md`:
 ```md
 ## Constella
 
-UI components are Constella: Base UI styled with StyleX, not Tailwind, from the `@constella` shadcn registry. Before using one, read its page at https://constella.aayush.cv/docs/components/<name>/index.md (every page: https://constella.aayush.cv/llms.txt).
+UI components are Constella: ui-sdk styled with StyleX, not Tailwind, from the `@constella` shadcn registry. Before using one, read its page at https://constella.aayush.cv/docs/components/<name>/index.md (every page: https://constella.aayush.cv/llms.txt).
 
 - Style with `sx` (from `stylex.create`), never `className`, `style` or Tailwind classes.
 - Use tokens from `@/lib/constella/tokens.stylex`, not raw values.

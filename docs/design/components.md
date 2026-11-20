@@ -123,7 +123,7 @@ Pagination sits under the table: the range in `textSecondary` at the start; rows
 
 ## Dialog
 
-Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index, so a Base UI popup (Menu, Tooltip) opened inside it renders under it until that popup ports. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index. A popup opened from it (a menu, a tooltip) joins the top layer after it, so it paints on top. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
 
 ## Empty state
 
@@ -135,7 +135,7 @@ Its button is a `fill` chip set into the box with an even inset on three sides, 
 
 ## Hover card
 
-A popover opened by resting on a link or focusing it by keyboard, never by a tap, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half the 600ms default of Base UI and ui-sdk, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out` and swaps the content at once, so reading a row of mentions is one card following the pointer, not cards opening and closing. Focus moves it without the glide.
+A popover opened by resting on a link or focusing it by keyboard, never by a tap, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half ui-sdk's 600ms default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out` and swaps the content at once, so reading a row of mentions is one card following the pointer, not cards opening and closing. Focus moves it without the glide.
 
 ## Input group
 
@@ -159,7 +159,7 @@ A popover whose popup is no surface: it holds two cards, a Command list at `size
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Base UI popups sit above Base UI dialogs on `layers.popover`; ui-sdk popups and dialogs sit in the top layer, above any z-index, so a Base UI popup opened inside a ui-sdk dialog renders under it until that popup ports. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and ui-sdk marks only a Tooltip that opens at once after another, so every popup, Tooltip included, tracks the open-change reason with `useSkipMotion`. For a ui-sdk part it reads `details.source` and focus leaving. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Popups and dialogs sit in the top layer, above any z-index, so a popup opened from a dialog paints on top of it. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once, and so do arrow keys and a picked item. ui-sdk marks only a Tooltip that opens at once after another (`data-instant`), so every popup, Tooltip included, tracks the open-change reason with `useSkipMotion`. It reads `details.source`, focus leaving and a picked item. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
@@ -287,7 +287,7 @@ The one shape for an agent's run: reasoning, tool calls, sources and files are a
 | --- | --- |
 | Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops at each marker's `controlXs` box, whose room around the icon is the gap. It starts on the first step, runs on beside a step's open content and ends on the last step |
 | Marker | The step's `iconSm` icon centered in a `controlXs` box, in the line's color, so it brightens with a trigger's line on hover. `dangerText` when failed; dimmed with the line while pending. While running, only the title's shimmer shows it. In a step's trigger, the icon cross-fades to a chevron while pointed at or focused |
-| Line | `controlMd` tall, no fill, `textSecondary` at `sm`; `textPrimary` on hover inside a link or trigger. A failed step keeps its color and says "Failed ..."; `pending` dims to `opacities.disabled` |
+| Line | `controlMd` tall, no fill, `textSecondary` at `sm`; `textPrimary` on hover inside a link or trigger, and while that trigger's popup is open. A failed step keeps its color and says "Failed ..."; `pending` dims to `opacities.disabled` |
 | Title | The verb, regular, in the line's color; cut short; shimmers while running. The run's trigger reads as one line: title and description both `textSecondary` |
 | Subject | `textMuted`, regular, so the verb leads; cut short |
 | Description | `textMuted`, tabular; never truncates. `dangerText` when the step failed, for the reason ("Exit code 1 · 3 errors"), which goes in the step's content under the title |

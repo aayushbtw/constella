@@ -20,7 +20,7 @@
 
 ## Custom triggers take `render`
 
-Base UI parts render a default element. To use your own, pass `render`. There is no `asChild`.
+ui-sdk parts render a default element. To use your own, pass `render`. There is no `asChild`.
 
 **Incorrect:**
 
@@ -42,12 +42,12 @@ The same holds for `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`, `S
 
 ## A link that looks like a button
 
-Base UI's `Button` always sets `role="button"`, so a link rendered through it is announced as a button.
+Pass an `<a>` to `Button`'s `render`. It keeps its `href` and link role. A Button that navigates in `onClick` is announced as a button and can't open in a new tab.
 
 **Incorrect:**
 
 ```tsx
-<Button render={<a href="/settings" />} nativeButton={false}>
+<Button onClick={() => navigate("/settings")} variant="outline">
   Settings
 </Button>
 ```
@@ -55,22 +55,18 @@ Base UI's `Button` always sets `role="button"`, so a link rendered through it is
 **Correct:**
 
 ```tsx
-import * as stylex from "@stylexjs/stylex";
-
-import { buttonStyles } from "@/components/primitives/button";
-
-<a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
+<Button render={<a href="/settings" />} variant="outline">
   Settings
-</a>;
+</Button>
 ```
 
-In a framework link, spread the same props onto it: `<Link href="/settings" {...stylex.props(buttonStyles({}))} />`.
+A framework link works the same way: `<Button render={<Link href="/settings" />}>`. For an element that can't be a Button, like a Toggle, spread `buttonStyles` onto it.
 
 ---
 
 ## Dialog, Sheet and AlertDialog need a Title
 
-Base UI names the dialog from its title. Without one the dialog has no accessible name.
+ui-sdk names the dialog from its title. Without one the dialog has no accessible name.
 
 **Incorrect:**
 
@@ -94,7 +90,7 @@ Base UI names the dialog from its title. Without one the dialog has no accessibl
 
 To hide it visually: `<DialogTitle sx={visuallyHidden.base}>` (from `@/lib/constella/styles`).
 
-`DialogContent` already renders the portal, backdrop and popup. Don't add them. Close buttons are `DialogClose render={<Button />}`; `DialogCloseButton` is the corner X.
+`DialogContent` already renders the backdrop and popup. Don't add them. Close buttons are `DialogClose render={<Button />}`; `DialogCloseButton` is the corner X.
 
 ---
 
