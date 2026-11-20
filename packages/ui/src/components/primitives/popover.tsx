@@ -13,16 +13,12 @@ import type { PopoverProps } from "@ui-sdk/react/popover";
 import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { popupReset, typeStyles } from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
   fontWeights,
-  media,
-  motion,
   offsets,
   radii,
   shadows,
@@ -38,12 +34,7 @@ type PopoverContentProps = Styled<
   ComponentProps<typeof PopoverContentPrimitive>
 >;
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-
 const styles = stylex.create({
-  // Select's surface and motion (below), so every popup opens the same way.
   surface: {
     backgroundColor: colors.raised,
     borderStartStartRadius: radii.lg,
@@ -58,21 +49,6 @@ const styles = stylex.create({
     paddingBlock: space.popup,
     paddingInline: space.popup,
     width: sizes.popover,
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   header: {
     display: "flex",
@@ -129,7 +105,7 @@ function PopoverContent({
       {...props}
       {...stylex.props(
         [typeStyles.textSm, popupReset.base, styles.surface],
-        styles.motion,
+        popupMotion.popover,
         sx
       )}
     />
@@ -177,9 +153,8 @@ function PopoverClose({
   return <PopoverClosePrimitive {...props} {...stylex.props(sx)} />;
 }
 
-/** The popup's reset, surface and motion, for a part that draws its own popup. */
+/** The popup's reset and surface, for a part that draws its own popup. */
 const popoverStyles = {
-  motion: styles.motion,
   popup: popupReset.base,
   surface: [typeStyles.textSm, styles.surface],
 };

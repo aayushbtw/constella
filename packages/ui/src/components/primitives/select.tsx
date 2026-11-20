@@ -19,7 +19,7 @@ import type { SelectProps } from "@ui-sdk/react/select";
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
@@ -31,10 +31,8 @@ import {
 import {
   colors,
   durations,
-  easings,
   fontWeights,
   media,
-  motion,
   offsets,
   opacities,
   radii,
@@ -66,11 +64,6 @@ type SelectContentProps = Styled<
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
 const disabled = ":is(:disabled, [data-disabled])";
-// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
 
 const styles = stylex.create({
   // An input's surface, so a select and an input in one form read as one family.
@@ -172,21 +165,6 @@ const styles = stylex.create({
     paddingInlineStart: space.xxs,
     scrollPaddingBlock: sizes.controlXs,
     width: "var(--anchor-width)",
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   item: {
     alignItems: "center",
@@ -401,7 +379,12 @@ function SelectContent({
         side={side}
         sideOffset={sideOffset}
         {...props}
-        {...stylex.props(popupReset.base, styles.content, styles.motion, sx)}
+        {...stylex.props(
+          popupReset.base,
+          styles.content,
+          popupMotion.popover,
+          sx
+        )}
       />
     </Size>
   );

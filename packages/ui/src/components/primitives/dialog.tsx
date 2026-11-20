@@ -17,17 +17,15 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import { popoverStyles } from "@/components/primitives/popover";
+import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   blurs,
   colors,
-  durations,
-  easings,
   fontWeights,
   layers,
   media,
-  motion,
   radii,
   shadows,
   sizes,
@@ -49,12 +47,7 @@ type DialogPopupProps<Payload = unknown> = Styled<
   size?: DialogSize;
 };
 
-// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
 const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
-const stack = "var(--dialog-stack, 0)";
 const gutter = `calc(100% - 2 * ${space.md})`;
 
 const styles = stylex.create({
@@ -69,12 +62,6 @@ const styles = stylex.create({
     position: "fixed",
     zIndex: layers.dialog,
   },
-  backdropMotion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transitionDuration: { default: durations.dialog, [instant]: 0 },
-    transitionProperty: "opacity",
-    transitionTimingFunction: easings.out,
-  },
   popup: {
     backgroundColor: colors.raised,
     borderStartStartRadius: radii.xl,
@@ -87,7 +74,6 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.md,
     maxHeight: "100%",
-    opacity: { default: 1, [offstage]: 0 },
     overflowY: {
       default: "auto",
       ":has(> [data-slot='dialog-body'])": "hidden",
@@ -96,17 +82,6 @@ const styles = stylex.create({
     paddingInlineEnd: space.md,
     paddingInlineStart: space.md,
     position: "relative",
-    // A parent steps back while a dialog opened from it sits on top.
-    transform: {
-      default: `translateY(calc(${stack} * -1 * ${space.sm})) scale(calc(1 - ${stack} * ${motion.stackScale}))`,
-      [offstage]: `scale(${motion.dialogScale})`,
-    },
-    transitionDuration: { default: durations.dialog, [instant]: 0 },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
     width: `min(100%, ${sizes.dialog})`,
   },
   centered: {
@@ -206,14 +181,14 @@ function DialogBackdrop({
   return (
     <DialogBackdropPrimitive
       {...props}
-      {...stylex.props(styles.backdrop, styles.backdropMotion, sx)}
+      {...stylex.props(styles.backdrop, popupMotion.backdrop, sx)}
     />
   );
 }
 
 // Shared with Alert Dialog and Sheet, type included, so they never drift apart.
 const dialogStyles = {
-  backdrop: [styles.backdrop, styles.backdropMotion],
+  backdrop: [styles.backdrop, popupMotion.backdrop],
   backdropSurface: styles.backdrop,
   closeButton: styles.closeButton,
   description: [typeStyles.textSm, styles.description],
@@ -224,6 +199,7 @@ const dialogStyles = {
     typeStyles.textSm,
     styles.popup,
     styles.centered,
+    popupMotion.dialog,
   ],
   sm: styles.sm,
   title: [typeStyles.textBase, styles.title],

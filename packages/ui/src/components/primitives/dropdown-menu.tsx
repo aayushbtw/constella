@@ -28,7 +28,7 @@ import type {
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { popupReset, typeStyles } from "@/lib/constella/styles";
 import {
@@ -37,7 +37,6 @@ import {
   easings,
   fontWeights,
   media,
-  motion,
   offsets,
   opacities,
   radii,
@@ -72,11 +71,6 @@ type DropdownMenuContentProps<Payload = unknown> = Styled<
   ComponentProps<typeof MenuContent<Payload>>
 > & { size?: DropdownMenuSize };
 
-// `[data-skip-motion]` is never offstage, so an instant open paints no blank frame while ui-sdk holds `data-starting-style`.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-open])";
 const destructive = ":is([data-destructive])";
 const off = ":is([data-disabled])";
@@ -88,7 +82,6 @@ const insetStart = (padding: string) =>
   `calc(${padding} + ${sizes.icon} + ${space.row})`;
 
 const styles = stylex.create({
-  // Select's surface and motion, so every popup opens the same way.
   popup: {
     backgroundColor: colors.raised,
     // ui-sdk's runtime layer resets the browser's `[popover]` box for popover and dialog content, not a menu's.
@@ -105,32 +98,14 @@ const styles = stylex.create({
     maxWidth: "var(--available-width)",
     // Wide enough for a label beside its value.
     minWidth: `max(var(--anchor-width), ${sizes.menuLg})`,
-    opacity: { default: 1, [offstage]: 0 },
     overflowY: "auto",
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   popupSm: {
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
-  },
-  submenu: {
-    transform: "none",
-    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
-    transitionProperty: "opacity",
   },
   // Select's item, so a menu and a select read as one family.
   item: {
@@ -343,7 +318,8 @@ function Popup<Payload>({
         {...stylex.props(
           [popupReset.base, styles.popup],
           sizeStyles[size].popup,
-          nested && styles.submenu,
+          popupMotion.popover,
+          nested && popupMotion.submenu,
           sx
         )}
       />
