@@ -333,8 +333,8 @@ Every part takes `sx`, applied last. The rest is [shadcn's Questionnaire](https:
 
 | Part | Adds |
 | --- | --- |
-| `QuestionnaireChoice` | A card holding the radio or checkbox, label and shortcut |
+| `QuestionnaireChoice` | A card holding the radio or checkbox, label and shortcut. Its input is native, so the agent bridge doesn't list it yet |
 | `QuestionnaireChoiceDescription` | A secondary line under the choice's label |
 | `QuestionnaireActions` | A row: Previous at the start, the rest at the end |
-| `QuestionnairePrevious`, `Skip` | Button's `size` and `variant`; `outline` by default |
-| `QuestionnaireNext`, `Submit` | Button's `size` and `variant`; `primary` by default |
+| `QuestionnairePrevious`, `Skip` | A [Button](/docs/components/button), so the agent bridge lists it by its text; `size` and `variant`, `outline` by default |
+| `QuestionnaireNext`, `Submit` | A [Button](/docs/components/button), so the agent bridge lists it by its text; `size` and `variant`, `primary` by default |
