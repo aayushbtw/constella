@@ -9,6 +9,7 @@ import {
   TriggerMenuEmpty,
   TriggerMenuInput,
   TriggerMenuItem,
+  TriggerMenuItemIcon,
   TriggerMenuList,
   TriggerMenuStatus,
 } from "@ui-sdk/react/trigger-menu";
@@ -178,6 +179,10 @@ const styles = stylex.create({
     },
     width: "var(--anchor-width)",
   },
+  commandIcon: {
+    display: "flex",
+    flexShrink: 0,
+  },
 });
 
 interface Anchor {
@@ -206,9 +211,8 @@ function PromptInput({
   );
 }
 
-/** Submits its form on Enter; Shift+Enter, and Enter while an IME is composing, add a line. */
+/** Submits its form on Enter, through ui-sdk Textarea's `submitShortcut`; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
 function PromptInputTextarea({
-  onKeyDown,
   placeholder = "Ask anything…",
   sx,
   ...props
@@ -216,21 +220,9 @@ function PromptInputTextarea({
   return (
     <InputGroupTextarea
       data-prompt-input-textarea=""
-      onKeyDown={(event) => {
-        onKeyDown?.(event);
-        if (
-          event.defaultPrevented ||
-          event.key !== "Enter" ||
-          event.shiftKey ||
-          event.nativeEvent.isComposing
-        ) {
-          return;
-        }
-        event.preventDefault();
-        event.currentTarget.form?.requestSubmit();
-      }}
       placeholder={placeholder}
       rows={1}
+      submitShortcut="enter"
       {...props}
       sx={[styles.textarea, sx]}
     />
@@ -400,7 +392,7 @@ type PromptInputCommandTextareaProps = Omit<
       }
   );
 
-/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. Cmd/Ctrl+Enter still submits. Control it with `value` and `onValueChange`. */
+/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. Control it with `value` and `onValueChange`. */
 function PromptInputCommandTextarea(props: PromptInputCommandTextareaProps) {
   return <TriggerMenuInput render={<PromptInputTextarea {...props} />} />;
 }
@@ -449,6 +441,16 @@ function PromptInputCommandItem<T = string>({
   );
 }
 
+/** A command's icon, before its text. Screen readers, filtering and insertion skip it; `mirror` flips it in right-to-left text. */
+function PromptInputCommandItemIcon({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof TriggerMenuItemIcon>>) {
+  return (
+    <TriggerMenuItemIcon {...props} {...stylex.props(styles.commandIcon, sx)} />
+  );
+}
+
 /** Shown while nothing matches. Rendered, it keeps the list open with no matches, so Enter submits only once Esc closes it. */
 function PromptInputCommandEmpty({
   sx,
@@ -467,6 +469,7 @@ export {
   PromptInputCommandContent,
   PromptInputCommandEmpty,
   PromptInputCommandItem,
+  PromptInputCommandItemIcon,
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,

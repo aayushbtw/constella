@@ -62,6 +62,7 @@ PromptInputCommand
     ├── PromptInputCommandEmpty
     └── PromptInputCommandList
         └── PromptInputCommandItem
+            └── PromptInputCommandItemIcon
 ```
 
 ## Prompt Input Command
@@ -160,10 +161,11 @@ Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to 
 | --- | --- |
 | `PromptInputTextarea` | Submits on Enter |
 | `PromptInputCommand` | ui-sdk's [Trigger Menu](https://ui-sdk.dev/docs/react/components/trigger-menu) root. Takes `triggers`, and holds a visually hidden status that tells screen readers how many commands match |
-| `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Cmd/Ctrl/Alt+Enter submits the draft. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |
+| `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |
 | `PromptInputCommandContent` | The popup on the composer, as wide as it, above it or below it when there's no room. Takes `side` (default `"top"`), `align` (default `"start"`) and `sideOffset` |
 | `PromptInputCommandList` | Trigger Menu's list, drawn as a Command list |
 | `PromptInputCommandItem` | A Command row. A pick runs its `onSelect`, then inserts what the trigger's `insert` returns, or `/`, its `label` and a space |
+| `PromptInputCommandItemIcon` | The command's icon, before its text and kept from shrinking. Screen readers, filtering and the inserted text skip it. `mirror` flips it in right-to-left text |
 | `PromptInputCommandEmpty` | Command's empty message, shown while nothing matches. Rendered, it keeps the list open with no match, so Enter doesn't send until Esc closes the list. Without it, the list closes and Enter sends |
 | `PromptInputHeader` | Above the text, for attachments |
 | `PromptInputWell` | A tray around the prompt input and its bars |

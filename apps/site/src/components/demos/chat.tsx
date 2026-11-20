@@ -49,6 +49,7 @@ import {
   PromptInputCommand,
   PromptInputCommandContent,
   PromptInputCommandItem,
+  PromptInputCommandItemIcon,
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
@@ -467,10 +468,11 @@ function PromptInputCommandDemo() {
               {commands.map((command) => (
                 <PromptInputCommandItem
                   key={command.value}
-                  label={command.label}
                   value={command.value}
                 >
-                  <Glyph icon={command.icon} />
+                  <PromptInputCommandItemIcon>
+                    <Glyph icon={command.icon} />
+                  </PromptInputCommandItemIcon>
                   {command.label}
                 </PromptInputCommandItem>
               ))}

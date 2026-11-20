@@ -6,7 +6,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { separator } from "@ui-sdk/core/separator";
-import { mount } from "@ui-sdk/core/testing";
+import { mount, setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { StrictMode, useState } from "react";
 import { afterAll, expect, test, vi } from "vite-plus/test";
@@ -17,6 +17,7 @@ import {
   PromptInputCommandContent,
   PromptInputCommandEmpty,
   PromptInputCommandItem,
+  PromptInputCommandItemIcon,
   PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
@@ -98,11 +99,12 @@ function CommandComposer({
         )}
         <PromptInputCommandList>
           {commands.map((command) => (
-            <PromptInputCommandItem
-              key={command.value}
-              label={command.label}
-              value={command.value}
-            >
+            <PromptInputCommandItem key={command.value} value={command.value}>
+              <PromptInputCommandItemIcon>
+                <svg>
+                  <title>Icon</title>
+                </svg>
+              </PromptInputCommandItemIcon>
               {command.label}
             </PromptInputCommandItem>
           ))}
@@ -122,13 +124,24 @@ function renderComposer(props: { empty?: boolean } = {}) {
   return onSubmit;
 }
 
-const options = () =>
-  screen.queryAllByRole("option").map((option) => option.textContent);
+// Accessible names, which leave out the icons.
+function optionNames() {
+  const names = new Map<Element, string>();
+  return screen
+    .queryAllByRole("option", {
+      name: (name, option) => {
+        names.set(option, name);
+        return true;
+      },
+    })
+    .map((option) => ({
+      highlighted: Object.hasOwn(option.dataset, "highlighted"),
+      name: names.get(option),
+    }));
+}
+const options = () => optionNames().map((option) => option.name);
 const highlighted = () =>
-  screen
-    .queryAllByRole("option")
-    .find((option) => Object.hasOwn(option.dataset, "highlighted"))
-    ?.textContent;
+  optionNames().find((option) => option.highlighted)?.name;
 const isOpen = () => screen.queryAllByRole("listbox").length > 0;
 const send = () =>
   screen.getByRole<HTMLButtonElement>("button", { name: "Send" });
@@ -154,7 +167,60 @@ test("Enter submits the form; Shift+Enter and Enter while an IME composes don't"
   expect(onSubmit).toHaveBeenCalledOnce();
 });
 
-test("/ lists every command with the first highlighted", async () => {
+test.each([
+  ["apple", { metaKey: true }, false],
+  ["apple", { ctrlKey: true }, true],
+  ["other", { ctrlKey: true }, false],
+  ["other", { altKey: true }, false],
+  ["other", { metaKey: true }, true],
+] as const)(
+  "on %s, Enter with %o submits: %s",
+  (platform, modifier, submits) => {
+    setPlatform(platform);
+    try {
+      const onSubmit = vi.fn<() => void>();
+      render(
+        <PromptInput
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit();
+          }}
+        >
+          <PromptInputTextarea aria-label="Message" />
+        </PromptInput>
+      );
+
+      fireEvent.keyDown(box(), { key: "Enter", ...modifier });
+      expect(onSubmit).toHaveBeenCalledTimes(submits ? 1 : 0);
+    } finally {
+      setPlatform("other");
+    }
+  }
+);
+
+test("a caller's onKeyDown that prevents default keeps Enter from submitting", () => {
+  const onSubmit = vi.fn<() => void>();
+  render(
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
+      <PromptInputTextarea
+        aria-label="Message"
+        onKeyDown={(event) => {
+          event.preventDefault();
+        }}
+      />
+    </PromptInput>
+  );
+
+  fireEvent.keyDown(box(), { key: "Enter" });
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+test("/ lists every command, named by its text and not its icon, with the first highlighted", async () => {
   renderComposer();
   await type("/");
 
@@ -165,6 +231,13 @@ test("/ lists every command with the first highlighted", async () => {
     "Translate",
   ]);
   expect(highlighted()).toBe("Summarize");
+});
+
+test("filtering ignores a command's icon", async () => {
+  renderComposer();
+  await type("/icon");
+
+  expect(isOpen()).toBe(false);
 });
 
 test("typing after / keeps the commands that contain it", async () => {
@@ -237,7 +310,27 @@ test("with an empty message, a query that matches nothing shows it and Enter doe
   expect(onSubmit).not.toHaveBeenCalled();
 });
 
-test("Cmd+Enter with the list open submits the draft", async () => {
+test.each([
+  ["apple", "Meta+Enter"],
+  ["other", "Control+Enter"],
+] as const)(
+  "on %s, %s with the list open neither picks nor submits",
+  async (platform, keys) => {
+    setPlatform(platform);
+    try {
+      const onSubmit = renderComposer();
+      await type("/tr");
+      await press(keys);
+
+      expect(box().value).toBe("/tr");
+      expect(onSubmit).not.toHaveBeenCalled();
+    } finally {
+      setPlatform("other");
+    }
+  }
+);
+
+test("on other, Meta+Enter with the list open submits the draft without picking", async () => {
   const onSubmit = renderComposer();
   await type("/tr");
   await press("Meta+Enter");
