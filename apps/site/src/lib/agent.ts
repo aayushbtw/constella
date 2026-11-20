@@ -1,7 +1,6 @@
 import { createAgent, registerTools } from "@ui-sdk/react/agent";
 import type { AgentAction } from "@ui-sdk/react/agent";
 import { createConfirm } from "@ui-sdk/react/alert-dialog";
-import { createHistory } from "@ui-sdk/react/history";
 
 function createBridge() {
   const confirm = createConfirm<AgentAction>();
@@ -28,7 +27,7 @@ function createBridge() {
   });
   // The bridge's allow already asked the person, and `!step.confirm` would refuse after they said yes.
   registerTools(agent, { allow: () => true });
-  return { agent, confirm, history: createHistory(agent), mountConfirm };
+  return { agent, confirm, mountConfirm };
 }
 
 declare global {
@@ -38,4 +37,4 @@ declare global {
 // The bridge has no destroy, so an HMR re-run reuses the one already on the page.
 globalThis.agentBridge ??= createBridge();
 
-export const { agent, confirm, history, mountConfirm } = globalThis.agentBridge;
+export const { agent, confirm, mountConfirm } = globalThis.agentBridge;
