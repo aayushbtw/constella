@@ -65,12 +65,20 @@ function Settings() {
   );
 }
 
-function Page() {
+function Page({ path = "/" }: { path?: string }) {
   return (
     <>
-      <Settings />
+      <header>
+        <Label>
+          <Switch />
+          Compact header
+        </Label>
+      </header>
+      <main>
+        <Settings />
+      </main>
       <AgentActivityButton />
-      <AgentLoop path="/" />
+      <AgentLoop path={path} />
     </>
   );
 }
@@ -189,12 +197,14 @@ test("the agent can't see the confirm dialog, so it can't press Allow for the pe
 test("two confirm steps asked at once each wait for their own answer", async () => {
   render(
     <>
-      <div data-agent-confirm="Pauses every alert.">
-        <Label>
-          <Switch />
-          Do not disturb
-        </Label>
-      </div>
+      <main>
+        <div data-agent-confirm="Pauses every alert.">
+          <Label>
+            <Switch />
+            Do not disturb
+          </Label>
+        </div>
+      </main>
       <Page />
     </>
   );
@@ -207,6 +217,9 @@ test("two confirm steps asked at once each wait for their own answer", async () 
   expect(dialog.textContent).toContain("Airplane mode");
   fireEvent.click(screen.getByRole("button", { name: "Allow" }));
   const result = await first;
+  expect(await Promise.race([second, Promise.resolve("pending")])).toBe(
+    "pending"
+  );
   expect(result.ok, result.error?.message).toBe(true);
   expect(checked("Airplane mode")).toBe("true");
   expect(checked("Do not disturb")).toBe("false");
@@ -250,7 +263,9 @@ function RegionPicker() {
 test("an agent setting a marked Select by an item's label asks the person once, with the item's value", async () => {
   render(
     <>
-      <RegionPicker />
+      <main>
+        <RegionPicker />
+      </main>
       <AgentLoop path="/" />
     </>
   );
@@ -343,6 +358,41 @@ test("the panel lists changes the assistant made while it was shut", async () =>
 
   const panel = await openPanel();
   expect(await panel.findByText("Weekly digest")).toBeTruthy();
+});
+
+test("a change outside the page's main isn't listed in the panel", async () => {
+  render(<Page />);
+
+  const result = await agent.act({
+    steps: [
+      { action: "setChecked", args: [true], ref: "Compact header" },
+      { action: "setChecked", args: [true], ref: "Weekly digest" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+
+  const panel = await openPanel();
+  expect(await panel.findByText("Weekly digest")).toBeTruthy();
+  expect(panel.queryByText("Compact header")).toBeNull();
+  expect(
+    await panel.findByRole("button", { name: "Undo assistant changes (1)" })
+  ).toBeTruthy();
+});
+
+test("a new page starts the panel empty", async () => {
+  const { rerender } = render(<Page path="/" />);
+
+  const result = await agent.act({
+    steps: [{ action: "setChecked", args: [true], ref: "Weekly digest" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  rerender(<Page path="/other" />);
+
+  const panel = await openPanel();
+  expect(await panel.findByText("No assistant changes")).toBeTruthy();
+  expect(
+    await panel.findByRole("button", { name: "Undo assistant changes (0)" })
+  ).toBeTruthy();
 });
 
 test("the activity button opens and closes the panel, and focus comes back to it", async () => {
