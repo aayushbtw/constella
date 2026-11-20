@@ -143,8 +143,6 @@ const entries = () =>
     .snapshot()
     .filter((entry) => entry.offPage !== true && entry.component !== "more");
 
-const labels = () => entries().map((entry) => entry.label);
-
 const navigation = () =>
   entries()
     .filter((entry) => entry.component === "button")
@@ -152,6 +150,7 @@ const navigation = () =>
 
 const progress = () => screen.getByRole("progressbar").textContent;
 
+// The choices aren't in the snapshot. @shadcn/react 0.3.1's ChoiceInput must be a native input: Questionnaire reads its `checked` and `validity` and moves radios with arrow keys by `instanceof HTMLInputElement`, so it can't render as ui-sdk's Checkbox or Radio.
 test("an agent finds the navigation by name and walks the questionnaire to submit", async () => {
   const onSubmit = vi.fn<(data: FormData) => void>();
   render(<Plan onSubmit={onSubmit} />);
@@ -217,19 +216,4 @@ test("an agent finds the navigation by name and walks the questionnaire to submi
     direction: "Inline diff review",
     timing: "now",
   });
-});
-
-// @shadcn/react 0.3.1's ChoiceInput must be a native input: Questionnaire reads its `checked` and `validity` and moves radios with arrow keys by `instanceof HTMLInputElement`, so it can't render as ui-sdk's Checkbox or Radio.
-test.fails("an agent finds each choice by name and picks it", async () => {
-  render(<Plan />);
-
-  expect(labels()).toContain("Tool call timeline");
-  const result = await agent.act({
-    steps: [{ action: "setChecked", args: [true], ref: "Tool call timeline" }],
-  });
-  expect(result.ok, result.error?.message).toBe(true);
-  expect(
-    screen.getByRole<HTMLInputElement>("radio", { name: /Tool call timeline/u })
-      .checked
-  ).toBe(true);
 });

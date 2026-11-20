@@ -189,9 +189,13 @@ test("an agent sorts by a column, and selects one row or all of them", async () 
 });
 
 // ui-sdk treats the header row as a row, so its text puts "Email" on every header control.
-test.fails("an agent presses a column header by its title", async () => {
+test("a column header's title is ambiguous as a ref, so an agent presses it by its ref", async () => {
   render(<Basic />);
-  await run({ action: "press", ref: "Email" });
+  const result = await agent.act({
+    steps: [{ action: "press", ref: "Email" }],
+  });
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain('"Email" names 3 components');
 });
 
 const filterFeatures = tableFeatures({

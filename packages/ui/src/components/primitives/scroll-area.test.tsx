@@ -91,7 +91,8 @@ test("a code block's pre is the viewport, its ref reaches it, and its root sits 
   expect(orientations(container)).toEqual(["horizontal"]);
 });
 
-test.fails("a viewport with sub-pixel overflow stays out of Tab order", async () => {
+// ui-sdk 0.1.0-beta.13 counts overflow in whole pixels, so Chromium makes a viewport with sub-pixel overflow a Tab stop; flip this once ui-sdk gives it `tabindex="-1"`.
+test("a viewport with sub-pixel overflow gets no tabindex", async () => {
   onTestFinished(() => {
     vi.restoreAllMocks();
   });
@@ -103,10 +104,16 @@ test.fails("a viewport with sub-pixel overflow stays out of Tab order", async ()
       <CodeBlockContent ref={pre}>pnpm add ai</CodeBlockContent>
     </CodeBlock>
   );
+  expect(pre.current?.tagName).toBe("PRE");
 
-  await waitFor(() => {
-    expect(pre.current?.getAttribute("tabindex")).toBe("-1");
-  });
+  await expect(
+    waitFor(
+      () => {
+        expect(pre.current?.hasAttribute("tabindex")).toBe(true);
+      },
+      { timeout: 200 }
+    )
+  ).rejects.toThrow();
 });
 
 function SuggestionRow() {
@@ -141,14 +148,13 @@ test("an agent finds every control in a scroll area by name, and nothing it coul
   ).toEqual([{ actions: [], component: "scroll-area" }]);
 });
 
-// ui-sdk 0.1.0-beta.1 lists every scroll area as a `scroll-area` entry with no actions, unnamed unless its root has an `aria-label`.
-test.fails("every snapshot entry is named", () => {
+// ui-sdk 0.1.0-beta.13 lists every scroll area as a `scroll-area` entry with no actions, unnamed unless its root has an `aria-label`.
+test("the only unnamed snapshot entry is the scroll area", () => {
   render(<SuggestionRow />);
 
-  for (const entry of onPage()) {
-    expect(
-      entry.label,
-      `${entry.component} ${entry.ref} has no name`
-    ).toBeTruthy();
-  }
+  expect(
+    onPage()
+      .filter((entry) => entry.label === undefined)
+      .map(({ actions, component }) => ({ actions, component }))
+  ).toEqual([{ actions: [], component: "scroll-area" }]);
 });
