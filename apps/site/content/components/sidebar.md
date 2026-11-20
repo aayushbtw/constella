@@ -11,7 +11,7 @@ description: The app's navigation, beside the page, collapsing to icons or out o
     <SidebarHeader>
       <SidebarExpandedOnly>…</SidebarExpandedOnly>
       <SidebarHeaderActions>
-        <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+        <SidebarTrigger kbd={<Kbd>{hint.text}</Kbd>}>
           <SidebarTriggerMark>
             <Logo />
           </SidebarTriggerMark>
@@ -51,7 +51,7 @@ import {
 } from "@/components/primitives/sidebar";
 ```
 
-`SidebarProvider` holds the open state and toggles it on ⌘B or Ctrl+B with no animation. Put the `Sidebar` and a `SidebarInset` for the page inside it. Below 768px the sidebar opens as a [Sheet](/docs/components/sheet) instead.
+`SidebarProvider` holds the open state and toggles it with no animation on ⌘B, or Ctrl+B off Apple devices. The shortcut pauses while a modal dialog is open. Put the `Sidebar` and a `SidebarInset` for the page inside it. Below 768px the sidebar opens as a [Sheet](/docs/components/sheet) instead.
 
 ```tsx
 <SidebarProvider>
@@ -98,7 +98,7 @@ SidebarProvider
 
 ## Sidebar Header
 
-`SidebarHeader` is a row the page header's height (56px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
+`SidebarHeader` is a row the page header's height (56px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Show the keys with `const hint = useShortcutHint("mod+b")` from `@ui-sdk/react/shortcuts`: Ctrl+B in the server HTML, ⌘B on Apple devices after the page loads. The trigger sets `aria-keyshortcuts` itself. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
 
 Wrap anything that only fits the open sidebar in `SidebarExpandedOnly`. It stays while the width moves, so the edge passes over it, and is removed once the sidebar has narrowed to its icons. In the content it fades with the labels.
 
@@ -108,7 +108,7 @@ Wrap anything that only fits the open sidebar in `SidebarExpandedOnly`. It stays
     <Brand />
   </SidebarExpandedOnly>
   <SidebarHeaderActions>
-    <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+    <SidebarTrigger kbd={<Kbd>{hint.text}</Kbd>}>
       <SidebarTriggerMark>
         <Logo />
       </SidebarTriggerMark>
@@ -273,9 +273,9 @@ Use the `collapsible` prop on `Sidebar` to choose how it closes. Collapsed to ic
 
 | Part | Adds |
 | --- | --- |
-| `SidebarProvider` | `open`, `defaultOpen`, `onOpenChange`; ⌘B / Ctrl+B |
+| `SidebarProvider` | `open`, `defaultOpen`, `onOpenChange`; `mod+b` toggles it (⌘B on Apple, Ctrl+B elsewhere), paused under a modal |
 | `Sidebar` | `side`: `"left"` or `"right"`; `collapsible`: `"offcanvas"`, `"icon"` or `"none"` |
-| `SidebarTrigger` | `kbd`; children default to `SidebarTriggerIcon` |
+| `SidebarTrigger` | `kbd`; `aria-keyshortcuts` for `mod+b`; children default to `SidebarTriggerIcon` |
 | `SidebarTriggerMark` | children: the mark shown in the rail |
 | `SidebarMenuButton` | `isActive`, `tooltip`, `withEnd`; `variant`: `"default"` or `"outline"`; `size`: `"sm"`, `"default"` or `"lg"`; `render` |
 | `SidebarMenuAction` | `showOnHover` |

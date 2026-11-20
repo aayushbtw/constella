@@ -21,6 +21,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { useShortcutHint } from "@ui-sdk/react/shortcuts";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -203,12 +204,13 @@ function HeaderTrigger({
   mark: ReactNode;
 }) {
   const { isMobile } = useSidebar();
+  const hint = useShortcutHint("mod+b");
   if (collapsible !== "icon" && !isMobile) {
     return null;
   }
   return (
     <SidebarHeaderActions>
-      <SidebarTrigger kbd={<Kbd>⌘B</Kbd>}>
+      <SidebarTrigger kbd={<Kbd>{hint.text}</Kbd>}>
         <SidebarTriggerMark>{mark}</SidebarTriggerMark>
       </SidebarTrigger>
     </SidebarHeaderActions>

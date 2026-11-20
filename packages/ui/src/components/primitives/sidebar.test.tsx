@@ -1,9 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { withSource } from "@ui-sdk/react/observe";
 import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
+import { Dialog, DialogContent, DialogTitle } from "./dialog";
 import {
   Sidebar,
   SidebarContent,
@@ -274,3 +276,60 @@ test("an agent finds and presses a sub row link, which stays a link", async () =
   expect(pressed.ok, pressed.error?.message).toBe(true);
   expect(onOpen).toHaveBeenCalledOnce();
 });
+
+function ShortcutApp({ dialog }: { dialog: boolean }) {
+  return (
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarContent />
+      </Sidebar>
+      <main>
+        <SidebarTrigger />
+        <input aria-label="Note" />
+      </main>
+      <Dialog defaultOpen={dialog}>
+        <DialogContent>
+          <DialogTitle>Settings</DialogTitle>
+        </DialogContent>
+      </Dialog>
+    </SidebarProvider>
+  );
+}
+
+const collapsed = () =>
+  document.querySelector<HTMLElement>("[data-slot='sidebar']")?.dataset
+    .collapsible === "icon";
+
+test("⌘B doesn't toggle the sidebar behind an open modal dialog", async () => {
+  setPlatform("apple");
+  try {
+    render(<ShortcutApp dialog />);
+    await screen.findByRole("dialog", { name: "Settings" });
+    fireEvent.keyDown(document.body, { key: "b", metaKey: true });
+    expect(collapsed()).toBe(false);
+  } finally {
+    setPlatform("other");
+  }
+});
+
+test.each([
+  { platform: "apple", press: { metaKey: true }, skip: { ctrlKey: true } },
+  { platform: "other", press: { ctrlKey: true }, skip: { metaKey: true } },
+] as const)(
+  "on $platform only the platform's modifier with B toggles the sidebar",
+  ({ platform, press, skip }) => {
+    setPlatform(platform);
+    try {
+      render(<ShortcutApp dialog={false} />);
+      fireEvent.keyDown(screen.getByRole("textbox", { name: "Note" }), {
+        key: "b",
+        ...skip,
+      });
+      expect(collapsed()).toBe(false);
+      fireEvent.keyDown(document.body, { key: "b", ...press });
+      expect(collapsed()).toBe(true);
+    } finally {
+      setPlatform("other");
+    }
+  }
+);
