@@ -519,7 +519,10 @@ function AppSidebar({
             <SidebarMenuSub>
               {docs.map((doc) => (
                 <SidebarMenuSubItem key={doc}>
-                  <SidebarMenuSubButton href="#sidebar">
+                  <SidebarMenuSubButton
+                    // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link
+                    render={<a href="#sidebar" />}
+                  >
                     {doc}
                   </SidebarMenuSubButton>
                 </SidebarMenuSubItem>
