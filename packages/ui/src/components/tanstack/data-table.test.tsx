@@ -117,6 +117,12 @@ function emails() {
     );
 }
 
+function shown(text: string) {
+  return screen.getByText(text, {
+    ignore: "[data-ui-sdk-announcer], [data-ui-sdk-announcer] *",
+  });
+}
+
 async function heard(text: string) {
   await vi.waitFor(() => {
     expect(
@@ -454,14 +460,14 @@ test("an agent pages through the rows and changes how many show", async () => {
   }
 
   await run({ action: "press", ref: "Next page" });
-  expect(screen.getByText("11–20 of 25")).toBeTruthy();
+  expect(shown("11–20 of 25")).toBeTruthy();
   await heard("11–20 of 25");
 
   await run({ action: "setValue", args: ["20"], ref: "Rows per page" });
-  expect(screen.getByText("1–20 of 25")).toBeTruthy();
+  expect(shown("1–20 of 25")).toBeTruthy();
 
   await run({ action: "press", ref: "Last page" });
-  expect(screen.getByText("21–25 of 25")).toBeTruthy();
+  expect(shown("21–25 of 25")).toBeTruthy();
   await heard("21–25 of 25");
 });
 
