@@ -154,7 +154,6 @@ function Header({ actions }: { actions?: ReactNode }) {
         </div>
         <div {...stylex.props(styles.end)}>
           <Search />
-          {/* Three children without actions, so NavMenu's useId matches builds that never pass them. */}
           {actions === undefined ? (
             themeToggle
           ) : (

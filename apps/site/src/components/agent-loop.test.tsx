@@ -47,7 +47,7 @@ const turnOn = {
 function Settings() {
   return (
     <>
-      <div data-agent-confirm="Cuts every connection.">
+      <div data-agent-confirm="Cuts every connection">
         <Label>
           <Switch />
           Airplane mode
@@ -111,8 +111,9 @@ test("the person refuses a confirm step with Cancel and lets it run with Allow",
 
   const refused = agent.act(turnOn);
   const dialog = await askedDialog();
-  expect(dialog.textContent).toContain("Cuts every connection.");
-  expect(dialog.textContent).toContain("Airplane mode");
+  expect(within(dialog).getByText(/It asked to/u).textContent).toBe(
+    "Cuts every connection. It asked to setChecked Airplane mode with true."
+  );
   fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
   await expect(refused).resolves.toMatchObject({ ok: false });
   expect(checked("Airplane mode")).toBe("false");
@@ -167,7 +168,13 @@ test("the agent can't see the confirm dialog, so it can't press Allow for the pe
   const asking = agent.act(turnOn);
   await askedDialog();
   const seen = JSON.stringify(agent.snapshot());
-  for (const word of ["Allow", "Cancel", "alert-dialog"]) {
+  for (const word of [
+    "Allow",
+    "Cancel",
+    "alert-dialog",
+    "Assistant activity",
+    "Undo assistant",
+  ]) {
     expect(seen).not.toContain(word);
   }
 
@@ -177,6 +184,42 @@ test("the agent can't see the confirm dialog, so it can't press Allow for the pe
   await expect(asking).resolves.toMatchObject({ ok: false });
   await expect(selfAllow).resolves.toMatchObject({ ok: false });
   expect(checked("Airplane mode")).toBe("false");
+});
+
+test("two confirm steps asked at once each wait for their own answer", async () => {
+  render(
+    <>
+      <div data-agent-confirm="Pauses every alert.">
+        <Label>
+          <Switch />
+          Do not disturb
+        </Label>
+      </div>
+      <Page />
+    </>
+  );
+
+  const first = agent.act(turnOn);
+  const second = tools.get("act")?.execute({
+    steps: [{ action: "setChecked", args: [true], ref: "Do not disturb" }],
+  });
+  const dialog = await askedDialog();
+  expect(dialog.textContent).toContain("Airplane mode");
+  fireEvent.click(screen.getByRole("button", { name: "Allow" }));
+  const result = await first;
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(checked("Airplane mode")).toBe("true");
+  expect(checked("Do not disturb")).toBe("false");
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole("alertdialog", { name: "Allow the assistant?" })
+        .textContent
+    ).toContain("Do not disturb");
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  await expect(second).resolves.toMatchObject({ ok: false });
+  expect(checked("Do not disturb")).toBe("false");
 });
 
 const regions = [
@@ -253,7 +296,7 @@ test("undo puts back the assistant's change and keeps the person's", async () =>
   const undo = await panel.findByRole("button", {
     name: "Undo assistant changes (0)",
   });
-  expect(undo.hasAttribute("disabled")).toBe(true);
+  expect(undo.getAttribute("aria-disabled")).toBe("true");
   expect(screen.getByText("No assistant changes")).toBeTruthy();
 
   const result = await agent.act({
@@ -266,13 +309,26 @@ test("undo puts back the assistant's change and keeps the person's", async () =>
   expect(await panel.findByText("Weekly digest")).toBeTruthy();
   expect(panel.getByText(/false → true/u)).toBeTruthy();
   expect(panel.queryByText("Dark mode")).toBeNull();
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Undo assistant changes (1)" })
-  );
+  const undoOne = await panel.findByRole("button", {
+    name: "Undo assistant changes (1)",
+  });
+  undoOne.focus();
+  fireEvent.click(undoOne);
 
-  await screen.findByRole("button", { name: "Undo assistant changes (0)" });
+  const done = await panel.findByRole("button", {
+    name: "Undo assistant changes (0)",
+  });
   expect(checked("Weekly digest")).toBe("false");
   expect(checked("Dark mode")).toBe("true");
+  expect(done.getAttribute("aria-disabled")).toBe("true");
+  expect(done.hasAttribute("disabled")).toBe(false);
+  expect(document.activeElement).toBe(done);
+  fireEvent.keyDown(done, { key: "Escape" });
+  await waitFor(() => {
+    expect(
+      screen.queryByRole("dialog", { name: "Assistant activity" })
+    ).toBeNull();
+  });
 });
 
 test("the panel lists changes the assistant made while it was shut", async () => {

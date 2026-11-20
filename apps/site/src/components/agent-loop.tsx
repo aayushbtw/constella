@@ -66,8 +66,15 @@ interface Row {
 const shift = ({ previous, value }: ObservedChange) =>
   `${JSON.stringify(previous ?? null)} → ${JSON.stringify(value ?? null)}`;
 
+const sentence = (text: string) => (/[.!?]$/u.test(text) ? text : `${text}.`);
+
 const asked = ({ action, args, label, component }: AgentAction) =>
   `It asked to ${action} ${label ?? component}${args.length > 0 ? ` with ${args.join(", ")}` : ""}.`;
+
+const question = (step: AgentAction) =>
+  step.confirm === undefined
+    ? asked(step)
+    : `${sentence(step.confirm)} ${asked(step)}`;
 
 const onHistory = (listener: () => void) => history.subscribe(listener);
 
@@ -94,7 +101,7 @@ function AgentConfirm() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Allow the assistant?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {step?.confirm} {step && asked(step)}
+                  {step && question(step)}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -169,6 +176,7 @@ function AgentFeed() {
         )}
         <Button
           disabled={applied === 0}
+          focusableWhenDisabled
           onClick={() => {
             void undo();
           }}

@@ -16,7 +16,6 @@ function PlainChrome({ children }: { children: ReactNode }) {
   );
 }
 
-// A separate tree, so an unflagged build keeps PlainChrome's useId values and markup.
 function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
   const AgentLoop = lazy(async () => {
     const { AgentLoop: loop } = await loadLoop();
