@@ -135,6 +135,8 @@ Pass `action` to `AlertDialogAction` for async work. A returned Promise keeps th
 </AlertDialog>
 ```
 
+Mark an action an agent must not take alone with `data-agent-confirm`, as above. [Agent Marks](/docs/agents#agent-marks) says where it goes and what it says.
+
 ## API Reference
 
 | Part | Adds |
