@@ -264,12 +264,24 @@ test("an agent names every slider and sets a value", async () => {
   );
 });
 
-test.fails("an agent names the Tooltip demo's tooltip, whose trigger is a thumb named on its inner input", () => {
+// ui-sdk 0.1.0-beta.13 names a tooltip from its trigger, and this trigger is the thumb, whose name sits on its inner input.
+test("the Tooltip demo's open tooltip is unnamed in the snapshot", () => {
   render(<TooltipVolume />);
-  const tooltip = agent
-    .snapshot()
-    .find((entry) => entry.component === "tooltip");
-  expect(tooltip?.label).toBeTruthy();
+  const thumb = screen.getByRole("slider", { name: "Volume" }).parentElement;
+  if (thumb === null) {
+    throw new Error("the thumb renders");
+  }
+  act(() => {
+    fireEvent.pointerEnter(thumb, { pointerType: "mouse" });
+  });
+
+  expect(screen.getByRole("tooltip").textContent).toBe("40%");
+  expect(
+    agent
+      .snapshot()
+      .filter((entry) => entry.component === "tooltip")
+      .map(({ component, label, open }) => ({ component, label, open }))
+  ).toEqual([{ component: "tooltip", label: undefined, open: true }]);
 });
 
 test("the thumb and slider carry their slots, and data-dragging while pressed", () => {

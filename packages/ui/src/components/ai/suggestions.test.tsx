@@ -32,6 +32,7 @@ function Row({ onPick }: { onPick?: OnPick }) {
   );
 }
 
+// ui-sdk 0.1.0-beta.13 lists every scroll area unnamed and with no actions.
 test("an agent finds every suggestion by name and picks each as the agent, and sees only the row's scroll area besides", async () => {
   const onPick = vi.fn<OnPick>();
   render(<Row onPick={onPick} />);
@@ -89,15 +90,4 @@ test("an agent's press waits for a Promise from onClick, and the suggestion is p
   expect(onPick.mock.calls.map(([text, { source }]) => [text, source])).toEqual(
     [["Draft a reply to Alex", "agent"]]
   );
-});
-
-// ui-sdk 0.1.0-beta.13 lists every scroll area with no actions.
-test.fails("the row's scroll area has a name", () => {
-  render(<Row />);
-
-  expect(
-    entries()
-      .filter((entry) => entry.component === "scroll-area")
-      .map((entry) => entry.label)
-  ).toEqual([expect.any(String)]);
 });

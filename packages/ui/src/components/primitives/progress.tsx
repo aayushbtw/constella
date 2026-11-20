@@ -106,7 +106,7 @@ function ProgressValue({
 }: Styled<ComponentProps<typeof ProgressValuePrimitive>>) {
   return (
     <ProgressValuePrimitive
-      // ui-sdk 0.1.0-beta.1 relies on the progressbar role hiding its children, which Chromium doesn't; drop once ui-sdk hides it.
+      // ui-sdk 0.1.0-beta.13 relies on the progressbar role hiding its children, which Chromium doesn't; drop once ui-sdk hides it.
       aria-hidden
       {...props}
       {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}

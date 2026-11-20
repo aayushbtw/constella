@@ -662,8 +662,8 @@ test("a controlled textarea whose onValueChange cancels the agent's setValue kee
   expect(box().value).toBe("Hello");
 });
 
-// ui-sdk 0.1.0-beta.13's trigger-menu `insert` puts the raw text in place of the query, skipping the trigger's own `insert`.
-test.fails("an agent inserts a slash command through the command menu", async () => {
+// ui-sdk 0.1.0-beta.13's trigger-menu `insert` puts the raw text in place of the query, skipping the trigger's own `insert`; expect "/translate " once it doesn't.
+test("an agent's insert through the command menu skips the trigger's insert", async () => {
   render(<CommandComposer />);
   box().focus();
 
@@ -674,5 +674,5 @@ test.fails("an agent inserts a slash command through the command menu", async ()
     ],
   });
   expect(result.ok, result.error?.message).toBe(true);
-  expect(box().value).toBe("/translate ");
+  expect(box().value).toBe("/translate");
 });

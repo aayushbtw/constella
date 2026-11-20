@@ -103,7 +103,7 @@ test("an agent sees each block's controls by name and none of its code", () => {
 const wrapsOutput = () =>
   screen.getByText(/pnpm lint/u).closest("pre")?.dataset.wrap !== undefined;
 
-test("an agent copies code and turns off line wrap", async () => {
+test("an agent copies each block and turns off line wrap", async () => {
   const writeText = stubClipboard();
   render(<Blocks />);
   expect(wrapsOutput()).toBe(true);
@@ -112,11 +112,12 @@ test("an agent copies code and turns off line wrap", async () => {
     steps: [
       { action: "press", ref: "Copy code" },
       { action: "press", ref: "Copy command" },
+      { action: "press", ref: "Copy output" },
       { action: "setPressed", args: [false], ref: "Wrap lines" },
     ],
   });
   expect(result.ok, result.error?.message).toBe(true);
-  expect(writeText.mock.calls).toEqual([[route], [install]]);
+  expect(writeText.mock.calls).toEqual([[route], [install], [lint]]);
   expect(wrapsOutput()).toBe(false);
 });
 

@@ -35,6 +35,7 @@ const users = await acme.metrics.activeUsers();
 \`\`\`
 `;
 
+// ui-sdk 0.1.0-beta.13 lists every scroll area unnamed and with no actions.
 test("an agent finds Copy code by name and copies the block, and sees only the table's scroll area besides", async () => {
   const writeText = stubClipboard();
   render(<Markdown>{answer}</Markdown>);
@@ -108,15 +109,4 @@ test("two blocks of the same language share a name, so a press by it is ambiguou
   for (const ref of refs) {
     expect(result.error?.message).toContain(ref);
   }
-});
-
-// ui-sdk 0.1.0-beta.13 lists every scroll area with no actions.
-test.fails("the table's scroll area has a name", () => {
-  render(<Markdown>{answer}</Markdown>);
-
-  expect(
-    entries()
-      .filter((entry) => entry.component === "scroll-area")
-      .map((entry) => entry.label)
-  ).toEqual([expect.any(String)]);
 });
