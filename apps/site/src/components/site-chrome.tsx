@@ -1,5 +1,5 @@
 import { ClientOnly, useRouterState } from "@tanstack/react-router";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/primitives/toast";
@@ -28,7 +28,6 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
   });
 
   return function AgentChrome({ children }: { children: ReactNode }) {
-    const [activity, setActivity] = useState(false);
     const path = useRouterState({ select: (s) => s.location.pathname });
 
     return (
@@ -37,7 +36,7 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
           actions={
             <ClientOnly>
               <Suspense>
-                <ActivityButton onOpenChange={setActivity} open={activity} />
+                <ActivityButton />
               </Suspense>
             </ClientOnly>
           }
@@ -46,7 +45,7 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
         <Toaster />
         <ClientOnly>
           <Suspense>
-            <AgentLoop onOpenChange={setActivity} open={activity} path={path} />
+            <AgentLoop path={path} />
           </Suspense>
         </ClientOnly>
       </>

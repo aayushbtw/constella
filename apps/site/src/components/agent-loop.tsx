@@ -2,6 +2,7 @@ import { Activity01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { AgentAction, ObservedChange } from "@ui-sdk/react/agent";
+import { createDialogController } from "@ui-sdk/react/dialog";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { Alert, AlertDescription } from "@/components/primitives/alert";
@@ -16,6 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/primitives/alert-dialog";
 import { Button } from "@/components/primitives/button";
+import { DialogTrigger } from "@/components/primitives/dialog";
 import {
   Empty,
   EmptyDescription,
@@ -42,6 +44,8 @@ import { agent, confirm, history, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
 
 const feedSize = 50;
+
+const activity = createDialogController();
 
 const styles = stylex.create({
   place: {
@@ -177,47 +181,29 @@ function AgentFeed() {
   );
 }
 
-function AgentActivityButton({
-  onOpenChange,
-  open,
-}: {
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-}) {
+function AgentActivityButton() {
   return (
-    <Button
-      aria-expanded={open}
+    <DialogTrigger
       aria-label="Assistant activity"
+      controller={activity}
       data-agent-hidden
-      onClick={() => {
-        onOpenChange(!open);
-      }}
-      size="icon"
-      variant="ghost"
+      render={<Button size="icon" variant="ghost" />}
     >
       <HugeiconsIcon
         icon={Activity01Icon}
         size={sizes.icon}
         strokeWidth={Number(strokes.icon)}
       />
-    </Button>
+    </DialogTrigger>
   );
 }
 
-function AgentLoop({
-  onOpenChange,
-  open,
-  path,
-}: {
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
-  path: string;
-}) {
+function AgentLoop({ path }: { path: string }) {
   return (
     <div data-agent-hidden>
       <AgentConfirm />
       <div {...stylex.props(styles.place)}>
-        <SidePanel onOpenChange={onOpenChange} open={open}>
+        <SidePanel controller={activity}>
           <SidePanelContent keepMounted>
             <SidePanelHeader>
               <SidePanelTitle>Assistant activity</SidePanelTitle>

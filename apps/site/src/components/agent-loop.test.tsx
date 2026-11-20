@@ -38,7 +38,7 @@ Object.assign(document, {
 });
 
 const { agent } = await import("~/lib/agent");
-const { AgentLoop } = await import("./agent-loop");
+const { AgentActivityButton, AgentLoop } = await import("./agent-loop");
 
 const turnOn = {
   steps: [{ action: "setChecked", args: [true], ref: "Airplane mode" }],
@@ -65,14 +65,25 @@ function Settings() {
   );
 }
 
-function Page({ open = false }: { open?: boolean }) {
+function Page() {
   return (
     <>
       <Settings />
-      <AgentLoop onOpenChange={() => {}} open={open} path="/" />
+      <AgentActivityButton />
+      <AgentLoop path="/" />
     </>
   );
 }
+
+const activityButton = () =>
+  screen.getByRole("button", { name: "Assistant activity" });
+
+const openPanel = async () => {
+  fireEvent.click(activityButton());
+  return within(
+    await screen.findByRole("dialog", { name: "Assistant activity" })
+  );
+};
 
 const checked = (name: string) =>
   screen.getByRole("switch", { name }).getAttribute("aria-checked");
@@ -197,7 +208,7 @@ test("an agent setting a marked Select by an item's label asks the person once, 
   render(
     <>
       <RegionPicker />
-      <AgentLoop onOpenChange={() => {}} open={false} path="/" />
+      <AgentLoop path="/" />
     </>
   );
 
@@ -237,8 +248,9 @@ test("a step that stops waiting closes the dialog and doesn't run", async () => 
 });
 
 test("undo puts back the assistant's change and keeps the person's", async () => {
-  render(<Page open />);
-  const undo = await screen.findByRole("button", {
+  render(<Page />);
+  const panel = await openPanel();
+  const undo = await panel.findByRole("button", {
     name: "Undo assistant changes (0)",
   });
   expect(undo.hasAttribute("disabled")).toBe(true);
@@ -251,9 +263,6 @@ test("undo puts back the assistant's change and keeps the person's", async () =>
   fireEvent.click(screen.getByRole("switch", { name: "Dark mode" }));
   expect(checked("Dark mode")).toBe("true");
 
-  const panel = within(
-    screen.getByRole("dialog", { name: "Assistant activity" })
-  );
   expect(await panel.findByText("Weekly digest")).toBeTruthy();
   expect(panel.getByText(/false → true/u)).toBeTruthy();
   expect(panel.queryByText("Dark mode")).toBeNull();
@@ -267,15 +276,42 @@ test("undo puts back the assistant's change and keeps the person's", async () =>
 });
 
 test("the panel lists changes the assistant made while it was shut", async () => {
-  const { rerender } = render(<Page />);
+  render(<Page />);
 
   await agent.act({
     steps: [{ action: "setChecked", args: [true], ref: "Weekly digest" }],
   });
-  rerender(<Page open />);
 
-  const panel = within(
-    await screen.findByRole("dialog", { name: "Assistant activity" })
-  );
+  const panel = await openPanel();
   expect(await panel.findByText("Weekly digest")).toBeTruthy();
+});
+
+test("the activity button opens and closes the panel, and focus comes back to it", async () => {
+  render(<Page />);
+  expect(activityButton().getAttribute("aria-haspopup")).toBe("dialog");
+  expect(activityButton().getAttribute("aria-expanded")).toBe("false");
+
+  await openPanel();
+  expect(activityButton().getAttribute("aria-expanded")).toBe("true");
+  fireEvent.click(activityButton());
+  await waitFor(() => {
+    expect(
+      screen.queryByRole("dialog", { name: "Assistant activity" })
+    ).toBeNull();
+  });
+  expect(activityButton().getAttribute("aria-expanded")).toBe("false");
+
+  const panel = await openPanel();
+  fireEvent.keyDown(panel.getByRole("button", { name: /Undo assistant/u }), {
+    key: "Escape",
+  });
+  await waitFor(() => {
+    expect(
+      screen.queryByRole("dialog", { name: "Assistant activity" })
+    ).toBeNull();
+  });
+  expect(activityButton().getAttribute("aria-expanded")).toBe("false");
+  await waitFor(() => {
+    expect(document.activeElement).toBe(activityButton());
+  });
 });
