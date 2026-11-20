@@ -10,6 +10,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { renderElement } from "@ui-sdk/react/primitive";
 import {
   ToastAction as ToastActionPrimitive,
   ToastClose as ToastClosePrimitive,
@@ -336,10 +337,31 @@ function ToastRegion({
 }
 
 function Toast({
+  render,
   sx,
   ...props
 }: Styled<ComponentProps<typeof ToastPrimitive>>) {
-  return <ToastPrimitive {...props} {...stylex.props(styles.toast, sx)} />;
+  return (
+    <ToastPrimitive
+      {...props}
+      {...stylex.props(styles.toast, sx)}
+      // ui-sdk leaves the toasts hidden behind a collapsed stack focusable.
+      render={(rendered, state) =>
+        renderElement(
+          "li",
+          {
+            ...rendered,
+            inert:
+              state.leaving ||
+              (!state.expanded && state.index > 0) ||
+              undefined,
+          },
+          render,
+          state
+        )
+      }
+    />
+  );
 }
 
 function ToastContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
