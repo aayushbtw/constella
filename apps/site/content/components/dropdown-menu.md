@@ -181,7 +181,7 @@ Use `color="danger"` for an action that can't be undone.
 <!-- ::demo name="dropdown-menu-danger" -->
 
 ```tsx
-<DropdownMenuItem color="danger">
+<DropdownMenuItem color="danger" data-agent-confirm="Deletes this file">
   <HugeiconsIcon icon={Delete02Icon} />
   Delete
 </DropdownMenuItem>

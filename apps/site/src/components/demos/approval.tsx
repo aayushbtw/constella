@@ -7,6 +7,7 @@ import {
   Approval,
   ApprovalAction,
   ApprovalCancel,
+  ApprovalConfirm,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,
@@ -60,6 +61,7 @@ function MailIcon() {
 }
 
 const recipients = ["alex@acme.com", "sam@acme.com"];
+const subject = "Q3 forecast, revised";
 
 function MailFields() {
   return (
@@ -77,7 +79,7 @@ function MailFields() {
         </ApprovalField>
         <ApprovalField>
           <ApprovalFieldLabel>Subject</ApprovalFieldLabel>
-          <ApprovalFieldValue>Q3 forecast, revised</ApprovalFieldValue>
+          <ApprovalFieldValue>{subject}</ApprovalFieldValue>
         </ApprovalField>
       </ApprovalFields>
     </ApprovalContent>
@@ -166,18 +168,17 @@ function ApprovalDemo() {
               >
                 Cancel
               </ApprovalCancel>
-              <Button
+              <ApprovalConfirm
                 aria-busy={sending}
+                data-agent-confirm={`Sends “${subject}” to ${recipients.join(" and ")}`}
                 disabled={sending}
                 onClick={() => {
                   setAnswer("sending");
                 }}
-                size="sm"
-                variant="primary"
               >
                 {sending ? <Spinner /> : null}
                 Send mail
-              </Button>
+              </ApprovalConfirm>
             </ApprovalFooter>
           )}
         </Approval>
