@@ -152,7 +152,6 @@ const styles = stylex.create({
   },
 });
 
-/** The command's look, for list parts another ui-sdk component renders (Prompt Input's Trigger Menu). */
 const commandStyles = {
   empty: [typeStyles.textMd, styles.empty],
   item: [typeStyles.textMd, styles.item],

@@ -164,7 +164,7 @@ const styles = stylex.create({
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
   },
-  // As wide as the composer; a list pads its own top. ui-sdk's trigger menu leaves the browser's `[popover]` border.
+  // ui-sdk's trigger menu leaves the browser's `[popover]` border.
   commandContent: {
     borderBlockEndWidth: 0,
     borderBlockStartWidth: 0,
@@ -388,7 +388,6 @@ function PromptInputCommand<T = string>({
   );
 }
 
-// A controlled `value` needs `onValueChange`: the trigger menu re-renders as it opens, before React's `onChange`, so a draft synced there loses the trigger.
 type PromptInputCommandTextareaProps = Omit<
   TextareaProps,
   "onValueChange" | "value"

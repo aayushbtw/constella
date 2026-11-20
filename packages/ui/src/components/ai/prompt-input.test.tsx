@@ -227,7 +227,6 @@ test("without an empty message, a query that matches nothing closes the list and
   expect(onSubmit.mock.calls).toEqual([["/zz"]]);
 });
 
-// The trade-off PromptInputCommandEmpty documents: the list stays open on no match, so Enter doesn't submit.
 test("with an empty message, a query that matches nothing shows it and Enter doesn't submit", async () => {
   const onSubmit = renderComposer({ empty: true });
   await type("/zz");
@@ -238,7 +237,6 @@ test("with an empty message, a query that matches nothing shows it and Enter doe
   expect(onSubmit).not.toHaveBeenCalled();
 });
 
-// That clearing the draft then closes the list shows only in a browser: jsdom keeps it open.
 test("Cmd+Enter with the list open submits the draft", async () => {
   const onSubmit = renderComposer();
   await type("/tr");
@@ -359,7 +357,6 @@ test("an agent finds the message field, its command menu and Send by name", () =
       `${entry.component} ${entry.ref} has no name`
     ).toBeTruthy();
   }
-  // These entries are the hook for phase 6's `definePrimitive` `agent` key.
   expect(
     entries.map((entry) => `${entry.component} ${entry.label}`).toSorted()
   ).toEqual(["button Send", "textarea Message", "trigger-menu Message"]);
