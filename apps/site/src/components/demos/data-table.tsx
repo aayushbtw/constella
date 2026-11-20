@@ -233,7 +233,9 @@ const money = new Intl.NumberFormat("en-US", {
 
 const columns = column.columns([
   column.display({
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
@@ -376,7 +378,13 @@ function RowActions({ payment }: { payment: Payment }) {
 
 const fullColumns = full.columns([
   full.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableGlobalFilter: false,
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
@@ -446,7 +454,7 @@ function DataTableFilterDemo() {
               <Glyph icon={Search01Icon} />
             </InputGroupAddon>
             <InputGroupInput
-              aria-label="Search payments"
+              aria-label="Filter payments"
               onChange={(event) => {
                 setSearch(event.target.value);
               }}
@@ -739,7 +747,13 @@ function PaymentLink({ payment }: { payment: Payment }) {
 
 const clickColumns = column.columns([
   column.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",

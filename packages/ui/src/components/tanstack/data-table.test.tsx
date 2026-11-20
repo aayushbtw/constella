@@ -118,13 +118,7 @@ function emails() {
 }
 
 function checkboxIn(email: string) {
-  const row = screen
-    .getAllByRole("row")
-    .find((candidate) => candidate.textContent.includes(email));
-  if (row === undefined) {
-    throw new Error(`No row holds ${email}`);
-  }
-  return within(row).getByRole("checkbox", { name: "Select row" });
+  return screen.getByRole("checkbox", { name: `Select ${email}` });
 }
 
 const features = tableFeatures({
@@ -137,7 +131,9 @@ const features = tableFeatures({
 const column = createColumnHelper<typeof features, Payment>();
 
 const selectColumn = column.display({
-  cell: ({ row }) => <DataTableSelectRow row={row} />,
+  cell: ({ row }) => (
+    <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+  ),
   enableSorting: false,
   header: ({ table }) => <DataTableSelectAll table={table} />,
   id: "select",
@@ -168,7 +164,12 @@ function Basic() {
 
 test("an agent sorts by a column, and selects one row or all of them", async () => {
   render(<Basic />);
-  const entries = expectNamed(["Select all", "Select row", "Email", "Amount"]);
+  const entries = expectNamed([
+    "Select all",
+    "Select dee@acme.com",
+    "Email",
+    "Amount",
+  ]);
 
   const email = entries.find(
     (entry) => entry.component === "button" && entry.label === "Email"
@@ -246,7 +247,13 @@ function RowActions({ payment }: { payment: Payment }) {
 
 const filterColumns = filtered.columns([
   filtered.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableGlobalFilter: false,
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
@@ -338,7 +345,7 @@ test("an agent searches, filters, hides a column, and deletes a row only once a 
     "Status",
     "View",
     "Actions for ken@acme.com",
-    "Select row",
+    "Select dee@acme.com",
   ]);
 
   await run({ action: "setValue", args: ["e@acme"], ref: "Search payments" });
@@ -366,6 +373,22 @@ test("an agent searches, filters, hides a column, and deletes a row only once a 
   const removed = await agent.act(remove);
   expect(removed.ok, removed.error?.message).toBe(true);
   expect(emails()).toEqual(["ken@acme.com"]);
+});
+
+test("an agent checks a row by its text or by its checkbox's own name", async () => {
+  render(<Filters />);
+  const labels = onPage()
+    .filter((entry) => entry.component === "checkbox")
+    .map((entry) => entry.label);
+  expect(new Set(labels).size, labels.join(", ")).toBe(labels.length);
+
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("true");
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("false");
+
+  await run({ action: "setChecked", args: [true], ref: "Select abe@acme.com" });
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("true");
+  expect(checkboxIn("ken@acme.com").getAttribute("aria-checked")).toBe("false");
 });
 
 const ledger: Payment[] = Array.from({ length: 25 }, (_, index) => ({
@@ -470,6 +493,31 @@ test("an agent acts on the selected rows from the action bar, deleting only once
   await run({ action: "setChecked", args: [true], ref: "ken@acme.com" });
   await run({ action: "press", ref: "Clear selection" });
   expect(checkboxIn("ken@acme.com").getAttribute("aria-checked")).toBe("false");
+});
+
+test("an agent can't reach the action bar while no row is selected", async () => {
+  render(<Bar />);
+  const barActions = () =>
+    agent
+      .snapshot()
+      .filter(
+        (entry) => entry.label === "Delete" || entry.label === "Clear selection"
+      );
+  const closed = barActions();
+  expect(closed).toHaveLength(2);
+  for (const entry of closed) {
+    expect(entry).toMatchObject({ actions: [], disabled: true });
+  }
+  const cleared = await agent.act({
+    steps: [{ action: "press", ref: "Clear selection" }],
+  });
+  expect(cleared.ok, "pressed Clear on a closed bar").toBe(false);
+
+  await run({ action: "setChecked", args: [true], ref: "abe@acme.com" });
+  for (const entry of barActions()) {
+    expect(entry.disabled).not.toBe(true);
+    expect(entry.actions).toContain("press");
+  }
 });
 
 const OpenPayment = createContext<(id: string) => void>(() => {});
