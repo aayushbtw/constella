@@ -748,22 +748,36 @@ const styles = stylex.create({
       [`:active${pressable}`]: colors.fillSubtle,
       [highlighted]: colors.fill,
     },
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
+    cursor: "pointer",
     display: "flex",
+    fontWeight: fontWeights.regular,
     gap: space.xs,
     height: sizes.controlSm,
+    opacity: {
+      default: 1,
+      ":is(:disabled, [aria-disabled='true'])": opacities.disabled,
+    },
     overflow: "hidden",
+    paddingBlockEnd: 0,
+    paddingBlockStart: 0,
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
+    textAlign: "start",
     textDecorationLine: "none",
     transitionDuration: durations.hover,
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
     whiteSpace: "nowrap",
+    width: "100%",
   },
   // The rail's mark and the icon share one cell, and cross-fade as the trigger is pointed at.
   markStack: {
@@ -1570,24 +1584,22 @@ function SidebarMenuSubItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
 }
 
 function SidebarMenuSubButton({
+  "data-slot": slot = "sidebar-menu-sub-button",
   isActive = false,
-  render,
   sx,
   ...props
-}: Styled<PartProps<"a">> & {
+}: Styled<SidebarButtonProps> & {
   isActive?: boolean;
 }) {
-  return renderElement(
-    "a",
-    mergeProps(
-      {
-        "data-active": isActive ? "" : undefined,
-        "data-slot": "sidebar-menu-sub-button",
-      },
-      props,
-      stylex.props([typeStyles.textMd, styles.subButton], sx)
-    ),
-    render
+  return (
+    <SidebarButton
+      {...mergeProps(
+        { "data-active": isActive ? "" : undefined },
+        props,
+        stylex.props([typeStyles.textMd, styles.subButton], sx)
+      )}
+      data-slot={slot}
+    />
   );
 }
 

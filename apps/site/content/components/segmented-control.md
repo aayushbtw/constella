@@ -6,21 +6,11 @@ description: One pick among a few, marked by a pill that slides to it.
 <!-- ::demo name="segmented-control" -->
 
 ```tsx
-const [range, setRange] = useState<"day" | "week" | "month">("week");
-
-<SegmentedControl
-  aria-label="Range"
-  onValueChange={(next) => {
-    if (next !== null) {
-      setRange(next);
-    }
-  }}
-  value={range}
->
+<SegmentedControl aria-label="Range" defaultValue="week">
   <SegmentedControlItem value="day">Day</SegmentedControlItem>
   <SegmentedControlItem value="week">Week</SegmentedControlItem>
   <SegmentedControlItem value="month">Month</SegmentedControlItem>
-</SegmentedControl>;
+</SegmentedControl>
 ```
 
 ## Installation

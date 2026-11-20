@@ -46,6 +46,7 @@ const styles = stylex.create({
   root: {
     display: "flex",
     flexDirection: { default: "row", [vertical]: "column" },
+    isolation: "isolate",
     position: "relative",
     width: "fit-content",
   },

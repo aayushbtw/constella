@@ -14,6 +14,9 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
@@ -221,4 +224,53 @@ test("a link row stays a link, with its own slot and no type", () => {
   const docs = screen.getByRole("link", { name: "Docs" });
   expect(docs.dataset.slot).toBe("sidebar-menu-button");
   expect(docs.hasAttribute("type")).toBe(false);
+});
+
+test("an agent finds and presses a sub row link, which stays a link", async () => {
+  const onOpen = vi.fn<() => void>();
+  render(
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuSub>
+                <SidebarMenuSubItem>
+                  <SidebarMenuSubButton
+                    isActive
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onOpen();
+                    }}
+                    // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link
+                    render={<a href="#installation" />}
+                  >
+                    Installation
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              </SidebarMenuSub>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+
+  const link = screen.getByRole("link", { name: "Installation" });
+  expect(link.getAttribute("href")).toBe("#installation");
+  expect(link.dataset.slot).toBe("sidebar-menu-sub-button");
+  expect(Object.hasOwn(link.dataset, "active")).toBe(true);
+  expect(link.hasAttribute("type")).toBe(false);
+
+  const entry = entries().find(
+    (candidate) => candidate.label === "Installation"
+  );
+  expect(entry, "Installation is missing from the snapshot").toBeDefined();
+  expect(entry?.actions).toContain("press");
+
+  const pressed = await agent.act({
+    steps: [{ action: "press", ref: "Installation" }],
+  });
+  expect(pressed.ok, pressed.error?.message).toBe(true);
+  expect(onOpen).toHaveBeenCalledOnce();
 });
