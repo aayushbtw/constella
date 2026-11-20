@@ -92,27 +92,29 @@ function AgentConfirm() {
   useEffect(() => mountConfirm(), []);
 
   return (
-    <AlertDialog controller={confirm.controller}>
-      <AlertDialogContent size="sm">
-        {() => {
-          const step = confirm.controller.getPayload();
-          return (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Allow the assistant?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {step && question(step)}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Allow</AlertDialogAction>
-              </AlertDialogFooter>
-            </>
-          );
-        }}
-      </AlertDialogContent>
-    </AlertDialog>
+    <div data-agent-hidden>
+      <AlertDialog controller={confirm.controller}>
+        <AlertDialogContent size="sm">
+          {() => {
+            const step = confirm.controller.getPayload();
+            return (
+              <>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Allow the assistant?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {step && question(step)}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Allow</AlertDialogAction>
+                </AlertDialogFooter>
+              </>
+            );
+          }}
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }
 
@@ -224,4 +226,4 @@ function AgentLoop({ path }: { path: string }) {
   );
 }
 
-export { AgentActivityButton, AgentLoop };
+export { AgentActivityButton, AgentConfirm, AgentLoop };
