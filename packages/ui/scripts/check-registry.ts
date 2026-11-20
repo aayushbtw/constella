@@ -1,10 +1,12 @@
-// Fails when an item's imports don't match the dependencies it declares, or a
-// file in src belongs to no item, so `shadcn add` never installs a broken item.
+// Fails when an item's imports don't match the dependencies it declares, a
+// declared version differs from package.json, or a file in src belongs to no
+// item, so `shadcn add` never installs a broken item.
 
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 import { registrySchema } from "shadcn/schema";
+import { z } from "zod";
 
 const root = path.join(import.meta.dirname, "..");
 // shadcn expects the app to provide React.
@@ -12,6 +14,35 @@ const provided = new Set(["react", "react-dom"]);
 
 const registry = registrySchema.parse(
   JSON.parse(await readFile(path.join(root, "registry.json"), "utf-8"))
+);
+
+const manifestSchema = z.object({
+  dependencies: z.record(z.string(), z.string()).default({}),
+  peerDependencies: z.record(z.string(), z.string()).default({}),
+  peerDependenciesMeta: z
+    .record(z.string(), z.object({ optional: z.boolean().optional() }))
+    .default({}),
+});
+
+const readManifest = async (dir: string) =>
+  manifestSchema.parse(
+    JSON.parse(await readFile(path.join(dir, "package.json"), "utf-8"))
+  );
+
+const { dependencies: ranges } = await readManifest(root);
+
+const requiredPeers = new Map(
+  await Promise.all(
+    Object.keys(ranges).map(async (name) => {
+      const { peerDependencies, peerDependenciesMeta } = await readManifest(
+        path.join(root, "node_modules", name)
+      );
+      const peers = Object.keys(peerDependencies).filter(
+        (peer) => peerDependenciesMeta[peer]?.optional !== true
+      );
+      return [name, peers] as const;
+    })
+  )
 );
 
 const owners = new Map<string, string[]>();
@@ -56,7 +87,7 @@ function compare(
   const unused = [...declared].filter((name) => !used.has(name));
   if (missing.length) {
     errors.push(
-      `${item} imports ${missing.join(", ")} but doesn't list it in ${kind}`
+      `${item} needs ${missing.join(", ")} but doesn't list it in ${kind}`
     );
   }
   if (unused.length) {
@@ -104,12 +135,31 @@ for (const item of registry.items) {
     }
   }
 
-  compare(
-    item.name,
-    "dependencies",
-    new Set(item.dependencies?.map((dep) => dep.replace(/(?<=.)@.*$/u, ""))),
-    new Set([...packages].filter((name) => !provided.has(name)))
+  const needed = new Set(
+    [...packages]
+      .flatMap((name) => [name, ...(requiredPeers.get(name) ?? [])])
+      .filter((name) => !provided.has(name))
   );
+
+  const declared = new Set<string>();
+  for (const dep of item.dependencies ?? []) {
+    const at = dep.indexOf("@", 1);
+    const name = at === -1 ? dep : dep.slice(0, at);
+    const range = at === -1 ? undefined : dep.slice(at + 1);
+    const expected = ranges[name];
+    declared.add(name);
+    if (expected === undefined) {
+      errors.push(`${item.name} lists ${name}, which package.json doesn't`);
+    } else if (
+      range === undefined ? /^\d/u.test(expected) : range !== expected
+    ) {
+      errors.push(
+        `${item.name} lists ${dep}, but package.json has ${name}@${expected}`
+      );
+    }
+  }
+
+  compare(item.name, "dependencies", declared, needed);
   compare(
     item.name,
     "registryDependencies",

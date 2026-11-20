@@ -27,7 +27,7 @@ Every `registry:lib` file lives in `src/lib/constella/`, so an install keeps it 
 
 `registryDependencies` reference this registry by URL. A bare name like `base` means shadcn's official registry.
 
-`vpr check` runs `packages/ui/scripts/check-registry.ts`: an item's direct imports must equal its `dependencies` (React aside, which the app provides) and its `registryDependencies`, even ones another dependency already brings, and every file in `src` belongs to exactly one item. `devDependencies` aren't checked.
+`vpr check` runs `packages/ui/scripts/check-registry.ts`: an item's direct imports must equal its `dependencies` (React aside, which the app provides) and its `registryDependencies`, even ones another dependency already brings, and every file in `src` belongs to exactly one item. An imported package's required peers count as imports, so an item on `@ui-sdk/react` also lists `@ui-sdk/core`, as ui-sdk's install asks. A dependency's version must equal its range in `packages/ui/package.json`, and one pinned there exactly, like `@ui-sdk/*`, must carry it, so `shadcn add` installs the beta Constella was checked against. A bump changes `package.json` and every item at once. `devDependencies` aren't checked.
 
 ## Composition
 

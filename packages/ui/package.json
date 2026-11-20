@@ -32,7 +32,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "shadcn": "^4.23.0",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "zod": "^4.6.7"
   },
   "peerDependencies": {
     "react": "^19",

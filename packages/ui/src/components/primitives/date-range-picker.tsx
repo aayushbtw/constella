@@ -3,7 +3,7 @@
 import { Calendar03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { formatDateRange } from "@ui-sdk/core/date";
+import { formatDateRange } from "@ui-sdk/react/date";
 import {
   DatePickerContent as DatePickerContentPrimitive,
   DatePickerPreset as DatePickerPresetPrimitive,
