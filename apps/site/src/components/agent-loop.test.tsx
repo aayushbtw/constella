@@ -9,6 +9,14 @@ import type { AgentStep } from "@ui-sdk/react/agent";
 import { expect, test } from "vite-plus/test";
 
 import { Label } from "@/components/primitives/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/primitives/select";
 import { Switch } from "@/components/primitives/switch";
 
 interface Tool {
@@ -119,6 +127,100 @@ test("a browser agent's confirm step asks the person once, and runs on Allow", a
   expect(result?.ok, result?.error?.message).toBe(true);
   expect(checked("Airplane mode")).toBe("true");
   expect(screen.queryByRole("alertdialog")).toBeNull();
+});
+
+test("a browser agent's confirm step is refused when the person presses Cancel", async () => {
+  render(<Page />);
+
+  const running = tools.get("act")?.execute(turnOn);
+  await askedDialog();
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  await expect(running).resolves.toMatchObject({ ok: false });
+  expect(checked("Airplane mode")).toBe("false");
+  await expectNoDialog();
+});
+
+test("with no confirm dialog on the page, a browser agent's confirm step is refused", async () => {
+  render(<Settings />);
+
+  const result = await tools.get("act")?.execute(turnOn);
+
+  expect(result?.ok).toBe(false);
+  expect(checked("Airplane mode")).toBe("false");
+});
+
+test("the agent can't see the confirm dialog, so it can't press Allow for the person", async () => {
+  render(<Page />);
+
+  const asking = agent.act(turnOn);
+  await askedDialog();
+  const seen = JSON.stringify(agent.snapshot());
+  for (const word of ["Allow", "Cancel", "alert-dialog"]) {
+    expect(seen).not.toContain(word);
+  }
+
+  const selfAllow = agent.act({ steps: [{ action: "press", ref: "Allow" }] });
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  await expect(asking).resolves.toMatchObject({ ok: false });
+  await expect(selfAllow).resolves.toMatchObject({ ok: false });
+  expect(checked("Airplane mode")).toBe("false");
+});
+
+const regions = [
+  { label: "Europe", value: "europe" },
+  { label: "North America", value: "north-america" },
+];
+
+function RegionPicker() {
+  return (
+    <div data-agent-confirm="Moves your data to another region.">
+      <Select defaultValue="europe" items={regions}>
+        <SelectLabel>Region</SelectLabel>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {regions.map((region) => (
+            <SelectItem key={region.value} value={region.value}>
+              {region.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+test("an agent setting a marked Select by an item's label asks the person once, with the item's value", async () => {
+  render(
+    <>
+      <RegionPicker />
+      <AgentLoop onOpenChange={() => {}} open={false} path="/" />
+    </>
+  );
+
+  const running = agent.act({
+    steps: [{ action: "setValue", args: ["North America"], ref: "Region" }],
+  });
+  const dialog = await askedDialog();
+  expect(within(dialog).getByText(/It asked to/u).textContent).toBe(
+    "Moves your data to another region. It asked to setValue Region with north-america."
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Allow" }));
+  await expectNoDialog();
+
+  const askedAgain = await Promise.race([
+    askedDialog(),
+    running.then(() => null),
+  ]);
+  expect(askedAgain).toBeNull();
+  const result = await running;
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(
+    screen.getByRole("combobox", { name: "Region" }).textContent
+  ).toContain("North America");
 });
 
 test("a step that stops waiting closes the dialog and doesn't run", async () => {

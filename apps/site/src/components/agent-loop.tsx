@@ -35,7 +35,7 @@ import {
   SidePanelHeader,
   SidePanelTitle,
 } from "@/components/primitives/side-panel";
-import { agent, confirm, history } from "~/lib/agent";
+import { agent, confirm, history, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
 
 const feedSize = 50;
@@ -75,6 +75,8 @@ const labelOf = (ref: string) =>
   history.entries().find((entry) => entry.ref === ref)?.label ?? ref;
 
 function AgentConfirm() {
+  useEffect(() => mountConfirm(), []);
+
   return (
     <AlertDialog controller={confirm.controller}>
       <AlertDialogContent size="sm">

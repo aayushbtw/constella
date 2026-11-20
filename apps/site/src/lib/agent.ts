@@ -5,9 +5,15 @@ import { createHistory } from "@ui-sdk/react/history";
 
 function createBridge() {
   const confirm = createConfirm<AgentAction>();
+  let mounted = false;
+  const mountConfirm = () => {
+    mounted = true;
+    return () => {
+      mounted = false;
+    };
+  };
   const ask = async (step: AgentAction, signal: AbortSignal) => {
-    // The controller has members only while an alert dialog holds it; unheld, `open` does nothing and resolves nothing.
-    if (!("open" in confirm.controller)) {
+    if (!mounted) {
       return false;
     }
     const { returnValue } = await confirm.controller.open({
@@ -20,8 +26,9 @@ function createBridge() {
     allow: async (step, { signal }) =>
       step.confirm === undefined || (await ask(step, signal)),
   });
+  // The bridge's allow already asked the person, and `!step.confirm` would refuse after they said yes.
   registerTools(agent, { allow: () => true });
-  return { agent, confirm, history: createHistory(agent) };
+  return { agent, confirm, history: createHistory(agent), mountConfirm };
 }
 
 declare global {
@@ -31,4 +38,4 @@ declare global {
 // The bridge has no destroy, so an HMR re-run reuses the one already on the page.
 globalThis.agentBridge ??= createBridge();
 
-export const { agent, confirm, history } = globalThis.agentBridge;
+export const { agent, confirm, history, mountConfirm } = globalThis.agentBridge;
