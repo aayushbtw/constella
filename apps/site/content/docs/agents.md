@@ -72,14 +72,14 @@ It finds the components already on the page and adds new ones as they mount. It 
 
 Pass `allow` to `createAgent` to decide each step before it runs. A step on a control with an [agent mark](#agent-marks) carries the mark's sentence as `step.confirm`, so let other steps run and ask the person about those.
 
-This bridge asks through `createConfirm`, which drives a Constella [Alert Dialog](/docs/components/alert-dialog). Put it in a module like `lib/agent.ts`:
+This bridge asks through a controller from `createAlertDialogController`, which opens a Constella [Alert Dialog](/docs/components/alert-dialog). The bridge doesn't use `createConfirm`, since its `confirm()` can't take the step's `signal`. Put it in a module like `lib/agent.ts`:
 
 ```ts
 import { createAgent } from "@ui-sdk/react/agent";
 import type { AgentAction } from "@ui-sdk/react/agent";
-import { createConfirm } from "@ui-sdk/react/alert-dialog";
+import { createAlertDialogController } from "@ui-sdk/react/alert-dialog";
 
-const confirm = createConfirm<AgentAction>();
+const confirmController = createAlertDialogController<AgentAction>();
 let mounted = false;
 const mountConfirm = () => {
   mounted = true;
@@ -91,7 +91,7 @@ const ask = async (step: AgentAction, signal: AbortSignal) => {
   if (!mounted) {
     return false;
   }
-  const { returnValue } = await confirm.controller.open({
+  const { returnValue } = await confirmController.open({
     payload: step,
     signal,
   });
@@ -102,7 +102,7 @@ const agent = createAgent({
     step.confirm === undefined || (await ask(step, signal)),
 });
 
-export { agent, confirm, mountConfirm };
+export { agent, confirmController, mountConfirm };
 ```
 
 | When | The step |
@@ -112,7 +112,7 @@ export { agent, confirm, mountConfirm };
 | The person presses **Cancel** | Is refused. |
 | The person presses **Allow** | Runs. |
 | Its `signal` aborts | Closes the dialog and doesn't run. |
-| Another confirm step is still asking | Waits for its own answer. |
+| Another confirm step is still asking | Waits for its own answer, since the bridge runs one `act` call at a time. |
 
 Render the dialog once on the page:
 
@@ -130,7 +130,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/primitives/alert-dialog";
-import { confirm, mountConfirm } from "@/lib/agent";
+import { confirmController, mountConfirm } from "@/lib/agent";
 
 const sentence = (text: string) => (/[.!?]$/u.test(text) ? text : `${text}.`);
 
@@ -147,7 +147,7 @@ function AgentConfirm() {
 
   return (
     <div data-agent-hidden>
-      <AlertDialog controller={confirm.controller}>
+      <AlertDialog controller={confirmController}>
         <AlertDialogContent<AgentAction> size="sm">
           {(state) => {
             const step = state.payload;
@@ -234,38 +234,44 @@ Use `createHistory` and `stageChanges` from `@ui-sdk/react/history` to undo an a
 
 | Call | What it does | Pair it with |
 | --- | --- | --- |
-| `createHistory(agent)` | Records changes from people, agents and your app. | One history, created next to the bridge. |
+| `createHistory(agent, { within })` | Records changes from people, agents and your app inside the `within` element. Without `within`, it records the whole page. | One history for the region its undo covers, created on mount and destroyed on unmount. |
 | `history.entries()`, `history.position()`, `history.subscribe(listener)` | `entries()` lists the changes, oldest first, each with its `label`, `previous`, `value`, `source` and `reason`. `position()` is how many entries are applied, from `0` to `entries().length`. `subscribe` calls the listener when either changes. | A list of the assistant's changes, the entries whose `source` is `"agent"`. |
 | `history.seek(n)` | Puts the page back as it was after `n` entries, or forward again. A new change after seeking back drops the entries after that point. It resolves with the changes it couldn't put back. | A timeline or rewind slider over the entries. |
 | `history.undoSource("agent")` | Puts back only the agent's changes. It resolves with the changes it couldn't put back. | A button that undoes the assistant's changes and names what it couldn't put back. |
 | `stageChanges(agent, changes)` | Writes each `{ ref, key?, value }` onto the real controls. `applied` lists each change as `{ ref, key, before, value }`. | An [Approval](/docs/components/approval) card that lists each `before → value`. |
 | `staged.revert()` | Puts each `before` value back. It resolves with the changes it couldn't put back. | **Discard**, an `ApprovalCancel`. |
 
-Create the history in the bridge's module, `lib/agent.ts`, and export it:
-
-```ts
-import { createHistory } from "@ui-sdk/react/history";
-
-const history = createHistory(agent);
-
-export { agent, confirm, history, mountConfirm };
-```
-
-Read it with `useSyncExternalStore`:
+Create the history in an effect, with `within` pointing at the region its undo covers. Call `destroy()` on unmount, so a region that leaves the page stops recording:
 
 ```tsx
+import { createHistory } from "@ui-sdk/react/history";
 import type { HistoryEntry } from "@ui-sdk/react/history";
-import { useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
-import { history } from "@/lib/agent";
+import { agent } from "@/lib/agent";
 
-const onHistory = (listener: () => void) => history.subscribe(listener);
-const entries = () => history.entries();
-const noEntries: readonly HistoryEntry[] = [];
+function AgentChanges({ children }: { children: ReactNode }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [entries, setEntries] = useState<readonly HistoryEntry[]>([]);
 
-function useAgentChanges() {
-  const recorded = useSyncExternalStore(onHistory, entries, () => noEntries);
-  return recorded.filter((entry) => entry.source === "agent");
+  useEffect(() => {
+    const history = createHistory(agent, { within: () => rootRef.current });
+    const stop = history.subscribe(() => setEntries(history.entries()));
+    return () => {
+      stop();
+      history.destroy();
+    };
+  }, []);
+
+  const changes = entries.filter((entry) => entry.source === "agent");
+
+  return (
+    <div ref={rootRef}>
+      {children}
+      <p>{changes.length} assistant changes</p>
+    </div>
+  );
 }
 ```
 
@@ -293,7 +299,7 @@ Staging and reverting both go through `allow`, so a marked control asks the pers
 Constella's AI and TanStack components are tested against the bridge. Each component's page lists what the agent sees in its Agent section.
 
 - Every control has a name, except the [Known Gaps](#known-gaps).
-- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`, and `details.cancel()` keeps the current value. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
+- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, skipping the state update keeps it, and `cancel()` tells the agent the change was refused. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
 - `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` work on the primitives, such as Button, `AlertDialogAction`, `DropdownMenuItem`, Field and Input.
 - Data Table's action bar is inert while no row is selected, so the agent can't press its buttons.
 
