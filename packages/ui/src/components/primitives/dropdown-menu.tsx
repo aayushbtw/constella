@@ -15,7 +15,6 @@ import {
   MenuRadioGroup,
   MenuRadioItem,
   MenuSeparator,
-  MenuShortcut,
   MenuSub,
   MenuSubContent,
   MenuSubTrigger,
@@ -73,17 +72,13 @@ type DropdownMenuContentProps<Payload = unknown> = Styled<
   ComponentProps<typeof MenuContent<Payload>>
 > & { size?: DropdownMenuSize };
 
-const dropdownMenuItemColors = ["danger"] as const;
-
-type DropdownMenuItemColor = (typeof dropdownMenuItemColors)[number];
-
 // `[data-skip-motion]` is never offstage, so an instant open paints no blank frame while ui-sdk holds `data-starting-style`.
 const offstage =
   ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
 const closing = ":is([data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-open])";
-const danger = ":is([data-color='danger'])";
+const destructive = ":is([data-destructive])";
 const off = ":is([data-disabled])";
 const unchecked = ":is([data-unchecked])";
 const inset = ":is([data-inset])";
@@ -143,13 +138,13 @@ const styles = stylex.create({
     backgroundColor: {
       default: "transparent",
       [highlighted]: colors.fillSubtle,
-      [`${danger}${highlighted}`]: colors.dangerSubtle,
+      [`${destructive}${highlighted}`]: colors.dangerSubtle,
     },
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
     borderEndEndRadius: radii.md,
-    color: { default: colors.textPrimary, [danger]: colors.dangerText },
+    color: { default: colors.textPrimary, [destructive]: colors.dangerText },
     cursor: { default: "pointer", [off]: "not-allowed" },
     display: "flex",
     gap: space.row,
@@ -250,12 +245,6 @@ const styles = stylex.create({
   separatorLg: {
     marginInlineEnd: space.md,
     marginInlineStart: space.md,
-  },
-  shortcut: {
-    color: colors.textMuted,
-    flexShrink: 0,
-    marginInlineStart: "auto",
-    whiteSpace: "nowrap",
   },
 });
 
@@ -405,17 +394,12 @@ function DropdownMenuLabel({
 
 function DropdownMenuItem({
   inset: isInset,
-  color,
   sx,
   ...props
-}: Styled<
-  Omit<ComponentProps<typeof MenuItem>, "color" | "destructive" | "shortcut">
-> &
-  Inset & { color?: DropdownMenuItemColor }) {
+}: Styled<ComponentProps<typeof MenuItem>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuItem
-      data-color={color}
       data-inset={isInset}
       {...props}
       {...stylex.props([size.text, styles.item], size.item, sx)}
@@ -542,31 +526,17 @@ function DropdownMenuSeparator({
   );
 }
 
-function DropdownMenuShortcut({
-  sx,
-  ...props
-}: Styled<ComponentProps<typeof MenuShortcut>>) {
-  return (
-    <MenuShortcut
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.shortcut], sx)}
-    />
-  );
-}
-
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  dropdownMenuItemColors,
   dropdownMenuSizes,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -576,7 +546,6 @@ export { createMenuController as createDropdownMenuController } from "@ui-sdk/re
 export type { MenuController as DropdownMenuController } from "@ui-sdk/react/menu";
 export type {
   DropdownMenuContentProps,
-  DropdownMenuItemColor,
   DropdownMenuSize,
   DropdownMenuTriggerProps,
 };

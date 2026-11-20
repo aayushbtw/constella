@@ -141,6 +141,8 @@ export const fonts = stylex.defineConsts({
 // reader's browser font size; apart, so leading can change without the sizes.
 const typeUnit = "0.25rem";
 const leadingUnit = "0.25rem";
+const captionLgSize = `calc(${typeUnit} * 3)`;
+const captionLgLeading = `calc(${leadingUnit} * 4)`;
 
 // The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
 // `textBase`. Each size has a line height of the same name; set them together. 15, 13 and
@@ -160,7 +162,7 @@ export const fontSizes = stylex.defineConsts({
   // Controls and the text inside components.
   textSm: `calc(${typeUnit} * 3 + 1px)`,
   // Badges, shortcuts, group labels.
-  captionLg: `calc(${typeUnit} * 3)`,
+  captionLg: captionLgSize,
   captionBase: `calc(${typeUnit} * 2.5 + 1px)`,
   captionSm: `calc(${typeUnit} * 2.5)`,
   captionXs: `calc(${typeUnit} * 2)`,
@@ -179,11 +181,17 @@ export const lineHeights = stylex.defineConsts({
   textBase: `calc(${leadingUnit} * 6)`,
   textMd: `calc(${leadingUnit} * 5)`,
   textSm: `calc(${leadingUnit} * 5)`,
-  captionLg: `calc(${leadingUnit} * 4)`,
+  captionLg: captionLgLeading,
   captionBase: `calc(${leadingUnit} * 4)`,
   captionSm: `calc(${leadingUnit} * 4)`,
   captionXs: `calc(${leadingUnit} * 3)`,
   touch: `calc(${leadingUnit} * 6)`,
+});
+
+// The type CSS outside StyleX's reach reads (base.css), under literal names.
+export const typeVars = stylex.defineVars({
+  "--caption-lg-leading": captionLgLeading,
+  "--caption-lg-size": captionLgSize,
 });
 
 // Large type tightens a little, so a heading doesn't read as spaced out.

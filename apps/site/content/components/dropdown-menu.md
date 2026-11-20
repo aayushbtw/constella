@@ -13,10 +13,7 @@ description: Displays a menu of actions or options, triggered by a button.
   <DropdownMenuContent>
     <DropdownMenuGroup>
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
-      <DropdownMenuItem>
-        Profile
-        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-      </DropdownMenuItem>
+      <DropdownMenuItem shortcut="mod+shift+p">Profile</DropdownMenuItem>
       <DropdownMenuItem>Billing</DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
@@ -61,7 +58,6 @@ DropdownMenu
     ├── DropdownMenuGroup
     │   ├── DropdownMenuLabel
     │   └── DropdownMenuItem
-    │       └── DropdownMenuShortcut
     ├── DropdownMenuSeparator
     ├── DropdownMenuCheckboxItem
     ├── DropdownMenuRadioGroup
@@ -174,14 +170,14 @@ Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes i
 </DropdownMenuContent>
 ```
 
-## Color
+## Destructive
 
-Use `color="danger"` for an action that can't be undone.
+Use `destructive` for an action that can't be undone. It colors the row red and sets `data-destructive`.
 
 <!-- ::demo name="dropdown-menu-danger" -->
 
 ```tsx
-<DropdownMenuItem color="danger" data-agent-confirm="Deletes this file">
+<DropdownMenuItem destructive data-agent-confirm="Deletes this file">
   <HugeiconsIcon icon={Delete02Icon} />
   Delete
 </DropdownMenuItem>
@@ -205,7 +201,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
+    <DropdownMenuItem destructive>Log out</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 ```
@@ -215,7 +211,7 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | Part | Adds |
 | --- | --- |
 | `DropdownMenuContent` | Renders in place, beside its trigger, in the browser's top layer; takes `side`, `align` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
-| `DropdownMenuItem` | `color`: `"danger"` |
+| `DropdownMenuItem` | `destructive`, drawn red; `shortcut`, like `"mod+shift+p"`, shown at the row's end for the platform and set as `aria-keyshortcuts` |
 | `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSubTrigger`, checkbox and radio items | `inset`, to line up with rows that have an icon |
 | `DropdownMenu`, `DropdownMenuTrigger` | `controller`; `payload` on the trigger |
 | `createDropdownMenuController` | A controller shared by `DropdownMenu` and its triggers |

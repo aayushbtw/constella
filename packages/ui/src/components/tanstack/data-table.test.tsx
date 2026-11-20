@@ -230,7 +230,7 @@ function RowActions({ payment }: { payment: Payment }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem
-          color="danger"
+          destructive
           data-agent-confirm={`Deletes the payment from ${payment.email}`}
           onSelect={() => {
             setRows((current) =>

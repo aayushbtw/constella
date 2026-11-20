@@ -13,7 +13,6 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -35,10 +34,7 @@ function Account({
       <DropdownMenuContent keepMounted={keepMounted} size="sm">
         <DropdownMenuGroup>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem shortcut="mod+shift+p">Profile</DropdownMenuItem>
           <DropdownMenuItem onSelect={onBilling}>Billing</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -187,11 +183,30 @@ test("one controller shared by two triggers shows the opening trigger's payload"
   expect(screen.queryByText("Roadmap")).toBeNull();
 });
 
-test("a shortcut stays out of its item's name", async () => {
+test("an item's shortcut sets aria-keyshortcuts and shows its keys at the end, out of the name", async () => {
   render(<Account />);
   await open();
 
-  expect(screen.getByRole("menuitem", { name: "Profile" })).toBeTruthy();
+  const profile = screen.getByRole("menuitem", { name: "Profile" });
+  expect(profile.getAttribute("aria-keyshortcuts")).toBe("Control+Shift+P");
+  expect(
+    profile.querySelector(":scope > [data-slot='menu-shortcut']:last-child")
+      ?.textContent
+  ).toContain("Ctrl+Shift+P");
+});
+
+test("a destructive item carries data-destructive", async () => {
+  render(
+    <DropdownMenu defaultOpen>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem destructive>Delete</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+  const item = await screen.findByRole("menuitem", { name: "Delete" });
+  expect(Object.hasOwn(item.dataset, "destructive")).toBe(true);
+  expect(Object.hasOwn(item.dataset, "color")).toBe(false);
 });
 
 test("an agent finds the menu by its trigger, names every control, and presses an item", async () => {

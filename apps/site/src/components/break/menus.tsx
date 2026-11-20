@@ -27,7 +27,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
 import {
@@ -145,11 +144,11 @@ interface Group {
 function groupsFor(data: Dataset): Group[] {
   const entries = {
     demo: [
-      { icon: UserIcon, label: "Profile", shortcut: "⌘P", value: "profile" },
+      { icon: UserIcon, label: "Profile", shortcut: "mod+p", value: "profile" },
       {
         icon: CreditCardIcon,
         label: "Billing",
-        shortcut: "⌘B",
+        shortcut: "mod+b",
         value: "billing",
       },
       { icon: SmileIcon, label: "Search Emoji", value: "emoji" },
@@ -161,16 +160,26 @@ function groupsFor(data: Dataset): Group[] {
       value: person.email,
     })),
     one: [
-      { icon: UserIcon, label: "Profile", shortcut: "⌘P", value: "profile" },
+      { icon: UserIcon, label: "Profile", shortcut: "mod+p", value: "profile" },
     ],
     worst: [
-      { icon: UserIcon, label: text.file, shortcut: "⌃⌥⇧⌘P", value: "file" },
-      { icon: CreditCardIcon, label: text.url, shortcut: "⌘B", value: "url" },
+      {
+        icon: UserIcon,
+        label: text.file,
+        shortcut: "ctrl+alt+shift+mod+p",
+        value: "file",
+      },
+      {
+        icon: CreditCardIcon,
+        label: text.url,
+        shortcut: "mod+b",
+        value: "url",
+      },
       { icon: SmileIcon, label: text.german, value: "german" },
       {
         icon: UserIcon,
         label: "Jo",
-        shortcut: "Ctrl+Alt+Shift+Delete",
+        shortcut: "ctrl+alt+shift+delete",
         value: "jo",
       },
     ],
@@ -209,7 +218,7 @@ function CommandBreak({ data }: { data: Dataset }) {
                   />
                   {entry.label}
                   {entry.shortcut !== undefined && (
-                    <CommandShortcut>{entry.shortcut}</CommandShortcut>
+                    <CommandShortcut shortcut={entry.shortcut} />
                   )}
                 </CommandItem>
               ))}
@@ -233,7 +242,7 @@ function DropdownMenuBreak({ data, open }: { data: Dataset; open: boolean }) {
           <DropdownMenuGroup key={group.value}>
             <DropdownMenuLabel>{group.value}</DropdownMenuLabel>
             {group.items.map((entry) => (
-              <DropdownMenuItem key={entry.value}>
+              <DropdownMenuItem key={entry.value} shortcut={entry.shortcut}>
                 <HugeiconsIcon
                   aria-hidden
                   icon={entry.icon}
@@ -241,15 +250,12 @@ function DropdownMenuBreak({ data, open }: { data: Dataset; open: boolean }) {
                   strokeWidth={Number(strokes.icon)}
                 />
                 {entry.label}
-                {entry.shortcut !== undefined && (
-                  <DropdownMenuShortcut>{entry.shortcut}</DropdownMenuShortcut>
-                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>
         ))}
         {groups.length > 0 && <DropdownMenuSeparator />}
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem destructive>
           {data === "worst" ? `Remove ${text.file}` : "Log out"}
         </DropdownMenuItem>
       </DropdownMenuContent>

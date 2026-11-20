@@ -169,7 +169,7 @@ A select's items and a menu's are the same row: `md` corners inside the popup's 
 | `default` | `controlMd` (32) | `textMd` | `space.sm` (12) | `icon + sm` (28) |
 | `lg` | `controlLg` (36) | `textBase` | `space.md` (16) | `icon + md` (32) |
 
-Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (200px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
+Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (200px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A destructive item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
 
 A filtered menu is a command in a popover.
 

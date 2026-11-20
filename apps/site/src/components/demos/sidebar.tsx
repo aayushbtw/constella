@@ -271,10 +271,7 @@ function ChatActions({ chat }: { chat: string }) {
           Rename
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          color="danger"
-          data-agent-confirm={`Deletes “${chat}”`}
-        >
+        <DropdownMenuItem destructive data-agent-confirm={`Deletes “${chat}”`}>
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>

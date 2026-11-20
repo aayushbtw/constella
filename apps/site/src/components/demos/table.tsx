@@ -167,7 +167,7 @@ function TableActionsDemo() {
                     <DropdownMenuItem>Duplicate</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      color="danger"
+                      destructive
                       data-agent-confirm={`Deletes ${product.name}`}
                     >
                       Delete

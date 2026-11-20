@@ -195,7 +195,7 @@ function MoreMenu() {
           </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem destructive>
           <Glyph icon={Delete02Icon} />
           Trash
         </DropdownMenuItem>
@@ -237,7 +237,7 @@ function ButtonGroupDropdownDemo() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              color="danger"
+              destructive
               data-agent-confirm="Deletes the conversation"
             >
               <Glyph icon={Delete02Icon} />
