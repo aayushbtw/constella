@@ -20,7 +20,11 @@ description: Lays out a control with its label, description and error.
         </Field>
         <Field>
           <FieldLabel>Card Number</FieldLabel>
-          <Input placeholder="1234 5678 9012 3456" required />
+          <Input
+            autoComplete="cc-number"
+            placeholder="1234 5678 9012 3456"
+            required
+          />
           <FieldDescription>Enter your 16-digit card number</FieldDescription>
         </Field>
       </FieldGroup>

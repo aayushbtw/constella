@@ -139,7 +139,11 @@ function FieldFormDemo() {
               </Field>
               <Field>
                 <FieldLabel>Card Number</FieldLabel>
-                <Input placeholder="1234 5678 9012 3456" required />
+                <Input
+                  autoComplete="cc-number"
+                  placeholder="1234 5678 9012 3456"
+                  required
+                />
                 <FieldDescription>
                   Enter your 16-digit card number
                 </FieldDescription>
@@ -149,7 +153,7 @@ function FieldFormDemo() {
                 <Picker label="Year" options={years} placeholder="YYYY" />
                 <Field>
                   <FieldLabel>CVV</FieldLabel>
-                  <Input placeholder="123" required />
+                  <Input autoComplete="cc-csc" placeholder="123" required />
                 </Field>
               </div>
             </FieldGroup>

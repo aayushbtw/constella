@@ -20,7 +20,9 @@ description: A dialog that asks to confirm an action before it happens.
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction>Continue</AlertDialogAction>
+      <AlertDialogAction data-agent-confirm="Deletes your account and its data">
+        Continue
+      </AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>
@@ -93,7 +95,12 @@ Use `AlertDialogMedia` for an icon above the title. Pass `color="danger"` to `Al
 </AlertDialogHeader>
 <AlertDialogFooter>
   <AlertDialogCancel>Cancel</AlertDialogCancel>
-  <AlertDialogAction color="danger">Delete</AlertDialogAction>
+  <AlertDialogAction
+    color="danger"
+    data-agent-confirm="Deletes the chat and its files"
+  >
+    Delete forever
+  </AlertDialogAction>
 </AlertDialogFooter>
 ```
 
@@ -108,7 +115,11 @@ Pass `action` to `AlertDialogAction` for async work. A returned Promise keeps th
   …
   <AlertDialogFooter>
     <AlertDialogCancel>Cancel</AlertDialogCancel>
-    <AlertDialogAction action={revoke} color="danger">
+    <AlertDialogAction
+      action={revoke}
+      color="danger"
+      data-agent-confirm="Revokes the API key, so apps using it stop working"
+    >
       {(state) =>
         state.pending ? (
           <>
@@ -116,7 +127,7 @@ Pass `action` to `AlertDialogAction` for async work. A returned Promise keeps th
             Revoking
           </>
         ) : (
-          "Revoke"
+          "Revoke now"
         )
       }
     </AlertDialogAction>

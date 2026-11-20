@@ -257,7 +257,7 @@ function Row({
   );
 }
 
-function ChatActions() {
+function ChatActions({ chat }: { chat: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -271,7 +271,10 @@ function ChatActions() {
           Rename
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem
+          color="danger"
+          data-agent-confirm={`Deletes “${chat}”`}
+        >
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>
@@ -303,7 +306,7 @@ function Recents({
               >
                 <SidebarMenuLabel>{chat}</SidebarMenuLabel>
               </SidebarMenuButton>
-              <ChatActions />
+              <ChatActions chat={chat} />
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

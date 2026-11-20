@@ -303,7 +303,10 @@ function DropdownMenuDangerDemo() {
             Share
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem color="danger">
+          <DropdownMenuItem
+            color="danger"
+            data-agent-confirm="Deletes this file"
+          >
             <Glyph icon={Delete02Icon} />
             Delete
           </DropdownMenuItem>
@@ -370,7 +373,12 @@ function DropdownMenuControllerDemo() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem color="danger">
+              <DropdownMenuItem
+                color="danger"
+                data-agent-confirm={
+                  payload ? `Deletes ${payload.name}` : "Deletes this document"
+                }
+              >
                 <Glyph icon={Delete02Icon} />
                 Delete
               </DropdownMenuItem>
