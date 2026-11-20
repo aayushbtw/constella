@@ -102,8 +102,7 @@ test("typing keeps the commands that contain it and hides groups left empty", as
   });
 });
 
-// ui-sdk beta.13 bug: server HTML hides every composed group, since groupMatches reads a registry that fills on bind.
-test.fails("server HTML shows a group that holds items", () => {
+test("server HTML shows a group that holds items", () => {
   const container = document.createElement("div");
   container.innerHTML = renderToString(<Palette />);
 
