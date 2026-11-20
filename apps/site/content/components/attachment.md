@@ -163,6 +163,16 @@ Use the `state` prop to show where an upload is. Say why a file failed in `Attac
 | `error`      | A red tint on the media and its note |
 | `done`       | The default                          |
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                | Component | Actions |
+| -------------------- | --------- | ------- |
+| Remove q3-report.pdf | button    | `press` |
+
+The actions and `AttachmentTrigger` have no text, so name each with `aria-label`. Put the file's name in it, like "Remove q3-report.pdf", so the agent can tell two attachments' buttons apart.
+
 ## API Reference
 
 | Part | Adds |

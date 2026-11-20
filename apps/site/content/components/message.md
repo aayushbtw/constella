@@ -42,6 +42,18 @@ Message
 └── MessageActions
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label       | Component | Actions |
+| ----------- | --------- | ------- |
+| Copy        | button    | `press` |
+| Good answer | button    | `press` |
+| Retry       | button    | `press` |
+
+The agent sees a reply's actions, not its text. Give each action a name, like the example's Copy, Good answer and Retry. **The actions repeat on every reply in a chat**, so a press by name matches each reply's button and fails. Press by the `ref` from the snapshot instead.
+
 ## API Reference
 
 | Part      | Adds                              |

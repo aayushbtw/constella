@@ -57,6 +57,22 @@ MessageScrollerProvider
     └── MessageScrollerButton
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label         | Component | Actions             |
+| ------------- | --------- | ------------------- |
+| Copy          | button    | `press`             |
+| Good answer   | button    | `press`             |
+| Retry         | button    | `press`             |
+| Scroll to end | button    | None while disabled |
+| Message       | textarea  | `setValue`, `clear` |
+| Attach        | button    | `press`             |
+| Send          | button    | None while disabled |
+
+Only Scroll to end is Message Scroller's own entry. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end. Message Scroller is built on `@shadcn/react`, so it doesn't pass ui-sdk's change `details` on.
+
 ## API Reference
 
 | Part | Adds |

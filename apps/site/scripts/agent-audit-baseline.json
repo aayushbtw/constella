@@ -1,37 +1,37 @@
 {
   "/docs/components/approval": {
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/attachment": {
     "scroll-area": {
-      "count": 4,
+      "count": 5,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/chart": {
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/citation": {
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/code-block": {
     "scroll-area": {
-      "count": 4,
+      "count": 5,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/data-table": {
     "scroll-area": {
-      "count": 10,
+      "count": 11,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     },
     "unseen": {
@@ -41,7 +41,7 @@
   },
   "/docs/components/markdown": {
     "scroll-area": {
-      "count": 3,
+      "count": 5,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
@@ -53,31 +53,31 @@
   },
   "/docs/components/message": {
     "scroll-area": {
-      "count": 2,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/message-scroller": {
     "scroll-area": {
-      "count": 2,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/model-picker": {
     "scroll-area": {
-      "count": 2,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/prompt-input": {
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/questionnaire": {
     "scroll-area": {
-      "count": 2,
+      "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
@@ -89,17 +89,17 @@
   },
   "/docs/components/suggestions": {
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/trace": {
     "collapsible": {
-      "count": 15,
+      "count": 18,
       "why": "trace.test.tsx pins the unnamed collapsibles of steps with no trigger"
     },
     "scroll-area": {
-      "count": 3,
+      "count": 4,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   }

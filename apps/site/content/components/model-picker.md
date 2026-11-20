@@ -103,6 +103,17 @@ The card opens at the list's `inline-end` by default. A picker at the end of a r
 </ModelPickerContent>
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label        | Component | Actions            |
+| ------------ | --------- | ------------------ |
+| Model: GPT-5 | button    | `press`            |
+| Model: GPT-5 | popover   | `setOpen`, `press` |
+
+The button is the trigger, named `<label>: <model>`. The popover with the same name is the picker. Open it with `setOpen`, then call `run` with a model's name on the list's search, "Search models" in the example. On a page with two pickers, give each its own `label`, like "Fallback", so each opens by its own name.
+
 ## API Reference
 
 | Part | Adds |

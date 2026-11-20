@@ -95,6 +95,10 @@ Render it as an `output` while work runs, so a screen reader announces each chan
 </Marker>
 ```
 
+## Agent
+
+Its examples add no entry to `agent.snapshot()`.
+
 ## API Reference
 
 ### Marker

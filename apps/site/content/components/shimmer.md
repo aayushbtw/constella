@@ -43,6 +43,10 @@ Put it in a [Marker](/docs/components/marker) for a status line in a conversatio
 </Marker>
 ```
 
+## Agent
+
+Its examples add no entry to `agent.snapshot()`.
+
 ## API Reference
 
 ### Shimmer

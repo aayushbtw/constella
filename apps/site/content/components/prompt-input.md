@@ -152,6 +152,18 @@ Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to 
 <PromptInputSubmit onStop={stop} state={status} />
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label   | Component | Actions             |
+| ------- | --------- | ------------------- |
+| Message | textarea  | `setValue`, `clear` |
+| Attach  | button    | `press`             |
+| Send    | button    | None while disabled |
+
+Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send, which is Stop while streaming. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
+
 ## API Reference
 
 | Part | Adds |

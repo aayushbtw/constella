@@ -105,6 +105,16 @@ List the sources a search found in a `CitationGroup`, a row that wraps. To count
 </CitationGroup>
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                   | Component  | Actions            |
+| ----------------------- | ---------- | ------------------ |
+| Sources for this answer | hover-card | `setOpen`, `press` |
+
+A card with one pill is named by its pill. A card shared by several pills takes the name from `Citations`' `aria-label`, "Sources" by default, like the preview's "Sources for this answer". **`setOpen` on a shared card opens it empty.** No pill has picked its sources yet.
+
 ## API Reference
 
 | Part | Adds |
