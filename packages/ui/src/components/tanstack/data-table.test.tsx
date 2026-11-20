@@ -18,12 +18,12 @@ import {
   useTable,
 } from "@tanstack/react-table";
 import type { RowSelectionState } from "@tanstack/react-table";
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { beforeEach, expect, test, vi } from "vite-plus/test";
+import { beforeEach, expect, onTestFinished, test, vi } from "vite-plus/test";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -651,5 +651,127 @@ test("an agent opens a row through its named link, as a row click would", async 
   await run({ action: "press", ref: "Open abe@acme.com" });
   expect(screen.getByRole("status", { name: "Open payment" }).textContent).toBe(
     "p2"
+  );
+});
+
+test("a selectable table is a multiselectable grid whose rows say whether they're selected", async () => {
+  render(<Basic />);
+  const grid = screen.getByRole("grid", { name: "Payments" });
+  expect(grid.getAttribute("aria-multiselectable")).toBe("true");
+
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  const selected = Object.fromEntries(
+    within(grid)
+      .getAllByRole("row")
+      .slice(1)
+      .map((row) => [emailIn(row), row.getAttribute("aria-selected")])
+  );
+  expect(selected).toEqual({
+    "abe@acme.com": "false",
+    "dee@acme.com": "true",
+    "ken@acme.com": "false",
+  });
+});
+
+const longLedger: Payment[] = Array.from({ length: 500 }, (_, index) => ({
+  amount: index + 1,
+  email: `user${index + 1}@acme.com`,
+  id: `p${index + 1}`,
+  status: "success",
+}));
+
+function LongLedger() {
+  const table = useTable({ columns, data: longLedger, features, getRowId });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+function emailIn(row: HTMLElement) {
+  return within(row).getByText(/@acme\.com$/u).textContent;
+}
+
+function rowWith(email: string) {
+  const row = screen.getByText(email).closest("tr");
+  if (row === null) {
+    throw new Error(`${email} isn't in a row`);
+  }
+  return row;
+}
+
+function focusedEmail() {
+  const focused = document.activeElement;
+  return focused instanceof HTMLTableRowElement
+    ? emailIn(focused)
+    : focused?.nodeName;
+}
+
+function press(key: string) {
+  if (document.activeElement !== null) {
+    fireEvent.keyDown(document.activeElement, { key });
+  }
+}
+
+// jsdom lays nothing out, so rows measure 0 tall and the virtualizer renders an arbitrary slice of them.
+function layOutRows(height: number) {
+  const measured = vi
+    .spyOn(HTMLElement.prototype, "offsetHeight", "get")
+    .mockImplementation(function rowHeight(this: HTMLElement) {
+      return this.matches("tbody > tr") ? height : 0;
+    });
+  onTestFinished(() => {
+    measured.mockRestore();
+  });
+}
+
+function scrollWindowTo(top: number) {
+  for (const key of ["scrollY", "pageYOffset"]) {
+    Object.defineProperty(window, key, { configurable: true, value: top });
+  }
+  act(() => {
+    window.dispatchEvent(new Event("scroll"));
+  });
+}
+
+test("End focuses the last row though it isn't rendered yet, and ArrowUp steps back from it", async () => {
+  layOutRows(41);
+  render(<LongLedger />);
+  expect(screen.queryByText("user500@acme.com")).toBeNull();
+
+  rowWith("user1@acme.com").focus();
+  press("End");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user500@acme.com");
+    },
+    { timeout: 1000 }
+  );
+
+  press("ArrowUp");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user499@acme.com");
+    },
+    { timeout: 1000 }
+  );
+});
+
+test("the focused row stays focused when the page scrolls it out of view", async () => {
+  layOutRows(41);
+  onTestFinished(() => {
+    scrollWindowTo(0);
+  });
+  render(<LongLedger />);
+  rowWith("user1@acme.com").focus();
+
+  scrollWindowTo(41 * 200);
+  expect(screen.queryByText("user201@acme.com")).not.toBeNull();
+  expect(screen.queryByText("user2@acme.com")).toBeNull();
+  expect(focusedEmail()).toBe("user1@acme.com");
+
+  press("ArrowDown");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user2@acme.com");
+    },
+    { timeout: 1000 }
   );
 });
