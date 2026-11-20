@@ -43,7 +43,8 @@ import {
   SidePanelTrigger,
 } from "@/components/primitives/side-panel";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
-import { confirm, history, mountConfirm } from "~/lib/agent";
+import { confirm, mountConfirm } from "~/lib/agent";
+import { history } from "~/lib/agent-history";
 import { layers, layout } from "~/lib/tokens.stylex";
 
 const activity = createSidePanelController();
