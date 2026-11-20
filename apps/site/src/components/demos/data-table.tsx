@@ -338,7 +338,13 @@ function RowActions({ payment }: { payment: Payment }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button aria-label="Actions" size="icon-sm" variant="ghost" />}
+        render={
+          <Button
+            aria-label={`Actions for ${payment.email}`}
+            size="icon-sm"
+            variant="ghost"
+          />
+        }
       >
         <Glyph icon={MoreHorizontalIcon} />
       </DropdownMenuTrigger>
@@ -356,7 +362,10 @@ function RowActions({ payment }: { payment: Payment }) {
           View customer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem
+          color="danger"
+          data-agent-confirm={`Deletes the payment from ${payment.email}`}
+        >
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>
@@ -716,6 +725,7 @@ function PaymentLink({ payment }: { payment: Payment }) {
   const open = use(OpenPayment);
   return (
     <Button
+      aria-label={`Open ${payment.email}`}
       onClick={() => {
         open(payment.id);
       }}
@@ -821,6 +831,7 @@ function DataTableRowClickDemo() {
 function DataTableActionBarDemo() {
   const [rows, setRows] = useState(payments);
   const table = useTable({ columns, data: rows, features, getRowId });
+  const selected = table.getSelectedRowIds().length;
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame, styles.contained)}>
@@ -866,6 +877,7 @@ function DataTableActionBarDemo() {
           <Button
             color="danger"
             corners="rounded"
+            data-agent-confirm={`Deletes ${selected} selected ${selected === 1 ? "payment" : "payments"}`}
             onClick={() => {
               const ids = new Set(table.getSelectedRowIds());
               setRows((current) => current.filter(({ id }) => !ids.has(id)));
