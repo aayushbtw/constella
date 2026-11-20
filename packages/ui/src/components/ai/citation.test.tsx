@@ -146,15 +146,79 @@ test("a citation passes its other props to the trigger link, which still opens t
   ).toBe("citation-source");
 });
 
-test("an agent finds the citation's card by its pill", () => {
+const hoverCard = () =>
+  agent
+    .snapshot()
+    .find(
+      (entry) => entry.offPage !== true && entry.component === "hover-card"
+    );
+
+function TwoPills({ label }: { label?: string }) {
+  return (
+    <Citations aria-label={label}>
+      <Citation sources={[withoutLogo]} />
+      <Citation sources={[second]} />
+    </Citations>
+  );
+}
+
+test("an agent finds a one-pill card by its pill, not the card's name", () => {
   render(
     <Citations>
       <Citation sources={[withoutLogo, second]} />
     </Citations>
   );
 
-  const card = agent
+  expect(hoverCard()?.label).toContain("Acme Journal");
+  expect(hoverCard()?.label).not.toContain("Sources");
+});
+
+test("an agent finds a card shared by several pills as Sources", () => {
+  render(<TwoPills />);
+
+  const entries = agent
     .snapshot()
-    .find((entry) => entry.component === "hover-card");
-  expect(card?.label).toContain("Acme Journal");
+    .filter((entry) => entry.offPage !== true && entry.component !== "more");
+  for (const entry of entries) {
+    expect(
+      entry.label,
+      `${entry.component} ${entry.ref} has no name`
+    ).toBeTruthy();
+  }
+  expect(hoverCard()?.label).toBe("Sources");
+});
+
+test("each answer's citations can name their card", () => {
+  render(<TwoPills label="Sources for answer 2" />);
+
+  expect(hoverCard()?.label).toBe("Sources for answer 2");
+});
+
+test("the shared card stays in the page, hidden, while closed", () => {
+  render(<TwoPills />);
+
+  const card = document.querySelector("[data-slot='hover-card-content']");
+  expect(card).not.toBeNull();
+  expect(card?.hasAttribute("hidden")).toBe(true);
+});
+
+test("the shared card's server markup is there but hidden", () => {
+  const html = renderToString(<Cited source={withoutLogo} />);
+
+  expect(html).toMatch(
+    /<div[^>]*aria-label="Sources"[^>]*data-slot="hover-card-content"[^>]*hidden=""/u
+  );
+});
+
+test("an agent opens the shared card, which is empty until a pill picks its sources", async () => {
+  render(<TwoPills />);
+
+  const result = await agent.act({
+    steps: [{ ref: "Sources", action: "setOpen", args: [true] }],
+  });
+
+  expect(result.ok, result.error?.message).toBe(true);
+  const card = document.querySelector("[data-slot='hover-card-content']");
+  expect(card?.hasAttribute("hidden")).toBe(false);
+  expect(card?.querySelectorAll("a")).toHaveLength(0);
 });
