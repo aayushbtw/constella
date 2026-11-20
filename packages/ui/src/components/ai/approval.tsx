@@ -171,10 +171,29 @@ function ApprovalCancel({
   );
 }
 
+/** The primary action, marked so an agent can't approve its own tool call. */
+function ApprovalConfirm({
+  "data-agent-confirm": confirm = "Allows this tool call",
+  size = "sm",
+  variant = "primary",
+  ...props
+}: Omit<ButtonProps, "render"> & { "data-agent-confirm"?: string }) {
+  return (
+    <Button
+      data-agent-confirm={confirm}
+      data-slot="approval-confirm"
+      size={size}
+      variant={variant}
+      {...props}
+    />
+  );
+}
+
 export {
   Approval,
   ApprovalAction,
   ApprovalCancel,
+  ApprovalConfirm,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,

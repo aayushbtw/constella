@@ -117,6 +117,7 @@ List the sources a search found in a `CitationGroup`, a row that wraps. To count
 
 | Prop | Part | Type |
 | --- | --- | --- |
+| `aria-label` | `Citations` | `string`, `"Sources"` by default: names the shared card for screen readers and agents; give each answer's `Citations` its own when a page shows several |
 | `sources` | `Citation` | At least one `{ name, title, url, description?, icon?, date? }`; a globe shows without `icon` |
 | `source` | `CitationSource` | One `{ name, title, url, description?, icon?, date? }` |
 | `count` | `CitationGroupMore` | `number`, the sources not shown |
