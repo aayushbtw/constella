@@ -309,7 +309,6 @@
       "title": "Combobox",
       "description": "An input that filters a list as you type, picking one value or many as chips.",
       "dependencies": [
-        "@base-ui/react",
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
         "@stylexjs/stylex",

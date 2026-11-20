@@ -58,7 +58,7 @@ const invalid =
 const wellCorner = `calc(${radii.xl} + ${space.xxs})`;
 // styles.ts's `popupOpen`; keep in step.
 const popupOpen =
-  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'])[data-open])";
+  ":is([data-popup-open], :where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open])";
 // The well frames the prompt, so its own ring would double the edge.
 const inWell = ":is([data-slot='prompt-input-well'] *)";
 
