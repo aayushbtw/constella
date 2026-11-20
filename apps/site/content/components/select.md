@@ -133,7 +133,7 @@ Use the `size` prop on `SelectTrigger` to match the controls beside it, and on `
 | --------- | ------- | ------------ | ---- | -------- | ---- |
 | `sm`      | 28px    | 12px         | 28px | 13px     | 14px |
 | `default` | 32px    | 13px         | 32px | 14px     | 16px |
-| `lg`      | 36px    | 13px         | 36px | 15px     | 16px |
+| `lg`      | 36px    | 13px         | 36px | 16px     | 16px |
 
 ```tsx
 <SelectTrigger size="sm">

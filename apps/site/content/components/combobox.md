@@ -248,7 +248,7 @@ Use the `size` prop on `ComboboxInput` or `ComboboxChips` to match the controls 
 | --------- | ---- | ---- | --------- | ---- | -------- |
 | `sm`      | 28px | 20px | 12px      | 28px | 13px     |
 | `default` | 32px | 24px | 12px      | 32px | 14px     |
-| `lg`      | 36px | 28px | 13px      | 36px | 15px     |
+| `lg`      | 36px | 28px | 13px      | 36px | 16px     |
 
 ```tsx
 <ComboboxChips size="sm">…</ComboboxChips>

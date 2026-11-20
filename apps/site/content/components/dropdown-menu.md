@@ -193,7 +193,7 @@ Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes i
 | --------- | ---- | ---- | ---------- | --------- |
 | `sm`      | 28px | 13px | 6px        | 144px     |
 | `default` | 32px | 14px | 12px       | 200px     |
-| `lg`      | 36px | 15px | 16px       | 200px     |
+| `lg`      | 36px | 16px | 16px       | 200px     |
 
 ```tsx
 <DropdownMenuContent size="lg">
