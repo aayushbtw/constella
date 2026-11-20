@@ -6,7 +6,7 @@ description: A set of options where only one can be picked at a time.
 <!-- ::demo name="radio-group" -->
 
 ```tsx
-<RadioGroup defaultValue="comfortable">
+<RadioGroup aria-label="Density" defaultValue="comfortable">
   <Label>
     <RadioGroupItem value="default" />
     Default
@@ -74,7 +74,7 @@ Put each item in a horizontal `Field`, with the label and description in a `Fiel
 <!-- ::demo name="radio-group-description" -->
 
 ```tsx
-<RadioGroup defaultValue="comfortable">
+<RadioGroup aria-label="Density" defaultValue="comfortable">
   <Field orientation="horizontal">
     <RadioGroupItem value="default" />
     <FieldContent>
@@ -92,7 +92,7 @@ Put the content and the item inside a `FieldLabel` to make the whole card pick i
 <!-- ::demo name="radio-group-card" -->
 
 ```tsx
-<RadioGroup defaultValue="plus">
+<RadioGroup aria-label="Plan" defaultValue="plus">
   <Field>
     <FieldLabel>
       <FieldContent>

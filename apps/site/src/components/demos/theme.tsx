@@ -333,7 +333,7 @@ function ThemeBuilderDemo() {
               <SliderControl />
             </Slider>
           </Field>
-          <Input placeholder="Email" />
+          <Input aria-label="Email" placeholder="Email" />
         </div>
       </Stage>
       <CodeBlock>

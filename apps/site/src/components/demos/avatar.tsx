@@ -114,7 +114,7 @@ function AvatarFallbackDemo() {
   return (
     <DemoRow>
       <Avatar>
-        <AvatarFallback>{me.fallback}</AvatarFallback>
+        <AvatarFallback aria-label={me.handle}>{me.fallback}</AvatarFallback>
       </Avatar>
     </DemoRow>
   );

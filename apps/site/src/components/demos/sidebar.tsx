@@ -314,7 +314,7 @@ function Recents({
 
 function UserAvatar() {
   return (
-    <Avatar sx={styles.avatar}>
+    <Avatar aria-hidden sx={styles.avatar}>
       <AvatarImage alt="" src="/avatars/shadcn.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>

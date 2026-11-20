@@ -94,7 +94,7 @@ function CardDemo() {
             Login
           </Button>
           <Button sx={styles.full} variant="outline">
-            Login with Google
+            Continue with Google
           </Button>
         </CardFooter>
       </Card>

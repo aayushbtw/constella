@@ -134,7 +134,7 @@ function Members() {
             {loading ? (
               <Skeleton sx={styles.avatarSm} />
             ) : (
-              <Avatar>
+              <Avatar aria-hidden>
                 <AvatarImage alt="" src={person.src} />
                 <AvatarFallback>{person.initials}</AvatarFallback>
               </Avatar>
