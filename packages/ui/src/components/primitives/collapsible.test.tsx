@@ -97,3 +97,30 @@ test("an agent finds each collapsible by its trigger and opens it", async () => 
   expect(result.ok, result.error?.message).toBe(true);
   expect(await screen.findByText("Shipped to Lisbon")).toBeTruthy();
 });
+
+test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps it closed", async () => {
+  const seen: [boolean, string][] = [];
+  render(
+    <Collapsible
+      onOpenChange={(next, details) => {
+        seen.push([next, details.source]);
+        details.cancel();
+      }}
+    >
+      <CollapsibleTrigger>Order #4189</CollapsibleTrigger>
+      <CollapsibleContent>Shipped to Lisbon</CollapsibleContent>
+    </Collapsible>
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "Order #4189" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[true, "agent"]]);
+  expect(
+    screen
+      .getByRole("button", { name: "Order #4189" })
+      .getAttribute("aria-expanded")
+  ).toBe("false");
+  expect(screen.queryByText("Shipped to Lisbon")).toBeNull();
+});

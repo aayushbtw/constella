@@ -7,6 +7,7 @@ import {
   createSortedRowModel,
   filterFn_equalsString,
   filterFn_includesString,
+  functionalUpdate,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -19,6 +20,7 @@ import {
 import type { RowSelectionState } from "@tanstack/react-table";
 import { render, screen, within } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { beforeEach, expect, test } from "vite-plus/test";
@@ -519,6 +521,57 @@ function RowClick() {
     </OpenPayment>
   );
 }
+
+function Selection({
+  apply,
+  selections,
+}: {
+  apply: boolean;
+  selections: RowSelectionState[];
+}) {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const table = useTable({
+    columns,
+    data: payments,
+    features,
+    getRowId,
+    onRowSelectionChange: (updater) => {
+      const next = functionalUpdate(updater, rowSelection);
+      selections.push(next);
+      if (apply) {
+        setRowSelection(next);
+      }
+    },
+    state: { rowSelection },
+  });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+test("an agent's row check reaches onRowSelectionChange, and the bridge reports it as the agent's", async () => {
+  const selections: RowSelectionState[] = [];
+  const changes: ObservedChange[] = [];
+  const stop = agent.subscribe((change) => {
+    changes.push(change);
+  });
+  render(<Selection apply selections={selections} />);
+
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  stop();
+  expect(selections).toEqual([{ p3: true }]);
+  expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("true");
+  expect(
+    changes.map(({ key, source, value }) => ({ key, source, value }))
+  ).toEqual([{ key: "checked", source: "agent", value: true }]);
+});
+
+test("a controlled table that ignores the agent's row check leaves the row unchecked", async () => {
+  const selections: RowSelectionState[] = [];
+  render(<Selection apply={false} selections={selections} />);
+
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  expect(selections).toEqual([{ p3: true }]);
+  expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("false");
+});
 
 test("an agent opens a row through its named link, as a row click would", async () => {
   render(<RowClick />);

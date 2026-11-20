@@ -1,5 +1,10 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ChangeDetails } from "@ui-sdk/core";
 import { createAgent } from "@ui-sdk/react/agent";
+import type {
+  SelectProps,
+  SelectValueChangeReason,
+} from "@ui-sdk/react/select";
 import { renderToString } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
 
@@ -29,17 +34,26 @@ function Fruit({
   alignItemWithTrigger = false,
   defaultValue = null,
   keepMounted = false,
+  onOpenChange,
+  onValueChange,
   size = "default",
 }: {
   alignItemWithTrigger?: boolean;
   defaultValue?: string | null;
   keepMounted?: boolean;
+  onOpenChange?: SelectProps["onOpenChange"];
+  onValueChange?: (
+    value: string | null,
+    details: ChangeDetails<SelectValueChangeReason>
+  ) => void;
   size?: SelectSize;
 }) {
   return (
     <Select
       defaultValue={defaultValue}
       items={fruits}
+      onOpenChange={onOpenChange}
+      onValueChange={onValueChange}
       placeholder="Pick a fruit"
     >
       <SelectLabel>Fruit</SelectLabel>
@@ -266,4 +280,44 @@ test("an agent finds the select and its items while it's closed, and names every
   });
   expect(picked.ok, picked.error?.message).toBe(true);
   expect(trigger().textContent).toContain("Cherry");
+});
+
+test("an agent's pick reaches onValueChange as the agent's, and a cancel keeps the value", async () => {
+  const seen: [string | null, string][] = [];
+  render(
+    <Fruit
+      defaultValue="banana"
+      onValueChange={(value, details) => {
+        seen.push([value, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["Cherry"], ref: "Fruit" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([["cherry", "agent"]]);
+  expect(trigger().textContent).toContain("Banana");
+});
+
+test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps the select closed", async () => {
+  const seen: [boolean, string][] = [];
+  render(
+    <Fruit
+      onOpenChange={(next, details) => {
+        seen.push([next, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "Fruit" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[true, "agent"]]);
+  expect(trigger().getAttribute("aria-expanded")).toBe("false");
+  expect(screen.queryByRole("listbox")).toBeNull();
 });

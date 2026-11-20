@@ -171,3 +171,24 @@ test("an agent finds the group and every toggle by name and presses one", async 
   expect(result.ok, result.error?.message).toBe(true);
   expect(button("Italic").getAttribute("aria-pressed")).toBe("true");
 });
+
+test("an agent's press reaches onValueChange as the agent's, and a cancel keeps the pressed item", async () => {
+  const seen: [string[], string][] = [];
+  render(
+    <Formatting
+      defaultValue={["bold"]}
+      onValueChange={(value, details) => {
+        seen.push([value, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setPressed", args: [true], ref: "Italic" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[["italic"], "agent"]]);
+  expect(button("Bold").getAttribute("aria-pressed")).toBe("true");
+  expect(button("Italic").getAttribute("aria-pressed")).toBe("false");
+});
