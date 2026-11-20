@@ -40,10 +40,9 @@ type ItemProps = Styled<PartProps<"div">> & {
 
 // An item only answers when it's rendered as a link, a button or a label for its control.
 const pressable = ":is(a, button, label)";
-const inSize = (size: ItemSize) =>
-  `:is([data-slot='item'][data-size='${size}'] *)`;
+const inSize = (size: ItemSize) => `:is([data-item][data-size='${size}'] *)`;
 const withDescription =
-  ":is([data-slot='item']:has([data-slot='item-description']) > *)";
+  ":is([data-item]:has([data-slot='item-description']) > *)";
 
 const styles = stylex.create({
   item: {
@@ -271,7 +270,12 @@ function Item({
   return renderElement(
     "div",
     mergeProps(
-      { "data-size": size, "data-slot": "item", "data-variant": variant },
+      {
+        "data-item": "",
+        "data-size": size,
+        "data-slot": "item",
+        "data-variant": variant,
+      },
       props,
       stylex.props(
         [
