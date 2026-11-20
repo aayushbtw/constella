@@ -1,6 +1,11 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import type { ChangeDetails } from "@ui-sdk/core";
 import { settle } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
+import type {
+  ComboboxProps,
+  ComboboxValueChangeReason,
+} from "@ui-sdk/react/combobox";
 import { Fragment, useState } from "react";
 import { renderToString } from "react-dom/server";
 import { expect, test } from "vite-plus/test";
@@ -47,12 +52,24 @@ function FruitItems() {
 function Fruit({
   defaultValue = null,
   loop,
+  onOpenChange,
+  onValueChange,
 }: {
   defaultValue?: string | null;
   loop?: boolean;
+  onOpenChange?: ComboboxProps["onOpenChange"];
+  onValueChange?: (
+    value: string | null,
+    details: ChangeDetails<ComboboxValueChangeReason>
+  ) => void;
 }) {
   return (
-    <Combobox defaultValue={defaultValue} loop={loop}>
+    <Combobox
+      defaultValue={defaultValue}
+      loop={loop}
+      onOpenChange={onOpenChange}
+      onValueChange={onValueChange}
+    >
       <ComboboxLabel>Fruit</ComboboxLabel>
       <ComboboxInput showClear />
       <ComboboxContent>
@@ -475,4 +492,44 @@ test("an agent finds every control by name, and picks a value by label", async (
   expect(picked.ok, picked.error?.message).toBe(true);
   expect(input("Fruit")).toHaveProperty("value", "Cherry");
   expect(chips()).toEqual(["Banana"]);
+});
+
+test("an agent's pick reaches onValueChange as the agent's, and a cancel keeps the value", async () => {
+  const seen: [string | null, string][] = [];
+  render(
+    <Fruit
+      defaultValue="Banana"
+      onValueChange={(value, details) => {
+        seen.push([value, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setValue", args: ["Cherry"], ref: "Fruit" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([["Cherry", "agent"]]);
+  expect(input("Fruit")).toHaveProperty("value", "Banana");
+});
+
+test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps the list closed", async () => {
+  const seen: [boolean, string][] = [];
+  render(
+    <Fruit
+      onOpenChange={(next, details) => {
+        seen.push([next, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "Fruit" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[true, "agent"]]);
+  expect(input("Fruit").getAttribute("aria-expanded")).toBe("false");
+  expect(content()).toBeNull();
 });

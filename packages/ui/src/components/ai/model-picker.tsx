@@ -248,12 +248,15 @@ function ModelPickerCommand({ onValueChange, sx, ...props }: CommandProps) {
     <Command
       {...props}
       onValueChange={(value, details) => {
+        onValueChange?.(value, details);
+        if (details.canceled) {
+          return;
+        }
         if (value === null) {
           setShown(false);
         } else if (details.reason === "list-navigation") {
           setShown(true);
         }
-        onValueChange?.(value, details);
       }}
       sx={[styles.command, sx]}
     />
@@ -282,12 +285,13 @@ function ModelPickerItem({
       aria-checked={selected}
       aria-describedby={shown ? detailsId : undefined}
       onSelect={(event) => {
-        onSelect?.(event);
+        const result = onSelect?.(event);
         // Lands before close(); see useSkipMotion in motion.ts.
         flushSync(() => {
           setPicked(true);
         });
         controller.close();
+        return result;
       }}
       onPointerEnter={(event) => {
         onPointerEnter?.(event);

@@ -263,3 +263,28 @@ test("an agent finds the card by its trigger and opens it", async () => {
   expect(opened.ok, opened.error?.message).toBe(true);
   expect(screen.getByText("Tools for teams that ship.")).toBeTruthy();
 });
+
+test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps the card closed", async () => {
+  const seen: [boolean, string][] = [];
+  render(
+    <HoverCard
+      onOpenChange={(next, details) => {
+        seen.push([next, details.source]);
+        details.cancel();
+      }}
+    >
+      <HoverCardTrigger href="https://acme.com">@acme</HoverCardTrigger>
+      <HoverCardContent>Tools for teams that ship.</HoverCardContent>
+    </HoverCard>
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "@acme" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[true, "agent"]]);
+  expect(
+    Object.hasOwn(screen.getByRole("link", { name: "@acme" }).dataset, "open")
+  ).toBe(false);
+  expect(content()).toBeNull();
+});

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
+import type { DialogProps } from "@ui-sdk/react/dialog";
 import { expect, test } from "vite-plus/test";
 
 import { Button } from "./button";
@@ -19,9 +20,13 @@ import { Input } from "./input";
 
 const agent = createAgent();
 
-function EditProfile() {
+function EditProfile({
+  onOpenChange,
+}: {
+  onOpenChange?: DialogProps["onOpenChange"];
+}) {
   return (
-    <Dialog>
+    <Dialog onOpenChange={onOpenChange}>
       <DialogTrigger render={<Button variant="outline" />}>
         Edit profile
       </DialogTrigger>
@@ -159,4 +164,23 @@ test("an agent finds the dialog by its trigger, then names every control inside"
   await waitFor(() => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
+});
+
+test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps the dialog closed", async () => {
+  const seen: [boolean, string][] = [];
+  render(
+    <EditProfile
+      onOpenChange={(next, details) => {
+        seen.push([next, details.source]);
+        details.cancel();
+      }}
+    />
+  );
+
+  const result = await agent.act({
+    steps: [{ action: "setOpen", args: [true], ref: "Edit profile" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(seen).toEqual([[true, "agent"]]);
+  expect(screen.queryByRole("dialog")).toBeNull();
 });
