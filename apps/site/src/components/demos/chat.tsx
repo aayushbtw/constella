@@ -227,9 +227,7 @@ function Composer({
     >
       <PromptInputTextarea
         aria-label="Message"
-        onChange={(event) => {
-          setText(event.target.value);
-        }}
+        onValueChange={setText}
         value={text}
       />
       <PromptInputFooter>
@@ -356,9 +354,7 @@ function PromptInputHeaderDemo() {
           )}
           <PromptInputTextarea
             aria-label="Message"
-            onChange={(event) => {
-              setText(event.target.value);
-            }}
+            onValueChange={setText}
             placeholder="Ask about these files…"
             value={text}
           />
