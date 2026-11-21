@@ -131,7 +131,7 @@ function Mention({
       controller={controller}
       href={profile.href}
       payload={profile}
-      {...stylex.props(styles.mention)}
+      sx={styles.mention}
     >
       {profile.handle}
     </HoverCardTrigger>
