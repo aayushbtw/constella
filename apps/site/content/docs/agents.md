@@ -210,7 +210,7 @@ agent: { actions: ["setValue", "clear"], secret: true },
 
 History can't put back a secret value, since it records `[redacted]`. Seeking or undoing leaves a secret field as it is and lists it among the changes it couldn't put back.
 
-**Don't put `data-agent-hidden` on the Toaster.** It hides every toast and its actions from the agent, and an empty Toaster already shows the agent nothing.
+**Don't put `data-agent-hidden` on the Toaster.** The mark hides every toast from the agent, so the agent can't read the toast its action raised or press the toast's **Undo**. An empty Toaster needs no mark, because ui-sdk leaves a toast region out of `snapshot` until it holds a toast. ui-sdk's agent-ready checklist still says to mark it, and that advice is filed as [vercel-labs/ui#978](https://github.com/vercel-labs/ui/issues/978).
 
 ## WebMCP
 
