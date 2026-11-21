@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, onTestFinished, test, vi } from "vite-plus/test";
 
@@ -121,33 +121,54 @@ test("a footnote's links stay in the tab while an outside link opens a new one, 
   expect(
     screen.getAllByRole("link").map((link) => ({
       backref: "footnoteBackref" in link.dataset,
-      href: link.getAttribute("href"),
+      href: link.getAttribute("href")?.replace(/^#.*user-content-/u, "#"),
       slot: link.dataset.slot,
       target: link.getAttribute("target"),
     }))
   ).toEqual([
-    {
-      backref: false,
-      href: "#user-content-fn-1",
-      slot: "link",
-      target: null,
-    },
+    { backref: false, href: "#fn-1", slot: "link", target: null },
     {
       backref: false,
       href: "https://example.com",
       slot: "link",
       target: "_blank",
     },
-    {
-      backref: true,
-      href: "#user-content-fnref-1",
-      slot: "link",
-      target: null,
-    },
+    { backref: true, href: "#fnref-1", slot: "link", target: null },
   ]);
-  expect(screen.getByRole("heading", { name: "Footnotes" }).id).toBe(
-    "footnote-label"
+  const heading = screen.getByRole("heading", { name: "Footnotes" });
+  expect(heading.id).toMatch(/footnote-label$/u);
+  expect(screen.getAllByRole("link")[0]?.getAttribute("aria-describedby")).toBe(
+    heading.id
   );
+});
+
+test("two answers that both use [^1] keep their footnotes apart", () => {
+  const { container } = render(
+    <>
+      <Markdown>{"First.[^1]\n\n[^1]: First source."}</Markdown>
+      <Markdown>{"Second.[^1]\n\n[^1]: Second source."}</Markdown>
+    </>
+  );
+
+  const ids = [...container.querySelectorAll("[id]")].map((el) => el.id);
+  expect(ids).toHaveLength(6);
+  expect(new Set(ids).size).toBe(ids.length);
+
+  for (const root of container.querySelectorAll<HTMLElement>(
+    "[data-slot=markdown]"
+  )) {
+    const block = within(root);
+    const [ref, backref] = block.getAllByRole("link");
+    const note = root.querySelector(
+      `[id="${ref?.getAttribute("href")?.slice(1)}"]`
+    );
+    expect(note?.tagName).toBe("LI");
+    expect(backref?.getAttribute("href")).toBe(`#${ref?.id}`);
+    expect(note?.contains(backref ?? null)).toBe(true);
+    expect(ref?.getAttribute("aria-describedby")).toBe(
+      block.getByRole("heading", { name: "Footnotes" }).id
+    );
+  }
 });
 
 test("a table and inline code render on their parts", () => {
