@@ -24,13 +24,10 @@ import { flushSync } from "react-dom";
 import { popoverStyles } from "@/components/primitives/popover";
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, withStyles } from "@/lib/constella/styles";
+import { popupSurface, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
-  colors,
   durations,
   offsets,
-  radii,
-  shadows,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -55,12 +52,6 @@ type HoverCardContentProps<Payload = unknown> = Styled<
 
 const styles = stylex.create({
   surface: {
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     maxWidth: "var(--available-width)",
     paddingBlock: space.popup,
     paddingInline: space.popup,
@@ -169,7 +160,12 @@ function HoverCardContent<Payload = unknown>({
       {...withStyles(
         props,
         stylex.props(
-          [typeStyles.textSm, popoverStyles.popup, styles.surface],
+          [
+            typeStyles.textSm,
+            popoverStyles.popup,
+            popupSurface.base,
+            styles.surface,
+          ],
           popupMotion.popover,
           popupMotion.glide,
           sx

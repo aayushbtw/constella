@@ -46,6 +46,7 @@ import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
 import {
   popupReset,
+  popupSurface,
   typeStyles,
   visuallyHidden,
   withStyles,
@@ -187,7 +188,6 @@ const styles = stylex.create({
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
-    boxShadow: shadows.lg,
     maxHeight: "var(--available-height)",
     paddingBlockStart: {
       default: space.xxs,
@@ -552,6 +552,7 @@ function PromptInputCommandContent({
         props,
         stylex.props(
           popupReset.base,
+          popupSurface.base,
           commandStyles.surface,
           styles.commandContent,
           sx

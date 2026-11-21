@@ -35,14 +35,17 @@ import {
 import type { PopoverContentProps } from "@/components/primitives/popover";
 import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { visuallyHidden, withStyles } from "@/lib/constella/styles";
+import {
+  popupSurface,
+  visuallyHidden,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
   fontWeights,
   lineHeights,
   offsets,
-  shadows,
   sizes,
   space,
   strokes,
@@ -70,7 +73,6 @@ const styles = stylex.create({
     flexDirection: "row-reverse",
   },
   command: {
-    boxShadow: shadows.lg,
     maxWidth: "100%",
     width: sizes.modelPicker,
   },
@@ -267,7 +269,7 @@ function ModelPickerCommand({ onValueChange, sx, ...props }: CommandProps) {
           setShown(true);
         }
       }}
-      sx={[styles.command, sx]}
+      sx={[popupSurface.base, styles.command, sx]}
     />
   );
 }

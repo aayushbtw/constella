@@ -30,7 +30,12 @@ import type { ComponentProps, ReactNode } from "react";
 
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
+import {
+  popupReset,
+  popupSurface,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -40,7 +45,6 @@ import {
   offsets,
   opacities,
   radii,
-  shadows,
   sizes,
   space,
   strokes,
@@ -83,17 +87,11 @@ const insetStart = (padding: string) =>
 
 const styles = stylex.create({
   popup: {
-    backgroundColor: colors.raised,
     // ui-sdk's runtime layer resets the browser's `[popover]` box for popover and dialog content, not a menu's.
     borderBlockEndWidth: 0,
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     maxHeight: "var(--available-height)",
     maxWidth: "var(--available-width)",
     // Wide enough for a label beside its value.
@@ -317,7 +315,7 @@ function Popup<Payload>({
         {...withStyles(
           props,
           stylex.props(
-            [popupReset.base, styles.popup],
+            [popupReset.base, popupSurface.base, styles.popup],
             sizeStyles[size].popup,
             popupMotion.popover,
             nested && popupMotion.submenu,

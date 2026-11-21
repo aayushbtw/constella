@@ -43,6 +43,7 @@ import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
   popupReset,
+  popupSurface,
   typeStyles,
   withStyles,
 } from "@/lib/constella/styles";
@@ -55,7 +56,6 @@ import {
   offsets,
   opacities,
   radii,
-  shadows,
   sizes,
   space,
   strokes,
@@ -149,16 +149,10 @@ const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 const styles = stylex.create({
   // ui-sdk's combobox leaves the browser's `[popover]` border, padding and margin.
   content: {
-    backgroundColor: colors.raised,
     borderBlockEndWidth: 0,
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     display: "flex",
     flexDirection: "column",
     marginBlock: 0,
@@ -516,7 +510,13 @@ function ComboboxContent({
         sideOffset={sideOffset}
         {...withStyles(
           props,
-          stylex.props(popupReset.base, styles.content, popupMotion.popover, sx)
+          stylex.props(
+            popupReset.base,
+            popupSurface.base,
+            styles.content,
+            popupMotion.popover,
+            sx
+          )
         )}
       />
     </Size>
