@@ -7,6 +7,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useLoaderData, useRouterState } from "@tanstack/react-router";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
@@ -285,7 +286,7 @@ function NavMenu() {
                 ))
               : groups.map(({ items, label, to }) => (
                   <li key={label}>
-                    <button
+                    <ButtonPrimitive
                       data-group={label}
                       onClick={() => {
                         enter(label);
@@ -300,7 +301,7 @@ function NavMenu() {
                     >
                       {label}
                       {icon(ArrowRight01Icon, true)}
-                    </button>
+                    </ButtonPrimitive>
                   </li>
                 ))}
           </ul>
