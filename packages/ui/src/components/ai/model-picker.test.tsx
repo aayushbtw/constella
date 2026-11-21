@@ -34,7 +34,6 @@ const agent = createAgent();
 
 const models = ["Claude Opus", "GPT-5"];
 
-// The skip must be in the DOM when onOpenChange fires; see useSkipMotion in motion.ts.
 async function openPicker() {
   const onPick = vi.fn<(model: string) => void>();
   const skipOnClose: boolean[] = [];

@@ -33,7 +33,7 @@ import {
   inputGroupInputStyles,
 } from "@/components/primitives/input-group";
 import type { InputGroupSize } from "@/components/primitives/input-group";
-import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
@@ -344,21 +344,25 @@ const inputSizes = {
   sm: "default",
 } satisfies Record<SelectSize, InputGroupSize>;
 
-const SkipMotion = createContext(false);
+const [SelectSkipMotion, useSelectSkipMotion] = createSkipMotion();
 const Size = createContext<SelectSize>("default");
 
 function Select<T = string, Multiple extends boolean | undefined = false>(
   props: SelectProps<T, Multiple>
 ) {
-  const [skip, handleOpenChange] = useSkipMotion(props.onOpenChange);
   return (
-    <SkipMotion value={skip}>
-      <SelectPrimitive<T, Multiple>
-        {...props}
-        loop={props.loop ?? false}
-        onOpenChange={handleOpenChange}
-      />
-    </SkipMotion>
+    <SelectSkipMotion
+      onOpenChange={props.onOpenChange}
+      onOpenChangeComplete={props.onOpenChangeComplete}
+    >
+      {(handlers) => (
+        <SelectPrimitive<T, Multiple>
+          {...props}
+          loop={props.loop ?? false}
+          {...handlers}
+        />
+      )}
+    </SelectSkipMotion>
   );
 }
 
@@ -426,7 +430,7 @@ function SelectContent({
   sx,
   ...props
 }: SelectContentProps) {
-  const skip = use(SkipMotion);
+  const skip = useSelectSkipMotion();
   const opensInPlace = alignItemWithTrigger;
   return (
     <Size value={size}>

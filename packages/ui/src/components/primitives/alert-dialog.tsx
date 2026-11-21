@@ -16,7 +16,11 @@ import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
-import { dialogStyles } from "@/components/primitives/dialog";
+import {
+  DialogSkipMotion,
+  dialogStyles,
+  useDialogSkipMotion,
+} from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
 import { withStyles } from "@/lib/constella/styles";
 import {
@@ -88,8 +92,19 @@ const sizeStyles = {
 // ui-sdk refuses the other Close parts while one's action runs, but marks only the running one; drop once it marks the refused ones.
 const Pending = createContext(false);
 
-function AlertDialog(props: AlertDialogProps) {
-  return <AlertDialogPrimitive {...props} />;
+function AlertDialog({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: AlertDialogProps) {
+  return (
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <AlertDialogPrimitive {...handlers} {...props} />}
+    </DialogSkipMotion>
+  );
 }
 
 function AlertDialogTrigger({
@@ -107,11 +122,16 @@ function AlertDialogContent<Payload = unknown>({
   sx,
   ...props
 }: AlertDialogContentProps<Payload>) {
+  const skip = useDialogSkipMotion();
   return (
     <>
-      <AlertDialogBackdropPrimitive {...stylex.props(dialogStyles.backdrop)} />
+      <AlertDialogBackdropPrimitive
+        data-skip-motion={skip || undefined}
+        {...stylex.props(dialogStyles.backdrop)}
+      />
       <AlertDialogContentPrimitive<Payload>
         data-size={size}
+        data-skip-motion={skip || undefined}
         {...withStyles(
           props,
           stylex.props(dialogStyles.popup, sizeStyles[size], sx)

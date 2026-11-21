@@ -67,6 +67,19 @@ function tick(item: HTMLElement) {
   return item.querySelector<HTMLElement>("[data-slot='menu-item-indicator']");
 }
 
+// A skipped close finishes in the same task under jsdom, so the attribute is gone before a waitFor looks.
+function watchSkipMotion(element: HTMLElement) {
+  let added = false;
+  const observer = new MutationObserver((records) => {
+    added ||= records.some((record) => record.oldValue === null);
+  });
+  observer.observe(element, {
+    attributeFilter: ["data-skip-motion"],
+    attributeOldValue: true,
+  });
+  return () => added;
+}
+
 test("the trigger opens a sized menu", async () => {
   render(<Account />);
   const menu = await open();
@@ -80,13 +93,14 @@ test("a pointer pick runs onSelect and closes the menu without motion", async ()
   const menu = await open();
   expect(Object.hasOwn(menu.dataset, "skipMotion")).toBe(false);
 
+  const skipped = watchSkipMotion(menu);
   fireEvent.click(screen.getByRole("menuitem", { name: "Billing" }));
 
   expect(onBilling).toHaveBeenCalledOnce();
   await waitFor(() => {
     expect(Object.hasOwn(menu.dataset, "closed")).toBe(true);
   });
-  expect(Object.hasOwn(menu.dataset, "skipMotion")).toBe(true);
+  expect(skipped()).toBe(true);
 });
 
 test("checkbox and radio items toggle, keep the menu open and keep their tick mounted", async () => {

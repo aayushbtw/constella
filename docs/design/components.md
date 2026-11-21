@@ -123,7 +123,7 @@ Pagination sits under the table: the range in `textSecondary` at the start; rows
 
 ## Dialog
 
-Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index. A popup opened from it (a menu, a tooltip) joins the top layer after it, so it paints on top. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index. A popup opened from it (a menu, a tooltip) joins the top layer after it, so it paints on top. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it. Opened from the keyboard or closed with Esc or a key on its buttons, it appears and leaves at once; Alert Dialog and Command Dialog do the same. A dialog opened by the app, like the assistant's confirm, still fades in. The one behind still steps back under a dialog opened at once.
 
 ## Empty state
 
@@ -163,7 +163,7 @@ Page links and steps are ghost buttons `space.xxs` apart. The current page draws
 
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Popups and dialogs sit in the top layer, above any z-index, so a popup opened from a dialog paints on top of it. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once, and so do arrow keys and a picked item. ui-sdk marks only a Tooltip that opens at once after another (`data-instant`), so every popup, Tooltip included, tracks the open-change reason with `useSkipMotion`. It reads `details.source`, focus leaving and a picked item. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Popups and dialogs sit in the top layer, above any z-index, so a popup opened from a dialog paints on top of it. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once, and so do arrow keys and a picked item. ui-sdk marks only a Tooltip that opens at once after another (`data-instant`), so every popup and dialog, Tooltip included, tracks the open-change reason with `useSkipMotion`. It reads `details.source`, focus leaving and a picked item. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
@@ -217,7 +217,7 @@ A 1px `borderSubtle` line: it groups content, it doesn't bound a control. A vert
 
 ## Sheet
 
-Travels the whole way in from its edge on a critically damped spring, `motion.sheetResponse`, that settles inside 300ms, and leaves the same way: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. A swipe toward its edge from the header or footer carries it along and closes it; pulled the other way it stretches a little and springs back, with its fill drawn past the edge so no gap opens. The body doesn't swipe, so its text selects. Under reduced motion it fades in, and on close it leaves at once while the backdrop fades. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
+Travels the whole way in from its edge on a critically damped spring, `motion.sheetResponse`, that settles inside 300ms, and leaves the same way: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. A swipe toward its edge from the header or footer carries it along and closes it; pulled the other way it stretches a little and springs back, with its fill drawn past the edge so no gap opens. The body doesn't swipe, so its text selects. Under reduced motion it fades in, and on close it leaves at once while the backdrop fades. A keyboard open or Esc still slides: ui-sdk's Drawer moves the sheet itself and has no instant open or close yet. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
 
 ## Settings dialog
 
@@ -225,7 +225,7 @@ A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capp
 
 ## Side panel
 
-Part of the layout, not a layer: it opens into a slot after the whole page, so the content narrows instead of being covered. The slot is sticky below the header row, the window's height less it, so the panel stays in view while the page scrolls. It floats `space.row` (6px) in from the content and the window's edges, lifted off the page as the composer is: `raised` fill, `radii.lg`, its edge a ring in its `shadows.panel` shadow. What it holds is the app's: details, a form, anything. It's non-modal, so the page beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step.
+Part of the layout, not a layer: it opens into a slot after the whole page, so the content narrows instead of being covered. The slot is sticky below the header row, the window's height less it, so the panel stays in view while the page scrolls. It floats `space.row` (6px) in from the content and the window's edges, lifted off the page as the composer is: `raised` fill, `radii.lg`, its edge a ring in its `shadows.panel` shadow. What it holds is the app's: details, a form, anything. It's non-modal, so the page beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step. Opened from the keyboard, it appears at once.
 
 Its header is a strip `sizes.header` less the panel's `space.row` inset above and below (44px), padded `space.row`, so its controls centre on the header row's line and its title's text sits on the body's edge. It holds a title, any actions, then Close, and never info or a description: that goes in the body. The header and footer are pinned; the body scrolls on its own. The footer is the sidebar's, a column with a `space.xs` gap, on the body's `space.md` inset.
 

@@ -38,7 +38,7 @@ import {
   InputGroupButton,
   inputGroupInputStyles,
 } from "@/components/primitives/input-group";
-import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
@@ -384,25 +384,26 @@ interface Anchor {
   setAnchor: (element: HTMLDivElement | null) => void;
 }
 
-const SkipMotion = createContext(false);
+const [ComboboxSkipMotion, useComboboxSkipMotion] = createSkipMotion();
 const Size = createContext<ComboboxSize>("default");
 const AnchorContext = createContext<Anchor | null>(null);
 
 function Combobox<T = string, Multiple extends boolean | undefined = false>(
   props: ComboboxProps<T, Multiple>
 ) {
-  const [skip, handleOpenChange] = useSkipMotion(props.onOpenChange);
   const [anchor, setAnchor] = useState<HTMLDivElement | null>(null);
   const anchorContext = useMemo(() => ({ anchor, setAnchor }), [anchor]);
   return (
-    <SkipMotion value={skip}>
-      <AnchorContext value={anchorContext}>
-        <ComboboxPrimitive<T, Multiple>
-          {...props}
-          onOpenChange={handleOpenChange}
-        />
-      </AnchorContext>
-    </SkipMotion>
+    <ComboboxSkipMotion
+      onOpenChange={props.onOpenChange}
+      onOpenChangeComplete={props.onOpenChangeComplete}
+    >
+      {(handlers) => (
+        <AnchorContext value={anchorContext}>
+          <ComboboxPrimitive<T, Multiple> {...props} {...handlers} />
+        </AnchorContext>
+      )}
+    </ComboboxSkipMotion>
   );
 }
 
@@ -496,7 +497,6 @@ function ComboboxContent({
   sx,
   ...props
 }: ComboboxContentProps) {
-  const skip = use(SkipMotion);
   const groupBox = use(AnchorContext)?.anchor;
   return (
     <Size value={size}>
@@ -505,7 +505,7 @@ function ComboboxContent({
         alignOffset={alignOffset}
         anchor={anchor ?? groupBox}
         data-size={size}
-        data-skip-motion={skip || undefined}
+        data-skip-motion={useComboboxSkipMotion() || undefined}
         side={side}
         sideOffset={sideOffset}
         {...withStyles(

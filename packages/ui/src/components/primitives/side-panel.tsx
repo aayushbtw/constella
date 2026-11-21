@@ -13,14 +13,16 @@ import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
 
 import { CloseButton } from "@/components/primitives/button";
+import {
+  DialogSkipMotion,
+  useDialogSkipMotion,
+} from "@/components/primitives/dialog";
+import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
   fontWeights,
-  media,
   radii,
   shadows,
   sizes,
@@ -38,8 +40,6 @@ type SidePanelContentProps<Payload = unknown> = Styled<
     "container" | "inline"
   >
 >;
-
-const entering = ":is([data-starting-style])";
 
 const styles = stylex.create({
   // Held in view below the header row while the content beside it scrolls.
@@ -82,18 +82,7 @@ const styles = stylex.create({
     display: { default: "flex", ":is([data-ending-style])": "none" },
     flexGrow: 1,
     flexShrink: 1,
-    opacity: { default: 1, [entering]: 0 },
     overflow: "hidden",
-    transform: {
-      default: "none",
-      [entering]: {
-        default: `translateX(${space.sm})`,
-        [media.reducedMotion]: "none",
-      },
-    },
-    transitionDuration: durations.dialog,
-    transitionProperty: "opacity, transform",
-    transitionTimingFunction: easings.layout,
   },
   // The header row less the panel's inset above and below, so a panel inset by `space.row`
   // centres its controls on the header row's line.
@@ -202,8 +191,19 @@ function PanelBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
 }
 
 /** A non-modal dialog: clicking the content beside it leaves it open; Close shuts it, and so does Escape while focus is in it. */
-function SidePanel(props: DialogProps) {
-  return <DialogPrimitive modal={false} {...props} />;
+function SidePanel({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: DialogProps) {
+  return (
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <DialogPrimitive modal={false} {...handlers} {...props} />}
+    </DialogSkipMotion>
+  );
 }
 
 function SidePanelTrigger({
@@ -229,11 +229,13 @@ function SidePanelContent<Payload = unknown>({
 }: SidePanelContentProps<Payload>) {
   return (
     <DialogContentPrimitive<Payload>
+      data-skip-motion={useDialogSkipMotion() || undefined}
       inline
       {...withStyles(
         props,
         stylex.props(
           [typeStyles.textSm, styles.surface, styles.placed, styles.popup],
+          popupMotion.sidePanel,
           sx
         )
       )}

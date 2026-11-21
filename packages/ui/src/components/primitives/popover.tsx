@@ -10,10 +10,9 @@ import {
   PopoverTrigger as PopoverTriggerPrimitive,
 } from "@ui-sdk/react/popover";
 import type { PopoverProps } from "@ui-sdk/react/popover";
-import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
-import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   popupReset,
@@ -66,20 +65,22 @@ const styles = stylex.create({
   },
 });
 
-const SkipMotion = createContext(false);
+/** `usePopoverSkipMotion` tells a part that draws its own popup whether the popover's last open or close skips its motion. */
+const [PopoverSkipMotion, usePopoverSkipMotion] = createSkipMotion();
 
-function Popover({ onOpenChange, ...props }: PopoverProps) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function Popover({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: PopoverProps) {
   return (
-    <SkipMotion value={skip}>
-      <PopoverPrimitive onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <PopoverSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <PopoverPrimitive {...handlers} {...props} />}
+    </PopoverSkipMotion>
   );
-}
-
-/** Whether the popover's last open or close skips its motion, for a part that draws its own popup. */
-function usePopoverSkipMotion() {
-  return use(SkipMotion);
 }
 
 function PopoverTrigger({
@@ -94,10 +95,9 @@ function PopoverContent({
   sx,
   ...props
 }: PopoverContentProps) {
-  const skip = usePopoverSkipMotion();
   return (
     <PopoverContentPrimitive
-      data-skip-motion={skip || undefined}
+      data-skip-motion={usePopoverSkipMotion() || undefined}
       sideOffset={sideOffset}
       {...withStyles(
         props,
