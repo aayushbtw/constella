@@ -165,6 +165,39 @@ test("the only unnamed entries are the collapsibles of steps with no trigger", (
   ]);
 });
 
+function Arriving({ steps }: { steps: string[] }) {
+  return (
+    <Trace>
+      {steps.map((title) => (
+        <TraceStep key={title}>
+          <TraceLine>
+            <TraceTitle>{title}</TraceTitle>
+          </TraceLine>
+        </TraceStep>
+      ))}
+    </Trace>
+  );
+}
+
+test("only a step added after the trace is on screen plays an entrance", () => {
+  const { container, rerender } = render(<Arriving steps={["Read"]} />);
+
+  rerender(<Arriving steps={["Read", "Edited"]} />);
+
+  const [present, added] = container.querySelectorAll(
+    "[data-slot='trace-step']"
+  );
+  for (const pick of [
+    (step: Element | undefined) => step,
+    (step: Element | undefined) => step?.firstElementChild,
+  ]) {
+    const resting = [...(pick(present)?.classList ?? [])];
+    const entering = [...(pick(added)?.classList ?? [])];
+    expect(entering).toEqual(expect.arrayContaining(resting));
+    expect(entering.length).toBeGreaterThan(resting.length);
+  }
+});
+
 test("an agent opens a shut step and shuts the run by name", async () => {
   const { container } = render(<Run />);
   const panels = () =>
