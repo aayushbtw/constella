@@ -165,10 +165,13 @@ For an account menu, render a `size="lg"` `SidebarMenuButton` as a `DropdownMenu
     <SidebarMenuItem>
       <DropdownMenu>
         <DropdownMenuTrigger
-          render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+          render={<SidebarMenuButton size="lg" tooltip="shadcn Pro" />}
         >
           <Avatar>…</Avatar>
-          <SidebarMenuLabel>shadcn</SidebarMenuLabel>
+          <SidebarMenuLabel>
+            <span>shadcn</span>
+            <span>Pro</span>
+          </SidebarMenuLabel>
           <HugeiconsIcon icon={UnfoldMoreIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top">…</DropdownMenuContent>
