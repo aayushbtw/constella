@@ -434,6 +434,49 @@ test("while streaming, the submit button is Stop: a press calls onStop and doesn
   expect(onSubmit).not.toHaveBeenCalled();
 });
 
+const buttonRef = (label: string) =>
+  agent
+    .snapshot()
+    .find(
+      (entry) =>
+        entry.offPage !== true &&
+        entry.component === "button" &&
+        entry.label === label
+    )?.ref;
+
+test("Send and Stop are separate refs, and Send keeps its ref across a stream", () => {
+  const { rerender } = render(
+    <Submit onStop={() => {}} onSubmit={() => {}} state="ready" />
+  );
+  const sendBefore = buttonRef("Send");
+
+  rerender(<Submit onStop={() => {}} onSubmit={() => {}} state="streaming" />);
+  const stop = buttonRef("Stop");
+
+  rerender(<Submit onStop={() => {}} onSubmit={() => {}} state="ready" />);
+  const sendAfter = buttonRef("Send");
+
+  expect(sendBefore).toBeTruthy();
+  expect(stop).toBeTruthy();
+  expect(stop).not.toBe(sendBefore);
+  expect(sendAfter).toBe(sendBefore);
+});
+
+test("an agent pressing Send's ref while streaming doesn't stop the stream", async () => {
+  const onStop = vi.fn<() => void>();
+  const onSubmit = vi.fn<() => void>();
+  const { rerender } = render(
+    <Submit onStop={onStop} onSubmit={onSubmit} state="ready" />
+  );
+  const sendRef = buttonRef("Send");
+  expect(sendRef).toBeTruthy();
+
+  rerender(<Submit onStop={onStop} onSubmit={onSubmit} state="streaming" />);
+  await agent.act({ steps: [{ action: "press", ref: sendRef ?? "" }] });
+
+  expect(onStop).not.toHaveBeenCalled();
+});
+
 test("once submitted, the submit button is busy", () => {
   render(<Submit onSubmit={() => {}} state="submitted" />);
 
