@@ -14,8 +14,15 @@ import {
   TriggerMenuStatus,
 } from "@ui-sdk/react/trigger-menu";
 import type { TriggerMenuProps } from "@ui-sdk/react/trigger-menu";
-import { createContext, use, useMemo, useState } from "react";
-import type { ComponentProps } from "react";
+import {
+  createContext,
+  use,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ComponentProps, FocusEvent } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -310,54 +317,114 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** Sends the prompt; while an answer streams it turns into Stop, which calls `onStop`. */
+type SubmitIcon = "send" | "stop";
+
+function SubmitIcons({
+  from,
+  value,
+}: {
+  from?: SubmitIcon;
+  value: SubmitIcon;
+}) {
+  return (
+    <SwapIcon aria-hidden from={from} value={value}>
+      <SwapIconItem value="send">
+        <HugeiconsIcon
+          icon={ArrowUp02Icon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      </SwapIconItem>
+      <SwapIconItem value="stop">
+        <HugeiconsIcon
+          icon={StopIcon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      </SwapIconItem>
+    </SwapIcon>
+  );
+}
+
+/** Sends the prompt. While an answer streams, a Stop button named by `stopLabel` takes its place and calls `onStop`. */
 function PromptInputSubmit({
-  disabled,
-  onClick,
+  onBlur,
+  onFocus,
   onStop,
+  size = "icon-sm",
   state = "ready",
+  stopLabel = "Stop",
+  sx,
+  variant = "primary",
   ...props
-}: Omit<InputGroupButtonProps, "children" | "type"> & {
+}: Omit<InputGroupButtonProps, "children" | "ref" | "type"> & {
   onStop?: () => void;
   state?: PromptInputState;
+  stopLabel?: string;
 }) {
-  const streaming = state === "streaming";
-  return (
+  const shown: SubmitIcon = state === "streaming" ? "stop" : "send";
+  const [held, setHeld] = useState(shown);
+  const [from, setFrom] = useState<SubmitIcon>();
+  const [swapsInstantly, setSwapsInstantly] = useState(false);
+  if (shown !== held) {
+    setHeld(shown);
+    setFrom(swapsInstantly ? undefined : held);
+  }
+  const trackFocus = {
+    onBlur: (event: FocusEvent<HTMLButtonElement>) => {
+      onBlur?.(event);
+      setSwapsInstantly(false);
+    },
+    onFocus: (event: FocusEvent<HTMLButtonElement>) => {
+      onFocus?.(event);
+      setSwapsInstantly(event.currentTarget.matches(":focus-visible"));
+    },
+  };
+  const focusFollows = useRef(false);
+  // A ref's cleanup runs before React removes the element, while it can still hold focus.
+  const followFocus = useCallback((element: HTMLButtonElement | null) => {
+    if (element !== null && focusFollows.current) {
+      focusFollows.current = false;
+      element.focus();
+      if (document.activeElement !== element) {
+        element.form
+          ?.querySelector<HTMLElement>("[data-prompt-input-textarea]")
+          ?.focus();
+      }
+    }
+    return () => {
+      focusFollows.current = document.activeElement === element;
+    };
+  }, []);
+  return shown === "stop" ? (
+    <InputGroupButton
+      aria-label={stopLabel}
+      data-slot="prompt-input-stop"
+      key="stop"
+      onClick={onStop}
+      ref={followFocus}
+      size={size}
+      sx={sx}
+      variant={variant}
+      {...trackFocus}
+    >
+      <SubmitIcons from={from} value="stop" />
+    </InputGroupButton>
+  ) : (
     <InputGroupButton
       aria-busy={state === "submitted" || undefined}
-      aria-label={streaming ? "Stop" : "Send"}
+      aria-label="Send"
       data-slot="prompt-input-submit"
-      data-state={state}
-      disabled={streaming ? false : disabled}
-      size="icon-sm"
-      type={streaming ? "button" : "submit"}
-      variant="primary"
+      key="send"
+      size={size}
+      type="submit"
+      variant={variant}
       {...props}
-      onClick={(event, details) => {
-        const result = onClick?.(event, details);
-        if (streaming) {
-          event.preventDefault();
-          onStop?.();
-        }
-        return streaming ? undefined : result;
-      }}
+      {...trackFocus}
+      ref={followFocus}
+      sx={sx}
     >
-      <SwapIcon aria-hidden value={streaming ? "stop" : "send"}>
-        <SwapIconItem value="send">
-          <HugeiconsIcon
-            icon={ArrowUp02Icon}
-            size={sizes.icon}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-        <SwapIconItem value="stop">
-          <HugeiconsIcon
-            icon={StopIcon}
-            size={sizes.icon}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-      </SwapIcon>
+      <SubmitIcons from={from} value="send" />
     </InputGroupButton>
   );
 }
