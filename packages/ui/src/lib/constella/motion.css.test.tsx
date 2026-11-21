@@ -24,6 +24,11 @@ import {
   ComboboxLabel,
   ComboboxList,
 } from "@/components/primitives/combobox";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+} from "@/components/primitives/alert-dialog";
 import { CommandInput, CommandList } from "@/components/primitives/command";
 import {
   DateRangePicker,
@@ -64,6 +69,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
+import {
+  SidePanel,
+  SidePanelContent,
+  SidePanelTitle,
+} from "@/components/primitives/side-panel";
 import {
   Tooltip,
   TooltipContent,
@@ -110,6 +120,16 @@ function Share() {
         <DialogTitle>Share</DialogTitle>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function Delete() {
+  return (
+    <AlertDialog defaultOpen>
+      <AlertDialogContent>
+        <AlertDialogTitle>Delete</AlertDialogTitle>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -216,6 +236,31 @@ const rows: PopupRow[] = [
     },
     name: "Dialog backdrop",
     render: () => <Share />,
+  },
+  {
+    content: async () =>
+      await screen.findByRole("alertdialog", { name: "Delete" }),
+    name: "Alert Dialog popup",
+    render: () => <Delete />,
+  },
+  {
+    content: async () => {
+      await screen.findByRole("alertdialog", { name: "Delete" });
+      return slot("alert-dialog-backdrop");
+    },
+    name: "Alert Dialog backdrop",
+    render: () => <Delete />,
+  },
+  {
+    content: async () => await screen.findByRole("dialog", { name: "Event" }),
+    name: "Side Panel popup",
+    render: () => (
+      <SidePanel defaultOpen>
+        <SidePanelContent>
+          <SidePanelTitle>Event</SidePanelTitle>
+        </SidePanelContent>
+      </SidePanel>
+    ),
   },
   {
     content: async () => await screen.findByRole("tooltip"),
