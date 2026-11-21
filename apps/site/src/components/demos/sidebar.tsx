@@ -385,7 +385,7 @@ function User({ side }: { side: SidebarSide }) {
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+              render={<SidebarMenuButton size="lg" tooltip="shadcn Pro" />}
             >
               <UserAvatar />
               <SidebarMenuLabel>
