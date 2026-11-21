@@ -24,6 +24,7 @@ import {
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
+  popupReset,
   stateStyles,
   typeStyles,
   withStyles,
@@ -81,12 +82,7 @@ const styles = stylex.create({
   root: {
     width: "fit-content",
   },
-  // ui-sdk's date picker leaves the browser's `[popover]` border.
   content: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     flexDirection: "row",
     gap: 0,
     paddingBlockEnd: 0,
@@ -252,7 +248,12 @@ function DateRangePickerContent({
       {...withStyles(
         props,
         stylex.props(
-          [popoverStyles.popup, popoverStyles.surface, styles.content],
+          [
+            popoverStyles.popup,
+            popupReset.borderless,
+            popoverStyles.surface,
+            styles.content,
+          ],
           popupMotion.popover,
           sx
         )

@@ -87,11 +87,6 @@ const insetStart = (padding: string) =>
 
 const styles = stylex.create({
   popup: {
-    // ui-sdk's runtime layer resets the browser's `[popover]` box for popover and dialog content, not a menu's.
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     maxHeight: "var(--available-height)",
     maxWidth: "var(--available-width)",
     // Wide enough for a label beside its value.
@@ -321,7 +316,12 @@ function Popup<Payload>({
         {...withStyles(
           props,
           stylex.props(
-            [popupReset.base, popupSurface.base, styles.popup],
+            [
+              popupReset.base,
+              popupReset.borderless,
+              popupSurface.base,
+              styles.popup,
+            ],
             sizeStyles[size].popup,
             popupMotion.popover,
             nested && popupMotion.submenu,
