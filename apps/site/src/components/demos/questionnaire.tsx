@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
-import { useId, useMemo, useState } from "react";
-import type { ComponentProps, SubmitEvent } from "react";
+import { useMemo, useState } from "react";
+import type { SubmitEvent } from "react";
 import { z } from "zod";
 
 import {
@@ -73,15 +73,17 @@ const styles = stylex.create({
 });
 
 function QuestionItem({
+  onStatusChange,
   question,
-  ...props
-}: { question: Question } & Partial<ComponentProps<typeof QuestionnaireItem>>) {
+}: {
+  onStatusChange?: (status: QuestionnaireItemStatus) => void;
+  question: Question;
+}) {
   return (
     <QuestionnaireItem
       multiple={question.multiple}
       name={question.name}
-      required={question.required}
-      {...props}
+      onStatusChange={onStatusChange}
     >
       <QuestionnaireTitle>{question.title}</QuestionnaireTitle>
       {question.description === undefined ? null : (
@@ -100,13 +102,13 @@ function QuestionItem({
             )}
           </QuestionnaireChoice>
         ))}
-        {question.input === undefined ? null : (
-          <QuestionnaireInput
-            aria-label={question.input.label}
-            placeholder={question.input.placeholder}
-          />
-        )}
       </QuestionnaireChoices>
+      {question.input === undefined ? null : (
+        <QuestionnaireInput
+          aria-label={question.input.label}
+          placeholder={question.input.placeholder}
+        />
+      )}
       <QuestionnaireError />
     </QuestionnaireItem>
   );
@@ -324,7 +326,6 @@ function ValidationProgress() {
 
 function QuestionnaireValidationDemo() {
   const [item, setItem] = useState("detail");
-  const titleId = useId();
   const [errors, setErrors] = useState<Partial<Record<AnswerName, string>>>({});
 
   function clearError(name: AnswerName) {
@@ -369,13 +370,14 @@ function QuestionnaireValidationDemo() {
       >
         <Card>
           <QuestionnaireItem
-            aria-labelledby={`${titleId}-detail`}
             invalid={errors.detail !== undefined}
             name="detail"
-            required
+            onValueChange={() => {
+              clearError("detail");
+            }}
           >
             <CardHeader>
-              <QuestionnaireTitle id={`${titleId}-detail`}>
+              <QuestionnaireTitle>
                 How much detail should the answer include?
               </QuestionnaireTitle>
               <QuestionnaireDescription>
@@ -387,20 +389,10 @@ function QuestionnaireValidationDemo() {
             </CardHeader>
             <CardContent>
               <QuestionnaireChoices>
-                <QuestionnaireChoice
-                  onChange={() => {
-                    clearError("detail");
-                  }}
-                  value="summary"
-                >
+                <QuestionnaireChoice value="summary">
                   Concise summary
                 </QuestionnaireChoice>
-                <QuestionnaireChoice
-                  onChange={() => {
-                    clearError("detail");
-                  }}
-                  value="complete"
-                >
+                <QuestionnaireChoice value="complete">
                   Complete answer
                 </QuestionnaireChoice>
               </QuestionnaireChoices>
@@ -408,15 +400,14 @@ function QuestionnaireValidationDemo() {
             </CardContent>
           </QuestionnaireItem>
           <QuestionnaireItem
-            aria-labelledby={`${titleId}-audience`}
             invalid={errors.audience !== undefined}
             name="audience"
-            required
+            onValueChange={() => {
+              clearError("audience");
+            }}
           >
             <CardHeader>
-              <QuestionnaireTitle id={`${titleId}-audience`}>
-                Who will read the answer?
-              </QuestionnaireTitle>
+              <QuestionnaireTitle>Who will read the answer?</QuestionnaireTitle>
               <QuestionnaireDescription>
                 Public answers require complete context.
               </QuestionnaireDescription>
@@ -426,20 +417,8 @@ function QuestionnaireValidationDemo() {
             </CardHeader>
             <CardContent>
               <QuestionnaireChoices>
-                <QuestionnaireChoice
-                  onChange={() => {
-                    clearError("audience");
-                  }}
-                  value="team"
-                >
-                  My team
-                </QuestionnaireChoice>
-                <QuestionnaireChoice
-                  onChange={() => {
-                    clearError("audience");
-                  }}
-                  value="public"
-                >
+                <QuestionnaireChoice value="team">My team</QuestionnaireChoice>
+                <QuestionnaireChoice value="public">
                   Public audience
                 </QuestionnaireChoice>
               </QuestionnaireChoices>
@@ -537,7 +516,7 @@ function QuestionnaireResumeDemo() {
         sx={styles.form}
       >
         <QuestionnaireProgress />
-        <QuestionnaireItem name="change" required>
+        <QuestionnaireItem defaultValue="incremental" name="change">
           <QuestionnaireTitle>
             What kind of migration is this?
           </QuestionnaireTitle>
@@ -545,7 +524,7 @@ function QuestionnaireResumeDemo() {
             This answer was saved during the previous session.
           </QuestionnaireDescription>
           <QuestionnaireChoices>
-            <QuestionnaireChoice defaultChecked value="incremental">
+            <QuestionnaireChoice value="incremental">
               Incremental migration
             </QuestionnaireChoice>
             <QuestionnaireChoice value="cutover">
@@ -554,7 +533,11 @@ function QuestionnaireResumeDemo() {
           </QuestionnaireChoices>
           <QuestionnaireError />
         </QuestionnaireItem>
-        <QuestionnaireItem multiple name="verification" required>
+        <QuestionnaireItem
+          defaultValue={["tests", "typecheck"]}
+          multiple
+          name="verification"
+        >
           <QuestionnaireTitle>
             How should the migration be verified?
           </QuestionnaireTitle>
@@ -562,10 +545,10 @@ function QuestionnaireResumeDemo() {
             These checks were selected during the previous session.
           </QuestionnaireDescription>
           <QuestionnaireChoices>
-            <QuestionnaireChoice defaultChecked value="tests">
+            <QuestionnaireChoice value="tests">
               Run migration tests
             </QuestionnaireChoice>
-            <QuestionnaireChoice defaultChecked value="typecheck">
+            <QuestionnaireChoice value="typecheck">
               Run the typecheck
             </QuestionnaireChoice>
             <QuestionnaireChoice value="manual">
@@ -624,34 +607,28 @@ function QuestionnaireConditionalDemo() {
         sx={styles.form}
       >
         <QuestionnaireProgress />
-        <QuestionnaireItem name="runtime" required>
+        <QuestionnaireItem
+          defaultValue="local"
+          name="runtime"
+          onValueChange={(value) => {
+            setRuntime(value ?? "local");
+          }}
+        >
           <QuestionnaireTitle>Where should the agent run?</QuestionnaireTitle>
           <QuestionnaireDescription>
             Cloud runs add an environment question to this flow.
           </QuestionnaireDescription>
           <QuestionnaireChoices>
-            <QuestionnaireChoice
-              checked={!cloud}
-              onChange={() => {
-                setRuntime("local");
-              }}
-              value="local"
-            >
+            <QuestionnaireChoice value="local">
               Local workspace
             </QuestionnaireChoice>
-            <QuestionnaireChoice
-              checked={cloud}
-              onChange={() => {
-                setRuntime("cloud");
-              }}
-              value="cloud"
-            >
+            <QuestionnaireChoice value="cloud">
               Cloud workspace
             </QuestionnaireChoice>
           </QuestionnaireChoices>
           <QuestionnaireError />
         </QuestionnaireItem>
-        <QuestionItem disabled={!cloud} question={environment} />
+        <QuestionItem question={environment} />
         <QuestionItem question={approval} />
         <QuestionnaireActions>
           <QuestionnairePrevious />
@@ -745,15 +722,10 @@ function QuestionnaireProgressDemo() {
 }
 
 function CardQuestion({ question }: { question: Question }) {
-  const titleId = useId();
   return (
-    <QuestionnaireItem
-      aria-labelledby={titleId}
-      name={question.name}
-      required={question.required}
-    >
+    <QuestionnaireItem name={question.name}>
       <CardHeader>
-        <QuestionnaireTitle id={titleId}>{question.title}</QuestionnaireTitle>
+        <QuestionnaireTitle>{question.title}</QuestionnaireTitle>
         <QuestionnaireDescription>
           {question.description}
         </QuestionnaireDescription>
@@ -805,7 +777,6 @@ function QuestionnaireCardDemo() {
 
 function QuestionnaireDialogDemo() {
   const [open, setOpen] = useState(false);
-  const titleId = useId();
   return (
     <DemoRow>
       <Dialog onOpenChange={setOpen} open={open}>
@@ -821,17 +792,10 @@ function QuestionnaireDialogDemo() {
             }}
           >
             {clarification.map((question) => (
-              <QuestionnaireItem
-                aria-labelledby={`${titleId}-${question.name}`}
-                key={question.name}
-                name={question.name}
-                required={question.required}
-              >
+              <QuestionnaireItem key={question.name} name={question.name}>
                 <DialogHeader>
                   <QuestionnaireProgress />
-                  <QuestionnaireTitle id={`${titleId}-${question.name}`}>
-                    {question.title}
-                  </QuestionnaireTitle>
+                  <QuestionnaireTitle>{question.title}</QuestionnaireTitle>
                   <QuestionnaireDescription>
                     {question.description}
                   </QuestionnaireDescription>

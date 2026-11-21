@@ -14,7 +14,6 @@ section: AI
       key={question.name}
       multiple={question.multiple}
       name={question.name}
-      required={question.required}
     >
       <QuestionnaireTitle>{question.title}</QuestionnaireTitle>
       <QuestionnaireDescription>
@@ -45,8 +44,6 @@ section: AI
 ## Installation
 
 <!-- ::install name="questionnaire" -->
-
-**Patch `@shadcn/react` 0.3.1 if you server-render.** On React 19.3, a question with a `QuestionnaireInput` loops on hydration ("Maximum update depth exceeded"); apply [Constella's patch](https://github.com/aayushbtw/constella/blob/main/patches/@shadcn__react@0.3.1.patch) with `pnpm patch` until a fixed release ships.
 
 ## Usage
 
@@ -81,7 +78,7 @@ const items = [
 ] as const;
 ```
 
-Define the questions once: pass them to `Questionnaire` as `items` so progress, actions and shortcuts render on the server, then map them into the parts. The answers arrive as the form's data on submit, one entry per `name`; `getAll` reads a `multiple` question.
+Define the questions once: pass them to `Questionnaire` as `items`, then map them into the parts. `items` sets the order, which questions are `required` or `disabled`, and the `choices` that get shortcut keys, so progress, actions and shortcuts render on the server. The answers arrive as the form's data on submit, one entry per `name`; `getAll` reads a `multiple` question. A skipped question, an empty freeform answer and a question with nothing picked submit no entry.
 
 ```tsx
 function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -99,9 +96,9 @@ Questionnaire
 │   ├── QuestionnaireTitle
 │   ├── QuestionnaireDescription
 │   ├── QuestionnaireChoices
-│   │   ├── QuestionnaireChoice
-│   │   │   └── QuestionnaireChoiceDescription
-│   │   └── QuestionnaireInput
+│   │   └── QuestionnaireChoice
+│   │       └── QuestionnaireChoiceDescription
+│   ├── QuestionnaireInput
 │   └── QuestionnaireError
 └── QuestionnaireActions
     ├── QuestionnairePrevious
@@ -110,16 +107,16 @@ Questionnaire
     └── QuestionnaireSubmit
 ```
 
-Questionnaire owns the order, the active question, the answers, validation and navigation. The page, card or dialog around it owns closing, saving, sending and branching.
+Questionnaire owns the order, the active question, the answers, validation and navigation. The page, card or dialog around it owns closing, saving, sending and branching. A single-answer question's choices are a [Radio Group](/docs/components/radio-group), and a `multiple` one's are checkboxes in a [Checkbox](/docs/components/checkbox) group.
 
 ## Multiple
 
-Use the `multiple` prop on an item that takes more than one answer. Its choices become checkboxes.
+Use the `multiple` prop on an item that takes more than one answer. Its choices become checkboxes, and its `defaultValue` and `onValueChange` take a list.
 
 <!-- ::demo name="questionnaire-multiple" -->
 
 ```tsx
-<QuestionnaireItem multiple name="context" required>
+<QuestionnaireItem multiple name="context">
   <QuestionnaireTitle>
     What context should the agent inspect?
   </QuestionnaireTitle>
@@ -135,7 +132,7 @@ Use the `multiple` prop on an item that takes more than one answer. Its choices 
 
 ## Questionnaire Input
 
-Add a `QuestionnaireInput` after the choices for an answer of the user's own. Typing in it clears the picked choice. Give it an `aria-label`; a placeholder is not a label.
+Add a `QuestionnaireInput` after the choices for an answer of the user's own. In a single-answer question, typing in it clears the picked choice and picking a choice clears the text. Give it an `aria-label`; a placeholder is not a label.
 
 <!-- ::demo name="questionnaire-freeform" -->
 
@@ -144,16 +141,16 @@ Add a `QuestionnaireInput` after the choices for an answer of the user's own. Ty
   <QuestionnaireChoice value="incremental">
     Make the smallest safe change
   </QuestionnaireChoice>
-  <QuestionnaireInput
-    aria-label="Another refactoring approach"
-    placeholder="Describe another approach…"
-  />
 </QuestionnaireChoices>
+<QuestionnaireInput
+  aria-label="Another refactoring approach"
+  placeholder="Describe another approach…"
+/>
 ```
 
 ## Questionnaire Skip
 
-Add a `QuestionnaireSkip` to let an optional item be left unanswered on purpose. It shows only on items without `required`; `onStatusChange` tells skipped apart from unanswered.
+Add a `QuestionnaireSkip` to let an optional item be left unanswered on purpose. It shows only on questions without `required` in `items`; `onStatusChange` tells skipped apart from unanswered.
 
 <!-- ::demo name="questionnaire-skip" -->
 
@@ -171,7 +168,7 @@ Add a `QuestionnaireSkip` to let an optional item be left unanswered on purpose.
 
 ## Shortcuts
 
-Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Enter moves on, and arrow keys move between answers and questions.
+Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Keys follow the order of each item's `choices` in `items`. Enter on a choice or the freeform answer moves on, and so does Ctrl or ⌘ with Enter anywhere in the form. The arrow keys move between a single-answer question's choices.
 
 <!-- ::demo name="questionnaire-shortcuts" -->
 
@@ -203,16 +200,18 @@ Use the `render` prop for your own progress, from `state.current` and `state.tot
 
 ## Reset
 
-Use `defaultItem` and `defaultChecked` to resume a saved draft. A `type="reset"` button restores those answers and returns to the saved question.
+Use `defaultItem`, an item's `defaultValue` and an input's `defaultValue` to resume a saved draft. A `type="reset"` button restores those answers and returns to the saved question.
 
 <!-- ::demo name="questionnaire-resume" -->
 
 ```tsx
 <Questionnaire defaultItem="verification" items={items}>
-  <QuestionnaireItem name="change" required>
-    <QuestionnaireChoice defaultChecked value="incremental">
-      Incremental migration
-    </QuestionnaireChoice>
+  <QuestionnaireItem defaultValue="incremental" name="change">
+    <QuestionnaireChoices>
+      <QuestionnaireChoice value="incremental">
+        Incremental migration
+      </QuestionnaireChoice>
+    </QuestionnaireChoices>
   </QuestionnaireItem>
   …
   <QuestionnaireActions>
@@ -244,7 +243,7 @@ const [item, setItem] = useState("scope");
 
 ### Questionnaire Item
 
-Use the `disabled` prop on an item, and on its entry in `items`, to drop a question that doesn't apply. Progress and navigation skip it.
+Set `disabled` on a question's entry in `items` to drop it when it doesn't apply. Progress and navigation skip it. Read an answer with the item's `onValueChange`, which passes ui-sdk's change `details` on.
 
 <!-- ::demo name="questionnaire-conditional" -->
 
@@ -254,7 +253,11 @@ const items = [
   { disabled: runtime !== "cloud", name: "environment", required: true },
 ];
 
-<QuestionnaireItem disabled={runtime !== "cloud"} name="environment" required>
+<QuestionnaireItem
+  defaultValue="local"
+  name="runtime"
+  onValueChange={(value) => setRuntime(value ?? "local")}
+>
   …
 </QuestionnaireItem>;
 ```
@@ -272,30 +275,32 @@ Read each item's status with `onStatusChange` to disable Next until it has an an
 
 ## Invalid
 
-Use the `invalid` prop with your own schema, such as Zod, and pass the message to `QuestionnaireError`. Move to the invalid question with `item`.
+Use the `invalid` prop with your own schema, such as Zod, and pass the message to `QuestionnaireError`. An invalid question blocks Next and submit. Move to it with `item`, and clear the error in `onValueChange`.
 
 <!-- ::demo name="questionnaire-validation" -->
 
 ```tsx
-<QuestionnaireItem invalid={errors.detail !== undefined} name="detail" required>
+<QuestionnaireItem
+  invalid={errors.detail !== undefined}
+  name="detail"
+  onValueChange={() => clearError("detail")}
+>
   …<QuestionnaireError>{errors.detail}</QuestionnaireError>
 </QuestionnaireItem>
 ```
 
 ## Card
 
-Wrap the items in a [Card](/docs/components/card), each question's title in its `CardHeader` and the actions in its `CardFooter`. Point the item's `aria-labelledby` at the title, since it no longer sits first in the fieldset.
+Wrap the items in a [Card](/docs/components/card), each question's title in its `CardHeader` and the actions in its `CardFooter`. The title names its question wherever it sits.
 
 <!-- ::demo name="questionnaire-card" -->
 
 ```tsx
 <Questionnaire items={items}>
   <Card>
-    <QuestionnaireItem aria-labelledby={titleId} name="task" required>
+    <QuestionnaireItem name="task">
       <CardHeader>
-        <QuestionnaireTitle id={titleId}>
-          What should the agent work on?
-        </QuestionnaireTitle>
+        <QuestionnaireTitle>What should the agent work on?</QuestionnaireTitle>
         <CardAction>
           <QuestionnaireProgress />
         </CardAction>
@@ -331,21 +336,45 @@ Put the questionnaire in a [Dialog](/docs/components/dialog) and close it from `
 
 What `agent.snapshot()` lists for the preview example:
 
-| Label                 | Component | Actions             |
-| --------------------- | --------- | ------------------- |
-| Another agent feature | input     | `setValue`, `clear` |
-| Next                  | button    | `press`             |
+| Label                             | Component | Actions             |
+| --------------------------------- | --------- | ------------------- |
+| What should the agent build next? | radio     | `setValue`          |
+| Another agent feature             | input     | `setValue`, `clear` |
+| Next                              | button    | `press`             |
 
-The agent fills the freeform answer, "Another agent feature" in the example, and moves between questions with Previous, Next, Skip and Submit. **The agent can't see or check the choices.** `@shadcn/react`'s choice needs a native input, which the agent bridge doesn't list. Questionnaire is built on `@shadcn/react`, so it doesn't pass ui-sdk's change `details` on.
+The agent picks a single answer with `setValue` on the question's radio group, named by its title, by a choice's label or value. A `multiple` question lists each checkbox by its label, with `setChecked`, and the group by the title, with `setValue`. It fills the freeform answer, then moves with Previous, Next, Skip and Submit. Only the active question is listed. **A title that shares a word with a button makes the button's label ambiguous.** The preview's "…build next?" and Next both match "Next", so the agent presses Next by the ref the bridge offers.
 
 ## API Reference
 
-Every part takes `sx`, applied last. The rest is [shadcn's Questionnaire](https://ui.shadcn.com/docs/react/questionnaire#api-reference).
+Every part takes `sx`, applied last.
 
 | Part | Adds |
 | --- | --- |
-| `QuestionnaireChoice` | A card holding the radio or checkbox, label and shortcut. Its input is native, so the agent bridge doesn't list it yet |
-| `QuestionnaireChoiceDescription` | A secondary line under the choice's label |
+| `Questionnaire` | A `<form>` that validates on submit and jumps to the first unanswered question. Takes `items`, `defaultItem`, `item` and `onItemChange`, and `shortcuts` (`"letters"` or `"numbers"`) |
+| `QuestionnaireProgress` | "Question 2 of 3" as a progress bar, or yours through [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) with `state.current` and `state.total` |
+| `QuestionnaireItem` | A [Field Set](/docs/components/field) shown while it's the active question. Takes `name`, `multiple`, `defaultValue`, `onValueChange`, `invalid` and `onStatusChange` |
+| `QuestionnaireTitle`, `Description` | A Field Legend and Field Description that name and describe the question |
+| `QuestionnaireChoices` | A [Radio Group](/docs/components/radio-group), or a [Checkbox](/docs/components/checkbox) group in a `multiple` question, named by the title |
+| `QuestionnaireChoice` | A choice card: a Field Label around the radio or checkbox, the label and the shortcut's Kbd. Takes `value` |
+| `QuestionnaireChoiceDescription` | A secondary line under the choice's label, which describes its control |
+| `QuestionnaireInput` | An [Input](/docs/components/input) for a freeform answer. Takes `defaultValue` and `onValueChange` |
+| `QuestionnaireError` | Shown while the question is invalid, with a default message per `required` |
 | `QuestionnaireActions` | A row: Previous at the start, the rest at the end |
-| `QuestionnairePrevious`, `Skip` | A [Button](/docs/components/button), so the agent bridge lists it by its text; `size` and `variant`, `outline` by default |
-| `QuestionnaireNext`, `Submit` | A [Button](/docs/components/button), so the agent bridge lists it by its text; `size` and `variant`, `primary` by default |
+| `QuestionnairePrevious`, `Skip` | A [Button](/docs/components/button), shown when it applies; `size` and `variant`, `outline` by default |
+| `QuestionnaireNext`, `Submit` | A [Button](/docs/components/button), shown when it applies; `size` and `variant`, `primary` by default |
+
+An entry in `items`:
+
+| Field | Type | Does |
+| --- | --- | --- |
+| `name` | `string` | Matches the item's `name` and its form data |
+| `required` | `boolean` | Hides Skip and needs an answer |
+| `disabled` | `boolean` | Drops the question from progress and navigation |
+| `choices` | `{ value, disabled? }[]` | Orders the shortcut keys; a `disabled` choice gets none and can't be picked |
+
+`QuestionnaireItem` value props, by `multiple`:
+
+| Prop | Single answer | `multiple` |
+| --- | --- | --- |
+| `defaultValue` | `string` | `string[]` |
+| `onValueChange` | `(value: string \| null, details)` | `(value: string[], details)` |
