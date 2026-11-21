@@ -311,6 +311,7 @@ function DataTable<
   const pending = query?.isPending === true;
   // The old page stays on screen while the next loads (`placeholderData: keepPreviousData`).
   const stale = query?.isFetching === true && query.isPlaceholderData;
+  const catchesDeletedRowFocus = rows.length === 0 && handle.api.interactive();
 
   const content = (
     <>
@@ -420,6 +421,7 @@ function DataTable<
       "aria-rowcount": rows.length + 1,
       children: content,
       onKeyDown: scrollToFocusedRow,
+      tabIndex: catchesDeletedRowFocus ? -1 : undefined,
       render: (
         <Table
           data-selecting={isSelecting(table) ? "" : undefined}

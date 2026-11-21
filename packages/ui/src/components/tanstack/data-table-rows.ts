@@ -2,6 +2,7 @@
 
 import {
   createChange,
+  createFocusRecovery,
   createRovingFocus,
   createSelection,
   definePrimitive,
@@ -87,6 +88,16 @@ const dataTable = definePrimitive({
         slot: "row",
       }
     );
+    const recovery = createFocusRecovery<DataTableRowProps>({
+      fallback: ({ props }) => {
+        const { ids } = context.options();
+        const id = ids[Math.min(props.index, ids.length - 1)];
+        return (
+          (id === undefined ? undefined : context.element("row", id)) ??
+          context.element("root")
+        );
+      },
+    });
     const canMultiSelect = (id: string) => context.options().multiple(id);
     const change = createChange(context);
     // TanStack's ranges skip a row it won't select alongside others.
@@ -152,6 +163,7 @@ const dataTable = definePrimitive({
       multiselectable: () =>
         context.options().selectable !== undefined &&
         context.options().ids.some(canMultiSelect),
+      recovery,
       roving,
       rowClick(event: MouseEvent, el: HTMLElement, id: string) {
         const { onRowOpen } = context.options();
@@ -253,7 +265,14 @@ const dataTable = definePrimitive({
             : undefined,
         };
       },
-      bind: (el, part) => part.api.roving.bind(el, part),
+      bind: (el, part) => {
+        const unbindFocus = part.api.roving.bind(el, part);
+        const unbindRecovery = part.api.recovery.bind(el, part);
+        return () => {
+          unbindFocus();
+          unbindRecovery();
+        };
+      },
       on: {
         click: (event, { api, el, key }) => {
           if (el !== undefined) {

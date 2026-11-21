@@ -25,7 +25,7 @@ import { settle } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { beforeEach, expect, onTestFinished, test, vi } from "vite-plus/test";
 
 import { Button } from "@/components/primitives/button";
@@ -705,7 +705,7 @@ test("pressing Clear from the keyboard puts focus back on the control it came fr
   expect(document.activeElement).toBe(checkboxIn("abe@acme.com"));
 });
 
-test("a Delete that removes the row focus came from puts focus on the table's row", () => {
+test("a Delete that removes the row focus came from puts focus on the row now in its place", () => {
   render(<Bar />);
   checkboxIn("abe@acme.com").focus();
   fireEvent.click(checkboxIn("abe@acme.com"));
@@ -715,9 +715,73 @@ test("a Delete that removes the row focus came from puts focus on the table's ro
   fireEvent.click(remove);
 
   expect(emails()).toEqual(["ken@acme.com", "dee@acme.com"]);
-  const focused = document.activeElement;
-  expect(focused).toBeInstanceOf(HTMLTableRowElement);
-  expect(focused?.closest("[role='grid']")).toBe(
+  expect(focusedEmail()).toBe("dee@acme.com");
+});
+
+test("a Delete of the last rows from the bar puts focus on the row before them", () => {
+  render(<Bar />);
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  press("ArrowDown", { shiftKey: true });
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(emails()).toEqual(["ken@acme.com"]);
+  expect(focusedEmail()).toBe("ken@acme.com");
+});
+
+test("a Delete of every row from the bar puts focus on the table", () => {
+  render(<Bar />);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Select all" }));
+  rowWith("abe@acme.com").focus();
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(shown("No payments.")).toBeTruthy();
+  expect(document.activeElement).toBe(
+    screen.getByRole("grid", { name: "Payments" })
+  );
+});
+
+function Rows({ data }: { data: Payment[] }) {
+  const table = useTable({ columns, data, features, getRowId });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+async function deleteRows(rerender: (ui: ReactNode) => void, ...ids: string[]) {
+  rerender(<Rows data={payments.filter((row) => !ids.includes(row.id))} />);
+  await act(settle);
+}
+
+test("deleting the focused row puts focus on the row now in its place", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("abe@acme.com").focus();
+
+  await deleteRows(rerender, "p2");
+
+  expect(focusedEmail()).toBe("dee@acme.com");
+});
+
+test("deleting the focused last row puts focus on the row before it", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("dee@acme.com").focus();
+
+  await deleteRows(rerender, "p3");
+
+  expect(focusedEmail()).toBe("abe@acme.com");
+});
+
+test("deleting every row puts focus on the table, not the page", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("ken@acme.com").focus();
+
+  await deleteRows(rerender, "p1", "p2", "p3");
+
+  expect(document.activeElement).toBe(
     screen.getByRole("grid", { name: "Payments" })
   );
 });
