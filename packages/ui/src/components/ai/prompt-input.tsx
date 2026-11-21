@@ -210,7 +210,7 @@ const AnchorContext = createContext<Anchor | null>(null);
 interface PromptHistory {
   field: InputController;
   recall: ReturnType<typeof createInputHistory<string>>;
-  recordSubmitted: () => void;
+  recordSent: () => void;
 }
 
 const PromptHistoryContext = createContext<PromptHistory | null>(null);
@@ -227,8 +227,7 @@ function PromptInput({
   // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
   const [field] = useState(createInputController);
   const [prompts, setPrompts] = useState<readonly string[]>([]);
-  // A submit counts as sent once the caller clears the field. A refused one, like Enter while streaming, leaves it.
-  const submitted = useRef<string | null>(null);
+  const awaitingClear = useRef<string | null>(null);
   const history = useMemo(
     () => ({
       field,
@@ -238,12 +237,12 @@ function PromptInput({
         write: (value, event) =>
           field.setValue(value, { event, reason: "input-change" }),
       }),
-      recordSubmitted: () => {
-        const prompt = submitted.current;
+      recordSent: () => {
+        const prompt = awaitingClear.current;
         if (prompt === null) {
           return;
         }
-        submitted.current = null;
+        awaitingClear.current = null;
         setPrompts((sent) =>
           prompt === sent.at(-1) ? sent : [...sent, prompt]
         );
@@ -256,16 +255,16 @@ function PromptInput({
       data-slot="prompt-input"
       {...withStyles(props, stylex.props(styles.form, sx))}
       onInput={(event) => {
-        submitted.current = null;
+        awaitingClear.current = null;
         onInput?.(event);
       }}
       onReset={(event) => {
-        history.recordSubmitted();
+        history.recordSent();
         onReset?.(event);
       }}
       onSubmit={(event) => {
         const prompt = field.getValue();
-        submitted.current = prompt.trim() === "" ? null : prompt;
+        awaitingClear.current = prompt.trim() === "" ? null : prompt;
         onSubmit?.(event);
       }}
     >
@@ -291,7 +290,7 @@ function PromptInputTextarea({
   const history = use(PromptHistoryContext);
   useEffect(() => {
     if (value === "") {
-      history?.recordSubmitted();
+      history?.recordSent();
     }
   }, [history, value]);
   return (
