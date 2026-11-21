@@ -205,6 +205,30 @@ test("an agent sorts by a column, and selects one row or all of them", async () 
   }
 });
 
+function sortOf(name: string) {
+  return screen
+    .getByRole("columnheader", { name: new RegExp(name, "u") })
+    .getAttribute("aria-sort");
+}
+
+test("a sorted column's header says which way it sorts", () => {
+  render(<Basic />);
+
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual([null, null]);
+
+  fireEvent.click(screen.getByRole("button", { name: "Email" }));
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual(["ascending", null]);
+
+  fireEvent.click(screen.getByRole("button", { name: "Email" }));
+  expect(sortOf("Email")).toBe("descending");
+
+  fireEvent.click(screen.getByRole("button", { name: "Amount" }));
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual([null, "descending"]);
+  expect(
+    screen.getAllByRole("columnheader")[0]?.hasAttribute("aria-sort")
+  ).toBe(false);
+});
+
 // ui-sdk treats the header row as a row, so its text puts "Email" on every header control.
 test("a column header's title is ambiguous as a ref, so an agent presses it by its ref", async () => {
   render(<Basic />);

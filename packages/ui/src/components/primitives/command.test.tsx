@@ -164,12 +164,12 @@ test("a disabled command doesn't run", () => {
   expect(onRun).not.toHaveBeenCalled();
 });
 
-test("the input sits in an input group's slot, in a group without the input group's ring", () => {
+test("the input sits in an input group's slot, so the group draws its ring", () => {
   render(<Palette />);
 
   const slot = input().parentElement;
   expect(slot?.dataset.slot).toBe("input-group-input");
-  expect(slot?.parentElement?.dataset.slot).toBe("command-input-group");
+  expect(slot?.parentElement?.dataset.slot).toBe("input-group");
   expect(input().matches("[data-slot='input-group-input'] > input")).toBe(true);
 });
 
