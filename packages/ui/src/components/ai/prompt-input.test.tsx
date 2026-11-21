@@ -789,6 +789,35 @@ test("a recalled prompt sends like a typed one", async () => {
   expect(onSubmit.mock.calls).toEqual([["Summarize Q3"], ["Summarize Q3"]]);
 });
 
+test("resending the newest prompt records it once and starts the history again from it", async () => {
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<Composer onSubmit={onSubmit} />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+  await sendPrompt("Draft an email");
+  await press("ArrowUp");
+  expect(box().value).toBe("Draft an email");
+  await press("Enter");
+  expect(onSubmit.mock.calls).toEqual([
+    ["Summarize Q3"],
+    ["Draft an email"],
+    ["Draft an email"],
+  ]);
+
+  await press("ArrowUp");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowDown");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowDown");
+  expect(box().value).toBe("");
+  await press("ArrowDown");
+  expect(box().value).toBe("");
+});
+
 function ChatComposer({
   onSubmit,
   state,

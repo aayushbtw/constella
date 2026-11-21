@@ -254,6 +254,7 @@ function PromptInput({
         }
         const prompt = field.getValue();
         if (prompt.trim() !== "") {
+          context.recall.reset();
           setPrompts((sent) =>
             prompt === sent.at(-1) ? sent : [...sent, prompt]
           );
