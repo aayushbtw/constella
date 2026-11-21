@@ -12,6 +12,12 @@ import {
 } from "./collapsible";
 import { Dialog, DialogContent, DialogTitle } from "./dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -379,12 +385,45 @@ test("a row that opens a collapsible sub-menu is expanded, and an agent closes i
     name: "Docs",
   });
   expect(screen.getByRole("button", { name: "Installation" })).toBeTruthy();
+  expect(Object.hasOwn(docs.dataset, "sidebarMenuButton")).toBe(true);
+  expect(
+    Object.hasOwn(docs.closest("li")?.dataset ?? {}, "sidebarMenuItem")
+  ).toBe(true);
 
   const closed = await agent.act({ steps: [{ action: "press", ref: "Docs" }] });
   expect(closed.ok, closed.error?.message).toBe(true);
   expect(docs.getAttribute("aria-expanded")).toBe("false");
   expect(screen.queryByRole("button", { name: "Installation" })).toBeNull();
   expect(screen.queryByRole("button", { name: "Theming" })).toBeNull();
+});
+
+test("a row a menu trigger renders keeps its row attribute", async () => {
+  render(
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={<SidebarMenuButton tooltip="Account" />}
+                >
+                  Account
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+
+  const account = await screen.findByRole("button", { name: "Account" });
+  expect(account.getAttribute("aria-haspopup")).toBe("menu");
+  expect(Object.hasOwn(account.dataset, "sidebarMenuButton")).toBe(true);
 });
 
 test("an agent finds and presses a sub row link, which stays a link", async () => {

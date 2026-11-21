@@ -205,9 +205,9 @@ const triggerHovered = ":is([data-slot='sidebar-trigger']:hover *)";
 const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 
 // The whole row answers the pointer, so reaching for its action keeps it lit, and so
-// does an open menu from it.
-const item = "[data-slot='sidebar-menu-item']";
-// Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
+// does an open menu from it. Own attributes, not `data-slot`, since a ui-sdk trigger
+// rendering the row, its button or its action writes its slot over theirs.
+const item = "[data-sidebar-menu-item]";
 const action = "[data-sidebar-menu-action]";
 // Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
 const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content'], [data-slot='collapsible-panel']):hover)`;
@@ -1386,6 +1386,7 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
 function SidebarMenuItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
+      data-sidebar-menu-item=""
       data-slot="sidebar-menu-item"
       {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
@@ -1426,6 +1427,7 @@ function SidebarMenuButton({
     {
       "aria-current": isActive ? "page" : undefined,
       "data-active": isActive ? "" : undefined,
+      "data-sidebar-menu-button": "",
       "data-size": size,
       "data-variant": variant,
     },
