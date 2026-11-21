@@ -1,3 +1,5 @@
+import { setTimeout as wait } from "node:timers/promises";
+
 import {
   columnFilteringFeature,
   columnVisibilityFeature,
@@ -429,7 +431,7 @@ const pagedColumns = paged.columns([
   paged.accessor("amount", { header: "Amount" }),
 ]);
 
-function Pages() {
+function Pages({ label }: { label?: string }) {
   const table = useTable({
     columns: pagedColumns,
     data: ledger,
@@ -439,37 +441,178 @@ function Pages() {
   return (
     <>
       <DataTable empty="No payments." label="Payments" table={table} />
-      <DataTablePagination pageSizes={[10, 20, 50]} table={table} />
+      <DataTablePagination
+        label={label}
+        pageSizes={[10, 20, 50]}
+        table={table}
+      />
     </>
   );
 }
 
+const searchFeatures = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  globalFilteringFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  rowPaginationFeature,
+});
+
+const searched = createColumnHelper<typeof searchFeatures, Payment>();
+
+const searchColumns = searched.columns([
+  searched.accessor("email", { header: "Email" }),
+  searched.accessor("amount", { enableGlobalFilter: false, header: "Amount" }),
+]);
+
+function SearchPages() {
+  const [search, setSearch] = useState("");
+  const table = useTable({
+    columns: searchColumns,
+    data: ledger,
+    features: searchFeatures,
+    getRowId,
+    globalFilterFn: "includesString",
+    state: { globalFilter: search },
+  });
+  return (
+    <>
+      <InputGroup>
+        <InputGroupInput
+          aria-label="Search payments"
+          onChange={(event) => {
+            setSearch(event.target.value);
+          }}
+          value={search}
+        />
+      </InputGroup>
+      <DataTable empty="No payments match." label="Payments" table={table} />
+      <DataTablePagination table={table} />
+    </>
+  );
+}
+
+function announcements() {
+  const said: string[] = [];
+  const observer = new MutationObserver((records) => {
+    const regions = new Set<Element>();
+    for (const { target } of records) {
+      const element = target instanceof Element ? target : target.parentElement;
+      const region = element?.closest("[data-ui-sdk-announcer]");
+      if (region) {
+        regions.add(region);
+      }
+    }
+    for (const region of regions) {
+      if (region.textContent) {
+        said.push(region.textContent);
+      }
+    }
+  });
+  observer.observe(document.body, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  onTestFinished(() => {
+    observer.disconnect();
+  });
+  return said;
+}
+
+test("the pagination is a navigation named by its label", () => {
+  const { unmount } = render(<Pages />);
+  expect(screen.getByRole("navigation", { name: "Pagination" })).toBeTruthy();
+  unmount();
+
+  render(<Pages label="Payment pages" />);
+  const nav = screen.getByRole("navigation", { name: "Payment pages" });
+  expect(
+    within(nav)
+      .getAllByRole("button")
+      .map((button) => button.getAttribute("aria-label"))
+  ).toEqual(["First page", "Previous page", "Next page", "Last page"]);
+});
+
+test("pressing Next onto the last page keeps focus on Next, which says it's disabled", () => {
+  render(<Pages />);
+  const next = screen.getByRole("button", { name: "Next page" });
+  next.focus();
+
+  fireEvent.click(next);
+  fireEvent.click(next);
+
+  expect(shown("21–25 of 25")).toBeTruthy();
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Next page" })
+  );
+  expect(
+    screen
+      .getByRole("button", { name: "Next page" })
+      .getAttribute("aria-disabled")
+  ).toBe("true");
+});
+
+// A polite announcement waits for a pause, longer than settle waits.
+async function quiet() {
+  await act(async () => {
+    await wait(500);
+  });
+}
+
+test("each page a person moves to is announced once", async () => {
+  render(<Pages />);
+  const said = announcements();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+  await quiet();
+
+  expect(said).toEqual(["11–20 of 25"]);
+});
+
+test("a filter that changes the row count announces nothing", async () => {
+  render(<SearchPages />);
+  expect(shown("1–10 of 25")).toBeTruthy();
+  const said = announcements();
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "user1" },
+  });
+  expect(shown("1–10 of 11")).toBeTruthy();
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
 test("an agent pages through the rows and changes how many show", async () => {
   render(<Pages />);
-  const entries = expectNamed([
-    "Rows per page",
-    "First page",
-    "Previous page",
-    "Next page",
-    "Last page",
-  ]);
-  for (const label of ["First page", "Previous page"]) {
-    expect(entries.find((entry) => entry.label === label)).toMatchObject({
-      actions: [],
-      disabled: true,
-    });
-  }
+  const entries = expectNamed(["Rows per page", "Pagination"]);
+  expect(
+    entries.find((entry) => entry.component === "pagination")
+  ).toMatchObject({
+    actions: ["setPage", "next", "previous", "first", "last"],
+    label: "Pagination",
+    page: 1,
+  });
 
-  await run({ action: "press", ref: "Next page" });
+  await run({ action: "previous", ref: "Pagination" });
+  expect(shown("1–10 of 25")).toBeTruthy();
+
+  await run({ action: "next", ref: "Pagination" });
   expect(shown("11–20 of 25")).toBeTruthy();
   await heard("11–20 of 25");
 
   await run({ action: "setValue", args: ["20"], ref: "Rows per page" });
   expect(shown("1–20 of 25")).toBeTruthy();
+  await heard("1–20 of 25");
 
-  await run({ action: "press", ref: "Last page" });
+  await run({ action: "last", ref: "Pagination" });
   expect(shown("21–25 of 25")).toBeTruthy();
   await heard("21–25 of 25");
+
+  await run({ action: "next", ref: "Pagination" });
+  expect(shown("21–25 of 25")).toBeTruthy();
 });
 
 function Bar() {

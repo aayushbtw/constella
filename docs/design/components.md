@@ -119,7 +119,7 @@ A numbered row shows its number in `textMuted` until it's pointed at, focused or
 
 The action bar floats at the window's foot while any row is selected: a popover's fill and shadow (`raised`, `shadows.lg`) at `radii.md` a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. Each new count is announced politely through `announce()`.
 
-Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. Each new range is announced politely through `announce()`. The column menu is an outline button that opens a menu of checkbox items.
+Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and a Pagination of outline icon-sm steps for first, previous, next and last at the end. A step at an end stays focusable and says it's disabled. The range is announced politely through `announce()` when the person changes the page or the page size, never when the data changes it. The column menu is an outline button that opens a menu of checkbox items.
 
 ## Dialog
 

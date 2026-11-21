@@ -9,9 +9,16 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { announce } from "@ui-sdk/core";
-import { useEffect, useRef } from "react";
 
-import { Button } from "@/components/primitives/button";
+import {
+  Pagination,
+  PaginationFirst,
+  PaginationItem,
+  PaginationLast,
+  PaginationList,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/primitives/pagination";
 import {
   Select,
   SelectContent,
@@ -26,12 +33,8 @@ import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
 
 // What the pagination feature adds to a table.
 interface PaginatedTable {
-  getCanNextPage: () => boolean;
-  getCanPreviousPage: () => boolean;
   getPageCount: () => number;
   getRowCount: () => number;
-  nextPage: () => void;
-  previousPage: () => void;
   setPageIndex: (index: number) => void;
   setPageSize: (size: number) => void;
   state: { pagination: { pageIndex: number; pageSize: number } };
@@ -65,48 +68,47 @@ const styles = stylex.create({
     display: "flex",
     gap: space.xs,
   },
-  pageButtons: {
-    display: "flex",
-    gap: space.xxs,
+  steps: {
+    marginInline: 0,
+    width: "auto",
   },
 });
 
-function PageButton({
-  disabled,
-  icon,
-  label,
-  onClick,
+function rangeOf({
+  count,
+  pageIndex,
+  pageSize,
 }: {
-  disabled: boolean;
-  icon: typeof ArrowLeft01Icon;
-  label: string;
-  onClick: () => void;
+  count: number;
+  pageIndex: number;
+  pageSize: number;
 }) {
+  const first = pageIndex * pageSize + 1;
+  const last = Math.min(first + pageSize - 1, count);
+  return `${first}–${last} of ${count}`;
+}
+
+function StepIcon({ icon }: { icon: typeof ArrowLeft01Icon }) {
   return (
-    <Button
-      aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
-      size="icon-sm"
-      variant="outline"
-    >
-      <HugeiconsIcon
-        aria-hidden
-        data-rtl-flip
-        icon={icon}
-        size={sizes.icon}
-        strokeWidth={Number(strokes.icon)}
-      />
-    </Button>
+    <HugeiconsIcon
+      aria-hidden
+      data-rtl-flip
+      icon={icon}
+      size={sizes.icon}
+      strokeWidth={Number(strokes.icon)}
+    />
   );
 }
 
 /** Pages through the rows (needs `rowPaginationFeature`, and `paginatedRowModel` unless `manualPagination`): the range shown, rows per page, and first, previous, next and last. */
 function DataTablePagination({
+  label = "Pagination",
   pageSizes = defaultPageSizes,
   sx,
   table,
 }: {
+  /** Names the navigation that holds first, previous, next and last. */
+  label?: string;
   /** The rows per page to offer. */
   pageSizes?: readonly number[];
   sx?: Sx;
@@ -114,18 +116,6 @@ function DataTablePagination({
 }) {
   const { pageIndex, pageSize } = table.state.pagination;
   const count = table.getRowCount();
-  const first = pageIndex * pageSize + 1;
-  const last = Math.min(first + pageSize - 1, count);
-  const range = count === 0 ? "" : `${first}–${last} of ${count}`;
-  const announced = useRef(range);
-  useEffect(() => {
-    const previous = announced.current;
-    announced.current = range;
-    // The first range arrives with the data, not from the user.
-    if (previous && range && range !== previous) {
-      announce(range);
-    }
-  }, [range]);
   if (count === 0) {
     return null;
   }
@@ -134,7 +124,9 @@ function DataTablePagination({
       data-slot="data-table-pagination"
       {...stylex.props(styles.pagination, sx)}
     >
-      <div {...stylex.props([typeStyles.textSm, styles.range])}>{range}</div>
+      <div {...stylex.props([typeStyles.textSm, styles.range])}>
+        {rangeOf({ count, pageIndex, pageSize })}
+      </div>
       <div {...stylex.props(styles.pageControls)}>
         <div {...stylex.props([typeStyles.textSm, styles.pageSize])}>
           <Select
@@ -144,9 +136,17 @@ function DataTablePagination({
               value: option,
             }))}
             onValueChange={(value) => {
-              if (value !== null) {
-                table.setPageSize(value);
+              if (value === null) {
+                return;
               }
+              table.setPageSize(value);
+              announce(
+                rangeOf({
+                  count,
+                  pageIndex: Math.floor((pageIndex * pageSize) / value),
+                  pageSize: value,
+                })
+              );
             }}
             value={pageSize}
           >
@@ -163,40 +163,55 @@ function DataTablePagination({
             </SelectContent>
           </Select>
         </div>
-        <div {...stylex.props(styles.pageButtons)}>
-          <PageButton
-            disabled={!table.getCanPreviousPage()}
-            icon={ArrowLeftDoubleIcon}
-            label="First page"
-            onClick={() => {
-              table.setPageIndex(0);
-            }}
-          />
-          <PageButton
-            disabled={!table.getCanPreviousPage()}
-            icon={ArrowLeft01Icon}
-            label="Previous page"
-            onClick={() => {
-              table.previousPage();
-            }}
-          />
-          <PageButton
-            disabled={!table.getCanNextPage()}
-            icon={ArrowRight01Icon}
-            label="Next page"
-            onClick={() => {
-              table.nextPage();
-            }}
-          />
-          <PageButton
-            disabled={!table.getCanNextPage()}
-            icon={ArrowRightDoubleIcon}
-            label="Last page"
-            onClick={() => {
-              table.setPageIndex(table.getPageCount() - 1);
-            }}
-          />
-        </div>
+        <Pagination
+          aria-label={label}
+          onPageChange={(page) => {
+            table.setPageIndex(page - 1);
+            announce(rangeOf({ count, pageIndex: page - 1, pageSize }));
+          }}
+          page={pageIndex + 1}
+          pageCount={table.getPageCount()}
+          sx={styles.steps}
+        >
+          <PaginationList>
+            <PaginationItem>
+              <PaginationFirst
+                aria-label="First page"
+                size="icon-sm"
+                variant="outline"
+              >
+                <StepIcon icon={ArrowLeftDoubleIcon} />
+              </PaginationFirst>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationPrevious
+                aria-label="Previous page"
+                size="icon-sm"
+                variant="outline"
+              >
+                <StepIcon icon={ArrowLeft01Icon} />
+              </PaginationPrevious>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                aria-label="Next page"
+                size="icon-sm"
+                variant="outline"
+              >
+                <StepIcon icon={ArrowRight01Icon} />
+              </PaginationNext>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLast
+                aria-label="Last page"
+                size="icon-sm"
+                variant="outline"
+              >
+                <StepIcon icon={ArrowRightDoubleIcon} />
+              </PaginationLast>
+            </PaginationItem>
+          </PaginationList>
+        </Pagination>
       </div>
     </div>
   );

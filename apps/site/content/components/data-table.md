@@ -256,7 +256,7 @@ While no row is selected, the action bar is inert, so the agent can't press its 
 | `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
 | `DataTableActionBar` | `table`, `label`; `children`, the actions, between the count and Clear |
 | `DataTableColumnHeader` | `column`, `title`; the sort icon leads in a column with `meta: { align: "end" }` |
-| `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
+| `DataTablePagination` | `table`; `label`, the name of the navigation that holds first, previous, next and last, "Pagination" by default; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |
 | `DataTableViewOptions` | `table`; `labels`, each column's name by id |
 | `DataTableSelectRow` | `row`, `label`, its name, such as "Select ken@acme.com"; `numbered`, the row's number until it's pointed at or any row is selected |
