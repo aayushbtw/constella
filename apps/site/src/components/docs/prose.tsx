@@ -4,7 +4,6 @@ import type {
   MarkdownComponents,
   MarkdownProps,
 } from "@tanstack/markdown/react";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import {
   CodeBlock,
@@ -101,35 +100,26 @@ const styles = stylex.create({
   },
 });
 
-// Only a fenced block's `code` carries a `language-*` class; it renders the whole Code Block, so `pre` passes through.
 // No highlighter: its HTML can't hold CodeBlockLines, which keep line numbers beside the code.
-function ProseCode({
-  children,
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"code">) {
-  const lang =
-    className?.startsWith("language-") === true
-      ? className.slice("language-".length)
-      : undefined;
-  // oxlint-disable-next-line anti-slop/no-runtime-typeof -- the renderer passes a fence's source as a string
-  if (lang === undefined || typeof children !== "string") {
-    return (
-      <Code {...props} sx={styles.code}>
-        {children}
-      </Code>
-    );
-  }
+function ProseCodeBlock({
+  code,
+  label,
+  lang,
+}: {
+  code: string;
+  label: string;
+  lang: string;
+}) {
   return (
     <CodeBlock sx={styles.p}>
       <CodeBlockContent
-        lineNumbers={lang !== "text" && children.trimEnd().includes("\n")}
+        lineNumbers={lang !== "text" && code.trimEnd().includes("\n")}
         wrap={lang === "text"}
       >
-        <CodeLines code={children} lang={lang} />
+        <CodeLines code={code} lang={lang} />
       </CodeBlockContent>
       <CodeBlockActions>
-        <CopyButton aria-label="Copy code" value={children.trimEnd()} />
+        <CopyButton aria-label={label} value={code.trimEnd()} />
       </CodeBlockActions>
     </CodeBlock>
   );
@@ -171,7 +161,7 @@ function MarkdownFrameworks() {
 
 const components = {
   a: ({ children, ...props }) => <Link {...props}>{children}</Link>,
-  code: ProseCode,
+  code: (props) => <Code {...props} sx={styles.code} />,
   h2: ({ children, ...props }) => (
     <Text
       {...props}
@@ -192,11 +182,11 @@ const components = {
       weight="semibold"
     />
   ),
+  "md-code": ProseCodeBlock,
   "md-demo": Demo,
   "md-frameworks": MarkdownFrameworks,
   "md-install": MarkdownInstall,
   p: ({ children }) => <Text sx={styles.p}>{children}</Text>,
-  pre: ({ children }: ComponentPropsWithoutRef<"pre">): ReactNode => children,
   strong: (props) => <strong {...props} {...stylex.props(styles.strong)} />,
   table: (props) => (
     <div data-agent-hidden {...stylex.props(styles.p)}>
