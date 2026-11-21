@@ -1,19 +1,22 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef } from "react";
 import type { PointerEvent } from "react";
 
 import { Checkbox } from "@/components/primitives/checkbox";
+import { DataTableContext } from "@/components/tanstack/data-table-rows";
 import type { Sx } from "@/lib/constella/styles";
 import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 // What the row selection feature adds to a row and a table.
 interface SelectableRow {
+  getCanMultiSelect: () => boolean;
   getCanSelect: () => boolean;
   getDisplayIndex: () => number;
   getIsSelected: () => boolean;
   getToggleSelectedHandler: () => (event: ToggleEvent) => void;
+  id: string;
   toggleSelected: (value?: boolean) => void;
 }
 
@@ -24,9 +27,12 @@ interface ToggleEvent {
 }
 
 interface SelectableTable {
+  // Read for the ids mapped to `true`, as `getSelectedRowIds` also returns those mapped to `false`.
+  atoms: { rowSelection?: { get: () => Readonly<Record<string, boolean>> } };
   getIsAllRowsSelected: () => boolean;
   getIsSomeRowsSelected: () => boolean;
   getRowModel: () => { rows: readonly unknown[] };
+  setRowSelection: (selection: Record<string, true>) => void;
   toggleAllRowsSelected: (value?: boolean) => void;
 }
 
@@ -48,6 +54,7 @@ const rowIndexOf = (target: EventTarget) =>
     : Number.NaN;
 
 interface Drag {
+  endId: string;
   from: number;
   to: number;
   value: boolean;
@@ -58,6 +65,7 @@ interface Drag {
 // Gives the rows from the range's start to `to` its value, and restores the rows it set before that fall outside.
 function paintRange(rows: readonly { id: string }[], range: Drag, to: number) {
   range.to = to;
+  range.endId = rows[to]?.id ?? range.endId;
   const low = Math.min(range.from, to);
   const high = Math.max(range.from, to);
   for (const [index, was] of range.was) {
@@ -76,18 +84,12 @@ function paintRange(rows: readonly { id: string }[], range: Drag, to: number) {
       row.toggleSelected(range.value);
     }
   }
-  // Through the handler, so a later Shift-click ranges from where this ended.
-  const end = rows[to];
-  if (hasSelection(end) && end.getCanSelect()) {
-    end.getToggleSelectedHandler()({
-      shiftKey: false,
-      target: { checked: range.value },
-    });
-  }
 }
 
-// Drag from a row's checkbox across others to give them all its new state; dragging back restores them.
-function useDragSelect(rows: readonly { id: string }[]) {
+function useDragSelect(
+  rows: readonly { id: string }[],
+  onDragEnd: (id: string) => void
+) {
   const drag = useRef<Drag | null>(null);
 
   useEffect(() => {
@@ -102,6 +104,7 @@ function useDragSelect(rows: readonly { id: string }[]) {
         setTimeout(() => {
           window.removeEventListener("click", swallow, { capture: true });
         }, 0);
+        onDragEnd(drag.current.endId);
       }
       drag.current = null;
     };
@@ -111,7 +114,7 @@ function useDragSelect(rows: readonly { id: string }[]) {
       window.removeEventListener("pointerup", end);
       window.removeEventListener("pointercancel", end);
     };
-  }, []);
+  }, [onDragEnd]);
 
   const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
     const from = rowIndexOf(event.target);
@@ -128,6 +131,7 @@ function useDragSelect(rows: readonly { id: string }[]) {
       return;
     }
     drag.current = {
+      endId: row.id,
       from,
       to: from,
       value: !row.getIsSelected(),
@@ -148,7 +152,8 @@ function useDragSelect(rows: readonly { id: string }[]) {
   return { handlePointerDown, handlePointerOver };
 }
 
-const rowHovered = ":is([data-slot='table-row']:hover *)";
+const rowHovered =
+  ":is(:is([data-slot='table-row'], [data-slot='data-table-row']):hover *)";
 const selecting = ":is([data-selecting] *)";
 
 const styles = stylex.create({
@@ -233,6 +238,7 @@ function DataTableSelectRow({
   row: SelectableRow;
   sx?: Sx;
 }) {
+  const table = use(DataTableContext);
   const toggle = row.getToggleSelectedHandler();
   const checkbox = (
     <Checkbox
@@ -241,13 +247,21 @@ function DataTableSelectRow({
       data-row-select=""
       disabled={!row.getCanSelect()}
       onCheckedChange={(checked, { event }) => {
-        toggle({
-          shiftKey:
-            (event instanceof globalThis.MouseEvent ||
-              event instanceof globalThis.KeyboardEvent) &&
-            event.shiftKey,
-          target: { checked: checked === true },
-        });
+        const shiftKey =
+          (event instanceof globalThis.MouseEvent ||
+            event instanceof globalThis.KeyboardEvent) &&
+          event.shiftKey;
+        if (table === null) {
+          toggle({ shiftKey, target: { checked: checked === true } });
+        } else if (shiftKey) {
+          table.selection.extend(row.id, {
+            event,
+            from: null,
+            reason: "item-press",
+          });
+        } else {
+          table.selection.toggle(row.id, { event, reason: "item-press" });
+        }
       }}
       sx={numbered ? [styles.stacked, styles.revealed] : sx}
     />
@@ -271,7 +285,5 @@ export {
   hasSelection,
   isSelectable,
   isSelecting,
-  paintRange,
   useDragSelect,
 };
-export type { Drag };
