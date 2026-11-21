@@ -40,7 +40,7 @@ export const plan = [
     },
     name: "direction",
     required: true,
-    title: "What should the agent build next?",
+    title: "What should the agent build first?",
   },
   {
     choices: [

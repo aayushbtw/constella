@@ -1094,18 +1094,21 @@
       "name": "questionnaire",
       "type": "registry:ui",
       "title": "Questionnaire",
-      "description": "Questions asked one at a time, with choices, a freeform answer and skips, on shadcn's questionnaire.",
+      "description": "Questions asked one at a time, with choices, a freeform answer and skips, on Radio Group and Checkbox.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
-        "@shadcn/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/core@0.1.0-beta.13",
+        "@ui-sdk/react@0.1.0-beta.13"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
         "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/checkbox.json",
+        "https://constella.aayush.cv/r/field.json",
         "https://constella.aayush.cv/r/input.json",
-        "https://constella.aayush.cv/r/kbd.json"
+        "https://constella.aayush.cv/r/kbd.json",
+        "https://constella.aayush.cv/r/progress.json",
+        "https://constella.aayush.cv/r/radio-group.json"
       ],
       "files": [
         {
