@@ -31,7 +31,15 @@ import { Marker, MarkerContent, MarkerIcon } from "@/components/ai/marker";
 </Marker>
 ```
 
-Place it between messages in a [Message Scroller](/docs/components/message-scroller).
+In a [Message Scroller](/docs/components/message-scroller), put it in its own `MessageScrollerItem` between turns. The thread is a list, so it holds only items.
+
+```tsx
+<MessageScrollerItem messageId="model-switch">
+  <Marker>
+    <MarkerContent>Switched to a faster model for this chat.</MarkerContent>
+  </Marker>
+</MessageScrollerItem>
+```
 
 ## Composition
 

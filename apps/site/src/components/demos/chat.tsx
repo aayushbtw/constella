@@ -138,8 +138,12 @@ function Glyph(props: Omit<HugeiconsIconProps, "strokeWidth">) {
   );
 }
 
-const reply =
-  "Constella is a component library on ui-sdk and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
+const replies = [
+  "Constella is a component library on ui-sdk and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.",
+  "Themes are one file of tokens: color, type, space and motion. Swap the file and every component follows, with no props to thread through.",
+  "Under the hood, ui-sdk handles focus, keyboard and ARIA, and StyleX compiles the styles to atomic CSS at build time.",
+];
+const [reply] = replies;
 
 const threadId = "chat-demo";
 
@@ -160,7 +164,10 @@ const adapter = fakeText({ tokensPerSecond: 24 });
 
 const connection = stream((messages, _data, signal) => {
   // The fake errors once its queue is empty, so every send gets a fresh answer.
-  adapter.setResponses([{ text: reply }]);
+  const answered = messages.filter(
+    (message) => message.role === "assistant"
+  ).length;
+  adapter.setResponses([{ text: replies[answered % replies.length] }]);
   const abortController = new AbortController();
   signal?.addEventListener("abort", () => {
     abortController.abort();
