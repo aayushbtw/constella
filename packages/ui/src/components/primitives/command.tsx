@@ -9,6 +9,7 @@ import {
   CommandGroup as CommandGroupPrimitive,
   CommandInput as CommandInputPrimitive,
   CommandItem as CommandItemPrimitive,
+  CommandItemText as CommandItemTextPrimitive,
   CommandList as CommandListPrimitive,
   Command as CommandPrimitive,
   CommandSeparator as CommandSeparatorPrimitive,
@@ -119,6 +120,14 @@ const styles = stylex.create({
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
     userSelect: "none",
+  },
+  itemText: {
+    color: { default: null, ":is([data-matched])": colors.textSecondary },
+  },
+  match: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
   },
   // In line with the rows' text.
   separator: {
@@ -284,6 +293,31 @@ function CommandItem({
   );
 }
 
+/** Its item's label, with the search marked in it. The label is the item's `label`, or its `value`. */
+function CommandItemText({
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof CommandItemTextPrimitive>>, "children">) {
+  return (
+    <CommandItemTextPrimitive
+      {...withStyles(props, stylex.props(styles.itemText, sx))}
+    >
+      {({ segments }) =>
+        segments.map((segment, index) =>
+          segment.match ? (
+            // oxlint-disable-next-line react/no-array-index-key -- a segment's place is its identity
+            <mark key={index} {...stylex.props(styles.match)}>
+              {segment.text}
+            </mark>
+          ) : (
+            segment.text
+          )
+        )
+      }
+    </CommandItemTextPrimitive>
+  );
+}
+
 function CommandSeparator({
   sx,
   ...props
@@ -331,6 +365,7 @@ export {
   CommandGroupLabel,
   CommandInput,
   CommandItem,
+  CommandItemText,
   CommandList,
   CommandSeparator,
   CommandShortcut,
