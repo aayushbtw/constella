@@ -155,7 +155,7 @@ const table = useTable({
 
 An agent can't click a row or press Enter on it, so put a control in the row that opens it the same way, named with a verb, like the example's `Open <email>` link. Named by the bare email, it would also match the row's checkbox.
 
-With Cmd or Ctrl, a click on a row selects it instead. With Shift, a click on a row or its checkbox selects every row from the last one you picked or reached with the arrow keys. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
+With Cmd or Ctrl, a click on a row selects it instead. With Shift, a click on a row or its checkbox selects every row from the last one you picked or reached with the arrow keys. A Shift-click that unchecks a checkbox unchecks that range instead. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
 
 <!-- ::demo name="data-table-row-click" -->
 

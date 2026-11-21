@@ -246,7 +246,7 @@ function DataTableSelectAll({
   );
 }
 
-/** A row's checkbox (needs `rowSelectionFeature`); Shift selects the range from the last one. `numbered` shows the row's number until the row is pointed at or any row is selected. */
+/** A row's checkbox (needs `rowSelectionFeature`); Shift checks or unchecks the range from the last one. `numbered` shows the row's number until the row is pointed at or any row is selected. */
 function DataTableSelectRow({
   label,
   numbered = false,
