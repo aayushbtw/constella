@@ -186,11 +186,7 @@ function CommandInput({
 }: Omit<Styled<ComponentProps<typeof CommandInputPrimitive>>, "render">) {
   const input = inputGroupInputStyles();
   return (
-    <InputGroup
-      data-slot="command-input-group"
-      size="lg"
-      sx={[styles.input, sx]}
-    >
+    <InputGroup size="lg" sx={[styles.input, sx]}>
       <span data-slot="input-group-input" {...stylex.props(input.slot)}>
         <CommandInputPrimitive
           {...withStyles(props, stylex.props(input.input))}
