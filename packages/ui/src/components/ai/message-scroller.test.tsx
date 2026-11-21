@@ -9,6 +9,10 @@ import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { beforeEach, expect, onTestFinished, test, vi } from "vite-plus/test";
 
+import { Button } from "@/components/primitives/button";
+import { CopyButton } from "@/components/primitives/copy-button";
+
+import { Message, MessageActions, MessageContent } from "./message";
 import type { MessageScrollerPosition } from "./message-scroller";
 import {
   MessageScroller,
@@ -378,6 +382,103 @@ test("pressing Scroll to end while it has focus moves focus into the log, not th
   await agent.act({ steps: [{ action: "press", ref: "Scroll to end" }] });
 
   expect(document.activeElement).toBe(screen.getByRole("log"));
+});
+
+function stubClipboard() {
+  const writeText = vi.fn<(text: string) => void>();
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true,
+    value: { writeText },
+  });
+  onTestFinished(() => {
+    Reflect.deleteProperty(navigator, "clipboard");
+  });
+  return writeText;
+}
+
+function Chat({
+  onRetry,
+  replies,
+}: {
+  onRetry?: (reply: string) => void;
+  replies: string[];
+}) {
+  return (
+    <MessageScrollerProvider>
+      <MessageScroller>
+        <MessageScrollerViewport aria-label="Conversation">
+          <MessageScrollerContent>
+            {replies.map((reply) => (
+              <MessageScrollerItem key={reply} messageId={reply}>
+                <Message from="assistant">
+                  <MessageContent>{reply}</MessageContent>
+                  <MessageActions>
+                    <CopyButton value={reply} />
+                    <Button
+                      aria-label="Retry"
+                      onClick={() => onRetry?.(reply)}
+                      size="icon-sm"
+                      variant="ghost"
+                    />
+                  </MessageActions>
+                </Message>
+              </MessageScrollerItem>
+            ))}
+          </MessageScrollerContent>
+        </MessageScrollerViewport>
+      </MessageScroller>
+      <Button>Send</Button>
+    </MessageScrollerProvider>
+  );
+}
+
+const replies = [
+  "Constella is a component library on ui-sdk and StyleX.",
+  "Themes are one file of tokens.",
+];
+
+test("each reply is a row, so an agent copies or retries one reply by its words", async () => {
+  const writeText = stubClipboard();
+  const onRetry = vi.fn<(reply: string) => void>();
+  render(<Chat onRetry={onRetry} replies={replies} />);
+
+  expect(
+    entries()
+      .filter((entry) => entry.label === "Copy")
+      .map((entry) => entry.row)
+  ).toEqual(replies);
+
+  const plain = await agent.act({ steps: [{ action: "press", ref: "Copy" }] });
+  expect(plain.error?.message).toContain('"Copy" names 2 components');
+
+  const result = await agent.act({
+    steps: [
+      { action: "press", ref: "Copy themes" },
+      { action: "press", ref: "Retry component library" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(writeText.mock.calls).toEqual([[replies[1]]]);
+  expect(onRetry.mock.calls).toEqual([[replies[0]]]);
+});
+
+test("the thread is a list of turns that announces each new one", () => {
+  render(<Chat replies={replies} />);
+
+  const thread = screen.getByRole("list");
+  expect(thread.getAttribute("aria-live")).toBe("polite");
+  expect(thread.getAttribute("aria-relevant")).toBe("additions");
+  expect(screen.getAllByRole("listitem")).toHaveLength(replies.length);
+});
+
+// Known gap, upstream: an exact label doesn't outrank row words, so a reply
+// that says "send" makes the composer's Send ambiguous.
+test("a reply's words join its actions' names, so a reply that says send collides with Send", async () => {
+  render(<Chat replies={["To send a file, attach it first."]} />);
+
+  const result = await agent.act({ steps: [{ action: "press", ref: "Send" }] });
+
+  expect(result.error?.message).toContain('"Send" names 3 components');
 });
 
 test("a new question marked scrollAnchor lets go of the end, so the answer streams below it", () => {
