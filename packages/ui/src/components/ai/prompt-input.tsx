@@ -3,6 +3,9 @@
 import { ArrowUp02Icon, StopIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createInputHistory } from "@ui-sdk/core";
+import { createInputController } from "@ui-sdk/react/textarea";
+import type { InputController } from "@ui-sdk/react/textarea";
 import {
   TriggerMenu,
   TriggerMenuContent,
@@ -197,37 +200,78 @@ interface Anchor {
 
 const AnchorContext = createContext<Anchor | null>(null);
 
-/** A form around an input group: submit it with Enter or the submit button. */
+interface PromptHistory {
+  field: InputController;
+  recall: ReturnType<typeof createInputHistory<string>>;
+}
+
+const PromptHistoryContext = createContext<PromptHistory | null>(null);
+
+/** A form around an input group: submit it with Enter or the submit button. Each submitted prompt joins the textarea's history. */
 function PromptInput({
   children,
+  onSubmit,
   sx,
   ...props
 }: Styled<ComponentProps<"form">>) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [field] = useState(createInputController);
+  const [prompts, setPrompts] = useState<readonly string[]>([]);
+  const history = useMemo(
+    () => ({
+      field,
+      recall: createInputHistory({
+        entries: () => prompts,
+        read: () => field.getValue(),
+        write: (value, event) =>
+          field.setValue(value, { event, reason: "input-change" }),
+      }),
+    }),
+    [field, prompts]
+  );
   return (
     <form
       data-slot="prompt-input"
       {...withStyles(props, stylex.props(styles.form, sx))}
+      onSubmit={(event) => {
+        const prompt = field.getValue();
+        if (prompt.trim() !== "" && prompt !== prompts.at(-1)) {
+          setPrompts([...prompts, prompt]);
+        }
+        onSubmit?.(event);
+      }}
     >
-      <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
-        {children}
-      </InputGroup>
+      <PromptHistoryContext value={history}>
+        <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
+          {children}
+        </InputGroup>
+      </PromptHistoryContext>
     </form>
   );
 }
 
-/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
+type PromptInputTextareaProps = Omit<TextareaProps, "controller">;
+
+/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. ArrowUp on the first line brings back earlier prompts, and ArrowDown returns to the draft. */
 function PromptInputTextarea({
+  onKeyDown,
   placeholder = "Ask anything…",
   sx,
   ...props
-}: TextareaProps) {
+}: PromptInputTextareaProps) {
+  const history = use(PromptHistoryContext);
   return (
     <InputGroupTextarea
+      controller={history?.field}
       data-prompt-input-textarea=""
       placeholder={placeholder}
       rows={1}
       submitShortcut="enter"
       {...props}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        history?.recall.keydown(event.nativeEvent);
+      }}
       sx={[styles.textarea, sx]}
     />
   );
@@ -382,7 +426,7 @@ function PromptInputCommand<T = string>({
 }
 
 type PromptInputCommandTextareaProps = Omit<
-  TextareaProps,
+  PromptInputTextareaProps,
   "onValueChange" | "value"
 > &
   (
