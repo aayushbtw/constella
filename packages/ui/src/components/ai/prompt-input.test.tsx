@@ -559,6 +559,16 @@ test("once submitted, the submit button is busy", () => {
   expect(send().getAttribute("aria-busy")).toBe("true");
 });
 
+test.each([
+  ["ready", "Send"],
+  ["submitted", "Send"],
+  ["streaming", "Stop"],
+] as const)("while %s, %s writes the state as data-state", (state, name) => {
+  render(<Submit onSubmit={() => {}} state={state} />);
+
+  expect(screen.getByRole("button", { name }).dataset.state).toBe(state);
+});
+
 test("a disabled submit button doesn't submit", async () => {
   const onSubmit = vi.fn<() => void>();
   render(<Submit disabled onSubmit={onSubmit} state="ready" />);

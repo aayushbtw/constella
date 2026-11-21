@@ -400,6 +400,7 @@ function PromptInputSubmit({
     <InputGroupButton
       aria-label={stopLabel}
       data-slot="prompt-input-stop"
+      data-state={state}
       key="stop"
       onClick={onStop}
       ref={followFocus}
@@ -415,6 +416,7 @@ function PromptInputSubmit({
       aria-busy={state === "submitted" || undefined}
       aria-label="Send"
       data-slot="prompt-input-submit"
+      data-state={state}
       key="send"
       size={size}
       type="submit"
