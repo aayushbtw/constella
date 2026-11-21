@@ -5,6 +5,8 @@ import { registrySchema } from "shadcn/schema";
 import { parse } from "yaml";
 import { z } from "zod";
 
+import { resolvePin, workspaceSchema } from "./pins.ts";
+
 const root = path.join(import.meta.dirname, "..");
 const repo = path.join(root, "../..");
 // shadcn expects the app to provide React.
@@ -14,14 +16,9 @@ const registry = registrySchema.parse(
   JSON.parse(await readFile(path.join(root, "registry.json"), "utf-8"))
 );
 
-const workspace = z
-  .object({
-    packages: z.array(z.string()).default([]),
-    catalog: z.record(z.string(), z.string()).default({}),
-  })
-  .parse(
-    parse(await readFile(path.join(repo, "pnpm-workspace.yaml"), "utf-8"))
-  );
+const workspace = workspaceSchema.parse(
+  parse(await readFile(path.join(repo, "pnpm-workspace.yaml"), "utf-8"))
+);
 
 const manifestSchema = z.object({
   dependencies: z.record(z.string(), z.string()).default({}),
@@ -37,25 +34,22 @@ const readManifest = async (dir: string) =>
     JSON.parse(await readFile(path.join(dir, "package.json"), "utf-8"))
   );
 
+const errors: string[] = [];
+
 const { dependencies } = await readManifest(root);
-const ranges = Object.fromEntries(
+const pins = new Map(
   Object.entries(dependencies).map(([name, range]) => {
-    if (!range.startsWith("catalog:")) {
-      return [name, range];
+    const pin = resolvePin(workspace, name, range);
+    if ("error" in pin) {
+      errors.push(pin.error);
     }
-    const pinned = workspace.catalog[name];
-    if (range !== "catalog:" || pinned === undefined) {
-      throw new Error(
-        `package.json has ${name}@${range}, which the default catalog doesn't pin`
-      );
-    }
-    return [name, pinned];
+    return [name, pin] as const;
   })
 );
 
 const requiredPeers = new Map(
   await Promise.all(
-    Object.keys(ranges).map(async (name) => {
+    [...pins.keys()].map(async (name) => {
       const { peerDependencies, peerDependenciesMeta } = await readManifest(
         path.join(root, "node_modules", name)
       );
@@ -74,8 +68,6 @@ for (const { name, files = [] } of registry.items) {
   }
 }
 
-const errors: string[] = [];
-
 for await (const file of glob(
   ["package.json", ...workspace.packages.map((dir) => `${dir}/package.json`)],
   { cwd: repo }
@@ -85,7 +77,10 @@ for await (const file of glob(
     ...Object.entries(manifest.dependencies),
     ...Object.entries(manifest.devDependencies),
   ]) {
-    if (workspace.catalog[name] !== undefined && range !== "catalog:") {
+    if (
+      workspace.catalog[name] !== undefined &&
+      !range.startsWith("catalog:")
+    ) {
       errors.push(`${file} pins ${name}@${range}; use catalog:`);
     }
   }
@@ -183,15 +178,16 @@ for (const item of registry.items) {
     const at = dep.indexOf("@", 1);
     const name = at === -1 ? dep : dep.slice(0, at);
     const range = at === -1 ? undefined : dep.slice(at + 1);
-    const expected = ranges[name];
+    const pin = pins.get(name);
     declared.add(name);
-    if (expected === undefined) {
+    if (pin === undefined) {
       errors.push(`${item.name} lists ${name}, which package.json doesn't`);
     } else if (
-      range === undefined ? /^\d/u.test(expected) : range !== expected
+      !("error" in pin) &&
+      (range === undefined ? /^\d/u.test(pin.range) : range !== pin.range)
     ) {
       errors.push(
-        `${item.name} lists ${dep}, but package.json has ${name}@${expected}`
+        `${item.name} lists ${dep}, but ${pin.source} has ${name}@${pin.range}`
       );
     }
   }

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { checkPattern } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { afterEach, expect, test, vi } from "vite-plus/test";
 
@@ -96,4 +97,9 @@ test("an agent finds the tabs by the list's name and picks one", async () => {
   expect(
     screen.getByRole("tab", { name: "Week" }).getAttribute("aria-selected")
   ).toBe("true");
+});
+
+test("the tabs follow the WAI-ARIA tabs pattern", async () => {
+  render(<Ranges />);
+  await checkPattern(screen.getByRole("tablist", { name: "Range" }), "tabs");
 });

@@ -9,10 +9,9 @@ import type { Browser, Page } from "playwright";
 import { z } from "zod";
 
 const siteDir = path.join(import.meta.dirname, "..");
-const builtAssetsDir = path.join(
-  siteDir,
-  ".cloudflare/output/v0/workers/default/assets"
-);
+const deployOutputDir = path.join(siteDir, ".cloudflare/output");
+const agentBuildDir = path.join(siteDir, ".agent-build");
+const builtAssetsDir = path.join(agentBuildDir, "v0/workers/default/assets");
 
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],
@@ -61,7 +60,7 @@ async function serve(
     const file =
       path.extname(target) === "" ? path.join(target, "index.html") : target;
     const type = contentTypes.get(path.extname(file));
-    if (type === undefined || !file.startsWith(assetsDir)) {
+    if (type === undefined || !file.startsWith(`${assetsDir}${path.sep}`)) {
       throw new Error("not served");
     }
     const body = await readFile(file);
@@ -147,8 +146,10 @@ async function openBridgePage(page: Page, url: string) {
 }
 
 export {
+  agentBuildDir,
   builtAssetsDir,
   componentsDir,
+  deployOutputDir,
   gatedSlugs,
   launch,
   NoBridgeError,

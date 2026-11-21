@@ -22,6 +22,10 @@
     }
   },
   "/docs/components/citation": {
+    "native": {
+      "count": 4,
+      "why": "citation-source renders each source as a native link, which the bridge doesn't list"
+    },
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
@@ -48,12 +52,20 @@
     }
   },
   "/docs/components/markdown": {
+    "native": {
+      "count": 4,
+      "why": "Markdown renders footnote references and back links as native links, which the bridge doesn't list"
+    },
     "scroll-area": {
       "count": 3,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     }
   },
   "/docs/components/marker": {
+    "native": {
+      "count": 1,
+      "why": "marker-link renders its marker as a native link, which the bridge doesn't list"
+    },
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"

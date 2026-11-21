@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { checkPattern } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { expect, test } from "vite-plus/test";
@@ -247,4 +248,12 @@ test("an agent finds the parent and each child by its label and checks them", as
   });
   expect(result.ok, result.error?.message).toBe(true);
   expect(screen.getByRole("status").textContent).toBe(fruits.join(","));
+});
+
+test("a checkbox follows the WAI-ARIA checkbox pattern", async () => {
+  render(<Settings />);
+  await checkPattern(
+    screen.getByRole("checkbox", { name: "Accept terms" }),
+    "checkbox"
+  );
 });
