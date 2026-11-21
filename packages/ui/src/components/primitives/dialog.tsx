@@ -24,7 +24,6 @@ import {
   blurs,
   colors,
   fontWeights,
-  layers,
   media,
   radii,
   shadows,
@@ -60,7 +59,6 @@ const styles = stylex.create({
     insetInlineEnd: 0,
     insetInlineStart: 0,
     position: "fixed",
-    zIndex: layers.dialog,
   },
   popup: {
     backgroundColor: colors.raised,
