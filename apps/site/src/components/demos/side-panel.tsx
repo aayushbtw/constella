@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import { useState } from "react";
 
 import { Badge } from "@/components/primitives/badge";
 import { Button } from "@/components/primitives/button";
@@ -162,9 +163,9 @@ const files = [
   { name: "Notes.md", size: "12 KB" },
 ];
 
-const panel = createSidePanelController<ActivityEvent>();
-
 function SidePanelDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [panel] = useState(() => createSidePanelController<ActivityEvent>());
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
