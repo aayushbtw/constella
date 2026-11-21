@@ -35,10 +35,14 @@ const items = [
 import {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
   SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
   SelectLabel,
+  SelectList,
   SelectSeparator,
   SelectTrigger,
   SelectValue,
@@ -68,11 +72,17 @@ Select
 ├── SelectTrigger
 │   └── SelectValue
 └── SelectContent
-    ├── SelectGroup
-    │   ├── SelectGroupLabel
-    │   └── SelectItem
-    └── SelectSeparator
+    ├── SelectInput
+    ├── SelectEmpty
+    └── SelectList
+        ├── SelectGroup
+        │   ├── SelectGroupLabel
+        │   └── SelectItem
+        │       └── SelectItemText
+        └── SelectSeparator
 ```
+
+`SelectInput`, `SelectEmpty`, `SelectList` and `SelectItemText` are only for [Search](#search). Without a search field, put the groups and items straight in `SelectContent`.
 
 `SelectLabel` names the trigger. Inside a `Field`, use `FieldLabel` instead. With no visible label, put `aria-label` on `SelectTrigger`. `SelectGroupLabel` is the heading of a `SelectGroup`.
 
@@ -127,6 +137,49 @@ A long list scrolls and keeps the highlighted row in view.
     </SelectGroup>
   ))}
 </SelectContent>
+```
+
+## Search
+
+Add `SelectInput` at the top of `SelectContent` to filter a long list, and put the items in `SelectList` so the field stays put while the list scrolls. `SelectEmpty` shows when nothing matches, and `SelectItemText` marks the matched text.
+
+<!-- ::demo name="select-search" -->
+
+```tsx
+<Select items={timezones} placeholder="Select a timezone">
+  <SelectTrigger aria-label="Timezone">
+    <SelectValue />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectInput aria-label="Search timezones" placeholder="Search timezones" />
+    <SelectEmpty>No timezones found.</SelectEmpty>
+    <SelectList>{({ items }) => <Options entries={items} />}</SelectList>
+  </SelectContent>
+</Select>
+```
+
+**Render the items from `SelectList`'s `items`.** With `items` on `Select`, ui-sdk filters only the items in that list, not ones written out by hand. Pass `items` as groups (`{ type: "group", label, items }`) and map them back to parts:
+
+```tsx
+function Options({ entries }: { entries: ListData<unknown> }) {
+  return entries.map((entry) => {
+    const item =
+      typeof entry === "string" ? { label: entry, value: entry } : entry;
+    if ("type" in item) {
+      return item.type === "group" ? (
+        <SelectGroup key={item.label}>
+          <SelectGroupLabel>{item.label}</SelectGroupLabel>
+          <Options entries={item.items} />
+        </SelectGroup>
+      ) : null;
+    }
+    return (
+      <SelectItem key={item.label} label={item.label} value={item.value}>
+        <SelectItemText />
+      </SelectItem>
+    );
+  });
+}
 ```
 
 ## Size
@@ -197,5 +250,7 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 | `Select` | `loop` defaults to `false`, so arrows stop at either end |
 | `SelectTrigger` | `size`: `"sm"`, `"default"` or `"lg"` |
 | `SelectContent` | Renders in place in the browser's top layer, with no portal or positioner; takes `side`, `align`, `alignItemWithTrigger` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
+| `SelectInput` | An input group with a search icon, a step above the rows' size; `sx` goes to the group |
+| `SelectItemText` | Takes no children: it shows the item's label, with the match in medium weight |
 
 Every part takes `sx`, applied last. For the rest, see [UI SDK Select](https://ui-sdk.dev/docs/react/components/select).
