@@ -18,7 +18,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   motion,
@@ -128,14 +128,14 @@ function SheetTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof DrawerTriggerPrimitive>>) {
-  return <DrawerTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <DrawerTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function SheetClose({
   sx,
   ...props
 }: Styled<ComponentProps<typeof DrawerClosePrimitive>>) {
-  return <DrawerClosePrimitive {...props} {...stylex.props(sx)} />;
+  return <DrawerClosePrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 /** Renders the backdrop and the sheet, with a close button unless `showCloseButton={false}`. */
@@ -151,8 +151,10 @@ function SheetContent({
         {...stylex.props(dialogStyles.backdropSurface)}
       />
       <DrawerContentPrimitive
-        {...props}
-        {...stylex.props(popupReset.base, typeStyles.textSm, styles.popup, sx)}
+        {...withStyles(
+          props,
+          stylex.props(popupReset.base, typeStyles.textSm, styles.popup, sx)
+        )}
       >
         {children}
         {showCloseButton && (
@@ -184,8 +186,7 @@ function SheetHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sheet-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -195,8 +196,7 @@ function SheetBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       data-drawer-no-drag=""
       data-slot="sheet-body"
-      {...props}
-      {...stylex.props(styles.body, sx)}
+      {...withStyles(props, stylex.props(styles.body, sx))}
     />
   );
 }
@@ -205,8 +205,7 @@ function SheetFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sheet-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }
@@ -217,8 +216,7 @@ function SheetTitle({
 }: Styled<ComponentProps<typeof DrawerTitlePrimitive>>) {
   return (
     <DrawerTitlePrimitive
-      {...props}
-      {...stylex.props(dialogStyles.title, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
     />
   );
 }
@@ -229,8 +227,7 @@ function SheetDescription({
 }: Styled<ComponentProps<typeof DrawerDescriptionPrimitive>>) {
   return (
     <DrawerDescriptionPrimitive
-      {...props}
-      {...stylex.props(dialogStyles.description, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
     />
   );
 }

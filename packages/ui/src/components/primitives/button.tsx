@@ -6,7 +6,12 @@ import { renderElement } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, stateStyles, typeStyles } from "@/lib/constella/styles";
+import {
+  joinStyles,
+  stateStyles,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -311,8 +316,10 @@ function Button({
       data-size={size}
       data-color={color}
       data-variant={variant}
-      {...props}
-      {...stylex.props(buttonStyles({ corners, size, color, variant }), sx)}
+      {...withStyles(
+        props,
+        stylex.props(buttonStyles({ corners, size, color, variant }), sx)
+      )}
       // ui-sdk writes `button` over a passed slot; a part built on Button keeps its own.
       render={
         slot === undefined

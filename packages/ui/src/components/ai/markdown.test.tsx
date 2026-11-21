@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, onTestFinished, test, vi } from "vite-plus/test";
 
@@ -109,4 +109,27 @@ test("two blocks of the same language share a name, so a press by it is ambiguou
   for (const ref of refs) {
     expect(result.error?.message).toContain(ref);
   }
+});
+
+test("a footnote renders its back-link, which the content gives a class", () => {
+  render(<Markdown>{"Claim.[^1]\n\n[^1]: Source."}</Markdown>);
+
+  const links = screen.getAllByRole("link");
+  expect(links.map((link) => link.dataset.slot)).toEqual(["link", "link"]);
+  expect(links.some((link) => "footnoteBackref" in link.dataset)).toBe(true);
+});
+
+test("a table and inline code render on their parts", () => {
+  render(
+    <Markdown>
+      {
+        "Run `vp install`.\n\n| Month | Users |\n| :-- | --: |\n| March | 22,270 |\n"
+      }
+    </Markdown>
+  );
+
+  expect(screen.getByRole("cell", { name: "22,270" }).dataset.slot).toBe(
+    "table-cell"
+  );
+  expect(screen.getByText("vp install").dataset.slot).toBe("code");
 });

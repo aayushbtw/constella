@@ -9,6 +9,7 @@ import {
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -164,8 +165,7 @@ function RadioGroup<Value extends string = string>({
 }: Styled<ComponentProps<typeof RadioGroupPrimitive<Value>>>) {
   return (
     <RadioGroupPrimitive<Value>
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
@@ -179,8 +179,7 @@ function RadioGroupItem({
   return (
     <RadioPrimitive
       data-size={size}
-      {...props}
-      {...stylex.props(styles.item, item, sx)}
+      {...withStyles(props, stylex.props(styles.item, item, sx))}
     >
       <RadioIndicator {...stylex.props(styles.indicator, indicator)} />
     </RadioPrimitive>

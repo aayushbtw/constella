@@ -3,6 +3,7 @@ import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, durations, media } from "@/lib/constella/tokens.stylex";
 
 type ShimmerProps = Omit<PartProps<"span">, "className" | "style"> & {
@@ -48,8 +49,7 @@ function Shimmer({ render, sx, ...props }: ShimmerProps) {
     "span",
     mergeProps(
       { "data-slot": "shimmer" },
-      props,
-      stylex.props(styles.shimmer, sx)
+      withStyles(props, stylex.props(styles.shimmer, sx))
     ),
     render
   );

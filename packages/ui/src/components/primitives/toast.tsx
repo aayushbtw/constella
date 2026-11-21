@@ -30,7 +30,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -332,7 +332,9 @@ function ToastRegion({
   ...props
 }: Styled<Omit<ToastRegionProps, "align" | "side">>) {
   return (
-    <ToastRegionPrimitive {...props} {...stylex.props(styles.region, sx)} />
+    <ToastRegionPrimitive
+      {...withStyles(props, stylex.props(styles.region, sx))}
+    />
   );
 }
 
@@ -343,8 +345,7 @@ function Toast({
 }: Styled<ComponentProps<typeof ToastPrimitive>>) {
   return (
     <ToastPrimitive
-      {...props}
-      {...stylex.props(styles.toast, sx)}
+      {...withStyles(props, stylex.props(styles.toast, sx))}
       // ui-sdk leaves the toasts hidden behind a collapsed stack focusable.
       render={(rendered, state) =>
         renderElement(
@@ -368,8 +369,7 @@ function ToastContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="toast-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -392,8 +392,7 @@ function ToastIcon({
       aria-hidden
       data-slot="toast-icon"
       data-type={type}
-      {...props}
-      {...stylex.props(styles.icon, sx)}
+      {...withStyles(props, stylex.props(styles.icon, sx))}
     >
       <span {...stylex.props(styles.layer, type === "loading" && styles.shown)}>
         <Spinner />
@@ -420,7 +419,10 @@ function ToastIcon({
 
 function ToastBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div data-slot="toast-body" {...props} {...stylex.props(styles.body, sx)} />
+    <div
+      data-slot="toast-body"
+      {...withStyles(props, stylex.props(styles.body, sx))}
+    />
   );
 }
 
@@ -430,8 +432,10 @@ function ToastTitle({
 }: Styled<ComponentProps<typeof ToastTitlePrimitive>>) {
   return (
     <ToastTitlePrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.title], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.title], sx)
+      )}
     />
   );
 }
@@ -442,13 +446,14 @@ function ToastDescription({
 }: Styled<ComponentProps<typeof ToastDescriptionPrimitive>>) {
   return (
     <ToastDescriptionPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
 
-// The styles ride on the Button: it applies its own last. ui-sdk passes `href` for a link action.
 function ToastAction({
   sx,
   ...props
@@ -478,8 +483,7 @@ function ToastClose({
   return (
     <ToastClosePrimitive
       aria-label="Close"
-      {...props}
-      {...stylex.props(styles.close, sx)}
+      {...withStyles(props, stylex.props(styles.close, sx))}
     >
       {children ?? (
         <HugeiconsIcon

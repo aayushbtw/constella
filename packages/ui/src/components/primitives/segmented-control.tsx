@@ -9,7 +9,7 @@ import {
 import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -121,8 +121,7 @@ function SegmentedControl<Value extends string = string>({
 }: SegmentedControlProps<Value>) {
   return (
     <SegmentedControlPrimitive<Value>
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.root], sx)}
+      {...withStyles(props, stylex.props([typeStyles.textSm, styles.root], sx))}
     >
       <SegmentedControlIndicator {...stylex.props(styles.indicator)} />
       {children}
@@ -136,8 +135,7 @@ function SegmentedControlItem({
 }: Styled<ComponentProps<typeof SegmentedControlItemPrimitive>>) {
   return (
     <SegmentedControlItemPrimitive
-      {...props}
-      {...stylex.props(styles.item, sx)}
+      {...withStyles(props, stylex.props(styles.item, sx))}
     />
   );
 }

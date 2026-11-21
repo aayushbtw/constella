@@ -9,6 +9,7 @@ import {
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   avatarVars,
   badgeVars,
@@ -297,12 +298,14 @@ function Avatar({
     <AvatarPrimitive
       data-corners={corners}
       data-size={size}
-      {...props}
-      {...stylex.props(
-        styles.avatar,
-        sizeStyles[size],
-        corners === "rounded" && styles.rounded,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.avatar,
+          sizeStyles[size],
+          corners === "rounded" && styles.rounded,
+          sx
+        )
       )}
     />
   );
@@ -313,7 +316,9 @@ function AvatarImage({
   ...props
 }: Styled<ComponentProps<typeof AvatarImagePrimitive>>) {
   return (
-    <AvatarImagePrimitive {...props} {...stylex.props(styles.image, sx)} />
+    <AvatarImagePrimitive
+      {...withStyles(props, stylex.props(styles.image, sx))}
+    />
   );
 }
 
@@ -325,8 +330,7 @@ function AvatarFallback({
     <AvatarFallbackPrimitive
       // A span drops its aria-label. As an image, the initials read as the person's name.
       role={props["aria-label"] === undefined ? undefined : "img"}
-      {...props}
-      {...stylex.props(styles.fallback, sx)}
+      {...withStyles(props, stylex.props(styles.fallback, sx))}
     />
   );
 }
@@ -352,8 +356,10 @@ function AvatarBadge({ presence, sx, ...props }: AvatarBadgeProps) {
       data-slot="avatar-badge"
       data-presence={presence}
       role={presence && "img"}
-      {...props}
-      {...stylex.props(styles.badge, presence && presenceStyles[presence], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.badge, presence && presenceStyles[presence], sx)
+      )}
     />
   );
 }
@@ -362,8 +368,7 @@ function AvatarGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="avatar-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
@@ -372,8 +377,7 @@ function AvatarGroupCount({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="avatar-group-count"
-      {...props}
-      {...stylex.props(styles.count, sx)}
+      {...withStyles(props, stylex.props(styles.count, sx))}
     />
   );
 }

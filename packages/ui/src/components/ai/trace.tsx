@@ -21,7 +21,7 @@ import {
 } from "@/components/primitives/collapsible";
 import { SwapText } from "@/components/primitives/swap-text";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -425,7 +425,10 @@ function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
   }, []);
   return (
     <Live value={live}>
-      <div data-slot="trace" {...props} {...stylex.props(styles.trace, sx)} />
+      <div
+        data-slot="trace"
+        {...withStyles(props, stylex.props(styles.trace, sx))}
+      />
     </Live>
   );
 }
@@ -488,11 +491,13 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="trace-line"
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.line],
-        state === "pending" && styles.pending,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.line],
+          state === "pending" && styles.pending,
+          sx
+        )
       )}
     />
   );
@@ -551,8 +556,7 @@ function TraceIcon({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="trace-icon"
-      {...props}
-      {...stylex.props(styles.icon, sx)}
+      {...withStyles(props, stylex.props(styles.icon, sx))}
     />
   );
 }
@@ -577,8 +581,7 @@ function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
       {" "}
       <span
         data-slot="trace-subject"
-        {...props}
-        {...stylex.props(styles.subject, sx)}
+        {...withStyles(props, stylex.props(styles.subject, sx))}
       />
     </>
   );
@@ -593,12 +596,14 @@ function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
       {" "}
       <span
         data-slot="trace-description"
-        {...props}
-        {...stylex.props(
-          styles.description,
-          inRun && styles.descriptionInRun,
-          state === "error" && styles.descriptionError,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(
+            styles.description,
+            inRun && styles.descriptionInRun,
+            state === "error" && styles.descriptionError,
+            sx
+          )
         )}
       />
     </>
@@ -750,8 +755,10 @@ function TraceSubsteps({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="trace-substeps"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.substeps], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.substeps], sx)
+      )}
     />
   );
 }

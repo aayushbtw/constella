@@ -27,6 +27,7 @@ import {
   popupReset,
   stateStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
@@ -310,14 +311,14 @@ function SelectLabel({
   sx,
   ...props
 }: Styled<ComponentProps<typeof SelectLabelPrimitive>>) {
-  return <SelectLabelPrimitive {...props} {...stylex.props(sx)} />;
+  return <SelectLabelPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function SelectGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof SelectGroupPrimitive>>) {
-  return <SelectGroupPrimitive {...props} {...stylex.props(sx)} />;
+  return <SelectGroupPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function SelectValue({
@@ -325,7 +326,9 @@ function SelectValue({
   ...props
 }: Styled<ComponentProps<typeof SelectValuePrimitive>>) {
   return (
-    <SelectValuePrimitive {...props} {...stylex.props(styles.value, sx)} />
+    <SelectValuePrimitive
+      {...withStyles(props, stylex.props(styles.value, sx))}
+    />
   );
 }
 
@@ -338,14 +341,16 @@ function SelectTrigger({
   return (
     <SelectTriggerPrimitive
       data-size={size}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.trigger],
-        stateStyles.outline,
-        joinStyles.md,
-        joinStyles.edges,
-        sizeStyles[size],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.trigger],
+          stateStyles.outline,
+          joinStyles.md,
+          joinStyles.edges,
+          sizeStyles[size],
+          sx
+        )
       )}
     >
       {children}
@@ -378,12 +383,9 @@ function SelectContent({
         data-skip-motion={skip || opensInPlace || undefined}
         side={side}
         sideOffset={sideOffset}
-        {...props}
-        {...stylex.props(
-          popupReset.base,
-          styles.content,
-          popupMotion.popover,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(popupReset.base, styles.content, popupMotion.popover, sx)
         )}
       />
     </Size>
@@ -396,11 +398,13 @@ function SelectGroupLabel({
 }: Styled<ComponentProps<typeof SelectGroupLabelPrimitive>>) {
   return (
     <SelectGroupLabelPrimitive
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.groupLabel],
-        contentSizeStyles[use(Size)].groupLabel,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.groupLabel],
+          contentSizeStyles[use(Size)].groupLabel,
+          sx
+        )
       )}
     />
   );
@@ -417,8 +421,10 @@ function SelectItem<T = string>({
   const sized = contentSizeStyles[size];
   return (
     <SelectItemPrimitive<T>
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     >
       <span {...stylex.props(styles.itemText)}>{children}</span>
       <SelectItemIndicatorPrimitive
@@ -436,11 +442,13 @@ function SelectSeparator({
 }: Styled<ComponentProps<typeof SelectSeparatorPrimitive>>) {
   return (
     <SelectSeparatorPrimitive
-      {...props}
-      {...stylex.props(
-        styles.separator,
-        contentSizeStyles[use(Size)].separator,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.separator,
+          contentSizeStyles[use(Size)].separator,
+          sx
+        )
       )}
     />
   );

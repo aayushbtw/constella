@@ -19,7 +19,7 @@ import { Button } from "@/components/primitives/button";
 import { popoverStyles } from "@/components/primitives/popover";
 import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   blurs,
   colors,
@@ -171,7 +171,7 @@ function DialogTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof DialogTriggerPrimitive>>) {
-  return <DialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <DialogTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function DialogBackdrop({
@@ -180,8 +180,10 @@ function DialogBackdrop({
 }: Styled<ComponentProps<typeof DialogBackdropPrimitive>>) {
   return (
     <DialogBackdropPrimitive
-      {...props}
-      {...stylex.props(styles.backdrop, popupMotion.backdrop, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.backdrop, popupMotion.backdrop, sx)
+      )}
     />
   );
 }
@@ -220,8 +222,10 @@ function DialogPopup<Payload = unknown>({
   return (
     <DialogContentPrimitive<Payload>
       data-size={size}
-      {...props}
-      {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.popup, sizeStyles[size], sx)
+      )}
     />
   );
 }
@@ -239,8 +243,7 @@ function DialogHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="dialog-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -249,8 +252,7 @@ function DialogBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="dialog-body"
-      {...props}
-      {...stylex.props(styles.body, sx)}
+      {...withStyles(props, stylex.props(styles.body, sx))}
     />
   );
 }
@@ -259,8 +261,7 @@ function DialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="dialog-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }
@@ -271,8 +272,7 @@ function DialogTitle({
 }: Styled<ComponentProps<typeof DialogTitlePrimitive>>) {
   return (
     <DialogTitlePrimitive
-      {...props}
-      {...stylex.props(dialogStyles.title, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
     />
   );
 }
@@ -283,8 +283,7 @@ function DialogDescription({
 }: Styled<ComponentProps<typeof DialogDescriptionPrimitive>>) {
   return (
     <DialogDescriptionPrimitive
-      {...props}
-      {...stylex.props(dialogStyles.description, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
     />
   );
 }
@@ -293,10 +292,9 @@ function DialogClose({
   sx,
   ...props
 }: Styled<ComponentProps<typeof DialogClosePrimitive>>) {
-  return <DialogClosePrimitive {...props} {...stylex.props(sx)} />;
+  return <DialogClosePrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-// The styles ride on the Button: it applies its own last, over anything ui-sdk merges in.
 function DialogCloseButton({
   children,
   sx,

@@ -444,6 +444,41 @@ type Sx = stylex.StyleXStyles<
     TokenStyles
 >;
 
+type StyleProps = ReturnType<typeof stylex.props>;
+
+// Declared here, not by @types/node, so a copied file typechecks in a Vite app.
+declare const process: { env: { NODE_ENV?: string } };
+
+const reported = new Set<string>();
+
+/** A part's own styles on its props. Class names join across `render`, so one part in a chain draws. A className from an outer part beside one of its own throws in development, and in production logs once and loses to its own. Inline styles merge, its own last. */
+const withStyles = <P extends object>(
+  props: P & StyleProps & { "data-slot"?: string },
+  own: StyleProps
+): P & StyleProps => {
+  if ((props.className ?? "") !== "" && (own.className ?? "") !== "") {
+    const slot =
+      props["data-slot"] === undefined
+        ? ""
+        : ` [data-slot="${props["data-slot"]}"]`;
+    const message = `Two parts style one element${slot}. Put \`sx\` on the part that draws and leave the others unstyled.`;
+    if (process.env.NODE_ENV !== "production") {
+      throw new Error(message);
+    }
+    if (!reported.has(message)) {
+      reported.add(message);
+      console.error(message);
+    }
+  }
+  return {
+    ...props,
+    ...own,
+    className: own.className ?? props.className,
+    style:
+      own.style === undefined ? props.style : { ...props.style, ...own.style },
+  };
+};
+
 export {
   controlIconSize,
   joinStyles,
@@ -456,5 +491,6 @@ export {
   trackStyles,
   typeStyles,
   visuallyHidden,
+  withStyles,
 };
 export type { Sx, TextColor, TextWeight };

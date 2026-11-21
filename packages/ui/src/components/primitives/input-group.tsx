@@ -11,7 +11,7 @@ import type { ButtonProps } from "@/components/primitives/button";
 import { Textarea } from "@/components/primitives/textarea";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -412,8 +412,10 @@ function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
       data-slot="input-group"
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
-      {...props}
-      {...stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)
+      )}
     />
   );
 }
@@ -444,12 +446,14 @@ function InputGroupAddon({
           ?.querySelector<HTMLElement>(control)
           ?.focus();
       }}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.addon],
-        alignStyles[align],
-        separated && separatedStyles[align],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.addon],
+          alignStyles[align],
+          separated && separatedStyles[align],
+          sx
+        )
       )}
     />
   );
@@ -480,8 +484,7 @@ function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
     "span",
     mergeProps(
       { "data-slot": "input-group-text" },
-      props,
-      stylex.props([typeStyles.textSm, styles.text], sx)
+      withStyles(props, stylex.props([typeStyles.textSm, styles.text], sx))
     ),
     render
   );
@@ -498,8 +501,10 @@ function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
     <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <InputPrimitive
         type={type}
-        {...props}
-        {...stylex.props(input.input, type === "file" && styles.file, sx)}
+        {...withStyles(
+          props,
+          stylex.props(input.input, type === "file" && styles.file, sx)
+        )}
       />
     </span>
   );

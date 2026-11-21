@@ -162,7 +162,7 @@ function LastHeading({ children, ...props }: Props<"h6">) {
 
 // An answer sits under the page's own headings, so its outline starts two levels down.
 const components = {
-  a: ({ children, ...props }: Props<"a">) => (
+  a: ({ children, className: _className, ...props }: Props<"a">) => (
     <Link {...props} rel="noopener noreferrer" target="_blank">
       {children}
     </Link>
@@ -200,20 +200,26 @@ const components = {
     <strong {...props} {...stylex.props(styles.strong)} />
   ),
   // A margin on the table would stay inside its scroll container.
-  table: (props: Props<"table">) => (
+  table: ({ className: _className, ...props }: Props<"table">) => (
     <div {...stylex.props(styles.block)}>
       <Table {...props} />
     </div>
   ),
-  tbody: (props: Props<"tbody">) => <TableBody {...props} />,
-  td: ({ style, ...props }: Props<"td">) => (
+  tbody: ({ className: _className, ...props }: Props<"tbody">) => (
+    <TableBody {...props} />
+  ),
+  td: ({ className: _className, style, ...props }: Props<"td">) => (
     <TableCell {...props} sx={[styles.cell, alignOf(style)]} />
   ),
-  th: ({ style, ...props }: Props<"th">) => (
+  th: ({ className: _className, style, ...props }: Props<"th">) => (
     <TableHead {...props} sx={[styles.cell, alignOf(style)]} />
   ),
-  thead: (props: Props<"thead">) => <TableHeader {...props} />,
-  tr: (props: Props<"tr">) => <TableRow {...props} />,
+  thead: ({ className: _className, ...props }: Props<"thead">) => (
+    <TableHeader {...props} />
+  ),
+  tr: ({ className: _className, ...props }: Props<"tr">) => (
+    <TableRow {...props} />
+  ),
   ul: (props: Props<"ul">) => (
     <ul {...props} {...stylex.props(styles.block, styles.list)} />
   ),

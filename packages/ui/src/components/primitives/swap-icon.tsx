@@ -3,6 +3,7 @@ import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   durations,
   easings,
@@ -53,8 +54,7 @@ function SwapIcon({
     <SwapIconContext value={value}>
       <span
         data-slot="swap-icon"
-        {...props}
-        {...stylex.props(styles.swap, sx)}
+        {...withStyles(props, stylex.props(styles.swap, sx))}
       />
     </SwapIconContext>
   );
@@ -71,8 +71,10 @@ function SwapIconItem({
       aria-hidden={!shown}
       data-shown={shown || undefined}
       data-slot="swap-icon-item"
-      {...props}
-      {...stylex.props(styles.item, !shown && styles.hidden, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.item, !shown && styles.hidden, sx)
+      )}
     />
   );
 }

@@ -35,7 +35,7 @@ import {
 import type { PopoverContentProps } from "@/components/primitives/popover";
 import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { visuallyHidden } from "@/lib/constella/styles";
+import { visuallyHidden, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -233,13 +233,15 @@ function ModelPickerContent({
       data-details-side={detailsSide}
       data-skip-motion={picked || skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        popoverStyles.popup,
-        popupMotion.popover,
-        styles.content,
-        detailsSide === "inline-start" && styles.detailsStart,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          popoverStyles.popup,
+          popupMotion.popover,
+          styles.content,
+          detailsSide === "inline-start" && styles.detailsStart,
+          sx
+        )
       )}
     />
   );
@@ -335,8 +337,10 @@ function ModelPickerLogo({
     <span
       aria-hidden
       data-slot="model-picker-logo"
-      {...props}
-      {...stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)
+      )}
     />
   );
 }
@@ -350,9 +354,11 @@ function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="model-picker-details"
-      {...props}
+      {...withStyles(
+        props,
+        stylex.props(popoverStyles.surface, styles.details, sx)
+      )}
       id={detailsId}
-      {...stylex.props(popoverStyles.surface, styles.details, sx)}
     />
   );
 }
@@ -362,8 +368,7 @@ function ModelPickerTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "model-picker-title" },
-      props,
-      stylex.props(styles.title, sx)
+      withStyles(props, stylex.props(styles.title, sx))
     ),
     render
   );
@@ -373,8 +378,7 @@ function ModelPickerDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   return (
     <p
       data-slot="model-picker-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }

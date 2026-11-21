@@ -11,7 +11,7 @@ import {
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { scrollFadeVars } from "@/lib/constella/scroll-fade.stylex";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   codeBlockVars,
   colors,
@@ -271,12 +271,14 @@ function CodeBlock({
       data-size={size}
       data-slot="code-block"
       data-color={color}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.block],
-        size === "sm" && [typeStyles.captionLg, styles.sm],
-        color && colorStyles[color],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.block],
+          size === "sm" && [typeStyles.captionLg, styles.sm],
+          color && colorStyles[color],
+          sx
+        )
       )}
     />
   );
@@ -286,8 +288,7 @@ function CodeBlockHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="code-block-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -298,8 +299,7 @@ function CodeBlockTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "code-block-title" },
-      props,
-      stylex.props(styles.title, sx)
+      withStyles(props, stylex.props(styles.title, sx))
     ),
     render
   );
@@ -310,8 +310,7 @@ function CodeBlockActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="code-block-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }
@@ -394,8 +393,10 @@ function CodeBlockLine({
     <span
       data-slot="code-block-line"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.line, lineVariantStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.line, lineVariantStyles[variant], sx)
+      )}
     >
       <span>{empty ? "\n" : children}</span>
     </span>
@@ -406,8 +407,7 @@ function CodeBlockFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="code-block-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }

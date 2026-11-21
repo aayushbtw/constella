@@ -7,7 +7,7 @@ import type { ComponentProps } from "react";
 import { ScrollArea } from "@/components/primitives/scroll-area";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import { tableVars } from "@/lib/constella/table.stylex";
 import {
   colors,
@@ -169,8 +169,10 @@ function Table({
           <table
             data-size={size}
             data-slot="table"
-            {...props}
-            {...stylex.props([typeStyles.textMd, styles.table], sx)}
+            {...withStyles(
+              props,
+              stylex.props([typeStyles.textMd, styles.table], sx)
+            )}
           />
         </ScrollArea>
       </TableSizeContext>
@@ -179,19 +181,22 @@ function Table({
 }
 
 function TableHeader({ sx, ...props }: Styled<ComponentProps<"thead">>) {
-  return <thead data-slot="table-header" {...props} {...stylex.props(sx)} />;
+  return (
+    <thead data-slot="table-header" {...withStyles(props, stylex.props(sx))} />
+  );
 }
 
 function TableBody({ sx, ...props }: Styled<ComponentProps<"tbody">>) {
-  return <tbody data-slot="table-body" {...props} {...stylex.props(sx)} />;
+  return (
+    <tbody data-slot="table-body" {...withStyles(props, stylex.props(sx))} />
+  );
 }
 
 function TableFooter({ sx, ...props }: Styled<ComponentProps<"tfoot">>) {
   return (
     <tfoot
       data-slot="table-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }
@@ -201,8 +206,10 @@ function TableRow({ sx, ...props }: Styled<ComponentProps<"tr">>) {
   return (
     <tr
       data-slot="table-row"
-      {...props}
-      {...stylex.props(styles.row, !interactive && styles.rowStatic, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.row, !interactive && styles.rowStatic, sx)
+      )}
     />
   );
 }
@@ -212,12 +219,14 @@ function TableHead({ sx, ...props }: Styled<ComponentProps<"th">>) {
   return (
     <th
       data-slot="table-head"
-      {...props}
-      {...stylex.props(
-        styles.divider,
-        styles.head,
-        size === "sm" && styles.headSm,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.divider,
+          styles.head,
+          size === "sm" && styles.headSm,
+          sx
+        )
       )}
     />
   );
@@ -228,12 +237,14 @@ function TableCell({ sx, ...props }: Styled<ComponentProps<"td">>) {
   return (
     <td
       data-slot="table-cell"
-      {...props}
-      {...stylex.props(
-        styles.divider,
-        styles.cell,
-        size === "sm" && styles.cellSm,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.divider,
+          styles.cell,
+          size === "sm" && styles.cellSm,
+          sx
+        )
       )}
     />
   );
@@ -243,8 +254,10 @@ function TableCaption({ sx, ...props }: Styled<ComponentProps<"caption">>) {
   return (
     <caption
       data-slot="table-caption"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.caption], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.caption], sx)
+      )}
     />
   );
 }

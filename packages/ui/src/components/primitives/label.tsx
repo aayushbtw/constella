@@ -3,7 +3,7 @@ import { Label as LabelPrimitive } from "@ui-sdk/react/label";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 
 type LabelProps = Omit<
@@ -38,8 +38,10 @@ function labelStyles() {
 function Label({ sx, ...props }: LabelProps) {
   return (
     <LabelPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.label], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.label], sx)
+      )}
     />
   );
 }

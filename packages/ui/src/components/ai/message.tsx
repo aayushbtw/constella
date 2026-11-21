@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import { colors, radii, space } from "@/lib/constella/tokens.stylex";
 
 const messageRoles = ["user", "assistant"] as const;
@@ -64,8 +64,10 @@ function Message({
     <div
       data-from={from}
       data-slot="message"
-      {...props}
-      {...stylex.props(styles.message, from === "user" && styles.user, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.message, from === "user" && styles.user, sx)
+      )}
     />
   );
 }
@@ -74,8 +76,10 @@ function MessageContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="message-content"
-      {...props}
-      {...stylex.props([typeStyles.textBase, styles.content], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textBase, styles.content], sx)
+      )}
     />
   );
 }
@@ -85,8 +89,7 @@ function MessageActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="message-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }

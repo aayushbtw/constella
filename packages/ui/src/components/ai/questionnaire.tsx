@@ -11,7 +11,7 @@ import type { ButtonStyleOptions } from "@/components/primitives/button";
 import { Input } from "@/components/primitives/input";
 import { Kbd } from "@/components/primitives/kbd";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -309,8 +309,7 @@ function Questionnaire({
   return (
     <QuestionnairePrimitive.Root
       data-slot="questionnaire"
-      {...props}
-      {...stylex.props(styles.root, sx)}
+      {...withStyles(props, stylex.props(styles.root, sx))}
     />
   );
 }
@@ -322,8 +321,10 @@ function QuestionnaireProgress({
   return (
     <QuestionnairePrimitive.Progress
       data-slot="questionnaire-progress"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.progress], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.progress], sx)
+      )}
     />
   );
 }
@@ -335,8 +336,7 @@ function QuestionnaireItem({
   return (
     <QuestionnairePrimitive.Item
       data-slot="questionnaire-item"
-      {...props}
-      {...stylex.props(styles.item, sx)}
+      {...withStyles(props, stylex.props(styles.item, sx))}
     />
   );
 }
@@ -348,8 +348,10 @@ function QuestionnaireTitle({
   return (
     <QuestionnairePrimitive.Title
       data-slot="questionnaire-title"
-      {...props}
-      {...stylex.props([typeStyles.textBase, styles.title], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textBase, styles.title], sx)
+      )}
     />
   );
 }
@@ -361,8 +363,10 @@ function QuestionnaireDescription({
   return (
     <QuestionnairePrimitive.Description
       data-slot="questionnaire-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -374,8 +378,7 @@ function QuestionnaireChoices({
   return (
     <QuestionnairePrimitive.Choices
       data-slot="questionnaire-choices"
-      {...props}
-      {...stylex.props(styles.choices, sx)}
+      {...withStyles(props, stylex.props(styles.choices, sx))}
     />
   );
 }
@@ -388,8 +391,10 @@ function QuestionnaireChoice({
   return (
     <QuestionnairePrimitive.Choice
       data-slot="questionnaire-choice"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.choice], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.choice], sx)
+      )}
     >
       <QuestionnairePrimitive.ChoiceInput
         data-slot="questionnaire-choice-input"
@@ -430,8 +435,7 @@ function QuestionnaireChoiceDescription({
   return (
     <span
       data-slot="questionnaire-choice-description"
-      {...props}
-      {...stylex.props(styles.choiceDescription, sx)}
+      {...withStyles(props, stylex.props(styles.choiceDescription, sx))}
     />
   );
 }
@@ -450,8 +454,10 @@ function QuestionnaireError({
   return (
     <QuestionnairePrimitive.Error
       data-slot="questionnaire-error"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.error], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.error], sx)
+      )}
     />
   );
 }
@@ -460,8 +466,7 @@ function QuestionnaireActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="questionnaire-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }

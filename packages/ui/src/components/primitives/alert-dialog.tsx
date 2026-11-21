@@ -18,6 +18,7 @@ import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   opacities,
@@ -95,7 +96,9 @@ function AlertDialogTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof AlertDialogTriggerPrimitive>>) {
-  return <AlertDialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return (
+    <AlertDialogTriggerPrimitive {...withStyles(props, stylex.props(sx))} />
+  );
 }
 
 function AlertDialogContent<Payload = unknown>({
@@ -109,8 +112,10 @@ function AlertDialogContent<Payload = unknown>({
       <AlertDialogBackdropPrimitive {...stylex.props(dialogStyles.backdrop)} />
       <AlertDialogContentPrimitive<Payload>
         data-size={size}
-        {...props}
-        {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
+        {...withStyles(
+          props,
+          stylex.props(dialogStyles.popup, sizeStyles[size], sx)
+        )}
       >
         {(state) => (
           <Pending value={state.pending}>
@@ -127,8 +132,10 @@ function AlertDialogHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-header"
-      {...props}
-      {...stylex.props(dialogStyles.header, styles.header, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.header, styles.header, sx)
+      )}
     />
   );
 }
@@ -137,8 +144,7 @@ function AlertDialogMedia({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-media"
-      {...props}
-      {...stylex.props(styles.media, sx)}
+      {...withStyles(props, stylex.props(styles.media, sx))}
     />
   );
 }
@@ -147,8 +153,10 @@ function AlertDialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-footer"
-      {...props}
-      {...stylex.props(dialogStyles.footer, styles.footer, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.footer, styles.footer, sx)
+      )}
     />
   );
 }
@@ -159,8 +167,7 @@ function AlertDialogTitle({
 }: Styled<ComponentProps<typeof AlertDialogTitlePrimitive>>) {
   return (
     <AlertDialogTitlePrimitive
-      {...props}
-      {...stylex.props(dialogStyles.title, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
     />
   );
 }
@@ -171,8 +178,7 @@ function AlertDialogDescription({
 }: Styled<ComponentProps<typeof AlertDialogDescriptionPrimitive>>) {
   return (
     <AlertDialogDescriptionPrimitive
-      {...props}
-      {...stylex.props(dialogStyles.description, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
     />
   );
 }

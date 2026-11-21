@@ -7,6 +7,7 @@ import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 
 const textSizes = ["sm", "base", "lg"] as const;
@@ -93,15 +94,17 @@ function Text({
         "data-truncate": lines === false ? undefined : lines,
         "data-weight": weight,
       },
-      props,
-      stylex.props(
-        styles.base,
-        size && sizeStyles[size],
-        weight && textWeightStyles[weight],
-        color && textColorStyles[color],
-        tabularNums && styles.tabularNums,
-        lines !== false && truncateStyles[lines],
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          styles.base,
+          size && sizeStyles[size],
+          weight && textWeightStyles[weight],
+          color && textColorStyles[color],
+          tabularNums && styles.tabularNums,
+          lines !== false && truncateStyles[lines],
+          sx
+        )
       )
     ),
     render

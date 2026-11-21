@@ -6,7 +6,7 @@ import type { ComponentProps } from "react";
 
 import { buttonStyles } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
-import { stateStyles } from "@/lib/constella/styles";
+import { stateStyles, withStyles } from "@/lib/constella/styles";
 
 const toggleVariants = ["default", "outline"] as const;
 const toggleSizes = [
@@ -60,8 +60,7 @@ function Toggle({
     <TogglePrimitive
       data-size={size}
       data-variant={variant}
-      {...props}
-      {...stylex.props(toggleStyles({ size, variant }), sx)}
+      {...withStyles(props, stylex.props(toggleStyles({ size, variant }), sx))}
     />
   );
 }

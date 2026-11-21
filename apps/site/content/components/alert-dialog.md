@@ -145,4 +145,4 @@ Mark an action an agent must not take alone with `data-agent-confirm`, as above.
 | `AlertDialogAction` | A Close part with `value="confirm"`, rendered as a `primary` `Button` |
 | `AlertDialogCancel` | A Close part, rendered as an `outline` `Button` |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Alert Dialog](https://ui-sdk.dev/docs/react/components/alert-dialog).
+Every part takes `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Alert Dialog](https://ui-sdk.dev/docs/react/components/alert-dialog).

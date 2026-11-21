@@ -43,6 +43,7 @@ import {
   controlIconSize,
   popupReset,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
@@ -406,7 +407,7 @@ function ComboboxLabel({
   sx,
   ...props
 }: Styled<ComponentProps<typeof ComboboxLabelPrimitive>>) {
-  return <ComboboxLabelPrimitive {...props} {...stylex.props(sx)} />;
+  return <ComboboxLabelPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function ComboboxTrigger({
@@ -418,7 +419,7 @@ function ComboboxTrigger({
   children?: ReactNode;
 }) {
   return (
-    <ComboboxTriggerPrimitive {...props} {...stylex.props(sx)}>
+    <ComboboxTriggerPrimitive {...withStyles(props, stylex.props(sx))}>
       {children}
       <Glyph icon={ArrowDown01Icon} />
     </ComboboxTriggerPrimitive>
@@ -456,7 +457,9 @@ function ComboboxInput({
   return (
     <InputGroup ref={use(AnchorContext)?.setAnchor} size={size} sx={sx}>
       <span data-slot="input-group-input" {...stylex.props(input.slot)}>
-        <ComboboxInputPrimitive {...props} {...stylex.props(input.input)} />
+        <ComboboxInputPrimitive
+          {...withStyles(props, stylex.props(input.input))}
+        />
       </span>
       <InputGroupAddon align="inline-end">
         {showTrigger !== false && (
@@ -502,12 +505,9 @@ function ComboboxContent({
         data-skip-motion={skip || undefined}
         side={side}
         sideOffset={sideOffset}
-        {...props}
-        {...stylex.props(
-          popupReset.base,
-          styles.content,
-          popupMotion.popover,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(popupReset.base, styles.content, popupMotion.popover, sx)
         )}
       />
     </Size>
@@ -519,7 +519,9 @@ function ComboboxList({
   ...props
 }: Styled<ComponentProps<typeof ComboboxListPrimitive>>) {
   return (
-    <ComboboxListPrimitive {...props} {...stylex.props(styles.list, sx)} />
+    <ComboboxListPrimitive
+      {...withStyles(props, stylex.props(styles.list, sx))}
+    />
   );
 }
 
@@ -534,8 +536,10 @@ function ComboboxItem<T = string>({
   const sized = contentSizeStyles[size];
   return (
     <ComboboxItemPrimitive<T>
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     >
       {children}
       <ComboboxItemIndicatorPrimitive
@@ -555,8 +559,10 @@ function ComboboxCreate({
   const sized = contentSizeStyles[use(Size)];
   return (
     <ComboboxCreatePrimitive
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     />
   );
 }
@@ -565,7 +571,7 @@ function ComboboxGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof ComboboxGroupPrimitive>>) {
-  return <ComboboxGroupPrimitive {...props} {...stylex.props(sx)} />;
+  return <ComboboxGroupPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function ComboboxGroupLabel({
@@ -574,11 +580,13 @@ function ComboboxGroupLabel({
 }: Styled<ComponentProps<typeof ComboboxGroupLabelPrimitive>>) {
   return (
     <ComboboxGroupLabelPrimitive
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.groupLabel],
-        contentSizeStyles[use(Size)].groupLabel,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.groupLabel],
+          contentSizeStyles[use(Size)].groupLabel,
+          sx
+        )
       )}
     />
   );
@@ -590,8 +598,10 @@ function ComboboxEmpty({
 }: Styled<ComponentProps<typeof ComboboxEmptyPrimitive>>) {
   return (
     <ComboboxEmptyPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textMd, styles.empty], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textMd, styles.empty], sx)
+      )}
     />
   );
 }
@@ -602,11 +612,13 @@ function ComboboxSeparator({
 }: Styled<ComponentProps<typeof ComboboxSeparatorPrimitive>>) {
   return (
     <ComboboxSeparatorPrimitive
-      {...props}
-      {...stylex.props(
-        styles.separator,
-        contentSizeStyles[use(Size)].separator,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.separator,
+          contentSizeStyles[use(Size)].separator,
+          sx
+        )
       )}
     />
   );
@@ -620,7 +632,9 @@ function ComboboxChips({ size = "default", sx, ...props }: ComboboxChipsProps) {
       size={size}
       sx={[styles.chipsBox, sx]}
     >
-      <ComboboxChipsPrimitive {...props} {...stylex.props(styles.chips)} />
+      <ComboboxChipsPrimitive
+        {...withStyles(props, stylex.props(styles.chips))}
+      />
     </InputGroup>
   );
 }
@@ -633,7 +647,9 @@ function ComboboxChip<T = string>({
   ...props
 }: ComboboxChipProps<T>) {
   return (
-    <ComboboxChipPrimitive<T> {...props} {...stylex.props(styles.chip, sx)}>
+    <ComboboxChipPrimitive<T>
+      {...withStyles(props, stylex.props(styles.chip, sx))}
+    >
       {({ label }) => (
         <>
           {children ?? label}
@@ -663,8 +679,7 @@ function ComboboxChipsInput({ sx, ...props }: InputPrimitiveProps) {
   return (
     <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <ComboboxInputPrimitive
-        {...props}
-        {...stylex.props(input.input, styles.chipsInput, sx)}
+        {...withStyles(props, stylex.props(input.input, styles.chipsInput, sx))}
       />
     </span>
   );

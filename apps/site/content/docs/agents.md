@@ -49,6 +49,7 @@ Without the skill, add this to your `AGENTS.md` or `CLAUDE.md`:
 UI components are Constella: ui-sdk styled with StyleX, not Tailwind, from the `@constella` shadcn registry. Before using one, read its page at https://constella.aayush.cv/docs/components/<name>/index.md (every page: https://constella.aayush.cv/llms.txt).
 
 - Style with `sx` (from `stylex.create`), never `className`, `style` or Tailwind classes.
+- In a `render` chain, one part draws, so put `sx` on that part only: the `Button` in `<PopoverTrigger render={<Button />}>`, the `Item` in `<Item render={<SidePanelTrigger />}>`.
 - Use tokens from `@/lib/constella/tokens.stylex`, not raw values.
 - Compose the parts each page lists; never run `shadcn init`.
 - Theme in `theme.stylex.ts`; dark mode is a `dark` class on `<html>`.

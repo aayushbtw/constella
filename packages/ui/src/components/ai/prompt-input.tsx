@@ -33,7 +33,12 @@ import type {
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import {
+  popupReset,
+  typeStyles,
+  visuallyHidden,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   fontSizes,
@@ -201,8 +206,7 @@ function PromptInput({
   return (
     <form
       data-slot="prompt-input"
-      {...props}
-      {...stylex.props(styles.form, sx)}
+      {...withStyles(props, stylex.props(styles.form, sx))}
     >
       <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
         {children}
@@ -263,8 +267,7 @@ function PromptInputTools({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-tools"
-      {...props}
-      {...stylex.props(styles.tools, sx)}
+      {...withStyles(props, stylex.props(styles.tools, sx))}
     />
   );
 }
@@ -274,8 +277,7 @@ function PromptInputWell({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-well"
-      {...props}
-      {...stylex.props(styles.well, sx)}
+      {...withStyles(props, stylex.props(styles.well, sx))}
     />
   );
 }
@@ -303,8 +305,7 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-bar"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.bar], sx)}
+      {...withStyles(props, stylex.props([typeStyles.textSm, styles.bar], sx))}
     />
   );
 }
@@ -411,12 +412,14 @@ function PromptInputCommandContent({
       anchor={use(AnchorContext)?.anchor}
       side={side}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        popupReset.base,
-        commandStyles.surface,
-        styles.commandContent,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          popupReset.base,
+          commandStyles.surface,
+          styles.commandContent,
+          sx
+        )
       )}
     />
   );
@@ -427,7 +430,9 @@ function PromptInputCommandList({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuList>>) {
   return (
-    <TriggerMenuList {...props} {...stylex.props(commandStyles.list, sx)} />
+    <TriggerMenuList
+      {...withStyles(props, stylex.props(commandStyles.list, sx))}
+    />
   );
 }
 
@@ -437,7 +442,9 @@ function PromptInputCommandItem<T = string>({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuItem<T>>>) {
   return (
-    <TriggerMenuItem<T> {...props} {...stylex.props(commandStyles.item, sx)} />
+    <TriggerMenuItem<T>
+      {...withStyles(props, stylex.props(commandStyles.item, sx))}
+    />
   );
 }
 
@@ -447,7 +454,9 @@ function PromptInputCommandItemIcon({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuItemIcon>>) {
   return (
-    <TriggerMenuItemIcon {...props} {...stylex.props(styles.commandIcon, sx)} />
+    <TriggerMenuItemIcon
+      {...withStyles(props, stylex.props(styles.commandIcon, sx))}
+    />
   );
 }
 
@@ -457,7 +466,9 @@ function PromptInputCommandEmpty({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuEmpty>>) {
   return (
-    <TriggerMenuEmpty {...props} {...stylex.props(commandStyles.empty, sx)} />
+    <TriggerMenuEmpty
+      {...withStyles(props, stylex.props(commandStyles.empty, sx))}
+    />
   );
 }
 

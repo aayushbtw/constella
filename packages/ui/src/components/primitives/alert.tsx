@@ -4,7 +4,7 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -99,8 +99,10 @@ function Alert({ color, sx, ...props }: AlertProps) {
       data-slot="alert"
       data-color={color}
       role="alert"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.alert], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.alert], sx)
+      )}
     />
   );
 }
@@ -110,8 +112,7 @@ function AlertTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "alert-title" },
-      props,
-      stylex.props(styles.title, sx)
+      withStyles(props, stylex.props(styles.title, sx))
     ),
     render
   );
@@ -121,8 +122,7 @@ function AlertDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }
@@ -131,8 +131,7 @@ function AlertAction({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-action"
-      {...props}
-      {...stylex.props(styles.action, sx)}
+      {...withStyles(props, stylex.props(styles.action, sx))}
     />
   );
 }

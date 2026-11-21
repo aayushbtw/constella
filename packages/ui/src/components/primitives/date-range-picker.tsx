@@ -26,6 +26,7 @@ import {
   controlIconSize,
   stateStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
@@ -185,10 +186,9 @@ function DateRangePicker({
         onValueChange?.(Array.isArray(value) ? value : null, details);
       }}
       showOutsideDays={showOutsideDays}
-      {...props}
+      {...withStyles(props, stylex.props(styles.root, sx))}
       mode="range"
       months={2}
-      {...stylex.props(styles.root, sx)}
     >
       {(state) => (
         <PickerProvider
@@ -249,11 +249,13 @@ function DateRangePickerContent({
       align={align}
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [popoverStyles.popup, popoverStyles.surface, styles.content],
-        popupMotion.popover,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [popoverStyles.popup, popoverStyles.surface, styles.content],
+          popupMotion.popover,
+          sx
+        )
       )}
     />
   );
@@ -266,8 +268,7 @@ function DateRangePickerPresets({
   return (
     <div
       data-slot="date-range-picker-presets"
-      {...props}
-      {...stylex.props(styles.presets, sx)}
+      {...withStyles(props, stylex.props(styles.presets, sx))}
     />
   );
 }
@@ -281,11 +282,9 @@ function DateRangePickerPreset({
   return (
     <DatePickerPresetPrimitive
       value={value}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textMd, styles.preset],
-        stateStyles.ghost,
-        sx
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textMd, styles.preset], stateStyles.ghost, sx)
       )}
     >
       {(state) => (

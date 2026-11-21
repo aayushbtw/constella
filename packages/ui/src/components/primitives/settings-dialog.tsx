@@ -20,7 +20,7 @@ import {
   SidebarProvider,
 } from "@/components/primitives/sidebar";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import { media, sizes, space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -166,8 +166,7 @@ function SettingsDialogPage({
   return (
     <div
       data-slot="settings-dialog-page"
-      {...props}
-      {...stylex.props(styles.page, sx)}
+      {...withStyles(props, stylex.props(styles.page, sx))}
     >
       <DialogHeader sx={styles.header}>
         <div {...stylex.props(styles.titleLine)}>

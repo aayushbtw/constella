@@ -24,7 +24,7 @@ import { flushSync } from "react-dom";
 import { popoverStyles } from "@/components/primitives/popover";
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -152,7 +152,7 @@ function HoverCardTrigger<Payload = unknown>({
   sx,
   ...props
 }: HoverCardTriggerProps<Payload>) {
-  return <HoverCardTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <HoverCardTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function HoverCardContent<Payload = unknown>({
@@ -166,12 +166,14 @@ function HoverCardContent<Payload = unknown>({
       data-moving={moving || undefined}
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, popoverStyles.popup, styles.surface],
-        popupMotion.popover,
-        popupMotion.glide,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, popoverStyles.popup, styles.surface],
+          popupMotion.popover,
+          popupMotion.glide,
+          sx
+        )
       )}
     />
   );

@@ -5,7 +5,7 @@ import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -251,8 +251,7 @@ function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "item-group" },
-      props,
-      stylex.props(styles.group, sx)
+      withStyles(props, stylex.props(styles.group, sx))
     ),
     render
   );
@@ -276,15 +275,17 @@ function Item({
         "data-slot": "item",
         "data-variant": variant,
       },
-      props,
-      stylex.props(
-        [
-          size === "default" ? typeStyles.textMd : typeStyles.textSm,
-          styles.item,
-        ],
-        variantStyles[variant],
-        size === "xs" && styles.xs,
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          [
+            size === "default" ? typeStyles.textMd : typeStyles.textSm,
+            styles.item,
+          ],
+          variantStyles[variant],
+          size === "xs" && styles.xs,
+          sx
+        )
       )
     ),
     render
@@ -300,8 +301,10 @@ function ItemMedia({
     <div
       data-slot="item-media"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.media, mediaStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.media, mediaStyles[variant], sx)
+      )}
     />
   );
 }
@@ -310,8 +313,7 @@ function ItemContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -321,8 +323,7 @@ function ItemTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "item-title" },
-      props,
-      stylex.props(styles.title, sx)
+      withStyles(props, stylex.props(styles.title, sx))
     ),
     render
   );
@@ -332,8 +333,7 @@ function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   return (
     <p
       data-slot="item-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }
@@ -342,8 +342,7 @@ function ItemActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }
@@ -352,8 +351,7 @@ function ItemHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-header"
-      {...props}
-      {...stylex.props(styles.edge, sx)}
+      {...withStyles(props, stylex.props(styles.edge, sx))}
     />
   );
 }
@@ -362,8 +360,7 @@ function ItemFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-footer"
-      {...props}
-      {...stylex.props(styles.edge, sx)}
+      {...withStyles(props, stylex.props(styles.edge, sx))}
     />
   );
 }

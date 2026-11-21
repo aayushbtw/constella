@@ -9,7 +9,7 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -78,8 +78,7 @@ function Breadcrumb({ sx, ...props }: Styled<ComponentProps<"nav">>) {
     <nav
       aria-label="Breadcrumb"
       data-slot="breadcrumb"
-      {...props}
-      {...stylex.props(sx)}
+      {...withStyles(props, stylex.props(sx))}
     />
   );
 }
@@ -88,8 +87,7 @@ function BreadcrumbList({ sx, ...props }: Styled<ComponentProps<"ol">>) {
   return (
     <ol
       data-slot="breadcrumb-list"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.list], sx)}
+      {...withStyles(props, stylex.props([typeStyles.textSm, styles.list], sx))}
     />
   );
 }
@@ -98,8 +96,7 @@ function BreadcrumbItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
       data-slot="breadcrumb-item"
-      {...props}
-      {...stylex.props(styles.item, sx)}
+      {...withStyles(props, stylex.props(styles.item, sx))}
     />
   );
 }
@@ -110,8 +107,7 @@ function BreadcrumbLink({ render, sx, ...props }: Styled<PartProps<"a">>) {
     "a",
     mergeProps(
       { "data-slot": "breadcrumb-link" },
-      props,
-      stylex.props(styles.link, sx)
+      withStyles(props, stylex.props(styles.link, sx))
     ),
     render
   );
@@ -122,8 +118,7 @@ function BreadcrumbPage({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-current="page"
       data-slot="breadcrumb-page"
-      {...props}
-      {...stylex.props(styles.page, sx)}
+      {...withStyles(props, stylex.props(styles.page, sx))}
     />
   );
 }
@@ -138,8 +133,7 @@ function BreadcrumbSeparator({
       aria-hidden
       data-slot="breadcrumb-separator"
       role="presentation"
-      {...props}
-      {...stylex.props(styles.separator, sx)}
+      {...withStyles(props, stylex.props(styles.separator, sx))}
     >
       {children ?? (
         <HugeiconsIcon
@@ -156,8 +150,7 @@ function BreadcrumbEllipsis({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
-      {...props}
-      {...stylex.props(styles.ellipsis, sx)}
+      {...withStyles(props, stylex.props(styles.ellipsis, sx))}
     >
       <HugeiconsIcon
         aria-hidden
