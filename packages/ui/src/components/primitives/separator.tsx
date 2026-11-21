@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import { Separator as SeparatorPrimitive } from "@ui-sdk/react/separator";
 import type { ComponentProps } from "react";

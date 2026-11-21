@@ -134,7 +134,7 @@ Use `createDropdownMenuController` for one menu that several triggers share, lik
 <!-- ::demo name="dropdown-menu-controller" -->
 
 ```tsx
-const rowMenu = createDropdownMenuController<Doc>();
+const [rowMenu] = useState(() => createDropdownMenuController<Doc>());
 
 <DropdownMenuTrigger controller={rowMenu} payload={doc} render={<Button size="icon" variant="ghost" />}>
   <HugeiconsIcon icon={MoreHorizontalIcon} />

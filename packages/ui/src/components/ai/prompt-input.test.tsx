@@ -9,6 +9,7 @@ import { separator } from "@ui-sdk/core/separator";
 import { mount, setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { StrictMode, useState } from "react";
+import type { ReactNode } from "react";
 import { afterAll, expect, test, vi } from "vite-plus/test";
 
 import { InputGroupButton } from "@/components/primitives/input-group";
@@ -434,10 +435,138 @@ test("while streaming, the submit button is Stop: a press calls onStop and doesn
   expect(onSubmit).not.toHaveBeenCalled();
 });
 
+const buttonRef = (label: string) =>
+  agent
+    .snapshot()
+    .find(
+      (entry) =>
+        entry.offPage !== true &&
+        entry.component === "button" &&
+        entry.label === label
+    )?.ref;
+
+// ui-sdk retires an unmounted part's ref a microtask later, so each swap settles as it would on a page.
+async function swapTo(rerender: (ui: ReactNode) => void, ui: ReactNode) {
+  await act(async () => {
+    rerender(ui);
+    await Promise.resolve();
+  });
+}
+
+test("Send and Stop are separate refs, and Send keeps its ref across a stream", async () => {
+  const { rerender } = render(
+    <Submit onStop={() => {}} onSubmit={() => {}} state="ready" />
+  );
+  const sendBefore = buttonRef("Send");
+
+  await swapTo(
+    rerender,
+    <Submit onStop={() => {}} onSubmit={() => {}} state="streaming" />
+  );
+  const stop = buttonRef("Stop");
+
+  await swapTo(
+    rerender,
+    <Submit onStop={() => {}} onSubmit={() => {}} state="ready" />
+  );
+  const sendAfter = buttonRef("Send");
+
+  expect(sendBefore).toBeTruthy();
+  expect(stop).toBeTruthy();
+  expect(stop).not.toBe(sendBefore);
+  expect(sendAfter).toBe(sendBefore);
+});
+
+test("an agent pressing Send's ref while streaming doesn't stop the stream", async () => {
+  const onStop = vi.fn<() => void>();
+  const onSubmit = vi.fn<() => void>();
+  const { rerender } = render(
+    <Submit onStop={onStop} onSubmit={onSubmit} state="ready" />
+  );
+  const sendRef = buttonRef("Send");
+  expect(sendRef).toBeTruthy();
+
+  rerender(<Submit onStop={onStop} onSubmit={onSubmit} state="streaming" />);
+  await agent.act({ steps: [{ action: "press", ref: sendRef ?? "" }] });
+
+  expect(onStop).not.toHaveBeenCalled();
+});
+
+test("while streaming, an agent sees Stop and no leftover Send", async () => {
+  const { rerender } = render(<Submit onSubmit={() => {}} state="ready" />);
+  agent.snapshot();
+
+  await swapTo(rerender, <Submit onSubmit={() => {}} state="streaming" />);
+
+  expect(
+    agent
+      .snapshot()
+      .map(
+        (entry) =>
+          `${entry.component} ${entry.label}${entry.offPage === true ? " (off page)" : ""}`
+      )
+      .toSorted()
+  ).toEqual(["button Stop", "textarea Message"]);
+});
+
+test("focus on Send moves to Stop when the stream starts", async () => {
+  const { rerender } = render(<Submit onSubmit={() => {}} state="ready" />);
+  send().focus();
+
+  await swapTo(rerender, <Submit onSubmit={() => {}} state="streaming" />);
+
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Stop" })
+  );
+});
+
+test("focus on Stop moves to the textarea when Send comes back disabled", async () => {
+  const { rerender } = render(
+    <Submit disabled onSubmit={() => {}} state="streaming" />
+  );
+  screen.getByRole<HTMLButtonElement>("button", { name: "Stop" }).focus();
+
+  await swapTo(rerender, <Submit disabled onSubmit={() => {}} state="ready" />);
+
+  expect(send().disabled).toBe(true);
+  expect(document.activeElement).toBe(box());
+});
+
+test("focus in the textarea stays there as Send and Stop swap", async () => {
+  const { rerender } = render(<Submit onSubmit={() => {}} state="ready" />);
+  box().focus();
+
+  await swapTo(rerender, <Submit onSubmit={() => {}} state="streaming" />);
+  expect(document.activeElement).toBe(box());
+
+  await swapTo(rerender, <Submit onSubmit={() => {}} state="ready" />);
+  expect(document.activeElement).toBe(box());
+});
+
+test("a custom stopLabel names Stop", () => {
+  render(
+    <PromptInput>
+      <PromptInputSubmit state="streaming" stopLabel="Stop answering" />
+    </PromptInput>
+  );
+
+  expect(screen.getByRole("button", { name: "Stop answering" })).toBeTruthy();
+});
+
 test("once submitted, the submit button is busy", () => {
   render(<Submit onSubmit={() => {}} state="submitted" />);
 
   expect(send().getAttribute("aria-busy")).toBe("true");
+});
+
+test.each([
+  ["ready", "Send"],
+  ["submitted", "Send"],
+  ["streaming", "Stop"],
+] as const)("while %s, %s writes the state as data-state", (state, name) => {
+  render(<Submit onSubmit={() => {}} state={state} />);
+
+  expect(screen.getByRole("button", { name }).dataset.state).toBe(state);
 });
 
 test("a disabled submit button doesn't submit", async () => {

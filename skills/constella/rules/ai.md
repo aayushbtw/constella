@@ -71,7 +71,7 @@ Set `streaming` on `Markdown` while the answer arrives, so unclosed code fences,
 <Markdown streaming={status === "streaming"}>{text}</Markdown>
 ```
 
-`PromptInputSubmit` takes the chat's `status` as `state`, and an `onStop`, so the same button submits and stops.
+`PromptInputSubmit` takes the chat's `status` as `state`, and an `onStop`. While streaming, a separate Stop button named by `stopLabel` takes Send's place.
 
 ---
 

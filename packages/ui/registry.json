@@ -123,6 +123,8 @@
       "title": "Button",
       "description": "Five variants for every level of emphasis, in four sizes, each with an icon-only square.",
       "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -188,8 +190,6 @@
       "title": "Dialog",
       "description": "A centered surface over a dimmed page, for a decision that needs full attention.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -663,8 +663,6 @@
       "title": "Sheet",
       "description": "A dialog that slides in from an edge, for side panels on narrow screens.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -688,8 +686,6 @@
       "title": "Side Panel",
       "description": "A full-height, non-modal panel that opens beside the page, for details, a form or anything else.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -924,7 +920,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "Picks one option from a list, on an input's surface, with groups and scrolling.",
+      "description": "Picks one option from a list, on an input's surface, with groups, scrolling and search.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
@@ -932,7 +928,10 @@
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
       ],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/input-group.json"
+      ],
       "files": [
         {
           "path": "src/components/primitives/select.tsx",
@@ -1144,7 +1143,7 @@
       "name": "prompt-input",
       "type": "registry:ui",
       "title": "Prompt Input",
-      "description": "The chat composer on an input group: grows with its text, submits on Enter, brings back earlier prompts with ArrowUp, turns into Stop while streaming, and opens a command list over itself.",
+      "description": "The chat composer on an input group: grows with its text, submits on Enter, brings back earlier prompts with ArrowUp, swaps to Stop while streaming, and opens a command list over itself.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",

@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
-import { withSource } from "@ui-sdk/react/observe";
 import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
+import { pressKeys } from "../../../test/keys";
 import {
   Collapsible,
   CollapsibleContent,
@@ -210,9 +210,8 @@ test("a keyboard press on the trigger toggles at once, an agent's press animates
     expanded: true,
     name: "Toggle sidebar",
   });
-  withSource("keyboard", () => {
-    fireEvent.click(trigger);
-  });
+  trigger.focus();
+  await pressKeys("Enter");
   expect(sidebar?.dataset.collapsible).toBe("icon");
   expect(trigger.getAttribute("aria-expanded")).toBe("false");
   expect(Object.hasOwn(wrapper?.dataset ?? {}, "instant")).toBe(true);

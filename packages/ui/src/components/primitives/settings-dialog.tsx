@@ -10,7 +10,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/primitives/dialog";
+import type { DialogPopupProps } from "@/components/primitives/dialog";
 import {
   Sidebar,
   SidebarContent,
@@ -101,22 +103,23 @@ const styles = stylex.create({
   },
 });
 
-/** A dialog laid out as a nav beside a page, with a close button in its corner. */
-function SettingsDialog({
+const SettingsDialog = Dialog;
+
+const SettingsDialogTrigger = DialogTrigger;
+
+/** The popup, laid out as a nav beside a page, with a close button in its corner. */
+function SettingsDialogContent({
   children,
   sx,
   ...props
-}: Omit<ComponentProps<typeof Dialog>, "children"> & {
+}: Omit<DialogPopupProps, "children" | "size"> & {
   children?: ReactNode;
-  sx?: Sx;
 }) {
   return (
-    <Dialog {...props}>
-      <DialogContent sx={[styles.popup, sx]}>
-        {children}
-        <DialogCloseButton sx={styles.close} />
-      </DialogContent>
-    </Dialog>
+    <DialogContent {...props} sx={[styles.popup, sx]}>
+      {children}
+      <DialogCloseButton sx={styles.close} />
+    </DialogContent>
   );
 }
 
@@ -187,4 +190,10 @@ function SettingsDialogPage({
   );
 }
 
-export { SettingsDialog, SettingsDialogNav, SettingsDialogPage };
+export {
+  SettingsDialog,
+  SettingsDialogContent,
+  SettingsDialogNav,
+  SettingsDialogPage,
+  SettingsDialogTrigger,
+};

@@ -305,9 +305,9 @@ const docs: Doc[] = [
   { edited: "Edited last week", name: "Hiring plan" },
 ];
 
-const rowMenu = createDropdownMenuController<Doc>();
-
 function DropdownMenuControllerDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [rowMenu] = useState(() => createDropdownMenuController<Doc>());
   return (
     <DemoRow>
       <ItemGroup render={<ul />} sx={styles.list}>

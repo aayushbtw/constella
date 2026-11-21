@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import { Textarea as TextareaPrimitive } from "@ui-sdk/react/textarea";
 import type { ComponentProps } from "react";

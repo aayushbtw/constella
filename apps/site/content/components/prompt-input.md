@@ -64,7 +64,7 @@ PromptInputCommand
 
 ## History
 
-Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own. A prompt joins it when it submits while `PromptInputSubmit` can send. While Send is disabled or its `state` isn't `ready`, Enter does nothing, so a prompt typed while an answer streams stays out.
+Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own. A prompt joins it when it submits while `PromptInputSubmit` can send. While Send is disabled or busy, or Stop has taken its place, Enter does nothing, so a prompt typed while an answer streams stays out.
 
 | Key | Where the caret is | Does |
 | --- | --- | --- |
@@ -151,7 +151,7 @@ Put the prompt input in a `PromptInputWell`, a tinted tray, when it needs contex
 
 ## Prompt Input Submit
 
-Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`. While the button is disabled or `state` isn't `ready`, the form doesn't submit, from Enter either, so `onSubmit` needn't check `status`.
+Pass the chat's `status` as `state`. While it's `streaming`, a separate Stop button takes Send's place and calls `onStop`. Name it with `stopLabel`. If the leaving button held focus, focus moves to the new one, or to the textarea when Send comes back disabled. Enter sends only while Send is shown, enabled and not busy, so `onSubmit` needn't check `status`.
 
 | State       | Button     |
 | ----------- | ---------- |
@@ -173,7 +173,7 @@ What `agent.snapshot()` lists for the preview example:
 | Attach  | button    | `press`             |
 | Send    | button    | None while disabled |
 
-Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send, which is Stop while streaming. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
+Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send. While the answer streams, Send leaves the snapshot and the agent finds Stop by its name. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
 
 ## API Reference
 
@@ -192,6 +192,6 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |
 | `PromptInputBarButton` | A ghost `sm` pill in secondary text |
-| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop`. Only a `ready`, enabled button lets the form submit |
+| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop`; `stopLabel`, Stop's name (default `"Stop"`). Stop takes only `size`, `variant` and `sx`; other props go to Send. The form submits only while Send is shown, enabled and not busy |
 
 Every part takes `sx`, applied last.

@@ -336,6 +336,7 @@ import {
   SelectGroupsDemo,
   SelectInvalidDemo,
   SelectScrollableDemo,
+  SelectSearchDemo,
   SelectSizesDemo,
 } from "~/components/demos/select";
 import {
@@ -747,6 +748,7 @@ const demos = {
   "select-groups": SelectGroupsDemo,
   "select-invalid": SelectInvalidDemo,
   "select-scrollable": SelectScrollableDemo,
+  "select-search": SelectSearchDemo,
   "select-sizes": SelectSizesDemo,
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,

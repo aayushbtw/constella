@@ -98,7 +98,7 @@ column.display({
 
 Use `DataTableActionBar` for actions on the selected rows. It floats at the bottom of the window while any row is selected, with the count, your actions and a Clear button, and leaves when none is. Register `rowSelectionFeature`. Put [Buttons](/docs/components/button) or a [Dropdown Menu](/docs/components/dropdown-menu) trigger in it, with `corners="rounded"` so they nest in its corner, and leave room under the table for it.
 
-When Clear or one of your actions empties the selection while focus is in the bar, focus goes back to where it came into the bar from. If that control is gone, like a deleted row's checkbox, focus goes to the table's row that takes Tab.
+When Clear or one of your actions empties the selection while focus is in the bar, focus goes back to where it came into the bar from. If that control is gone, like a deleted row's checkbox, focus goes to the row now in its place, or the row before it, or the table once it's empty.
 
 <!-- ::demo name="data-table-action-bar" -->
 
@@ -172,7 +172,7 @@ With Cmd or Ctrl, a click on a row selects it instead. With Shift, a click on a 
 
 ## Keyboard
 
-When rows can be selected or clicked, the table is a grid. One row takes Tab, and the arrow keys move between them. Tab returns to the row focused last, even after it scrolls out of view.
+When rows can be selected or clicked, the table is a grid. One row takes Tab, and the arrow keys move between them. Tab returns to the row focused last, even after it scrolls out of view. When the focused row leaves the data, focus moves to the row now in its place, or the row before it, or the table once it's empty.
 
 | Key                  | Does                                           |
 | -------------------- | ---------------------------------------------- |

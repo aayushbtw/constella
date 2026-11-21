@@ -1,15 +1,23 @@
 "use client";
 
-import { Tick02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
+import {
+  Search01Icon,
+  Tick02Icon,
+  UnfoldMoreIcon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   SelectContent as SelectContentPrimitive,
+  SelectEmpty as SelectEmptyPrimitive,
   SelectGroupLabel as SelectGroupLabelPrimitive,
   SelectGroup as SelectGroupPrimitive,
+  SelectInput as SelectInputPrimitive,
   SelectItemIndicator as SelectItemIndicatorPrimitive,
   SelectItem as SelectItemPrimitive,
+  SelectItemText as SelectItemTextPrimitive,
   SelectLabel as SelectLabelPrimitive,
+  SelectList as SelectListPrimitive,
   Select as SelectPrimitive,
   SelectSeparator as SelectSeparatorPrimitive,
   SelectTrigger as SelectTriggerPrimitive,
@@ -19,6 +27,12 @@ import type { SelectProps } from "@ui-sdk/react/select";
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
+import {
+  InputGroup,
+  InputGroupAddon,
+  inputGroupInputStyles,
+} from "@/components/primitives/input-group";
+import type { InputGroupSize } from "@/components/primitives/input-group";
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -64,6 +78,7 @@ type SelectContentProps = Styled<
 > & { size?: SelectSize };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
+const searchable = ":has(> [data-slot='select-list'])";
 const disabled = ":is(:disabled, [data-disabled])";
 
 const styles = stylex.create({
@@ -154,18 +169,48 @@ const styles = stylex.create({
     borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
     color: colors.textPrimary,
+    display: { default: null, [searchable]: "flex" },
+    flexDirection: "column",
     marginBlock: 0,
     marginInline: 0,
     maxHeight: `min(var(--available-height), ${sizes.menuHeight})`,
     maxWidth: "var(--available-width)",
     minWidth: sizes.menu,
     overflowX: "hidden",
-    overflowY: "auto",
-    paddingBlock: space.xxs,
+    overflowY: { default: "auto", [searchable]: "hidden" },
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
     scrollPaddingBlock: sizes.controlXs,
     width: "var(--anchor-width)",
+  },
+  input: {
+    backgroundColor: colors.fill,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
+    boxShadow: "none",
+    flexShrink: 0,
+  },
+  searchIcon: {
+    color: colors.textMuted,
+    display: "flex",
+  },
+  list: {
+    minHeight: 0,
+    overflowX: "hidden",
+    overflowY: "auto",
+    overscrollBehavior: "contain",
+    paddingBlockStart: { default: space.xxs, ":empty": 0 },
+    scrollPaddingBlock: sizes.controlXs,
+  },
+  empty: {
+    color: colors.textSecondary,
+    paddingBlockEnd: { default: space.lg, ":empty": 0 },
+    paddingBlockStart: { default: space.lg, ":empty": 0 },
+    textAlign: "center",
   },
   item: {
     alignItems: "center",
@@ -206,6 +251,14 @@ const styles = stylex.create({
     minWidth: 0,
     overflowWrap: "anywhere",
   },
+  matchedText: {
+    color: { default: null, ":is([data-matched])": colors.textSecondary },
+  },
+  match: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
+  },
   indicator: {
     alignItems: "center",
     display: "flex",
@@ -218,7 +271,8 @@ const styles = stylex.create({
   groupLabel: {
     color: colors.textMuted,
     fontWeight: fontWeights.medium,
-    paddingBlock: space.xxs,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
   },
@@ -288,6 +342,12 @@ const contentSizeStyles = {
     stylex.StyleXStyles | null
   >
 >;
+
+const inputSizes = {
+  default: "lg",
+  lg: "lg",
+  sm: "default",
+} satisfies Record<SelectSize, InputGroupSize>;
 
 const SkipMotion = createContext(false);
 const Size = createContext<SelectSize>("default");
@@ -436,6 +496,91 @@ function SelectItem<T = string>({
   );
 }
 
+/** A search field at the top of the popup that filters the items in `SelectList`. Name it with `aria-label`. `sx` goes to the group. */
+function SelectInput({
+  sx,
+  ...props
+}: Omit<
+  Styled<ComponentProps<typeof SelectInputPrimitive>>,
+  "render" | "size"
+>) {
+  const input = inputGroupInputStyles();
+  return (
+    <InputGroup
+      data-slot="select-input-group"
+      size={inputSizes[use(Size)]}
+      sx={[styles.input, sx]}
+    >
+      <span data-slot="input-group-input" {...stylex.props(input.slot)}>
+        <SelectInputPrimitive
+          {...withStyles(props, stylex.props(input.input))}
+        />
+      </span>
+      <InputGroupAddon>
+        <span {...stylex.props(styles.searchIcon)}>
+          <HugeiconsIcon
+            aria-hidden
+            icon={Search01Icon}
+            size={sizes.icon}
+            strokeWidth={Number(strokes.icon)}
+          />
+        </span>
+      </InputGroupAddon>
+    </InputGroup>
+  );
+}
+
+function SelectList({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectListPrimitive>>) {
+  return (
+    <SelectListPrimitive
+      {...withStyles(props, stylex.props(styles.list, sx))}
+    />
+  );
+}
+
+function SelectEmpty({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectEmptyPrimitive>>) {
+  return (
+    <SelectEmptyPrimitive
+      {...withStyles(
+        props,
+        stylex.props([contentSizeStyles[use(Size)].text, styles.empty], sx)
+      )}
+    />
+  );
+}
+
+function SelectItemText({
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof SelectItemTextPrimitive>>, "children">) {
+  return (
+    <SelectItemTextPrimitive
+      {...withStyles(props, stylex.props(styles.matchedText, sx))}
+    >
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
+              {segment.text}
+            </mark>
+          ) : (
+            segment.text
+          );
+        });
+      }}
+    </SelectItemTextPrimitive>
+  );
+}
+
 function SelectSeparator({
   sx,
   ...props
@@ -457,10 +602,14 @@ function SelectSeparator({
 export {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
   SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
   SelectLabel,
+  SelectList,
   SelectSeparator,
   selectSizes,
   SelectTrigger,

@@ -65,7 +65,7 @@ const InTrigger = createContext<"run" | "step" | undefined>(undefined);
 
 // True once the Trace has mounted: only a step that arrives after it gets an entrance, so a
 // run read back from history, or rendered on the server, lands without one.
-const Live = createContext<{ readonly current: boolean }>({ current: false });
+const Live = createContext(false);
 
 const step = "[data-slot='trace-step']";
 const triggerOpen = ":is([data-slot='collapsible-trigger'][data-open] *)";
@@ -385,7 +385,7 @@ function useArrival<T extends HTMLElement>(carried = false) {
   const live = use(Live);
   const ref = useRef<T>(null);
   // Read once, at mount: whether the Trace was already on screen when this arrived.
-  const [arrived, setArrived] = useState(() => carried || !live.current);
+  const [arrived, setArrived] = useState(() => carried || !live);
   useEffect(() => {
     const animations = ref.current?.getAnimations() ?? [];
     const settle = async () => {
@@ -419,9 +419,10 @@ function Chevron() {
 
 /** The steps an agent takes, on one rail. */
 function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  const live = useRef(false);
+  const [live, setLive] = useState(false);
   useEffect(() => {
-    live.current = true;
+    // oxlint-disable-next-line react/set-state-in-effect -- the second render is the point; only steps mounted after it enter
+    setLive(true);
   }, []);
   return (
     <Live value={live}>

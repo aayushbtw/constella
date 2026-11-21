@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test, vi } from "vite-plus/test";
 
-import { Button } from "./button";
+import { Button, CloseButton } from "./button";
 import { Dialog, DialogTrigger } from "./dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Spinner } from "./spinner";
@@ -112,6 +112,29 @@ test("render swaps the element and keeps it a link", () => {
 
   const link = screen.getByRole("link", { name: "Settings" });
   expect(link.dataset).toMatchObject({ slot: "button", variant: "outline" });
+});
+
+test("CloseButton is a ghost icon-sm Button named Close with the X, unless given its own name, slot or icon", () => {
+  render(
+    <>
+      <CloseButton />
+      <CloseButton aria-label="Dismiss" data-slot="banner-close">
+        <svg aria-hidden data-testid="custom" />
+      </CloseButton>
+    </>
+  );
+
+  const close = screen.getByRole("button", { name: "Close" });
+  expect(close.dataset).toMatchObject({
+    size: "icon-sm",
+    slot: "button",
+    variant: "ghost",
+  });
+  expect(close.querySelector("svg")).not.toBeNull();
+  const dismiss = screen.getByRole("button", { name: "Dismiss" });
+  expect(dismiss.dataset.slot).toBe("banner-close");
+  expect(dismiss.querySelectorAll("svg")).toHaveLength(1);
+  expect(dismiss.contains(screen.getByTestId("custom"))).toBe(true);
 });
 
 test("an agent can find and press every button", async () => {

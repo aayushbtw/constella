@@ -6,6 +6,8 @@ import {
   within,
 } from "@testing-library/react";
 import type { AgentStep } from "@ui-sdk/react/agent";
+import { createDialogController } from "@ui-sdk/react/dialog";
+import { useState } from "react";
 import { expect, test } from "vite-plus/test";
 
 import { Label } from "@/components/primitives/label";
@@ -66,6 +68,8 @@ function Settings() {
 }
 
 function Page({ path = "/" }: { path?: string }) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [activity] = useState(() => createDialogController());
   return (
     <>
       <header>
@@ -77,8 +81,8 @@ function Page({ path = "/" }: { path?: string }) {
       <main>
         <Settings />
       </main>
-      <AgentActivityButton />
-      <AgentLoop path={path} />
+      <AgentActivityButton controller={activity} />
+      <AgentLoop controller={activity} path={path} />
     </>
   );
 }
@@ -274,7 +278,7 @@ test("an agent setting a marked Select by an item's label asks the person once, 
       <main>
         <RegionPicker />
       </main>
-      <AgentLoop path="/" />
+      <AgentLoop controller={createDialogController()} path="/" />
     </>
   );
 

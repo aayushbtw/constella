@@ -1,7 +1,5 @@
 "use client";
 
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   DialogClose as DialogClosePrimitive,
@@ -14,7 +12,7 @@ import {
 import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
 
-import { Button } from "@/components/primitives/button";
+import { CloseButton } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
@@ -256,16 +254,8 @@ function SidePanelHeader({
     >
       {children}
       <DialogClosePrimitive
-        aria-label="Close"
-        render={<Button size="icon-sm" variant="ghost" />}
-      >
-        <HugeiconsIcon
-          aria-hidden
-          icon={Cancel01Icon}
-          size={sizes.icon}
-          strokeWidth={Number(strokes.icon)}
-        />
-      </DialogClosePrimitive>
+        render={<CloseButton data-slot="side-panel-close-button" />}
+      />
     </div>
   );
 }

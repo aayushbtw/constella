@@ -94,6 +94,7 @@ test("the close button keeps its slot as the sheet's direct child, so the header
 
   const close = screen.getByRole("button", { name: "Close" });
   expect(close.dataset.slot).toBe("dialog-close-button");
+  expect(close.querySelector("svg")).not.toBeNull();
   expect(close.parentElement).toBe(sheet);
 });
 

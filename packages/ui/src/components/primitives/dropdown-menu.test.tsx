@@ -209,6 +209,22 @@ test("a destructive item carries data-destructive", async () => {
   expect(Object.hasOwn(item.dataset, "color")).toBe(false);
 });
 
+test("only an inset item carries data-inset", async () => {
+  render(
+    <DropdownMenu defaultOpen>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem inset>Inset</DropdownMenuItem>
+        <DropdownMenuItem inset={false}>Flush</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+  const insetItem = await screen.findByRole("menuitem", { name: "Inset" });
+  const flush = screen.getByRole("menuitem", { name: "Flush" });
+  expect(Object.hasOwn(insetItem.dataset, "inset")).toBe(true);
+  expect(Object.hasOwn(flush.dataset, "inset")).toBe(false);
+});
+
 test("an agent finds the menu by its trigger, names every control, and presses an item", async () => {
   const onBilling = vi.fn<() => void>();
   render(<Account onBilling={onBilling} />);

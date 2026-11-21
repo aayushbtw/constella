@@ -18,6 +18,7 @@ import {
   CommandGroup,
   CommandGroupLabel,
   CommandInput,
+  CommandItemText,
   CommandList,
   CommandSeparator,
 } from "@/components/primitives/command";
@@ -239,6 +240,7 @@ function Picker({
                   {group.items.map((model) => (
                     <ModelPickerItem
                       key={model.value}
+                      label={model.label}
                       onSelect={() => {
                         setValue(model.value);
                       }}
@@ -246,7 +248,7 @@ function Picker({
                       value={model.value}
                     >
                       <ModelPickerLogo src={model.logo} />
-                      {model.label}
+                      <CommandItemText />
                     </ModelPickerItem>
                   ))}
                 </CommandGroup>
