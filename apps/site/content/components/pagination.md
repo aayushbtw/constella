@@ -187,8 +187,14 @@ Pass `getHref` to map each page to a URL. Page links and steps then render as an
 
 Use the `render` prop to pass a router's link. It receives the `href` from `getHref`. Read the page from the URL, so the route controls it.
 
+**Return a full path from `getHref`.** TanStack Router's `Link` reads a passed `href` as a path, so `?page=2` links to `/?page=2`. Give `to` the same path, since `Link` requires it.
+
 ```tsx
-<Pagination getHref={(page) => `?page=${page}`} page={page} pageCount={10}>
+<Pagination
+  getHref={(page) => `/posts?page=${page}`}
+  page={page}
+  pageCount={10}
+>
   <PaginationList>
     {({ items }) =>
       items.map((item) => (
@@ -196,7 +202,7 @@ Use the `render` prop to pass a router's link. It receives the `href` from `getH
           {item === "ellipsis-start" || item === "ellipsis-end" ? (
             <PaginationEllipsis />
           ) : (
-            <PaginationLink page={item} render={<Link />} />
+            <PaginationLink page={item} render={<Link to="/posts" />} />
           )}
         </PaginationItem>
       ))
