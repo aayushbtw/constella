@@ -89,6 +89,7 @@ function PaginationSimpleDemo() {
 }
 
 function PaginationIconOnlyDemo() {
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState("25");
   return (
     <DemoRow>
@@ -100,6 +101,7 @@ function PaginationIconOnlyDemo() {
             onValueChange={(value) => {
               if (value !== null) {
                 setPageSize(value);
+                setPage(1);
               }
             }}
             value={pageSize}
@@ -116,7 +118,13 @@ function PaginationIconOnlyDemo() {
             </SelectContent>
           </Select>
         </Field>
-        <Pagination pageSize={Number(pageSize)} sx={styles.end} total={240}>
+        <Pagination
+          onPageChange={setPage}
+          page={page}
+          pageSize={Number(pageSize)}
+          sx={styles.end}
+          total={240}
+        >
           <PaginationList>
             <PaginationItem>
               <PaginationPrevious size="icon" />

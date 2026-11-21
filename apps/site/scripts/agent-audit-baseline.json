@@ -44,7 +44,7 @@
     },
     "unseen": {
       "count": 2,
-      "why": "Agent-ready Data Table and Chart unit: past the snapshot's 100-entry cap, a kind found only in the tail can't be queried. Pagination's entries sit in the tail"
+      "why": "Agent-ready Data Table and Chart unit: past the snapshot's 100-entry cap, a kind found only in the tail can't be queried. The \"Rows per page\" select and the Pagination nav sit in the tail"
     }
   },
   "/docs/components/markdown": {

@@ -38,6 +38,7 @@ interface SelectableTable {
 }
 
 const announceSelection = (table: SelectableTable) => {
+  // Controlled selection has no new count to read until the parent commits it.
   queueMicrotask(() => {
     const selection = table.atoms.rowSelection?.get() ?? {};
     const count = Object.values(selection).filter(Boolean).length;

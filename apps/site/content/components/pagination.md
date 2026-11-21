@@ -121,24 +121,41 @@ Use an `icon` size on a step to show its arrow alone. Its text stays for screen 
 <!-- ::demo name="pagination-icon-only" -->
 
 ```tsx
+const [page, setPage] = useState(1);
 const [pageSize, setPageSize] = useState("25");
 
-<Field orientation="horizontal">
-  <FieldLabel>Rows per page</FieldLabel>
-  <Select items={pageSizes} onValueChange={setPageSize} value={pageSize}>
-    …
-  </Select>
-</Field>
-<Pagination pageSize={Number(pageSize)} total={240}>
-  <PaginationList>
-    <PaginationItem>
-      <PaginationPrevious size="icon" />
-    </PaginationItem>
-    <PaginationItem>
-      <PaginationNext size="icon" />
-    </PaginationItem>
-  </PaginationList>
-</Pagination>;
+<>
+  <Field orientation="horizontal">
+    <FieldLabel>Rows per page</FieldLabel>
+    <Select
+      items={pageSizes}
+      onValueChange={(value) => {
+        if (value !== null) {
+          setPageSize(value);
+          setPage(1);
+        }
+      }}
+      value={pageSize}
+    >
+      …
+    </Select>
+  </Field>
+  <Pagination
+    onPageChange={setPage}
+    page={page}
+    pageSize={Number(pageSize)}
+    total={240}
+  >
+    <PaginationList>
+      <PaginationItem>
+        <PaginationPrevious size="icon" />
+      </PaginationItem>
+      <PaginationItem>
+        <PaginationNext size="icon" />
+      </PaginationItem>
+    </PaginationList>
+  </Pagination>
+</>;
 ```
 
 `PaginationFirst` and `PaginationLast` are `icon` by default. With your own children, give an icon-only step an `aria-label`.
@@ -151,7 +168,7 @@ Pass `total` and `pageSize` instead of `pageCount`, and the page count follows t
 const [page, setPage] = useState(1);
 const [pageSize, setPageSize] = useState(25);
 
-<Pagination page={page} pageSize={pageSize} total={240} onPageChange={setPage}>
+<Pagination onPageChange={setPage} page={page} pageSize={pageSize} total={240}>
   …
 </Pagination>;
 ```
