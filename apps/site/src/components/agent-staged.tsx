@@ -138,6 +138,12 @@ function Suggestion({
   state: Extract<State, { kind: "review" | "reverting" }>;
 }) {
   const reverting = state.kind === "reverting";
+  const discardButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    discardButton.current?.focus();
+  }, []);
+
   return (
     <Approval>
       <ApprovalHeader>
@@ -165,7 +171,11 @@ function Suggestion({
         </ApprovalContent>
       )}
       <ApprovalFooter>
-        <ApprovalCancel disabled={reverting} onClick={onDiscard}>
+        <ApprovalCancel
+          disabled={reverting}
+          onClick={onDiscard}
+          ref={discardButton}
+        >
           Discard
         </ApprovalCancel>
         <ApprovalConfirm
@@ -217,7 +227,11 @@ function AgentStaged() {
   const suggestButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (state.kind === "kept" || state.kind === "discarded") {
+    if (
+      state.kind === "kept" ||
+      state.kind === "discarded" ||
+      state.kind === "unapplied"
+    ) {
       suggestButton.current?.focus();
     }
   }, [state.kind]);
