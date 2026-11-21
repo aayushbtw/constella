@@ -3,6 +3,7 @@
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { announce, prepareAnnouncements } from "@ui-sdk/core";
 import {
   createContext,
   use,
@@ -399,6 +400,43 @@ function useArrival<T extends HTMLElement>(carried = false) {
   return [!arrived, ref] as const;
 }
 
+// A Swap Text keeps its letters, outgoing ones too, under aria-hidden beside a copy of the whole text.
+function spoken(node: Node): string {
+  if (node instanceof Element) {
+    return node.getAttribute("aria-hidden") === "true"
+      ? ""
+      : Array.from(node.childNodes, spoken).join("");
+  }
+  return node.textContent ?? "";
+}
+
+/** Tells a screen reader when the step's line finishes or fails, not when it mounts so. */
+function useOutcome(
+  stepRef: { readonly current: HTMLElement | null },
+  state: TraceState | undefined
+) {
+  const previous = useRef(state);
+  useEffect(() => {
+    if (previous.current === state) {
+      return;
+    }
+    previous.current = state;
+    if (state !== undefined && state !== "error") {
+      return;
+    }
+    const line = stepRef.current?.querySelector("[data-slot='trace-line']");
+    if (line === null || line === undefined) {
+      return;
+    }
+    const label = spoken(line).replaceAll(/\s+/gu, " ").trim();
+    if (state === "error") {
+      announce(`${label}, failed`, { priority: "assertive" });
+    } else {
+      announce(`${label}, done`);
+    }
+  }, [state, stepRef]);
+}
+
 /** A link or trigger's styles, for one that wraps a `TraceLine`. */
 function traceActionStyles() {
   return styles.action;
@@ -422,6 +460,7 @@ function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
   const live = useRef(false);
   useEffect(() => {
     live.current = true;
+    prepareAnnouncements(document);
   }, []);
   return (
     <Live value={live}>
@@ -451,6 +490,7 @@ function TraceStep({
 } & Pick<CollapsibleProps, "defaultOpen" | "onOpenChange" | "open">) {
   const [growing, stepRef] = useArrival<HTMLDivElement>();
   const [arriving, innerRef] = useArrival<HTMLDivElement>();
+  useOutcome(stepRef, state);
   const context = useMemo(
     () => ({ arriving: growing || arriving, state }),
     [arriving, growing, state]
