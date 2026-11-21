@@ -13,6 +13,7 @@ import {
   ComboboxGroupLabel,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemText,
   ComboboxList,
   ComboboxSeparator,
   comboboxSizes,
@@ -57,7 +58,7 @@ function FruitList() {
       <ComboboxList>
         {fruits.map((fruit) => (
           <ComboboxItem key={fruit} value={fruit}>
-            {fruit}
+            <ComboboxItemText />
           </ComboboxItem>
         ))}
       </ComboboxList>
@@ -159,7 +160,7 @@ function ComboboxCreatableDemo() {
           <ComboboxList>
             {known.map((tag) => (
               <ComboboxItem key={tag} value={tag}>
-                {tag}
+                <ComboboxItemText />
               </ComboboxItem>
             ))}
             <ComboboxCreate onCreate={add}>
@@ -211,7 +212,7 @@ function ComboboxGroupsDemo() {
                   <ComboboxGroupLabel>{group.label}</ComboboxGroupLabel>
                   {group.items.map((item) => (
                     <ComboboxItem key={item} value={item}>
-                      {item}
+                      <ComboboxItemText />
                     </ComboboxItem>
                   ))}
                 </ComboboxGroup>

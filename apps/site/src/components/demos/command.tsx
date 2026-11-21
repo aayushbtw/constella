@@ -22,6 +22,7 @@ import {
   CommandGroupLabel,
   CommandInput,
   CommandItem,
+  CommandItemText,
   CommandList,
   CommandSeparator,
   CommandShortcut,
@@ -103,6 +104,7 @@ function Palette({ onRun }: { onRun?: (entry: Entry) => void }) {
                 <CommandItem
                   disabled={entry.disabled}
                   key={entry.value}
+                  label={entry.label}
                   onSelect={() => onRun?.(entry)}
                   value={entry.value}
                 >
@@ -112,7 +114,7 @@ function Palette({ onRun }: { onRun?: (entry: Entry) => void }) {
                     size={sizes.icon}
                     strokeWidth={Number(strokes.icon)}
                   />
-                  {entry.label}
+                  <CommandItemText />
                   {entry.shortcut !== undefined && (
                     <CommandShortcut shortcut={entry.shortcut} />
                   )}

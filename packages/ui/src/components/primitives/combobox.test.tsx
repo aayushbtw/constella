@@ -22,6 +22,7 @@ import {
   ComboboxGroupLabel,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemText,
   ComboboxLabel,
   ComboboxList,
   ComboboxSeparator,
@@ -42,7 +43,7 @@ function FruitItems() {
     <ComboboxList>
       {fruits.map((fruit) => (
         <ComboboxItem key={fruit} value={fruit}>
-          {fruit}
+          <ComboboxItemText />
         </ComboboxItem>
       ))}
     </ComboboxList>
@@ -97,7 +98,7 @@ function Produce() {
                 <ComboboxGroupLabel>{group.label}</ComboboxGroupLabel>
                 {group.items.map((item) => (
                   <ComboboxItem key={item} value={item}>
-                    {item}
+                    <ComboboxItemText />
                   </ComboboxItem>
                 ))}
               </ComboboxGroup>
@@ -284,6 +285,17 @@ test("typing keeps the items that contain it, and hides a group left empty with 
   await type("Produce", "zzz");
   expect(options()).toEqual([]);
   expect(screen.getByText("No produce found.")).toBeTruthy();
+});
+
+test("each result marks the typed text inside its label, and keeps its name", async () => {
+  render(<Produce />);
+  await type("Produce", "AR");
+
+  const carrot = screen.getByRole("option", { name: "Carrot" });
+  expect(
+    [...carrot.querySelectorAll("mark")].map((mark) => mark.textContent)
+  ).toEqual(["ar"]);
+  expect(carrot.textContent).toBe("Carrot");
 });
 
 test("a pointer open animates, and a pointer pick closes at once", async () => {

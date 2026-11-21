@@ -20,6 +20,7 @@ import {
   ComboboxInput as ComboboxInputPrimitive,
   ComboboxItemIndicator as ComboboxItemIndicatorPrimitive,
   ComboboxItem as ComboboxItemPrimitive,
+  ComboboxItemText as ComboboxItemTextPrimitive,
   ComboboxLabel as ComboboxLabelPrimitive,
   ComboboxList as ComboboxListPrimitive,
   Combobox as ComboboxPrimitive,
@@ -218,6 +219,14 @@ const styles = stylex.create({
     minHeight: sizes.controlLg,
     paddingInlineEnd: `calc(${sizes.icon} + ${space.md})`,
     paddingInlineStart: space.md,
+  },
+  itemText: {
+    color: { default: null, ":is([data-matched])": colors.textSecondary },
+  },
+  match: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
   },
   indicator: {
     alignItems: "center",
@@ -551,6 +560,33 @@ function ComboboxItem<T = string>({
   );
 }
 
+/** Its item's label, with the typed text in it marked. The label is the item's `label`, or its `value`. */
+function ComboboxItemText({
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof ComboboxItemTextPrimitive>>, "children">) {
+  return (
+    <ComboboxItemTextPrimitive
+      {...withStyles(props, stylex.props(styles.itemText, sx))}
+    >
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
+              {segment.text}
+            </mark>
+          ) : (
+            segment.text
+          );
+        });
+      }}
+    </ComboboxItemTextPrimitive>
+  );
+}
+
 /** A row that offers the typed text as a new item. Shown while no item's label matches it exactly. */
 function ComboboxCreate({
   sx,
@@ -698,6 +734,7 @@ export {
   ComboboxGroupLabel,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemText,
   ComboboxLabel,
   ComboboxList,
   ComboboxSeparator,
