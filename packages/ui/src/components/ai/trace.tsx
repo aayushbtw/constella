@@ -410,8 +410,7 @@ function spoken(node: Node): string {
   return node.textContent ?? "";
 }
 
-/** Tells a screen reader when the step's line finishes or fails, not when it mounts so. */
-function useOutcome(
+function useAnnounceStateChange(
   stepRef: { readonly current: HTMLElement | null },
   state: TraceState | undefined
 ) {
@@ -424,8 +423,9 @@ function useOutcome(
     if (state !== undefined && state !== "error") {
       return;
     }
-    const line = stepRef.current?.querySelector("[data-slot='trace-line']");
-    if (line === null || line === undefined) {
+    const line =
+      stepRef.current?.querySelector("[data-slot='trace-line']") ?? null;
+    if (line === null) {
       return;
     }
     const label = spoken(line).replaceAll(/\s+/gu, " ").trim();
@@ -490,7 +490,7 @@ function TraceStep({
 } & Pick<CollapsibleProps, "defaultOpen" | "onOpenChange" | "open">) {
   const [growing, stepRef] = useArrival<HTMLDivElement>();
   const [arriving, innerRef] = useArrival<HTMLDivElement>();
-  useOutcome(stepRef, state);
+  useAnnounceStateChange(stepRef, state);
   const context = useMemo(
     () => ({ arriving: growing || arriving, state }),
     [arriving, growing, state]
