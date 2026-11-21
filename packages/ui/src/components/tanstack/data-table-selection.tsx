@@ -275,11 +275,12 @@ function DataTableSelectRow({
         if (table === null) {
           toggle({ shiftKey, target: { checked: checked === true } });
         } else if (shiftKey) {
-          table.selection.extend(row.id, {
-            event,
-            from: null,
-            reason: "item-press",
-          });
+          const why = { event, from: null, reason: "item-press" } as const;
+          if (checked === true) {
+            table.selection.extend(row.id, why);
+          } else {
+            table.selection.unselectRange(row.id, why);
+          }
         } else {
           table.selection.toggle(row.id, { event, reason: "item-press" });
         }

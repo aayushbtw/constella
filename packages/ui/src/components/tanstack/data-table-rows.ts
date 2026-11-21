@@ -89,12 +89,13 @@ const dataTable = definePrimitive({
     );
     const canMultiSelect = (id: string) => context.options().multiple(id);
     const change = createChange(context);
+    // TanStack's ranges skip a row it won't select alongside others.
+    const rangeSelectable = (id: string) => canSelect(id) && canMultiSelect(id);
     const list = createSelection(context, {
       key: "selected",
       multiple: () => true,
       order: () => context.options().ids,
-      // TanStack's ranges skip a row it won't select alongside others.
-      selectable: (id) => canSelect(id) && canMultiSelect(id),
+      selectable: rangeSelectable,
       set: (value, details) => change("selected", value, details),
     });
     // Matches TanStack's `enableMultiRowSelection`, where such a row replaces the selection and a range from or to it toggles it alone.
@@ -123,6 +124,24 @@ const dataTable = definePrimitive({
           selected.includes(id) ? selected.filter((key) => key !== id) : [id],
           why
         );
+      },
+      unselectRange(id: string, why: Parameters<typeof list.extend>[1]) {
+        const start = list.anchor() ?? why.from ?? null;
+        if (start === null || !canMultiSelect(id) || !canMultiSelect(start)) {
+          selection.toggle(id, why);
+          return;
+        }
+        const { ids } = context.options();
+        const ends = [ids.indexOf(start), ids.indexOf(id)];
+        const range = new Set(
+          ids
+            .slice(Math.min(...ends), Math.max(...ends) + 1)
+            .filter(rangeSelectable)
+        );
+        const next = context.store
+          .get()
+          .selected.filter((key) => !range.has(key));
+        change("selected", next, why);
       },
     };
     return {
