@@ -64,7 +64,7 @@ PromptInputCommand
 
 ## History
 
-Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own.
+Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own. A prompt counts as sent once your `onSubmit` clears the draft, so one it refuses, like Enter while streaming, stays out.
 
 | Key | Where the caret is | Does |
 | --- | --- | --- |
@@ -179,7 +179,7 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 
 | Part | Adds |
 | --- | --- |
-| `PromptInput` | Records each sent prompt for its textarea's history |
+| `PromptInput` | Records each sent prompt for its textarea's history, once `onSubmit` clears the draft or resets the form |
 | `PromptInputTextarea` | Submits on Enter. ArrowUp and ArrowDown step through earlier prompts. Takes every Textarea prop but `controller`, which the history writes through |
 | `PromptInputCommand` | ui-sdk's [Trigger Menu](https://ui-sdk.dev/docs/react/components/trigger-menu) root. Takes `triggers`, and holds a visually hidden status that tells screen readers how many commands match |
 | `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |

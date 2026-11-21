@@ -642,6 +642,62 @@ test("a recalled prompt sends like a typed one", async () => {
   expect(onSubmit.mock.calls).toEqual([["Summarize Q3"], ["Summarize Q3"]]);
 });
 
+function GatedComposer({ ready }: { ready: boolean }) {
+  const [text, setText] = useState("");
+  return (
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (ready) {
+          setText("");
+        }
+      }}
+    >
+      <PromptInputTextarea
+        aria-label="Message"
+        onValueChange={setText}
+        value={text}
+      />
+    </PromptInput>
+  );
+}
+
+test("a prompt the caller refuses, like Enter while streaming, stays out of the history", async () => {
+  const { rerender } = render(<GatedComposer ready />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+
+  rerender(<GatedComposer ready={false} />);
+  await sendPrompt("Draft an email");
+  expect(box().value).toBe("Draft an email");
+
+  fireEvent.input(box(), { target: { value: "" } });
+  expect(box().value).toBe("");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+});
+
+test("an uncontrolled prompt cleared with the form's reset joins the history", async () => {
+  render(
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.currentTarget.reset();
+      }}
+    >
+      <PromptInputTextarea aria-label="Message" />
+    </PromptInput>
+  );
+  box().focus();
+  await sendPrompt("Summarize Q3");
+  expect(box().value).toBe("");
+
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+});
+
 test("ArrowUp on a later line of a multi-line draft moves the caret, not the history", async () => {
   render(<Composer />);
   box().focus();

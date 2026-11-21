@@ -17,7 +17,14 @@ import {
   TriggerMenuStatus,
 } from "@ui-sdk/react/trigger-menu";
 import type { TriggerMenuProps } from "@ui-sdk/react/trigger-menu";
-import { createContext, use, useMemo, useState } from "react";
+import {
+  createContext,
+  use,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -203,13 +210,16 @@ const AnchorContext = createContext<Anchor | null>(null);
 interface PromptHistory {
   field: InputController;
   recall: ReturnType<typeof createInputHistory<string>>;
+  recordSubmitted: () => void;
 }
 
 const PromptHistoryContext = createContext<PromptHistory | null>(null);
 
-/** A form around an input group: submit it with Enter or the submit button. Each submitted prompt joins the textarea's history. */
+/** A form around an input group: submit it with Enter or the submit button. Each sent prompt joins the textarea's history. */
 function PromptInput({
   children,
+  onInput,
+  onReset,
   onSubmit,
   sx,
   ...props
@@ -217,6 +227,8 @@ function PromptInput({
   // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
   const [field] = useState(createInputController);
   const [prompts, setPrompts] = useState<readonly string[]>([]);
+  // A submit counts as sent once the caller clears the field. A refused one, like Enter while streaming, leaves it.
+  const submitted = useRef<string | null>(null);
   const history = useMemo(
     () => ({
       field,
@@ -226,6 +238,16 @@ function PromptInput({
         write: (value, event) =>
           field.setValue(value, { event, reason: "input-change" }),
       }),
+      recordSubmitted: () => {
+        const prompt = submitted.current;
+        if (prompt === null) {
+          return;
+        }
+        submitted.current = null;
+        setPrompts((sent) =>
+          prompt === sent.at(-1) ? sent : [...sent, prompt]
+        );
+      },
     }),
     [field, prompts]
   );
@@ -233,11 +255,17 @@ function PromptInput({
     <form
       data-slot="prompt-input"
       {...withStyles(props, stylex.props(styles.form, sx))}
+      onInput={(event) => {
+        submitted.current = null;
+        onInput?.(event);
+      }}
+      onReset={(event) => {
+        history.recordSubmitted();
+        onReset?.(event);
+      }}
       onSubmit={(event) => {
         const prompt = field.getValue();
-        if (prompt.trim() !== "" && prompt !== prompts.at(-1)) {
-          setPrompts([...prompts, prompt]);
-        }
+        submitted.current = prompt.trim() === "" ? null : prompt;
         onSubmit?.(event);
       }}
     >
@@ -257,9 +285,15 @@ function PromptInputTextarea({
   onKeyDown,
   placeholder = "Ask anything…",
   sx,
+  value,
   ...props
 }: PromptInputTextareaProps) {
   const history = use(PromptHistoryContext);
+  useEffect(() => {
+    if (value === "") {
+      history?.recordSubmitted();
+    }
+  }, [history, value]);
   return (
     <InputGroupTextarea
       controller={history?.field}
@@ -267,6 +301,7 @@ function PromptInputTextarea({
       placeholder={placeholder}
       rows={1}
       submitShortcut="enter"
+      value={value}
       {...props}
       onKeyDown={(event) => {
         onKeyDown?.(event);
