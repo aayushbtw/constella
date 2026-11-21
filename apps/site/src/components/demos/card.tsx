@@ -80,12 +80,12 @@ function CardDemo() {
         <CardContent>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="card-email">Email</FieldLabel>
-              <Input id="card-email" placeholder="m@acme.com" type="email" />
+              <FieldLabel>Email</FieldLabel>
+              <Input placeholder="m@acme.com" type="email" />
             </Field>
             <Field>
-              <FieldLabel htmlFor="card-password">Password</FieldLabel>
-              <Input id="card-password" type="password" />
+              <FieldLabel>Password</FieldLabel>
+              <Input type="password" />
             </Field>
           </FieldGroup>
         </CardContent>
@@ -94,7 +94,7 @@ function CardDemo() {
             Login
           </Button>
           <Button sx={styles.full} variant="outline">
-            Login with Google
+            Continue with Google
           </Button>
         </CardFooter>
       </Card>
@@ -202,7 +202,7 @@ function CardActionDemo() {
                 <DropdownMenuItem>Edit recipients</DropdownMenuItem>
                 <DropdownMenuItem>Send now</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem color="danger">Turn off</DropdownMenuItem>
+                <DropdownMenuItem destructive>Turn off</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </CardAction>

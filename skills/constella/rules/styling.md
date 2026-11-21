@@ -81,7 +81,7 @@ Import from `@/lib/constella/tokens.stylex` and use them inside `stylex.create`.
 | `sizes` | Control heights, icon sizes, widths | `sizes.controlMd`, `sizes.icon`, `sizes.dialog` |
 | `fontWeights`, `fonts` | Weight, family | `fontWeights.medium`, `fonts.mono` |
 | `durations`, `easings` | Motion | `durations.hover`, `easings.out` |
-| `layers` | z-index | `layers.popover` |
+| `layers` | z-index | `layers.dialog` |
 | `media` | Conditions | `media.hover`, `media.coarse`, `media.reducedMotion` |
 | `shadows` | Elevation | `shadows.lg` |
 

@@ -8,7 +8,7 @@ A box like a card, a control's radius and padding: `border` border, `raised` fil
 
 ## Alert dialog
 
-Wears the dialog's surface (`radii.xl`), motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. The action doesn't close it, so a confirm can stay open while its work runs.
+Wears the dialog's surface (`radii.xl`), motion and footer (dialog exports `dialogStyles`), so a confirm and a dialog never drift apart. Its media is a `fill` tile a `media` square above the title. At `sm` it's a short confirm: centered text over two equal buttons. Both buttons close it. An action with async work keeps it open while it runs: the action shows busy, and Cancel fades to the disabled look since it can't close it until the work settles.
 
 ## Approval
 
@@ -28,7 +28,7 @@ The text block is exactly the media's height, so the media's inset holds on ever
 
 ## Avatar
 
-Follows the control heights, so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through; the count draws the avatars' `border` ring too, so it reads as one of them. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (Base UI unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
+Follows the control heights, so it lines up with a button of the same size; its photo draws its `border` inside itself. Avatars in a group, and an avatar and its badge, are cut apart by a 2px gap masked out of the one beneath, so any surface shows through it, not a ring of the page color. An avatar and a group's count fill with `fillOpaque` (`gray-3`, which matches `fill` on the page), so an overlapped avatar doesn't show through; the count draws the avatars' `border` ring too, so it reads as one of them. Its badge's presence is a `Solid` dot (online, away, busy) or `textMuted` (offline), named for screen readers. The fallback can't stay mounted (ui-sdk unmounts it), so the photo fades in over `fillOpaque`. A logo takes `rounded` corners, a ladder step under a control's (`radii.sm`, `xs` at `sm` and leading a badge, which keeps its `chip` corner around it); a group's cut-outs assume pills.
 
 ## Badge
 
@@ -81,19 +81,19 @@ A `fillSubtle` tray, read left to right. Long lines scroll sideways under Scroll
 
 ## Collapsible
 
-Animates its height, since what sits below it has to make room: the panel grows to Base UI's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. Base UI owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
+Animates its height, since what sits below it has to make room: the panel grows to ui-sdk's measured height on `layout`, fading in with it, and shuts quicker, on `layoutExit` + `out`; it jumps under reduced motion. ui-sdk owns that measurement, so the animation never feeds back into it. Toggled from the keyboard it opens and closes at once, and its trigger carries `data-collapsible-instant`, so a chevron in it snaps too. A later change from the app's `open` still animates.
 
 ## Calendar and date range picker
 
-A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `infoOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band that runs on under the ends, so it reaches their edge. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pick closes it at once, with the popover's exit.
+A month grid on `sizes.controlMd` cells, its arrows ghost icon buttons beside the first and last month's names. A selected day, and both ends of a range, are `infoSolid` with `infoOnSolid` text, like Switch's checked track; the days between sit in an `infoSubtle` band with no corners, and each end squares the corners that meet it, so the band joins. A one-day range stays round. While a range is picked, the days from its start to the pointer or focus draw the same way. Today is medium weight, days outside the month are hidden, and a blocked day takes the disabled opacity. Days highlight like a ghost button. The picker is a default-size secondary button in a popover, with presets as ghost buttons on `radii.md` in a column set off by a `borderSubtle` edge, sized like a default menu's items (32px rows, 14px text, `space.sm` at both ends, the tick on the end); the pressed preset takes `fill`. A pointer pick closes it at once, with the popover's exit; a keyboard pick closes it with none.
 
 ## Combobox
 
-An input group with a select's popup under it: the same rows, tick and sizes, as wide as the field, opening at once when typing opens it. With chips, the box grows a line at a time to hold them. A chip is a `fill` pill a step under the box's height, centered with an even inset so its corner is concentric with the box's, and its remove button is a square flush with its end, sharing its corners. Empty, the input's text sits where a plain input's does; the typed text keeps `sizes.chipsInput` beside the chips before it drops to the next line.
+An input group with a select's popup under it: the same rows, tick and sizes, as wide as the field, opening at once when typing opens it. The clear button and the trigger share the end slot, and clear stands in while there's a value or typed text. The create row reads as one more item row. With chips, the box grows a line at a time to hold them. A chip is a `fill` pill a step under the box's height, centered with an even inset so its corner is concentric with the box's, and its remove button is a square flush with its end, sharing its corners. Empty, the input's text sits where a plain input's does; the typed text keeps `sizes.chipsInput` beside the chips before it drops to the next line.
 
 ## Command
 
-A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.lg`, the field an `lg` input group a step above them, its corner `md` like theirs, nesting in the command's corner (a Command Dialog's popup is `lg` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart).
+A menu that stays open under a search field: a default menu's rows on a `raised` surface at `radii.lg`, the field an `lg` input group a step above them, its corner `md` like theirs, nesting in the command's corner (a Command Dialog's popup is `lg` too), and the first match always highlighted so Enter runs it. Its field is flat, with no drop shadow, on `fill`, so in a dark dialog the popup's own edge stays readable above it. In a dialog it sits near the top of the window at `lg` width, so the list grows downward without the box jumping. Escape clears the search first, and only a second Escape closes the dialog. A footer is a `fillSubtle` bar flush with the command's edges, for key hints (a `Kbd` beside its label, pairs `space.md` apart). While a search matches, an item text's label steps back to `textSecondary` and the matched text stays `textPrimary` in medium weight, with no fill, so the match reads in both themes without color alone; a Combobox's item text marks the same way.
 
 ## Markdown
 
@@ -109,7 +109,7 @@ Reads as a page with the user's words set off: a user's message is a `fillOpaque
 
 ## Copy button
 
-A button that swaps its copy icon for a tick for `durations.confirm` and back. With a label it's an `sm` button, icon first at the size's icon size, and the label names it. Its name never changes; a polite live region announces "Copied".
+A button that swaps its copy icon for a tick for `durations.confirm` and back. With a label it's an `sm` button, icon first at the size's icon size, and the label names it. Its name never changes; `announce()` reads "Copied" politely, and a refused copy "Couldn't copy" at once, with no tick.
 
 ## Data table
 
@@ -117,13 +117,13 @@ A table whose rows render only while on screen, so its layout is fixed and narro
 
 A numbered row shows its number in `textMuted` until it's pointed at, focused or any row is selected, then the checkbox in the same spot; on touch it's always the checkbox. The swap fades on `hover` + `ease` for the pointer only. While a query is pending the body holds five skeleton rows as tall as loaded ones: each cell a bar `iconSm` tall and 60% wide in a `textSm` line, keeping its column's width and alignment, and the checkbox column a `sizes.icon` square; while the next page loads over the old one, the body fades to `opacities.busy`.
 
-The action bar floats at the window's foot while any row is selected: a popover's fill and shadow (`raised`, `shadows.lg`) at `radii.md` a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. The count is announced through a live region outside the bar, since a hidden bar isn't read.
+The action bar floats at the window's foot while any row is selected: a popover's fill and shadow (`raised`, `shadows.lg`) at `radii.md` a `space.xxs` inset around `sm` buttons with `rounded` corners, which nest in its corner, on `layers.bar`, under dialogs. "N selected" leads in medium; Clear ends it. It enters and leaves as a popup does, a fade and 0.96 scale from `motion.exitOffset` below, on `popover` and `popoverExit`, and under reduced motion only fades. A selection made from the keyboard, or a key pressed in the bar, shows and hides it at once. Esc does nothing there: it would also reach a menu opened from an action, whose own Esc closes it. "N selected" is announced politely through `announce()` once per selection the person makes, never at 0 and never when the app or the data changes the count. When Clear or an action empties the selection with focus in the bar, focus goes back to where it came into the bar from, or to the table's focusable row when that control is gone.
 
-Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and outline icon-sm buttons for first, previous, next and last at the end. The column menu is an outline button that opens a menu of checkbox items.
+Pagination sits under the table: the range in `textSecondary` at the start; rows per page (a small Select) and a Pagination of outline icon-sm steps for first, previous, next and last at the end. A step at an end stays focusable and says it's disabled. The range is announced politely through `announce()` when the person changes the page or the page size, never when the data changes it. The column menu is an outline button that opens a menu of checkbox items.
 
 ## Dialog
 
-Its popup is `raised` on `radii.xl`. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it.
+Its popup is `raised` on `radii.xl`, centered in the window and kept `space.md` clear of every edge. It sits in the top layer, above every z-index. A popup opened from it (a menu, a tooltip) joins the top layer after it, so it paints on top. Its backdrop is `overlay` over the page blurred by `blurs.backdrop`, so the page behind recedes without reading as content. A dialog opened from another sits on top, and the one behind steps back like a toast stack: shrinks by `motion.stackScale` and peeks `space.sm` above it. Opened from the keyboard or closed with Esc or a key on its buttons, it appears and leaves at once; Alert Dialog and Command Dialog do the same. A dialog opened by the app, like the assistant's confirm, still fades in. The one behind still steps back under a dialog opened at once.
 
 ## Empty state
 
@@ -135,7 +135,7 @@ Its button is a `fill` chip set into the box with an even inset on three sides, 
 
 ## Hover card
 
-A popover opened by resting on a link, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half Base UI's default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out`, grows to the new content's height, and cross-fades the content in place, so reading a row of mentions is one card following the pointer, not cards opening and closing.
+A popover opened by resting on a link or focusing it by keyboard, never by a tap, with the popover's surface (`radii.lg`) and motion; the link still leads somewhere, so nothing lives only in the card. It waits `hoverCardDelay`, a tooltip's rest: half ui-sdk's 600ms default, so a card answers a deliberate rest without opening for a pointer sweeping past. Triggers can share one card: moving between them it glides on `move` + `out` and swaps the content at once, so reading a row of mentions is one card following the pointer, not cards opening and closing. Focus moves it without the glide.
 
 ## Input group
 
@@ -157,9 +157,13 @@ A `strokes.indicator` line in `accentSolid` along the window's top, on `layers.l
 
 A popover whose popup is no surface: it holds two cards, a Command list at `sizes.modelPicker` and the highlighted model's details, opening and closing together on the popover's motion. The card shows once a row is reached by arrow key or the pointer rests on it for `hoverCardDelay`, then follows the highlight, so skimming the list never flashes it. A pick closes the picker at once, with no exit. The card opens at the list's `inline-end`, or `inline-start` for a picker at a row's end; opening upward it lines up with the list's bottom, nearest the trigger, and it wraps under the list when both don't fit. Logos are one-color masks painted in the text color. While the card shows, each row is described by it (`aria-describedby`), so a screen reader hears the highlighted model's details after its name.
 
+## Pagination
+
+Page links and steps are ghost buttons `space.xxs` apart. The current page draws as outline: a `border` edge on the page's `background`, so it reads as the button the reader is on, not one more to press. Numbers are tabular, so the row doesn't shift as the range moves. First and Last are icon-only by default, since a double arrow needs no word beside Previous and Next. The ellipsis takes a `controlMd` square, a page link's size, so a gap holds the same room as the page it stands for.
+
 ## Popups (select, menu, popover)
 
-Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`, above dialogs on `layers.popover`. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once (Base UI's `data-instant`); so do arrow keys and a picked item. Base UI marks only some of these, and none on a select, so both track the open-change reason with `useSkipMotion`. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
+Share one surface and one motion: `raised` on `shadows.lg` at `radii.lg`, a fade and a 0.96 scale from the trigger on `durations.popover`, leaving faster on `popoverExit`. Popups and dialogs sit in the top layer, above any z-index, so a popup opened from a dialog paints on top of it. Opened from the keyboard or dismissed with Esc, a popup appears and leaves at once, and so do arrow keys and a picked item. ui-sdk marks only a Tooltip that opens at once after another (`data-instant`), so every popup and dialog, Tooltip included, tracks the open-change reason with `useSkipMotion`. It reads `details.source`, focus leaving and a picked item. A submenu only fades, on `popoverExit`: it opens many times a minute while the pointer sweeps a menu, and a scale from beside its row reads as decoration.
 
 A select's items and a menu's are the same row: `md` corners inside the popup's `xxs` padding so the two are concentric, `fillSubtle` while highlighted, and a tick on the end for the picked option. `size` on the content sets the row, after Grok's menus at `default`; a submenu inherits it:
 
@@ -169,9 +173,9 @@ A select's items and a menu's are the same row: `md` corners inside the popup's 
 | `default` | `controlMd` (32) | `textMd` | `space.sm` (12) | `icon + sm` (28) |
 | `lg` | `controlLg` (36) | `textBase` | `space.md` (16) | `icon + md` (32) |
 
-Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (200px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A danger item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
+Labels pad by the side inset and separators stop at it, so a label's text, a row's text and a separator's ends line up; the tick sits the side inset from the end. A menu is at least `sizes.menuLg` (200px) wide, room for a label beside its value, or `sizes.menu` (144px) at `sm`. A menu stays open while a checkbox or radio item toggles, so its tick draws in and fades out like a checkbox's. A destructive item turns red and highlights in `dangerSubtle`. A popup never grows past the viewport (`--available-width`); a long item wraps, anywhere if it must, and its icon and shortcut keep their size.
 
-A filtered menu is a command in a popup: its field is the command's input group, a step above the rows (`lg` at most) and its corner `md` like theirs, and the first match is highlighted while filtering so Enter runs it. The field stays put and the list scrolls to `sizes.menuHeight`. Items hide and show at once as you type, and the popup snaps to the new height.
+A filtered menu is a command in a popover.
 
 ## Progress and meter
 
@@ -193,7 +197,7 @@ A mouse wheel sends only a vertical delta, which a sideways row ignores. A one-l
 
 ## Scroll area
 
-Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows takes Tab, and the area draws its ring, since the fade would mask the scroller's own.
+Its scrollbar is an overlay: a 10px rail with a `border` thumb on full corners, shown only while the area is hovered or scrolling, fading on `hover` + `ease`. It takes no room, so content lines up the same whether it scrolls or not. `scrollbar` sets its axis: vertical by default, `horizontal` for a strip like a wide table or code block, or `none` where a scroll fade already shows there's more, like the docs sidebar. A vertical wheel over a sideways scroller scrolls the page; only a one-line strip relays it sideways. A scroller that overflows and holds nothing focusable takes Tab, and the area draws its ring, since the fade would mask the scroller's own. One with links or controls inside doesn't, since Tab reaches them.
 
 ## Scroll fade
 
@@ -205,7 +209,7 @@ One pick among a few, read like tabs: items are `semimedium` `textSecondary` on 
 
 ## Select
 
-Its trigger is an input's surface at `radii.md`, so a select and an input in one form read as one family; at `sm` the trigger takes `captionLg`, and the chevron and tick follow `controlIconSize`. `size` on the content sizes the rows as a menu's. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu; opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion; scrolled, it grows to `sizes.menuHeight` and then scrolls, instead of stretching to the viewport.
+Its trigger is an input's surface at `radii.md`, so a select and an input in one form read as one family; at `sm` the trigger takes `captionLg`, and the chevron and tick follow `controlIconSize`. `size` on the content sizes the rows as a menu's. It opens below its trigger, as wide as it (never under `sizes.menu`), like a menu. Opened over it instead (`alignItemWithTrigger`), it appears in place, with no motion, and so does its fallback below the trigger on touch or when there's no room. A long list grows to `sizes.menuHeight` and then scrolls, with no scroll arrows, instead of stretching to the viewport.
 
 ## Separator
 
@@ -213,7 +217,7 @@ A 1px `borderSubtle` line: it groups content, it doesn't bound a control. A vert
 
 ## Sheet
 
-Travels the whole way in from its edge on `layout` (the drawer curve, `durations.layout`), and leaves the same way, faster, on `dialog`: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. Under reduced motion it fades in place. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
+Travels the whole way in from its edge on a critically damped spring, `motion.sheetResponse`, that settles inside 300ms, and leaves the same way: in and out along one path, so where it went is where it comes from. Its sides are physical, like the slide. A swipe toward its edge from the header or footer carries it along and closes it; pulled the other way it stretches a little and springs back, with its fill drawn past the edge so no gap opens. The body doesn't swipe, so its text selects. Under reduced motion it fades in, and on close it leaves at once while the backdrop fades. A keyboard open or Esc still slides: ui-sdk's Drawer moves the sheet itself and has no instant open or close yet. It is the dialog's surface (backdrop, `raised`, `shadows.xl`, footer bar), so a side panel and its narrow-window sheet read alike.
 
 ## Settings dialog
 
@@ -221,7 +225,7 @@ A dialog `sizes.settingsDialog` wide and `sizes.settingsDialogHeight` tall, capp
 
 ## Side panel
 
-Part of the layout, not a layer: it opens into a slot after the whole page, so the content narrows instead of being covered. The slot is sticky below the header row, the window's height less it, so the panel stays in view while the page scrolls. It floats `space.row` (6px) in from the content and the window's edges, lifted off the page as the composer is: `raised` fill, `radii.lg`, its edge a ring in its `shadows.panel` shadow. What it holds is the app's: details, a form, anything. It's non-modal, so the page beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step.
+Part of the layout, not a layer: it opens into a slot after the whole page, so the content narrows instead of being covered. The slot is sticky below the header row, the window's height less it, so the panel stays in view while the page scrolls. It floats `space.row` (6px) in from the content and the window's edges, lifted off the page as the composer is: `raised` fill, `radii.lg`, its edge a ring in its `shadows.panel` shadow. What it holds is the app's: details, a form, anything. It's non-modal, so the page beside it stays usable and picking another row swaps what it shows. It slides `space.sm` in and fades on `layout`, and closes at once, so the content widens in one step. Opened from the keyboard, it appears at once.
 
 Its header is a strip `sizes.header` less the panel's `space.row` inset above and below (44px), padded `space.row`, so its controls centre on the header row's line and its title's text sits on the body's edge. It holds a title, any actions, then Close, and never info or a description: that goes in the body. The header and footer are pinned; the body scrolls on its own. The footer is the sidebar's, a column with a `space.xs` gap, on the body's `space.md` inset.
 
@@ -249,7 +253,7 @@ Breathes, `fill` dimming to `opacities.pulse` and back over `durations.pulse` on
 
 ## Slider
 
-The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which Base UI sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
+The thumb is 12px on a 4px track; at 16px it outweighed the bar. It gives (`presses.icon`) for as long as it's held, on `[data-dragging]`, which ui-sdk sets on press, so a tap on the track gives too. Arrow keys don't set it, so they stay still.
 
 ## Suggestions
 
@@ -273,7 +277,7 @@ An input's surface at `radii.md`, two control heights tall, growing with its con
 
 ## Toast
 
-Enters and leaves along one path: from and back to `translateY(100%)` with a fade, in on `move` + `out`, out on `popoverExit`. A swipe leaves the way it was thrown. Its height animates as the stack expands, the exception to animating a height: Base UI's stack measures each toast and sets the height, so the animation never feeds its own measurement. Under reduced motion it only fades.
+Enters and leaves the same way. Only the front toast travels, from and back to `translateY(100%)` with a fade. One behind it enters or leaves in place, fading. The stack moves on `move` + `out`, and a toast leaves on `popoverExit`. Its height eases on `layout` to new content, the exception to animating a height: ui-sdk measures the content laid out freely, so the animation never feeds its own measurement. A swipe leaves the way it was thrown, toward the end edge in RTL too. Under reduced motion it only fades.
 
 ## Toggle
 
@@ -287,7 +291,7 @@ The one shape for an agent's run: reasoning, tool calls, sources and files are a
 | --- | --- |
 | Rail | 1px `border` at the marker column's center, drawn as two halves per step so it shows on any surface. It stops at each marker's `controlXs` box, whose room around the icon is the gap. It starts on the first step, runs on beside a step's open content and ends on the last step |
 | Marker | The step's `iconSm` icon centered in a `controlXs` box, in the line's color, so it brightens with a trigger's line on hover. `dangerText` when failed; dimmed with the line while pending. While running, only the title's shimmer shows it. In a step's trigger, the icon cross-fades to a chevron while pointed at or focused |
-| Line | `controlMd` tall, no fill, `textSecondary` at `sm`; `textPrimary` on hover inside a link or trigger. A failed step keeps its color and says "Failed ..."; `pending` dims to `opacities.disabled` |
+| Line | `controlMd` tall, no fill, `textSecondary` at `sm`; `textPrimary` on hover inside a link or trigger, and while that trigger's popup is open. A failed step keeps its color and says "Failed ..."; `pending` dims to `opacities.disabled` |
 | Title | The verb, regular, in the line's color; cut short; shimmers while running. The run's trigger reads as one line: title and description both `textSecondary` |
 | Subject | `textMuted`, regular, so the verb leads; cut short |
 | Description | `textMuted`, tabular; never truncates. `dangerText` when the step failed, for the reason ("Exit code 1 · 3 errors"), which goes in the step's content under the title |

@@ -19,6 +19,14 @@ import { Button } from "@/components/primitives/button";
 <Button variant="outline">Button</Button>
 ```
 
+## Composition
+
+```
+Button
+
+CloseButton
+```
+
 ## Variant
 
 Use the `variant` prop to set how much the button stands out. Use one `primary` per view.
@@ -99,20 +107,33 @@ Buttons are pills by default. Use `corners="rounded"` for the theme's control co
 
 ## As Link
 
-Use `buttonStyles` to make a link look like a button.
-
-**Don't use `<Button render={<a />} nativeButton={false} />` for links.** Base UI's `Button` always sets `role="button"`, so screen readers announce it as a button, not a link.
+Pass an `<a>` to `render` for a link that looks like a button. It keeps its link role. For an element that can't be a Button, like a Toggle, use `buttonStyles`.
 
 <!-- ::demo name="button-link" -->
 
 ```tsx
-import * as stylex from "@stylexjs/stylex";
-
-import { buttonStyles } from "@/components/primitives/button";
-
-<a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
+<Button render={<a href="/settings" />} variant="outline">
   Settings
-</a>;
+</Button>
+```
+
+## Close Button
+
+`CloseButton` is the X that closes Dialog, Sheet and Side Panel: a `ghost` `icon-sm` Button named "Close". Pass `children` to swap the icon.
+
+<!-- ::demo name="button-close" -->
+
+```tsx
+<CloseButton />
+<CloseButton aria-label="Minimize">
+  <HugeiconsIcon icon={MinusSignIcon} size={sizes.icon} aria-hidden />
+</CloseButton>
+```
+
+Render it through a Close part, so it closes that surface.
+
+```tsx
+<DialogClose render={<CloseButton />} />
 ```
 
 ## Disabled
@@ -127,17 +148,20 @@ Use `disabled` when the action isn't available. It fades the button and shows a 
 
 ## Busy
 
-Add `aria-busy` while something runs. It shows a busy cursor, so working reads differently from unavailable. What goes inside is up to you.
+Return a Promise from `onClick`, and the button stays pending until it settles. It sets `aria-busy` and `data-pending`, fades less than disabled, shows a busy cursor and ignores presses, so the action can't run twice. It keeps focus, and after a second it announces `pendingAnnouncement` ("Loading" by default). Read `state.pending` in a function child to show a [Spinner](/docs/components/spinner); keep the label, so the button's name doesn't change while it's focused.
 
-- With `disabled`, it's loading: it fades less than disabled and can't be pressed twice.
-- Alone, it stays pressable at full strength, for a button that acts on the running work: press Generate, and the same button becomes Stop generating.
+For a button that acts on the running work, set `aria-busy` yourself. It shows the busy cursor but stays pressable at full strength: press Generate, and the same button becomes Stop generating.
 
 <!-- ::demo name="button-busy" -->
 
 ```tsx
-<Button aria-busy disabled>
-  <Spinner data-icon="inline-start" />
-  Saving
+<Button onClick={save} pendingAnnouncement="Saving">
+  {(state) => (
+    <>
+      {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+      Save
+    </>
+  )}
 </Button>
 <Button aria-busy={generating} onClick={() => setGenerating(!generating)}>
   {generating && <Spinner data-icon="inline-start" />}
@@ -149,7 +173,7 @@ Add `aria-busy` while something runs. It shows a busy cursor, so working reads d
 
 ### Button
 
-Takes every prop of [Base UI's Button](https://base-ui.com/react/components/button), plus:
+Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/react/components/button), plus:
 
 | Prop | Type | Default |
 | --- | --- | --- |
@@ -158,6 +182,15 @@ Takes every prop of [Base UI's Button](https://base-ui.com/react/components/butt
 | `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
 | `corners` | `"rounded" \| "pill"` | `"pill"` |
 | `sx` | `Sx`, applied last |  |
+
+### CloseButton
+
+Takes every prop of Button except `variant` and `size`, plus:
+
+| Prop         | Type                           | Default                  |
+| ------------ | ------------------------------ | ------------------------ |
+| `aria-label` | `string`                       | `"Close"`                |
+| `children`   | `ReactNode`, replaces the icon | Hugeicons `Cancel01Icon` |
 
 ### buttonStyles
 

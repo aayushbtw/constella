@@ -1,6 +1,5 @@
 import { Delete02Icon, UserRemove01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
 
 import {
   AlertDialog,
@@ -16,6 +15,7 @@ import {
 } from "@/components/primitives/alert-dialog";
 import { Button } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
+import { toast } from "@/components/primitives/toast";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
@@ -36,7 +36,9 @@ function AlertDialogDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogAction data-agent-confirm="Deletes your account and its data">
+              Continue
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -68,7 +70,9 @@ function AlertDialogSizeDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Remove</AlertDialogAction>
+            <AlertDialogAction data-agent-confirm="Removes the member from this workspace">
+              Remove
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -100,7 +104,12 @@ function AlertDialogDangerDemo() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction color="danger">Delete</AlertDialogAction>
+            <AlertDialogAction
+              color="danger"
+              data-agent-confirm="Deletes the chat and its files"
+            >
+              Delete forever
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -108,26 +117,17 @@ function AlertDialogDangerDemo() {
   );
 }
 
+async function revoke() {
+  const { promise, resolve } = Promise.withResolvers<null>();
+  setTimeout(resolve, 1500, null);
+  await promise;
+  toast({ title: "Key revoked" });
+}
+
 function AlertDialogAsyncDemo() {
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  function revoke() {
-    setBusy(true);
-    setTimeout(() => {
-      setBusy(false);
-      setOpen(false);
-    }, 1500);
-  }
   return (
     <DemoRow>
-      <AlertDialog
-        onOpenChange={(next) => {
-          if (!busy) {
-            setOpen(next);
-          }
-        }}
-        open={open}
-      >
+      <AlertDialog pendingAnnouncement="Revoking key">
         <AlertDialogTrigger render={<Button variant="outline" />}>
           Revoke API key
         </AlertDialogTrigger>
@@ -139,10 +139,22 @@ function AlertDialogAsyncDemo() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-            <AlertDialogAction aria-busy={busy} onClick={revoke} color="danger">
-              {busy && <Spinner data-icon="inline-start" />}
-              {busy ? "Revoking" : "Revoke"}
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              action={revoke}
+              color="danger"
+              data-agent-confirm="Revokes the API key, so apps using it stop working"
+            >
+              {(state) =>
+                state.pending ? (
+                  <>
+                    <Spinner data-icon="inline-start" />
+                    Revoking
+                  </>
+                ) : (
+                  "Revoke now"
+                )
+              }
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

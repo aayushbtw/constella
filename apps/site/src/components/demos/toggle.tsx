@@ -115,6 +115,7 @@ function ToggleGroupDemo() {
   return (
     <DemoRow>
       <ToggleGroup
+        aria-label="Text formatting"
         defaultValue={["bold"]}
         multiple
         size="icon"
@@ -129,7 +130,12 @@ function ToggleGroupDemo() {
 function ToggleGroupSpacingDemo() {
   return (
     <DemoRow>
-      <ToggleGroup defaultValue={["all"]} spacing={0} variant="outline">
+      <ToggleGroup
+        aria-label="Filter"
+        defaultValue={["all"]}
+        spacing={0}
+        variant="outline"
+      >
         <ToggleGroupItem value="all">All</ToggleGroupItem>
         <ToggleGroupItem value="unread">Unread</ToggleGroupItem>
         <ToggleGroupItem value="archived">Archived</ToggleGroupItem>
@@ -142,7 +148,13 @@ function ToggleGroupSizeDemo() {
   return (
     <DemoRow sx={styles.stack}>
       {iconSizes.map((size) => (
-        <ToggleGroup defaultValue={["bold"]} key={size} multiple size={size}>
+        <ToggleGroup
+          aria-label="Text formatting"
+          defaultValue={["bold"]}
+          key={size}
+          multiple
+          size={size}
+        >
           <Formatting size={size} />
         </ToggleGroup>
       ))}
@@ -153,7 +165,11 @@ function ToggleGroupSizeDemo() {
 function ToggleGroupMultipleDemo() {
   return (
     <DemoRow sx={styles.stack}>
-      <ToggleGroup defaultValue={["left"]} variant="outline">
+      <ToggleGroup
+        aria-label="Alignment"
+        defaultValue={["left"]}
+        variant="outline"
+      >
         <ToggleGroupItem aria-label="Align left" value="left">
           <Glyph icon={TextAlignLeftIcon} />
         </ToggleGroupItem>
@@ -164,7 +180,12 @@ function ToggleGroupMultipleDemo() {
           <Glyph icon={TextAlignRightIcon} />
         </ToggleGroupItem>
       </ToggleGroup>
-      <ToggleGroup defaultValue={["bold", "italic"]} multiple variant="outline">
+      <ToggleGroup
+        aria-label="Text formatting"
+        defaultValue={["bold", "italic"]}
+        multiple
+        variant="outline"
+      >
         <Formatting />
       </ToggleGroup>
     </DemoRow>
@@ -174,7 +195,12 @@ function ToggleGroupMultipleDemo() {
 function ToggleGroupWithIconDemo() {
   return (
     <DemoRow>
-      <ToggleGroup defaultValue={["list"]} spacing={0} variant="outline">
+      <ToggleGroup
+        aria-label="View"
+        defaultValue={["list"]}
+        spacing={0}
+        variant="outline"
+      >
         <ToggleGroupItem value="list">
           <Glyph data-icon="inline-start" icon={LeftToRightListBulletIcon} />
           List
@@ -192,6 +218,7 @@ function ToggleGroupVerticalDemo() {
   return (
     <DemoRow>
       <ToggleGroup
+        aria-label="Filter"
         defaultValue={["all"]}
         orientation="vertical"
         spacing={0}
@@ -208,7 +235,12 @@ function ToggleGroupVerticalDemo() {
 function ToggleGroupDisabledDemo() {
   return (
     <DemoRow>
-      <ToggleGroup defaultValue={["all"]} spacing={0} variant="outline">
+      <ToggleGroup
+        aria-label="Filter"
+        defaultValue={["all"]}
+        spacing={0}
+        variant="outline"
+      >
         <ToggleGroupItem value="all">All</ToggleGroupItem>
         <ToggleGroupItem value="unread">Unread</ToggleGroupItem>
         <ToggleGroupItem disabled value="archived">

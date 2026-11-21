@@ -1,32 +1,54 @@
 "use client";
 
-import { Select as SelectPrimitive } from "@base-ui/react/select";
 import {
-  ArrowDown01Icon,
-  ArrowUp01Icon,
+  Search01Icon,
   Tick02Icon,
   UnfoldMoreIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { createContext, use, useContext } from "react";
+import {
+  SelectContent as SelectContentPrimitive,
+  SelectEmpty as SelectEmptyPrimitive,
+  SelectGroupLabel as SelectGroupLabelPrimitive,
+  SelectGroup as SelectGroupPrimitive,
+  SelectInput as SelectInputPrimitive,
+  SelectItemIndicator as SelectItemIndicatorPrimitive,
+  SelectItem as SelectItemPrimitive,
+  SelectItemText as SelectItemTextPrimitive,
+  SelectLabel as SelectLabelPrimitive,
+  SelectList as SelectListPrimitive,
+  Select as SelectPrimitive,
+  SelectSeparator as SelectSeparatorPrimitive,
+  SelectTrigger as SelectTriggerPrimitive,
+  SelectValue as SelectValuePrimitive,
+} from "@ui-sdk/react/select";
+import type { SelectProps } from "@ui-sdk/react/select";
+import { createContext, use } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import {
+  InputGroup,
+  InputGroupAddon,
+  inputGroupInputStyles,
+} from "@/components/primitives/input-group";
+import type { InputGroupSize } from "@/components/primitives/input-group";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
   joinStyles,
+  popupReset,
+  popupSurface,
   stateStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  easings,
   fontWeights,
-  layers,
   media,
-  motion,
   offsets,
   opacities,
   radii,
@@ -44,27 +66,21 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SelectTriggerProps = Styled<SelectPrimitive.Trigger.Props> & {
+type SelectTriggerProps = Omit<
+  Styled<ComponentProps<typeof SelectTriggerPrimitive>>,
+  "children"
+> & {
+  children?: ReactNode;
   size?: SelectSize;
 };
 
-type SelectContentProps = Styled<SelectPrimitive.Popup.Props> &
-  Pick<
-    SelectPrimitive.Positioner.Props,
-    "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset"
-  > & { size?: SelectSize };
+type SelectContentProps = Styled<
+  ComponentProps<typeof SelectContentPrimitive>
+> & { size?: SelectSize };
 
 const invalid = ":is([aria-invalid='true'], [data-invalid])";
+const searchable = ":has(> [data-slot='select-list'])";
 const disabled = ":is(:disabled, [data-disabled])";
-const offstage = ":is([data-starting-style], [data-ending-style])";
-// Over the trigger, the popup opens in place, so it doesn't travel.
-const aligned = ":is([data-side='none'])";
-const closing =
-  ":is([data-ending-style]):not([data-side='none'], [data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-
-// Base UI grows an aligned popup as it scrolls, up to the popup's `max-height`.
-const maxHeight = `min(var(--available-height), ${sizes.menuHeight})`;
 
 const styles = stylex.create({
   // An input's surface, so a select and an input in one form read as one family.
@@ -87,11 +103,11 @@ const styles = stylex.create({
     borderInlineStyle: "solid",
     boxShadow: {
       default: shadows.default,
-      [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
+      [`:is([data-open]):not(${invalid})`]: shadows.defaultHover,
       // Repeated inside the media block, which StyleX ranks above the bare conditions.
       [media.hover]: {
         default: shadows.default,
-        [`:is([data-popup-open]):not(${invalid})`]: shadows.defaultHover,
+        [`:is([data-open]):not(${invalid})`]: shadows.defaultHover,
         [`:hover:not(:disabled, :active):not(${invalid})`]:
           shadows.defaultHover,
         [`:active:not(:disabled):not(${invalid})`]: shadows.defaultPressed,
@@ -141,47 +157,55 @@ const styles = stylex.create({
     display: "flex",
     flexShrink: 0,
   },
-  positioner: {
-    zIndex: layers.popover,
-  },
-  popup: {
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
+  // ui-sdk's select leaves the browser's `[popover]` border and margin.
+  content: {
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     color: colors.textPrimary,
-    maxHeight,
+    display: { default: null, [searchable]: "flex" },
+    flexDirection: "column",
+    marginBlock: 0,
+    marginInline: 0,
+    maxHeight: `min(var(--available-height), ${sizes.menuHeight})`,
     maxWidth: "var(--available-width)",
     minWidth: sizes.menu,
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    // Holds the scroll arrows, which Base UI positions absolutely.
-    position: "relative",
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [aligned]: "0s",
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
-    width: "var(--anchor-width)",
-  },
-  list: {
-    maxHeight,
     overflowX: "hidden",
-    overflowY: "auto",
-    paddingBlock: space.xxs,
+    overflowY: { default: "auto", [searchable]: "hidden" },
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
-    position: "relative",
     scrollPaddingBlock: sizes.controlXs,
+    width: "var(--anchor-width)",
+  },
+  input: {
+    backgroundColor: colors.fill,
+    borderStartStartRadius: radii.md,
+    borderStartEndRadius: radii.md,
+    borderEndStartRadius: radii.md,
+    borderEndEndRadius: radii.md,
+    boxShadow: "none",
+    flexShrink: 0,
+  },
+  searchIcon: {
+    color: colors.textMuted,
+    display: "flex",
+  },
+  list: {
+    minHeight: 0,
+    overflowX: "hidden",
+    overflowY: "auto",
+    overscrollBehavior: "contain",
+    paddingBlockStart: { default: space.xxs, ":empty": 0 },
+    scrollPaddingBlock: sizes.controlXs,
+  },
+  empty: {
+    color: colors.textSecondary,
+    paddingBlockEnd: { default: space.lg, ":empty": 0 },
+    paddingBlockStart: { default: space.lg, ":empty": 0 },
+    textAlign: "center",
   },
   item: {
     alignItems: "center",
@@ -222,6 +246,14 @@ const styles = stylex.create({
     minWidth: 0,
     overflowWrap: "anywhere",
   },
+  matchedText: {
+    color: { default: null, ":is([data-matched])": colors.textSecondary },
+  },
+  match: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
+  },
   indicator: {
     alignItems: "center",
     display: "flex",
@@ -231,15 +263,16 @@ const styles = stylex.create({
   },
   indicatorSm: { insetInlineEnd: space.row },
   indicatorLg: { insetInlineEnd: space.md },
-  label: {
+  groupLabel: {
     color: colors.textMuted,
     fontWeight: fontWeights.medium,
-    paddingBlock: space.xxs,
+    paddingBlockEnd: space.xxs,
+    paddingBlockStart: space.xxs,
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
   },
-  labelSm: { paddingInlineEnd: space.row, paddingInlineStart: space.row },
-  labelLg: { paddingInlineEnd: space.md, paddingInlineStart: space.md },
+  groupLabelSm: { paddingInlineEnd: space.row, paddingInlineStart: space.row },
+  groupLabelLg: { paddingInlineEnd: space.md, paddingInlineStart: space.md },
   // In line with the rows' text.
   separator: {
     backgroundColor: colors.borderSubtle,
@@ -249,23 +282,6 @@ const styles = stylex.create({
   },
   separatorSm: { marginInline: space.row },
   separatorLg: { marginInline: space.md },
-  scrollArrow: {
-    alignItems: "center",
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    insetBlockEnd: { default: null, ":is([data-direction='down'])": 0 },
-    insetBlockStart: { default: null, ":is([data-direction='up'])": 0 },
-    color: colors.textMuted,
-    cursor: "default",
-    display: "flex",
-    height: sizes.controlXs,
-    justifyContent: "center",
-    width: "100%",
-    zIndex: 1,
-  },
 });
 
 const sizeStyles = {
@@ -294,65 +310,83 @@ function Glyph({
 // The popup's rows by `SelectContent`'s size; the base styles are `default`'s.
 const contentSizeStyles = {
   default: {
+    groupLabel: null,
     indicator: null,
     item: null,
-    label: null,
     separator: null,
     text: typeStyles.textMd,
   },
   lg: {
+    groupLabel: styles.groupLabelLg,
     indicator: styles.indicatorLg,
     item: styles.itemLg,
-    label: styles.labelLg,
     separator: styles.separatorLg,
     text: typeStyles.textBase,
   },
   sm: {
+    groupLabel: styles.groupLabelSm,
     indicator: styles.indicatorSm,
     item: styles.itemSm,
-    label: styles.labelSm,
     separator: styles.separatorSm,
     text: typeStyles.textSm,
   },
 } satisfies Record<
   SelectSize,
   Record<
-    "indicator" | "item" | "label" | "separator" | "text",
+    "groupLabel" | "indicator" | "item" | "separator" | "text",
     stylex.StyleXStyles | null
   >
 >;
 
-const SkipMotion = createContext(false);
+const inputSizes = {
+  default: "lg",
+  lg: "lg",
+  sm: "default",
+} satisfies Record<SelectSize, InputGroupSize>;
+
+const [SelectSkipMotion, useSelectSkipMotion] = createSkipMotion();
 const Size = createContext<SelectSize>("default");
 
-function Select<Value, Multiple extends boolean | undefined = false>({
-  onOpenChange,
+function Select<T = string, Multiple extends boolean | undefined = false>(
+  props: SelectProps<T, Multiple>
+) {
+  return (
+    <SelectSkipMotion
+      onOpenChange={props.onOpenChange}
+      onOpenChangeComplete={props.onOpenChangeComplete}
+    >
+      {(handlers) => (
+        <SelectPrimitive<T, Multiple>
+          {...props}
+          loop={props.loop ?? false}
+          {...handlers}
+        />
+      )}
+    </SelectSkipMotion>
+  );
+}
+
+function SelectLabel({
+  sx,
   ...props
-}: SelectPrimitive.Root.Props<Value, Multiple>) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
-  return (
-    <SkipMotion value={skip}>
-      <SelectPrimitive.Root onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
-  );
+}: Styled<ComponentProps<typeof SelectLabelPrimitive>>) {
+  return <SelectLabelPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-function SelectGroup({ sx, ...props }: Styled<SelectPrimitive.Group.Props>) {
-  return (
-    <SelectPrimitive.Group
-      data-slot="select-group"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+function SelectGroup({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectGroupPrimitive>>) {
+  return <SelectGroupPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-function SelectValue({ sx, ...props }: Styled<SelectPrimitive.Value.Props>) {
+function SelectValue({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectValuePrimitive>>) {
   return (
-    <SelectPrimitive.Value
-      data-slot="select-value"
-      {...props}
-      {...stylex.props(styles.value, sx)}
+    <SelectValuePrimitive
+      {...withStyles(props, stylex.props(styles.value, sx))}
     />
   );
 }
@@ -364,154 +398,207 @@ function SelectTrigger({
   ...props
 }: SelectTriggerProps) {
   return (
-    <SelectPrimitive.Trigger
+    <SelectTriggerPrimitive
       data-size={size}
-      data-slot="select-trigger"
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.trigger],
-        stateStyles.outline,
-        joinStyles.md,
-        joinStyles.edges,
-        sizeStyles[size],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.trigger],
+          stateStyles.outline,
+          joinStyles.md,
+          joinStyles.edges,
+          sizeStyles[size],
+          sx
+        )
       )}
     >
       {children}
-      <SelectPrimitive.Icon {...stylex.props(styles.icon)}>
+      <span aria-hidden {...stylex.props(styles.icon)}>
         <Glyph icon={UnfoldMoreIcon} size={size} />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
+      </span>
+    </SelectTriggerPrimitive>
   );
 }
 
-function SelectScrollUpButton({
-  sx,
-  ...props
-}: Styled<SelectPrimitive.ScrollUpArrow.Props>) {
-  return (
-    <SelectPrimitive.ScrollUpArrow
-      data-slot="select-scroll-up-button"
-      {...props}
-      {...stylex.props(styles.scrollArrow, sx)}
-    >
-      <Glyph icon={ArrowUp01Icon} />
-    </SelectPrimitive.ScrollUpArrow>
-  );
-}
-
-function SelectScrollDownButton({
-  sx,
-  ...props
-}: Styled<SelectPrimitive.ScrollDownArrow.Props>) {
-  return (
-    <SelectPrimitive.ScrollDownArrow
-      data-slot="select-scroll-down-button"
-      {...props}
-      {...stylex.props(styles.scrollArrow, sx)}
-    >
-      <Glyph icon={ArrowDown01Icon} />
-    </SelectPrimitive.ScrollDownArrow>
-  );
-}
-
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
 function SelectContent({
   align = "start",
   alignItemWithTrigger = false,
   alignOffset = 0,
-  children,
   side = "bottom",
   sideOffset = Number(offsets.popover),
   size = "default",
   sx,
   ...props
 }: SelectContentProps) {
-  const skip = useContext(SkipMotion);
+  const skip = useSelectSkipMotion();
+  const opensInPlace = alignItemWithTrigger;
   return (
     <Size value={size}>
-      <SelectPrimitive.Portal>
-        <SelectPrimitive.Positioner
-          align={align}
-          alignItemWithTrigger={alignItemWithTrigger}
-          alignOffset={alignOffset}
-          side={side}
-          sideOffset={sideOffset}
-          {...stylex.props(styles.positioner)}
-        >
-          <SelectPrimitive.Popup
-            data-size={size}
-            data-skip-motion={skip || undefined}
-            data-slot="select-content"
-            {...props}
-            {...stylex.props(styles.popup, sx)}
-          >
-            <SelectScrollUpButton />
-            <SelectPrimitive.List {...stylex.props(styles.list)}>
-              {children}
-            </SelectPrimitive.List>
-            <SelectScrollDownButton />
-          </SelectPrimitive.Popup>
-        </SelectPrimitive.Positioner>
-      </SelectPrimitive.Portal>
+      <SelectContentPrimitive
+        align={align}
+        alignItemWithTrigger={alignItemWithTrigger}
+        alignOffset={alignOffset}
+        data-size={size}
+        data-skip-motion={skip || opensInPlace || undefined}
+        side={side}
+        sideOffset={sideOffset}
+        {...withStyles(
+          props,
+          stylex.props(
+            popupReset.base,
+            popupSurface.base,
+            styles.content,
+            popupMotion.popover,
+            sx
+          )
+        )}
+      />
     </Size>
   );
 }
 
-function SelectLabel({
+function SelectGroupLabel({
   sx,
   ...props
-}: Styled<SelectPrimitive.GroupLabel.Props>) {
+}: Styled<ComponentProps<typeof SelectGroupLabelPrimitive>>) {
   return (
-    <SelectPrimitive.GroupLabel
-      data-slot="select-label"
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.label],
-        contentSizeStyles[use(Size)].label,
-        sx
+    <SelectGroupLabelPrimitive
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.groupLabel],
+          contentSizeStyles[use(Size)].groupLabel,
+          sx
+        )
       )}
     />
   );
 }
 
-function SelectItem({
+function SelectItem<T = string>({
   children,
   sx,
   ...props
-}: Styled<SelectPrimitive.Item.Props>) {
+}: Omit<Styled<ComponentProps<typeof SelectItemPrimitive<T>>>, "children"> & {
+  children?: ReactNode;
+}) {
   const size = use(Size);
   const sized = contentSizeStyles[size];
   return (
-    <SelectPrimitive.Item
-      data-slot="select-item"
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+    <SelectItemPrimitive<T>
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     >
-      <SelectPrimitive.ItemText {...stylex.props(styles.itemText)}>
-        {children}
-      </SelectPrimitive.ItemText>
-      <SelectPrimitive.ItemIndicator
+      <span {...stylex.props(styles.itemText)}>{children}</span>
+      <SelectItemIndicatorPrimitive
         {...stylex.props(styles.indicator, sized.indicator)}
       >
         <Glyph icon={Tick02Icon} size={size} />
-      </SelectPrimitive.ItemIndicator>
-    </SelectPrimitive.Item>
+      </SelectItemIndicatorPrimitive>
+    </SelectItemPrimitive>
+  );
+}
+
+/** A search field at the top of the popup that filters the items in `SelectList`. Name it with `aria-label`. `sx` goes to the group. */
+function SelectInput({
+  sx,
+  ...props
+}: Omit<
+  Styled<ComponentProps<typeof SelectInputPrimitive>>,
+  "render" | "size"
+>) {
+  const input = inputGroupInputStyles();
+  return (
+    <InputGroup
+      data-slot="select-input-group"
+      size={inputSizes[use(Size)]}
+      sx={[styles.input, sx]}
+    >
+      <span data-slot="input-group-input" {...stylex.props(input.slot)}>
+        <SelectInputPrimitive
+          {...withStyles(props, stylex.props(input.input))}
+        />
+      </span>
+      <InputGroupAddon>
+        <span {...stylex.props(styles.searchIcon)}>
+          <HugeiconsIcon
+            aria-hidden
+            icon={Search01Icon}
+            size={sizes.icon}
+            strokeWidth={Number(strokes.icon)}
+          />
+        </span>
+      </InputGroupAddon>
+    </InputGroup>
+  );
+}
+
+function SelectList({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectListPrimitive>>) {
+  return (
+    <SelectListPrimitive
+      {...withStyles(props, stylex.props(styles.list, sx))}
+    />
+  );
+}
+
+function SelectEmpty({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SelectEmptyPrimitive>>) {
+  return (
+    <SelectEmptyPrimitive
+      {...withStyles(
+        props,
+        stylex.props([contentSizeStyles[use(Size)].text, styles.empty], sx)
+      )}
+    />
+  );
+}
+
+function SelectItemText({
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof SelectItemTextPrimitive>>, "children">) {
+  return (
+    <SelectItemTextPrimitive
+      {...withStyles(props, stylex.props(styles.matchedText, sx))}
+    >
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
+              {segment.text}
+            </mark>
+          ) : (
+            segment.text
+          );
+        });
+      }}
+    </SelectItemTextPrimitive>
   );
 }
 
 function SelectSeparator({
   sx,
   ...props
-}: Styled<SelectPrimitive.Separator.Props>) {
+}: Styled<ComponentProps<typeof SelectSeparatorPrimitive>>) {
   return (
-    <SelectPrimitive.Separator
-      data-slot="select-separator"
-      {...props}
-      {...stylex.props(
-        styles.separator,
-        contentSizeStyles[use(Size)].separator,
-        sx
+    <SelectSeparatorPrimitive
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.separator,
+          contentSizeStyles[use(Size)].separator,
+          sx
+        )
       )}
     />
   );
@@ -520,11 +607,14 @@ function SelectSeparator({
 export {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
+  SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
   SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
+  SelectList,
   SelectSeparator,
   selectSizes,
   SelectTrigger,

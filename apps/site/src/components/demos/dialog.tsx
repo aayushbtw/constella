@@ -123,7 +123,15 @@ function DialogControlledDemo() {
       >
         Delete project
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(next, details) => {
+          setOpen(next);
+          if (!next && details.returnValue === "delete") {
+            toast({ title: "Project deleted" });
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete this project?</DialogTitle>
@@ -135,15 +143,13 @@ function DialogControlledDemo() {
             <DialogClose render={<Button variant="outline" />}>
               Cancel
             </DialogClose>
-            <Button
-              color="danger"
-              onClick={() => {
-                setOpen(false);
-                toast.add({ title: "Project deleted" });
-              }}
+            <DialogClose
+              data-agent-confirm="Deletes the project, its pages and its history"
+              render={<Button color="danger" />}
+              value="delete"
             >
-              Delete
-            </Button>
+              Delete forever
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

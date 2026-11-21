@@ -19,7 +19,7 @@ description: Turns an option on or off.
 ## Usage
 
 ```tsx
-import { Checkbox } from "@/components/primitives/checkbox";
+import { Checkbox, CheckboxGroup } from "@/components/primitives/checkbox";
 import { Label } from "@/components/primitives/label";
 ```
 
@@ -28,6 +28,13 @@ import { Label } from "@/components/primitives/label";
   <Checkbox />
   Accept terms and conditions
 </Label>
+```
+
+## Composition
+
+```
+CheckboxGroup
+└── Checkbox
 ```
 
 ## Size
@@ -66,27 +73,44 @@ Use a horizontal [Field](/docs/components/field) with `FieldContent` and `FieldD
 
 ## Group
 
-Use a `FieldSet` of fields for a checkbox list.
+Use `CheckboxGroup` to keep one list of checked values. Each checkbox supplies its `value`. In a `FieldSet`, point the group at the legend with `aria-labelledby` and at the description with `aria-describedby`.
 
-<!-- ::demo name="field-set" -->
+<!-- ::demo name="checkbox-group" -->
 
 ```tsx
-<FieldSet>
-  <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
-  <FieldSetDescription>
-    Select the items you want to show on the desktop.
-  </FieldSetDescription>
-  <FieldGroup>
-    <Field orientation="horizontal">
-      <Checkbox defaultChecked />
-      <FieldLabel>Hard disks</FieldLabel>
-    </Field>
-    <Field orientation="horizontal">
-      <Checkbox />
-      <FieldLabel>Connected servers</FieldLabel>
-    </Field>
-  </FieldGroup>
-</FieldSet>
+const desktopItems = [
+  { label: "Hard disks", value: "hard-disks" },
+  { label: "External disks", value: "external-disks" },
+  { label: "CDs, DVDs, and iPods", value: "media" },
+  { label: "Connected servers", value: "servers" },
+];
+
+function DesktopItems() {
+  const legend = useId();
+  const description = useId();
+  return (
+    <FieldSet>
+      <FieldLegend id={legend} variant="label">
+        Show these items on the desktop
+      </FieldLegend>
+      <FieldDescription id={description}>
+        Select the items you want to show on the desktop.
+      </FieldDescription>
+      <CheckboxGroup
+        aria-describedby={description}
+        aria-labelledby={legend}
+        defaultValue={["hard-disks", "external-disks"]}
+      >
+        {desktopItems.map((item) => (
+          <Label key={item.value}>
+            <Checkbox value={item.value} />
+            {item.label}
+          </Label>
+        ))}
+      </CheckboxGroup>
+    </FieldSet>
+  );
+}
 ```
 
 ## Choice Card
@@ -111,7 +135,7 @@ Put the checkbox and its content inside a `FieldLabel` to make the whole card to
 
 ## Controlled
 
-Use `checked` and `onCheckedChange` to control the checkbox.
+Use `checked` and `onCheckedChange` to control the checkbox. The value is `true`, `false` or `"indeterminate"`.
 
 <!-- ::demo name="checkbox-controlled" -->
 
@@ -119,53 +143,46 @@ Use `checked` and `onCheckedChange` to control the checkbox.
 const [checked, setChecked] = useState(true);
 
 <Label>
-  <Checkbox checked={checked} onCheckedChange={setChecked} />
-  {checked ? "Notifications on" : "Notifications off"}
+  <Checkbox
+    checked={checked}
+    onCheckedChange={(next) => setChecked(next === true)}
+  />
+  Notifications
 </Label>;
 ```
 
 ## Indeterminate
 
-Use `indeterminate` when some, but not all, of a group is checked.
+Add a checkbox with `parent` to a `CheckboxGroup` to check or uncheck the whole group. It shows a dash while some, but not all, are checked, and a click checks them all. Pass `allValues` so it has the right state on the first render, on the server too.
 
 <!-- ::demo name="checkbox-indeterminate" -->
 
 ```tsx
 const fruits = ["Apples", "Oranges", "Pears"];
 
-function FruitPicker() {
-  const [selected, setSelected] = useState(["Apples"]);
-  const all = selected.length === fruits.length;
-
+function Fruits() {
   return (
-    <>
+    <CheckboxGroup
+      aria-label="Fruits"
+      allValues={fruits}
+      defaultValue={["Apples"]}
+    >
       <Label>
-        <Checkbox
-          checked={all}
-          indeterminate={selected.length > 0 && !all}
-          onCheckedChange={(checked) => setSelected(checked ? fruits : [])}
-        />
+        <Checkbox parent />
         All fruits
       </Label>
       {fruits.map((fruit) => (
         <Label key={fruit}>
-          <Checkbox
-            checked={selected.includes(fruit)}
-            onCheckedChange={(checked) =>
-              setSelected((current) =>
-                checked
-                  ? [...current, fruit]
-                  : current.filter((item) => item !== fruit)
-              )
-            }
-          />
+          <Checkbox value={fruit} />
           {fruit}
         </Label>
       ))}
-    </>
+    </CheckboxGroup>
   );
 }
 ```
+
+A checkbox outside a group takes `checked="indeterminate"` directly.
 
 ## Disabled
 
@@ -195,23 +212,54 @@ Add `aria-invalid` to mark the checkbox as needing attention.
 
 ## Table
 
-Put a checkbox in the first cell of each row, and one in the header to select them all. Mark a picked row with `data-state="selected"`.
+Wrap the table in a `CheckboxGroup`. Put a checkbox with the row's `value` in the first cell of each row, and a `parent` checkbox in the header to select them all. Mark a picked row with `data-state="selected"`. Name the table with a `TableCaption`, visually hidden when the page already shows what it lists.
 
 <!-- ::demo name="checkbox-table" -->
 
 ```tsx
-<TableRow data-state={selected.has(row.id) ? "selected" : undefined}>
-  <TableCell>
-    <Checkbox
-      aria-label={`Select ${row.name}`}
-      checked={selected.has(row.id)}
-      onCheckedChange={(checked) => toggle(row.id, checked)}
-    />
-  </TableCell>
-  <TableCell>{row.name}</TableCell>
-</TableRow>
+function TeamMembers() {
+  const [selected, setSelected] = useState(["1"]);
+
+  return (
+    <CheckboxGroup
+      allValues={people.map((row) => row.id)}
+      aria-label="Team members"
+      onValueChange={setSelected}
+      value={selected}
+    >
+      <Table>
+        <TableCaption sx={visuallyHidden.base}>Team members</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Checkbox aria-label="Select all" parent />
+            </TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {people.map((row) => (
+            <TableRow
+              data-state={selected.includes(row.id) ? "selected" : undefined}
+              key={row.id}
+            >
+              <TableCell>
+                <Checkbox aria-label={`Select ${row.name}`} value={row.id} />
+              </TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.email}</TableCell>
+              <TableCell>{row.role}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </CheckboxGroup>
+  );
+}
 ```
 
 ## API Reference
 
-`Checkbox` renders the box and its tick, which turns into a dash when `indeterminate`. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. For the rest, see [Base UI Checkbox](https://base-ui.com/react/components/checkbox).
+`Checkbox` renders a button with the `checkbox` role, its tick, which turns into a dash while `checked` is `"indeterminate"`, and a hidden native checkbox for forms. It takes `size` (`"sm"`, `"default"` or `"lg"`) and `sx`, applied last. `CheckboxGroup` stacks its children and takes `sx`. For the rest, see [UI SDK Checkbox](https://ui-sdk.dev/docs/react/components/checkbox).

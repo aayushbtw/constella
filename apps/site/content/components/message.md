@@ -42,6 +42,18 @@ Message
 └── MessageActions
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label       | Component | Actions |
+| ----------- | --------- | ------- |
+| Copy        | button    | `press` |
+| Good answer | button    | `press` |
+| Retry       | button    | `press` |
+
+Give each action a name, like the example's Copy, Good answer and Retry. In a [Message Scroller](/docs/components/message-scroller), each `MessageScrollerItem` is a row, so an action's row text is its reply's opening words, and `press` "Copy Constella" copies the reply that starts "Constella". A bare "Copy" matches every reply's button and fails. **A standalone Message has no row**, so press its actions by the `ref` from the snapshot. Two replies that open with the same words need a `ref` too.
+
 ## API Reference
 
 | Part      | Adds                              |

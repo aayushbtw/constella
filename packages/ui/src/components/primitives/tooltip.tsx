@@ -1,18 +1,22 @@
 "use client";
 
-import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 import * as stylex from "@stylexjs/stylex";
+import {
+  TooltipContent as TooltipContentPrimitive,
+  Tooltip as TooltipPrimitive,
+  TooltipTrigger as TooltipTriggerPrimitive,
+} from "@ui-sdk/react/tooltip";
+import type { TooltipProps } from "@ui-sdk/react/tooltip";
+import { createContext, use, useMemo } from "react";
+import type { ComponentProps } from "react";
 
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  easings,
   fontWeights,
-  layers,
-  media,
-  motion,
   offsets,
   radii,
   sizes,
@@ -23,13 +27,8 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-
 const styles = stylex.create({
-  positioner: {
-    zIndex: layers.tooltip,
-  },
-  popup: {
+  content: {
     alignItems: "center",
     backgroundColor: colors.invertedSolid,
     borderStartStartRadius: radii.sm,
@@ -40,122 +39,63 @@ const styles = stylex.create({
     display: "flex",
     fontWeight: fontWeights.medium,
     gap: space.xs,
-    maxWidth: sizes.tooltip,
-    opacity: { default: 1, [offstage]: 0 },
+    maxWidth: `min(${sizes.tooltip}, var(--available-width))`,
     paddingBlock: space.xxs,
     paddingInlineEnd: {
       default: space.xs,
       ":has(> [data-slot^='kbd']:last-child)": space.xxs,
     },
     paddingInlineStart: space.xs,
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    // Once one tooltip is open, the next opens at once, so moving along a toolbar stays quick.
-    transitionDuration: {
-      default: durations.hover,
-      ":is([data-instant])": "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
 });
 
-function TooltipProvider(props: TooltipPrimitive.Provider.Props) {
-  return <TooltipPrimitive.Provider data-slot="tooltip-provider" {...props} />;
-}
+const TooltipContext = createContext<{ skip: boolean }>({ skip: false });
 
-function Tooltip(props: TooltipPrimitive.Root.Props) {
-  return <TooltipPrimitive.Root {...props} />;
+function Tooltip({
+  delay = Number.parseFloat(durations.tooltipDelay),
+  onOpenChange,
+  ...props
+}: TooltipProps) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+  const context = useMemo(() => ({ skip }), [skip]);
+  return (
+    <TooltipContext value={context}>
+      <TooltipPrimitive
+        delay={delay}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
+    </TooltipContext>
+  );
 }
 
 function TooltipTrigger({
-  delay = Number.parseFloat(durations.tooltipDelay),
   sx,
   ...props
-}: Styled<TooltipPrimitive.Trigger.Props>) {
-  return (
-    <TooltipPrimitive.Trigger
-      data-slot="tooltip-trigger"
-      delay={delay}
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+}: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
+  return <TooltipTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-function TooltipPortal({
-  sx,
-  ...props
-}: Styled<TooltipPrimitive.Portal.Props>) {
-  return (
-    <TooltipPrimitive.Portal
-      data-slot="tooltip-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-function TooltipPositioner({
+function TooltipContent({
   sideOffset = Number(offsets.tooltip),
   sx,
   ...props
-}: Styled<TooltipPrimitive.Positioner.Props>) {
+}: Styled<ComponentProps<typeof TooltipContentPrimitive>>) {
+  const { skip } = use(TooltipContext);
   return (
-    <TooltipPrimitive.Positioner
-      data-slot="tooltip-positioner"
+    <TooltipContentPrimitive
+      data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(styles.positioner, sx)}
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, popupReset.base, styles.content],
+          popupMotion.tooltip,
+          sx
+        )
+      )}
     />
   );
 }
 
-function TooltipPopup({ sx, ...props }: Styled<TooltipPrimitive.Popup.Props>) {
-  return (
-    <TooltipPrimitive.Popup
-      data-slot="tooltip-popup"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.popup], sx)}
-    />
-  );
-}
-
-/** Renders the portal, the positioner and the popup. Placement props go to the positioner. */
-function TooltipContent({
-  align,
-  alignOffset,
-  side,
-  sideOffset,
-  ...props
-}: Styled<TooltipPrimitive.Popup.Props> &
-  Pick<
-    TooltipPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
-  >) {
-  return (
-    <TooltipPortal>
-      <TooltipPositioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <TooltipPopup {...props} />
-      </TooltipPositioner>
-    </TooltipPortal>
-  );
-}
-
-export {
-  Tooltip,
-  TooltipContent,
-  TooltipPopup,
-  TooltipPortal,
-  TooltipPositioner,
-  TooltipProvider,
-  TooltipTrigger,
-};
+export { Tooltip, TooltipContent, TooltipTrigger };

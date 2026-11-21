@@ -233,7 +233,9 @@ const money = new Intl.NumberFormat("en-US", {
 
 const columns = column.columns([
   column.display({
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
@@ -338,13 +340,19 @@ function RowActions({ payment }: { payment: Payment }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button aria-label="Actions" size="icon-sm" variant="ghost" />}
+        render={
+          <Button
+            aria-label={`Actions for ${payment.email}`}
+            size="icon-sm"
+            variant="ghost"
+          />
+        }
       >
         <Glyph icon={MoreHorizontalIcon} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => {
+          onSelect={() => {
             void navigator.clipboard.writeText(payment.id);
           }}
         >
@@ -356,7 +364,10 @@ function RowActions({ payment }: { payment: Payment }) {
           View customer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem
+          destructive
+          data-agent-confirm={`Deletes the payment from ${payment.email}`}
+        >
           <Glyph icon={Delete02Icon} />
           Delete
         </DropdownMenuItem>
@@ -367,7 +378,13 @@ function RowActions({ payment }: { payment: Payment }) {
 
 const fullColumns = full.columns([
   full.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableGlobalFilter: false,
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
@@ -437,10 +454,8 @@ function DataTableFilterDemo() {
               <Glyph icon={Search01Icon} />
             </InputGroupAddon>
             <InputGroupInput
-              aria-label="Search payments"
-              onChange={(event) => {
-                setSearch(event.target.value);
-              }}
+              aria-label="Filter payments"
+              onValueChange={setSearch}
               placeholder="Search emails"
               value={search}
             />
@@ -448,11 +463,10 @@ function DataTableFilterDemo() {
           <div {...stylex.props(styles.controls)}>
             <ToggleGroup
               aria-label="Status"
+              deselectable={false}
               onValueChange={(next) => {
                 const [picked] = next;
-                if (picked !== undefined) {
-                  setStatus(picked);
-                }
+                setStatus(picked);
               }}
               spacing={0}
               value={[status]}
@@ -557,9 +571,7 @@ function PaymentsQuery() {
           </InputGroupAddon>
           <InputGroupInput
             aria-label="Search payments"
-            onChange={(event) => {
-              setSearch(event.target.value);
-            }}
+            onValueChange={setSearch}
             placeholder="Search emails"
             value={search}
           />
@@ -717,6 +729,7 @@ function PaymentLink({ payment }: { payment: Payment }) {
   const open = use(OpenPayment);
   return (
     <Button
+      aria-label={`Open ${payment.email}`}
       onClick={() => {
         open(payment.id);
       }}
@@ -730,7 +743,13 @@ function PaymentLink({ payment }: { payment: Payment }) {
 
 const clickColumns = column.columns([
   column.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",
@@ -754,7 +773,6 @@ const clickColumns = column.columns([
 ]);
 
 function DataTableRowClickDemo() {
-  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
   const main = useRef<HTMLDivElement>(null);
   const [openId, setOpenId] = useState<string | undefined>();
   const table = useTable({
@@ -787,7 +805,6 @@ function DataTableRowClickDemo() {
             </OpenPayment>
           </div>
         </ScrollArea>
-        <SidePanelSlot ref={setSlot} />
         <SidePanel
           onOpenChange={(open) => {
             if (!open) {
@@ -796,23 +813,25 @@ function DataTableRowClickDemo() {
           }}
           open={payment !== undefined}
         >
-          <SidePanelContent container={slot} sx={styles.panel}>
-            <SidePanelHeader>
-              <SidePanelTitle>{payment?.email}</SidePanelTitle>
-            </SidePanelHeader>
-            <SidePanelBody>
-              <dl {...stylex.props(styles.facts)}>
-                <dt {...stylex.props(styles.term)}>Amount</dt>
-                <dd {...stylex.props(styles.value)}>
-                  {payment && money.format(payment.amount)}
-                </dd>
-                <dt {...stylex.props(styles.term)}>Status</dt>
-                <dd {...stylex.props(styles.value)}>{payment?.status}</dd>
-                <dt {...stylex.props(styles.term)}>ID</dt>
-                <dd {...stylex.props(styles.value)}>{payment?.id}</dd>
-              </dl>
-            </SidePanelBody>
-          </SidePanelContent>
+          <SidePanelSlot>
+            <SidePanelContent sx={styles.panel}>
+              <SidePanelHeader>
+                <SidePanelTitle>{payment?.email}</SidePanelTitle>
+              </SidePanelHeader>
+              <SidePanelBody>
+                <dl {...stylex.props(styles.facts)}>
+                  <dt {...stylex.props(styles.term)}>Amount</dt>
+                  <dd {...stylex.props(styles.value)}>
+                    {payment && money.format(payment.amount)}
+                  </dd>
+                  <dt {...stylex.props(styles.term)}>Status</dt>
+                  <dd {...stylex.props(styles.value)}>{payment?.status}</dd>
+                  <dt {...stylex.props(styles.term)}>ID</dt>
+                  <dd {...stylex.props(styles.value)}>{payment?.id}</dd>
+                </dl>
+              </SidePanelBody>
+            </SidePanelContent>
+          </SidePanelSlot>
         </SidePanel>
       </div>
     </DemoRow>
@@ -822,6 +841,7 @@ function DataTableRowClickDemo() {
 function DataTableActionBarDemo() {
   const [rows, setRows] = useState(payments);
   const table = useTable({ columns, data: rows, features, getRowId });
+  const selected = table.getSelectedRowIds().length;
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame, styles.contained)}>
@@ -867,6 +887,7 @@ function DataTableActionBarDemo() {
           <Button
             color="danger"
             corners="rounded"
+            data-agent-confirm={`Deletes ${selected} selected ${selected === 1 ? "payment" : "payments"}`}
             onClick={() => {
               const ids = new Set(table.getSelectedRowIds());
               setRows((current) => current.filter(({ id }) => !ids.has(id)));

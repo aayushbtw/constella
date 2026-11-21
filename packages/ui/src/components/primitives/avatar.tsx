@@ -1,10 +1,13 @@
-"use client";
-
-import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import * as stylex from "@stylexjs/stylex";
+import {
+  AvatarFallback as AvatarFallbackPrimitive,
+  AvatarImage as AvatarImagePrimitive,
+  Avatar as AvatarPrimitive,
+} from "@ui-sdk/react/avatar";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   avatarVars,
   badgeVars,
@@ -30,7 +33,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type AvatarProps = Styled<AvatarPrimitive.Root.Props> & {
+type AvatarProps = Styled<ComponentProps<typeof AvatarPrimitive>> & {
   /** `rounded` for a logo; a group's cut-outs assume a pill. */
   corners?: AvatarCorners;
   size?: AvatarSize;
@@ -51,7 +54,7 @@ const groupOf = (size: AvatarSize) =>
 // Leading a badge, it takes the size the badge sets for it.
 const inBadge = (size: string) => ({
   default: size,
-  ":is([data-slot='badge'] > :first-child)": badgeVars.avatar,
+  ":is([data-badge] > :first-child)": badgeVars.avatar,
 });
 
 const gap = `calc(2 * ${strokes.border})`;
@@ -156,7 +159,7 @@ const styles = stylex.create({
     [avatarVars.corner]: {
       default: radii.sm,
       ":is([data-size='sm'])": radii.xs,
-      ":is([data-slot='badge'] > :first-child)": radii.xs,
+      ":is([data-badge] > :first-child)": radii.xs,
     },
   },
   image: {
@@ -168,7 +171,7 @@ const styles = stylex.create({
     height: "100%",
     maskImage: avatarVars.badgeCut,
     objectFit: "cover",
-    opacity: { default: 1, ":is([data-starting-style])": 0 },
+    // ui-sdk hides the image inline until it loads; clearing that is where the fade starts.
     transitionDuration: durations.crossfade,
     transitionProperty: "opacity",
     transitionTimingFunction: easings.crossfade,
@@ -186,12 +189,12 @@ const styles = stylex.create({
     fontSize: {
       default: fontSizes.textSm,
       ":is([data-size='sm'] *)": fontSizes.captionLg,
-      ":is([data-slot='badge'] > :first-child > *)": fontSizes.captionLg,
+      ":is([data-badge] > :first-child > *)": fontSizes.captionLg,
     },
     lineHeight: {
       default: lineHeights.textSm,
       ":is([data-size='sm'] *)": lineHeights.captionLg,
-      ":is([data-slot='badge'] > :first-child > *)": lineHeights.captionLg,
+      ":is([data-badge] > :first-child > *)": lineHeights.captionLg,
     },
     fontWeight: fontWeights.medium,
     height: "100%",
@@ -290,27 +293,29 @@ function Avatar({
   ...props
 }: AvatarProps) {
   return (
-    <AvatarPrimitive.Root
+    <AvatarPrimitive
       data-corners={corners}
       data-size={size}
-      data-slot="avatar"
-      {...props}
-      {...stylex.props(
-        styles.avatar,
-        sizeStyles[size],
-        corners === "rounded" && styles.rounded,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.avatar,
+          sizeStyles[size],
+          corners === "rounded" && styles.rounded,
+          sx
+        )
       )}
     />
   );
 }
 
-function AvatarImage({ sx, ...props }: Styled<AvatarPrimitive.Image.Props>) {
+function AvatarImage({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof AvatarImagePrimitive>>) {
   return (
-    <AvatarPrimitive.Image
-      data-slot="avatar-image"
-      {...props}
-      {...stylex.props(styles.image, sx)}
+    <AvatarImagePrimitive
+      {...withStyles(props, stylex.props(styles.image, sx))}
     />
   );
 }
@@ -318,12 +323,12 @@ function AvatarImage({ sx, ...props }: Styled<AvatarPrimitive.Image.Props>) {
 function AvatarFallback({
   sx,
   ...props
-}: Styled<AvatarPrimitive.Fallback.Props>) {
+}: Styled<ComponentProps<typeof AvatarFallbackPrimitive>>) {
   return (
-    <AvatarPrimitive.Fallback
-      data-slot="avatar-fallback"
-      {...props}
-      {...stylex.props(styles.fallback, sx)}
+    <AvatarFallbackPrimitive
+      // A span drops its aria-label. As an image, the initials read as the person's name.
+      role={props["aria-label"] === undefined ? undefined : "img"}
+      {...withStyles(props, stylex.props(styles.fallback, sx))}
     />
   );
 }
@@ -349,8 +354,10 @@ function AvatarBadge({ presence, sx, ...props }: AvatarBadgeProps) {
       data-slot="avatar-badge"
       data-presence={presence}
       role={presence && "img"}
-      {...props}
-      {...stylex.props(styles.badge, presence && presenceStyles[presence], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.badge, presence && presenceStyles[presence], sx)
+      )}
     />
   );
 }
@@ -359,8 +366,7 @@ function AvatarGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="avatar-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
@@ -369,8 +375,7 @@ function AvatarGroupCount({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="avatar-group-count"
-      {...props}
-      {...stylex.props(styles.count, sx)}
+      {...withStyles(props, stylex.props(styles.count, sx))}
     />
   );
 }

@@ -1,12 +1,13 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 
 const textSizes = ["sm", "base", "lg"] as const;
@@ -15,7 +16,7 @@ const textTruncates = [1, 2, 3] as const;
 type TextSize = (typeof textSizes)[number];
 type TextTruncate = (typeof textTruncates)[number];
 
-type TextProps = Omit<useRender.ComponentProps<"p">, "className" | "style"> & {
+type TextProps = Omit<PartProps<"p">, "className" | "style"> & {
   color?: TextColor;
   size?: TextSize;
   sx?: Sx;
@@ -83,23 +84,31 @@ function Text({
 }: TextProps) {
   const lines = truncate === true ? 1 : truncate;
 
-  return useRender({
-    defaultTagName: "p",
-    props: mergeProps<"p">(
-      props,
-      stylex.props(
-        styles.base,
-        size && sizeStyles[size],
-        weight && textWeightStyles[weight],
-        color && textColorStyles[color],
-        tabularNums && styles.tabularNums,
-        lines !== false && truncateStyles[lines],
-        sx
+  return renderElement(
+    "p",
+    mergeProps(
+      {
+        "data-color": color,
+        "data-size": size,
+        "data-slot": "text",
+        "data-truncate": lines === false ? undefined : lines,
+        "data-weight": weight,
+      },
+      withStyles(
+        props,
+        stylex.props(
+          styles.base,
+          size && sizeStyles[size],
+          weight && textWeightStyles[weight],
+          color && textColorStyles[color],
+          tabularNums && styles.tabularNums,
+          lines !== false && truncateStyles[lines],
+          sx
+        )
       )
     ),
-    render,
-    state: { color, size, slot: "text", truncate: lines, weight },
-  });
+    render
+  );
 }
 
 export { Text, textSizes, textTruncates };

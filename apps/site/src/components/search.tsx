@@ -1,14 +1,14 @@
 import { ArrowRight02Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useLoaderData, useNavigate } from "@tanstack/react-router";
-import { Fragment, useEffect, useState } from "react";
-import type { MouseEvent } from "react";
+import { Link, useLoaderData, useNavigate } from "@tanstack/react-router";
+import { createDialogController } from "@ui-sdk/react/dialog";
+import { useShortcut, useShortcutHint } from "@ui-sdk/react/shortcuts";
+import { Fragment, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
   Command,
-  CommandCollection,
   CommandDialog,
   CommandEmpty,
   CommandFooter,
@@ -19,22 +19,60 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/primitives/command";
+import { DialogTrigger } from "@/components/primitives/dialog";
 import { Kbd, KbdGroup } from "@/components/primitives/kbd";
-import { colors, sizes, space, strokes } from "@/lib/constella/tokens.stylex";
+import {
+  colors,
+  sizes,
+  space,
+  strokes,
+  media,
+} from "@/lib/constella/tokens.stylex";
 import type { SidebarGroup } from "~/components/docs/sidebar";
 import { blocksGroups, docsGroups } from "~/lib/nav";
-import { layout, media } from "~/lib/tokens.stylex";
+import { layout, media as siteMedia } from "~/lib/tokens.stylex";
 
+// styles.ts's `interactive`; keep in step.
+const popupOpen =
+  ":where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open]";
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+const interactive = <const R, const A>(rest: R, active: A) => ({
+  default: rest,
+  [popupOpen]: active,
+  [media.hover]: {
+    default: rest,
+    [popupOpen]: active,
+    [hoverIdle]: active,
+  },
+  [activeIdle]: active,
+});
+
+// One trigger for both looks: a dialog with two has no name for the agent while closed.
 const styles = stylex.create({
+  trigger: {
+    backgroundColor: {
+      ...interactive("transparent", colors.fillSubtle),
+      [siteMedia.sidebar]: interactive(colors.fillSubtle, colors.fill),
+    },
+    color: {
+      default: colors.textPrimary,
+      [siteMedia.sidebar]: colors.textMuted,
+    },
+    marginInlineEnd: { default: null, [siteMedia.sidebar]: space.xs },
+    paddingInlineEnd: { default: 0, [siteMedia.sidebar]: space.popup },
+    paddingInlineStart: { default: 0, [siteMedia.sidebar]: space.popup },
+    width: { default: sizes.controlMd, [siteMedia.sidebar]: layout.search },
+  },
   icon: {
-    display: { default: "flex", [media.sidebar]: "none" },
+    display: { default: "flex", [siteMedia.sidebar]: "none" },
   },
   field: {
-    color: colors.textMuted,
-    display: { default: "none", [media.sidebar]: "flex" },
+    alignItems: "center",
+    display: { default: "none", [siteMedia.sidebar]: "flex" },
+    flexGrow: 1,
+    gap: space.row,
     justifyContent: "space-between",
-    marginInlineEnd: space.xs,
-    width: layout.search,
   },
   arrow: {
     color: colors.textMuted,
@@ -51,6 +89,7 @@ interface Entry {
   label: string;
   params: { slug: string };
   to: SidebarGroup["to"];
+  value: string;
 }
 
 interface Group {
@@ -67,17 +106,13 @@ const icon = (glyph: typeof Search01Icon) => (
   />
 );
 
-function isTyping(target: EventTarget | null) {
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable ||
-      ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName))
-  );
-}
+const leftToBrowser = (event: Event) =>
+  event instanceof MouseEvent &&
+  (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey);
 
 function Search() {
-  const [open, setOpen] = useState(false);
-  const [instant, setInstant] = useState(false);
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [search] = useState(() => createDialogController());
   const navigate = useNavigate();
   const { blocks, components, docs } = useLoaderData({ from: "__root__" });
   const groups: Group[] = [
@@ -89,99 +124,83 @@ function Search() {
         label: title,
         params: { slug },
         to,
+        value: `${to}:${slug}`,
       })),
       label,
     }))
     .filter(({ items }) => items.length > 0);
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.repeat) {
-        return;
-      }
-      if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        setInstant(true);
-        setOpen((was) => !was);
-      } else if (
-        event.key === "/" &&
-        !(event.metaKey || event.ctrlKey || event.altKey) &&
-        !isTyping(event.target)
-      ) {
-        event.preventDefault();
-        setInstant(true);
-        setOpen(true);
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
-
-  const show = (event: MouseEvent<HTMLButtonElement>) => {
-    // A click from Enter or Space has no click count.
-    setInstant(event.detail === 0);
-    setOpen(true);
-  };
+  useShortcut(
+    "/",
+    (event) => {
+      search.setOpen(true, { event, reason: "shortcut" });
+    },
+    { description: "Search documentation" }
+  );
+  const hint = useShortcutHint("mod+k");
 
   return (
     <>
-      <Button
-        aria-label="Search documentation"
-        onClick={show}
-        size="icon"
-        sx={styles.icon}
-        variant="ghost"
+      <DialogTrigger
+        controller={search}
+        shortcut="mod+k"
+        render={
+          <Button
+            aria-label="Search documentation"
+            size="icon"
+            sx={styles.trigger}
+            variant="ghost"
+          />
+        }
       >
-        {icon(Search01Icon)}
-      </Button>
-      <Button onClick={show} sx={styles.field}>
-        Search documentation...
-        <KbdGroup>
-          <Kbd>⌘</Kbd>
-          <Kbd>K</Kbd>
-        </KbdGroup>
-      </Button>
+        <span {...stylex.props(styles.icon)}>{icon(Search01Icon)}</span>
+        <span {...stylex.props(styles.field)}>
+          Search documentation...
+          <Kbd>{hint.text}</Kbd>
+        </span>
+      </DialogTrigger>
       <CommandDialog
+        controller={search}
         description="Search for a page to go to..."
-        instant={instant}
-        onOpenChange={(next, { reason }) => {
-          setInstant(reason === "escape-key");
-          setOpen(next);
-        }}
-        open={open}
         title="Search documentation"
       >
-        <Command items={groups}>
-          <CommandInput placeholder="Search documentation..." />
+        <Command>
+          <CommandInput
+            aria-label="Search pages"
+            placeholder="Search documentation..."
+          />
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandList>
-            {(group: Group, index: number) => (
+            {groups.map((group, index) => (
               <Fragment key={group.label}>
                 {index > 0 && <CommandSeparator />}
-                <CommandGroup items={group.items}>
+                <CommandGroup>
                   <CommandGroupLabel>{group.label}</CommandGroupLabel>
-                  <CommandCollection>
-                    {(entry: Entry) => (
-                      <CommandItem
-                        key={`${entry.to}:${entry.params.slug}`}
-                        onClick={() => {
-                          setOpen(false);
+                  {group.items.map((entry) => (
+                    <CommandItem
+                      key={entry.value}
+                      onSelect={(event) => {
+                        if (leftToBrowser(event)) {
+                          return;
+                        }
+                        const linkNavigates = event.type === "click";
+                        search.close();
+                        if (!linkNavigates) {
                           void navigate({ params: entry.params, to: entry.to });
-                        }}
-                        value={entry}
-                      >
-                        <span {...stylex.props(styles.arrow)}>
-                          {icon(ArrowRight02Icon)}
-                        </span>
-                        {entry.label}
-                      </CommandItem>
-                    )}
-                  </CommandCollection>
+                        }
+                      }}
+                      render={<Link params={entry.params} to={entry.to} />}
+                      value={entry.value}
+                    >
+                      <span data-rtl-flip {...stylex.props(styles.arrow)}>
+                        {icon(ArrowRight02Icon)}
+                      </span>
+                      {entry.label}
+                    </CommandItem>
+                  ))}
                 </CommandGroup>
               </Fragment>
-            )}
+            ))}
           </CommandList>
           <CommandFooter>
             <span {...stylex.props(styles.hint)}>

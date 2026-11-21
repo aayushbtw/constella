@@ -117,7 +117,7 @@ const vega = stylex.createTheme(theme, { "--accent-9": "var(--indigo-9)" });
 <html {...stylex.props(vega)} lang="en">
 ```
 
-**Apply a theme to `<html>`, not a subtree.** Popups render in a portal at the end of `<body>`, so they only see a theme set on the root.
+**Apply a theme to `<html>`, not a subtree.** Toasts render where `<Toaster />` sits, near the root, so a theme set on a subtree doesn't reach them.
 
 ---
 
@@ -125,4 +125,4 @@ const vega = stylex.createTheme(theme, { "--accent-9": "var(--indigo-9)" });
 
 - **Dark mode** is a `dark` class on `<html>`. next-themes (`attribute="class"`) and shadcn's theme setup already do this, so reuse the app's existing toggle. Components never branch on the theme.
 - **Fonts.** The page is set in `--font-sans` and code in `--font-mono`. The theme names Inter and Geist Mono but doesn't ship them: load them (`@fontsource-variable/inter`, `@fontsource-variable/geist-mono`), or put your own first in `theme.stylex.ts`.
-- **RTL.** Set `dir="rtl"` on `<html>` **and** wrap the app in Base UI's `DirectionProvider`, since Base UI places popups and thumbs by its own direction. Add `data-rtl-flip` to icons that point along the line.
+- **RTL.** Set `dir="rtl"` on `<html>`. ui-sdk reads it, also when it changes after load, so there's no provider. Add `data-rtl-flip` to icons that point along the line.

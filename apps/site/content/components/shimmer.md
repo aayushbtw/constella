@@ -43,6 +43,10 @@ Put it in a [Marker](/docs/components/marker) for a status line in a conversatio
 </Marker>
 ```
 
+## Agent
+
+Its examples add no entry to `agent.snapshot()`.
+
 ## API Reference
 
 ### Shimmer
@@ -51,5 +55,5 @@ Takes every prop of `<span>`, plus:
 
 | Prop | Type |
 | --- | --- |
-| `render` | `ReactElement \| function`; see [Base UI useRender](https://base-ui.com/react/utils/use-render) |
+| `render` | `ReactElement \| function`; see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |
 | `sx` | `Sx`, applied last |

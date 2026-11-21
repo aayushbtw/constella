@@ -36,20 +36,19 @@ import {
 ## Composition
 
 ```
-TooltipProvider
-└── Tooltip
-    ├── TooltipTrigger
-    └── TooltipContent
+Tooltip
+├── TooltipTrigger
+└── TooltipContent
 ```
 
 ## Side
 
-Use the `side` prop on `TooltipContent` to place the tooltip. Wrap neighbors in a `TooltipProvider`, so once one is open the next opens at once.
+Use the `side` prop on `TooltipContent` to place the tooltip. Neighbors group on their own: once one is open, the next opens at once.
 
 <!-- ::demo name="tooltip-side" -->
 
 ```tsx
-<TooltipProvider>
+<>
   {["left", "top", "bottom", "right"].map((side) => (
     <Tooltip key={side}>
       <TooltipTrigger render={<Button variant="outline" />}>
@@ -58,21 +57,21 @@ Use the `side` prop on `TooltipContent` to place the tooltip. Wrap neighbors in 
       <TooltipContent side={side}>Add to library</TooltipContent>
     </Tooltip>
   ))}
-</TooltipProvider>
+</>
 ```
 
 ## Disabled Button
 
-A disabled button takes no pointer events, so put the trigger on a wrapper around it.
+A natively disabled button can't take focus, so its tooltip never shows. Add `focusableWhenDisabled`: the button stays in the Tab order, reads as dimmed to screen readers and ignores presses, and its tooltip can say why.
 
 <!-- ::demo name="tooltip-disabled" -->
 
 ```tsx
 <Tooltip>
-  <TooltipTrigger render={<span />}>
-    <Button disabled variant="outline">
-      Disabled
-    </Button>
+  <TooltipTrigger
+    render={<Button disabled focusableWhenDisabled variant="outline" />}
+  >
+    Disabled
   </TooltipTrigger>
   <TooltipContent>This feature is currently unavailable</TooltipContent>
 </Tooltip>
@@ -100,4 +99,4 @@ Put a [Kbd](/docs/components/kbd) last in the content; the popup tightens its en
 
 ## API Reference
 
-`TooltipTrigger` opens after `300ms` (Base UI's is `600ms`); pass `delay` to change it. `TooltipContent` renders the portal, positioner and popup; `side`, `align`, `sideOffset` and `alignOffset` go to the positioner. The parts stay exported for when it doesn't fit. Every styled part takes `sx`, applied last. For the rest, see [Base UI Tooltip](https://base-ui.com/react/components/tooltip).
+`Tooltip` opens after `300ms` (ui-sdk's default is `600ms`); pass `delay` to change it. `TooltipContent` renders in place beside the trigger and shows in the top layer; it takes the placement props `side`, `align`, `sideOffset` and `alignOffset`. `TooltipTrigger` and `TooltipContent` take `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [ui-sdk Tooltip](https://ui-sdk.dev/docs/react/components/tooltip).

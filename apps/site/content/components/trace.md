@@ -161,6 +161,13 @@ Set `state` on `TraceStep` while it runs, if it failed or before it starts. A st
 
 Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under the title. It turns `dangerText` on a failed step.
 
+When a step's `state` changes to none or `error`, screen readers hear its line. A failed title already says it failed, so only a finished step adds "done". A step that mounts done or failed says nothing.
+
+| Change to | Heard                     | When              |
+| --------- | ------------------------- | ----------------- |
+| none      | "Ran pnpm build, done"    | At the next pause |
+| `error`   | "Failed to run pnpm lint" | At once           |
+
 <!-- ::demo name="trace-state" -->
 
 ```tsx
@@ -346,12 +353,30 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger the same way
 </SheetTrigger>
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                         | Component   | Actions            |
+| ----------------------------- | ----------- | ------------------ |
+| No name                       | collapsible | `setOpen`, `press` |
+| Worked for 14s                | collapsible | `setOpen`, `press` |
+| Sources for this run          | hover-card  | `setOpen`, `press` |
+| Run again                     | button      | `press`            |
+| Read Swedish orders           | collapsible | `setOpen`, `press` |
+| No name                       | collapsible | `setOpen`, `press` |
+| Delegated to Brand researcher | collapsible | `setOpen`, `press` |
+| No name                       | collapsible | `setOpen`, `press` |
+| No name                       | collapsible | `setOpen`, `press` |
+
+The run and each step are named by their words on screen, like "Worked for 14s" and "Read Swedish orders". **A step with no trigger is listed with no name**, four of them in the preview. Act on one by the `ref` from the snapshot. Sources for this run is the example's [Citation](/docs/components/citation) card, and Run again is its replay button.
+
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
 | `Trace` | One rail of steps; steps that arrive after it mounts grow in |
-| `TraceStep` | `state`: `running`, `error` or `pending`; none is done. `open`, `defaultOpen` (true) and `onOpenChange` for its content. A node on the rail, which stops at its marker |
+| `TraceStep` | `state`: `running`, `error` or `pending`; none is done. `open`, `defaultOpen` (true) and `onOpenChange` for its content. A node on the rail, which stops at its marker. Announces its line when its `state` changes to done or `error` |
 | `TraceLine` | The step's row, `textSecondary`; `textPrimary` on hover inside a link or trigger, dimmed when pending |
 | `TraceStepTrigger` | A `TraceLine` that opens and shuts the step's content; its marker shows a chevron while pointed at or focused |
 | `TraceMarker` | A 24px box holding the step's 14px icon (`sizes.iconSm`) on the rail, in the line's color; `dangerText` when the step failed |
@@ -368,4 +393,4 @@ Wrap the `TraceLine` in a [Sheet](/docs/components/sheet)'s trigger the same way
 | `TraceCollapsibleContent` | The panel; it stays mounted while shut |
 | `traceActionStyles()` | Styles for a link or trigger that wraps a `TraceLine` |
 
-Every part takes `sx`, applied last. The collapsible parts take Base UI [Collapsible](https://base-ui.com/react/components/collapsible) props.
+Every part takes `sx`, applied last. The collapsible parts take [UI SDK Collapsible](https://ui-sdk.dev/docs/react/components/collapsible) props.

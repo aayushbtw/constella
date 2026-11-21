@@ -2,22 +2,28 @@ import {
   Add01Icon,
   ArrowRight02Icon,
   ArrowUpRight01Icon,
+  MinusSignIcon,
   Search01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
-import * as stylex from "@stylexjs/stylex";
 import { Fragment, useEffect, useState } from "react";
 
 import {
   Button,
-  buttonStyles,
   buttonVariants,
+  CloseButton,
 } from "@/components/primitives/button";
 import type { ButtonSize, ButtonVariant } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
+
+async function save() {
+  const { promise, resolve } = Promise.withResolvers<undefined>();
+  setTimeout(resolve, 1500);
+  await promise;
+}
 
 const labels = {
   ghost: "Ghost",
@@ -156,9 +162,13 @@ function ButtonDisabledDemo() {
 function ButtonBusyDemo() {
   return (
     <DemoRow>
-      <Button aria-busy disabled variant="outline">
-        <Spinner data-icon="inline-start" />
-        Saving
+      <Button onClick={save} pendingAnnouncement="Saving" variant="outline">
+        {(state) => (
+          <>
+            {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+            Save
+          </>
+        )}
       </Button>
       <GenerateButton />
     </DemoRow>
@@ -193,21 +203,34 @@ function GenerateButton() {
   );
 }
 
+function ButtonCloseDemo() {
+  return (
+    <DemoRow>
+      <CloseButton />
+      <CloseButton aria-label="Minimize">
+        <Glyph icon={MinusSignIcon} />
+      </CloseButton>
+    </DemoRow>
+  );
+}
+
 function ButtonLinkDemo() {
   return (
     <DemoRow>
-      <a
-        href="/docs/components/toast"
-        {...stylex.props(buttonStyles({ variant: "outline" }))}
+      <Button
+        // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the button renders its children into the link
+        render={<a href="/docs/components/toast" />}
+        variant="outline"
       >
         Read the toast docs
-      </a>
+      </Button>
     </DemoRow>
   );
 }
 
 export {
   ButtonBusyDemo,
+  ButtonCloseDemo,
   ButtonDisabledDemo,
   ButtonDemo,
   ButtonIconDemo,

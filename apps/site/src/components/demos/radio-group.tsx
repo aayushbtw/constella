@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import { useId } from "react";
 
 import {
   Field,
@@ -7,7 +8,6 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
 } from "@/components/primitives/field";
 import { Label } from "@/components/primitives/label";
@@ -72,7 +72,11 @@ const channels = [
 function RadioGroupDemo() {
   return (
     <DemoRow>
-      <RadioGroup defaultValue="comfortable" sx={styles.fit}>
+      <RadioGroup
+        aria-label="Density"
+        defaultValue="comfortable"
+        sx={styles.fit}
+      >
         {densities.map((item) => (
           <Label key={item.value}>
             <RadioGroupItem value={item.value} />
@@ -93,7 +97,7 @@ const sizeLabels = {
 function RadioGroupSizeDemo() {
   return (
     <DemoRow>
-      <RadioGroup defaultValue="default" sx={styles.fit}>
+      <RadioGroup aria-label="Size" defaultValue="default" sx={styles.fit}>
         {radioGroupItemSizes.map((size) => (
           <Label key={size}>
             <RadioGroupItem size={size} value={size} />
@@ -108,7 +112,11 @@ function RadioGroupSizeDemo() {
 function RadioGroupDescriptionDemo() {
   return (
     <DemoRow>
-      <RadioGroup defaultValue="comfortable" sx={styles.fit}>
+      <RadioGroup
+        aria-label="Density"
+        defaultValue="comfortable"
+        sx={styles.fit}
+      >
         {densities.map((item) => (
           <Field key={item.value} orientation="horizontal">
             <RadioGroupItem value={item.value} />
@@ -126,7 +134,7 @@ function RadioGroupDescriptionDemo() {
 function RadioGroupCardDemo() {
   return (
     <DemoRow sx={styles.narrow}>
-      <RadioGroup defaultValue="plus">
+      <RadioGroup aria-label="Plan" defaultValue="plus">
         {plans.map((item) => (
           <Field key={item.value}>
             <FieldLabel>
@@ -144,14 +152,22 @@ function RadioGroupCardDemo() {
 }
 
 function RadioGroupFieldsetDemo() {
+  const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Subscription Plan</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Subscription Plan
+        </FieldLegend>
+        <FieldDescription id={description}>
           Yearly and lifetime plans offer significant savings.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="monthly">
+        </FieldDescription>
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="monthly"
+        >
           {billing.map((item) => (
             <Field key={item.value} orientation="horizontal">
               <RadioGroupItem value={item.value} />
@@ -167,7 +183,7 @@ function RadioGroupFieldsetDemo() {
 function RadioGroupDisabledDemo() {
   return (
     <DemoRow>
-      <RadioGroup defaultValue="option2" sx={styles.fit}>
+      <RadioGroup aria-label="Option" defaultValue="option2" sx={styles.fit}>
         <Field disabled orientation="horizontal">
           <RadioGroupItem value="option1" />
           <FieldLabel sx={styles.regular}>Disabled</FieldLabel>
@@ -186,17 +202,25 @@ function RadioGroupDisabledDemo() {
 }
 
 function RadioGroupInvalidDemo() {
+  const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Notification Preferences</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Notification Preferences
+        </FieldLegend>
+        <FieldDescription id={description}>
           Choose how you want to receive notifications.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="email">
+        </FieldDescription>
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="email"
+        >
           {channels.map((item) => (
             <Field invalid key={item.value} orientation="horizontal">
-              <RadioGroupItem aria-invalid value={item.value} />
+              <RadioGroupItem value={item.value} />
               <FieldLabel sx={styles.regular}>{item.label}</FieldLabel>
             </Field>
           ))}

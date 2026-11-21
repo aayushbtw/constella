@@ -1,24 +1,25 @@
 "use client";
 
-import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps } from "react";
-
 import {
-  DialogBackdrop,
-  DialogCloseButton,
-  DialogDescription,
-  DialogPortal,
-  DialogTitle,
-} from "@/components/primitives/dialog";
+  DrawerBackdrop as DrawerBackdropPrimitive,
+  DrawerClose as DrawerClosePrimitive,
+  DrawerContent as DrawerContentPrimitive,
+  DrawerDescription as DrawerDescriptionPrimitive,
+  Drawer as DrawerPrimitive,
+  DrawerTitle as DrawerTitlePrimitive,
+  DrawerTrigger as DrawerTriggerPrimitive,
+} from "@ui-sdk/react/drawer";
+import type { DrawerProps } from "@ui-sdk/react/drawer";
+import type { ComponentProps, ReactNode } from "react";
+
+import { CloseButton } from "@/components/primitives/button";
+import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
-  layers,
-  media,
+  motion,
   shadows,
   sizes,
   space,
@@ -27,99 +28,50 @@ import {
 
 const sheetSides = ["top", "right", "bottom", "left"] as const;
 
-type SheetSide = (typeof sheetSides)[number];
-
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type SheetContentProps = Styled<SheetPrimitive.Popup.Props> & {
+type SheetContentProps = Omit<
+  Styled<ComponentProps<typeof DrawerContentPrimitive>>,
+  "children"
+> & {
+  children?: ReactNode;
   showCloseButton?: boolean;
-  side?: SheetSide;
 };
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
+const sideways = ":is([data-side='left'], [data-side='right'])";
+const vertical = ":is([data-side='top'], [data-side='bottom'])";
+const onSide = {
+  bottom: ":is([data-side='bottom'])",
+  left: ":is([data-side='left'])",
+  right: ":is([data-side='right'])",
+  top: ":is([data-side='top'])",
+} as const;
 const withClose = ":is(:has(> [data-slot='dialog-close-button']) > *)";
 
 const styles = stylex.create({
-  // Slides the whole way in from its edge and back out the same way.
   popup: {
     backgroundColor: colors.raised,
     boxShadow: shadows.xl,
     color: colors.textPrimary,
     display: "flex",
     flexDirection: "column",
-    opacity: {
-      default: 1,
-      [media.reducedMotion]: { default: 1, [offstage]: 0 },
-    },
-    overflowY: {
-      default: "auto",
-      ":has(> [data-slot='sheet-body'])": "hidden",
-    },
-    position: "fixed",
-    transitionDuration: {
-      default: durations.layout,
-      ":is([data-ending-style])": durations.dialog,
-    },
-    transitionProperty: {
-      default: "transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.layout,
-    zIndex: layers.dialog,
-  },
-  // Sides are physical, like the slide that brings them in.
-  right: {
-    height: "100%",
-    insetBlockEnd: 0,
-    insetBlockStart: 0,
-    right: 0,
-    transform: {
-      default: "none",
-      [offstage]: {
-        default: "translateX(100%)",
-        [media.reducedMotion]: "none",
-      },
-    },
-    width: `min(75%, ${sizes.dialog})`,
-  },
-  left: {
-    height: "100%",
-    insetBlockEnd: 0,
-    insetBlockStart: 0,
-    left: 0,
-    transform: {
-      default: "none",
-      [offstage]: {
-        default: "translateX(-100%)",
-        [media.reducedMotion]: "none",
-      },
-    },
-    width: `min(75%, ${sizes.dialog})`,
-  },
-  top: {
-    insetBlockStart: 0,
-    insetInlineEnd: 0,
-    insetInlineStart: 0,
-    transform: {
-      default: "none",
-      [offstage]: {
-        default: "translateY(-100%)",
-        [media.reducedMotion]: "none",
-      },
-    },
-  },
-  bottom: {
-    insetBlockEnd: 0,
-    insetInlineEnd: 0,
-    insetInlineStart: 0,
-    transform: {
-      default: "none",
-      [offstage]: {
-        default: "translateY(100%)",
-        [media.reducedMotion]: "none",
-      },
+    height: { default: null, [sideways]: "100%" },
+    maxHeight: "100%",
+    position: "relative",
+    width: { default: "100%", [sideways]: `min(75%, ${sizes.dialog})` },
+    // Covers the gap the rubber band opens past the edge, as ui-sdk's own sheet does.
+    "::after": {
+      backgroundColor: "inherit",
+      bottom: { default: null, [sideways]: 0, [onSide.top]: "100%" },
+      content: "''",
+      height: { default: null, [vertical]: "100%" },
+      left: { default: null, [vertical]: 0, [onSide.right]: "100%" },
+      position: "absolute",
+      right: { default: null, [vertical]: 0, [onSide.left]: "100%" },
+      top: { default: null, [sideways]: 0, [onSide.bottom]: "100%" },
+      width: { default: null, [sideways]: "100%" },
     },
   },
   header: {
@@ -160,51 +112,61 @@ const styles = stylex.create({
   },
 });
 
-function Sheet(props: SheetPrimitive.Root.Props) {
-  return <SheetPrimitive.Root {...props} />;
-}
-
-function SheetTrigger({ sx, ...props }: Styled<SheetPrimitive.Trigger.Props>) {
+function Sheet({ physics, side = "right", ...props }: DrawerProps) {
   return (
-    <SheetPrimitive.Trigger
-      data-slot="sheet-trigger"
+    <DrawerPrimitive
+      physics={{ response: Number(motion.sheetResponse), ...physics }}
+      side={side}
       {...props}
-      {...stylex.props(sx)}
     />
   );
 }
 
-function SheetClose({ sx, ...props }: Styled<SheetPrimitive.Close.Props>) {
-  return (
-    <SheetPrimitive.Close
-      data-slot="sheet-close"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
+function SheetTrigger({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DrawerTriggerPrimitive>>) {
+  return <DrawerTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-/** Renders the portal, backdrop and popup at the `side` edge, with a close button unless `showCloseButton={false}`. */
+function SheetClose({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DrawerClosePrimitive>>) {
+  return <DrawerClosePrimitive {...withStyles(props, stylex.props(sx))} />;
+}
+
+/** Renders the backdrop and the sheet, with a close button unless `showCloseButton={false}`. */
 function SheetContent({
   children,
   showCloseButton = true,
-  side = "right",
   sx,
   ...props
 }: SheetContentProps) {
   return (
-    <DialogPortal>
-      <DialogBackdrop />
-      <SheetPrimitive.Popup
-        data-side={side}
-        data-slot="sheet-content"
-        {...props}
-        {...stylex.props([typeStyles.textSm, styles.popup], styles[side], sx)}
+    <>
+      <DrawerBackdropPrimitive
+        {...stylex.props(dialogStyles.backdropSurface)}
+      />
+      <DrawerContentPrimitive
+        {...withStyles(
+          props,
+          stylex.props(popupReset.base, typeStyles.textSm, styles.popup, sx)
+        )}
       >
         {children}
-        {showCloseButton && <DialogCloseButton />}
-      </SheetPrimitive.Popup>
-    </DialogPortal>
+        {showCloseButton && (
+          <DrawerClosePrimitive
+            render={
+              <CloseButton
+                data-slot="dialog-close-button"
+                sx={dialogStyles.closeButton}
+              />
+            }
+          />
+        )}
+      </DrawerContentPrimitive>
+    </>
   );
 }
 
@@ -212,15 +174,18 @@ function SheetHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sheet-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
 
 function SheetBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div data-slot="sheet-body" {...props} {...stylex.props(styles.body, sx)} />
+    <div
+      data-drawer-no-drag=""
+      data-slot="sheet-body"
+      {...withStyles(props, stylex.props(styles.body, sx))}
+    />
   );
 }
 
@@ -228,18 +193,31 @@ function SheetFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sheet-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }
 
-function SheetTitle(props: ComponentProps<typeof DialogTitle>) {
-  return <DialogTitle data-slot="sheet-title" {...props} />;
+function SheetTitle({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DrawerTitlePrimitive>>) {
+  return (
+    <DrawerTitlePrimitive
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
+    />
+  );
 }
 
-function SheetDescription(props: ComponentProps<typeof DialogDescription>) {
-  return <DialogDescription data-slot="sheet-description" {...props} />;
+function SheetDescription({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DrawerDescriptionPrimitive>>) {
+  return (
+    <DrawerDescriptionPrimitive
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
+    />
+  );
 }
 
 export {
@@ -254,4 +232,4 @@ export {
   SheetTitle,
   SheetTrigger,
 };
-export type { SheetContentProps, SheetSide };
+export type { SheetContentProps };

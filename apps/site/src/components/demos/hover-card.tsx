@@ -1,17 +1,19 @@
 import * as stylex from "@stylexjs/stylex";
+import { useState } from "react";
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import { Button, buttonStyles } from "@/components/primitives/button";
+import { buttonStyles } from "@/components/primitives/button";
 import {
-  createHoverCardHandle,
+  createHoverCardController,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
+import type { HoverCardController } from "@/components/primitives/hover-card";
 import { Text } from "@/components/typography/text";
 import {
   colors,
@@ -116,16 +118,20 @@ function HoverCardDemo() {
   );
 }
 
-const mentions = createHoverCardHandle<Profile>();
-
-function Mention({ id }: { id: keyof typeof profiles }) {
+function Mention({
+  controller,
+  id,
+}: {
+  controller: HoverCardController<Profile>;
+  id: keyof typeof profiles;
+}) {
   const profile = profiles[id];
   return (
     <HoverCardTrigger
-      handle={mentions}
+      controller={controller}
       href={profile.href}
       payload={profile}
-      {...stylex.props(styles.mention)}
+      sx={styles.mention}
     >
       {profile.handle}
     </HoverCardTrigger>
@@ -133,18 +139,21 @@ function Mention({ id }: { id: keyof typeof profiles }) {
 }
 
 function HoverCardTriggersDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [mentions] = useState(() => createHoverCardController<Profile>());
   return (
     <DemoRow>
       <Text color="primary" size="lg" sx={styles.sentence}>
-        Follow <Mention id="shadcn" />, <Mention id="emilkowalski" /> and{" "}
-        <Mention id="acme" /> for updates.
+        Follow <Mention controller={mentions} id="shadcn" />,{" "}
+        <Mention controller={mentions} id="emilkowalski" /> and{" "}
+        <Mention controller={mentions} id="acme" /> for updates.
       </Text>
-      <HoverCard handle={mentions}>
-        {({ payload }) => (
-          <HoverCardContent>
-            {payload === undefined ? null : <ProfileCard profile={payload} />}
-          </HoverCardContent>
-        )}
+      <HoverCard controller={mentions}>
+        <HoverCardContent<Profile>>
+          {({ payload }) =>
+            payload === undefined ? null : <ProfileCard profile={payload} />
+          }
+        </HoverCardContent>
       </HoverCard>
     </DemoRow>
   );
@@ -152,12 +161,14 @@ function HoverCardTriggersDemo() {
 
 const sides = ["left", "top", "bottom", "right"] as const;
 
+const outline = stylex.props(buttonStyles({ variant: "outline" }));
+
 function HoverCardSideDemo() {
   return (
     <DemoRow>
       {sides.map((side) => (
         <HoverCard key={side}>
-          <HoverCardTrigger render={<Button variant="outline" />}>
+          <HoverCardTrigger href={profiles.shadcn.href} {...outline}>
             {side}
           </HoverCardTrigger>
           <HoverCardContent side={side}>

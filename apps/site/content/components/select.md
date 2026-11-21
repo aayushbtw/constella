@@ -7,18 +7,17 @@ description: Displays a list of options for the user to pick from, triggered by 
 
 ```tsx
 const items = [
-  { label: "Select a fruit", value: null },
   { label: "Apple", value: "apple" },
   { label: "Banana", value: "banana" },
 ];
 
-<Select items={items}>
-  <SelectTrigger>
+<Select items={items} placeholder="Select a fruit">
+  <SelectTrigger aria-label="Fruit">
     <SelectValue />
   </SelectTrigger>
   <SelectContent>
     <SelectGroup>
-      <SelectLabel>Fruits</SelectLabel>
+      <SelectGroupLabel>Fruits</SelectGroupLabel>
       <SelectItem value="apple">Apple</SelectItem>
       <SelectItem value="banana">Banana</SelectItem>
     </SelectGroup>
@@ -36,17 +35,25 @@ const items = [
 import {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
+  SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
+  SelectLabel,
+  SelectList,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
 ```
 
-Pass `items` to `Select`, so `SelectValue` shows the picked item's label. An item with `value: null` is the placeholder.
+Pass `items` to `Select` as an array of `{ label, value }`. The trigger then shows the picked item's label before the list opens and in the server's HTML, and an agent sees the choices while the select is closed. Use `placeholder` for the text the trigger shows while nothing is picked.
 
 ```tsx
-<Select items={items}>
+<Select items={items} placeholder="Select a theme">
+  <SelectLabel>Theme</SelectLabel>
   <SelectTrigger>
     <SelectValue />
   </SelectTrigger>
@@ -61,18 +68,27 @@ Pass `items` to `Select`, so `SelectValue` shows the picked item's label. An ite
 
 ```
 Select
+├── SelectLabel
 ├── SelectTrigger
 │   └── SelectValue
 └── SelectContent
-    ├── SelectGroup
-    │   ├── SelectLabel
-    │   └── SelectItem
-    └── SelectSeparator
+    ├── SelectInput
+    ├── SelectEmpty
+    └── SelectList
+        ├── SelectGroup
+        │   ├── SelectGroupLabel
+        │   └── SelectItem
+        │       └── SelectItemText
+        └── SelectSeparator
 ```
+
+`SelectInput`, `SelectEmpty`, `SelectList` and `SelectItemText` are only for [Search](#search). Without a search field, put the groups and items straight in `SelectContent`.
+
+`SelectLabel` names the trigger. Inside a `Field`, use `FieldLabel` instead. With no visible label, put `aria-label` on `SelectTrigger`. `SelectGroupLabel` is the heading of a `SelectGroup`.
 
 ## Align Item With Trigger
 
-Use `alignItemWithTrigger` on `SelectContent` to choose where the popup opens. When `false` (default), the popup opens below the trigger, like a dropdown menu. When `true`, the selected item sits over the trigger.
+Use `alignItemWithTrigger` on `SelectContent` to choose where the popup opens. When `false` (default), the popup opens below the trigger, like a dropdown menu. When `true` and an item is selected, the selected item sits over the trigger.
 
 <!-- ::demo name="select-align-item" -->
 
@@ -84,19 +100,19 @@ Use `alignItemWithTrigger` on `SelectContent` to choose where the popup opens. W
 
 ## Groups
 
-Use `SelectGroup`, `SelectLabel` and `SelectSeparator` to organize items.
+Use `SelectGroup`, `SelectGroupLabel` and `SelectSeparator` to organize items.
 
 <!-- ::demo name="select-groups" -->
 
 ```tsx
 <SelectContent>
   <SelectGroup>
-    <SelectLabel>Fruits</SelectLabel>
+    <SelectGroupLabel>Fruits</SelectGroupLabel>
     <SelectItem value="apple">Apple</SelectItem>
   </SelectGroup>
   <SelectSeparator />
   <SelectGroup>
-    <SelectLabel>Vegetables</SelectLabel>
+    <SelectGroupLabel>Vegetables</SelectGroupLabel>
     <SelectItem value="carrot">Carrot</SelectItem>
   </SelectGroup>
 </SelectContent>
@@ -104,7 +120,7 @@ Use `SelectGroup`, `SelectLabel` and `SelectSeparator` to organize items.
 
 ## Scrollable
 
-A long list scrolls, with arrows at the ends while there's more to see.
+A long list scrolls and keeps the highlighted row in view.
 
 <!-- ::demo name="select-scrollable" -->
 
@@ -112,7 +128,7 @@ A long list scrolls, with arrows at the ends while there's more to see.
 <SelectContent>
   {timezones.map((group) => (
     <SelectGroup key={group.label}>
-      <SelectLabel>{group.label}</SelectLabel>
+      <SelectGroupLabel>{group.label}</SelectGroupLabel>
       {group.items.map((item) => (
         <SelectItem key={item.value} value={item.value}>
           {item.label}
@@ -121,6 +137,49 @@ A long list scrolls, with arrows at the ends while there's more to see.
     </SelectGroup>
   ))}
 </SelectContent>
+```
+
+## Search
+
+Add `SelectInput` at the top of `SelectContent` to filter a long list, and put the items in `SelectList` so the field stays put while the list scrolls. `SelectEmpty` shows when nothing matches, and `SelectItemText` marks the matched text.
+
+<!-- ::demo name="select-search" -->
+
+```tsx
+<Select items={timezones} placeholder="Select a timezone">
+  <SelectTrigger aria-label="Timezone">
+    <SelectValue />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectInput aria-label="Search timezones" placeholder="Search timezones" />
+    <SelectEmpty>No timezones found.</SelectEmpty>
+    <SelectList>{({ items }) => <Options entries={items} />}</SelectList>
+  </SelectContent>
+</Select>
+```
+
+**Render the items from `SelectList`'s `items`.** With `items` on `Select`, ui-sdk filters only the items in that list, not ones written out by hand. Pass `items` as groups (`{ type: "group", label, items }`) and map them back to parts:
+
+```tsx
+function Options({ entries }: { entries: ListData<unknown> }) {
+  return entries.map((entry) => {
+    const item =
+      typeof entry === "string" ? { label: entry, value: entry } : entry;
+    if ("type" in item) {
+      return item.type === "group" ? (
+        <SelectGroup key={item.label}>
+          <SelectGroupLabel>{item.label}</SelectGroupLabel>
+          <Options entries={item.items} />
+        </SelectGroup>
+      ) : null;
+    }
+    return (
+      <SelectItem key={item.label} label={item.label} value={item.value}>
+        <SelectItemText />
+      </SelectItem>
+    );
+  });
+}
 ```
 
 ## Size
@@ -151,8 +210,8 @@ Add `disabled` to `Select` to disable it, or to a `SelectItem` to disable one op
 <!-- ::demo name="select-disabled" -->
 
 ```tsx
-<Select disabled items={items}>
-  <SelectTrigger>
+<Select disabled items={items} placeholder="Select a fruit">
+  <SelectTrigger aria-label="Fruit">
     <SelectValue />
   </SelectTrigger>
   <SelectContent>
@@ -172,7 +231,7 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 ```tsx
 <Field invalid>
   <FieldLabel>Fruit</FieldLabel>
-  <Select items={items}>
+  <Select items={items} placeholder="Select a fruit">
     <SelectTrigger>
       <SelectValue />
     </SelectTrigger>
@@ -188,7 +247,10 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 
 | Part | Adds |
 | --- | --- |
+| `Select` | `loop` defaults to `false`, so arrows stop at either end |
 | `SelectTrigger` | `size`: `"sm"`, `"default"` or `"lg"` |
-| `SelectContent` | Renders the portal, positioner and popup; takes `side`, `align`, `alignItemWithTrigger` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
+| `SelectContent` | Renders in place in the browser's top layer, with no portal or positioner; takes `side`, `align`, `alignItemWithTrigger` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
+| `SelectInput` | An input group with a search icon, a step above the rows' size; `sx` goes to the group |
+| `SelectItemText` | Takes no children. Shows the item's label, with the match in medium weight |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Select](https://base-ui.com/react/components/select).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Select](https://ui-sdk.dev/docs/react/components/select).

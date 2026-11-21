@@ -142,14 +142,17 @@ const words = reasoning.split(" ");
 function useClock(end: number) {
   const [run, setRun] = useState(0);
   const [tick, setTick] = useState(0);
+  const ticking = tick < end * 10;
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTick((value) => Math.min(value + 1, end * 10));
-    }, 100);
+    const timer = ticking
+      ? setInterval(() => {
+          setTick((value) => Math.min(value + 1, end * 10));
+        }, 100)
+      : undefined;
     return () => {
       clearInterval(timer);
     };
-  }, [end]);
+  }, [end, ticking]);
   return {
     t: tick / 10,
     replay: () => {
@@ -466,7 +469,7 @@ function TraceDemo() {
       controls={<Replay disabled={!finished} onClick={replay} />}
       sx={[styles.stage, styles.tall]}
     >
-      <Citations>
+      <Citations aria-label="Sources for this run">
         <TraceCollapsible
           key={take}
           onOpenChange={setOpen}
@@ -667,7 +670,7 @@ function TraceSourcesDemo() {
       controls={<Replay disabled={t < search.span[1]} onClick={replay} />}
       sx={styles.stage}
     >
-      <Citations>
+      <Citations aria-label="Sources found">
         <Trace sx={styles.width}>
           <SearchSources found={search.found} span={search.span} t={t} />
         </Trace>

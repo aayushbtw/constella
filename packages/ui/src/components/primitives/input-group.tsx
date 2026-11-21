@@ -1,17 +1,19 @@
 "use client";
 
-import { Input as InputPrimitive } from "@base-ui/react/input";
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { Input as InputPrimitive } from "@ui-sdk/react/input";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
-import { Textarea, textareaStyles } from "@/components/primitives/textarea";
+import { Textarea } from "@/components/primitives/textarea";
 import type { TextareaProps } from "@/components/primitives/textarea";
+import { Toggle } from "@/components/primitives/toggle";
+import type { ToggleProps } from "@/components/primitives/toggle";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -39,10 +41,12 @@ const inputGroupAddonAligns = [
 ] as const;
 const inputGroupButtonSizes = ["xs", "sm", "icon-xs", "icon-sm"] as const;
 const inputGroupSizes = ["sm", "default", "lg"] as const;
+const inputGroupToggleSizes = ["sm", "icon-xs", "icon-sm"] as const;
 
 type InputGroupAddonAlign = (typeof inputGroupAddonAligns)[number];
 type InputGroupButtonSize = (typeof inputGroupButtonSizes)[number];
 type InputGroupSize = (typeof inputGroupSizes)[number];
+type InputGroupToggleSize = (typeof inputGroupToggleSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
@@ -62,15 +66,20 @@ type InputGroupButtonProps = Omit<ButtonProps, "size"> & {
   size?: InputGroupButtonSize;
 };
 
+type InputGroupToggleProps = Omit<ToggleProps, "size" | "variant"> & {
+  size?: InputGroupToggleSize;
+};
+
 // Native `size` counts characters; width comes from layout here.
 type InputGroupInputProps = Omit<
-  InputPrimitive.Props,
+  ComponentProps<typeof InputPrimitive>,
   "className" | "size" | "style"
 > & {
   sx?: Sx;
 };
 
-const control = "[data-slot='input-group-control']";
+const control =
+  ":is([data-slot='input-group-input'] > input, [data-slot='input-group'] > [data-slot='textarea'], [data-slot='input-group-control'])";
 const invalid = `:has(${control}:is([aria-invalid='true'], [data-invalid]))`;
 const disabled = `:has(${control}:is(:disabled, [data-disabled]))`;
 const controlDisabled = ":is(:disabled, [data-disabled])";
@@ -79,14 +88,15 @@ const sm = ":is([data-size='sm'])";
 const rtl = ":is([dir='rtl'] *)";
 // The first button in a run, inside a block addon.
 const leadingBlockButton =
-  ":where([data-slot='input-group-addon'][data-align^='block'] > :not([data-slot='button'] + *))";
+  ":where([data-slot='input-group-addon'][data-align^='block'] > :not(:is([data-slot='button'], [data-input-group-button]) + *))";
 // A text prefix like `https://` or `$`, or a suffix like `%`, reads as part of the value. `:is`, not `:where`, so it outranks the inline padding.
 const afterPrefix =
   ":is([data-slot='input-group']:has(> [data-align='inline-start'] > [data-slot='input-group-text']:only-child) *)";
 const beforeSuffix =
   ":is([data-slot='input-group']:has(> [data-align='inline-end'] > [data-slot='input-group-text']:only-child) *)";
 // A trailing button sits as far from the side as from the edge it rests on.
-const trailingButton = ":has(> [data-slot='button']:last-child)";
+const trailingButton =
+  ":has(> :is([data-slot='button'], [data-input-group-button]):last-child)";
 const stacked = ":has(> [data-align^='block'], > textarea)";
 
 // Conditions on the control, read from the group around it.
@@ -111,7 +121,7 @@ const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 // An xs button or a keycap sits in the box with an even inset on three sides.
 const insetEdge = {
   default: null,
-  ":has(> [data-slot='button'])": bySize({
+  ":has(> :is([data-slot='button'], [data-input-group-button]))": bySize({
     lg: insetMargin(sizes.controlLg, sizes.controlXs),
     default: insetMargin(sizes.controlMd, sizes.controlXs),
     sm: insetMargin(sizes.controlSm, sizes.controlXs),
@@ -368,10 +378,12 @@ const styles = stylex.create({
   textarea: {
     resize: "none",
   },
-  button: {
-    boxShadow: "none",
+  action: {
     // In a header or footer the actions gather at the end, after any text.
     marginInlineStart: { default: null, [leadingBlockButton]: "auto" },
+  },
+  button: {
+    boxShadow: "none",
   },
   // Concentric with the group's corner at the even inset.
   buttonXs: {
@@ -410,8 +422,10 @@ function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
       data-slot="input-group"
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
-      {...props}
-      {...stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)
+      )}
     />
   );
 }
@@ -434,7 +448,7 @@ function InputGroupAddon({
         if (
           !(event.target instanceof Element) ||
           !event.currentTarget.contains(event.target) ||
-          event.target.closest("button")
+          event.target.closest("button, [popover]")
         ) {
           return;
         }
@@ -442,12 +456,14 @@ function InputGroupAddon({
           ?.querySelector<HTMLElement>(control)
           ?.focus();
       }}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.addon],
-        alignStyles[align],
-        separated && separatedStyles[align],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.addon],
+          alignStyles[align],
+          separated && separatedStyles[align],
+          sx
+        )
       )}
     />
   );
@@ -462,57 +478,65 @@ function InputGroupButton({
 }: InputGroupButtonProps) {
   return (
     <Button
+      // A ui-sdk part rendered through it writes its own slot over `button`.
+      data-input-group-button=""
       size={size}
       type={type}
       variant={variant}
       {...props}
-      sx={[styles.button, buttonSizeStyles[size], sx]}
+      sx={[styles.action, styles.button, buttonSizeStyles[size], sx]}
     />
   );
 }
 
-function InputGroupText({
-  render,
+function InputGroupToggle({
+  size = "icon-xs",
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"span">>) {
-  return useRender({
-    defaultTagName: "span",
-    props: mergeProps<"span">(
-      props,
-      stylex.props([typeStyles.textSm, styles.text], sx)
-    ),
-    render,
-    state: { slot: "input-group-text" },
-  });
+}: InputGroupToggleProps) {
+  return (
+    <Toggle
+      data-input-group-button=""
+      size={size}
+      {...props}
+      sx={[styles.action, buttonSizeStyles[size], sx]}
+    />
+  );
 }
 
-/** The control's styles for your own textarea; pair them with `data-slot="input-group-control"`. */
-function inputGroupTextareaStyles() {
-  return [...textareaStyles(), styles.control, styles.textarea];
+function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
+  return renderElement(
+    "span",
+    mergeProps(
+      { "data-slot": "input-group-text" },
+      withStyles(props, stylex.props([typeStyles.textSm, styles.text], sx))
+    ),
+    render
+  );
+}
+
+/** The input's styles for another library's input; put it in a `data-slot="input-group-input"` span with the `slot` styles. */
+function inputGroupInputStyles() {
+  return { input: styles.input, slot: styles.inputSlot };
 }
 
 function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
+  const input = inputGroupInputStyles();
   return (
-    <span data-slot="input-group-input" {...stylex.props(styles.inputSlot)}>
+    <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <InputPrimitive
         type={type}
-        {...props}
-        data-slot="input-group-control"
-        {...stylex.props(styles.input, type === "file" && styles.file, sx)}
+        {...withStyles(
+          props,
+          stylex.props(input.input, type === "file" && styles.file, sx)
+        )}
       />
     </span>
   );
 }
 
 function InputGroupTextarea({ sx, ...props }: TextareaProps) {
-  return (
-    <Textarea
-      data-slot="input-group-control"
-      {...props}
-      sx={[styles.control, styles.textarea, sx]}
-    />
-  );
+  return <Textarea {...props} sx={[styles.control, styles.textarea, sx]} />;
 }
 
 export {
@@ -522,10 +546,12 @@ export {
   InputGroupButton,
   inputGroupButtonSizes,
   InputGroupInput,
+  inputGroupInputStyles,
   inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,
-  inputGroupTextareaStyles,
+  InputGroupToggle,
+  inputGroupToggleSizes,
 };
 export type {
   InputGroupAddonAlign,
@@ -535,4 +561,6 @@ export type {
   InputGroupInputProps,
   InputGroupProps,
   InputGroupSize,
+  InputGroupToggleProps,
+  InputGroupToggleSize,
 };

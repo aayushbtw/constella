@@ -37,9 +37,9 @@ section: AI
   </ApprovalContent>
   <ApprovalFooter>
     <ApprovalCancel>Cancel</ApprovalCancel>
-    <Button size="sm" variant="primary">
+    <ApprovalConfirm data-agent-confirm="Sends “Q3 forecast, revised” to alex@acme.com and sam@acme.com">
       Send mail
-    </Button>
+    </ApprovalConfirm>
   </ApprovalFooter>
 </Approval>
 ```
@@ -55,6 +55,7 @@ import {
   Approval,
   ApprovalAction,
   ApprovalCancel,
+  ApprovalConfirm,
   ApprovalContent,
   ApprovalField,
   ApprovalFieldLabel,
@@ -74,9 +75,9 @@ import {
   </ApprovalHeader>
   <ApprovalFooter>
     <ApprovalCancel>Cancel</ApprovalCancel>
-    <Button size="sm" color="danger">
+    <ApprovalConfirm color="danger" variant="secondary">
       Delete file
-    </Button>
+    </ApprovalConfirm>
   </ApprovalFooter>
 </Approval>
 ```
@@ -95,12 +96,15 @@ Approval
 │           ├── ApprovalFieldLabel
 │           └── ApprovalFieldValue
 └── ApprovalFooter
-    └── ApprovalCancel
+    ├── ApprovalCancel
+    └── ApprovalConfirm
 ```
 
 ## Approval Footer
 
 Name the confirm button for the action ("Send mail"), never "Approve". `ApprovalCancel` sits alone at the footer's start, the action at its end, so a slip lands on the button that does nothing. Another option, such as Edit, goes just before the action.
+
+An agent must never approve its own call, so `ApprovalConfirm` carries `data-agent-confirm` and the agent bridge asks the person first. Pass the attribute a sentence that says what the call does, built from app state. A plain [Button](/docs/components/button) opts out.
 
 ### Busy
 
@@ -129,6 +133,18 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 | Resuming | Both disabled            | None                   |
 | Answered | None                     | A Badge: what happened |
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label     | Component | Actions                   |
+| --------- | --------- | ------------------------- |
+| Cancel    | button    | `press`                   |
+| Send mail | button    | `press` (asks the person) |
+| Ask again | button    | None while disabled       |
+
+`ApprovalConfirm` carries `data-agent-confirm`, so a press on Send mail waits for the person. Without a sentence of your own, it asks with "Allows this tool call". Cancel runs without asking. Ask again is the example's replay button, not part of Approval.
+
 ## API Reference
 
 | Part | Adds |
@@ -139,5 +155,6 @@ Once answered, drop the footer and say what happened in a [Badge](/docs/componen
 | `ApprovalFields` | A `dl` grid: labels in `textSecondary`, values wrap anywhere |
 | `ApprovalFooter` | The card's footer, buttons at its end |
 | `ApprovalCancel` | An outline `sm` [Button](/docs/components/button), pushed to the footer's start |
+| `ApprovalConfirm` | A primary `sm` Button marked `data-agent-confirm`, so an agent can't approve its own tool call; pass the attribute to say what it does |
 
 `ApprovalHeader`, `ApprovalAction` and `ApprovalContent` are the Card's parts. Every part takes `sx`, applied last. `ApprovalField` renders a `div`, its label a `dt` and its value a `dd`.

@@ -1,5 +1,6 @@
 import { createRouter } from "@tanstack/react-router";
 
+import { agentFlag } from "~/lib/agent-flag";
 import { markNavigations } from "~/lib/entrance";
 
 import { routeTree } from "./routeTree.gen";
@@ -14,6 +15,7 @@ export function getRouter() {
 
   if (typeof document !== "undefined") {
     markNavigations(router);
+    void agentFlag?.loadBridge();
   }
 
   return router;

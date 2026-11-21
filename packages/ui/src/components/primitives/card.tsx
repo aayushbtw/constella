@@ -1,10 +1,10 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   cardVars,
   colors,
@@ -164,13 +164,15 @@ function Card({
       data-size={size}
       data-slot="card"
       data-variant={variant}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.card],
-        sizeStyles[size],
-        variant === "well" && styles.well,
-        variant === "filled" && styles.filled,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.card],
+          sizeStyles[size],
+          variant === "well" && styles.well,
+          variant === "filled" && styles.filled,
+          sx
+        )
       )}
     />
   );
@@ -180,31 +182,30 @@ function CardHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="card-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
 
-function CardTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "card-title" },
-  });
+function CardTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "card-title" },
+      withStyles(props, stylex.props(styles.title, sx))
+    ),
+    render
+  );
 }
 
 function CardDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="card-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -213,8 +214,7 @@ function CardAction({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="card-action"
-      {...props}
-      {...stylex.props(styles.action, sx)}
+      {...withStyles(props, stylex.props(styles.action, sx))}
     />
   );
 }
@@ -223,8 +223,7 @@ function CardContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="card-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -233,8 +232,7 @@ function CardFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="card-footer"
-      {...props}
-      {...stylex.props(styles.footer, sx)}
+      {...withStyles(props, stylex.props(styles.footer, sx))}
     />
   );
 }

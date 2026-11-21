@@ -1,10 +1,10 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -99,31 +99,30 @@ function Alert({ color, sx, ...props }: AlertProps) {
       data-slot="alert"
       data-color={color}
       role="alert"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.alert], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.alert], sx)
+      )}
     />
   );
 }
 
-function AlertTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "alert-title" },
-  });
+function AlertTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "alert-title" },
+      withStyles(props, stylex.props(styles.title, sx))
+    ),
+    render
+  );
 }
 
 function AlertDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }
@@ -132,8 +131,7 @@ function AlertAction({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-action"
-      {...props}
-      {...stylex.props(styles.action, sx)}
+      {...withStyles(props, stylex.props(styles.action, sx))}
     />
   );
 }

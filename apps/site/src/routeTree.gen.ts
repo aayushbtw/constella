@@ -14,6 +14,7 @@ import { Route as SiteRouteRouteImport } from './routes/_site/route'
 import { Route as textIndexDotmdRouteImport } from './routes/(text)/index[.]md'
 import { Route as textLlmsFullDottxtRouteImport } from './routes/(text)/llms-full[.]txt'
 import { Route as textLlmsDottxtRouteImport } from './routes/(text)/llms[.]txt'
+import { Route as DevAgentStagedRouteImport } from './routes/_dev/agent-staged'
 import { Route as DevClipRouteImport } from './routes/_dev/clip'
 import { Route as DevPosterRouteImport } from './routes/_dev/poster'
 import { Route as SiteIndexRouteImport } from './routes/_site/index'
@@ -58,6 +59,11 @@ const textLlmsDottxtRoute = textLlmsDottxtRouteImport.update({
   id: '/(text)/llms.txt',
   path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DevAgentStagedRoute = DevAgentStagedRouteImport.update({
+  id: '/agent-staged',
+  path: '/agent-staged',
+  getParentRoute: () => DevRouteRoute,
 } as any)
 const DevClipRoute = DevClipRouteImport.update({
   id: '/clip',
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/index.md': typeof textIndexDotmdRoute
   '/llms-full.txt': typeof textLlmsFullDottxtRoute
   '/llms.txt': typeof textLlmsDottxtRoute
+  '/agent-staged': typeof DevAgentStagedRoute
   '/clip': typeof DevClipRoute
   '/poster': typeof DevPosterRoute
   '/break': typeof SiteBreakRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/index.md': typeof textIndexDotmdRoute
   '/llms-full.txt': typeof textLlmsFullDottxtRoute
   '/llms.txt': typeof textLlmsDottxtRoute
+  '/agent-staged': typeof DevAgentStagedRoute
   '/clip': typeof DevClipRoute
   '/poster': typeof DevPosterRoute
   '/break': typeof SiteBreakRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/(text)/index.md': typeof textIndexDotmdRoute
   '/(text)/llms-full.txt': typeof textLlmsFullDottxtRoute
   '/(text)/llms.txt': typeof textLlmsDottxtRoute
+  '/_dev/agent-staged': typeof DevAgentStagedRoute
   '/_dev/clip': typeof DevClipRoute
   '/_dev/poster': typeof DevPosterRoute
   '/_site/break': typeof SiteBreakRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/index.md'
     | '/llms-full.txt'
     | '/llms.txt'
+    | '/agent-staged'
     | '/clip'
     | '/poster'
     | '/break'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/index.md'
     | '/llms-full.txt'
     | '/llms.txt'
+    | '/agent-staged'
     | '/clip'
     | '/poster'
     | '/break'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/(text)/index.md'
     | '/(text)/llms-full.txt'
     | '/(text)/llms.txt'
+    | '/_dev/agent-staged'
     | '/_dev/clip'
     | '/_dev/poster'
     | '/_site/break'
@@ -383,6 +395,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/llms.txt'
       preLoaderRoute: typeof textLlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_dev/agent-staged': {
+      id: '/_dev/agent-staged'
+      path: '/agent-staged'
+      fullPath: '/agent-staged'
+      preLoaderRoute: typeof DevAgentStagedRouteImport
+      parentRoute: typeof DevRouteRoute
     }
     '/_dev/clip': {
       id: '/_dev/clip'
@@ -535,11 +554,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface DevRouteRouteChildren {
+  DevAgentStagedRoute: typeof DevAgentStagedRoute
   DevClipRoute: typeof DevClipRoute
   DevPosterRoute: typeof DevPosterRoute
 }
 
 const DevRouteRouteChildren: DevRouteRouteChildren = {
+  DevAgentStagedRoute: DevAgentStagedRoute,
   DevClipRoute: DevClipRoute,
   DevPosterRoute: DevPosterRoute,
 }

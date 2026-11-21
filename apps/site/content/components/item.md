@@ -166,7 +166,7 @@ Use `ItemHeader` and `ItemFooter` for full-width rows above and below the conten
   </ItemContent>
   <ItemFooter>
     Today
-    <Button size="sm" variant="ghost">
+    <Button aria-label="Read notes for v0.9.0" size="sm" variant="ghost">
       Read notes
     </Button>
   </ItemFooter>
@@ -195,7 +195,7 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 
 ```tsx
 <ItemMedia>
-  <Avatar size="lg">
+  <Avatar aria-hidden size="lg">
     <AvatarImage alt="" src="/avatars/shadcn.png" />
     <AvatarFallback>CN</AvatarFallback>
   </Avatar>
@@ -211,4 +211,4 @@ Put an [Avatar](/docs/components/avatar) in `ItemMedia`. Use `variant="image"` f
 | `ItemMedia` | `variant`: `"default"`, `"icon"`, `"image"` or `"tile"` |
 | `ItemTitle` | `render`, to make it a heading: `render={<h3 />}` |
 
-Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

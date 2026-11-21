@@ -6,7 +6,7 @@
 - A link that looks like a button
 - Dialog, Sheet and AlertDialog need a Title
 - Choosing an overlay
-- Select and Command take `items`
+- Select takes `items`, Command picks with `onSelect`
 - Groups
 - Card structure
 - Button states
@@ -20,7 +20,7 @@
 
 ## Custom triggers take `render`
 
-Base UI parts render a default element. To use your own, pass `render`. There is no `asChild`.
+ui-sdk parts render a default element. To use your own, pass `render`. There is no `asChild`.
 
 **Incorrect:**
 
@@ -42,12 +42,12 @@ The same holds for `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`, `S
 
 ## A link that looks like a button
 
-Base UI's `Button` always sets `role="button"`, so a link rendered through it is announced as a button.
+Pass an `<a>` to `Button`'s `render`. It keeps its `href` and link role. A Button that navigates in `onClick` is announced as a button and can't open in a new tab.
 
 **Incorrect:**
 
 ```tsx
-<Button render={<a href="/settings" />} nativeButton={false}>
+<Button onClick={() => navigate("/settings")} variant="outline">
   Settings
 </Button>
 ```
@@ -55,22 +55,18 @@ Base UI's `Button` always sets `role="button"`, so a link rendered through it is
 **Correct:**
 
 ```tsx
-import * as stylex from "@stylexjs/stylex";
-
-import { buttonStyles } from "@/components/primitives/button";
-
-<a href="/settings" {...stylex.props(buttonStyles({ variant: "outline" }))}>
+<Button render={<a href="/settings" />} variant="outline">
   Settings
-</a>;
+</Button>
 ```
 
-In a framework link, spread the same props onto it: `<Link href="/settings" {...stylex.props(buttonStyles({}))} />`.
+A framework link works the same way: `<Button render={<Link href="/settings" />}>`. For an element that can't be a Button, like a Toggle, spread `buttonStyles` onto it.
 
 ---
 
 ## Dialog, Sheet and AlertDialog need a Title
 
-Base UI names the dialog from its title. Without one the dialog has no accessible name.
+ui-sdk names the dialog from its title. Without one the dialog has no accessible name.
 
 **Incorrect:**
 
@@ -94,7 +90,7 @@ Base UI names the dialog from its title. Without one the dialog has no accessibl
 
 To hide it visually: `<DialogTitle sx={visuallyHidden.base}>` (from `@/lib/constella/styles`).
 
-`DialogContent` already renders the portal, backdrop and popup. Don't add them. Close buttons are `DialogClose render={<Button />}`; `DialogCloseButton` is the corner X.
+`DialogContent` already renders the backdrop and popup. Don't add them. Close buttons are `DialogClose render={<Button />}`; `DialogCloseButton` is the corner X.
 
 ---
 
@@ -110,11 +106,13 @@ To hide it visually: `<DialogTitle sx={visuallyHidden.base}>` (from `@/lib/const
 | A label for an icon                | `Tooltip`       |
 | A command palette                  | `CommandDialog` |
 
+Mark the button that confirms a destructive action, and a destructive menu item, with `data-agent-confirm="<what it does>"`. Give it text the trigger doesn't hold, like "Delete forever" under "Delete chat". See [Agent Marks](https://constella.aayush.cv/docs/agents#agent-marks).
+
 ---
 
-## Select and Command take `items`
+## Select takes `items`, Command picks with `onSelect`
 
-Pass `items` so the trigger shows the picked item's label and the list filters what it renders.
+Pass `items` to `Select` so the trigger shows the picked item's label.
 
 **Incorrect:**
 
@@ -132,12 +130,9 @@ Pass `items` so the trigger shows the picked item's label and the list filters w
 **Correct:**
 
 ```tsx
-const items = [
-  { label: "Select a fruit", value: null },
-  { label: "Apple", value: "apple" },
-];
+const items = [{ label: "Apple", value: "apple" }];
 
-<Select items={items}>
+<Select items={items} placeholder="Select a fruit">
   <SelectTrigger>
     <SelectValue />
   </SelectTrigger>
@@ -147,16 +142,18 @@ const items = [
 </Select>;
 ```
 
-An item with `value: null` is the placeholder.
+`placeholder` on `Select` is the text the trigger shows while nothing is picked.
 
-`Command` is Base UI's Autocomplete, not cmdk. It filters the `items` it's given and renders each through a function child. Mapping your own children shows them unfiltered.
+`Command` is ui-sdk's Command, not cmdk. Map your items as children, each with a unique string `value`; typing filters what it renders. Handle a pick with the item's `onSelect`: Enter runs the highlighted item without a click, so `onClick` misses it.
 
 **Incorrect:**
 
 ```tsx
 <CommandList>
   {entries.map((e) => (
-    <CommandItem key={e.value}>{e.label}</CommandItem>
+    <CommandItem key={e.value} onClick={() => run(e)}>
+      {e.label}
+    </CommandItem>
   ))}
 </CommandList>
 ```
@@ -164,28 +161,30 @@ An item with `value: null` is the placeholder.
 **Correct:**
 
 ```tsx
-<Command items={entries}>
-  <CommandInput placeholder="Search..." />
+<Command>
+  <CommandInput aria-label="Search commands" placeholder="Search..." />
   <CommandEmpty>No results found.</CommandEmpty>
   <CommandList>
-    {(entry) => (
-      <CommandItem key={entry.value} value={entry}>
+    {entries.map((entry) => (
+      <CommandItem
+        key={entry.value}
+        onSelect={() => run(entry)}
+        value={entry.value}
+      >
         {entry.label}
       </CommandItem>
-    )}
+    ))}
   </CommandList>
 </Command>
 ```
-
-Handle a pick with the item's `onClick`; Enter fires it too. Grouped commands nest `CommandGroup items={group.items}` and `CommandCollection`: read the page.
 
 ---
 
 ## Groups
 
-A group is for a label or a section, not a requirement. Items sit directly in `SelectContent` or `DropdownMenuContent`. Add `SelectGroup` + `SelectLabel`, or `DropdownMenuGroup` + `DropdownMenuLabel`, when the list has headed sections, with a `*Separator` between them.
+A group is for a label or a section, not a requirement. Items sit directly in `SelectContent` or `DropdownMenuContent`. Add `SelectGroup` + `SelectGroupLabel`, or `DropdownMenuGroup` + `DropdownMenuLabel`, when the list has headed sections, with a `*Separator` between them.
 
-`Command` is the exception: grouped entries go through `CommandGroup` and `CommandCollection` so filtering still works.
+`Command` groups the same way: `CommandGroup` + `CommandGroupLabel`, with a `CommandSeparator` between groups.
 
 ---
 
@@ -248,18 +247,18 @@ A disabled button takes no pointer events. Put the trigger on a wrapper.
 </Tooltip>
 ```
 
-Wrap neighbors in a `TooltipProvider` so the next opens at once. An icon-only button gets an `aria-label` as well as a tooltip.
+Neighbors group on their own, so once one is open the next opens at once. An icon-only button gets an `aria-label` as well as a tooltip.
 
 ---
 
 ## Toast
 
-Render `Toaster` once around the app, then call `toast` from anywhere.
+Render `<Toaster />` once near the app's root, as a sibling of the content, then call `toast` from anywhere.
 
 ```tsx
 import { toast } from "@/components/primitives/toast";
 
-toast.add({ title: "Saved", type: "success" });
+toast.success({ title: "Saved" });
 toast.promise(upload(files), {
   loading: { title: "Uploading…" },
   success: { title: "Done" },
@@ -267,7 +266,7 @@ toast.promise(upload(files), {
 });
 ```
 
-It is Base UI's Toast, not Sonner. Don't install `sonner`; there's no `toast.success()`. One action at most: `actionProps: { children: "Undo", onClick }`.
+It is ui-sdk's Toast, not Sonner. Don't install `sonner`. One action at most: `action: { label: "Undo", onAction }`; pressing it dismisses the toast.
 
 ---
 
@@ -275,7 +274,7 @@ It is Base UI's Toast, not Sonner. Don't install `sonner`; there's no `toast.suc
 
 ```tsx
 <Tabs defaultValue="account">
-  <TabsList>
+  <TabsList aria-label="Settings">
     <TabsTrigger value="account">Account</TabsTrigger>
   </TabsList>
   <TabsContent value="account">…</TabsContent>

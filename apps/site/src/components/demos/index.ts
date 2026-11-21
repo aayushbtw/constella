@@ -47,6 +47,7 @@ import {
   BreadcrumbEllipsisDemo,
 } from "~/components/demos/breadcrumb";
 import {
+  ButtonCloseDemo,
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -99,6 +100,7 @@ import {
   CheckboxControlledDemo,
   CheckboxDemo,
   CheckboxDisabledDemo,
+  CheckboxGroupDemo,
   CheckboxIndeterminateDemo,
   CheckboxInvalidDemo,
   CheckboxSizeDemo,
@@ -165,10 +167,9 @@ import {
 } from "~/components/demos/dialog";
 import {
   DropdownMenuCheckboxesDemo,
+  DropdownMenuControllerDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
-  DropdownMenuFilterDemo,
-  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,
@@ -221,7 +222,6 @@ import {
   InputGroupBlockEndDemo,
   InputGroupBlockStartDemo,
   InputGroupButtonDemo,
-  InputGroupCustomDemo,
   InputGroupDemo,
   InputGroupIconDemo,
   InputGroupInlineEndDemo,
@@ -251,7 +251,11 @@ import {
   KbdGroupDemo,
   KbdTooltipDemo,
 } from "~/components/demos/kbd";
-import { LabelDemo, LabelWrapDemo } from "~/components/demos/label";
+import {
+  LabelDemo,
+  LabelRadioGroupDemo,
+  LabelWrapDemo,
+} from "~/components/demos/label";
 import { LayoutRadiiDemo, LayoutSizesDemo } from "~/components/demos/layout";
 import { LoadingBarDemo } from "~/components/demos/loading-bar";
 import {
@@ -270,6 +274,11 @@ import {
   ModelPickerSideDemo,
 } from "~/components/demos/model-picker";
 import { MotionEasingDemo } from "~/components/demos/motion";
+import {
+  PaginationDemo,
+  PaginationIconOnlyDemo,
+  PaginationSimpleDemo,
+} from "~/components/demos/pagination";
 import {
   PopoverAlignDemo,
   PopoverDemo,
@@ -319,6 +328,7 @@ import {
 import {
   SegmentedControlDemo,
   SegmentedControlDisabledDemo,
+  SegmentedControlVerticalDemo,
 } from "~/components/demos/segmented-control";
 import {
   SelectAlignItemDemo,
@@ -327,6 +337,7 @@ import {
   SelectGroupsDemo,
   SelectInvalidDemo,
   SelectScrollableDemo,
+  SelectSearchDemo,
   SelectSizesDemo,
 } from "~/components/demos/select";
 import {
@@ -503,6 +514,7 @@ const demos = {
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
+  "button-close": ButtonCloseDemo,
   "button-link": ButtonLinkDemo,
   "button-corners": ButtonCornersDemo,
   "button-sizes": ButtonSizesDemo,
@@ -542,6 +554,7 @@ const demos = {
   checkbox: CheckboxDemo,
   "checkbox-controlled": CheckboxControlledDemo,
   "checkbox-disabled": CheckboxDisabledDemo,
+  "checkbox-group": CheckboxGroupDemo,
   "checkbox-indeterminate": CheckboxIndeterminateDemo,
   "checkbox-invalid": CheckboxInvalidDemo,
   "checkbox-size": CheckboxSizeDemo,
@@ -591,9 +604,8 @@ const demos = {
   "dialog-size": DialogSizeDemo,
   "dropdown-menu": DropdownMenuDemo,
   "dropdown-menu-checkboxes": DropdownMenuCheckboxesDemo,
+  "dropdown-menu-controller": DropdownMenuControllerDemo,
   "dropdown-menu-danger": DropdownMenuDangerDemo,
-  "dropdown-menu-filter": DropdownMenuFilterDemo,
-  "dropdown-menu-handle": DropdownMenuHandleDemo,
   "dropdown-menu-icons": DropdownMenuIconsDemo,
   "dropdown-menu-radio-group": DropdownMenuRadioGroupDemo,
   "dropdown-menu-sizes": DropdownMenuSizesDemo,
@@ -634,7 +646,6 @@ const demos = {
   "input-group-block-end": InputGroupBlockEndDemo,
   "input-group-block-start": InputGroupBlockStartDemo,
   "input-group-button": InputGroupButtonDemo,
-  "input-group-custom": InputGroupCustomDemo,
   "input-group-icon": InputGroupIconDemo,
   "input-group-inline-end": InputGroupInlineEndDemo,
   "input-group-inline-start": InputGroupInlineStartDemo,
@@ -664,6 +675,7 @@ const demos = {
   "kbd-group": KbdGroupDemo,
   "kbd-tooltip": KbdTooltipDemo,
   label: LabelDemo,
+  "label-radio-group": LabelRadioGroupDemo,
   "label-wrap": LabelWrapDemo,
   "layout-radii": LayoutRadiiDemo,
   "layout-sizes": LayoutSizesDemo,
@@ -690,6 +702,9 @@ const demos = {
   "calendar-range": CalendarRangeDemo,
   "date-range-picker": DateRangePickerDemo,
   "date-range-picker-presets": DateRangePickerPresetsDemo,
+  pagination: PaginationDemo,
+  "pagination-icon-only": PaginationIconOnlyDemo,
+  "pagination-simple": PaginationSimpleDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
@@ -735,6 +750,7 @@ const demos = {
   "select-groups": SelectGroupsDemo,
   "select-invalid": SelectInvalidDemo,
   "select-scrollable": SelectScrollableDemo,
+  "select-search": SelectSearchDemo,
   "select-sizes": SelectSizesDemo,
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,
@@ -789,6 +805,7 @@ const demos = {
   "swap-text": SwapTextDemo,
   "segmented-control": SegmentedControlDemo,
   "segmented-control-disabled": SegmentedControlDisabledDemo,
+  "segmented-control-vertical": SegmentedControlVerticalDemo,
   switch: SwitchDemo,
   "switch-card": SwitchCardDemo,
   "switch-description": SwitchDescriptionDemo,

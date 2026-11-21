@@ -1,0 +1,130 @@
+{
+  "/docs/components/approval": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/attachment": {
+    "ambiguous": {
+      "count": 1,
+      "why": "attachment-size shows one chip per size, so its Remove buttons share a name on purpose"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/chart": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/citation": {
+    "native": {
+      "count": 4,
+      "why": "citation-source renders each source as a native link, which the bridge doesn't list"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/code-block": {
+    "ambiguous": {
+      "count": 1,
+      "why": "code-block-size shows one block per size, so its Copy command buttons share a name on purpose"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/data-table": {
+    "scroll-area": {
+      "count": 8,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    },
+    "unseen": {
+      "count": 2,
+      "why": "Agent-ready Data Table and Chart unit: past the snapshot's 100-entry cap, a kind found only in the tail can't be queried. The \"Rows per page\" select and the Pagination nav sit in the tail"
+    }
+  },
+  "/docs/components/markdown": {
+    "native": {
+      "count": 4,
+      "why": "Markdown renders footnote references and back links as native links, which the bridge doesn't list"
+    },
+    "scroll-area": {
+      "count": 3,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/marker": {
+    "native": {
+      "count": 1,
+      "why": "marker-link renders its marker as a native link, which the bridge doesn't list"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/message": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/message-scroller": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/model-picker": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/prompt-input": {
+    "ambiguous": {
+      "count": 2,
+      "why": "prompt-input-well shows the bar above and below the composer, so the two composers share Message and Attach on purpose"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/questionnaire": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/shimmer": {
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/suggestions": {
+    "scroll-area": {
+      "count": 2,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  },
+  "/docs/components/trace": {
+    "collapsible": {
+      "count": 18,
+      "why": "trace.test.tsx pins the unnamed collapsibles of steps with no trigger"
+    },
+    "scroll-area": {
+      "count": 1,
+      "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    }
+  }
+}

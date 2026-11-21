@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import { Card } from "@/components/primitives/card";
@@ -14,7 +14,6 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
 } from "@/components/primitives/field";
 import { Input } from "@/components/primitives/input";
@@ -66,27 +65,20 @@ const styles = stylex.create({
 
 interface Option {
   label: string;
-  value: string | null;
+  value: string;
 }
 
-const months: Option[] = [
-  { label: "MM", value: null },
-  ...Array.from({ length: 12 }, (_, i) => {
-    const month = String(i + 1).padStart(2, "0");
-    return { label: month, value: month };
-  }),
-];
+const months: Option[] = Array.from({ length: 12 }, (_, i) => {
+  const month = String(i + 1).padStart(2, "0");
+  return { label: month, value: month };
+});
 
-const years: Option[] = [
-  { label: "YYYY", value: null },
-  ...Array.from({ length: 6 }, (_, i) => {
-    const year = String(2024 + i);
-    return { label: year, value: year };
-  }),
-];
+const years: Option[] = Array.from({ length: 6 }, (_, i) => {
+  const year = String(2024 + i);
+  return { label: year, value: year };
+});
 
 const departments: Option[] = [
-  { label: "Choose department", value: null },
   { label: "Engineering", value: "engineering" },
   { label: "Design", value: "design" },
   { label: "Marketing", value: "marketing" },
@@ -100,18 +92,26 @@ const plans = [
   { label: "Lifetime ($299.99)", value: "lifetime" },
 ];
 
-function Picker({ label, options }: { label: string; options: Option[] }) {
+function Picker({
+  label,
+  options,
+  placeholder,
+}: {
+  label: string;
+  options: Option[];
+  placeholder: string;
+}) {
   return (
     <Field>
       <FieldLabel>{label}</FieldLabel>
-      <Select items={options}>
+      <Select items={options} placeholder={placeholder}>
         <SelectTrigger sx={styles.full}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {options.slice(1).map((item) => (
-              <SelectItem key={item.label} value={item.value}>
+            {options.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
             ))}
@@ -129,9 +129,9 @@ function FieldFormDemo() {
         <FieldGroup>
           <FieldSet>
             <FieldLegend>Payment Method</FieldLegend>
-            <FieldSetDescription>
+            <FieldDescription>
               All transactions are secure and encrypted
-            </FieldSetDescription>
+            </FieldDescription>
             <FieldGroup>
               <Field>
                 <FieldLabel>Name on Card</FieldLabel>
@@ -139,17 +139,21 @@ function FieldFormDemo() {
               </Field>
               <Field>
                 <FieldLabel>Card Number</FieldLabel>
-                <Input placeholder="1234 5678 9012 3456" required />
+                <Input
+                  autoComplete="cc-number"
+                  placeholder="1234 5678 9012 3456"
+                  required
+                />
                 <FieldDescription>
                   Enter your 16-digit card number
                 </FieldDescription>
               </Field>
               <div {...stylex.props(styles.thirds)}>
-                <Picker label="Month" options={months} />
-                <Picker label="Year" options={years} />
+                <Picker label="Month" options={months} placeholder="MM" />
+                <Picker label="Year" options={years} placeholder="YYYY" />
                 <Field>
                   <FieldLabel>CVV</FieldLabel>
-                  <Input placeholder="123" required />
+                  <Input autoComplete="cc-csc" placeholder="123" required />
                 </Field>
               </div>
             </FieldGroup>
@@ -157,9 +161,9 @@ function FieldFormDemo() {
           <FieldSeparator />
           <FieldSet>
             <FieldLegend>Billing Address</FieldLegend>
-            <FieldSetDescription>
+            <FieldDescription>
               The billing address associated with your payment method
-            </FieldSetDescription>
+            </FieldDescription>
             <Field orientation="horizontal">
               <Checkbox defaultChecked />
               <FieldLabel sx={styles.regular}>
@@ -178,9 +182,7 @@ function FieldFormDemo() {
             <Button type="submit" variant="primary">
               Submit
             </Button>
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
+            <Button variant="outline">Cancel</Button>
           </Field>
         </FieldGroup>
       </form>
@@ -230,14 +232,14 @@ function FieldSelectDemo() {
     <DemoRow sx={styles.narrow}>
       <Field>
         <FieldLabel>Department</FieldLabel>
-        <Select items={departments}>
+        <Select items={departments} placeholder="Choose department">
           <SelectTrigger sx={styles.full}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {departments.slice(1).map((item) => (
-                <SelectItem key={item.label} value={item.value}>
+              {departments.map((item) => (
+                <SelectItem key={item.value} value={item.value}>
                   {item.label}
                 </SelectItem>
               ))}
@@ -253,18 +255,17 @@ function FieldSelectDemo() {
 }
 
 function FieldSliderDemo() {
-  const [range, setRange] = useState<readonly number[]>([200, 800]);
+  const [range, setRange] = useState([200, 800]);
   return (
     <DemoRow sx={styles.narrow}>
       <Field>
-        <FieldTitle>Price Range</FieldTitle>
+        <FieldLabel>Price Range</FieldLabel>
         <FieldDescription>
           Set your budget range ($
           <span {...stylex.props(styles.value)}>{range[0]}</span> -{" "}
           <span {...stylex.props(styles.value)}>{range[1]}</span>).
         </FieldDescription>
         <Slider
-          aria-label="Price Range"
           max={1000}
           min={0}
           onValueChange={setRange}
@@ -274,8 +275,8 @@ function FieldSliderDemo() {
           <SliderControl>
             <SliderTrack>
               <SliderIndicator />
-              <SliderThumb index={0} />
-              <SliderThumb index={1} />
+              <SliderThumb aria-label="Minimum price" index={0} />
+              <SliderThumb aria-label="Maximum price" index={1} />
             </SliderTrack>
           </SliderControl>
         </Slider>
@@ -285,14 +286,22 @@ function FieldSliderDemo() {
 }
 
 function FieldRadioDemo() {
+  const legend = useId();
+  const description = useId();
   return (
     <DemoRow sx={styles.narrow}>
       <FieldSet>
-        <FieldLegend variant="label">Subscription Plan</FieldLegend>
-        <FieldSetDescription>
+        <FieldLegend id={legend} variant="label">
+          Subscription Plan
+        </FieldLegend>
+        <FieldDescription id={description}>
           Yearly and lifetime plans offer significant savings.
-        </FieldSetDescription>
-        <RadioGroup defaultValue="monthly">
+        </FieldDescription>
+        <RadioGroup
+          aria-describedby={description}
+          aria-labelledby={legend}
+          defaultValue="monthly"
+        >
           {plans.map((plan) => (
             <Field key={plan.value} orientation="horizontal">
               <RadioGroupItem value={plan.value} />
@@ -322,9 +331,9 @@ function FieldGroupDemo() {
       <FieldGroup>
         <FieldSet>
           <FieldLegend variant="label">Responses</FieldLegend>
-          <FieldSetDescription>
+          <FieldDescription>
             Get notified when ChatGPT responds to requests that take time.
-          </FieldSetDescription>
+          </FieldDescription>
           <Field orientation="horizontal">
             <Checkbox defaultChecked disabled />
             <FieldLabel sx={styles.regular}>Push notifications</FieldLabel>
@@ -333,9 +342,9 @@ function FieldGroupDemo() {
         <FieldSeparator />
         <FieldSet>
           <FieldLegend variant="label">Tasks</FieldLegend>
-          <FieldSetDescription>
+          <FieldDescription>
             Get notified when tasks you&apos;ve created have updates.
-          </FieldSetDescription>
+          </FieldDescription>
           <Field orientation="horizontal">
             <Checkbox />
             <FieldLabel sx={styles.regular}>Push notifications</FieldLabel>
@@ -373,9 +382,9 @@ function FieldSetDemo() {
         <FieldLegend variant="label">
           Show these items on the desktop
         </FieldLegend>
-        <FieldSetDescription>
+        <FieldDescription>
           Select the items you want to show on the desktop.
-        </FieldSetDescription>
+        </FieldDescription>
         <FieldGroup>
           {items.map((item) => (
             <Field key={item.label} orientation="horizontal">

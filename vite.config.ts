@@ -33,7 +33,6 @@ export default defineConfig({
       "constella/type-scale": "error",
       // Hoisting lets a route's `component:` sit above the component it names.
       "func-style": ["error", "declaration", { allowArrowFunctions: true }],
-      // Base UI's checkbox is a span with a hidden input, so the label wraps it rather than pointing at it.
       "jsx-a11y/label-has-associated-control": [
         "error",
         {
@@ -88,7 +87,19 @@ export default defineConfig({
           "constella/type-scale": "off",
         },
       },
+      // jsdom stubs are no-ops by design.
+      {
+        files: ["packages/ui/test/setup.ts"],
+        rules: { "class-methods-use-this": "off", "no-empty-function": "off" },
+      },
     ],
     options: { typeAware: true, typeCheck: true },
+  },
+  test: {
+    projects: [
+      "packages/ui",
+      "packages/ui/vitest.css.config.ts",
+      "apps/site/vitest.config.ts",
+    ],
   },
 });

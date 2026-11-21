@@ -6,13 +6,11 @@ description: One pick among a few, marked by a pill that slides to it.
 <!-- ::demo name="segmented-control" -->
 
 ```tsx
-const [range, setRange] = useState<"day" | "week" | "month">("week");
-
-<SegmentedControl aria-label="Range" onValueChange={setRange} value={range}>
+<SegmentedControl aria-label="Range" defaultValue="week">
   <SegmentedControlItem value="day">Day</SegmentedControlItem>
   <SegmentedControlItem value="week">Week</SegmentedControlItem>
   <SegmentedControlItem value="month">Month</SegmentedControlItem>
-</SegmentedControl>;
+</SegmentedControl>
 ```
 
 ## Installation
@@ -29,19 +27,37 @@ import {
 ```
 
 ```tsx
-<SegmentedControl onValueChange={setValue} value={value}>
+<SegmentedControl aria-label="View" defaultValue="a">
   <SegmentedControlItem value="a">A</SegmentedControlItem>
   <SegmentedControlItem value="b">B</SegmentedControlItem>
 </SegmentedControl>
 ```
 
-It's always controlled, and one item is always on: clicking the picked item keeps it. Use [Tabs](/docs/components/tabs) to switch panels, and a [Toggle Group](/docs/components/toggle-group) when none or several can be on.
+Name it with `aria-label`, or put it in a [Field](/docs/components/field) whose label names it. Nothing starts picked without `value` or `defaultValue`; once one is, clicking it keeps it. Arrow keys move the pick. Use [Tabs](/docs/components/tabs) to switch panels, and a [Toggle Group](/docs/components/toggle-group) when none or several can be on.
 
 ## Composition
 
 ```
 SegmentedControl
 └── SegmentedControlItem
+```
+
+## Orientation
+
+Set `orientation="vertical"` to stack the items. Arrow keys on both axes move the pick.
+
+<!-- ::demo name="segmented-control-vertical" -->
+
+```tsx
+<SegmentedControl
+  aria-label="Vertical alignment"
+  defaultValue="middle"
+  orientation="vertical"
+>
+  <SegmentedControlItem value="top">Top</SegmentedControlItem>
+  <SegmentedControlItem value="middle">Middle</SegmentedControlItem>
+  <SegmentedControlItem value="bottom">Bottom</SegmentedControlItem>
+</SegmentedControl>
 ```
 
 ## Disabled
@@ -58,8 +74,6 @@ Add `disabled` to a `SegmentedControlItem` to turn one off, or to `SegmentedCont
 
 ## API Reference
 
-| Part | Adds |
-| --- | --- |
-| `SegmentedControl` | `value` and `onValueChange` take one value, not an array, and are required |
+`SegmentedControl` renders the pill that slides to the picked item. `onValueChange` gets `null` only when a form reset or a controller clears the pick.
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Toggle Group](https://base-ui.com/react/components/toggle-group).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Segmented Control](https://ui-sdk.dev/docs/react/components/segmented-control).

@@ -6,22 +6,31 @@ description: A searchable list of commands, inline or as a palette.
 <!-- ::demo name="command" -->
 
 ```tsx
-<Command items={groups}>
-  <CommandInput placeholder="Type a command or search..." />
+<Command>
+  <CommandInput
+    aria-label="Search commands"
+    placeholder="Type a command or search..."
+  />
   <CommandEmpty>No results found.</CommandEmpty>
   <CommandList>
-    {(group) => (
-      <CommandGroup items={group.items} key={group.value}>
-        <CommandGroupLabel>{group.value}</CommandGroupLabel>
-        <CommandCollection>
-          {(entry) => (
-            <CommandItem key={entry.value} value={entry}>
-              {entry.label}
+    {groups.map((group, index) => (
+      <Fragment key={group.value}>
+        {index > 0 && <CommandSeparator />}
+        <CommandGroup>
+          <CommandGroupLabel>{group.value}</CommandGroupLabel>
+          {group.items.map((entry) => (
+            <CommandItem
+              key={entry.value}
+              label={entry.label}
+              onSelect={() => run(entry)}
+              value={entry.value}
+            >
+              <CommandItemText />
             </CommandItem>
-          )}
-        </CommandCollection>
-      </CommandGroup>
-    )}
+          ))}
+        </CommandGroup>
+      </Fragment>
+    ))}
   </CommandList>
 </Command>
 ```
@@ -38,27 +47,29 @@ import {
   CommandEmpty,
   CommandInput,
   CommandItem,
+  CommandItemText,
   CommandList,
 } from "@/components/primitives/command";
 ```
 
-Pass the entries as `items`, and render each one in `CommandList`. Typing filters them by `label`.
+Give the input an `aria-label` and each item a unique `value`. Typing keeps the items whose text matches. Handle a pick with the item's `onSelect`.
 
 ```tsx
-<Command items={entries}>
-  <CommandInput placeholder="Search..." />
+<Command>
+  <CommandInput aria-label="Search commands" placeholder="Search..." />
   <CommandEmpty>No results found.</CommandEmpty>
   <CommandList>
-    {(entry) => (
-      <CommandItem key={entry.value} value={entry}>
-        {entry.label}
-      </CommandItem>
-    )}
+    <CommandItem onSelect={createFile} value="new-file">
+      New file
+    </CommandItem>
+    <CommandItem onSelect={createFolder} value="new-folder">
+      New folder
+    </CommandItem>
   </CommandList>
 </Command>
 ```
 
-**Don't map children yourself.** The list only filters what it renders from `items`.
+**Use `onSelect`, not `onClick`.** Enter runs the highlighted item without a click, so `onClick` misses it.
 
 ## Composition
 
@@ -69,24 +80,97 @@ Command
 ├── CommandList
 │   ├── CommandGroup
 │   │   ├── CommandGroupLabel
-│   │   └── CommandCollection
-│   │       └── CommandItem
-│   │           └── CommandShortcut
+│   │   └── CommandItem
+│   │       ├── CommandItemText
+│   │       └── CommandShortcut
 │   └── CommandSeparator
 └── CommandFooter
 ```
 
-Add `disabled` to a `CommandItem` to show it but skip it, and a `CommandSeparator` between groups. Handle a pick with the item's `onClick`, which Enter fires too. `CommandFooter` is a bar under the list for key hints, set into the command's edges.
+Put a `CommandSeparator` between groups. A group and its separator hide while the search leaves the group empty. Add `disabled` to a `CommandItem` to show it but skip it. `Command`'s `onAction` gets the `value` of any item that runs, after the item's `onSelect`.
+
+## Command Item Text
+
+Put a `CommandItemText` in a `CommandItem` to show its `label` with the search marked in it. Without a `label`, it shows the item's `value`.
+
+```tsx
+<CommandItem label="New file" onSelect={createFile} value="new-file">
+  <CommandItemText />
+</CommandItem>
+```
+
+## Filter
+
+Use the `filter` prop to change how typing narrows the list. Items keep their order, and the first match is highlighted.
+
+| Value          | Keeps                                                |
+| -------------- | ---------------------------------------------------- |
+| `"contains"`   | Items whose text contains the search. The default    |
+| `"startsWith"` | Items whose text starts with the search              |
+| `"fuzzy"`      | Items with the search's letters in order, even apart |
+| A function     | Items it scores above 0                              |
+
+```tsx
+<Command filter="fuzzy">…</Command>
+```
+
+Add `keywords` to a `CommandItem` to match words that aren't in its text.
+
+## Command Shortcut
+
+Give a `CommandItem` a `shortcut` to run it from the keyboard while the list is in the page, even when the search hides it. Put an empty `CommandShortcut` at the end of the item to show the keys: ⌘P on Apple devices and Ctrl+P elsewhere.
+
+```tsx
+<CommandItem onSelect={openProfile} shortcut="mod+p" value="profile">
+  Profile
+  <CommandShortcut />
+</CommandItem>
+```
+
+The server's HTML carries the Ctrl form. Apple devices switch to ⌘ after the page loads. A `shortcut` on `CommandShortcut` itself only shows the keys and runs nothing. Pass children instead to show fixed text.
+
+## Command Footer
+
+Use `CommandFooter` for key hints in a bar under the list, set into the command's edges.
+
+```tsx
+<CommandFooter>
+  <span>
+    <Kbd>↵</Kbd> Select
+  </span>
+  <span>
+    <Kbd>esc</Kbd> Close
+  </span>
+</CommandFooter>
+```
 
 ## Command Dialog
 
-Use `CommandDialog` for a palette over the page, opened by a shortcut you listen for. It sits near the top of the window so the list can grow downward. It's named for screen readers by `title` and `description`. Close it when an item runs. Set `instant` when the keyboard opened or closed it, so it skips its motion.
+Use `CommandDialog` for a palette over the page. It sits near the top of the window so the list can grow downward. It's named for screen readers by `title` and `description`, so give its input a different `aria-label`. Open it with a `createDialogController` from `@ui-sdk/react/dialog`, passed to the dialog and to any `DialogTrigger`. Give the trigger a `shortcut` to open it from the keyboard: `mod+j` is ⌘J on Apple devices and Ctrl+J elsewhere, the trigger gets `aria-keyshortcuts`, and the shortcut pauses while a modal is open. Show the keys with `useShortcutHint` from `@ui-sdk/react/shortcuts`. Close it with `close()` in the item's `onSelect`. Escape clears the search first, then closes the dialog. It skips its motion when the keyboard opens or closes it, and when a pick closes it.
 
 <!-- ::demo name="command-dialog" -->
 
 ```tsx
-<CommandDialog onOpenChange={setOpen} open={open}>
-  <Command items={groups}>…</Command>
+const [palette] = useState(() => createDialogController());
+const hint = useShortcutHint("mod+j");
+
+<DialogTrigger
+  controller={palette}
+  render={<Button variant="outline" />}
+  shortcut="mod+j"
+>
+  Open Menu
+  <Kbd aria-hidden>{hint.text}</Kbd>
+</DialogTrigger>
+<CommandDialog controller={palette}>
+  <Command>
+    <CommandInput aria-label="Search commands" />
+    <CommandList>
+      <CommandItem onSelect={() => palette.close()} value="profile">
+        Profile
+      </CommandItem>
+    </CommandList>
+  </Command>
 </CommandDialog>
 ```
 
@@ -94,8 +178,11 @@ Use `CommandDialog` for a palette over the page, opened by a shortcut you listen
 
 | Part | Adds |
 | --- | --- |
-| `Command` | Base UI Autocomplete, inline and always open, highlighting the first match |
-| `CommandDialog` | A dialog for the palette; `title` and `description` for screen readers, `instant` to skip its motion |
+| `Command` | ui-sdk Command, with `filter="contains"` by default |
+| `CommandInput` | ui-sdk's input in an `lg` Input Group with a search icon; `sx` styles the group |
+| `CommandItemText` | Shows the item's `label`, or its `value`, with the search marked; takes no children |
+| `CommandShortcut` | Shows the item's `shortcut`, or its own, for the platform (⌘P on Apple, Ctrl+P elsewhere), or its children, at the item's end; only the item's `shortcut` runs it |
+| `CommandDialog` | A dialog for the palette; `title` and `description` for screen readers; no motion for a keyboard change or a pick |
 | `CommandFooter` | A tinted bar under the list, for key hints |
 
-Every part takes `sx`, applied last. shadcn builds this on cmdk; this one is Base UI. For the rest, see [Base UI Autocomplete](https://base-ui.com/react/components/autocomplete).
+Every part takes `sx`, applied last. shadcn builds this on cmdk; this one is ui-sdk. For the rest, see [ui-sdk Command](https://ui-sdk.dev/docs/react/components/command).

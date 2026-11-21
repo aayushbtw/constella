@@ -26,6 +26,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { Label as LabelPrimitive } from "@ui-sdk/react/label";
 import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -57,8 +58,8 @@ import { Input } from "@/components/primitives/input";
 import {
   InputGroup,
   InputGroupAddon,
-  InputGroupButton,
   InputGroupInput,
+  InputGroupToggle,
 } from "@/components/primitives/input-group";
 import {
   Popover,
@@ -195,7 +196,7 @@ function MoreMenu() {
           </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem destructive>
           <Glyph icon={Delete02Icon} />
           Trash
         </DropdownMenuItem>
@@ -236,7 +237,10 @@ function ButtonGroupDropdownDemo() {
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem color="danger">
+            <DropdownMenuItem
+              destructive
+              data-agent-confirm="Deletes the conversation"
+            >
               <Glyph icon={Delete02Icon} />
               Delete Conversation
             </DropdownMenuItem>
@@ -418,17 +422,12 @@ function ButtonGroupInputGroupDemo() {
               }
             />
             <InputGroupAddon align="inline-end">
-              <Tooltip>
+              <Tooltip type="label">
                 <TooltipTrigger
                   render={
-                    <InputGroupButton
-                      aria-label="Voice mode"
-                      aria-pressed={voice}
-                      onClick={() => {
-                        setVoice(!voice);
-                      }}
-                      size="icon-xs"
-                      variant={voice ? "secondary" : "ghost"}
+                    <InputGroupToggle
+                      onPressedChange={setVoice}
+                      pressed={voice}
                     />
                   }
                 >
@@ -495,8 +494,7 @@ function ButtonGroupTextDemo() {
   return (
     <DemoRow sx={styles.narrow}>
       <ButtonGroup sx={styles.narrow}>
-        {/* oxlint-disable-next-line jsx-a11y/label-has-associated-control -- the children render inside the label */}
-        <ButtonGroupText render={<label htmlFor="button-group-url" />}>
+        <ButtonGroupText render={<LabelPrimitive htmlFor="button-group-url" />}>
           https://
         </ButtonGroupText>
         <InputGroup>

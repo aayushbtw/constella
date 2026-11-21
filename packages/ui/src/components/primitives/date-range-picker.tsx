@@ -3,46 +3,90 @@
 import { Calendar03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useRef, useState } from "react";
-import type { DateRange, PropsBase } from "react-day-picker";
+import { formatDateRange } from "@ui-sdk/react/date";
+import {
+  DatePickerContent as DatePickerContentPrimitive,
+  DatePickerPreset as DatePickerPresetPrimitive,
+  DatePicker as DatePickerPrimitive,
+  DatePickerTrigger as DatePickerTriggerPrimitive,
+} from "@ui-sdk/react/date-picker";
+import { createContext, use, useMemo } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
-import { Calendar } from "@/components/primitives/calendar";
+import { CalendarMonths } from "@/components/primitives/calendar";
+import { popoverStyles } from "@/components/primitives/popover";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/primitives/popover";
+  popupMotion,
+  skipsMotion,
+  useSkipMotion,
+} from "@/lib/constella/motion";
+import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
   stateStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
+  offsets,
+  opacities,
   radii,
   sizes,
   space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-interface DayRange {
-  from: Date;
-  to: Date;
-}
+type Styled<T> = Omit<T, "className" | "style"> & {
+  sx?: Sx;
+};
 
-interface DateRangePreset {
-  label: string;
-  range: DayRange;
-}
+type DateRange = [start: string, end: string];
+
+type PickerProps = ComponentProps<typeof DatePickerPrimitive>;
+
+type DateRangePickerProps = Styled<
+  Omit<
+    PickerProps,
+    "children" | "defaultValue" | "mode" | "months" | "onValueChange" | "value"
+  >
+> & {
+  children: ReactNode;
+  defaultValue?: DateRange | null;
+  onValueChange?: (
+    value: DateRange | null,
+    details: Parameters<NonNullable<PickerProps["onValueChange"]>>[1]
+  ) => void;
+  value?: DateRange | null;
+};
+
+type DateRangePickerTriggerProps = Styled<
+  Omit<ComponentProps<typeof DatePickerTriggerPrimitive>, "children" | "render">
+> & {
+  placeholder?: string;
+};
+
+type DateRangePickerPresetProps = Styled<
+  Omit<
+    ComponentProps<typeof DatePickerPresetPrimitive>,
+    "children" | "render" | "value"
+  >
+> & {
+  children?: ReactNode;
+  value: DateRange;
+};
 
 const styles = stylex.create({
-  // A menu's corner, so the presets read as one.
+  root: {
+    width: "fit-content",
+  },
+  // ui-sdk's date picker leaves the browser's `[popover]` border.
   content: {
-    borderEndEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderStartStartRadius: radii.lg,
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     flexDirection: "row",
     gap: 0,
     paddingBlockEnd: 0,
@@ -75,147 +119,209 @@ const styles = stylex.create({
     borderStartEndRadius: radii.md,
     borderStartStartRadius: radii.md,
     color: colors.textPrimary,
-    cursor: "pointer",
+    cursor: { default: "pointer", ":disabled": "not-allowed" },
     display: "flex",
     gap: space.row,
     justifyContent: "space-between",
     minHeight: sizes.controlMd,
+    opacity: { default: null, ":disabled": opacities.disabled },
     paddingInlineEnd: space.sm,
     paddingInlineStart: space.sm,
     textAlign: "start",
   },
   calendar: {
-    paddingBlockEnd: space.md,
-    paddingBlockStart: space.md,
-    paddingInlineEnd: space.md,
-    paddingInlineStart: space.md,
+    marginBlockEnd: space.md,
+    marginBlockStart: space.md,
+    marginInlineEnd: space.md,
+    marginInlineStart: space.md,
   },
 });
 
-const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
-const sameRange = (a: DayRange, b: DayRange) =>
-  sameDay(a.from, b.from) && sameDay(a.to, b.to);
+interface PickerState {
+  locale: string | undefined;
+  skip: boolean;
+  value: DateRange | null;
+}
 
-/** A button showing a day range, opening presets beside a two-month calendar; a pick closes it. */
-function DateRangePicker({
-  onValueChange,
-  presets,
+const Picker = createContext<PickerState>({
+  locale: undefined,
+  skip: false,
+  value: null,
+});
+
+function PickerProvider({
+  children,
+  locale,
+  skip,
   value,
-  ...calendar
-}: Pick<
-  PropsBase,
-  | "disabled"
-  | "endMonth"
-  | "locale"
-  | "startMonth"
-  | "timeZone"
-  | "weekStartsOn"
-> & {
-  onValueChange: (range: DayRange) => void;
-  presets?: readonly DateRangePreset[];
-  value: DayRange;
-}) {
-  const [open, setOpen] = useState(false);
-  const popup = useRef<HTMLDivElement>(null);
-  // The first day picked, until a second one ends the range.
-  const [anchor, setAnchor] = useState<Date | null>(null);
-  const shown: DateRange =
-    anchor === null ? value : { from: anchor, to: anchor };
+}: PickerState & { children: ReactNode }) {
+  const state = useMemo(() => ({ locale, skip, value }), [locale, skip, value]);
+  return <Picker value={state}>{children}</Picker>;
+}
 
-  const pick = (range: DayRange) => {
-    onValueChange(range);
-    setAnchor(null);
-    setOpen(false);
-  };
+// A day picked by pointer closes with the popover's exit, unlike a menu's item.
+const skipsPickMotion = (
+  open: boolean,
+  details: { reason: string; source: string }
+) =>
+  (details.reason !== "item-press" || details.source === "keyboard") &&
+  skipsMotion(open, details);
 
+/** ui-sdk's Date Picker picking a range across two months; its value is `[start, end]` as ISO dates, or `null`. */
+function DateRangePicker({
+  children,
+  locale,
+  onOpenChange,
+  onValueChange,
+  showOutsideDays = false,
+  sx,
+  ...props
+}: DateRangePickerProps) {
+  const [skip, handleOpenChange] = useSkipMotion(onOpenChange, skipsPickMotion);
   return (
-    <Popover
-      onOpenChange={(next) => {
-        setOpen(next);
-        setAnchor(null);
+    <DatePickerPrimitive
+      locale={locale}
+      onOpenChange={handleOpenChange}
+      onValueChange={(value, details) => {
+        onValueChange?.(Array.isArray(value) ? value : null, details);
       }}
-      open={open}
+      showOutsideDays={showOutsideDays}
+      {...withStyles(props, stylex.props(styles.root, sx))}
+      mode="range"
+      months={2}
     >
-      <PopoverTrigger render={<Button />}>
-        <HugeiconsIcon
-          aria-hidden
-          data-icon="inline-start"
-          icon={Calendar03Icon}
-          size={controlIconSize.default}
-          strokeWidth={Number(strokes.icon)}
-        />
-        {new Intl.DateTimeFormat(calendar.locale?.code ?? "en-US", {
-          timeZone: calendar.timeZone,
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        })
-          .formatRange(value.from, value.to)
-          // Node's ICU spaces the dash with thin spaces and browsers' with plain ones, so SSR would mismatch.
-          .replaceAll("\u2009", " ")}
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        // A pointer open focuses the popup, so no preset wears a ring it didn't earn.
-        initialFocus={(openType) => openType === "keyboard" || popup.current}
-        ref={popup}
-        sx={styles.content}
-      >
-        {presets === undefined ? null : (
-          <div {...stylex.props(styles.presets)}>
-            {presets.map((preset) => {
-              const active = sameRange(preset.range, value);
-              return (
-                <button
-                  aria-pressed={active}
-                  key={preset.label}
-                  onClick={() => {
-                    pick(preset.range);
-                  }}
-                  type="button"
-                  {...stylex.props(
-                    typeStyles.textMd,
-                    styles.preset,
-                    stateStyles.ghost
-                  )}
-                >
-                  {preset.label}
-                  {active ? (
-                    <HugeiconsIcon
-                      aria-hidden
-                      icon={Tick02Icon}
-                      size={controlIconSize.default}
-                      strokeWidth={Number(strokes.icon)}
-                    />
-                  ) : null}
-                </button>
-              );
-            })}
-          </div>
-        )}
-        <Calendar
-          defaultMonth={value.to}
-          mode="range"
-          numberOfMonths={2}
-          onSelect={(_range, day) => {
-            if (anchor === null) {
-              setAnchor(day);
-              return;
-            }
-            pick(
-              anchor <= day
-                ? { from: anchor, to: day }
-                : { from: day, to: anchor }
-            );
-          }}
-          selected={shown}
-          {...calendar}
-          sx={styles.calendar}
-        />
-      </PopoverContent>
-    </Popover>
+      {(state) => (
+        <PickerProvider
+          locale={locale}
+          skip={skip}
+          value={Array.isArray(state.value) ? state.value : null}
+        >
+          {children}
+        </PickerProvider>
+      )}
+    </DatePickerPrimitive>
   );
 }
 
-export { DateRangePicker };
-export type { DateRangePreset, DayRange };
+/** A button showing the range; an `aria-label` names it and the dates follow. */
+function DateRangePickerTrigger({
+  "aria-label": label,
+  placeholder = "Pick a date range",
+  sx,
+  ...props
+}: DateRangePickerTriggerProps) {
+  const { locale, value } = use(Picker);
+  const text =
+    value === null
+      ? placeholder
+      : formatDateRange(value[0], value[1], locale ?? "en-US", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+  return (
+    <DatePickerTriggerPrimitive
+      aria-label={label === undefined ? undefined : `${label}, ${text}`}
+      render={<Button sx={sx} />}
+      {...props}
+    >
+      <HugeiconsIcon
+        aria-hidden
+        data-icon="inline-start"
+        icon={Calendar03Icon}
+        size={controlIconSize.default}
+        strokeWidth={Number(strokes.icon)}
+      />
+      {text}
+    </DatePickerTriggerPrimitive>
+  );
+}
+
+function DateRangePickerContent({
+  align = "start",
+  sideOffset = Number(offsets.popover),
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof DatePickerContentPrimitive>>) {
+  const { skip } = use(Picker);
+  return (
+    <DatePickerContentPrimitive
+      align={align}
+      data-skip-motion={skip || undefined}
+      sideOffset={sideOffset}
+      {...withStyles(
+        props,
+        stylex.props(
+          [popoverStyles.popup, popoverStyles.surface, styles.content],
+          popupMotion.popover,
+          sx
+        )
+      )}
+    />
+  );
+}
+
+function DateRangePickerPresets({
+  sx,
+  ...props
+}: Styled<ComponentProps<"div">>) {
+  return (
+    <div
+      data-slot="date-range-picker-presets"
+      {...withStyles(props, stylex.props(styles.presets, sx))}
+    />
+  );
+}
+
+function DateRangePickerPreset({
+  children,
+  sx,
+  value,
+  ...props
+}: DateRangePickerPresetProps) {
+  return (
+    <DatePickerPresetPrimitive
+      value={value}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textMd, styles.preset], stateStyles.ghost, sx)
+      )}
+    >
+      {(state) => (
+        <>
+          {children}
+          {state.selected ? (
+            <HugeiconsIcon
+              aria-hidden
+              icon={Tick02Icon}
+              size={controlIconSize.default}
+              strokeWidth={Number(strokes.icon)}
+            />
+          ) : null}
+        </>
+      )}
+    </DatePickerPresetPrimitive>
+  );
+}
+
+function DateRangePickerCalendar({
+  sx,
+  ...props
+}: Omit<ComponentProps<typeof CalendarMonths>, "months">) {
+  return <CalendarMonths months={2} {...props} sx={[styles.calendar, sx]} />;
+}
+
+export {
+  DateRangePicker,
+  DateRangePickerCalendar,
+  DateRangePickerContent,
+  DateRangePickerPreset,
+  DateRangePickerPresets,
+  DateRangePickerTrigger,
+};
+export type {
+  DateRange,
+  DateRangePickerPresetProps,
+  DateRangePickerProps,
+  DateRangePickerTriggerProps,
+};

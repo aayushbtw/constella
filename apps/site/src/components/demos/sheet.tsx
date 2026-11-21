@@ -37,12 +37,12 @@ function SheetDemo() {
           <SheetBody>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="sheet-name">Name</FieldLabel>
-                <Input defaultValue="Alex Smith" id="sheet-name" />
+                <FieldLabel>Name</FieldLabel>
+                <Input defaultValue="Alex Smith" />
               </Field>
               <Field>
-                <FieldLabel htmlFor="sheet-username">Username</FieldLabel>
-                <Input defaultValue="@alex" id="sheet-username" />
+                <FieldLabel>Username</FieldLabel>
+                <Input defaultValue="@alex" />
               </Field>
             </FieldGroup>
           </SheetBody>
@@ -60,13 +60,13 @@ function SheetSideDemo() {
   return (
     <DemoRow>
       {sheetSides.map((side) => (
-        <Sheet key={side}>
+        <Sheet key={side} side={side}>
           <SheetTrigger
             render={<Button sx={styles.capitalize} variant="outline" />}
           >
             {side}
           </SheetTrigger>
-          <SheetContent side={side}>
+          <SheetContent>
             <SheetHeader>
               <SheetTitle>Edit profile</SheetTitle>
               <SheetDescription>

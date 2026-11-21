@@ -149,7 +149,7 @@ function TableActionsDemo() {
                   <DropdownMenuTrigger
                     render={
                       <Button
-                        aria-label="Open menu"
+                        aria-label={`Actions for ${product.name}`}
                         size="icon"
                         variant="ghost"
                       />
@@ -166,7 +166,12 @@ function TableActionsDemo() {
                     <DropdownMenuItem>Edit</DropdownMenuItem>
                     <DropdownMenuItem>Duplicate</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem color="danger">Delete</DropdownMenuItem>
+                    <DropdownMenuItem
+                      destructive
+                      data-agent-confirm={`Deletes ${product.name}`}
+                    >
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

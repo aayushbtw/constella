@@ -7,7 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -27,7 +27,9 @@ import {
 import {
   Slider,
   SliderControl,
-  SliderLabel,
+  SliderIndicator,
+  SliderThumb,
+  SliderTrack,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Spinner } from "@/components/primitives/spinner";
@@ -49,7 +51,7 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 import { Chat } from "~/components/demos/chat";
-import { groups, Palette } from "~/components/demos/command";
+import { Palette } from "~/components/demos/command";
 import { Formatting } from "~/components/demos/toggle";
 import { entrance } from "~/lib/entrance";
 import {
@@ -58,6 +60,12 @@ import {
   shadows,
   surfaces,
 } from "~/lib/tokens.stylex";
+
+async function wait(ms: number) {
+  const { promise, resolve } = Promise.withResolvers<undefined>();
+  setTimeout(resolve, ms);
+  await promise;
+}
 
 // Concentric with the chat's composer, which sits its `xs` inset from the tile's edge.
 const corner = `calc(${radii.xl} + ${space.xs})`;
@@ -169,37 +177,30 @@ const plans = [
 function SaveButtons() {
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const done = saving
-      ? setTimeout(() => {
-          setSaving(false);
-          toast.add({
-            description: "Your changes are live.",
-            title: "Saved",
-            type: "success",
-          });
-        }, 1200)
-      : undefined;
-    return () => {
-      clearTimeout(done);
-    };
-  }, [saving]);
-
   return (
     <div {...stylex.props(styles.row)}>
       <Button disabled={saving} variant="outline">
         Discard
       </Button>
       <Button
-        aria-busy={saving}
-        disabled={saving}
-        onClick={() => {
+        onClick={async () => {
           setSaving(true);
+          await wait(1200);
+          setSaving(false);
+          toast.success({
+            description: "Your changes are live.",
+            title: "Saved",
+          });
         }}
+        pendingAnnouncement="Saving"
         variant="primary"
       >
-        {saving && <Spinner data-icon="inline-start" />}
-        Save changes
+        {(state) => (
+          <>
+            {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+            Save changes
+          </>
+        )}
       </Button>
     </div>
   );
@@ -247,16 +248,26 @@ const tiles: Tile[] = [
   {
     content: (
       <div {...stylex.props(styles.fill, styles.sliders)}>
-        <Slider defaultValue={64}>
-          <SliderLabel>Volume</SliderLabel>
-          <SliderValue />
-          <SliderControl />
-        </Slider>
-        <Slider defaultValue={[20, 80]}>
-          <SliderLabel>Price</SliderLabel>
-          <SliderValue />
-          <SliderControl />
-        </Slider>
+        <Field>
+          <Slider defaultValue={64}>
+            <FieldLabel>Volume</FieldLabel>
+            <SliderValue />
+            <SliderControl />
+          </Slider>
+        </Field>
+        <Field>
+          <Slider defaultValue={[20, 80]}>
+            <FieldLabel>Price</FieldLabel>
+            <SliderValue />
+            <SliderControl>
+              <SliderTrack>
+                <SliderIndicator />
+                <SliderThumb aria-label="Minimum price" index={0} />
+                <SliderThumb aria-label="Maximum price" index={1} />
+              </SliderTrack>
+            </SliderControl>
+          </Slider>
+        </Field>
       </div>
     ),
     slug: "slider",
@@ -264,7 +275,7 @@ const tiles: Tile[] = [
   },
   {
     content: (
-      <Command items={groups} sx={styles.command}>
+      <Command sx={styles.command}>
         <Palette />
       </Command>
     ),
@@ -274,7 +285,7 @@ const tiles: Tile[] = [
   },
   {
     content: (
-      <RadioGroup defaultValue="Pro" sx={styles.fill}>
+      <RadioGroup aria-label="Plan" defaultValue="Pro" sx={styles.fill}>
         {plans.map((plan) => (
           <Field key={plan.label}>
             <FieldLabel>
@@ -301,6 +312,7 @@ const tiles: Tile[] = [
     content: (
       <div {...stylex.props(styles.row)}>
         <ToggleGroup
+          aria-label="Text formatting"
           defaultValue={["bold"]}
           multiple
           size="icon"
@@ -308,7 +320,12 @@ const tiles: Tile[] = [
         >
           <Formatting />
         </ToggleGroup>
-        <ToggleGroup defaultValue={["left"]} size="icon" variant="outline">
+        <ToggleGroup
+          aria-label="Alignment"
+          defaultValue={["left"]}
+          size="icon"
+          variant="outline"
+        >
           <ToggleGroupItem aria-label="Align left" value="left">
             <Glyph icon={TextAlignLeftIcon} />
           </ToggleGroupItem>

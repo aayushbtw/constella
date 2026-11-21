@@ -8,8 +8,8 @@
 - FieldSet for related controls
 - Choice cards
 - InputGroup for addons and buttons
-- Option sets use ToggleGroup
-- Controls with no label element
+- Option sets use SegmentedControl or ToggleGroup
+- Slider labels name thumbs
 
 ---
 
@@ -106,7 +106,7 @@ Inside a `Field`, `FieldLabel`, `FieldDescription` and `FieldError` attach to th
 </Field>
 ```
 
-- `match` shows the error always. Without it, `FieldError` shows only when Base UI's validation fails.
+- `match` shows the error always. Without it, `FieldError` shows only when the browser's validation fails.
 - With a form library, pass its errors: `<FieldError errors={field.state.meta.errors} />`. Nothing renders when the array is empty.
 - `<Field disabled>` disables its control and dims the label.
 
@@ -133,7 +133,7 @@ Group related checkboxes or radios in a `FieldSet` with a `FieldLegend`, not a `
 ```tsx
 <FieldSet>
   <FieldLegend variant="label">Notifications</FieldLegend>
-  <FieldSetDescription>Choose how you hear from us.</FieldSetDescription>
+  <FieldDescription>Choose how you hear from us.</FieldDescription>
   <FieldGroup>
     <Field orientation="horizontal">
       <Checkbox />
@@ -147,7 +147,7 @@ Group related checkboxes or radios in a `FieldSet` with a `FieldLegend`, not a `
 </FieldSet>
 ```
 
-A radio group is `FieldSet` + `FieldLegend` around `RadioGroup`, each `RadioGroupItem` in a horizontal `Field`. Break stacked fieldsets with `FieldSeparator`.
+A radio group is `FieldSet` + `FieldLegend` around `RadioGroup`, each `RadioGroupItem` in a horizontal `Field`. Point the group at the legend with `aria-labelledby`, since the legend names only the set. Break stacked fieldsets with `FieldSeparator`.
 
 ---
 
@@ -200,15 +200,15 @@ Put `InputGroupAddon` after the input in the DOM and place it with `align` (`inl
 
 ---
 
-## Option sets use ToggleGroup
+## Option sets use SegmentedControl or ToggleGroup
 
-For two to seven options, use `ToggleGroup`. Don't loop `Button`s and track the active one.
+To pick one of a few options, use `SegmentedControl`. Don't loop `Button`s and track the active one.
 
 **Incorrect:**
 
 ```tsx
-{
-  ["left", "center", "right"].map((a) => (
+<div>
+  {["left", "center", "right"].map((a) => (
     <Button
       key={a}
       variant={a === align ? "primary" : "outline"}
@@ -216,44 +216,70 @@ For two to seven options, use `ToggleGroup`. Don't loop `Button`s and track the 
     >
       {a}
     </Button>
-  ));
-}
+  ))}
+</div>
 ```
 
 **Correct:**
 
 ```tsx
-<ToggleGroup
-  value={[align]}
-  onValueChange={([next]) => next && setAlign(next)}
-  variant="outline"
+<SegmentedControl
+  aria-label="Alignment"
+  onValueChange={(next) => next !== null && setAlign(next)}
+  value={align}
 >
-  <ToggleGroupItem value="left" aria-label="Align left">
+  <SegmentedControlItem value="left">Left</SegmentedControlItem>
+  <SegmentedControlItem value="center">Center</SegmentedControlItem>
+  <SegmentedControlItem value="right">Right</SegmentedControlItem>
+</SegmentedControl>
+```
+
+Name it with `aria-label`, or a `FieldLabel` in a `Field`. `onValueChange` gets `null` only when a form reset or a controller clears the pick.
+
+When none or several can be on, use `ToggleGroup`. Its value is always an array, even for one choice, and without `multiple` one item is on at a time. An icon-only item needs an `aria-label`.
+
+```tsx
+<ToggleGroup multiple value={formats} onValueChange={setFormats}>
+  <ToggleGroupItem value="bold" aria-label="Bold">
     …
   </ToggleGroupItem>
-  <ToggleGroupItem value="center" aria-label="Align center">
+  <ToggleGroupItem value="italic" aria-label="Italic">
     …
   </ToggleGroupItem>
 </ToggleGroup>
 ```
 
-The value is always an array, even for one choice. Without `multiple`, one item is on at a time. An icon-only item needs an `aria-label`.
-
 ---
 
-## Controls with no label element
+## Slider labels name thumbs
 
-A `Slider` has no `<label>`, so use `FieldTitle` and give the control an `aria-label`.
+Put the `FieldLabel` inside the `Slider`. In a `Field`, it names a single thumb.
 
 ```tsx
 <Field>
-  <FieldTitle>Price range</FieldTitle>
-  <Slider
-    aria-label="Price range"
-    max={1000}
-    value={range}
-    onValueChange={setRange}
-  />
+  <Slider defaultValue={40}>
+    <FieldLabel>Volume</FieldLabel>
+    <SliderValue />
+    <SliderControl />
+  </Slider>
+</Field>
+```
+
+In a range, the `FieldLabel` or an `aria-label` on `Slider` names only the group. Compose the track and give each thumb its own `aria-label`.
+
+```tsx
+<Field>
+  <Slider max={1000} value={range} onValueChange={setRange}>
+    <FieldLabel>Price</FieldLabel>
+    <SliderValue />
+    <SliderControl>
+      <SliderTrack>
+        <SliderIndicator />
+        <SliderThumb aria-label="Minimum price" index={0} />
+        <SliderThumb aria-label="Maximum price" index={1} />
+      </SliderTrack>
+    </SliderControl>
+  </Slider>
 </Field>
 ```
 

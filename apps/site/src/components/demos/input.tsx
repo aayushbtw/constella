@@ -289,9 +289,7 @@ function InputFormDemo() {
             <Input placeholder="123 Main St" />
           </Field>
           <Field orientation="horizontal">
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
+            <Button variant="outline">Cancel</Button>
             <Button type="submit" variant="primary">
               Submit
             </Button>

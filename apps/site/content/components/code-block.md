@@ -181,6 +181,16 @@ Use `color="danger"` for an error's output. `CodeBlockFooter` holds a line under
 
 [Markdown](/docs/components/markdown) renders its fenced code in a `CodeBlock`, with a copy button on the first line.
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label     | Component | Actions |
+| --------- | --------- | ------- |
+| Copy code | button    | `press` |
+
+The agent sees the actions you name, like "Copy code", and never the code. The block's scroll area is hidden from the agent, so a block with no actions adds no entry.
+
 ## API Reference
 
 Every part takes `sx`, applied last.

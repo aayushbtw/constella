@@ -7,6 +7,7 @@ import {
   tabsListSizes,
   TabsTrigger,
 } from "@/components/primitives/tabs";
+import type { TabsListSize } from "@/components/primitives/tabs";
 import { Text } from "@/components/typography/text";
 import { lineHeights, sizes, space } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
@@ -24,11 +25,17 @@ const styles = stylex.create({
   },
 });
 
+const rangeLabels = {
+  default: "Default range",
+  lg: "Large range",
+  sm: "Small range",
+} satisfies Record<TabsListSize, string>;
+
 function TabsDemo() {
   return (
     <DemoRow>
       <Tabs defaultValue="preview">
-        <TabsList>
+        <TabsList aria-label="View">
           <TabsTrigger value="preview">Preview</TabsTrigger>
           <TabsTrigger value="code">Code</TabsTrigger>
           <TabsTrigger value="docs">Docs</TabsTrigger>
@@ -42,7 +49,7 @@ function TabsLineDemo() {
   return (
     <DemoRow>
       <Tabs defaultValue="overview">
-        <TabsList variant="line">
+        <TabsList aria-label="Project" variant="line">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -58,7 +65,7 @@ function TabsSizeDemo() {
       <div {...stylex.props(styles.column)}>
         {tabsListSizes.map((size) => (
           <Tabs defaultValue="day" key={size}>
-            <TabsList size={size}>
+            <TabsList aria-label={rangeLabels[size]} size={size}>
               <TabsTrigger value="day">Day</TabsTrigger>
               <TabsTrigger value="week">Week</TabsTrigger>
               <TabsTrigger value="month">Month</TabsTrigger>
@@ -74,7 +81,7 @@ function TabsVerticalDemo() {
   return (
     <DemoRow>
       <Tabs defaultValue="general" orientation="vertical">
-        <TabsList variant="line">
+        <TabsList aria-label="Settings" variant="line">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="models">Models</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
@@ -103,7 +110,7 @@ function TabsDisabledDemo() {
   return (
     <DemoRow>
       <Tabs defaultValue="chat">
-        <TabsList>
+        <TabsList aria-label="Workspace">
           <TabsTrigger value="chat">Chat</TabsTrigger>
           <TabsTrigger value="files">Files</TabsTrigger>
           <TabsTrigger disabled value="agents">

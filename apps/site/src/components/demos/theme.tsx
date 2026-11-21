@@ -24,11 +24,14 @@ import {
 import {
   Slider,
   SliderControl,
-  SliderLabel,
   SliderValue,
 } from "@/components/primitives/slider";
 import { Switch } from "@/components/primitives/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
 import { radii, sizes, space } from "@/lib/constella/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
 import {
@@ -81,9 +84,7 @@ const styles = stylex.create({
     gap: space.sm,
   },
   presets: {
-    display: "flex",
     flexWrap: "wrap",
-    gap: space.xxs,
     gridColumn: "1 / -1",
   },
   swatch: (color: string) => ({
@@ -115,12 +116,20 @@ function swatch(accent: Accent) {
     : (radix.get(accent)?.[`${accent}9`] ?? RadixColors.gray.gray9);
 }
 
-const accentItems = Object.fromEntries(
-  ["ink", ...accents].map((accent) => [
-    accent,
-    accent.charAt(0).toUpperCase() + accent.slice(1),
-  ])
-);
+const accentItems = (["ink", ...accents] as const).map((accent) => ({
+  label: accent.charAt(0).toUpperCase() + accent.slice(1),
+  value: accent,
+}));
+
+function itemsOf<Value extends string>(labels: Record<Value, string>) {
+  return Object.keys(labels)
+    .filter((value): value is Value => Object.hasOwn(labels, value))
+    .map((value) => ({ label: labels[value], value }));
+}
+
+const radiusItems = itemsOf(radiusLabels);
+const scalingItems = itemsOf(scalingLabels);
+const depthItems = itemsOf(depthLabels);
 
 const radixFiles = import.meta.glob<string>(
   "/node_modules/@radix-ui/colors/*.css",
@@ -175,17 +184,25 @@ function ThemeBuilderDemo() {
       <Stage
         controls={
           <>
-            <div {...stylex.props(styles.presets)}>
+            <ToggleGroup
+              aria-label="Theme"
+              deselectable={false}
+              onValueChange={([name]) => {
+                if (name !== undefined) {
+                  setTheme(name);
+                  setAccent(themes[name].accent);
+                }
+              }}
+              size="sm"
+              spacing={1}
+              sx={styles.presets}
+              value={[theme]}
+            >
               {themeNames.map((name) => (
-                <Button
+                <ToggleGroupItem
                   key={name}
-                  onClick={() => {
-                    setTheme(name);
-                    setAccent(themes[name].accent);
-                  }}
-                  size="sm"
                   title={themes[name].description}
-                  variant={theme === name ? "secondary" : "ghost"}
+                  value={name}
                 >
                   <span
                     data-icon="inline-start"
@@ -194,9 +211,9 @@ function ThemeBuilderDemo() {
                     )}
                   />
                   {themes[name].label}
-                </Button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
             <Field>
               <FieldLabel>Accent</FieldLabel>
               <Select
@@ -213,10 +230,12 @@ function ThemeBuilderDemo() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {(["ink", ...accents] as const).map((value) => (
-                    <SelectItem key={value} value={value}>
-                      <span {...stylex.props(styles.swatch(swatch(value)))} />
-                      {accentItems[value]}
+                  {accentItems.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      <span
+                        {...stylex.props(styles.swatch(swatch(item.value)))}
+                      />
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -225,7 +244,7 @@ function ThemeBuilderDemo() {
             <Field>
               <FieldLabel>Radius</FieldLabel>
               <Select
-                items={radiusLabels}
+                items={radiusItems}
                 onValueChange={(value) => {
                   if (value !== null) {
                     setRadius(value);
@@ -237,9 +256,9 @@ function ThemeBuilderDemo() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(radiusLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {radiusItems.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -248,7 +267,7 @@ function ThemeBuilderDemo() {
             <Field>
               <FieldLabel>Sizing</FieldLabel>
               <Select
-                items={scalingLabels}
+                items={scalingItems}
                 onValueChange={(value) => {
                   if (value !== null) {
                     setScaling(value);
@@ -260,9 +279,9 @@ function ThemeBuilderDemo() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(scalingLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {scalingItems.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -271,7 +290,7 @@ function ThemeBuilderDemo() {
             <Field>
               <FieldLabel>Depth</FieldLabel>
               <Select
-                items={depthLabels}
+                items={depthItems}
                 onValueChange={(value) => {
                   if (value !== null) {
                     setDepth(value);
@@ -283,9 +302,9 @@ function ThemeBuilderDemo() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(depthLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {depthItems.map((item) => (
+                    <SelectItem key={item.value} value={item.value}>
+                      {item.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -301,7 +320,7 @@ function ThemeBuilderDemo() {
             <Badge variant="primary">New</Badge>
           </div>
           <Tabs defaultValue="account">
-            <TabsList>
+            <TabsList aria-label="Settings">
               <TabsTrigger value="account">Account</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
               <TabsTrigger value="team">Team</TabsTrigger>
@@ -317,12 +336,14 @@ function ThemeBuilderDemo() {
               Remember me
             </Label>
           </div>
-          <Slider defaultValue={60}>
-            <SliderLabel>Volume</SliderLabel>
-            <SliderValue />
-            <SliderControl />
-          </Slider>
-          <Input placeholder="Email" />
+          <Field>
+            <Slider defaultValue={60}>
+              <FieldLabel>Volume</FieldLabel>
+              <SliderValue />
+              <SliderControl />
+            </Slider>
+          </Field>
+          <Input aria-label="Email" placeholder="Email" />
         </div>
       </Stage>
       <CodeBlock>

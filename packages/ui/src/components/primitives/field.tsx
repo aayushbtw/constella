@@ -1,16 +1,21 @@
-"use client";
-
-import { Field as FieldPrimitive } from "@base-ui/react/field";
-import { Fieldset as FieldsetPrimitive } from "@base-ui/react/fieldset";
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import {
+  FieldDescription as FieldDescriptionPrimitive,
+  FieldError as FieldErrorPrimitive,
+  FieldGroup as FieldGroupPrimitive,
+  FieldLabel as FieldLabelPrimitive,
+  FieldLegend as FieldLegendPrimitive,
+  Field as FieldPrimitive,
+  FieldSet as FieldSetPrimitive,
+} from "@ui-sdk/react/field";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { labelStyles } from "@/components/primitives/label";
 import { Separator } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -57,16 +62,19 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     gap: space.sm,
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     marginInline: 0,
     minWidth: 0,
     paddingBlock: 0,
     paddingInline: 0,
   },
+  // A native legend sits outside the set's flex flow, so the gap after it is a margin.
   legend: {
     color: colors.textPrimary,
     fontWeight: fontWeights.medium,
     lineHeight: lineHeights.textSm,
+    marginBlockEnd: space.sm,
     paddingBlock: 0,
     paddingInline: 0,
   },
@@ -173,7 +181,8 @@ const styles = stylex.create({
   description: {
     color: colors.textSecondary,
     fontWeight: fontWeights.regular,
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     marginInline: 0,
     overflowWrap: "anywhere",
     textWrap: "pretty",
@@ -184,7 +193,8 @@ const styles = stylex.create({
     color: colors.textMuted,
     display: "flex",
     gap: space.xs,
-    marginBlock: `calc(-1 * ${space.xs})`,
+    marginBlockEnd: `calc(-1 * ${space.xs})`,
+    marginBlockStart: `calc(-1 * ${space.xs})`,
     minHeight: lineHeights.textSm,
   },
   separatorLine: { flex: 1 },
@@ -198,7 +208,8 @@ const styles = stylex.create({
     flexDirection: "column",
     gap: space.xxxs,
     listStylePosition: "inside",
-    marginBlock: 0,
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
     paddingInline: 0,
   },
 });
@@ -213,13 +224,12 @@ const legendStyles = {
   legend: typeStyles.textBase,
 } satisfies Record<LegendVariant, stylex.StyleXStyles>;
 
-function FieldSet({ sx, ...props }: Styled<FieldsetPrimitive.Root.Props>) {
+function FieldSet({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof FieldSetPrimitive>>) {
   return (
-    <FieldsetPrimitive.Root
-      data-slot="field-set"
-      {...props}
-      {...stylex.props(styles.set, sx)}
-    />
+    <FieldSetPrimitive {...withStyles(props, stylex.props(styles.set, sx))} />
   );
 }
 
@@ -227,23 +237,27 @@ function FieldLegend({
   sx,
   variant = "legend",
   ...props
-}: Styled<FieldsetPrimitive.Legend.Props> & { variant?: LegendVariant }) {
+}: Styled<ComponentProps<typeof FieldLegendPrimitive>> & {
+  variant?: LegendVariant;
+}) {
   return (
-    <FieldsetPrimitive.Legend
-      data-slot="field-legend"
+    <FieldLegendPrimitive
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.legend, legendStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.legend, legendStyles[variant], sx)
+      )}
     />
   );
 }
 
-function FieldGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
+function FieldGroup({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof FieldGroupPrimitive>>) {
   return (
-    <div
-      data-slot="field-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
+    <FieldGroupPrimitive
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
@@ -252,13 +266,16 @@ function Field({
   orientation = "vertical",
   sx,
   ...props
-}: Styled<FieldPrimitive.Root.Props> & { orientation?: FieldOrientation }) {
+}: Styled<ComponentProps<typeof FieldPrimitive>> & {
+  orientation?: FieldOrientation;
+}) {
   return (
-    <FieldPrimitive.Root
+    <FieldPrimitive
       data-orientation={orientation}
-      data-slot="field"
-      {...props}
-      {...stylex.props(styles.field, orientationStyles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.field, orientationStyles[orientation], sx)
+      )}
     />
   );
 }
@@ -267,61 +284,49 @@ function FieldContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="field-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
 
-function FieldLabel({ sx, ...props }: Styled<FieldPrimitive.Label.Props>) {
+function FieldLabel({
+  sx,
+  ...props
+}: Styled<Omit<ComponentProps<typeof FieldLabelPrimitive>, "htmlFor">>) {
   return (
-    <FieldPrimitive.Label
-      data-slot="field-label"
-      {...props}
-      {...stylex.props(labelStyles(), styles.label, sx)}
+    <FieldLabelPrimitive
+      {...withStyles(props, stylex.props(labelStyles(), styles.label, sx))}
     />
   );
 }
 
 /** A label's look without the `<label>`, for a card's heading inside a `FieldLabel`. */
-function FieldTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(labelStyles(), sx)),
-    render,
-    state: { slot: "field-title" },
-  });
+function FieldTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "field-title" },
+      withStyles(props, stylex.props(labelStyles(), sx))
+    ),
+    render
+  );
 }
 
 function FieldDescription({
   sx,
   ...props
-}: Styled<FieldPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof FieldDescriptionPrimitive>>) {
   return (
-    <FieldPrimitive.Description
-      data-slot="field-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+    <FieldDescriptionPrimitive
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
 
-/** A fieldset's helper text. Base UI's description only works inside a `Field`. */
-function FieldSetDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
-  return (
-    <p
-      data-slot="field-set-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
-    />
-  );
-}
-
-type FieldErrorProps = Styled<FieldPrimitive.Error.Props> &
+type FieldErrorProps = Styled<ComponentProps<typeof FieldErrorPrimitive>> &
   (
     | { errors: readonly ({ message?: string } | undefined)[]; match?: never }
     | { errors?: undefined }
@@ -330,10 +335,11 @@ type FieldErrorProps = Styled<FieldPrimitive.Error.Props> &
 function FieldError({ errors, sx, ...props }: FieldErrorProps) {
   if (errors === undefined) {
     return (
-      <FieldPrimitive.Error
-        data-slot="field-error"
-        {...props}
-        {...stylex.props([typeStyles.textSm, styles.error], sx)}
+      <FieldErrorPrimitive
+        {...withStyles(
+          props,
+          stylex.props([typeStyles.textSm, styles.error], sx)
+        )}
       />
     );
   }
@@ -355,14 +361,15 @@ function FieldError({ errors, sx, ...props }: FieldErrorProps) {
     return null;
   }
   return (
-    <FieldPrimitive.Error
-      data-slot="field-error"
+    <FieldErrorPrimitive
       match
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.error], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.error], sx)
+      )}
     >
       {children}
-    </FieldPrimitive.Error>
+    </FieldErrorPrimitive>
   );
 }
 
@@ -375,14 +382,18 @@ function FieldSeparator({
     <div
       data-content={children !== undefined}
       data-slot="field-separator"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.separator], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.separator], sx)
+      )}
     >
-      <Separator sx={styles.separatorLine} />
-      {children !== undefined && (
+      {children === undefined ? (
+        <Separator sx={styles.separatorLine} />
+      ) : (
         <>
+          <Separator decorative sx={styles.separatorLine} />
           <span data-slot="field-separator-content">{children}</span>
-          <Separator sx={styles.separatorLine} />
+          <Separator decorative sx={styles.separatorLine} />
         </>
       )}
     </div>
@@ -399,7 +410,6 @@ export {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
   fieldOrientations,
   legendVariants,

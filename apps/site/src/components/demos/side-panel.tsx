@@ -11,6 +11,7 @@ import {
   ItemTitle,
 } from "@/components/primitives/item";
 import {
+  createSidePanelController,
   Panel,
   PanelBody,
   PanelHeader,
@@ -22,16 +23,20 @@ import {
   SidePanelHeader,
   SidePanelSlot,
   SidePanelTitle,
+  SidePanelTrigger,
 } from "@/components/primitives/side-panel";
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
+  media,
   radii,
   sizes,
   space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
+
+const open = ":is([data-open])";
 
 const styles = stylex.create({
   stage: { width: "100%" },
@@ -85,10 +90,21 @@ const styles = stylex.create({
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
   },
-  row: { cursor: "pointer" },
+  row: {
+    backgroundColor: {
+      default: "transparent",
+      [open]: colors.fill,
+      [media.hover]: {
+        default: "transparent",
+        [open]: colors.fill,
+        ":hover:not([data-open])": colors.fillSubtle,
+      },
+      ":active:not([data-open])": colors.fillSubtle,
+    },
+    cursor: "pointer",
+  },
   // The frame is its own height, not the window's, so the slot fills it rather than sticking.
   slot: { alignSelf: "stretch", height: "auto", position: "static" },
-  selected: { backgroundColor: colors.fill },
   facts: {
     display: "grid",
     gap: space.xs,
@@ -106,7 +122,14 @@ const styles = stylex.create({
   value: { marginInlineStart: 0 },
 });
 
-const events = [
+interface ActivityEvent {
+  action: string;
+  actor: string;
+  status: string;
+  time: string;
+}
+
+const events: ActivityEvent[] = [
   {
     actor: "ana@acme.com",
     action: "Signed in",
@@ -141,9 +164,8 @@ const files = [
 ];
 
 function SidePanelDemo() {
-  const [slot, setSlot] = useState<HTMLDivElement | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
-  const event = selected === null ? undefined : events[selected];
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [panel] = useState(() => createSidePanelController<ActivityEvent>());
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.frame)}>
@@ -152,60 +174,59 @@ function SidePanelDemo() {
             Activity
           </header>
           <div {...stylex.props(styles.list)}>
-            {events.map((item, index) => (
+            {events.map((event) => (
               <Item
-                key={item.time}
-                onClick={() => {
-                  setSelected(index);
-                }}
-                // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- the item renders its children into the button
-                render={<button type="button" />}
+                key={event.time}
+                render={<SidePanelTrigger controller={panel} payload={event} />}
                 size="sm"
-                sx={[styles.row, selected === index && styles.selected]}
+                sx={styles.row}
               >
                 <ItemContent>
-                  <ItemTitle>{item.action}</ItemTitle>
-                  <ItemDescription>{item.actor}</ItemDescription>
+                  <ItemTitle>{event.action}</ItemTitle>
+                  <ItemDescription>{event.actor}</ItemDescription>
                 </ItemContent>
-                <ItemActions>{item.time}</ItemActions>
+                <ItemActions>{event.time}</ItemActions>
               </Item>
             ))}
           </div>
         </div>
-        <SidePanelSlot ref={setSlot} sx={styles.slot} />
-        <SidePanel
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelected(null);
-            }
-          }}
-          open={event !== undefined}
-        >
-          <SidePanelContent container={slot}>
-            <SidePanelHeader>
-              <SidePanelTitle>{event?.action}</SidePanelTitle>
-            </SidePanelHeader>
-            <SidePanelBody>
-              <dl {...stylex.props(styles.facts)}>
-                <dt {...stylex.props(styles.term)}>User</dt>
-                <dd {...stylex.props(styles.value)}>{event?.actor}</dd>
-                <dt {...stylex.props(styles.term)}>Time</dt>
-                <dd {...stylex.props(styles.value)}>{event?.time}</dd>
-                <dt {...stylex.props(styles.term)}>Status</dt>
-                <dd {...stylex.props(styles.value)}>
-                  <Badge
-                    color={event?.status === "Denied" ? "danger" : "success"}
-                    variant="secondary"
-                  >
-                    {event?.status}
-                  </Badge>
-                </dd>
-              </dl>
-            </SidePanelBody>
-            <SidePanelFooter>
-              <Button variant="outline">Copy event ID</Button>
-            </SidePanelFooter>
-          </SidePanelContent>
+        <SidePanel controller={panel}>
+          <SidePanelSlot sx={styles.slot}>
+            <SidePanelContent<ActivityEvent>
+              aria-label="Event details"
+              keepMounted
+            >
+              {({ payload: event }) => (
+                <>
+                  <SidePanelHeader>
+                    <SidePanelTitle>{event?.action}</SidePanelTitle>
+                  </SidePanelHeader>
+                  <SidePanelBody>
+                    <dl {...stylex.props(styles.facts)}>
+                      <dt {...stylex.props(styles.term)}>User</dt>
+                      <dd {...stylex.props(styles.value)}>{event?.actor}</dd>
+                      <dt {...stylex.props(styles.term)}>Time</dt>
+                      <dd {...stylex.props(styles.value)}>{event?.time}</dd>
+                      <dt {...stylex.props(styles.term)}>Status</dt>
+                      <dd {...stylex.props(styles.value)}>
+                        <Badge
+                          color={
+                            event?.status === "Denied" ? "danger" : "success"
+                          }
+                          variant="secondary"
+                        >
+                          {event?.status}
+                        </Badge>
+                      </dd>
+                    </dl>
+                  </SidePanelBody>
+                  <SidePanelFooter>
+                    <Button variant="outline">Copy event ID</Button>
+                  </SidePanelFooter>
+                </>
+              )}
+            </SidePanelContent>
+          </SidePanelSlot>
         </SidePanel>
       </div>
     </DemoRow>

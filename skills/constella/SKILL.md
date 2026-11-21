@@ -1,11 +1,11 @@
 ---
 name: constella
-description: Install and build with Constella, React components on Base UI styled with StyleX, added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/{primitives,typography,ai,tanstack}/* or @/lib/constella/*, uses stylex, or the user asks to set up, theme, add or fix a Constella component, or to build UI, forms or a chat screen with it.
+description: Install and build with Constella, React components on ui-sdk styled with StyleX, added with the shadcn CLI from the @constella registry. Use when a project has @constella in components.json, imports from @/components/{primitives,typography,ai,tanstack}/* or @/lib/constella/*, uses stylex, or the user asks to set up, theme, add or fix a Constella component, or to build UI, forms or a chat screen with it.
 ---
 
 # Constella
 
-React components on Base UI, styled with StyleX, copied into the project with the shadcn CLI. They look like shadcn's, but the API differs: Base UI underneath, `sx` instead of `className`, tokens instead of utility classes. **What you remember about shadcn is a starting point; the component's page wins.**
+React components on ui-sdk, styled with StyleX, copied into the project with the shadcn CLI. They look like shadcn's, but the API differs: ui-sdk underneath, `sx` instead of `className`, tokens instead of utility classes. **What you remember about shadcn is a starting point; the component's page wins.**
 
 ## Docs
 
@@ -41,9 +41,9 @@ Each links to a file with Incorrect/Correct pairs.
 ### Composition → [composition.md](./rules/composition.md)
 
 - **A custom trigger takes `render`, not `asChild`.** `<DialogTrigger render={<Button />}>`.
-- **A link that looks like a button spreads `buttonStyles`** onto an `<a>`. Not `<Button render={<a />}>`.
+- **A link that looks like a button is `<Button render={<a href="…" />}>`.** It keeps its link role. Not a Button that navigates in `onClick`.
 - **Dialog, Sheet and AlertDialog always need a Title.** Hide it with `sx={visuallyHidden.base}`.
-- **`Select` and `Command` take `items`.** Don't map your own children into `Command`.
+- **`Select` takes `items`; `Command` picks with `onSelect`.** Map `CommandItem`s as children, each with a string `value`. Enter doesn't fire `onClick`.
 - **Button has no `isLoading`.** Compose `Spinner` + `data-icon` + `aria-busy` + `disabled`.
 - **Full Card composition**, `TabsTrigger` inside `TabsList`, `Avatar` always with `AvatarFallback`.
 - **Don't wrap a component to restyle it.** Pass `sx`, or use the variant.
@@ -54,7 +54,7 @@ Each links to a file with Incorrect/Correct pairs.
 - **Validation is `invalid` on `Field`, `disabled` on `Field`.** Not `aria-invalid` by hand.
 - **Related checkboxes or radios go in `FieldSet` + `FieldLegend`.**
 - **A button or icon inside an input is `InputGroup` + `InputGroupAddon`.**
-- **Pick one of 2–7 options with `ToggleGroup`** (its value is an array), not a loop of `Button`s.
+- **Pick one of a few options with `SegmentedControl`**, not a loop of `Button`s. Use `ToggleGroup` when none or several can be on (its value is an array).
 
 ### Icons → [icons.md](./rules/icons.md)
 
@@ -79,7 +79,7 @@ Each links to a file with Incorrect/Correct pairs.
 | Need | Use |
 | --- | --- |
 | Action | `Button` (`primary` once per view) |
-| Link that looks like a button | `buttonStyles` on an `<a>` |
+| Link that looks like a button | `Button` with `render={<a />}` |
 | Text input | `Input`, `Textarea`, `InputGroup` |
 | Choice | `Select`, `Checkbox`, `RadioGroup`, `Switch`, `Slider`, `ToggleGroup`, `SegmentedControl` |
 | Form layout | `Field`, `FieldGroup`, `FieldSet` |
@@ -104,8 +104,8 @@ Each links to a file with Incorrect/Correct pairs.
 ## References
 
 - [rules/styling.md](./rules/styling.md): `sx`, tokens, shorthands, hover, type, dark mode
-- [rules/composition.md](./rules/composition.md): triggers, groups, overlays, Card, Button states, Select and Command `items`, Toast
-- [rules/forms.md](./rules/forms.md): Field, InputGroup, ToggleGroup, validation
+- [rules/composition.md](./rules/composition.md): triggers, groups, overlays, Card, Button states, Select `items`, Command picks, Toast
+- [rules/forms.md](./rules/forms.md): Field, InputGroup, SegmentedControl, ToggleGroup, validation
 - [rules/icons.md](./rules/icons.md): Hugeicons, sizes, `data-icon`, RTL
 - [rules/ai.md](./rules/ai.md): chat parts, Trace, PromptInput, DataTable, Chart
 - [setup.md](./setup.md): install, StyleX config per framework, theming, fonts, dark mode, RTL

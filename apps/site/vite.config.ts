@@ -28,11 +28,13 @@ export default defineConfig({
       tomekit(),
       tanstackStart({
         // Dev-only: they 404 in builds.
-        pages: ["/break", "/clip", "/poster"].map((devPath) => ({
-          path: devPath,
-          prerender: { enabled: false },
-          sitemap: { exclude: true },
-        })),
+        pages: ["/agent-staged", "/break", "/clip", "/poster"].map(
+          (devPath) => ({
+            path: devPath,
+            prerender: { enabled: false },
+            sitemap: { exclude: true },
+          })
+        ),
         prerender: {
           crawlLinks: true,
           enabled: true,
