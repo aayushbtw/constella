@@ -80,7 +80,10 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     height: "max-content",
+    listStyleType: "none",
     minHeight: `calc(100% + var(${anchorRoomVar}, 0px))`,
+    paddingInlineEnd: 0,
+    paddingInlineStart: 0,
   },
   item: {
     flexShrink: 0,
@@ -166,7 +169,7 @@ function createMessageScroller(position: MessageScrollerPosition) {
             : "smooth",
       });
     },
-    focusLog() {
+    focusContent() {
       content?.focus({ preventScroll: true });
     },
     actions: {
@@ -286,13 +289,13 @@ function MessageScrollerViewport({
 function MessageScrollerContent({
   sx,
   ...props
-}: Styled<ComponentProps<"div">>) {
+}: Styled<ComponentProps<"ol">>) {
   const scroller = useScroller();
   return (
-    <div
+    <ol
+      aria-live="polite"
       aria-relevant="additions"
       data-slot="message-scroller-content"
-      role="log"
       tabIndex={-1}
       {...mergeProps(withStyles(props, stylex.props(styles.content, sx)), {
         ref: scroller.holdContent,
@@ -306,13 +309,13 @@ function MessageScrollerItem({
   scrollAnchor = false,
   sx,
   ...props
-}: Styled<ComponentProps<"div">> & {
+}: Styled<ComponentProps<"li">> & {
   messageId: string;
   scrollAnchor?: boolean;
 }) {
   const scroller = useScroller();
   const register = useCallback(
-    (element: HTMLDivElement) => {
+    (element: HTMLLIElement) => {
       if (scrollAnchor) {
         scroller.pinQuestionToTop(element);
       }
@@ -322,7 +325,7 @@ function MessageScrollerItem({
   );
 
   return (
-    <div
+    <li
       data-slot="message-scroller-item"
       {...mergeProps(withStyles(props, stylex.props(styles.item, sx)), {
         ref: register,
@@ -357,7 +360,7 @@ function MessageScrollerButton({
           const button = event.currentTarget;
           scroller.jumpToEnd(details.source === "keyboard");
           if (button.ownerDocument.activeElement === button) {
-            scroller.focusLog();
+            scroller.focusContent();
           }
         }
       }}

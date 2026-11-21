@@ -88,13 +88,16 @@ What `agent.snapshot()` lists for the preview example:
 
 Conversation and Scroll to end are Message Scroller's own entries. Conversation is its Scroll Area, named by the viewport's `aria-label`, with nothing to act on. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
 
+Each `MessageScrollerItem` is a row, so a reply's actions carry its opening words: `press` "Copy Constella" copies the reply that starts "Constella". Those words also join every action's name, so a reply that says "send" makes a bare "Send" match its actions too.
+
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
 | `MessageScrollerProvider` | `defaultScrollPosition`: `"end"` (default) or `"start"` |
 | `MessageScrollerViewport` | Scroll Area's bar; a tab stop only while it overflows and holds no control |
-| `MessageScrollerItem` | `messageId`, for `scrollToMessage`; `scrollAnchor` |
+| `MessageScrollerContent` | An `ol` that announces each new turn (`aria-live="polite"`); **hold only `MessageScrollerItem`s in it**, since a list takes no other children |
+| `MessageScrollerItem` | An `li`; `messageId`, for `scrollToMessage`; `scrollAnchor` |
 | `MessageScrollerButton` | A pill that rises in while there's more below; named "Scroll to end" unless given `aria-label` |
 | `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage(messageId)`, each taking `{ behavior }`; `prepend()` |
 | `useMessageScrollerState` | `following`, `atBottom`, `unseen` |

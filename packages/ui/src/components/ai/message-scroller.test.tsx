@@ -373,7 +373,7 @@ test("the viewport is a tab stop only while it overflows and holds no control", 
   });
 });
 
-test("pressing Scroll to end while it has focus moves focus into the log, not the page", async () => {
+test("pressing Scroll to end while it has focus moves focus into the thread, not the page", async () => {
   render(<Thread defaultScrollPosition="start" />);
   stubScroller(1000);
   const button = screen.getByRole("button", { name: "Scroll to end" });
@@ -381,7 +381,7 @@ test("pressing Scroll to end while it has focus moves focus into the log, not th
 
   await agent.act({ steps: [{ action: "press", ref: "Scroll to end" }] });
 
-  expect(document.activeElement).toBe(screen.getByRole("log"));
+  expect(document.activeElement).toBe(screen.getByRole("list"));
 });
 
 function stubClipboard() {
@@ -454,7 +454,7 @@ test("each reply is a row, so an agent copies or retries one reply by its words"
   const result = await agent.act({
     steps: [
       { action: "press", ref: "Copy themes" },
-      { action: "press", ref: "Retry component library" },
+      { action: "press", ref: "Retry Constella" },
     ],
   });
   expect(result.ok, result.error?.message).toBe(true);
@@ -471,8 +471,6 @@ test("the thread is a list of turns that announces each new one", () => {
   expect(screen.getAllByRole("listitem")).toHaveLength(replies.length);
 });
 
-// Known gap, upstream: an exact label doesn't outrank row words, so a reply
-// that says "send" makes the composer's Send ambiguous.
 test("a reply's words join its actions' names, so a reply that says send collides with Send", async () => {
   render(<Chat replies={["To send a file, attach it first."]} />);
 
