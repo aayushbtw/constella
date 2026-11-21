@@ -147,12 +147,8 @@ const sideInset = {
 const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 
 const styles = stylex.create({
-  // ui-sdk's combobox leaves the browser's `[popover]` border, padding and margin.
+  // ui-sdk's combobox leaves the browser's `[popover]` padding and margin.
   content: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     display: "flex",
     flexDirection: "column",
     marginBlock: 0,
@@ -512,6 +508,7 @@ function ComboboxContent({
           props,
           stylex.props(
             popupReset.base,
+            popupReset.borderless,
             popupSurface.base,
             styles.content,
             popupMotion.popover,
