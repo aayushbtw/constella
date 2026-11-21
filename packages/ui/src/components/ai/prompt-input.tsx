@@ -3,6 +3,9 @@
 import { ArrowUp02Icon, StopIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createInputHistory } from "@ui-sdk/core";
+import { createInputController } from "@ui-sdk/react/textarea";
+import type { InputController } from "@ui-sdk/react/textarea";
 import {
   TriggerMenu,
   TriggerMenuContent,
@@ -18,6 +21,7 @@ import {
   createContext,
   use,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -204,37 +208,91 @@ interface Anchor {
 
 const AnchorContext = createContext<Anchor | null>(null);
 
-/** A form around an input group: submit it with Enter or the submit button. */
+interface PromptInputContextValue {
+  allowSend: (sendable: boolean) => void;
+  field: InputController;
+  recall: ReturnType<typeof createInputHistory<string>>;
+}
+
+const PromptInputContext = createContext<PromptInputContextValue | null>(null);
+
+/** A form around an input group: submit it with Enter or the submit button. While that button can't send, a submit does nothing; each prompt that goes through joins the textarea's history. */
 function PromptInput({
   children,
+  onSubmit,
   sx,
   ...props
 }: Styled<ComponentProps<"form">>) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [field] = useState(createInputController);
+  const [prompts, setPrompts] = useState<readonly string[]>([]);
+  const canSend = useRef(true);
+  const allowSend = useCallback((sendable: boolean) => {
+    canSend.current = sendable;
+  }, []);
+  const context = useMemo(
+    () => ({
+      allowSend,
+      field,
+      recall: createInputHistory({
+        entries: () => prompts,
+        read: () => field.getValue(),
+        write: (value, event) =>
+          field.setValue(value, { event, reason: "input-change" }),
+      }),
+    }),
+    [allowSend, field, prompts]
+  );
   return (
     <form
       data-slot="prompt-input"
       {...withStyles(props, stylex.props(styles.form, sx))}
+      onSubmit={(event) => {
+        if (!canSend.current) {
+          event.preventDefault();
+          return;
+        }
+        const prompt = field.getValue();
+        if (prompt.trim() !== "") {
+          context.recall.reset();
+          setPrompts((sent) =>
+            prompt === sent.at(-1) ? sent : [...sent, prompt]
+          );
+        }
+        onSubmit?.(event);
+      }}
     >
-      <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
-        {children}
-      </InputGroup>
+      <PromptInputContext value={context}>
+        <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
+          {children}
+        </InputGroup>
+      </PromptInputContext>
     </form>
   );
 }
 
-/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
+type PromptInputTextareaProps = Omit<TextareaProps, "controller">;
+
+/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. ArrowUp on the first line brings back earlier prompts, and ArrowDown returns to the draft. */
 function PromptInputTextarea({
+  onKeyDown,
   placeholder = "Ask anything…",
   sx,
   ...props
-}: TextareaProps) {
+}: PromptInputTextareaProps) {
+  const context = use(PromptInputContext);
   return (
     <InputGroupTextarea
+      controller={context?.field}
       data-prompt-input-textarea=""
       placeholder={placeholder}
       rows={1}
       submitShortcut="enter"
       {...props}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        context?.recall.keydown(event.nativeEvent);
+      }}
       sx={[styles.textarea, sx]}
     />
   );
@@ -346,8 +404,9 @@ function SubmitIcons({
   );
 }
 
-/** Sends the prompt. While an answer streams, a Stop button named by `stopLabel` takes its place and calls `onStop`. */
+/** Sends the prompt. While an answer streams, a Stop button named by `stopLabel` takes its place and calls `onStop`. Enter sends only while Send is shown, enabled and not busy. */
 function PromptInputSubmit({
+  disabled,
   onBlur,
   onFocus,
   onStop,
@@ -363,6 +422,13 @@ function PromptInputSubmit({
   stopLabel?: string;
 }) {
   const shown: SubmitIcon = state === "streaming" ? "stop" : "send";
+  const allowSend = use(PromptInputContext)?.allowSend;
+  const sendable =
+    shown === "send" && state !== "submitted" && disabled !== true;
+  useEffect(() => {
+    allowSend?.(sendable);
+    return () => allowSend?.(true);
+  }, [allowSend, sendable]);
   const [held, setHeld] = useState(shown);
   const [from, setFrom] = useState<SubmitIcon>();
   const [swapsInstantly, setSwapsInstantly] = useState(false);
@@ -417,6 +483,7 @@ function PromptInputSubmit({
       aria-label="Send"
       data-slot="prompt-input-submit"
       data-state={state}
+      disabled={disabled}
       key="send"
       size={size}
       type="submit"
@@ -451,7 +518,7 @@ function PromptInputCommand<T = string>({
 }
 
 type PromptInputCommandTextareaProps = Omit<
-  TextareaProps,
+  PromptInputTextareaProps,
   "onValueChange" | "value"
 > &
   (

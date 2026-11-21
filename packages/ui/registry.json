@@ -1143,7 +1143,7 @@
       "name": "prompt-input",
       "type": "registry:ui",
       "title": "Prompt Input",
-      "description": "The chat composer on an input group: grows with its text, submits on Enter, swaps to Stop while streaming, and opens a command list over itself.",
+      "description": "The chat composer on an input group: grows with its text, submits on Enter, brings back earlier prompts with ArrowUp, swaps to Stop while streaming, and opens a command list over itself.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",

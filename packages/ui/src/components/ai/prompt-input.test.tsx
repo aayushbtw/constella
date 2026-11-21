@@ -735,6 +735,208 @@ test("an agent's setValue on Message lands on the textarea, not the command menu
   expect(onSubmit.mock.calls).toEqual([["Translate this"]]);
 });
 
+// The driver's keys don't edit text, so this deletes a character the way a browser's Backspace does.
+async function backspace() {
+  await act(async () => {
+    const field = box();
+    const end = field.selectionEnd;
+    const init = { inputType: "deleteContentBackward", bubbles: true };
+    if (
+      field.dispatchEvent(
+        new InputEvent("beforeinput", { ...init, cancelable: true })
+      )
+    ) {
+      field.setRangeText("", Math.max(0, end - 1), end, "end");
+      field.dispatchEvent(new InputEvent("input", init));
+    }
+    await driver.settle();
+  });
+}
+
+async function sendPrompt(prompt: string) {
+  await type(prompt);
+  await press("Enter");
+}
+
+test("ArrowUp brings back earlier prompts, newest first, and ArrowDown returns to the draft", async () => {
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<Composer onSubmit={onSubmit} />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+  await sendPrompt("Draft an email");
+  expect(onSubmit.mock.calls).toEqual([["Summarize Q3"], ["Draft an email"]]);
+
+  await type("Half a thought");
+  await press("ArrowUp");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowDown");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowDown");
+  expect(box().value).toBe("Half a thought");
+});
+
+test("a recalled prompt sends like a typed one", async () => {
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<Composer onSubmit={onSubmit} />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+
+  await press("ArrowUp");
+  expect(send().disabled).toBe(false);
+  await press("Enter");
+  expect(onSubmit.mock.calls).toEqual([["Summarize Q3"], ["Summarize Q3"]]);
+});
+
+test("resending the newest prompt records it once and starts the history again from it", async () => {
+  const onSubmit = vi.fn<(text: string) => void>();
+  render(<Composer onSubmit={onSubmit} />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+  await sendPrompt("Draft an email");
+  await press("ArrowUp");
+  expect(box().value).toBe("Draft an email");
+  await press("Enter");
+  expect(onSubmit.mock.calls).toEqual([
+    ["Summarize Q3"],
+    ["Draft an email"],
+    ["Draft an email"],
+  ]);
+
+  await press("ArrowUp");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+  await press("ArrowDown");
+  expect(box().value).toBe("Draft an email");
+  await press("ArrowDown");
+  expect(box().value).toBe("");
+  await press("ArrowDown");
+  expect(box().value).toBe("");
+});
+
+function ChatComposer({
+  onSubmit,
+  state,
+}: {
+  onSubmit: (text: string) => void;
+  state: PromptInputState;
+}) {
+  const [text, setText] = useState("");
+  return (
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit(text);
+        setText("");
+      }}
+    >
+      <PromptInputTextarea
+        aria-label="Message"
+        onValueChange={setText}
+        value={text}
+      />
+      <PromptInputFooter>
+        <PromptInputSubmit disabled={text.trim() === ""} state={state} />
+      </PromptInputFooter>
+    </PromptInput>
+  );
+}
+
+test.each(["submitted", "streaming"] as const)(
+  "while %s, Enter neither sends nor records, so a prompt deleted afterwards stays out of the history",
+  async (state) => {
+    const onSubmit = vi.fn<(text: string) => void>();
+    const { rerender } = render(
+      <ChatComposer onSubmit={onSubmit} state="ready" />
+    );
+    box().focus();
+    await sendPrompt("Summarize Q3");
+
+    rerender(<ChatComposer onSubmit={onSubmit} state={state} />);
+    await sendPrompt("R");
+    expect(box().value).toBe("R");
+    await backspace();
+    expect(box().value).toBe("");
+
+    rerender(<ChatComposer onSubmit={onSubmit} state="ready" />);
+    expect(onSubmit.mock.calls).toEqual([["Summarize Q3"]]);
+    await press("ArrowUp");
+    expect(box().value).toBe("Summarize Q3");
+    await press("ArrowUp");
+    expect(box().value).toBe("Summarize Q3");
+  }
+);
+
+test("an uncontrolled prompt cleared with the form's reset joins the history", async () => {
+  render(
+    <PromptInput
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.currentTarget.reset();
+      }}
+    >
+      <PromptInputTextarea aria-label="Message" />
+    </PromptInput>
+  );
+  box().focus();
+  await sendPrompt("Summarize Q3");
+  expect(box().value).toBe("");
+
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+});
+
+test("ArrowUp on a later line of a multi-line draft moves the caret, not the history", async () => {
+  render(<Composer />);
+  box().focus();
+  await sendPrompt("Summarize Q3");
+
+  await type("First line\nsecond line");
+  await press("ArrowUp");
+  expect(box().value).toBe("First line\nsecond line");
+
+  box().setSelectionRange(5, 5);
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+});
+
+test("while the command list is open, ArrowUp moves its highlight and leaves the draft", async () => {
+  renderComposer();
+  await sendPrompt("Summarize Q3");
+
+  await type("/");
+  expect(highlighted()).toBe("Summarize");
+  await press("ArrowUp");
+  expect(box().value).toBe("/");
+  expect(highlighted()).toBe("Translate");
+
+  await press("Escape");
+  await press("ArrowUp");
+  expect(box().value).toBe("Summarize Q3");
+});
+
+test("each prompt input keeps its own history", async () => {
+  render(
+    <>
+      <Composer />
+      <Composer />
+    </>
+  );
+  const [first, second] = screen.getAllByRole<HTMLTextAreaElement>("textbox", {
+    name: "Message",
+  });
+  first?.focus();
+  await sendPrompt("Summarize Q3");
+
+  second?.focus();
+  await press("ArrowUp");
+  expect(second?.value).toBe("");
+});
+
 interface ValueChange {
   source: string;
   value: string;
