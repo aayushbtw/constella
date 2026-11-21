@@ -16,6 +16,17 @@ const styles = stylex.create({
   answer: {
     maxWidth: 448,
   },
+  stack: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.md,
+  },
+  flushList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: space.xxs,
+    marginInline: `calc(-1 * ${space.row})`,
+  },
   panel: {
     display: "flex",
     flexDirection: "column",
@@ -52,12 +63,19 @@ function CitationDemo() {
   return (
     <DemoRow>
       <Citations aria-label="Sources for this answer">
-        <Text color="primary" size="lg" sx={styles.answer}>
-          Acme’s revenue grew 12% last quarter, ahead of forecasts{" "}
-          <Citation sources={[sources.acme, sources.newsroom]} />. Its new
-          dashboard is built on open components{" "}
-          <Citation sources={[sources.shadcn]} />.
-        </Text>
+        <div {...stylex.props(styles.answer, styles.stack)}>
+          <Text color="primary" size="lg">
+            Acme’s revenue grew 12% last quarter, ahead of forecasts{" "}
+            <Citation sources={[sources.acme, sources.newsroom]} />. Its new
+            dashboard is built on open components{" "}
+            <Citation sources={[sources.shadcn]} />.
+          </Text>
+          <div {...stylex.props(styles.flushList)}>
+            {Object.values(sources).map((source) => (
+              <CitationSource key={source.url} source={source} />
+            ))}
+          </div>
+        </div>
       </Citations>
     </DemoRow>
   );

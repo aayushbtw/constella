@@ -119,7 +119,18 @@ Pass an `<a>` to `render` for a link that looks like a button. It keeps its link
 
 ## Close Button
 
-`CloseButton` is the X that closes Dialog, Sheet and Side Panel: a `ghost` `icon-sm` Button named "Close". Render it through a Close part. Pass `children` to swap the icon.
+`CloseButton` is the X that closes Dialog, Sheet and Side Panel: a `ghost` `icon-sm` Button named "Close". Pass `children` to swap the icon.
+
+<!-- ::demo name="button-close" -->
+
+```tsx
+<CloseButton />
+<CloseButton aria-label="Minimize">
+  <HugeiconsIcon icon={MinusSignIcon} size={sizes.icon} aria-hidden />
+</CloseButton>
+```
+
+Render it through a Close part, so it closes that surface.
 
 ```tsx
 <DialogClose render={<CloseButton />} />

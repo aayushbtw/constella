@@ -5,7 +5,7 @@ import { afterEach, expect, test, vi } from "vite-plus/test";
 
 import { durations } from "@/lib/constella/tokens.stylex";
 
-import { Citation, Citations } from "./citation";
+import { Citation, Citations, CitationSource } from "./citation";
 import type { Source } from "./citation";
 
 const agent = createAgent();
@@ -90,6 +90,33 @@ const second: Source = {
   title: "Another headline",
   url: "https://beta.example/story",
 };
+
+test("sources listed outside the card are links an agent can press", () => {
+  render(
+    <>
+      <CitationSource source={withoutLogo} />
+      <CitationSource source={second} />
+    </>
+  );
+
+  const links = screen.getAllByRole("link");
+  expect(links.map((link) => link.getAttribute("href"))).toEqual([
+    withoutLogo.url,
+    second.url,
+  ]);
+  expect(links.every((link) => link.dataset.slot === "citation-source")).toBe(
+    true
+  );
+  const pressable = agent
+    .snapshot()
+    .filter(
+      (entry) => entry.offPage !== true && entry.actions.includes("press")
+    );
+  expect(pressable.map((entry) => entry.label)).toEqual([
+    "Acme Journal, A headline",
+    "Beta Times, Another headline",
+  ]);
+});
 
 test("a citation's pill opens the shared card with a link to each source", async () => {
   vi.useFakeTimers();

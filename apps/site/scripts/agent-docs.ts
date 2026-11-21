@@ -220,6 +220,9 @@ const rowsOf = (entries: Entry[]): Row[] =>
     actions: actionsCell(first),
   }));
 
+// The formatter's width: it rewrites a wider aligned table in compact form, and `--check` compares exact text.
+const printWidth = 80;
+
 const cell = (text: string) => text.replaceAll("|", String.raw`\|`);
 
 function table(rows: Row[]) {
@@ -230,12 +233,14 @@ function table(rows: Row[]) {
   const widths = [0, 1, 2].map((column) =>
     Math.max(3, ...cells.map((line) => line[column].length))
   );
+  const aligned = 4 + widths.reduce((sum, width) => sum + width + 3, 0) - 3;
+  const compact = aligned > printWidth;
   const line = (values: string[]) =>
-    `| ${values.map((value, column) => value.padEnd(widths[column])).join(" | ")} |`;
+    `| ${values.map((value, column) => (compact ? value : value.padEnd(widths[column]))).join(" | ")} |`;
   const [header, ...body] = cells;
   return [
     line(header),
-    line(widths.map((width) => "-".repeat(width))),
+    line(widths.map((width) => "-".repeat(compact ? 3 : width))),
     ...body.map(line),
   ];
 }
