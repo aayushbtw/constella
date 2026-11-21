@@ -920,7 +920,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "Picks one option from a list, on an input's surface, with groups and scrolling.",
+      "description": "Picks one option from a list, on an input's surface, with groups, scrolling and search.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
@@ -928,7 +928,10 @@
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
       ],
-      "registryDependencies": ["https://constella.aayush.cv/r/base.json"],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/input-group.json"
+      ],
       "files": [
         {
           "path": "src/components/primitives/select.tsx",

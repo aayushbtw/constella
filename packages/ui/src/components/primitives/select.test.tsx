@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ChangeDetails } from "@ui-sdk/core";
 import { createAgent } from "@ui-sdk/react/agent";
 import type {
+  ListData,
   SelectProps,
   SelectValueChangeReason,
 } from "@ui-sdk/react/select";
@@ -12,10 +13,14 @@ import { Field, FieldDescription, FieldLabel } from "./field";
 import {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
   SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
   SelectLabel,
+  SelectList,
   SelectSeparator,
   SelectTrigger,
   SelectValue,
@@ -320,4 +325,158 @@ test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps th
   expect(seen).toEqual([[true, "agent"]]);
   expect(trigger().getAttribute("aria-expanded")).toBe("false");
   expect(screen.queryByRole("listbox")).toBeNull();
+});
+
+const timezones = [
+  {
+    items: [
+      { label: "Eastern Standard Time", value: "est" },
+      { label: "Pacific Standard Time", value: "pst" },
+    ],
+    label: "North America",
+    type: "group" as const,
+  },
+  {
+    items: [
+      { label: "Japan Standard Time", value: "jst" },
+      { label: "Moscow Time", value: "msk" },
+    ],
+    label: "Asia",
+    type: "group" as const,
+  },
+];
+
+function Options({ entries }: { entries: ListData<unknown> }) {
+  return entries.map((entry) => {
+    const item =
+      // oxlint-disable-next-line anti-slop/no-runtime-typeof -- a plain string is an item in ui-sdk's ListData
+      typeof entry === "string" ? { label: entry, value: entry } : entry;
+    if ("type" in item) {
+      return item.type === "group" ? (
+        <SelectGroup key={item.label}>
+          <SelectGroupLabel>{item.label}</SelectGroupLabel>
+          <Options entries={item.items} />
+        </SelectGroup>
+      ) : null;
+    }
+    return (
+      <SelectItem key={item.label} label={item.label} value={item.value}>
+        <SelectItemText />
+      </SelectItem>
+    );
+  });
+}
+
+function Timezone({ search = true }: { search?: boolean }) {
+  return (
+    <Select items={timezones}>
+      <SelectLabel>Timezone</SelectLabel>
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      {search ? (
+        <SelectContent>
+          <SelectInput aria-label="Search timezones" />
+          <SelectEmpty>No timezones found.</SelectEmpty>
+          <SelectList>{({ items }) => <Options entries={items} />}</SelectList>
+        </SelectContent>
+      ) : (
+        <SelectContent>
+          <Options entries={timezones} />
+        </SelectContent>
+      )}
+    </Select>
+  );
+}
+
+async function openTimezone() {
+  fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
+  return await screen.findByRole("combobox", { name: "Search timezones" });
+}
+
+function options() {
+  return screen.queryAllByRole("option").map((option) => option.textContent);
+}
+
+test("typing in the search field keeps the matching items and marks the match", async () => {
+  render(<Timezone />);
+  const search = await openTimezone();
+  expect(options()).toHaveLength(4);
+  expect(search.closest("[data-slot='select-input-group']")).not.toBeNull();
+
+  fireEvent.change(search, { target: { value: "japan" } });
+  await waitFor(() => {
+    expect(options()).toEqual(["Japan Standard Time"]);
+  });
+  const text = screen
+    .getByRole("option", { name: "Japan Standard Time" })
+    .querySelector<HTMLElement>("[data-slot='select-item-text']");
+  expect(Object.hasOwn(text?.dataset ?? {}, "matched")).toBe(true);
+  expect(text?.querySelector("mark")?.textContent).toBe("Japan");
+  expect(screen.queryByText("North America")).toBeNull();
+});
+
+test("a search that matches nothing shows the empty state", async () => {
+  render(<Timezone />);
+  const search = await openTimezone();
+  expect(screen.queryByText("No timezones found.")).toBeNull();
+
+  fireEvent.change(search, { target: { value: "zzz" } });
+  expect(await screen.findByText("No timezones found.")).toBeTruthy();
+  expect(options()).toEqual([]);
+});
+
+function highlighted(name: string) {
+  return Object.hasOwn(
+    screen.getByRole("option", { name }).dataset,
+    "highlighted"
+  );
+}
+
+test("arrow keys and Enter pick a filtered item while focus stays in the search field", async () => {
+  render(<Timezone />);
+  const search = await openTimezone();
+  await waitFor(() => {
+    expect(document.activeElement).toBe(search);
+  });
+
+  fireEvent.change(search, { target: { value: "standard" } });
+  await waitFor(() => {
+    expect(options()).toHaveLength(3);
+  });
+  await waitFor(() => {
+    expect(highlighted("Eastern Standard Time")).toBe(true);
+  });
+  fireEvent.keyDown(search, { key: "ArrowDown" });
+  await waitFor(() => {
+    expect(highlighted("Pacific Standard Time")).toBe(true);
+  });
+  expect(document.activeElement).toBe(search);
+
+  fireEvent.keyDown(search, { key: "Enter" });
+  await waitFor(() => {
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+  expect(
+    screen.getByRole("combobox", { name: "Timezone" }).textContent
+  ).toContain("Pacific Standard Time");
+});
+
+function snapshotLabels() {
+  return agent
+    .snapshot()
+    .filter((entry) => entry.offPage !== true && entry.component !== "more")
+    .map((entry) => entry.label);
+}
+
+test("search adds no names to the agent's snapshot", async () => {
+  const { unmount } = render(<Timezone search={false} />);
+  fireEvent.click(screen.getByRole("combobox", { name: "Timezone" }));
+  await screen.findByRole("listbox");
+  const plain = snapshotLabels();
+  unmount();
+
+  render(<Timezone />);
+  await openTimezone();
+  expect(snapshotLabels()).toEqual(plain);
 });
