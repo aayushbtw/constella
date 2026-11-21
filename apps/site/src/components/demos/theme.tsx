@@ -28,6 +28,10 @@ import {
 } from "@/components/primitives/slider";
 import { Switch } from "@/components/primitives/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/primitives/tabs";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/primitives/toggle-group";
 import { radii, sizes, space } from "@/lib/constella/tokens.stylex";
 import { Stage } from "~/components/demos/frame";
 import {
@@ -80,9 +84,7 @@ const styles = stylex.create({
     gap: space.sm,
   },
   presets: {
-    display: "flex",
     flexWrap: "wrap",
-    gap: space.xxs,
     gridColumn: "1 / -1",
   },
   swatch: (color: string) => ({
@@ -182,17 +184,25 @@ function ThemeBuilderDemo() {
       <Stage
         controls={
           <>
-            <div {...stylex.props(styles.presets)}>
+            <ToggleGroup
+              aria-label="Theme"
+              deselectable={false}
+              onValueChange={([name]) => {
+                if (name !== undefined) {
+                  setTheme(name);
+                  setAccent(themes[name].accent);
+                }
+              }}
+              size="sm"
+              spacing={1}
+              sx={styles.presets}
+              value={[theme]}
+            >
               {themeNames.map((name) => (
-                <Button
+                <ToggleGroupItem
                   key={name}
-                  onClick={() => {
-                    setTheme(name);
-                    setAccent(themes[name].accent);
-                  }}
-                  size="sm"
                   title={themes[name].description}
-                  variant={theme === name ? "secondary" : "ghost"}
+                  value={name}
                 >
                   <span
                     data-icon="inline-start"
@@ -201,9 +211,9 @@ function ThemeBuilderDemo() {
                     )}
                   />
                   {themes[name].label}
-                </Button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
             <Field>
               <FieldLabel>Accent</FieldLabel>
               <Select
