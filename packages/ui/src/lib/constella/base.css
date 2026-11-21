@@ -155,9 +155,6 @@
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):focus-visible
-    ),
-    [data-slot="questionnaire-choice"]:has(
-      > [data-slot="questionnaire-choice-input"]:focus-visible
     )
   ) {
     outline: 1px solid var(--focus-ring);
@@ -182,8 +179,7 @@
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):focus-visible
-    ),
-    :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
+    )
   ) {
     outline-color: var(--red-11);
   }
@@ -199,7 +195,7 @@
     [role="alertdialog"],
     [role="menu"],
     [role="listbox"],
-    [data-slot="questionnaire-item"]
+    [data-slot="questionnaire"] [data-slot="field-set"][data-active]
   ):focus-visible {
     outline: none;
   }
