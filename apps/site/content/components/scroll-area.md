@@ -50,13 +50,13 @@ ScrollArea
 </ScrollArea>
 ```
 
-For content wider and taller than the area, like a sheet, keep the vertical one and add a `ScrollBar` with `orientation="horizontal"`. The corner between them stays clear.
+For content wider and taller than the area, like a grid, keep the vertical one and add a `ScrollBar` with `orientation="horizontal"`. The corner between them stays clear.
 
 <!-- ::demo name="scroll-area-both" -->
 
 ```tsx
 <ScrollArea sx={styles.sheet}>
-  <table>…</table>
+  <div {...stylex.props(styles.grid)}>{tiles}</div>
   <ScrollBar orientation="horizontal" />
 </ScrollArea>
 ```
