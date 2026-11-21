@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { checkPattern } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test } from "vite-plus/test";
 
@@ -181,4 +182,12 @@ test("a group in a set takes the legend as its name and the set's description as
         .getAttribute("aria-describedby")
     ).toBe("billing-description");
   });
+});
+
+test("a group follows the WAI-ARIA radio group pattern", async () => {
+  render(<Settings />);
+  await checkPattern(
+    screen.getByRole("radiogroup", { name: "Density" }),
+    "radio-group"
+  );
 });

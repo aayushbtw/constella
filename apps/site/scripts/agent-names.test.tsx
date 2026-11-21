@@ -130,17 +130,19 @@ test("a row's text makes the address, so Remove in two rows isn't ambiguous", as
 });
 
 test("a trigger and its popup share a name without being ambiguous", async () => {
-  expectAmbiguous(
-    await ambiguityOf(
-      <Popover defaultOpen>
-        <PopoverTrigger>Dimensions</PopoverTrigger>
-        <PopoverContent>
-          <PopoverTitle>Dimensions</PopoverTitle>
-        </PopoverContent>
-      </Popover>
-    ),
-    { Dimensions: false }
+  const seen = await ambiguityOf(
+    <Popover defaultOpen>
+      <PopoverTrigger render={<Button />}>Dimensions</PopoverTrigger>
+      <PopoverContent>
+        <PopoverTitle>Dimensions</PopoverTitle>
+      </PopoverContent>
+    </Popover>
   );
+  expect(seen.map(({ address }) => address)).toEqual([
+    "Dimensions",
+    "Dimensions",
+  ]);
+  expectAmbiguous(seen, { Dimensions: false });
 });
 
 test("two buttons with one label are ambiguous", async () => {

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { checkPattern } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import { expect, test } from "vite-plus/test";
 
@@ -133,4 +134,12 @@ test("an agent finds every switch by its label and sets it", async () => {
       .getByRole("switch", { name: "Weekly digest" })
       .getAttribute("aria-checked")
   ).toBe("false");
+});
+
+test("a switch follows the WAI-ARIA switch pattern", async () => {
+  render(<Settings />);
+  await checkPattern(
+    screen.getByRole("switch", { name: "Airplane mode" }),
+    "switch"
+  );
 });

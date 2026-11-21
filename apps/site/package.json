@@ -10,7 +10,8 @@
     "generate": "tomekit build",
     "deploy": "cf deploy",
     "dev": "vp dev",
-    "preview": "vp preview"
+    "preview": "vp preview",
+    "take-agent-build": "node scripts/take-agent-build.ts"
   },
   "dependencies": {
     "@constella/ui": "workspace:*",
