@@ -4,6 +4,8 @@ import path from "node:path";
 import type { Page } from "playwright";
 import { z } from "zod";
 
+import { ambiguousIn } from "./agent-names.ts";
+import type { Named } from "./agent-names.ts";
 import {
   builtAssetsDir,
   gatedSlugs,
@@ -67,60 +69,6 @@ async function listPages() {
     )
     .map((file) => `/${path.posix.dirname(file)}`);
   return [home, ...pages].toSorted();
-}
-
-interface Named {
-  actions: string[];
-  component: string;
-  label: string;
-  row?: string;
-}
-
-// Mirrors how the agent finds a component by name: the same folded label, or its
-// words inside another's label and row. Two it finds that take the same action
-// can't be told apart by that action, so the name isn't an address. A button and a
-// popup of one name are a trigger and what it opens, which the agent tells apart.
-const fold = (text: string) =>
-  text
-    .replaceAll(/[ßẞ]/gu, "ss")
-    .normalize("NFKD")
-    .replaceAll(/\p{M}/gu, "")
-    .toLowerCase();
-const wordsOf = (text: string) =>
-  ` ${fold(text)} `.replaceAll(/[^\p{L}\p{N}]+/gu, " ");
-const addressOf = ({ label, row }: Named) =>
-  [label, row].filter(Boolean).join(" ");
-const finds = (entry: Named, other: Named) =>
-  fold(other.label) === fold(addressOf(entry)) ||
-  wordsOf(addressOf(other)).includes(wordsOf(addressOf(entry)));
-const triggerAndPopup = (entry: Named, other: Named) =>
-  (entry.component === "button") !== (other.component === "button") &&
-  fold(entry.label) === fold(other.label);
-const sameAction = (entry: Named, other: Named) =>
-  !triggerAndPopup(entry, other) &&
-  entry.actions.some((action) => other.actions.includes(action));
-
-function ambiguousIn(named: Named[]) {
-  const same = Object.values(
-    Object.groupBy(named, (entry) => fold(addressOf(entry)))
-  ).flatMap((group = []) =>
-    group.some((entry) =>
-      group.some((other) => other !== entry && sameAction(entry, other))
-    )
-      ? [`"${addressOf(group[0])}"×${group.length}`]
-      : []
-  );
-  const inside = named.flatMap((entry) =>
-    named
-      .filter(
-        (other) =>
-          fold(addressOf(other)) !== fold(addressOf(entry)) &&
-          finds(entry, other) &&
-          sameAction(entry, other)
-      )
-      .map((other) => `"${addressOf(entry)}" in "${addressOf(other)}"`)
-  );
-  return [...same, ...new Set(inside)];
 }
 
 const hiddenMark = "data-agent-audit-hidden";
