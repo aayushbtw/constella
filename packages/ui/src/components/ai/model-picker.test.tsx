@@ -16,6 +16,7 @@ import {
   CommandGroup,
   CommandGroupLabel,
   CommandInput,
+  CommandItemText,
   CommandList,
 } from "@/components/primitives/command";
 import type { CommandProps } from "@/components/primitives/command";
@@ -60,7 +61,7 @@ async function openPicker() {
                 }}
                 value={model}
               >
-                {model}
+                <CommandItemText />
               </ModelPickerItem>
             ))}
           </CommandList>
@@ -139,6 +140,7 @@ function Picker({
               {catalog.map((model) => (
                 <ModelPickerItem
                   key={model.value}
+                  label={model.label}
                   onSelect={() => {
                     setValue(model.value);
                     onPick?.(model.value);
@@ -146,7 +148,7 @@ function Picker({
                   selected={model.value === value}
                   value={model.value}
                 >
-                  {model.label}
+                  <CommandItemText />
                 </ModelPickerItem>
               ))}
             </CommandGroup>

@@ -1,12 +1,14 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
 import {
   SettingsDialog,
+  SettingsDialogContent,
   SettingsDialogNav,
   SettingsDialogPage,
+  SettingsDialogTrigger,
 } from "./settings-dialog";
 import { SidebarMenuButton, SidebarMenuItem } from "./sidebar";
 
@@ -35,32 +37,58 @@ const pages = [
 
 type PageLabel = (typeof pages)[number]["label"];
 
-function Settings() {
+function Settings({ defaultOpen }: { defaultOpen: boolean }) {
   const [current, setCurrent] = useState<PageLabel>("General");
   const page = pages.find((entry) => entry.label === current) ?? pages[0];
   return (
-    <SettingsDialog defaultOpen>
-      <SettingsDialogNav label="Settings">
-        {pages.map((entry) => (
-          <SidebarMenuItem key={entry.label}>
-            <SidebarMenuButton
-              isActive={entry.label === current}
-              onClick={() => {
-                setCurrent(entry.label);
-              }}
-            >
-              {entry.label}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SettingsDialogNav>
-      <SettingsDialogPage title={page.title} />
+    <SettingsDialog defaultOpen={defaultOpen}>
+      <SettingsDialogTrigger>Open settings</SettingsDialogTrigger>
+      <SettingsDialogContent>
+        <SettingsDialogNav label="Settings">
+          {pages.map((entry) => (
+            <SidebarMenuItem key={entry.label}>
+              <SidebarMenuButton
+                isActive={entry.label === current}
+                onClick={() => {
+                  setCurrent(entry.label);
+                }}
+              >
+                {entry.label}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SettingsDialogNav>
+        <SettingsDialogPage title={page.title} />
+      </SettingsDialogContent>
     </SettingsDialog>
   );
 }
 
+test("the trigger opens it, and Close and Escape close it and return focus to the trigger", async () => {
+  render(<Settings defaultOpen={false} />);
+  const trigger = screen.getByRole("button", { name: "Open settings" });
+
+  fireEvent.click(trigger);
+  await screen.findByRole("dialog", { name: "Workspace profile" });
+  fireEvent.click(screen.getByRole("button", { name: "Close" }));
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+  expect(document.activeElement).toBe(trigger);
+
+  fireEvent.click(trigger);
+  const dialog = await screen.findByRole("dialog", {
+    name: "Workspace profile",
+  });
+  fireEvent.keyDown(dialog, { key: "Escape" });
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+  expect(document.activeElement).toBe(trigger);
+});
+
 test("an agent finds every settings page and switches between them", async () => {
-  render(<Settings />);
+  render(<Settings defaultOpen />);
   const title = await screen.findByRole("heading", {
     name: "Workspace profile",
   });

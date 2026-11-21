@@ -140,7 +140,7 @@ Put the prompt input in a `PromptInputWell`, a tinted tray, when it needs contex
 
 ## Prompt Input Submit
 
-Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.
+Pass the chat's `status` as `state`. While it's `streaming`, a separate Stop button takes Send's place and calls `onStop`. Name it with `stopLabel`. If the leaving button held focus, focus moves to the new one, or to the textarea when Send comes back disabled.
 
 | State       | Button     |
 | ----------- | ---------- |
@@ -162,7 +162,7 @@ What `agent.snapshot()` lists for the preview example:
 | Attach  | button    | `press`             |
 | Send    | button    | None while disabled |
 
-Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send, which is Stop while streaming. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
+Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send. While the answer streams, Send leaves the snapshot and the agent finds Stop by its name. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
 
 ## API Reference
 
@@ -180,6 +180,6 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |
 | `PromptInputBarButton` | A ghost `sm` pill in secondary text |
-| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop` |
+| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop`; `stopLabel`, Stop's name (default `"Stop"`). Stop takes only `size`, `variant` and `sx`; other props go to Send |
 
 Every part takes `sx`, applied last.

@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
-import { withSource } from "@ui-sdk/react/observe";
 import { expect, test, vi } from "vite-plus/test";
 
+import { pressKeys } from "../../../test/keys";
 import {
   DateRangePicker,
   DateRangePickerCalendar,
@@ -161,14 +161,17 @@ test("a pointer picks two days, the later one first, and the picker reports one 
 });
 
 test("a range picked by keyboard closes the picker with no exit", async () => {
-  render(<Report keepMounted />);
+  const onValueChange = vi.fn<(value: DateRange | null) => void>();
+  render(<Report keepMounted onValueChange={onValueChange} />);
   fireEvent.click(trigger());
   const content = await screen.findByRole("dialog");
 
-  withSource("keyboard", () => {
-    fireEvent.click(screen.getByRole("gridcell", { name: /June 5,/u }));
-    fireEvent.click(screen.getByRole("gridcell", { name: /June 10,/u }));
-  });
+  screen.getByRole("gridcell", { name: /June 5,/u }).focus();
+  await pressKeys("Enter", "ArrowDown", "ArrowLeft", "ArrowLeft", "Enter");
+
+  expect(onValueChange.mock.calls.map(([value]) => value)).toEqual([
+    ["2026-06-05", "2026-06-10"],
+  ]);
 
   await waitFor(() => {
     expect(trigger().getAttribute("aria-expanded")).toBe("false");

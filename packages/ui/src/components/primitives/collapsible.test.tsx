@@ -3,6 +3,7 @@ import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { expect, test } from "vite-plus/test";
 
+import { pressKeys } from "../../../test/keys";
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,7 +21,6 @@ function Order() {
   );
 }
 
-// jsdom events are untrusted, so ui-sdk reports every source as programmatic; the keyboard snap needs a browser.
 test("a press opens and closes the content, with no instant flag", async () => {
   render(<Order />);
   const trigger = screen.getByRole("button", { name: "Order #4189" });
@@ -39,6 +39,27 @@ test("a press opens and closes the content, with no instant flag", async () => {
     expect(screen.queryByText("Shipped to Lisbon")).toBeNull();
   });
   expect(trigger.getAttribute("aria-expanded")).toBe("false");
+});
+
+test("a keyboard press toggles the content at once", async () => {
+  render(<Order />);
+  const trigger = screen.getByRole("button", { name: "Order #4189" });
+  trigger.focus();
+
+  await pressKeys("Enter");
+
+  const content = await screen.findByText("Shipped to Lisbon");
+  expect(trigger.getAttribute("aria-expanded")).toBe("true");
+  expect(Object.hasOwn(trigger.dataset, "collapsibleInstant")).toBe(true);
+  expect(Object.hasOwn(content.dataset, "collapsibleInstant")).toBe(true);
+
+  await pressKeys("Space");
+
+  await waitFor(() => {
+    expect(screen.queryByText("Shipped to Lisbon")).toBeNull();
+  });
+  expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  expect(Object.hasOwn(trigger.dataset, "collapsibleInstant")).toBe(true);
 });
 
 test("a controlled open follows onOpenChange", async () => {

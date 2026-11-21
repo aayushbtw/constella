@@ -21,8 +21,10 @@ import {
 import { Input } from "@/components/primitives/input";
 import {
   SettingsDialog,
+  SettingsDialogContent,
   SettingsDialogNav,
   SettingsDialogPage,
+  SettingsDialogTrigger,
 } from "@/components/primitives/settings-dialog";
 import {
   SidebarMenuButton,
@@ -160,36 +162,32 @@ const pages = [
 type PageId = (typeof pages)[number]["id"];
 
 function SettingsDialogDemo() {
-  const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<PageId>("general");
   const page = pages.find((entry) => entry.id === current) ?? pages[0];
   return (
     <DemoRow>
-      <Button
-        onClick={() => {
-          setOpen(true);
-        }}
-        variant="outline"
-      >
-        Settings
-      </Button>
-      <SettingsDialog onOpenChange={setOpen} open={open}>
-        <SettingsDialogNav label="Settings" title="Acme">
-          {pages.map((entry) => (
-            <SidebarMenuItem key={entry.id}>
-              <SidebarMenuButton
-                isActive={entry.id === current}
-                onClick={() => {
-                  setCurrent(entry.id);
-                }}
-              >
-                <Glyph icon={entry.icon} />
-                <SidebarMenuLabel>{entry.label}</SidebarMenuLabel>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SettingsDialogNav>
-        <page.Page />
+      <SettingsDialog>
+        <SettingsDialogTrigger render={<Button variant="outline" />}>
+          Settings
+        </SettingsDialogTrigger>
+        <SettingsDialogContent>
+          <SettingsDialogNav label="Settings" title="Acme">
+            {pages.map((entry) => (
+              <SidebarMenuItem key={entry.id}>
+                <SidebarMenuButton
+                  isActive={entry.id === current}
+                  onClick={() => {
+                    setCurrent(entry.id);
+                  }}
+                >
+                  <Glyph icon={entry.icon} />
+                  <SidebarMenuLabel>{entry.label}</SidebarMenuLabel>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SettingsDialogNav>
+          <page.Page />
+        </SettingsDialogContent>
       </SettingsDialog>
     </DemoRow>
   );

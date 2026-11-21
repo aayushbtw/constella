@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import { useState } from "react";
 
 import {
   Avatar,
@@ -12,6 +13,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
+import type { HoverCardController } from "@/components/primitives/hover-card";
 import { Text } from "@/components/typography/text";
 import {
   colors,
@@ -116,13 +118,17 @@ function HoverCardDemo() {
   );
 }
 
-const mentions = createHoverCardController<Profile>();
-
-function Mention({ id }: { id: keyof typeof profiles }) {
+function Mention({
+  controller,
+  id,
+}: {
+  controller: HoverCardController<Profile>;
+  id: keyof typeof profiles;
+}) {
   const profile = profiles[id];
   return (
     <HoverCardTrigger
-      controller={mentions}
+      controller={controller}
       href={profile.href}
       payload={profile}
       {...stylex.props(styles.mention)}
@@ -133,11 +139,14 @@ function Mention({ id }: { id: keyof typeof profiles }) {
 }
 
 function HoverCardTriggersDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [mentions] = useState(() => createHoverCardController<Profile>());
   return (
     <DemoRow>
       <Text color="primary" size="lg" sx={styles.sentence}>
-        Follow <Mention id="shadcn" />, <Mention id="emilkowalski" /> and{" "}
-        <Mention id="acme" /> for updates.
+        Follow <Mention controller={mentions} id="shadcn" />,{" "}
+        <Mention controller={mentions} id="emilkowalski" /> and{" "}
+        <Mention controller={mentions} id="acme" /> for updates.
       </Text>
       <HoverCard controller={mentions}>
         <HoverCardContent<Profile>>

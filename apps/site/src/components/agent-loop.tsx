@@ -2,6 +2,7 @@ import { Activity01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { AgentAction } from "@ui-sdk/react/agent";
+import type { DialogController } from "@ui-sdk/react/dialog";
 import { createHistory } from "@ui-sdk/react/history";
 import type { HistoryEntry } from "@ui-sdk/react/history";
 import { useEffect, useRef, useState } from "react";
@@ -34,7 +35,6 @@ import {
   ItemTitle,
 } from "@/components/primitives/item";
 import {
-  createSidePanelController,
   SidePanel,
   SidePanelBody,
   SidePanelContent,
@@ -46,8 +46,6 @@ import {
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
 import { agent, confirmController, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
-
-const activity = createSidePanelController();
 
 const styles = stylex.create({
   place: {
@@ -202,11 +200,11 @@ function AgentFeed() {
   );
 }
 
-function AgentActivityButton() {
+function AgentActivityButton({ controller }: { controller: DialogController }) {
   return (
     <SidePanelTrigger
       aria-label="Assistant activity"
-      controller={activity}
+      controller={controller}
       data-agent-hidden
       render={<Button size="icon" variant="ghost" />}
     >
@@ -219,12 +217,18 @@ function AgentActivityButton() {
   );
 }
 
-function AgentLoop({ path }: { path: string }) {
+function AgentLoop({
+  controller,
+  path,
+}: {
+  controller: DialogController;
+  path: string;
+}) {
   return (
     <div data-agent-hidden>
       <AgentConfirm />
       <div {...stylex.props(styles.place)}>
-        <SidePanel controller={activity}>
+        <SidePanel controller={controller}>
           <SidePanelContent keepMounted>
             <SidePanelHeader>
               <SidePanelTitle>Assistant activity</SidePanelTitle>

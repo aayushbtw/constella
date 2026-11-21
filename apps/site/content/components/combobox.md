@@ -19,7 +19,7 @@ const fruits = ["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"];
     <ComboboxList>
       {fruits.map((fruit) => (
         <ComboboxItem key={fruit} value={fruit}>
-          {fruit}
+          <ComboboxItemText />
         </ComboboxItem>
       ))}
     </ComboboxList>
@@ -40,12 +40,13 @@ import {
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemText,
   ComboboxLabel,
   ComboboxList,
 } from "@/components/primitives/combobox";
 ```
 
-Render a `ComboboxItem` for each option in `ComboboxList`. The list shows only the items that contain what's typed. With the list open, Enter picks the highlighted row.
+Render a `ComboboxItem` for each option in `ComboboxList`, with a `ComboboxItemText` to show its label. The list shows only the items that contain what's typed. With the list open, Enter picks the highlighted row.
 
 ```tsx
 <Combobox>
@@ -56,7 +57,7 @@ Render a `ComboboxItem` for each option in `ComboboxList`. The list shows only t
     <ComboboxList>
       {items.map((item) => (
         <ComboboxItem key={item} value={item}>
-          {item}
+          <ComboboxItemText />
         </ComboboxItem>
       ))}
     </ComboboxList>
@@ -79,6 +80,7 @@ Combobox
     ├── ComboboxEmpty
     └── ComboboxList
         ├── ComboboxItem
+        │   └── ComboboxItemText
         ├── ComboboxGroup
         │   ├── ComboboxGroupLabel
         │   └── ComboboxItem
@@ -87,6 +89,16 @@ Combobox
 ```
 
 `ComboboxLabel` names the input. Inside a `Field`, use `FieldLabel` instead. With no visible label, put `aria-label` on `ComboboxInput`, or on both `ComboboxChips` and `ComboboxChipsInput`. `ComboboxGroupLabel` is the heading of a `ComboboxGroup`. Name the trigger with `triggerLabel`, like "Show fruits", so each combobox's trigger has a name of its own; pass `showTrigger={false}` to leave it out.
+
+## Combobox Item Text
+
+Put a `ComboboxItemText` in a `ComboboxItem` to show its `label` with the typed text marked in it. Without a `label`, it shows the item's `value`.
+
+```tsx
+<ComboboxItem label="United States" value="us">
+  <ComboboxItemText />
+</ComboboxItem>
+```
 
 ## Multiple
 
@@ -109,7 +121,7 @@ const [value, setValue] = useState(["Apple", "Banana"]);
     <ComboboxList>
       {fruits.map((fruit) => (
         <ComboboxItem key={fruit} value={fruit}>
-          {fruit}
+          <ComboboxItemText />
         </ComboboxItem>
       ))}
     </ComboboxList>
@@ -168,7 +180,7 @@ function add(text: string) {
     <ComboboxList>
       {known.map((tag) => (
         <ComboboxItem key={tag} value={tag}>
-          {tag}
+          <ComboboxItemText />
         </ComboboxItem>
       ))}
       <ComboboxCreate onCreate={add}>
@@ -214,7 +226,7 @@ const produce = [
         <ComboboxGroupLabel>{group.label}</ComboboxGroupLabel>
         {group.items.map((item) => (
           <ComboboxItem key={item} value={item}>
-            {item}
+            <ComboboxItemText />
           </ComboboxItem>
         ))}
       </ComboboxGroup>
@@ -279,6 +291,7 @@ Add `invalid` to the `Field`, so the input takes the red edge.
 | `ComboboxChips` | An input group's box that wraps its chips and input onto new lines; `size`: `"sm"`, `"default"` or `"lg"`; `sx` goes to the box, and the other props, `ref` included, to ui-sdk's chips toolbar. Give it an `aria-label` when no `ComboboxLabel` names it |
 | `ComboboxChip` | `value` (required); without children it shows the value's label; `showRemove` (default `true`): a button that removes the chip, named after it ("Remove Apple") |
 | `ComboboxContent` | Anchors to the input group's box, so it's as wide as the box; takes `side`, `align`, `anchor` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
+| `ComboboxItemText` | Shows the item's `label`, or its `value`, with the typed text marked; takes no children |
 | `ComboboxCreate` | Styled and sized as an item row |
 | `ComboboxGroupLabel` | The heading of a `ComboboxGroup`, sized with the rows |
 

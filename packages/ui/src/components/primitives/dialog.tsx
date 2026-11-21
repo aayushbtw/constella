@@ -1,7 +1,5 @@
 "use client";
 
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   DialogBackdrop as DialogBackdropPrimitive,
@@ -15,7 +13,7 @@ import {
 import type { DialogProps } from "@ui-sdk/react/dialog";
 import type { ComponentProps } from "react";
 
-import { Button } from "@/components/primitives/button";
+import { CloseButton } from "@/components/primitives/button";
 import { popoverStyles } from "@/components/primitives/popover";
 import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
@@ -24,7 +22,6 @@ import {
   blurs,
   colors,
   fontWeights,
-  layers,
   media,
   radii,
   shadows,
@@ -60,7 +57,6 @@ const styles = stylex.create({
     insetInlineEnd: 0,
     insetInlineStart: 0,
     position: "fixed",
-    zIndex: layers.dialog,
   },
   popup: {
     backgroundColor: colors.raised,
@@ -296,32 +292,19 @@ function DialogClose({
 }
 
 function DialogCloseButton({
-  children,
   sx,
   ...props
 }: Omit<Styled<ComponentProps<typeof DialogClosePrimitive>>, "render">) {
   return (
     <DialogClosePrimitive
-      aria-label="Close"
       render={
-        <Button
+        <CloseButton
           data-slot="dialog-close-button"
-          size="icon-sm"
           sx={[styles.closeButton, sx]}
-          variant="ghost"
         />
       }
       {...props}
-    >
-      {children ?? (
-        <HugeiconsIcon
-          aria-hidden
-          icon={Cancel01Icon}
-          size={sizes.icon}
-          strokeWidth={Number(strokes.icon)}
-        />
-      )}
-    </DialogClosePrimitive>
+    />
   );
 }
 

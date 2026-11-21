@@ -27,12 +27,13 @@ section: AI
         {models.map((model) => (
           <ModelPickerItem
             key={model.value}
+            label={model.label}
             onSelect={() => setValue(model.value)}
             selected={model.value === value}
             value={model.value}
           >
             <ModelPickerLogo src={model.logo} />
-            {model.label}
+            <CommandItemText />
           </ModelPickerItem>
         ))}
       </CommandList>
@@ -64,10 +65,14 @@ import {
   ModelPickerItem,
   ModelPickerTrigger,
 } from "@/components/ai/model-picker";
-import { CommandInput, CommandList } from "@/components/primitives/command";
+import {
+  CommandInput,
+  CommandItemText,
+  CommandList,
+} from "@/components/primitives/command";
 ```
 
-The list is a [Command](/docs/components/command). Render a `ModelPickerItem` for each model, and group them as Command shows. Picking a model, by click or Enter, calls the item's `onSelect` and closes the picker.
+The list is a [Command](/docs/components/command). Render a `ModelPickerItem` for each model, with its name in `label` and a `CommandItemText` to show it with the search marked, and group them as Command shows. Picking a model, by click or Enter, calls the item's `onSelect` and closes the picker.
 
 ## Composition
 
@@ -81,7 +86,8 @@ ModelPicker
     │   ├── CommandEmpty
     │   └── CommandList
     │       └── ModelPickerItem
-    │           └── ModelPickerLogo
+    │           ├── ModelPickerLogo
+    │           └── CommandItemText
     └── ModelPickerDetails
         ├── ModelPickerTitle
         └── ModelPickerDescription

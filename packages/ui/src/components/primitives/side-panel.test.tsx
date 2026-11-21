@@ -144,6 +144,16 @@ test("a press on the page beside it leaves it open", async () => {
   expect(screen.getByRole("dialog")).toBeTruthy();
 });
 
+test("the header ends in a Close button with the X and its own slot", async () => {
+  render(<Activity />);
+  await openRow();
+
+  const close = screen.getByRole("button", { name: "Close" });
+  expect(close.dataset.slot).toBe("side-panel-close-button");
+  expect(close.querySelector("svg")).not.toBeNull();
+  expect(close.parentElement?.lastElementChild).toBe(close);
+});
+
 test("Escape closes it while focus is in it", async () => {
   render(<Activity />);
   await openRow();

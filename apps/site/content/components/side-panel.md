@@ -6,7 +6,7 @@ description: A panel floating beside the page for details, a form or anything el
 <!-- ::demo name="side-panel" -->
 
 ```tsx
-const panel = createSidePanelController<ActivityEvent>();
+const [panel] = useState(() => createSidePanelController<ActivityEvent>());
 
 <div {...stylex.props(styles.row)}>
   <div>
