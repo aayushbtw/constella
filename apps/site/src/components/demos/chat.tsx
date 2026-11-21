@@ -218,9 +218,6 @@ function Composer({
     <PromptInput
       onSubmit={(event) => {
         event.preventDefault();
-        if (text.trim() === "" || status !== "ready") {
-          return;
-        }
         onSubmit?.(text);
         setText("");
       }}

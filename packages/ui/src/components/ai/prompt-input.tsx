@@ -20,6 +20,7 @@ import type { TriggerMenuProps } from "@ui-sdk/react/trigger-menu";
 import {
   createContext,
   use,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -207,19 +208,17 @@ interface Anchor {
 
 const AnchorContext = createContext<Anchor | null>(null);
 
-interface PromptHistory {
+interface PromptInputContextValue {
+  allowSend: (sendable: boolean) => void;
   field: InputController;
   recall: ReturnType<typeof createInputHistory<string>>;
-  recordSent: () => void;
 }
 
-const PromptHistoryContext = createContext<PromptHistory | null>(null);
+const PromptInputContext = createContext<PromptInputContextValue | null>(null);
 
-/** A form around an input group: submit it with Enter or the submit button. Each sent prompt joins the textarea's history. */
+/** A form around an input group: submit it with Enter or the submit button. While that button can't send, a submit does nothing; each prompt that goes through joins the textarea's history. */
 function PromptInput({
   children,
-  onInput,
-  onReset,
   onSubmit,
   sx,
   ...props
@@ -227,9 +226,13 @@ function PromptInput({
   // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
   const [field] = useState(createInputController);
   const [prompts, setPrompts] = useState<readonly string[]>([]);
-  const awaitingClear = useRef<string | null>(null);
-  const history = useMemo(
+  const canSend = useRef(true);
+  const allowSend = useCallback((sendable: boolean) => {
+    canSend.current = sendable;
+  }, []);
+  const context = useMemo(
     () => ({
+      allowSend,
       field,
       recall: createInputHistory({
         entries: () => prompts,
@@ -237,42 +240,32 @@ function PromptInput({
         write: (value, event) =>
           field.setValue(value, { event, reason: "input-change" }),
       }),
-      recordSent: () => {
-        const prompt = awaitingClear.current;
-        if (prompt === null) {
-          return;
-        }
-        awaitingClear.current = null;
-        setPrompts((sent) =>
-          prompt === sent.at(-1) ? sent : [...sent, prompt]
-        );
-      },
     }),
-    [field, prompts]
+    [allowSend, field, prompts]
   );
   return (
     <form
       data-slot="prompt-input"
       {...withStyles(props, stylex.props(styles.form, sx))}
-      onInput={(event) => {
-        awaitingClear.current = null;
-        onInput?.(event);
-      }}
-      onReset={(event) => {
-        history.recordSent();
-        onReset?.(event);
-      }}
       onSubmit={(event) => {
+        if (!canSend.current) {
+          event.preventDefault();
+          return;
+        }
         const prompt = field.getValue();
-        awaitingClear.current = prompt.trim() === "" ? null : prompt;
+        if (prompt.trim() !== "") {
+          setPrompts((sent) =>
+            prompt === sent.at(-1) ? sent : [...sent, prompt]
+          );
+        }
         onSubmit?.(event);
       }}
     >
-      <PromptHistoryContext value={history}>
+      <PromptInputContext value={context}>
         <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
           {children}
         </InputGroup>
-      </PromptHistoryContext>
+      </PromptInputContext>
     </form>
   );
 }
@@ -284,27 +277,20 @@ function PromptInputTextarea({
   onKeyDown,
   placeholder = "Ask anything…",
   sx,
-  value,
   ...props
 }: PromptInputTextareaProps) {
-  const history = use(PromptHistoryContext);
-  useEffect(() => {
-    if (value === "") {
-      history?.recordSent();
-    }
-  }, [history, value]);
+  const context = use(PromptInputContext);
   return (
     <InputGroupTextarea
-      controller={history?.field}
+      controller={context?.field}
       data-prompt-input-textarea=""
       placeholder={placeholder}
       rows={1}
       submitShortcut="enter"
-      value={value}
       {...props}
       onKeyDown={(event) => {
         onKeyDown?.(event);
-        history?.recall.keydown(event.nativeEvent);
+        context?.recall.keydown(event.nativeEvent);
       }}
       sx={[styles.textarea, sx]}
     />
@@ -388,7 +374,7 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** Sends the prompt; while an answer streams it turns into Stop, which calls `onStop`. */
+/** Sends the prompt; while an answer streams it turns into Stop, which calls `onStop`. While it's disabled or not `ready`, Enter doesn't send either. */
 function PromptInputSubmit({
   disabled,
   onClick,
@@ -400,6 +386,12 @@ function PromptInputSubmit({
   state?: PromptInputState;
 }) {
   const streaming = state === "streaming";
+  const allowSend = use(PromptInputContext)?.allowSend;
+  const sendable = state === "ready" && disabled !== true;
+  useEffect(() => {
+    allowSend?.(sendable);
+    return () => allowSend?.(true);
+  }, [allowSend, sendable]);
   return (
     <InputGroupButton
       aria-busy={state === "submitted" || undefined}

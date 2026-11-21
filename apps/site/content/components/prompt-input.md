@@ -64,7 +64,7 @@ PromptInputCommand
 
 ## History
 
-Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own. A prompt counts as sent once your `onSubmit` clears the draft, so one it refuses, like Enter while streaming, stays out.
+Each prompt you send joins the composer's history, like a terminal's. ArrowUp brings back the one before, and ArrowDown goes forward again, back to the draft you were typing. It's on, with nothing to pass, and each `PromptInput` keeps its own. A prompt joins it when it submits while `PromptInputSubmit` can send. While Send is disabled or its `state` isn't `ready`, Enter does nothing, so a prompt typed while an answer streams stays out.
 
 | Key | Where the caret is | Does |
 | --- | --- | --- |
@@ -151,7 +151,7 @@ Put the prompt input in a `PromptInputWell`, a tinted tray, when it needs contex
 
 ## Prompt Input Submit
 
-Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`.
+Pass the chat's `status` as `state`. While it's `streaming`, the arrow swaps to a stop square and the button calls `onStop`. While the button is disabled or `state` isn't `ready`, the form doesn't submit, from Enter either, so `onSubmit` needn't check `status`.
 
 | State       | Button     |
 | ----------- | ---------- |
@@ -179,7 +179,7 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 
 | Part | Adds |
 | --- | --- |
-| `PromptInput` | Records each sent prompt for its textarea's history, once `onSubmit` clears the draft or resets the form |
+| `PromptInput` | Skips a submit while its `PromptInputSubmit` can't send, and records each prompt that goes through for its textarea's history |
 | `PromptInputTextarea` | Submits on Enter. ArrowUp and ArrowDown step through earlier prompts. Takes every Textarea prop but `controller`, which the history writes through |
 | `PromptInputCommand` | ui-sdk's [Trigger Menu](https://ui-sdk.dev/docs/react/components/trigger-menu) root. Takes `triggers`, and holds a visually hidden status that tells screen readers how many commands match |
 | `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |
@@ -192,6 +192,6 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 | `PromptInputWell` | A tray around the prompt input and its bars |
 | `PromptInputBar` | A row in the well |
 | `PromptInputBarButton` | A ghost `sm` pill in secondary text |
-| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop` |
+| `PromptInputSubmit` | `state`: `"ready"`, `"submitted"` or `"streaming"`; `onStop`. Only a `ready`, enabled button lets the form submit |
 
 Every part takes `sx`, applied last.

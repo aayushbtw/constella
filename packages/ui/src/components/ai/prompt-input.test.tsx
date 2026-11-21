@@ -606,6 +606,24 @@ test("an agent's setValue on Message lands on the textarea, not the command menu
   expect(onSubmit.mock.calls).toEqual([["Translate this"]]);
 });
 
+// The driver's keys don't edit text, so this deletes a character the way a browser's Backspace does.
+async function backspace() {
+  await act(async () => {
+    const field = box();
+    const end = field.selectionEnd;
+    const init = { inputType: "deleteContentBackward", bubbles: true };
+    if (
+      field.dispatchEvent(
+        new InputEvent("beforeinput", { ...init, cancelable: true })
+      )
+    ) {
+      field.setRangeText("", Math.max(0, end - 1), end, "end");
+      field.dispatchEvent(new InputEvent("input", init));
+    }
+    await driver.settle();
+  });
+}
+
 async function sendPrompt(prompt: string) {
   await type(prompt);
   await press("Enter");
@@ -642,15 +660,20 @@ test("a recalled prompt sends like a typed one", async () => {
   expect(onSubmit.mock.calls).toEqual([["Summarize Q3"], ["Summarize Q3"]]);
 });
 
-function GatedComposer({ ready }: { ready: boolean }) {
+function ChatComposer({
+  onSubmit,
+  state,
+}: {
+  onSubmit: (text: string) => void;
+  state: PromptInputState;
+}) {
   const [text, setText] = useState("");
   return (
     <PromptInput
       onSubmit={(event) => {
         event.preventDefault();
-        if (ready) {
-          setText("");
-        }
+        onSubmit(text);
+        setText("");
       }}
     >
       <PromptInputTextarea
@@ -658,26 +681,37 @@ function GatedComposer({ ready }: { ready: boolean }) {
         onValueChange={setText}
         value={text}
       />
+      <PromptInputFooter>
+        <PromptInputSubmit disabled={text.trim() === ""} state={state} />
+      </PromptInputFooter>
     </PromptInput>
   );
 }
 
-test("a prompt the caller refuses, like Enter while streaming, stays out of the history", async () => {
-  const { rerender } = render(<GatedComposer ready />);
-  box().focus();
-  await sendPrompt("Summarize Q3");
+test.each(["submitted", "streaming"] as const)(
+  "while %s, Enter neither sends nor records, so a prompt deleted afterwards stays out of the history",
+  async (state) => {
+    const onSubmit = vi.fn<(text: string) => void>();
+    const { rerender } = render(
+      <ChatComposer onSubmit={onSubmit} state="ready" />
+    );
+    box().focus();
+    await sendPrompt("Summarize Q3");
 
-  rerender(<GatedComposer ready={false} />);
-  await sendPrompt("Draft an email");
-  expect(box().value).toBe("Draft an email");
+    rerender(<ChatComposer onSubmit={onSubmit} state={state} />);
+    await sendPrompt("R");
+    expect(box().value).toBe("R");
+    await backspace();
+    expect(box().value).toBe("");
 
-  fireEvent.input(box(), { target: { value: "" } });
-  expect(box().value).toBe("");
-  await press("ArrowUp");
-  expect(box().value).toBe("Summarize Q3");
-  await press("ArrowUp");
-  expect(box().value).toBe("Summarize Q3");
-});
+    rerender(<ChatComposer onSubmit={onSubmit} state="ready" />);
+    expect(onSubmit.mock.calls).toEqual([["Summarize Q3"]]);
+    await press("ArrowUp");
+    expect(box().value).toBe("Summarize Q3");
+    await press("ArrowUp");
+    expect(box().value).toBe("Summarize Q3");
+  }
+);
 
 test("an uncontrolled prompt cleared with the form's reset joins the history", async () => {
   render(
