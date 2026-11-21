@@ -1,6 +1,7 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
+import { announce } from "@ui-sdk/core";
 import { use, useEffect, useRef } from "react";
 import type { PointerEvent } from "react";
 
@@ -35,6 +36,16 @@ interface SelectableTable {
   setRowSelection: (selection: Record<string, true>) => void;
   toggleAllRowsSelected: (value?: boolean) => void;
 }
+
+const announceSelection = (table: SelectableTable) => {
+  queueMicrotask(() => {
+    const selection = table.atoms.rowSelection?.get() ?? {};
+    const count = Object.values(selection).filter(Boolean).length;
+    if (count > 0) {
+      announce(`${count} selected`);
+    }
+  });
+};
 
 const isSelectable = <TTable extends { getAllLeafColumns: () => unknown[] }>(
   table: TTable
@@ -86,10 +97,15 @@ function paintRange(rows: readonly { id: string }[], range: Drag, to: number) {
   }
 }
 
-function useDragSelect(
-  rows: readonly { id: string }[],
-  onDragEnd: (id: string) => void
-) {
+function useDragSelect({
+  onDragEnd,
+  rows,
+  table,
+}: {
+  onDragEnd: (id: string) => void;
+  rows: readonly { id: string }[];
+  table: SelectableTable | undefined;
+}) {
   const drag = useRef<Drag | null>(null);
 
   useEffect(() => {
@@ -105,6 +121,9 @@ function useDragSelect(
           window.removeEventListener("click", swallow, { capture: true });
         }, 0);
         onDragEnd(drag.current.endId);
+        if (table !== undefined) {
+          announceSelection(table);
+        }
       }
       drag.current = null;
     };
@@ -114,7 +133,7 @@ function useDragSelect(
       window.removeEventListener("pointerup", end);
       window.removeEventListener("pointercancel", end);
     };
-  }, [onDragEnd]);
+  }, [onDragEnd, table]);
 
   const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
     const from = rowIndexOf(event.target);
@@ -219,6 +238,7 @@ function DataTableSelectAll({
       disabled={table.getRowModel().rows.length === 0}
       onCheckedChange={(checked) => {
         table.toggleAllRowsSelected(checked === true);
+        announceSelection(table);
       }}
       sx={sx}
     />

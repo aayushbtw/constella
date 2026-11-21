@@ -687,6 +687,171 @@ test("an agent can't reach the action bar while no row is selected", async () =>
   }
 });
 
+const noneSelected: RowSelectionState = {};
+
+function clearButton() {
+  return screen.getByRole("button", { name: "Clear selection" });
+}
+
+test("pressing Clear from the keyboard puts focus back on the control it came from", () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  clearButton().focus();
+
+  fireEvent.click(clearButton());
+
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(document.activeElement).toBe(checkboxIn("abe@acme.com"));
+});
+
+test("a Delete that removes the row focus came from puts focus on the table's row", () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(emails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+  const focused = document.activeElement;
+  expect(focused).toBeInstanceOf(HTMLTableRowElement);
+  expect(focused?.closest("[role='grid']")).toBe(
+    screen.getByRole("grid", { name: "Payments" })
+  );
+});
+
+test("an agent's Clear leaves the person's focus where it is", async () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  clearButton().focus();
+  rowWith("ken@acme.com").focus();
+
+  await run({ action: "press", ref: "Clear selection" });
+
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(document.activeElement).toBe(rowWith("ken@acme.com"));
+});
+
+test("each row a person selects is announced once, with the new count", async () => {
+  render(<Bar />);
+  const said = announcements();
+
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  await quiet();
+  rowWith("dee@acme.com").focus();
+  press(" ");
+  await quiet();
+
+  expect(said).toEqual(["1 selected", "2 selected"]);
+});
+
+test("a drag across the checkboxes is announced once, when it ends", async () => {
+  render(<Bar />);
+  const said = announcements();
+  const mouse = { button: 0, pointerType: "mouse" };
+
+  fireEvent.pointerDown(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("abe@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("dee@acme.com"), mouse);
+  await quiet();
+  expect(said).toEqual([]);
+  fireEvent.pointerUp(window, mouse);
+  await quiet();
+
+  expect(said).toEqual(["3 selected"]);
+});
+
+test("clearing the selection announces nothing", async () => {
+  render(<Bar />);
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  await quiet();
+  const said = announcements();
+
+  fireEvent.click(clearButton());
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
+function SetElsewhere({ rowSelection }: { rowSelection: RowSelectionState }) {
+  const table = useTable({
+    columns,
+    data: payments,
+    features,
+    getRowId,
+    state: { rowSelection },
+  });
+  return (
+    <>
+      <DataTable empty="No payments." label="Payments" table={table} />
+      <DataTableActionBar label="Payment actions" table={table} />
+    </>
+  );
+}
+
+test("a selection the app sets, not the person, announces nothing", async () => {
+  const { rerender } = render(<SetElsewhere rowSelection={noneSelected} />);
+  const said = announcements();
+
+  rerender(<SetElsewhere rowSelection={{ p1: true, p2: true }} />);
+  expect(shown("2 selected")).toBeTruthy();
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
+const pagedSelectFeatures = tableFeatures({
+  paginatedRowModel: createPaginatedRowModel(),
+  rowPaginationFeature,
+  rowSelectionFeature,
+});
+
+const pagedSelect = createColumnHelper<typeof pagedSelectFeatures, Payment>();
+
+const pagedSelectColumns = pagedSelect.columns([
+  pagedSelect.display({
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
+    header: ({ table }) => <DataTableSelectAll table={table} />,
+    id: "select",
+  }),
+  pagedSelect.accessor("email", { header: "Email" }),
+]);
+
+function PagedSelection() {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const table = useTable({
+    columns: pagedSelectColumns,
+    data: ledger,
+    features: pagedSelectFeatures,
+    getRowId,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
+  });
+  return (
+    <>
+      <DataTable empty="No payments." label="Payments" table={table} />
+      <DataTableActionBar label="Payment actions" table={table} />
+    </>
+  );
+}
+
+test("Select all on one page of a controlled table announces every row it selected, as the bar counts them", async () => {
+  render(<PagedSelection />);
+  expect(screen.getAllByRole("row")).toHaveLength(11);
+  const said = announcements();
+
+  fireEvent.click(screen.getByRole("checkbox", { name: "Select all" }));
+  await quiet();
+
+  expect(shown("25 selected")).toBeTruthy();
+  expect(said).toEqual(["25 selected"]);
+});
+
 const OpenPayment = createContext<(id: string) => void>(() => {});
 
 function PaymentLink({ payment }: { payment: Payment }) {
@@ -736,8 +901,6 @@ function RowClick() {
     </OpenPayment>
   );
 }
-
-const noneSelected: RowSelectionState = {};
 
 function Selection({
   apply,

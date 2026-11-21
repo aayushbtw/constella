@@ -81,7 +81,7 @@ header: ({ column }) => (
 
 ## Data Table Select All
 
-Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox.
+Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox. Each selection a person makes is announced to screen readers as "N selected". A `DataTableSelectRow` outside a `DataTable` announces nothing.
 
 ```tsx
 column.display({
@@ -97,6 +97,8 @@ column.display({
 ## Data Table Action Bar
 
 Use `DataTableActionBar` for actions on the selected rows. It floats at the bottom of the window while any row is selected, with the count, your actions and a Clear button, and leaves when none is. Register `rowSelectionFeature`. Put [Buttons](/docs/components/button) or a [Dropdown Menu](/docs/components/dropdown-menu) trigger in it, with `corners="rounded"` so they nest in its corner, and leave room under the table for it.
+
+When Clear or one of your actions empties the selection while focus is in the bar, focus goes back to where it came into the bar from. If that control is gone, like a deleted row's checkbox, focus goes to the table's row that takes Tab.
 
 <!-- ::demo name="data-table-action-bar" -->
 

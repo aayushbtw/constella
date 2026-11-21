@@ -1,8 +1,7 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { announce } from "@ui-sdk/core";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -26,6 +25,13 @@ interface ActionBarTable {
   getSelectedRowIds: () => string[];
   resetRowSelection: (defaultState?: boolean) => void;
 }
+
+interface FocusOrigin {
+  element: HTMLElement | null;
+  table: Element | null;
+}
+
+const noOrigin: FocusOrigin = { element: null, table: null };
 
 const closed = ":is([data-closed])";
 // A key in the table, or in the bar itself, moved it: the keyboard never animates.
@@ -105,27 +111,43 @@ function DataTableActionBar({
   table: ActionBarTable;
 }) {
   const count = table.getSelectedRowIds().length;
+  const open = count > 0;
   // The last count stays on screen while the bar leaves.
   const [held, setHeld] = useState(count);
   if (count > 0 && count !== held) {
     setHeld(count);
   }
-  const announced = useRef(count);
-  useEffect(() => {
-    if (count === announced.current) {
+  const bar = useRef<HTMLDivElement>(null);
+  const origin = useRef<FocusOrigin>(noOrigin);
+  // Closing inerts the bar, which would drop a focused Clear or action to the page.
+  useLayoutEffect(() => {
+    if (open || bar.current?.contains(document.activeElement) !== true) {
       return;
     }
-    announced.current = count;
-    if (count > 0) {
-      announce(`${count} selected`);
+    const { element, table: from } = origin.current;
+    if (element?.isConnected === true) {
+      element.focus();
     }
-  }, [count]);
+    if (document.activeElement !== element) {
+      from?.querySelector<HTMLElement>("tr[tabindex='0']")?.focus();
+    }
+  }, [open]);
   return (
     <div
       aria-label={label}
-      data-closed={count === 0 ? "" : undefined}
+      data-closed={open ? undefined : ""}
       data-slot="data-table-action-bar"
-      inert={count === 0}
+      inert={!open}
+      onFocus={({ currentTarget, relatedTarget }) => {
+        if (!currentTarget.contains(relatedTarget)) {
+          origin.current = {
+            element:
+              relatedTarget instanceof HTMLElement ? relatedTarget : null,
+            table: relatedTarget?.closest("[data-slot='data-table']") ?? null,
+          };
+        }
+      }}
+      ref={bar}
       role="toolbar"
       {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
     >
