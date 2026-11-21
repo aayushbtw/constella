@@ -1,7 +1,5 @@
 "use client";
 
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import {
   DrawerBackdrop as DrawerBackdropPrimitive,
@@ -15,7 +13,7 @@ import {
 import type { DrawerProps } from "@ui-sdk/react/drawer";
 import type { ComponentProps, ReactNode } from "react";
 
-import { Button } from "@/components/primitives/button";
+import { CloseButton } from "@/components/primitives/button";
 import { dialogStyles } from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
 import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
@@ -159,23 +157,13 @@ function SheetContent({
         {children}
         {showCloseButton && (
           <DrawerClosePrimitive
-            aria-label="Close"
             render={
-              <Button
+              <CloseButton
                 data-slot="dialog-close-button"
-                size="icon-sm"
                 sx={dialogStyles.closeButton}
-                variant="ghost"
               />
             }
-          >
-            <HugeiconsIcon
-              aria-hidden
-              icon={Cancel01Icon}
-              size={sizes.icon}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </DrawerClosePrimitive>
+          />
         )}
       </DrawerContentPrimitive>
     </>

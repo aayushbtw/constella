@@ -138,7 +138,7 @@ Use `CommandDialog` for a palette over the page. It sits near the top of the win
 <!-- ::demo name="command-dialog" -->
 
 ```tsx
-const palette = createDialogController();
+const [palette] = useState(() => createDialogController());
 const hint = useShortcutHint("mod+j");
 
 <DialogTrigger

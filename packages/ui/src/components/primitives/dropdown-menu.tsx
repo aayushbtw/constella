@@ -353,13 +353,13 @@ function DropdownMenuGroup({
 }
 
 function DropdownMenuLabel({
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuGroupLabel>> & Inset) {
   return (
     <MenuGroupLabel
-      data-inset={isInset}
+      data-inset={isInset || undefined}
       {...withStyles(
         props,
         stylex.props(
@@ -373,14 +373,14 @@ function DropdownMenuLabel({
 }
 
 function DropdownMenuItem({
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuItem>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuItem
-      data-inset={isInset}
+      data-inset={isInset || undefined}
       {...withStyles(
         props,
         stylex.props([size.text, styles.item], size.item, sx)
@@ -401,14 +401,14 @@ function DropdownMenuSub({ onOpenChange, ...props }: MenuSubProps) {
 
 function DropdownMenuSubTrigger({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuSubTrigger>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuSubTrigger
-      data-inset={isInset}
+      data-inset={isInset || undefined}
       {...withStyles(
         props,
         stylex.props([size.text, styles.item], size.item, sx)
@@ -443,14 +443,14 @@ function Indicator() {
 
 function DropdownMenuCheckboxItem({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuCheckboxItem>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuCheckboxItem
-      data-inset={isInset}
+      data-inset={isInset || undefined}
       {...withStyles(
         props,
         stylex.props(
@@ -477,14 +477,14 @@ function DropdownMenuRadioGroup<T extends string = string>({
 
 function DropdownMenuRadioItem({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuRadioItem>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuRadioItem
-      data-inset={isInset}
+      data-inset={isInset || undefined}
       {...withStyles(
         props,
         stylex.props(

@@ -123,6 +123,8 @@
       "title": "Button",
       "description": "Five variants for every level of emphasis, in four sizes, each with an icon-only square.",
       "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -188,8 +190,6 @@
       "title": "Dialog",
       "description": "A centered surface over a dimmed page, for a decision that needs full attention.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -663,8 +663,6 @@
       "title": "Sheet",
       "description": "A dialog that slides in from an edge, for side panels on narrow screens.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"
@@ -688,8 +686,6 @@
       "title": "Side Panel",
       "description": "A full-height, non-modal panel that opens beside the page, for details, a form or anything else.",
       "dependencies": [
-        "@hugeicons/core-free-icons",
-        "@hugeicons/react",
         "@stylexjs/stylex",
         "@ui-sdk/core@0.1.0-beta.13",
         "@ui-sdk/react@0.1.0-beta.13"

@@ -52,7 +52,7 @@ Use `createHoverCardController` for one card that several triggers share, like m
 <!-- ::demo name="hover-card-triggers" -->
 
 ```tsx
-const mentions = createHoverCardController<Profile>();
+const [mentions] = useState(() => createHoverCardController<Profile>());
 
 <HoverCardTrigger controller={mentions} href={profile.href} payload={profile}>
   {profile.handle}

@@ -313,7 +313,6 @@ export const offsets = stylex.defineConsts({
 export const layers = stylex.defineConsts({
   // Floats over the page, under a dialog's backdrop.
   bar: "30",
-  dialog: "40",
   // A 2px line along the window's top edge that covers nothing, so it sits above everything.
   loadingBar: "70",
 } as const);

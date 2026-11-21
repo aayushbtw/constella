@@ -4,7 +4,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { createDialogController } from "@ui-sdk/react/dialog";
 import { useShortcut, useShortcutHint } from "@ui-sdk/react/shortcuts";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -106,9 +106,9 @@ const icon = (glyph: typeof Search01Icon) => (
   />
 );
 
-const search = createDialogController();
-
 function Search() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [search] = useState(() => createDialogController());
   const navigate = useNavigate();
   const { blocks, components, docs } = useLoaderData({ from: "__root__" });
   const groups: Group[] = [
