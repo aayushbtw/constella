@@ -72,13 +72,15 @@ function MarkdownStreamingDemo() {
   const streaming = shown < answer.length;
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setShown((value) => Math.min(value + chunk, answer.length));
-    }, chunkEvery);
+    const timer = streaming
+      ? setInterval(() => {
+          setShown((value) => Math.min(value + chunk, answer.length));
+        }, chunkEvery)
+      : undefined;
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [streaming]);
 
   return (
     <DemoRow

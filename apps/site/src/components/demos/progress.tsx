@@ -148,21 +148,26 @@ const megabytes = (value: number) => `${value.toFixed(1)} MB`;
 
 function Uploads() {
   const [progress, setProgress] = useState(() => uploads.map(() => 0));
+  const uploading = uploads.some(
+    (upload, index) => (progress[index] ?? 0) < upload.size
+  );
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((all) =>
-        all.map((value, index) => {
-          const upload = uploads[index];
-          return upload === undefined
-            ? value
-            : Math.min(upload.size, value + upload.speed);
-        })
-      );
-    }, 200);
+    const timer = uploading
+      ? setInterval(() => {
+          setProgress((all) =>
+            all.map((value, index) => {
+              const upload = uploads[index];
+              return upload === undefined
+                ? value
+                : Math.min(upload.size, value + upload.speed);
+            })
+          );
+        }, 200)
+      : undefined;
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [uploading]);
   return uploads.map((upload, index) => {
     const value = progress[index] ?? 0;
     return (
