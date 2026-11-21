@@ -11,6 +11,7 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
+  InputGroupToggle,
 } from "./input-group";
 
 const agent = createAgent();
@@ -191,4 +192,45 @@ test("a controlled input whose onValueChange cancels the agent's setValue keeps 
   expect(result.steps.map((step) => step.result)).toEqual([false]);
   expect(changes).toEqual([{ source: "agent", value: "constella.dev" }]);
   expect(website().value).toBe("old.dev");
+});
+
+function Favorite() {
+  const [favorite, setFavorite] = useState(false);
+  return (
+    <InputGroup>
+      <InputGroupInput aria-label="Website" />
+      <InputGroupAddon align="inline-end">
+        <InputGroupToggle
+          aria-label="Favorite"
+          onPressedChange={setFavorite}
+          pressed={favorite}
+        />
+      </InputGroupAddon>
+    </InputGroup>
+  );
+}
+
+test("a toggle flips once per press and takes the addon's button inset", () => {
+  render(<Favorite />);
+  const favorite = screen.getByRole("button", { name: "Favorite" });
+  expect(favorite.getAttribute("type")).toBe("button");
+  expect(favorite.dataset).toMatchObject({
+    inputGroupButton: "",
+    size: "icon-xs",
+    slot: "toggle",
+  });
+  expect(favorite.getAttribute("aria-pressed")).toBe("false");
+
+  fireEvent.click(favorite);
+  expect(favorite.getAttribute("aria-pressed")).toBe("true");
+  fireEvent.click(favorite);
+  expect(favorite.getAttribute("aria-pressed")).toBe("false");
+});
+
+test("an agent sees a toggle as one toggle entry", () => {
+  render(<Favorite />);
+  const entries = agent
+    .snapshot()
+    .filter((entry) => entry.offPage !== true && entry.label === "Favorite");
+  expect(entries.map((entry) => entry.component)).toEqual(["toggle"]);
 });

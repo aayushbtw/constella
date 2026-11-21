@@ -39,6 +39,7 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
+  InputGroupToggle,
 } from "@/components/primitives/input-group";
 import { Kbd } from "@/components/primitives/kbd";
 import {
@@ -402,19 +403,16 @@ function InputGroupButtonDemo() {
           </InputGroupAddon>
           <InputGroupInput aria-label="Website" />
           <InputGroupAddon align="inline-end">
-            <InputGroupButton
+            <InputGroupToggle
               aria-label="Favorite"
-              aria-pressed={favorite}
-              onClick={() => {
-                setFavorite(!favorite);
-              }}
-              size="icon-xs"
+              onPressedChange={setFavorite}
+              pressed={favorite}
             >
               <Glyph
                 fill={favorite ? "currentColor" : "none"}
                 icon={StarIcon}
               />
-            </InputGroupButton>
+            </InputGroupToggle>
           </InputGroupAddon>
         </InputGroup>
         <InputGroup>
