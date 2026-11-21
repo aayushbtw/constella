@@ -27,7 +27,7 @@ import {
 import { Code } from "@/components/typography/code";
 import { Link } from "@/components/typography/link";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -162,11 +162,18 @@ function LastHeading({ children, ...props }: Props<"h6">) {
 
 // An answer sits under the page's own headings, so its outline starts two levels down.
 const components = {
-  a: ({ children, className: _className, ...props }: Props<"a">) => (
-    <Link {...props} rel="noopener noreferrer" target="_blank">
-      {children}
-    </Link>
-  ),
+  a: ({ children, className: _className, ...props }: Props<"a">) => {
+    const inPage = props.href?.startsWith("#") === true;
+    return (
+      <Link
+        {...props}
+        rel={inPage ? undefined : "noopener noreferrer"}
+        target={inPage ? undefined : "_blank"}
+      >
+        {children}
+      </Link>
+    );
+  },
   blockquote: (props: Props<"blockquote">) => (
     <blockquote {...props} {...stylex.props(styles.block, styles.quote)} />
   ),
@@ -176,8 +183,16 @@ const components = {
       {children}
     </h3>
   ),
-  h2: ({ children, ...props }: Props<"h2">) => (
-    <h4 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
+  // GFM's Footnotes heading arrives as `sr-only`.
+  h2: ({ children, className, ...props }: Props<"h2">) => (
+    <h4
+      {...props}
+      {...stylex.props(
+        styles.heading,
+        typeStyles.textLg,
+        className === "sr-only" && visuallyHidden.base
+      )}
+    >
       {children}
     </h4>
   ),

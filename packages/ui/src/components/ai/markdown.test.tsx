@@ -111,12 +111,43 @@ test("two blocks of the same language share a name, so a press by it is ambiguou
   }
 });
 
-test("a footnote renders its back-link, which the content gives a class", () => {
-  render(<Markdown>{"Claim.[^1]\n\n[^1]: Source."}</Markdown>);
+test("a footnote's links stay in the tab while an outside link opens a new one, and its heading stays readable", () => {
+  render(
+    <Markdown>
+      {"Claim.[^1] See [site](https://example.com).\n\n[^1]: Source."}
+    </Markdown>
+  );
 
-  const links = screen.getAllByRole("link");
-  expect(links.map((link) => link.dataset.slot)).toEqual(["link", "link"]);
-  expect(links.some((link) => "footnoteBackref" in link.dataset)).toBe(true);
+  expect(
+    screen.getAllByRole("link").map((link) => ({
+      backref: "footnoteBackref" in link.dataset,
+      href: link.getAttribute("href"),
+      slot: link.dataset.slot,
+      target: link.getAttribute("target"),
+    }))
+  ).toEqual([
+    {
+      backref: false,
+      href: "#user-content-fn-1",
+      slot: "link",
+      target: null,
+    },
+    {
+      backref: false,
+      href: "https://example.com",
+      slot: "link",
+      target: "_blank",
+    },
+    {
+      backref: true,
+      href: "#user-content-fnref-1",
+      slot: "link",
+      target: null,
+    },
+  ]);
+  expect(screen.getByRole("heading", { name: "Footnotes" }).id).toBe(
+    "footnote-label"
+  );
 });
 
 test("a table and inline code render on their parts", () => {
