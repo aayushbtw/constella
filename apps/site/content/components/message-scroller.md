@@ -44,7 +44,7 @@ import {
 } from "@/components/ai/message-scroller";
 ```
 
-It opens at the newest message and follows a streaming answer while the reader is at the end; scrolled up, it stays put and shows the button to jump back. History loaded above keeps the reader's place. Mark each user message a `scrollAnchor`, so a new question scrolls to the top. The behavior is shadcn's `@shadcn/react/message-scroller`.
+It opens at the newest message and follows a streaming answer while the reader is at the end. Scrolled up, it keeps the reader's place, even as history loads above, and shows the button to jump back. Mark each user message a `scrollAnchor`: a new question scrolls to the top, with the end of the turn before it in view, and stays there while the answer streams in below. The behavior is ui-sdk's [`createStickToBottom`](https://ui-sdk.dev/docs/core/behaviors/lists#logs-that-follow-their-end).
 
 ## Composition
 
@@ -71,14 +71,22 @@ What `agent.snapshot()` lists for the preview example:
 | Attach        | button    | `press`             |
 | Send          | button    | None while disabled |
 
-Only Scroll to end is Message Scroller's own entry. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end. Message Scroller is built on `@shadcn/react`, so it doesn't pass ui-sdk's change `details` on.
+Only Scroll to end is Message Scroller's own entry. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
 
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
-| `MessageScrollerItem` | `messageId`; `scrollAnchor` |
+| `MessageScrollerProvider` | `defaultScrollPosition`: `"end"` (default) or `"start"` |
+| `MessageScrollerItem` | `messageId`, for `scrollToMessage`; `scrollAnchor` |
 | `MessageScrollerButton` | A pill that rises in while there's more below; named "Scroll to end" unless given `aria-label` |
-| `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage` |
+| `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage(messageId)`, each taking `{ behavior }` |
+| `useMessageScrollerState` | `following`, `atBottom`, `unseen` |
+
+| Attribute | On | Present while |
+| --- | --- | --- |
+| `data-pending-scroll` | `MessageScrollerViewport` | The opening position isn't applied yet; the viewport stays hidden |
+| `data-visible` | `MessageScrollerButton` | The reader is away from the end and not following it |
+| `data-unseen` | `MessageScrollerButton` | Content arrived below while away; clears at the end |
 
 Every part takes `sx`, applied last.
