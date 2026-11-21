@@ -239,9 +239,7 @@ test("a step that fails is announced at once", async () => {
   rerender(<Running label="Failed to run" state="error" />);
   await quiet();
 
-  expect(said).toEqual([
-    { role: "alert", text: "Failed to run tests, failed" },
-  ]);
+  expect(said).toEqual([{ role: "alert", text: "Failed to run tests" }]);
 });
 
 test("mounting, starting and re-rendering a step announce nothing", async () => {

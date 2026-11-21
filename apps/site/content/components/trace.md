@@ -161,12 +161,12 @@ Set `state` on `TraceStep` while it runs, if it failed or before it starts. A st
 
 Put why a step failed in a `TraceDescription` inside `TraceStepContent`, under the title. It turns `dangerText` on a failed step.
 
-When a step's `state` changes to none or `error`, screen readers hear its line and the outcome. A step that mounts done or failed says nothing.
+When a step's `state` changes to none or `error`, screen readers hear its line. A failed title already says it failed, so only a finished step adds "done". A step that mounts done or failed says nothing.
 
-| Change to | Heard                             | When              |
-| --------- | --------------------------------- | ----------------- |
-| none      | "Ran pnpm build, done"            | At the next pause |
-| `error`   | "Failed to run pnpm lint, failed" | At once           |
+| Change to | Heard                     | When              |
+| --------- | ------------------------- | ----------------- |
+| none      | "Ran pnpm build, done"    | At the next pause |
+| `error`   | "Failed to run pnpm lint" | At once           |
 
 <!-- ::demo name="trace-state" -->
 

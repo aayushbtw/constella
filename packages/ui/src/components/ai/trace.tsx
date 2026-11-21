@@ -430,7 +430,7 @@ function useOutcome(
     }
     const label = spoken(line).replaceAll(/\s+/gu, " ").trim();
     if (state === "error") {
-      announce(`${label}, failed`, { priority: "assertive" });
+      announce(label, { priority: "assertive" });
     } else {
       announce(`${label}, done`);
     }
