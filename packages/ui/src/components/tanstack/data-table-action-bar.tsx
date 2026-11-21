@@ -28,10 +28,24 @@ interface ActionBarTable {
 
 interface FocusOrigin {
   element: HTMLElement | null;
-  table: Element | null;
+  row: number | null;
+  table: HTMLElement | null;
 }
 
-const noOrigin: FocusOrigin = { element: null, table: null };
+const noOrigin: FocusOrigin = { element: null, row: null, table: null };
+
+const rowInPlaceOf = ({ row, table }: FocusOrigin) => {
+  const rows = [
+    ...(table?.querySelectorAll<HTMLElement>("tr[data-index]") ?? []),
+  ];
+  return (
+    (row === null
+      ? undefined
+      : rows.findLast((candidate) => Number(candidate.dataset.index) <= row)) ??
+    table?.querySelector<HTMLElement>("tr[tabindex='0']") ??
+    table
+  );
+};
 
 const closed = ":is([data-closed])";
 // A key in the table, or in the bar itself, moved it: the keyboard never animates.
@@ -124,12 +138,12 @@ function DataTableActionBar({
     if (open || bar.current?.contains(document.activeElement) !== true) {
       return;
     }
-    const { element, table: from } = origin.current;
+    const { element } = origin.current;
     if (element?.isConnected === true) {
       element.focus();
     }
     if (document.activeElement !== element) {
-      from?.querySelector<HTMLElement>("tr[tabindex='0']")?.focus();
+      rowInPlaceOf(origin.current)?.focus();
     }
   }, [open]);
   return (
@@ -140,10 +154,16 @@ function DataTableActionBar({
       inert={!open}
       onFocus={({ currentTarget, relatedTarget }) => {
         if (!currentTarget.contains(relatedTarget)) {
+          const row =
+            relatedTarget?.closest<HTMLElement>("tr[data-index]")?.dataset
+              .index;
           origin.current = {
             element:
               relatedTarget instanceof HTMLElement ? relatedTarget : null,
-            table: relatedTarget?.closest("[data-slot='data-table']") ?? null,
+            row: row === undefined ? null : Number(row),
+            table:
+              relatedTarget?.closest<HTMLElement>("[data-slot='data-table']") ??
+              null,
           };
         }
       }}
