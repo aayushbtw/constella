@@ -44,7 +44,7 @@ import {
 } from "@/components/ai/message-scroller";
 ```
 
-It opens at the newest message and follows a streaming answer while the reader is at the end. Scrolled up, it keeps the reader's place and shows the button to jump back. Mark each user message a `scrollAnchor`: a new question scrolls to the top, with the end of the turn before it in view, and stays there while the answer streams in below. The behavior is ui-sdk's [`createStickToBottom`](https://ui-sdk.dev/docs/core/behaviors/lists#logs-that-follow-their-end), on a [Scroll Area](/docs/components/scroll-area) viewport.
+It opens at the newest message and follows a streaming answer while the reader is at the end. Scrolled up, it keeps the reader's place and shows the button to jump back. Mark each user message a `scrollAnchor`. A new question then scrolls to the top, with the end of the turn before it in view, and stays there while the answer streams in below. The behavior is ui-sdk's [`createStickToBottom`](https://ui-sdk.dev/docs/core/behaviors/lists#logs-that-follow-their-end), on a [Scroll Area](/docs/components/scroll-area) viewport.
 
 ## Composition
 
@@ -86,7 +86,7 @@ What `agent.snapshot()` lists for the preview example:
 | Attach        | button      | `press`             |
 | Send          | button      | None while disabled |
 
-Conversation and Scroll to end are Message Scroller's own entries: Conversation is its Scroll Area, named by the viewport's `aria-label`, with nothing to act on. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
+Conversation and Scroll to end are Message Scroller's own entries. Conversation is its Scroll Area, named by the viewport's `aria-label`, with nothing to act on. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
 
 ## API Reference
 
@@ -105,4 +105,4 @@ Conversation and Scroll to end are Message Scroller's own entries: Conversation 
 | `data-visible` | `MessageScrollerButton` | The reader is away from the end and not following it |
 | `data-unseen` | `MessageScrollerButton` | Content arrived below while away; clears at the end |
 
-Every part takes `sx`, applied last.
+Every part takes `sx`, applied last. For the rest, see [UI SDK Scroll Area](https://ui-sdk.dev/docs/react/components/scroll-area).

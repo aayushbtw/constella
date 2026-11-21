@@ -45,7 +45,8 @@ interface MessageScrollerScrollOptions {
   behavior?: ScrollBehavior;
 }
 
-const anchorVar = "--message-scroller-anchor";
+const anchorRoomVar = "--message-scroller-anchor-room";
+const priorTurnPeek = `calc(${space.xl} + ${space.md})`;
 const hidden = ":not([data-visible])";
 const reducedMotionQuery = media.reducedMotion.slice("@media ".length);
 
@@ -70,8 +71,7 @@ const styles = stylex.create({
     minHeight: 0,
     minWidth: 0,
     overscrollBehavior: "contain",
-    // How much of the turn before stays in view above a new question.
-    scrollPaddingBlockStart: `calc(${space.xl} + ${space.md})`,
+    scrollPaddingBlockStart: priorTurnPeek,
     // Hidden until the opening position is applied, so the first frame never shows the top.
     visibility: { default: "visible", ":is([data-pending-scroll])": "hidden" },
     width: "100%",
@@ -80,8 +80,7 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: "column",
     height: "max-content",
-    // Room below the newest question, so the end of the thread is that question at the top.
-    minHeight: `calc(100% + var(${anchorVar}, 0px))`,
+    minHeight: `calc(100% + var(${anchorRoomVar}, 0px))`,
   },
   item: {
     flexShrink: 0,
@@ -148,29 +147,27 @@ function createMessageScroller(position: MessageScrollerPosition) {
         }
       };
     },
-    anchor(element: HTMLElement) {
+    pinQuestionToTop(element: HTMLElement) {
       if (!viewport) {
         return;
       }
       viewport.style.setProperty(
-        anchorVar,
+        anchorRoomVar,
         `${Math.max(0, scrollTopOf(viewport, element))}px`
       );
-      // The end is now the question at the top; letting go keeps it there while the answer streams.
       stick.scrollToBottom();
       stick.release();
     },
-    jumpToEnd(button: HTMLElement, fromKeyboard: boolean) {
+    jumpToEnd(fromKeyboard: boolean) {
       stick.scrollToBottom({
         behavior:
           fromKeyboard || matchMedia(reducedMotionQuery).matches
             ? "instant"
             : "smooth",
       });
-      // The button goes inert at the end, and the viewport is no tab stop while it holds controls.
-      if (button.ownerDocument.activeElement === button) {
-        content?.focus({ preventScroll: true });
-      }
+    },
+    focusLog() {
+      content?.focus({ preventScroll: true });
     },
     actions: {
       prepend: () => {
@@ -245,7 +242,7 @@ function MessageScroller({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
-/** The element that scrolls, with Scroll Area's bar; a tab stop only while it overflows and holds no control. */
+/** The element that scrolls, with Scroll Area's bar. It's a tab stop only while it overflows and holds no control. */
 function MessageScrollerViewport({
   "aria-label": label = "Messages",
   children,
@@ -317,7 +314,7 @@ function MessageScrollerItem({
   const register = useCallback(
     (element: HTMLDivElement) => {
       if (scrollAnchor) {
-        scroller.anchor(element);
+        scroller.pinQuestionToTop(element);
       }
       return scroller.register(messageId, element);
     },
@@ -357,10 +354,11 @@ function MessageScrollerButton({
       onClick={(event, details) => {
         onClick?.(event, details);
         if (!event.defaultPrevented) {
-          scroller.jumpToEnd(
-            event.currentTarget,
-            details.source === "keyboard"
-          );
+          const button = event.currentTarget;
+          scroller.jumpToEnd(details.source === "keyboard");
+          if (button.ownerDocument.activeElement === button) {
+            scroller.focusLog();
+          }
         }
       }}
       size="icon-sm"
