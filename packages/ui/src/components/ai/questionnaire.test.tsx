@@ -100,11 +100,9 @@ const plan = [
 
 function Plan({
   onSignals,
-  onStatusChange,
   onSubmit,
 }: {
   onSignals?: (status: QuestionnaireItemStatus) => void;
-  onStatusChange?: (status: QuestionnaireItemStatus) => void;
   onSubmit?: (data: FormData) => void;
 }) {
   return (
@@ -122,9 +120,7 @@ function Plan({
           key={question.name}
           multiple={question.multiple}
           name={question.name}
-          onStatusChange={
-            question.name === "signals" ? onSignals : onStatusChange
-          }
+          onStatusChange={question.name === "signals" ? onSignals : undefined}
         >
           <QuestionnaireTitle>{question.title}</QuestionnaireTitle>
           <QuestionnaireDescription>

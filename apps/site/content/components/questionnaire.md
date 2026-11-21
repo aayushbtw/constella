@@ -78,7 +78,7 @@ const items = [
 ] as const;
 ```
 
-Define the questions once: pass them to `Questionnaire` as `items`, then map them into the parts. `items` sets the order, which questions are `required` or `disabled`, and the `choices` that get shortcut keys, so progress, actions and shortcuts render on the server. The answers arrive as the form's data on submit, one entry per `name`; `getAll` reads a `multiple` question. A skipped question, an empty freeform answer and a question with nothing picked submit no entry.
+Define the questions once: pass them to `Questionnaire` as `items` so progress, actions and shortcuts render on the server, then map them into the parts. The answers arrive as the form's data on submit, one entry per answered `name`; `getAll` reads a `multiple` question.
 
 ```tsx
 function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -168,7 +168,7 @@ Add a `QuestionnaireSkip` to let an optional item be left unanswered on purpose.
 
 ## Shortcuts
 
-Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Keys follow the order of each item's `choices` in `items`, and work while focus is in the questionnaire, so two on one page don't share them. Enter on a choice or the freeform answer moves on, and so does ⌘ Enter (Ctrl Enter off Apple platforms) anywhere in the form. The arrow keys move between a single-answer question's choices.
+Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Keys work only while focus is in the questionnaire, so two on one page don't share them.
 
 <!-- ::demo name="questionnaire-shortcuts" -->
 
@@ -177,6 +177,13 @@ Use the `shortcuts` prop to give each answer a letter or number key, shown as a 
   …
 </Questionnaire>
 ```
+
+| Key | Where | Does |
+| --- | --- | --- |
+| A to Z, or 1 to 9 | Anywhere in the form | Picks the choice, in the order of the item's `choices` in `items` |
+| Enter | A choice or the freeform answer | Moves on |
+| ⌘ Enter (Ctrl Enter off Apple platforms) | Anywhere in the form | Moves on |
+| Arrow keys | A single-answer question's choices | Moves between them |
 
 ## Questionnaire Progress
 
@@ -338,7 +345,9 @@ What `agent.snapshot()` lists for the preview example:
 | Another agent feature              | input     | `setValue`, `clear` |
 | Next                               | button    | `press`             |
 
-The agent picks a single answer with `setValue` on the question's radio group, named by its title, by a choice's label or value. A `multiple` question lists each checkbox by its label, with `setChecked`, and the group by the title, with `setValue`. It fills the freeform answer, then moves with Previous, Next, Skip and Submit, and reads the step from the progress. Only the active question is listed. **Keep the buttons' words out of a title.** A title like "What should the agent build next?" makes "Next" name two components, so the agent can press Next only by its ref.
+Only the active question is listed. The agent passes a choice's label or value to `setValue` on the question's group, and a `multiple` question also lists each checkbox by its label, with `setChecked`.
+
+**Keep the buttons' words out of a title.** A title like "What should the agent build next?" makes "Next" name two components, so the agent can press Next only by its ref.
 
 ## API Reference
 

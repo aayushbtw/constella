@@ -213,7 +213,6 @@ const styles = stylex.create({
     gap: space.sm,
     minHeight: lineHeights.textSm,
   },
-  // Alone, the step reads before the title, not across from it as beside a bar.
   step: { marginInlineStart: 0 },
   item: {
     display: { default: "flex", ":is([hidden])": "none" },
@@ -291,7 +290,6 @@ function Questionnaire({
   const total = enabled.length;
   const shown = useRef(current?.name);
 
-  // Focuses the question a step moved to, or the one the owner moved to while focus was in the form.
   useLayoutEffect(() => {
     const request = focusRequest.current;
     const moved = shown.current !== current?.name;
@@ -463,7 +461,7 @@ function Questionnaire({
 
   return (
     <QuestionnaireContext value={context}>
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- the choice keys and ⌘ Enter turn on while focus is in this form, so questionnaires on one page don't share them */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- focus and blur only scope the shortcuts to this form */}
       <form
         data-shortcuts={shortcuts}
         data-slot="questionnaire"
@@ -551,7 +549,6 @@ function QuestionnaireItem(props: QuestionnaireItemProps) {
     one: createRadioGroupController(),
     text: createInputController(),
   }));
-  // Seeds once from the default, like the groups it renders.
   const [picked, setPicked] = useState(() => defaults.length > 0);
   const [typed, setTyped] = useState(false);
   const definition = useMemo(
@@ -693,7 +690,6 @@ type QuestionnaireChoicesProps = Styled<
 function QuestionnaireChoices(props: QuestionnaireChoicesProps) {
   const { chooseMany, chooseOne, controllers, defaults, ids, multiple, name } =
     useQuestionnaireItem("QuestionnaireChoices");
-  // A legend names its fieldset, not the group inside it.
   if (multiple) {
     return (
       <CheckboxGroup
@@ -742,9 +738,9 @@ function QuestionnaireChoice({
   const disabled = definition.choices?.some(
     (choice) => choice.value === value && choice.disabled === true
   );
-  // Only the shown question's keys register, so its siblings' A and B don't compete.
+  const activeShortcut = active ? shortcut : null;
   useShortcut(
-    active ? shortcut : null,
+    activeShortcut,
     () => {
       control.current?.focus();
       control.current?.click();
@@ -915,7 +911,6 @@ function QuestionnaireSkip({
   );
 }
 
-// A submit button, so Enter in an answer presses it; the form's submit steps forward until the last question.
 function QuestionnaireNext({
   children = "Next",
   sx,
