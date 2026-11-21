@@ -169,7 +169,6 @@ const styles = stylex.create({
     borderEndEndRadius: radii.lg,
     boxShadow: shadows.lg,
     color: colors.textPrimary,
-    // With a search field, the list scrolls under it instead of the whole popup.
     display: { default: null, [searchable]: "flex" },
     flexDirection: "column",
     marginBlock: 0,
@@ -186,7 +185,6 @@ const styles = stylex.create({
     scrollPaddingBlock: sizes.controlXs,
     width: "var(--anchor-width)",
   },
-  // Command's field: flat on `fill`, nesting in the popup's corner.
   input: {
     backgroundColor: colors.fill,
     borderStartStartRadius: radii.md,
@@ -345,7 +343,6 @@ const contentSizeStyles = {
   >
 >;
 
-// A step above the rows, as in Command.
 const inputSizes = {
   default: "lg",
   lg: "lg",
@@ -558,7 +555,6 @@ function SelectEmpty({
   );
 }
 
-/** The item's label, with the part the search matched in medium weight and the rest in `textSecondary`. */
 function SelectItemText({
   sx,
   ...props
@@ -567,18 +563,20 @@ function SelectItemText({
     <SelectItemTextPrimitive
       {...withStyles(props, stylex.props(styles.matchedText, sx))}
     >
-      {({ segments }) =>
-        segments.map((segment, index) =>
-          segment.match ? (
-            // oxlint-disable-next-line react/no-array-index-key -- Segments have no id, and the same text can match twice.
-            <mark key={index} {...stylex.props(styles.match)}>
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
               {segment.text}
             </mark>
           ) : (
             segment.text
-          )
-        )
-      }
+          );
+        });
+      }}
     </SelectItemTextPrimitive>
   );
 }

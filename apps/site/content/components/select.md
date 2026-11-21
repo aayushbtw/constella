@@ -251,6 +251,6 @@ Add `invalid` to the `Field`, so the trigger takes the red edge.
 | `SelectTrigger` | `size`: `"sm"`, `"default"` or `"lg"` |
 | `SelectContent` | Renders in place in the browser's top layer, with no portal or positioner; takes `side`, `align`, `alignItemWithTrigger` and their offsets; `size`: `"sm"`, `"default"` or `"lg"` rows |
 | `SelectInput` | An input group with a search icon, a step above the rows' size; `sx` goes to the group |
-| `SelectItemText` | Takes no children: it shows the item's label, with the match in medium weight |
+| `SelectItemText` | Takes no children. Shows the item's label, with the match in medium weight |
 
 Every part takes `sx`, applied last. For the rest, see [UI SDK Select](https://ui-sdk.dev/docs/react/components/select).
