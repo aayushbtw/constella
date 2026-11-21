@@ -43,8 +43,8 @@
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
     },
     "unseen": {
-      "count": 1,
-      "why": "Agent-ready Data Table and Chart unit: past the snapshot's 100-entry cap, a kind found only in the tail can't be queried"
+      "count": 2,
+      "why": "Agent-ready Data Table and Chart unit: past the snapshot's 100-entry cap, a kind found only in the tail can't be queried. The \"Rows per page\" select and the Pagination nav sit in the tail"
     }
   },
   "/docs/components/markdown": {

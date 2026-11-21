@@ -274,6 +274,11 @@ import {
 } from "~/components/demos/model-picker";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
+  PaginationDemo,
+  PaginationIconOnlyDemo,
+  PaginationSimpleDemo,
+} from "~/components/demos/pagination";
+import {
   PopoverAlignDemo,
   PopoverDemo,
   PopoverFormDemo,
@@ -694,6 +699,9 @@ const demos = {
   "calendar-range": CalendarRangeDemo,
   "date-range-picker": DateRangePickerDemo,
   "date-range-picker-presets": DateRangePickerPresetsDemo,
+  pagination: PaginationDemo,
+  "pagination-icon-only": PaginationIconOnlyDemo,
+  "pagination-simple": PaginationSimpleDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,

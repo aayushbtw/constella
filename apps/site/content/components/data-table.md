@@ -81,7 +81,7 @@ header: ({ column }) => (
 
 ## Data Table Select All
 
-Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox.
+Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox. Each selection a person makes is announced to screen readers as "N selected". A `DataTableSelectRow` outside a `DataTable` announces nothing.
 
 ```tsx
 column.display({
@@ -97,6 +97,8 @@ column.display({
 ## Data Table Action Bar
 
 Use `DataTableActionBar` for actions on the selected rows. It floats at the bottom of the window while any row is selected, with the count, your actions and a Clear button, and leaves when none is. Register `rowSelectionFeature`. Put [Buttons](/docs/components/button) or a [Dropdown Menu](/docs/components/dropdown-menu) trigger in it, with `corners="rounded"` so they nest in its corner, and leave room under the table for it.
+
+When Clear or one of your actions empties the selection while focus is in the bar, focus goes back to where it came into the bar from. If that control is gone, like a deleted row's checkbox, focus goes to the table's row that takes Tab.
 
 <!-- ::demo name="data-table-action-bar" -->
 
@@ -256,7 +258,7 @@ While no row is selected, the action bar is inert, so the agent can't press its 
 | `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
 | `DataTableActionBar` | `table`, `label`; `children`, the actions, between the count and Clear |
 | `DataTableColumnHeader` | `column`, `title`; the sort icon leads in a column with `meta: { align: "end" }` |
-| `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
+| `DataTablePagination` | `table`; `label`, the name of the navigation that holds first, previous, next and last, "Pagination" by default; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |
 | `DataTableViewOptions` | `table`; `labels`, each column's name by id |
 | `DataTableSelectRow` | `row`, `label`, its name, such as "Select ken@acme.com"; `numbered`, the row's number until it's pointed at or any row is selected |

@@ -1283,6 +1283,30 @@
       "docs": "Usage: https://constella.aayush.cv/docs/components/breadcrumb/index.md"
     },
     {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page links and steps through a list split into pages.",
+      "dependencies": [
+        "@hugeicons/core-free-icons",
+        "@hugeicons/react",
+        "@stylexjs/stylex",
+        "@ui-sdk/core@0.1.0-beta.13",
+        "@ui-sdk/react@0.1.0-beta.13"
+      ],
+      "registryDependencies": [
+        "https://constella.aayush.cv/r/base.json",
+        "https://constella.aayush.cv/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "src/components/primitives/pagination.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Usage: https://constella.aayush.cv/docs/components/pagination/index.md"
+    },
+    {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
@@ -1325,6 +1349,7 @@
         "https://constella.aayush.cv/r/button.json",
         "https://constella.aayush.cv/r/checkbox.json",
         "https://constella.aayush.cv/r/dropdown-menu.json",
+        "https://constella.aayush.cv/r/pagination.json",
         "https://constella.aayush.cv/r/select.json",
         "https://constella.aayush.cv/r/skeleton.json",
         "https://constella.aayush.cv/r/swap-icon.json",

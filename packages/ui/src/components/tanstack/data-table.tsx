@@ -14,6 +14,7 @@ import type {
   RowData,
   TableFeatures,
 } from "@tanstack/react-table";
+import { announce } from "@ui-sdk/core";
 import { createParts, usePart, usePrimitive } from "@ui-sdk/react/primitive";
 import { Fragment, useMemo, useRef, useSyncExternalStore } from "react";
 import type { MouseEvent, ReactNode, RefObject } from "react";
@@ -230,6 +231,9 @@ function useRows<
       selectable?.setRowSelection(
         Object.fromEntries(selected.map((id) => [id, true] as const))
       );
+      if (selected.length > 0) {
+        announce(`${selected.length} selected`);
+      }
     },
     selectable:
       selectable &&
@@ -250,6 +254,7 @@ function useRows<
     indexOf,
     keep: focused === null ? undefined : indexOf.get(focused),
     rows,
+    selectable,
   };
 }
 
@@ -273,11 +278,15 @@ function DataTable<
   table,
 }: DataTableProps<TFeatures, TData, TSelected>) {
   const body = useRef<HTMLTableSectionElement>(null);
-  const { handle, indexOf, keep, rows } = useRows(table, onRowClick);
-  const { handlePointerDown, handlePointerOver } = useDragSelect(
-    rows,
-    handle.api.selection.setAnchor
+  const { handle, indexOf, keep, rows, selectable } = useRows(
+    table,
+    onRowClick
   );
+  const { handlePointerDown, handlePointerOver } = useDragSelect({
+    onDragEnd: handle.api.selection.setAnchor,
+    rows,
+    table: selectable,
+  });
   const { items, padAfter, spaceBefore, virtualizer } = useDataTableVirtualizer(
     {
       body,
