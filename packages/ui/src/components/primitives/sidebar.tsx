@@ -205,12 +205,12 @@ const triggerHovered = ":is([data-slot='sidebar-trigger']:hover *)";
 const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 
 // The whole row answers the pointer, so reaching for its action keeps it lit, and so
-// does an open menu from it.
-const item = "[data-slot='sidebar-menu-item']";
-// Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
+// does an open menu from it. Own attributes, not `data-slot`, since a ui-sdk trigger
+// rendering the row, its button or its action writes its slot over theirs.
+const item = "[data-sidebar-menu-item]";
 const action = "[data-sidebar-menu-action]";
 // Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content']):hover)`;
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content'], [data-slot='collapsible-panel']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
 // A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
@@ -1082,7 +1082,8 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
+  const { isMobile, open, openMobile, setOpenMobile, toggleSidebar } =
+    useSidebar();
   const inSheet = use(InSheetContext);
   const name = use(TriggerNameContext);
   const triggerSx = [name !== null && styles.triggerName(name), sx];
@@ -1110,18 +1111,16 @@ function SidebarTrigger({
     );
   }
 
-  let label = open ? "Collapse sidebar" : "Expand sidebar";
-  if (isMobile) {
-    label = "Open sidebar";
-  }
+  const label = ariaLabel ?? "Toggle sidebar";
   return (
     <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
-            aria-expanded={isMobile ? undefined : open}
+            aria-expanded={isMobile ? openMobile : open}
+            aria-haspopup={isMobile ? "dialog" : undefined}
             aria-keyshortcuts={hint.ariaKeyshortcuts}
-            aria-label={ariaLabel ?? label}
+            aria-label={label}
             data-slot="sidebar-trigger"
             onClick={(event, details) => {
               const result = onClick?.(event, details);
@@ -1143,7 +1142,7 @@ function SidebarTrigger({
         }
       />
       <TooltipContent side={rail ? tooltipSide : "bottom"}>
-        {ariaLabel ?? label}
+        {label}
         {kbd}
       </TooltipContent>
     </Tooltip>
@@ -1227,10 +1226,10 @@ function SidebarRail({
   const { toggleSidebar } = useSidebar();
   return (
     <SidebarButton
-      aria-label="Toggle Sidebar"
+      aria-label="Sidebar rail"
       onClick={toggleSidebar}
       tabIndex={-1}
-      title="Toggle Sidebar"
+      title="Toggle sidebar"
       {...withStyles(props, stylex.props(styles.rail, sx))}
       data-slot={slot}
     />
@@ -1387,6 +1386,7 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
 function SidebarMenuItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
+      data-sidebar-menu-item=""
       data-slot="sidebar-menu-item"
       {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
@@ -1427,6 +1427,7 @@ function SidebarMenuButton({
     {
       "aria-current": isActive ? "page" : undefined,
       "data-active": isActive ? "" : undefined,
+      "data-sidebar-menu-button": "",
       "data-size": size,
       "data-variant": variant,
     },
@@ -1452,15 +1453,10 @@ function SidebarMenuButton({
 
   return (
     <LabelContext value={setTruncated}>
-      <Tooltip disabled={!(rail || truncated)}>
+      <Tooltip disabled={!(rail || truncated)} type="label">
         <TooltipTrigger
-          // The row's label stays in the accessibility tree, even in the rail, so the tooltip only repeats it; the row sets `type` itself.
-          render={({
-            "aria-describedby": _describedBy,
-            "aria-labelledby": _labelledBy,
-            type: _type,
-            ...trigger
-          }) => (
+          // A link row must not get `type`, and a button row gets it from SidebarButton.
+          render={({ type: _type, ...trigger }) => (
             <SidebarButton
               {...mergeProps(trigger, own)}
               data-slot={slot}
