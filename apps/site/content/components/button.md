@@ -19,6 +19,14 @@ import { Button } from "@/components/primitives/button";
 <Button variant="outline">Button</Button>
 ```
 
+## Composition
+
+```
+Button
+
+CloseButton
+```
+
 ## Variant
 
 Use the `variant` prop to set how much the button stands out. Use one `primary` per view.
@@ -109,6 +117,14 @@ Pass an `<a>` to `render` for a link that looks like a button. It keeps its link
 </Button>
 ```
 
+## Close Button
+
+`CloseButton` is the X that closes Dialog, Sheet and Side Panel: a `ghost` `icon-sm` Button named "Close". Render it through a Close part. Pass `children` to swap the icon.
+
+```tsx
+<DialogClose render={<CloseButton />} />
+```
+
 ## Disabled
 
 Use `disabled` when the action isn't available. It fades the button and shows a not-allowed cursor.
@@ -155,6 +171,15 @@ Takes every prop of [UI SDK Button](https://ui-sdk.dev/docs/react/components/but
 | `size` | `"xs" \| "sm" \| "default" \| "lg" \| "icon-xs" \| "icon-sm" \| "icon" \| "icon-lg"` | `"default"` |
 | `corners` | `"rounded" \| "pill"` | `"pill"` |
 | `sx` | `Sx`, applied last |  |
+
+### CloseButton
+
+Takes every prop of Button except `variant` and `size`, plus:
+
+| Prop         | Type                           | Default                  |
+| ------------ | ------------------------------ | ------------------------ |
+| `aria-label` | `string`                       | `"Close"`                |
+| `children`   | `ReactNode`, replaces the icon | Hugeicons `Cancel01Icon` |
 
 ### buttonStyles
 

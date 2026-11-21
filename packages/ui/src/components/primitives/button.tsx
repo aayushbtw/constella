@@ -1,5 +1,7 @@
 "use client";
 
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { renderElement } from "@ui-sdk/react/primitive";
@@ -336,8 +338,31 @@ function Button({
   );
 }
 
+type CloseButtonProps = Omit<ButtonProps, "size" | "variant">;
+
+/** The ghost X that shuts a surface; each surface renders its own Close through it. */
+function CloseButton({
+  "aria-label": label = "Close",
+  children,
+  ...props
+}: CloseButtonProps) {
+  return (
+    <Button aria-label={label} size="icon-sm" variant="ghost" {...props}>
+      {children ?? (
+        <HugeiconsIcon
+          aria-hidden
+          icon={Cancel01Icon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      )}
+    </Button>
+  );
+}
+
 export {
   Button,
+  CloseButton,
   buttonCorners,
   buttonSizes,
   buttonColors,
@@ -351,4 +376,5 @@ export type {
   ButtonColor,
   ButtonStyleOptions,
   ButtonVariant,
+  CloseButtonProps,
 };
