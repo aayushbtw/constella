@@ -1,14 +1,12 @@
-// Fails when an item's imports don't match the dependencies it declares, a
-// declared version differs from package.json, or a file in src belongs to no
-// item, so `shadcn add` never installs a broken item.
-
-import { readFile, readdir } from "node:fs/promises";
+import { glob, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 import { registrySchema } from "shadcn/schema";
+import { parse } from "yaml";
 import { z } from "zod";
 
 const root = path.join(import.meta.dirname, "..");
+const repo = path.join(root, "../..");
 // shadcn expects the app to provide React.
 const provided = new Set(["react", "react-dom"]);
 
@@ -16,8 +14,18 @@ const registry = registrySchema.parse(
   JSON.parse(await readFile(path.join(root, "registry.json"), "utf-8"))
 );
 
+const workspace = z
+  .object({
+    packages: z.array(z.string()).default([]),
+    catalog: z.record(z.string(), z.string()).default({}),
+  })
+  .parse(
+    parse(await readFile(path.join(repo, "pnpm-workspace.yaml"), "utf-8"))
+  );
+
 const manifestSchema = z.object({
   dependencies: z.record(z.string(), z.string()).default({}),
+  devDependencies: z.record(z.string(), z.string()).default({}),
   peerDependencies: z.record(z.string(), z.string()).default({}),
   peerDependenciesMeta: z
     .record(z.string(), z.object({ optional: z.boolean().optional() }))
@@ -29,7 +37,21 @@ const readManifest = async (dir: string) =>
     JSON.parse(await readFile(path.join(dir, "package.json"), "utf-8"))
   );
 
-const { dependencies: ranges } = await readManifest(root);
+const { dependencies } = await readManifest(root);
+const ranges = Object.fromEntries(
+  Object.entries(dependencies).map(([name, range]) => {
+    if (!range.startsWith("catalog:")) {
+      return [name, range];
+    }
+    const pinned = workspace.catalog[name];
+    if (range !== "catalog:" || pinned === undefined) {
+      throw new Error(
+        `package.json has ${name}@${range}, which the default catalog doesn't pin`
+      );
+    }
+    return [name, pinned];
+  })
+);
 
 const requiredPeers = new Map(
   await Promise.all(
@@ -53,6 +75,21 @@ for (const { name, files = [] } of registry.items) {
 }
 
 const errors: string[] = [];
+
+for await (const file of glob(
+  ["package.json", ...workspace.packages.map((dir) => `${dir}/package.json`)],
+  { cwd: repo }
+)) {
+  const manifest = await readManifest(path.join(repo, path.dirname(file)));
+  for (const [name, range] of [
+    ...Object.entries(manifest.dependencies),
+    ...Object.entries(manifest.devDependencies),
+  ]) {
+    if (workspace.catalog[name] !== undefined && range !== "catalog:") {
+      errors.push(`${file} pins ${name}@${range}; use catalog:`);
+    }
+  }
+}
 
 const sources = await readdir(path.join(root, "src"), { recursive: true });
 const shipped = (entry: string) =>
