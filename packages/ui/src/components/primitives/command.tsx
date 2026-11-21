@@ -302,18 +302,20 @@ function CommandItemText({
     <CommandItemTextPrimitive
       {...withStyles(props, stylex.props(styles.itemText, sx))}
     >
-      {({ segments }) =>
-        segments.map((segment, index) =>
-          segment.match ? (
-            // oxlint-disable-next-line react/no-array-index-key -- a segment's place is its identity
-            <mark key={index} {...stylex.props(styles.match)}>
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
               {segment.text}
             </mark>
           ) : (
             segment.text
-          )
-        )
-      }
+          );
+        });
+      }}
     </CommandItemTextPrimitive>
   );
 }
