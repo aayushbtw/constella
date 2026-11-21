@@ -6,6 +6,7 @@ import * as stylex from "@stylexjs/stylex";
 import { createStickToBottom } from "@ui-sdk/core";
 import type { StickToBottomState } from "@ui-sdk/core";
 import { mergeProps } from "@ui-sdk/react/primitive";
+import { ScrollArea, ScrollAreaViewport } from "@ui-sdk/react/scroll-area";
 import {
   createContext,
   use,
@@ -16,6 +17,10 @@ import {
 import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
+import {
+  ScrollBar,
+  scrollHideDelay,
+} from "@/components/primitives/scroll-area";
 import type { Sx } from "@/lib/constella/styles";
 import { withStyles } from "@/lib/constella/styles";
 import {
@@ -54,15 +59,17 @@ const styles = stylex.create({
     position: "relative",
     width: "100%",
   },
+  area: {
+    height: "100%",
+    minHeight: 0,
+    width: "100%",
+  },
   viewport: {
     contain: "content",
     height: "100%",
     minHeight: 0,
     minWidth: 0,
-    overflowY: "auto",
     overscrollBehavior: "contain",
-    scrollbarGutter: "stable",
-    scrollbarWidth: "thin",
     // How much of the turn before stays in view above a new question.
     scrollPaddingBlockStart: `calc(${space.xl} + ${space.md})`,
     // Hidden until the opening position is applied, so the first frame never shows the top.
@@ -113,6 +120,7 @@ function createMessageScroller(position: MessageScrollerPosition) {
   const stick = createStickToBottom({ initial: position === "end" });
   const messages = new Map<string, HTMLElement>();
   let viewport: HTMLElement | undefined;
+  let content: HTMLElement | undefined;
 
   return {
     position,
@@ -124,6 +132,12 @@ function createMessageScroller(position: MessageScrollerPosition) {
       return () => {
         disconnect();
         viewport = undefined;
+      };
+    },
+    holdContent: (element: HTMLElement) => {
+      content = element;
+      return () => {
+        content = undefined;
       };
     },
     register(messageId: string, element: HTMLElement) {
@@ -153,11 +167,15 @@ function createMessageScroller(position: MessageScrollerPosition) {
             ? "instant"
             : "smooth",
       });
+      // The button goes inert at the end, and the viewport is no tab stop while it holds controls.
       if (button.ownerDocument.activeElement === button) {
-        viewport?.focus({ preventScroll: true });
+        content?.focus({ preventScroll: true });
       }
     },
     actions: {
+      prepend: () => {
+        stick.prepend();
+      },
       scrollToEnd: (options?: MessageScrollerScrollOptions) => {
         stick.scrollToBottom(options);
       },
@@ -227,8 +245,10 @@ function MessageScroller({ sx, ...props }: Styled<ComponentProps<"div">>) {
   );
 }
 
+/** The element that scrolls, with Scroll Area's bar; a tab stop only while it overflows and holds no control. */
 function MessageScrollerViewport({
   "aria-label": label = "Messages",
+  children,
   sx,
   ...props
 }: Styled<ComponentProps<"section">>) {
@@ -244,16 +264,25 @@ function MessageScrollerViewport({
   );
 
   return (
-    <section
-      aria-label={label}
-      data-pending-scroll={pending ? "" : undefined}
-      data-slot="message-scroller-viewport"
-      // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scroller with no focusable content needs a tab stop to scroll by keyboard
-      tabIndex={0}
-      {...mergeProps(withStyles(props, stylex.props(styles.viewport, sx)), {
-        ref: connect,
-      })}
-    />
+    <ScrollArea
+      scrollHideDelay={scrollHideDelay}
+      {...stylex.props(styles.area)}
+    >
+      <ScrollAreaViewport
+        render={
+          <section
+            aria-label={label}
+            data-pending-scroll={pending ? "" : undefined}
+            data-slot="message-scroller-viewport"
+            {...mergeProps(props, { ref: connect })}
+          />
+        }
+        {...stylex.props(styles.viewport, sx)}
+      >
+        {children}
+      </ScrollAreaViewport>
+      <ScrollBar />
+    </ScrollArea>
   );
 }
 
@@ -261,12 +290,16 @@ function MessageScrollerContent({
   sx,
   ...props
 }: Styled<ComponentProps<"div">>) {
+  const scroller = useScroller();
   return (
     <div
       aria-relevant="additions"
       data-slot="message-scroller-content"
       role="log"
-      {...withStyles(props, stylex.props(styles.content, sx))}
+      tabIndex={-1}
+      {...mergeProps(withStyles(props, stylex.props(styles.content, sx)), {
+        ref: scroller.holdContent,
+      })}
     />
   );
 }

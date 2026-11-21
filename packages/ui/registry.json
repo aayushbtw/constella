@@ -1069,7 +1069,7 @@
       "name": "message-scroller",
       "type": "registry:ui",
       "title": "Message Scroller",
-      "description": "Scrolls a conversation, sticking to the newest message, on ui-sdk's stick-to-bottom.",
+      "description": "Scrolls a conversation, sticking to the newest message, on ui-sdk's stick-to-bottom and scroll area.",
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
@@ -1079,7 +1079,8 @@
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/button.json"
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/scroll-area.json"
       ],
       "files": [
         {

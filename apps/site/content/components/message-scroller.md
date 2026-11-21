@@ -44,7 +44,7 @@ import {
 } from "@/components/ai/message-scroller";
 ```
 
-It opens at the newest message and follows a streaming answer while the reader is at the end. Scrolled up, it keeps the reader's place, even as history loads above, and shows the button to jump back. Mark each user message a `scrollAnchor`: a new question scrolls to the top, with the end of the turn before it in view, and stays there while the answer streams in below. The behavior is ui-sdk's [`createStickToBottom`](https://ui-sdk.dev/docs/core/behaviors/lists#logs-that-follow-their-end).
+It opens at the newest message and follows a streaming answer while the reader is at the end. Scrolled up, it keeps the reader's place and shows the button to jump back. Mark each user message a `scrollAnchor`: a new question scrolls to the top, with the end of the turn before it in view, and stays there while the answer streams in below. The behavior is ui-sdk's [`createStickToBottom`](https://ui-sdk.dev/docs/core/behaviors/lists#logs-that-follow-their-end), on a [Scroll Area](/docs/components/scroll-area) viewport.
 
 ## Composition
 
@@ -57,30 +57,46 @@ MessageScrollerProvider
     └── MessageScrollerButton
 ```
 
+## Older Messages
+
+Call `prepend` from `useMessageScroller` right before adding older messages above, so the message in view stays where it is. At the end, the thread stays at the end.
+
+```tsx
+const { prepend } = useMessageScroller();
+
+async function loadOlder() {
+  const older = await fetchOlderTurns();
+  prepend();
+  setTurns((turns) => [...older, ...turns]);
+}
+```
+
 ## Agent
 
 What `agent.snapshot()` lists for the preview example:
 
-| Label         | Component | Actions             |
-| ------------- | --------- | ------------------- |
-| Copy          | button    | `press`             |
-| Good answer   | button    | `press`             |
-| Retry         | button    | `press`             |
-| Scroll to end | button    | None while disabled |
-| Message       | textarea  | `setValue`, `clear` |
-| Attach        | button    | `press`             |
-| Send          | button    | None while disabled |
+| Label         | Component   | Actions             |
+| ------------- | ----------- | ------------------- |
+| Copy          | button      | `press`             |
+| Good answer   | button      | `press`             |
+| Retry         | button      | `press`             |
+| Conversation  | scroll-area | None                |
+| Scroll to end | button      | None while disabled |
+| Message       | textarea    | `setValue`, `clear` |
+| Attach        | button      | `press`             |
+| Send          | button      | None while disabled |
 
-Only Scroll to end is Message Scroller's own entry. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
+Conversation and Scroll to end are Message Scroller's own entries: Conversation is its Scroll Area, named by the viewport's `aria-label`, with nothing to act on. Copy, Good answer and Retry come from the example's [Message](/docs/components/message), and Message, Attach and Send from its [Prompt Input](/docs/components/prompt-input). At the end of the thread, Scroll to end is disabled. With more below, a `press` scrolls to the end.
 
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
 | `MessageScrollerProvider` | `defaultScrollPosition`: `"end"` (default) or `"start"` |
+| `MessageScrollerViewport` | Scroll Area's bar; a tab stop only while it overflows and holds no control |
 | `MessageScrollerItem` | `messageId`, for `scrollToMessage`; `scrollAnchor` |
 | `MessageScrollerButton` | A pill that rises in while there's more below; named "Scroll to end" unless given `aria-label` |
-| `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage(messageId)`, each taking `{ behavior }` |
+| `useMessageScroller` | `scrollToEnd`, `scrollToStart`, `scrollToMessage(messageId)`, each taking `{ behavior }`; `prepend()` |
 | `useMessageScrollerState` | `following`, `atBottom`, `unseen` |
 
 | Attribute | On | Present while |

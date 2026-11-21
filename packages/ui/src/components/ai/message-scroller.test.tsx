@@ -1,4 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { beforeEach, expect, onTestFinished, test, vi } from "vite-plus/test";
@@ -27,9 +33,56 @@ const itemHeight = 250;
 
 const layout = { top: 0, height: 0 };
 
+const resizeObservers = new Set<FakeResizeObserver>();
+
+const entryFor = (target: Element): ResizeObserverEntry => ({
+  borderBoxSize: [],
+  contentBoxSize: [],
+  contentRect: target.getBoundingClientRect(),
+  devicePixelContentBoxSize: [],
+  target,
+});
+
+class FakeResizeObserver implements ResizeObserver {
+  readonly #notify: ResizeObserverCallback;
+  readonly #targets = new Set<Element>();
+
+  constructor(notify: ResizeObserverCallback) {
+    this.#notify = notify;
+    resizeObservers.add(this);
+  }
+
+  observe(target: Element) {
+    this.#targets.add(target);
+  }
+
+  unobserve(target: Element) {
+    this.#targets.delete(target);
+  }
+
+  disconnect() {
+    this.#targets.clear();
+  }
+
+  resize() {
+    this.#notify(
+      [...this.#targets].map((target) => entryFor(target)),
+      this
+    );
+  }
+}
+
+function resize() {
+  for (const observer of resizeObservers) {
+    observer.resize();
+  }
+}
+
 beforeEach(() => {
   layout.top = 0;
   layout.height = 0;
+  resizeObservers.clear();
+  vi.stubGlobal("ResizeObserver", FakeResizeObserver);
   vi.stubGlobal("matchMedia", () => ({ matches: false }));
   vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(
     function rect(this: Element) {
@@ -93,14 +146,29 @@ const firstTurns: Turn[] = [
   { from: "assistant", id: "answer" },
 ];
 
-function Controls({ onAsk }: { onAsk: () => void }) {
-  const { scrollToMessage, scrollToStart } = useMessageScroller();
+function Controls({
+  onAsk,
+  onLoadOlder,
+}: {
+  onAsk: () => void;
+  onLoadOlder: () => void;
+}) {
+  const { prepend, scrollToMessage, scrollToStart } = useMessageScroller();
   const { following } = useMessageScrollerState();
   return (
     <>
       <output aria-label="Following">{String(following)}</output>
       <button onClick={onAsk} type="button">
         Ask
+      </button>
+      <button
+        onClick={() => {
+          prepend();
+          onLoadOlder();
+        }}
+        type="button"
+      >
+        Load older
       </button>
       <button
         onClick={() => {
@@ -154,6 +222,10 @@ function Thread({
             { from: "assistant", id: "follow-up-answer" },
           ]);
         }}
+        onLoadOlder={() => {
+          layout.height += itemHeight;
+          setTurns([{ from: "assistant", id: "older" }, ...turns]);
+        }}
       />
     </MessageScrollerProvider>
   );
@@ -161,7 +233,7 @@ function Thread({
 
 const following = () => screen.getByLabelText("Following").textContent;
 
-test("at the end, Scroll to end is the scroller's only entry: named, with nothing to press", () => {
+test("at the end, the snapshot lists the scroll area by the viewport's name and Scroll to end with nothing to press", () => {
   render(
     <MessageScrollerProvider>
       <MessageScroller>
@@ -178,6 +250,11 @@ test("at the end, Scroll to end is the scroller's only entry: named, with nothin
   );
 
   expect(entries()).toEqual([
+    expect.objectContaining({
+      actions: [],
+      component: "scroll-area",
+      label: "Conversation",
+    }),
     expect.objectContaining({
       actions: [],
       component: "button",
@@ -235,6 +312,72 @@ test("scrollToMessage brings a registered message to the top, and scrollToStart 
   fireEvent.click(screen.getByRole("button", { name: "To start" }));
   expect(layout.top).toBe(0);
   expect(following()).toBe("false");
+});
+
+test("prepend before older messages load above keeps the message in view where it was", () => {
+  render(<Thread defaultScrollPosition="start" />);
+  stubScroller(1000);
+  expect(layout.top).toBe(0);
+
+  fireEvent.click(screen.getByRole("button", { name: "Load older" }));
+  act(() => {
+    resize();
+  });
+
+  expect(layout.top).toBe(itemHeight);
+  expect(following()).toBe("false");
+});
+
+test("the viewport is a tab stop only while it overflows and holds no control", async () => {
+  const { rerender } = render(
+    <MessageScrollerProvider>
+      <MessageScroller>
+        <MessageScrollerViewport aria-label="Conversation">
+          <MessageScrollerContent>
+            <MessageScrollerItem messageId="question">
+              What is Constella?
+            </MessageScrollerItem>
+          </MessageScrollerContent>
+        </MessageScrollerViewport>
+      </MessageScroller>
+    </MessageScrollerProvider>
+  );
+  const conversation = screen.getByRole("region", { name: "Conversation" });
+  expect(conversation.hasAttribute("tabindex")).toBe(false);
+
+  stubScroller(1000);
+  await waitFor(() => {
+    expect(conversation.getAttribute("tabindex")).toBe("0");
+  });
+
+  rerender(
+    <MessageScrollerProvider>
+      <MessageScroller>
+        <MessageScrollerViewport aria-label="Conversation">
+          <MessageScrollerContent>
+            <MessageScrollerItem messageId="question">
+              <button type="button">Copy</button>
+            </MessageScrollerItem>
+          </MessageScrollerContent>
+        </MessageScrollerViewport>
+      </MessageScroller>
+    </MessageScrollerProvider>
+  );
+  fireEvent.scroll(conversation);
+  await waitFor(() => {
+    expect(conversation.hasAttribute("tabindex")).toBe(false);
+  });
+});
+
+test("pressing Scroll to end while it has focus moves focus into the log, not the page", async () => {
+  render(<Thread defaultScrollPosition="start" />);
+  stubScroller(1000);
+  const button = screen.getByRole("button", { name: "Scroll to end" });
+  button.focus();
+
+  await agent.act({ steps: [{ action: "press", ref: "Scroll to end" }] });
+
+  expect(document.activeElement).toBe(screen.getByRole("log"));
 });
 
 test("a new question marked scrollAnchor lets go of the end, so the answer streams below it", () => {
