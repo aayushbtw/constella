@@ -93,6 +93,17 @@ const popupReset = stylex.create({
   },
 });
 
+const popupSurface = stylex.create({
+  base: {
+    backgroundColor: colors.raised,
+    borderStartStartRadius: radii.lg,
+    borderStartEndRadius: radii.lg,
+    borderEndStartRadius: radii.lg,
+    borderEndEndRadius: radii.lg,
+    boxShadow: shadows.lg,
+  },
+});
+
 const visuallyHidden = stylex.create({
   base: {
     clipPath: "inset(50%)",
@@ -483,6 +494,7 @@ export {
   controlIconSize,
   joinStyles,
   popupReset,
+  popupSurface,
   stateStyles,
   textColors,
   textColorStyles,

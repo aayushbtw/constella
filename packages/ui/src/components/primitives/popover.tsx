@@ -15,13 +15,16 @@ import type { ComponentProps } from "react";
 
 import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
+import {
+  popupReset,
+  popupSurface,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
   offsets,
-  radii,
-  shadows,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -36,12 +39,6 @@ type PopoverContentProps = Styled<
 
 const styles = stylex.create({
   surface: {
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     display: "flex",
     flexDirection: "column",
     gap: space.popup,
@@ -105,7 +102,12 @@ function PopoverContent({
       {...withStyles(
         props,
         stylex.props(
-          [typeStyles.textSm, popupReset.base, styles.surface],
+          [
+            typeStyles.textSm,
+            popupReset.base,
+            popupSurface.base,
+            styles.surface,
+          ],
           popupMotion.popover,
           sx
         )
@@ -161,7 +163,7 @@ function PopoverClose({
 /** The popup's reset and surface, for a part that draws its own popup. */
 const popoverStyles = {
   popup: popupReset.base,
-  surface: [typeStyles.textSm, styles.surface],
+  surface: [typeStyles.textSm, popupSurface.base, styles.surface],
 };
 
 export {

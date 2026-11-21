@@ -39,6 +39,7 @@ import {
   controlIconSize,
   joinStyles,
   popupReset,
+  popupSurface,
   stateStyles,
   typeStyles,
   withStyles,
@@ -158,16 +159,10 @@ const styles = stylex.create({
   },
   // ui-sdk's select leaves the browser's `[popover]` border and margin.
   content: {
-    backgroundColor: colors.raised,
     borderBlockEndWidth: 0,
     borderBlockStartWidth: 0,
     borderInlineEndWidth: 0,
     borderInlineStartWidth: 0,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     color: colors.textPrimary,
     display: { default: null, [searchable]: "flex" },
     flexDirection: "column",
@@ -445,7 +440,13 @@ function SelectContent({
         sideOffset={sideOffset}
         {...withStyles(
           props,
-          stylex.props(popupReset.base, styles.content, popupMotion.popover, sx)
+          stylex.props(
+            popupReset.base,
+            popupSurface.base,
+            styles.content,
+            popupMotion.popover,
+            sx
+          )
         )}
       />
     </Size>
