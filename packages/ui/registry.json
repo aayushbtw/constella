@@ -1557,7 +1557,8 @@
       "dependencies": [
         "@hugeicons/core-free-icons",
         "@hugeicons/react",
-        "@stylexjs/stylex"
+        "@stylexjs/stylex",
+        "@ui-sdk/core@0.1.0-beta.13"
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
