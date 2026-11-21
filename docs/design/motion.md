@@ -55,7 +55,7 @@ Never from `scale(0)` or full transparency in place. Start close to the final st
 
 ## Crossfades
 
-When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
+When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Prompt Input's Send and Stop are the exception: two buttons, so each keeps a stable accessible name, and a quick change back restarts the new icon instead of reversing. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
 
 `SwapIcon` and `SwapText` are these two as parts. The sidebar trigger's mark and a trace step trigger's marker are the crossfades that aren't a state change: each reveals its toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
 
