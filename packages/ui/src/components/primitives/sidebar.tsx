@@ -210,7 +210,7 @@ const item = "[data-slot='sidebar-menu-item']";
 // Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
 const action = "[data-sidebar-menu-action]";
 // Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content']):hover)`;
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content'], [data-slot='collapsible-panel']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
 // A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
@@ -1082,7 +1082,8 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
+  const { isMobile, open, openMobile, setOpenMobile, toggleSidebar } =
+    useSidebar();
   const inSheet = use(InSheetContext);
   const name = use(TriggerNameContext);
   const triggerSx = [name !== null && styles.triggerName(name), sx];
@@ -1110,18 +1111,16 @@ function SidebarTrigger({
     );
   }
 
-  let label = open ? "Collapse sidebar" : "Expand sidebar";
-  if (isMobile) {
-    label = "Open sidebar";
-  }
+  const label = ariaLabel ?? "Toggle sidebar";
   return (
     <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
-            aria-expanded={isMobile ? undefined : open}
+            aria-expanded={isMobile ? openMobile : open}
+            aria-haspopup={isMobile ? "dialog" : undefined}
             aria-keyshortcuts={hint.ariaKeyshortcuts}
-            aria-label={ariaLabel ?? label}
+            aria-label={label}
             data-slot="sidebar-trigger"
             onClick={(event, details) => {
               const result = onClick?.(event, details);
@@ -1143,7 +1142,7 @@ function SidebarTrigger({
         }
       />
       <TooltipContent side={rail ? tooltipSide : "bottom"}>
-        {ariaLabel ?? label}
+        {label}
         {kbd}
       </TooltipContent>
     </Tooltip>
@@ -1227,10 +1226,10 @@ function SidebarRail({
   const { toggleSidebar } = useSidebar();
   return (
     <SidebarButton
-      aria-label="Toggle Sidebar"
+      aria-label="Sidebar rail"
       onClick={toggleSidebar}
       tabIndex={-1}
-      title="Toggle Sidebar"
+      title="Toggle sidebar"
       {...withStyles(props, stylex.props(styles.rail, sx))}
       data-slot={slot}
     />
@@ -1452,15 +1451,10 @@ function SidebarMenuButton({
 
   return (
     <LabelContext value={setTruncated}>
-      <Tooltip disabled={!(rail || truncated)}>
+      <Tooltip disabled={!(rail || truncated)} type="label">
         <TooltipTrigger
-          // The row's label stays in the accessibility tree, even in the rail, so the tooltip only repeats it; the row sets `type` itself.
-          render={({
-            "aria-describedby": _describedBy,
-            "aria-labelledby": _labelledBy,
-            type: _type,
-            ...trigger
-          }) => (
+          // A link row must not get `type`, and a button row gets it from SidebarButton.
+          render={({ type: _type, ...trigger }) => (
             <SidebarButton
               {...mergeProps(trigger, own)}
               data-slot={slot}
