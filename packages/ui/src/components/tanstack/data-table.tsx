@@ -116,6 +116,17 @@ const isSized = <TColumn extends { id: string }>(
   column: TColumn
 ): column is TColumn & SizedColumn => "getSize" in column;
 
+const isSortable = <TColumn extends { id: string }>(
+  column: TColumn
+): column is TColumn & SortableColumn => "getIsSorted" in column;
+
+const ariaSorts = { asc: "ascending", desc: "descending" } as const;
+
+const ariaSortOf = (column: { id: string }) => {
+  const sorted = isSortable(column) && column.getIsSorted();
+  return sorted === false ? undefined : ariaSorts[sorted];
+};
+
 // The column visibility feature's table; without it every column shows.
 const hasVisibility = <TTable extends { getAllLeafColumns: () => unknown[] }>(
   table: TTable
@@ -320,6 +331,7 @@ function DataTable<
           <TableRow key={group.id}>
             {group.headers.map((header) => (
               <TableHead
+                aria-sort={ariaSortOf(header.column)}
                 key={header.id}
                 sx={[
                   styles.cell,

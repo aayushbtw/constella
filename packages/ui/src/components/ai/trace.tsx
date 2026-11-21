@@ -231,20 +231,26 @@ const styles = stylex.create({
     filter: {
       default: "none",
       [triggerFocused]: `blur(${motion.crossfadeTextBlur})`,
+      // Focus repeats inside the hover block, or that block's default outranks it.
       [media.hover]: {
         default: "none",
         [triggerHovered]: `blur(${motion.crossfadeTextBlur})`,
+        [triggerFocused]: `blur(${motion.crossfadeTextBlur})`,
       },
     },
     opacity: {
       default: 1,
       [triggerFocused]: 0,
-      [media.hover]: { default: 1, [triggerHovered]: 0 },
+      [media.hover]: { default: 1, [triggerHovered]: 0, [triggerFocused]: 0 },
     },
     scale: {
       default: 1,
       [triggerFocused]: motion.popoverScale,
-      [media.hover]: { default: 1, [triggerHovered]: motion.popoverScale },
+      [media.hover]: {
+        default: 1,
+        [triggerHovered]: motion.popoverScale,
+        [triggerFocused]: motion.popoverScale,
+      },
     },
   },
   markActive: {
@@ -254,17 +260,22 @@ const styles = stylex.create({
       [media.hover]: {
         default: `blur(${motion.crossfadeTextBlur})`,
         [triggerHovered]: "none",
+        [triggerFocused]: "none",
       },
     },
     opacity: {
       default: 0,
       [triggerFocused]: 1,
-      [media.hover]: { default: 0, [triggerHovered]: 1 },
+      [media.hover]: { default: 0, [triggerHovered]: 1, [triggerFocused]: 1 },
     },
     scale: {
       default: motion.popoverScale,
       [triggerFocused]: 1,
-      [media.hover]: { default: motion.popoverScale, [triggerHovered]: 1 },
+      [media.hover]: {
+        default: motion.popoverScale,
+        [triggerHovered]: 1,
+        [triggerFocused]: 1,
+      },
     },
   },
   icon: {
@@ -546,7 +557,7 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
 
 /**
  * A step's line that opens and shuts its content. Put the line's parts in it; its marker turns
- * into a chevron while it's pointed at. A step with `open` needs `onOpenChange` for it to toggle.
+ * into a chevron while it's pointed at or focused. A step with `open` needs `onOpenChange` for it to toggle.
  */
 function TraceStepTrigger({ children, sx, ...props }: TraceTriggerProps) {
   return (
