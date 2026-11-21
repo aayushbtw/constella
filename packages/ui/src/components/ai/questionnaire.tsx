@@ -1,22 +1,33 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
-import type { PartProps } from "@ui-sdk/react/primitive";
+import { createCheckboxGroupController } from "@ui-sdk/react/checkbox";
+import type { CheckboxGroupController } from "@ui-sdk/react/checkbox";
+import { createInputController } from "@ui-sdk/react/input";
+import type { InputController } from "@ui-sdk/react/input";
+import { Progress as ProgressPrimitive } from "@ui-sdk/react/progress";
+import { createRadioGroupController } from "@ui-sdk/react/radio";
+import type { RadioGroupController } from "@ui-sdk/react/radio";
+import {
+  ariaKeyshortcuts,
+  shortcuts as shortcutScopes,
+  useShortcut,
+} from "@ui-sdk/react/shortcuts";
 import {
   createContext,
   use,
+  useEffect,
   useId,
   useLayoutEffect,
   useMemo,
-  useReducer,
   useRef,
   useState,
 } from "react";
 import type {
   ComponentProps,
-  KeyboardEvent,
+  FocusEvent,
   ReactNode,
+  RefObject,
   SubmitEvent,
   SyntheticEvent,
 } from "react";
@@ -35,6 +46,7 @@ import {
 } from "@/components/primitives/field";
 import { Input } from "@/components/primitives/input";
 import { Kbd } from "@/components/primitives/kbd";
+import { ProgressValue } from "@/components/primitives/progress";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -42,7 +54,6 @@ import {
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
-  colors,
   fontWeights,
   lineHeights,
   sizes,
@@ -53,15 +64,9 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const questionnaireShortcutModes = ["letters", "numbers"] as const;
-type QuestionnaireShortcutMode = (typeof questionnaireShortcutModes)[number];
+type QuestionnaireShortcutMode = "letters" | "numbers";
 
-const questionnaireItemStatuses = [
-  "unanswered",
-  "answered",
-  "skipped",
-] as const;
-type QuestionnaireItemStatus = (typeof questionnaireItemStatuses)[number];
+type QuestionnaireItemStatus = "unanswered" | "answered" | "skipped";
 
 interface QuestionnaireChoiceDefinition {
   disabled?: boolean;
@@ -77,202 +82,33 @@ interface QuestionnaireItemDefinition {
 
 const shortcutKeys = {
   letters: Array.from({ length: 26 }, (_, index) =>
-    String.fromCodePoint(65 + index)
+    String.fromCodePoint(97 + index)
   ),
   numbers: Array.from({ length: 9 }, (_, index) => String(index + 1)),
 } satisfies Record<QuestionnaireShortcutMode, string[]>;
 
-interface Given {
-  choices: readonly string[];
-  text: string;
+interface ItemHandle {
+  clear: () => void;
+  focus: () => void;
+  valid: () => boolean;
 }
 
-type Answer = { kind: "skipped" } | ({ kind: "given" } & Given);
-
-interface Entry {
-  answer: Answer;
-  attempted: boolean;
-  invalid: boolean;
-  touched: boolean;
-}
-
-interface Answers {
-  defaults: Partial<Record<string, Given>>;
-  entries: Partial<Record<string, Entry>>;
-}
-
-type AnswersAction =
-  | { name: string; seed: Partial<Given>; type: "seed" }
-  | {
-      choices: readonly string[];
-      multiple: boolean;
-      name: string;
-      type: "choose";
-    }
-  | { multiple: boolean; name: string; text: string; type: "type" }
-  | { name: string; type: "skip" }
-  | { name: string; type: "attempt" }
-  | { invalid: boolean; name: string; type: "mark" }
-  | { type: "reset" };
-
-const blank: Given = { choices: [], text: "" };
-
-function entryOf(answers: Answers, name: string): Entry {
-  return (
-    answers.entries[name] ?? {
-      answer: { kind: "given", ...(answers.defaults[name] ?? blank) },
-      attempted: false,
-      invalid: false,
-      touched: false,
-    }
-  );
-}
-
-function givenOf(answers: Answers, name: string): Given {
-  const { answer } = entryOf(answers, name);
-  return answer.kind === "given" ? answer : blank;
-}
-
-function withEntry(answers: Answers, name: string, entry: Entry): Answers {
-  return { ...answers, entries: { ...answers.entries, [name]: entry } };
-}
-
-function withAnswer(answers: Answers, name: string, answer: Answer): Answers {
-  const entry = entryOf(answers, name);
-  return withEntry(answers, name, {
-    ...entry,
-    answer,
-    attempted: answer.kind === "given" && entry.attempted,
-    touched: true,
-  });
-}
-
-function answersReducer(answers: Answers, action: AnswersAction): Answers {
-  switch (action.type) {
-    case "seed": {
-      const entry = entryOf(answers, action.name);
-      const seeded = {
-        ...answers,
-        defaults: {
-          ...answers.defaults,
-          [action.name]: {
-            ...(answers.defaults[action.name] ?? blank),
-            ...action.seed,
-          },
-        },
-      };
-      return entry.touched
-        ? seeded
-        : withEntry(seeded, action.name, {
-            ...entry,
-            answer: {
-              kind: "given",
-              ...givenOf(answers, action.name),
-              ...action.seed,
-            },
-          });
-    }
-    case "choose": {
-      const replaces = !action.multiple && action.choices.length > 0;
-      return withAnswer(answers, action.name, {
-        choices: action.choices,
-        kind: "given",
-        text: replaces ? "" : givenOf(answers, action.name).text,
-      });
-    }
-    case "type": {
-      const replaces = !action.multiple && action.text.trim() !== "";
-      return withAnswer(answers, action.name, {
-        choices: replaces ? [] : givenOf(answers, action.name).choices,
-        kind: "given",
-        text: action.text,
-      });
-    }
-    case "skip": {
-      return withAnswer(answers, action.name, { kind: "skipped" });
-    }
-    case "attempt": {
-      return withEntry(answers, action.name, {
-        ...entryOf(answers, action.name),
-        attempted: true,
-      });
-    }
-    case "mark": {
-      return withEntry(answers, action.name, {
-        ...entryOf(answers, action.name),
-        invalid: action.invalid,
-      });
-    }
-    case "reset": {
-      return {
-        defaults: answers.defaults,
-        entries: Object.fromEntries(
-          Object.entries(answers.defaults).map(([name, defaults]) => [
-            name,
-            {
-              answer: { kind: "given", ...(defaults ?? blank) },
-              attempted: false,
-              invalid: entryOf(answers, name).invalid,
-              touched: false,
-            },
-          ])
-        ),
-      };
-    }
-    default: {
-      const exhaustive: never = action;
-      return exhaustive;
-    }
-  }
-}
-
-function statusOf(answer: Answer): QuestionnaireItemStatus {
-  if (answer.kind === "skipped") {
-    return "skipped";
-  }
-  return answer.choices.length > 0 || answer.text.trim() !== ""
-    ? "answered"
-    : "unanswered";
-}
-
-function isValid(definition: QuestionnaireItemDefinition, entry: Entry) {
-  if (definition.disabled === true) {
-    return true;
-  }
-  const status = statusOf(entry.answer);
-  return status === "skipped" || (!entry.invalid && status === "answered");
-}
-
-function isTextEntry(target: EventTarget) {
-  if (target instanceof HTMLInputElement) {
-    return !["button", "checkbox", "radio", "reset", "submit"].includes(
-      target.type
-    );
-  }
-  return (
-    target instanceof HTMLTextAreaElement ||
-    target instanceof HTMLSelectElement ||
-    (target instanceof HTMLElement && target.isContentEditable)
-  );
-}
+const none: ReadonlySet<string> = new Set();
 
 const activeItem = "[data-slot='field-set'][data-active]";
-const answerControl = "[role='radio'], [role='checkbox'], input";
-const firstControl =
-  "[role='radio'][tabindex='0']:not(:disabled), [role='checkbox']:not(:disabled), input:not([type='hidden']):not(:disabled)";
-
-type FocusTarget = "item" | "control";
 
 interface QuestionnaireContextValue {
-  answers: Answers;
+  attempted: ReadonlySet<string>;
   current: QuestionnaireItemDefinition | undefined;
   definitions: ReadonlyMap<string, QuestionnaireItemDefinition>;
-  dispatch: (action: AnswersAction) => void;
-  goNext: () => void;
+  form: RefObject<HTMLFormElement | null>;
   goPrevious: () => void;
+  handles: Map<string, ItemHandle>;
   index: number;
+  scope: string;
   shortcuts: QuestionnaireShortcutMode | undefined;
   skip: () => void;
+  skipped: ReadonlySet<string>;
   total: number;
 }
 
@@ -298,18 +134,50 @@ type TextChange = Parameters<
   NonNullable<ComponentProps<typeof Input>["onValueChange"]>
 >;
 
+interface ItemControllers {
+  many: CheckboxGroupController;
+  one: RadioGroupController;
+  text: InputController;
+}
+
+// A controller warns when its control isn't rendered, so each write first checks there's an answer to clear.
+function clearChoices({ many, one }: ItemControllers) {
+  if ((one.getValue() ?? null) !== null) {
+    one.setValue(null);
+  }
+  if ((many.getValue()?.length ?? 0) > 0) {
+    many.setValue([]);
+  }
+}
+
+function clearText({ text }: ItemControllers) {
+  if ((text.getValue() ?? "") !== "") {
+    text.clear();
+  }
+}
+
+function statusOf(
+  answered: boolean,
+  skipped: boolean
+): QuestionnaireItemStatus {
+  if (answered) {
+    return "answered";
+  }
+  return skipped ? "skipped" : "unanswered";
+}
+
 interface QuestionnaireItemContextValue {
+  active: boolean;
   chooseMany: (...change: MultipleChange) => void;
   chooseOne: (...change: SingleChange) => void;
+  controllers: ItemControllers;
+  defaults: readonly string[];
   definition: QuestionnaireItemDefinition;
-  given: Given;
-  ids: { description: string; error: string; title: string };
+  ids: { error: string; title: string };
   invalid: boolean;
   multiple: boolean;
   name: string;
-  setDescribed: (described: boolean) => void;
-  shortcutOf: (value: string) => string | undefined;
-  type: (text: string) => void;
+  setTyped: (typed: boolean) => void;
 }
 
 const QuestionnaireItemContext =
@@ -338,11 +206,15 @@ const styles = stylex.create({
     width: "100%",
   },
   progress: {
-    color: colors.textSecondary,
-    fontVariantNumeric: "tabular-nums",
+    alignItems: "center",
+    display: "flex",
+    flexWrap: "wrap",
     fontWeight: fontWeights.medium,
+    gap: space.sm,
     minHeight: lineHeights.textSm,
   },
+  // Alone, the step reads before the title, not across from it as beside a bar.
+  step: { marginInlineStart: 0 },
   item: {
     display: { default: "flex", ":is([hidden])": "none" },
     gap: space.md,
@@ -385,24 +257,23 @@ function Questionnaire({
   defaultItem,
   item,
   items,
+  onBlur,
+  onFocus,
   onItemChange,
-  onKeyDown,
-  onKeyDownCapture,
   onReset,
   onSubmit,
   shortcuts,
   sx,
   ...props
 }: QuestionnaireProps) {
-  const [answers, dispatch] = useReducer(answersReducer, {
-    defaults: {},
-    entries: {},
-  });
   const [ownItem, setOwnItem] = useState(defaultItem);
+  const [skipped, setSkipped] = useState(none);
+  const [attempted, setAttempted] = useState(none);
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set; items register their handles in it
+  const [handles] = useState(() => new Map<string, ItemHandle>());
+  const scope = `questionnaire-${useId()}`;
   const form = useRef<HTMLFormElement>(null);
-  const focusRequest = useRef<{ name: string; target: FocusTarget } | null>(
-    null
-  );
+  const focusRequest = useRef<{ control: boolean; name: string } | null>(null);
   const enabled = useMemo(
     () => items.filter((definition) => definition.disabled !== true),
     [items]
@@ -431,11 +302,12 @@ function Questionnaire({
     }
     if (request?.name === current.name) {
       focusRequest.current = null;
-      const control =
-        request.target === "control"
-          ? element.querySelector<HTMLElement>(firstControl)
-          : null;
-      (control ?? element).focus();
+      if (request.control) {
+        handles.get(current.name)?.focus();
+      }
+      if (!element.contains(document.activeElement)) {
+        element.focus();
+      }
       return;
     }
     const focused = document.activeElement;
@@ -447,9 +319,26 @@ function Questionnaire({
     }
   });
 
+  useEffect(
+    () => () => {
+      shortcutScopes.setScope(scope, false);
+    },
+    [scope]
+  );
+
+  useShortcut(
+    "mod+enter",
+    () => {
+      form.current?.requestSubmit();
+    },
+    { layer: form, scope }
+  );
+
   const steps = useMemo(() => {
-    function go(name: string, target: FocusTarget) {
-      focusRequest.current = { name, target };
+    const after = enabled.at(index + 1);
+
+    function go(name: string, control = false) {
+      focusRequest.current = { control, name };
       if (name === current?.name) {
         return;
       }
@@ -459,114 +348,93 @@ function Questionnaire({
       onItemChange?.(name);
     }
 
-    function attempt(definition: QuestionnaireItemDefinition) {
-      dispatch({ name: definition.name, type: "attempt" });
-      go(definition.name, "control");
+    function attempt(name: string) {
+      setAttempted((names) => new Set(names).add(name));
+      go(name, true);
     }
 
-    function validates(definition: QuestionnaireItemDefinition) {
-      return isValid(definition, entryOf(answers, definition.name));
-    }
-
-    function goPrevious() {
-      const before = enabled.at(index - 1);
-      if (index > 0 && before !== undefined) {
-        go(before.name, "item");
-      }
-    }
-
-    function goNext() {
-      const after = enabled.at(index + 1);
-      if (current === undefined || after === undefined) {
-        return;
-      }
-      if (validates(current)) {
-        go(after.name, "item");
-      } else {
-        attempt(current);
-      }
-    }
-
-    function forward() {
-      if (current === undefined) {
-        return;
-      }
-      if (!validates(current)) {
-        attempt(current);
-      } else if (index === total - 1) {
-        form.current?.requestSubmit();
-      } else {
-        goNext();
-      }
-    }
-
-    function skip() {
-      if (current === undefined || current.required === true) {
-        return;
-      }
-      dispatch({ name: current.name, type: "skip" });
-      const after = enabled.at(index + 1);
-      if (after === undefined) {
-        queueMicrotask(() => form.current?.requestSubmit());
-      } else {
-        go(after.name, "item");
-      }
-    }
-
-    function restart() {
-      const start =
-        enabled.find((definition) => definition.name === defaultItem) ??
-        enabled.at(0);
-      if (start !== undefined) {
-        go(start.name, "item");
-      }
-    }
-
-    function firstInvalid() {
-      return enabled.find((definition) => !validates(definition));
+    function valid(name: string) {
+      return handles.get(name)?.valid() ?? true;
     }
 
     return {
+      after,
       attempt,
-      firstInvalid,
-      forward,
-      goNext,
-      goPrevious,
-      restart,
-      skip,
+      go,
+      goPrevious: () => {
+        const before = enabled.at(index - 1);
+        if (index > 0 && before !== undefined) {
+          go(before.name);
+        }
+      },
+      restart: () => {
+        const start =
+          enabled.find((definition) => definition.name === defaultItem) ??
+          enabled.at(0);
+        if (start !== undefined) {
+          go(start.name);
+        }
+      },
+      skip: () => {
+        if (current === undefined || current.required === true) {
+          return;
+        }
+        handles.get(current.name)?.clear();
+        setSkipped((names) => new Set(names).add(current.name));
+        if (after === undefined) {
+          queueMicrotask(() => form.current?.requestSubmit());
+        } else {
+          go(after.name);
+        }
+      },
+      valid,
     };
-  }, [
-    answers,
-    current,
-    defaultItem,
-    enabled,
-    index,
-    item,
-    onItemChange,
-    total,
-  ]);
+  }, [current, defaultItem, enabled, handles, index, item, onItemChange]);
 
   const context = useMemo(
     () => ({
-      answers,
+      attempted,
       current,
       definitions,
-      dispatch,
-      goNext: steps.goNext,
+      form,
       goPrevious: steps.goPrevious,
+      handles,
       index,
+      scope,
       shortcuts,
       skip: steps.skip,
+      skipped,
       total,
     }),
-    [answers, current, definitions, index, shortcuts, steps, total]
+    [
+      attempted,
+      current,
+      definitions,
+      handles,
+      index,
+      scope,
+      shortcuts,
+      skipped,
+      steps,
+      total,
+    ]
   );
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    const invalid = steps.firstInvalid();
+    const { after, attempt, go, valid } = steps;
+    if (current !== undefined && after !== undefined) {
+      event.preventDefault();
+      if (valid(current.name)) {
+        go(after.name);
+      } else {
+        attempt(current.name);
+      }
+      return;
+    }
+    const invalid = enabled.find((definition) => !valid(definition.name));
     if (invalid !== undefined) {
       event.preventDefault();
-      steps.attempt(invalid);
+      attempt(invalid.name);
       return;
     }
     onSubmit?.(event);
@@ -575,77 +443,33 @@ function Questionnaire({
   function handleReset(event: SyntheticEvent<HTMLFormElement>) {
     onReset?.(event);
     if (!event.defaultPrevented) {
-      dispatch({ type: "reset" });
+      setSkipped(none);
+      setAttempted(none);
       steps.restart();
     }
   }
 
-  // Enter moves on before a focused choice or input can submit the form.
-  function handleKeyDownCapture(event: KeyboardEvent<HTMLFormElement>) {
-    onKeyDownCapture?.(event);
-    const { altKey, ctrlKey, key, metaKey, nativeEvent, shiftKey, target } =
-      event;
-    if (
-      event.defaultPrevented ||
-      key !== "Enter" ||
-      altKey ||
-      shiftKey ||
-      nativeEvent.isComposing ||
-      !(target instanceof Element)
-    ) {
-      return;
-    }
-    const answering =
-      target.closest(activeItem) !== null && target.matches(answerControl);
-    if (metaKey || ctrlKey || answering) {
-      event.preventDefault();
-      if (!event.repeat) {
-        steps.forward();
-      }
-    }
+  function handleFocus(event: FocusEvent<HTMLFormElement>) {
+    onFocus?.(event);
+    shortcutScopes.setScope(scope, true);
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
-    onKeyDown?.(event);
-    const { altKey, ctrlKey, key, metaKey, target } = event;
-    if (
-      shortcuts === undefined ||
-      event.defaultPrevented ||
-      altKey ||
-      ctrlKey ||
-      metaKey ||
-      isTextEntry(target)
-    ) {
-      return;
-    }
-    const shortcut = shortcutKeys[shortcuts].find(
-      (candidate) => candidate === key.toUpperCase()
-    );
-    const control =
-      shortcut === undefined
-        ? null
-        : form.current
-            ?.querySelector(activeItem)
-            ?.querySelector<HTMLElement>(`[aria-keyshortcuts='${shortcut}']`);
-    if (control === null || control === undefined) {
-      return;
-    }
-    event.preventDefault();
-    if (!event.repeat) {
-      control.focus();
-      control.click();
+  function handleBlur(event: FocusEvent<HTMLFormElement>) {
+    onBlur?.(event);
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      shortcutScopes.setScope(scope, false);
     }
   }
 
   return (
     <QuestionnaireContext value={context}>
-      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Enter and the choice keys are scoped to this form, so questionnaires on one page don't share them */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- the choice keys and ⌘ Enter turn on while focus is in this form, so questionnaires on one page don't share them */}
       <form
         data-shortcuts={shortcuts}
         data-slot="questionnaire"
         noValidate
-        onKeyDown={handleKeyDown}
-        onKeyDownCapture={handleKeyDownCapture}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         onReset={handleReset}
         onSubmit={handleSubmit}
         ref={form}
@@ -657,45 +481,28 @@ function Questionnaire({
   );
 }
 
-interface QuestionnaireProgressState {
-  current: number;
-  first: boolean;
-  last: boolean;
-  total: number;
-}
-
 function QuestionnaireProgress({
   children,
-  render,
   sx,
   ...props
-}: Styled<PartProps<"div", QuestionnaireProgressState>>) {
+}: Styled<ComponentProps<typeof ProgressPrimitive>>) {
   const { index, total } = useQuestionnaire("QuestionnaireProgress");
-  const current = total > 0 ? index + 1 : 0;
-  const text = total > 0 ? `Question ${current} of ${total}` : undefined;
-  return renderElement(
-    "div",
-    mergeProps(
-      {
-        "aria-label": "Questionnaire progress",
-        "aria-live": "polite",
-        "aria-valuemax": total > 0 ? total : undefined,
-        "aria-valuemin": total > 0 ? 1 : undefined,
-        "aria-valuenow": total > 0 ? current : undefined,
-        "aria-valuetext": text,
-        children: children ?? text,
-        "data-slot": "questionnaire-progress",
-        role: "progressbar",
-      },
-      withStyles(props, stylex.props([typeStyles.textSm, styles.progress], sx))
-    ),
-    render,
-    {
-      current,
-      first: index === 0,
-      last: index === total - 1,
-      total,
-    } satisfies QuestionnaireProgressState
+  const step = (current: number | null) =>
+    `Question ${current ?? index + 1} of ${total}`;
+  return (
+    <ProgressPrimitive
+      aria-label="Questionnaire progress"
+      format={step}
+      getValueLabel={step}
+      max={total}
+      value={index + 1}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.progress], sx)
+      )}
+    >
+      {children ?? <ProgressValue sx={styles.step} />}
+    </ProgressPrimitive>
   );
 }
 
@@ -723,7 +530,7 @@ type QuestionnaireItemProps = Omit<
 function QuestionnaireItem(props: QuestionnaireItemProps) {
   const {
     children,
-    defaultValue: _defaultValue,
+    defaultValue,
     invalid = false,
     multiple = false,
     name,
@@ -734,46 +541,49 @@ function QuestionnaireItem(props: QuestionnaireItemProps) {
   } = props;
   const onMany = props.multiple === true ? props.onValueChange : undefined;
   const onOne = props.multiple === true ? undefined : props.onValueChange;
-  const { answers, current, definitions, dispatch, shortcuts } =
+  const defaults = useMemo(() => [defaultValue ?? []].flat(), [defaultValue]);
+  const { attempted, current, definitions, handles, skipped } =
     useQuestionnaire("QuestionnaireItem");
   const id = useId();
-  const [described, setDescribed] = useState(false);
-  // oxlint-disable-next-line react/hook-use-state -- only the first default seeds, like a native defaultValue
-  const [defaults] = useState<readonly string[]>(() => {
-    if (props.multiple === true) {
-      return props.defaultValue ?? [];
-    }
-    return props.defaultValue === undefined ? [] : [props.defaultValue];
-  });
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [controllers] = useState<ItemControllers>(() => ({
+    many: createCheckboxGroupController(),
+    one: createRadioGroupController(),
+    text: createInputController(),
+  }));
+  // Seeds once from the default, like the groups it renders.
+  const [picked, setPicked] = useState(() => defaults.length > 0);
+  const [typed, setTyped] = useState(false);
   const definition = useMemo(
     () => definitions.get(name) ?? { name },
     [definitions, name]
   );
-  const stored = answers.entries[name];
-  const storedAnswer = stored?.answer;
-  const answer = useMemo<Answer>(
-    () => storedAnswer ?? { choices: defaults, kind: "given", text: "" },
-    [defaults, storedAnswer]
-  );
-  const entry: Entry = {
-    answer,
-    attempted: stored?.attempted ?? false,
-    invalid,
-    touched: stored?.touched ?? false,
-  };
-  const status = statusOf(entry.answer);
-  const shownInvalid =
-    !isValid(definition, entry) && (invalid || entry.attempted);
+  const status = statusOf(picked || typed, skipped.has(name));
+  const valid = status === "skipped" || (status === "answered" && !invalid);
+  const shownInvalid = !valid && (invalid || attempted.has(name));
   const active = current?.name === name;
   const reported = useRef(status);
 
   useLayoutEffect(() => {
-    dispatch({ name, seed: { choices: defaults }, type: "seed" });
-  }, [defaults, dispatch, name]);
-
-  useLayoutEffect(() => {
-    dispatch({ invalid, name, type: "mark" });
-  }, [dispatch, invalid, name]);
+    handles.set(name, {
+      clear: () => {
+        clearChoices(controllers);
+        clearText(controllers);
+      },
+      focus: () => {
+        const group = multiple ? controllers.many : controllers.one;
+        if (group.getValue() === undefined) {
+          controllers.text.focus();
+        } else {
+          group.focus();
+        }
+      },
+      valid: () => valid,
+    });
+    return () => {
+      handles.delete(name);
+    };
+  });
 
   useLayoutEffect(() => {
     if (reported.current !== status) {
@@ -782,83 +592,73 @@ function QuestionnaireItem(props: QuestionnaireItemProps) {
     }
   }, [onStatusChange, status]);
 
-  const given = entry.answer.kind === "given" ? entry.answer : blank;
-  const context = useMemo(() => {
-    const keys = shortcuts === undefined ? [] : shortcutKeys[shortcuts];
-    const keyed =
-      definition.choices?.filter((choice) => choice.disabled !== true) ?? [];
-    return {
+  const context = useMemo(
+    () => ({
+      active,
       chooseMany: (...[values, details]: MultipleChange) => {
-        if (details.reason === "reset") {
-          return;
+        if (details.reason !== "reset") {
+          onMany?.(values, details);
+          if (details.canceled) {
+            return;
+          }
         }
-        onMany?.(values, details);
-        if (!details.canceled) {
-          dispatch({ choices: values, multiple, name, type: "choose" });
-        }
+        setPicked(values.length > 0);
       },
       chooseOne: (...[value, details]: SingleChange) => {
-        if (details.reason === "reset") {
-          return;
+        if (details.reason !== "reset") {
+          onOne?.(value, details);
+          if (details.canceled) {
+            return;
+          }
+          if (value !== null) {
+            clearText(controllers);
+          }
         }
-        onOne?.(value, details);
-        if (!details.canceled) {
-          dispatch({
-            choices: value === null ? [] : [value],
-            multiple,
-            name,
-            type: "choose",
-          });
-        }
+        setPicked(value !== null);
       },
+      controllers,
+      defaults,
       definition,
-      given,
-      ids: {
-        description: `${id}-description`,
-        error: `${id}-error`,
-        title: `${id}-title`,
-      },
+      ids: { error: `${id}-error`, title: `${id}-title` },
       invalid: shownInvalid,
       multiple,
       name,
-      setDescribed,
-      shortcutOf: (value: string) =>
-        keys.at(keyed.findIndex((choice) => choice.value === value)),
-      type: (text: string) => {
-        dispatch({ multiple, name, text, type: "type" });
-      },
-    };
-  }, [
-    definition,
-    dispatch,
-    given,
-    id,
-    multiple,
-    name,
-    onMany,
-    onOne,
-    shortcuts,
-    shownInvalid,
-  ]);
+      setTyped,
+    }),
+    [
+      active,
+      controllers,
+      defaults,
+      definition,
+      id,
+      multiple,
+      name,
+      onMany,
+      onOne,
+      shownInvalid,
+    ]
+  );
   const { ids } = context;
 
   return (
     <QuestionnaireItemContext value={context}>
       <FieldSet
-        aria-describedby={
-          [
-            described ? ids.description : undefined,
-            shownInvalid ? ids.error : undefined,
-          ]
-            .filter((reference) => reference !== undefined)
-            .join(" ") || undefined
-        }
-        aria-labelledby={ids.title}
         data-active={active ? "" : undefined}
         data-status={status}
         disabled={definition.disabled}
         hidden={!active}
         inert={!active}
+        // The set owns aria-describedby for its description, so the error joins it here.
+        render={(set: ComponentProps<"fieldset">) => (
+          <fieldset
+            {...set}
+            aria-describedby={
+              shownInvalid
+                ? [set["aria-describedby"], ids.error].join(" ").trim()
+                : set["aria-describedby"]
+            }
+          />
+        )}
         sx={[styles.item, sx]}
         tabIndex={-1}
         {...rest}
@@ -878,18 +678,9 @@ function QuestionnaireTitle({
 }
 
 function QuestionnaireDescription(
-  props: Omit<ComponentProps<typeof FieldDescription>, "id">
+  props: ComponentProps<typeof FieldDescription>
 ) {
-  const { ids, setDescribed } = useQuestionnaireItem(
-    "QuestionnaireDescription"
-  );
-  useLayoutEffect(() => {
-    setDescribed(true);
-    return () => {
-      setDescribed(false);
-    };
-  }, [setDescribed]);
-  return <FieldDescription id={ids.description} {...props} />;
+  return <FieldDescription {...props} />;
 }
 
 type QuestionnaireChoicesProps = Styled<
@@ -900,15 +691,17 @@ type QuestionnaireChoicesProps = Styled<
 > & { children?: ReactNode };
 
 function QuestionnaireChoices(props: QuestionnaireChoicesProps) {
-  const { chooseMany, chooseOne, given, ids, multiple, name } =
+  const { chooseMany, chooseOne, controllers, defaults, ids, multiple, name } =
     useQuestionnaireItem("QuestionnaireChoices");
+  // A legend names its fieldset, not the group inside it.
   if (multiple) {
     return (
       <CheckboxGroup
         aria-labelledby={ids.title}
+        controller={controllers.many}
+        defaultValue={[...defaults]}
         name={name}
         onValueChange={chooseMany}
-        value={[...given.choices]}
         {...props}
       />
     );
@@ -916,9 +709,10 @@ function QuestionnaireChoices(props: QuestionnaireChoicesProps) {
   return (
     <RadioGroup
       aria-labelledby={ids.title}
+      controller={controllers.one}
+      defaultValue={defaults.at(0) ?? null}
       name={name}
       onValueChange={chooseOne}
-      value={given.choices.at(0) ?? null}
       {...props}
     />
   );
@@ -932,22 +726,41 @@ function QuestionnaireChoice({
   children?: ReactNode;
   value: string;
 }) {
-  const { definition, invalid, multiple, shortcutOf } = useQuestionnaireItem(
+  const { form, scope, shortcuts } = useQuestionnaire("QuestionnaireChoice");
+  const { active, definition, invalid, multiple } = useQuestionnaireItem(
     "QuestionnaireChoice"
   );
-  const shortcut = shortcutOf(value);
+  const control = useRef<HTMLButtonElement>(null);
+  const keyed =
+    definition.choices?.filter((choice) => choice.disabled !== true) ?? [];
+  const shortcut =
+    shortcuts === undefined
+      ? undefined
+      : shortcutKeys[shortcuts].at(
+          keyed.findIndex((choice) => choice.value === value)
+        );
   const disabled = definition.choices?.some(
     (choice) => choice.value === value && choice.disabled === true
   );
+  // Only the shown question's keys register, so its siblings' A and B don't compete.
+  useShortcut(
+    active ? shortcut : null,
+    () => {
+      control.current?.focus();
+      control.current?.click();
+    },
+    { layer: form, scope }
+  );
+  const keys = shortcut === undefined ? undefined : ariaKeyshortcuts(shortcut);
   const Control = multiple ? Checkbox : RadioGroupItem;
   return (
     <Field disabled={disabled} invalid={invalid}>
       <FieldLabel {...props}>
-        <Control aria-keyshortcuts={shortcut} value={value} />
+        <Control aria-keyshortcuts={keys} ref={control} value={value} />
         <FieldContent>{children}</FieldContent>
-        {shortcut === undefined ? null : (
+        {keys === undefined ? null : (
           <Kbd aria-hidden sx={styles.shortcut}>
-            {shortcut}
+            {keys}
           </Kbd>
         )}
       </FieldLabel>
@@ -966,30 +779,43 @@ function QuestionnaireInput({
   defaultValue = "",
   onValueChange,
   ...props
-}: Omit<ComponentProps<typeof Input>, "defaultValue" | "name" | "value"> & {
+}: Omit<
+  ComponentProps<typeof Input>,
+  "controller" | "defaultValue" | "name" | "value"
+> & {
   defaultValue?: string;
 }) {
-  const { dispatch } = useQuestionnaire("QuestionnaireInput");
-  const { given, invalid, name, type } =
+  const { controllers, invalid, multiple, name, setTyped } =
     useQuestionnaireItem("QuestionnaireInput");
+  const [text, setText] = useState(defaultValue);
+  const filled = text.trim() !== "";
+
   useLayoutEffect(() => {
-    dispatch({ name, seed: { text: defaultValue }, type: "seed" });
-  }, [defaultValue, dispatch, name]);
+    setTyped(filled);
+    return () => {
+      setTyped(false);
+    };
+  }, [filled, setTyped]);
+
   return (
     <Input
       aria-invalid={invalid || undefined}
-      name={given.text.trim() === "" ? undefined : name}
+      controller={controllers.text}
+      defaultValue={defaultValue}
+      name={filled ? name : undefined}
       onValueChange={(...change: TextChange) => {
-        const [text, details] = change;
-        if (details.reason === "reset") {
-          return;
+        const [next, details] = change;
+        if (details.reason !== "reset") {
+          onValueChange?.(...change);
+          if (details.canceled) {
+            return;
+          }
+          if (!multiple && next.trim() !== "") {
+            clearChoices(controllers);
+          }
         }
-        onValueChange?.(...change);
-        if (!details.canceled) {
-          type(text);
-        }
+        setText(next);
       }}
-      value={given.text}
       {...props}
     />
   );
@@ -1089,28 +915,22 @@ function QuestionnaireSkip({
   );
 }
 
+// A submit button, so Enter in an answer presses it; the form's submit steps forward until the last question.
 function QuestionnaireNext({
   children = "Next",
-  onClick,
   sx,
   variant = "primary",
   ...props
 }: NavigationProps) {
-  const { goNext, index, total } = useQuestionnaire("QuestionnaireNext");
+  const { index, total } = useQuestionnaire("QuestionnaireNext");
   if (index >= total - 1) {
     return null;
   }
   return (
     <Button
       data-slot="questionnaire-next"
-      onClick={(event, details) => {
-        onClick?.(event, details);
-        if (!event.defaultPrevented) {
-          goNext();
-        }
-      }}
       sx={[styles.forward, sx]}
-      type="button"
+      type="submit"
       variant={variant}
       {...props}
     >
@@ -1158,13 +978,10 @@ export {
   QuestionnaireSkip,
   QuestionnaireSubmit,
   QuestionnaireTitle,
-  questionnaireItemStatuses,
-  questionnaireShortcutModes,
 };
 export type {
   QuestionnaireChoiceDefinition,
   QuestionnaireItemDefinition,
   QuestionnaireItemStatus,
-  QuestionnaireProgressState,
   QuestionnaireShortcutMode,
 };

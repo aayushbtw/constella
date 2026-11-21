@@ -168,7 +168,7 @@ Add a `QuestionnaireSkip` to let an optional item be left unanswered on purpose.
 
 ## Shortcuts
 
-Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Keys follow the order of each item's `choices` in `items`. Enter on a choice or the freeform answer moves on, and so does Ctrl or ⌘ with Enter anywhere in the form. The arrow keys move between a single-answer question's choices.
+Use the `shortcuts` prop to give each answer a letter or number key, shown as a Kbd on the choice. Keys follow the order of each item's `choices` in `items`, and work while focus is in the questionnaire, so two on one page don't share them. Enter on a choice or the freeform answer moves on, and so does ⌘ Enter (Ctrl Enter off Apple platforms) anywhere in the form. The arrow keys move between a single-answer question's choices.
 
 <!-- ::demo name="questionnaire-shortcuts" -->
 
@@ -180,22 +180,17 @@ Use the `shortcuts` prop to give each answer a letter or number key, shown as a 
 
 ## Questionnaire Progress
 
-Use the `render` prop for your own progress, from `state.current` and `state.total`. A [Progress](/docs/components/progress) bar inside it is `aria-hidden`, since the part already reports the step.
+Add a `ProgressTrack` from [Progress](/docs/components/progress) to show the step as a bar. The part is a Progress whose value is the question's number, so its children replace the "Question 2 of 3" text, and `format` changes that text while screen readers still hear "Question 2 of 3".
 
 <!-- ::demo name="questionnaire-progress" -->
 
 ```tsx
-<QuestionnaireProgress
-  render={(props, state) => (
-    <div {...props}>
-      <Progress aria-hidden max={state.total} value={state.current}>
-        <ProgressLabel>
-          Step {state.current} of {state.total}
-        </ProgressLabel>
-      </Progress>
-    </div>
-  )}
-/>
+<QuestionnaireProgress>
+  <ProgressValue />
+  <ProgressTrack>
+    <ProgressIndicator />
+  </ProgressTrack>
+</QuestionnaireProgress>
 ```
 
 ## Reset
@@ -336,13 +331,14 @@ Put the questionnaire in a [Dialog](/docs/components/dialog) and close it from `
 
 What `agent.snapshot()` lists for the preview example:
 
-| Label                             | Component | Actions             |
-| --------------------------------- | --------- | ------------------- |
-| What should the agent build next? | radio     | `setValue`          |
-| Another agent feature             | input     | `setValue`, `clear` |
-| Next                              | button    | `press`             |
+| Label                              | Component | Actions             |
+| ---------------------------------- | --------- | ------------------- |
+| Questionnaire progress             | progress  | None                |
+| What should the agent build first? | radio     | `setValue`          |
+| Another agent feature              | input     | `setValue`, `clear` |
+| Next                               | button    | `press`             |
 
-The agent picks a single answer with `setValue` on the question's radio group, named by its title, by a choice's label or value. A `multiple` question lists each checkbox by its label, with `setChecked`, and the group by the title, with `setValue`. It fills the freeform answer, then moves with Previous, Next, Skip and Submit. Only the active question is listed. **A title that shares a word with a button makes the button's label ambiguous.** The preview's "…build next?" and Next both match "Next", so the agent presses Next by the ref the bridge offers.
+The agent picks a single answer with `setValue` on the question's radio group, named by its title, by a choice's label or value. A `multiple` question lists each checkbox by its label, with `setChecked`, and the group by the title, with `setValue`. It fills the freeform answer, then moves with Previous, Next, Skip and Submit, and reads the step from the progress. Only the active question is listed. **Keep the buttons' words out of a title.** A title like "What should the agent build next?" makes "Next" name two components, so the agent can press Next only by its ref.
 
 ## API Reference
 
@@ -351,7 +347,7 @@ Every part takes `sx`, applied last.
 | Part | Adds |
 | --- | --- |
 | `Questionnaire` | A `<form>` that validates on submit and jumps to the first unanswered question. Takes `items`, `defaultItem`, `item` and `onItemChange`, and `shortcuts` (`"letters"` or `"numbers"`) |
-| `QuestionnaireProgress` | "Question 2 of 3" as a progress bar, or yours through [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) with `state.current` and `state.total` |
+| `QuestionnaireProgress` | A [Progress](/docs/components/progress) at the question's number out of the number of questions, reading "Question 2 of 3" through a `ProgressValue` unless you pass children |
 | `QuestionnaireItem` | A [Field Set](/docs/components/field) shown while it's the active question. Takes `name`, `multiple`, `defaultValue`, `onValueChange`, `invalid` and `onStatusChange` |
 | `QuestionnaireTitle`, `Description` | A Field Legend and Field Description that name and describe the question |
 | `QuestionnaireChoices` | A [Radio Group](/docs/components/radio-group), or a [Checkbox](/docs/components/checkbox) group in a `multiple` question, named by the title |

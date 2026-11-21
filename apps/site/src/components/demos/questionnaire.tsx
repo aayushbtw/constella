@@ -40,7 +40,11 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/primitives/dialog";
-import { Progress, ProgressLabel } from "@/components/primitives/progress";
+import {
+  ProgressIndicator,
+  ProgressTrack,
+  ProgressValue,
+} from "@/components/primitives/progress";
 import { toast } from "@/components/primitives/toast";
 import {
   ToggleGroup,
@@ -315,11 +319,7 @@ const answerItems = [
 function ValidationProgress() {
   return (
     <QuestionnaireProgress
-      render={(props, state) => (
-        <div {...props}>
-          {state.current} / {state.total}
-        </div>
-      )}
+      format={(current) => `${current} / ${answerItems.length}`}
     />
   );
 }
@@ -697,17 +697,12 @@ function QuestionnaireProgressDemo() {
         }}
         sx={styles.form}
       >
-        <QuestionnaireProgress
-          render={(props, state) => (
-            <div {...props}>
-              <Progress aria-hidden max={state.total} value={state.current}>
-                <ProgressLabel>
-                  Step {state.current} of {state.total}
-                </ProgressLabel>
-              </Progress>
-            </div>
-          )}
-        />
+        <QuestionnaireProgress>
+          <ProgressValue />
+          <ProgressTrack>
+            <ProgressIndicator />
+          </ProgressTrack>
+        </QuestionnaireProgress>
         {pullRequest.map((question) => (
           <QuestionItem key={question.name} question={question} />
         ))}
