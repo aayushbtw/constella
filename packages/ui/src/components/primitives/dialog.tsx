@@ -15,7 +15,7 @@ import type { ComponentProps } from "react";
 
 import { CloseButton } from "@/components/primitives/button";
 import { popoverStyles } from "@/components/primitives/popover";
-import { popupMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
@@ -159,8 +159,17 @@ const styles = stylex.create({
   },
 });
 
-function Dialog(props: DialogProps) {
-  return <DialogPrimitive {...props} />;
+const [DialogSkipMotion, useDialogSkipMotion] = createSkipMotion();
+
+function Dialog({ onOpenChange, onOpenChangeComplete, ...props }: DialogProps) {
+  return (
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <DialogPrimitive {...handlers} {...props} />}
+    </DialogSkipMotion>
+  );
 }
 
 function DialogTrigger({
@@ -176,6 +185,7 @@ function DialogBackdrop({
 }: Styled<ComponentProps<typeof DialogBackdropPrimitive>>) {
   return (
     <DialogBackdropPrimitive
+      data-skip-motion={useDialogSkipMotion() || undefined}
       {...withStyles(
         props,
         stylex.props(styles.backdrop, popupMotion.backdrop, sx)
@@ -218,6 +228,7 @@ function DialogPopup<Payload = unknown>({
   return (
     <DialogContentPrimitive<Payload>
       data-size={size}
+      data-skip-motion={useDialogSkipMotion() || undefined}
       {...withStyles(
         props,
         stylex.props(dialogStyles.popup, sizeStyles[size], sx)
@@ -321,9 +332,11 @@ export {
   DialogFooter,
   DialogHeader,
   DialogPopup,
+  DialogSkipMotion,
   DialogTitle,
   DialogTrigger,
   dialogSizes,
   dialogStyles,
+  useDialogSkipMotion,
 };
 export type { DialogPopupProps, DialogSize };

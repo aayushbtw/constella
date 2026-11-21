@@ -99,6 +99,19 @@ async function open() {
   return content;
 }
 
+// A skipped close finishes in the same task under jsdom, so the attribute is gone before a waitFor looks.
+function watchSkipMotion(element: HTMLElement) {
+  let added = false;
+  const observer = new MutationObserver((records) => {
+    added ||= records.some((record) => record.oldValue === null);
+  });
+  observer.observe(element, {
+    attributeFilter: ["data-skip-motion"],
+    attributeOldValue: true,
+  });
+  return () => added;
+}
+
 test("the label names the trigger, which opens sized content whose parts carry their slots", async () => {
   render(<Fruit size="sm" />);
   expect(trigger().dataset).toMatchObject({
@@ -123,11 +136,12 @@ test("a pointer open animates, and a pointer pick closes at once", async () => {
   const content = await open();
   expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(false);
 
+  const skipped = watchSkipMotion(content);
   fireEvent.click(screen.getByRole("option", { name: "Banana" }));
   await waitFor(() => {
     expect(screen.queryByRole("listbox")).toBeNull();
   });
-  expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(true);
+  expect(skipped()).toBe(true);
   expect(trigger().textContent).toContain("Banana");
 });
 

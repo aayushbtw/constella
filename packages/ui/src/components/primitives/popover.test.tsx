@@ -78,10 +78,10 @@ test("focus leaving closes it with no exit motion, after a click opened it with 
   screen.getByRole("button", { name: "Done" }).focus();
   screen.getByRole("button", { name: "Elsewhere" }).focus();
 
+  expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(true);
   await waitFor(() => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
-  expect(Object.hasOwn(content.dataset, "skipMotion")).toBe(true);
 });
 
 test("an agent finds the popover by its trigger and presses its controls", async () => {

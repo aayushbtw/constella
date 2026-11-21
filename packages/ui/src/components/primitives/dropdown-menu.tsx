@@ -28,7 +28,7 @@ import type {
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
-import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   popupReset,
@@ -274,19 +274,25 @@ const sizeStyles = {
   >
 >;
 
-const SkipMotion = createContext(false);
+const [MenuSkipMotion, useMenuSkipMotion] = createSkipMotion();
 const Size = createContext<DropdownMenuSize>("default");
 
 function useSizeStyles() {
   return sizeStyles[use(Size)];
 }
 
-function DropdownMenu({ onOpenChange, ...props }: MenuProps) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function DropdownMenu({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: MenuProps) {
   return (
-    <SkipMotion value={skip}>
-      <Menu onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <MenuSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <Menu {...handlers} {...props} />}
+    </MenuSkipMotion>
   );
 }
 
@@ -303,7 +309,7 @@ function Popup<Payload>({
   sx,
   ...props
 }: DropdownMenuContentProps<Payload> & { nested?: boolean }) {
-  const skip = use(SkipMotion);
+  const skip = useMenuSkipMotion();
   // A submenu takes its parent's size unless it sets its own.
   const size = ownSize ?? use(Size);
   const Part = nested ? MenuSubContent : MenuContent;
@@ -387,13 +393,19 @@ function DropdownMenuItem({
   );
 }
 
-function DropdownMenuSub({ onOpenChange, ...props }: MenuSubProps) {
-  const inherited = use(SkipMotion);
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function DropdownMenuSub({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: MenuSubProps) {
   return (
-    <SkipMotion value={inherited || skip}>
-      <MenuSub onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <MenuSkipMotion
+      inherit
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <MenuSub {...handlers} {...props} />}
+    </MenuSkipMotion>
   );
 }
 

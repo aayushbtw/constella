@@ -17,6 +17,11 @@ import {
   ModelPickerTrigger,
 } from "@/components/ai/model-picker";
 import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+} from "@/components/primitives/alert-dialog";
+import {
   Combobox,
   ComboboxContent,
   ComboboxInput,
@@ -24,11 +29,6 @@ import {
   ComboboxLabel,
   ComboboxList,
 } from "@/components/primitives/combobox";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-} from "@/components/primitives/alert-dialog";
 import { CommandInput, CommandList } from "@/components/primitives/command";
 import {
   DateRangePicker,

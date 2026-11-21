@@ -28,7 +28,7 @@
           "type": "registry:lib"
         },
         {
-          "path": "src/lib/constella/motion.ts",
+          "path": "src/lib/constella/motion.tsx",
           "type": "registry:lib"
         },
         {
@@ -692,7 +692,8 @@
       ],
       "registryDependencies": [
         "https://constella.aayush.cv/r/base.json",
-        "https://constella.aayush.cv/r/button.json"
+        "https://constella.aayush.cv/r/button.json",
+        "https://constella.aayush.cv/r/dialog.json"
       ],
       "files": [
         {

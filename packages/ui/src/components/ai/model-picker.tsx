@@ -297,7 +297,7 @@ function ModelPickerItem({
       aria-describedby={shown ? detailsId : undefined}
       onSelect={(event) => {
         const result = onSelect?.(event);
-        // Lands before close(); see useSkipMotion in motion.ts.
+        // Lands before close(); see useSkipMotion in motion.tsx.
         flushSync(() => {
           setPicked(true);
         });

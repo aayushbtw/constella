@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { createContext, use, useState } from "react";
+import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 
 import {
@@ -38,14 +39,68 @@ function useSkipMotion<Details extends OpenChangeDetails>(
     }
     onOpenChange?.(open, details);
   }
-  return [skip, handleOpenChange] as const;
+  function reset() {
+    setSkip(false);
+  }
+  return [skip, handleOpenChange, reset] as const;
+}
+
+interface OpenChangeHandlers<Details extends OpenChangeDetails> {
+  onOpenChange?: (open: boolean, details: Details) => void;
+  onOpenChangeComplete?: (open: boolean) => void;
+}
+
+interface SkipMotionProps<
+  Details extends OpenChangeDetails,
+> extends OpenChangeHandlers<Details> {
+  children: (handlers: Required<OpenChangeHandlers<Details>>) => ReactNode;
+  /** Also skips while the enclosing root of the same family does, as a submenu under its menu. */
+  inherit?: boolean;
+  skips?: (open: boolean, details: Details) => boolean;
+}
+
+/** One popup family's skip: its root wraps its open-change handlers here, and its parts read the value for `data-skip-motion`. */
+function createSkipMotion() {
+  const Skip = createContext(false);
+  function SkipMotion<Details extends OpenChangeDetails>({
+    children,
+    inherit = false,
+    onOpenChange,
+    onOpenChangeComplete,
+    skips,
+  }: SkipMotionProps<Details>) {
+    const inherited = use(Skip);
+    const [skip, handleOpenChange, reset] = useSkipMotion(onOpenChange, skips);
+    // A controlled `open` fires no onOpenChange, so the next open must not keep the last close's skip.
+    function handleOpenChangeComplete(open: boolean) {
+      if (!open) {
+        reset();
+      }
+      onOpenChangeComplete?.(open);
+    }
+    return (
+      <Skip value={(inherit && inherited) || skip}>
+        {children({
+          onOpenChange: handleOpenChange,
+          onOpenChangeComplete: handleOpenChangeComplete,
+        })}
+      </Skip>
+    );
+  }
+  function useSkip() {
+    return use(Skip);
+  }
+  return [SkipMotion, useSkip] as const;
 }
 
 // ui-sdk holds `data-starting-style` a frame on an instant open, so a skipped one is never offstage.
 const offstage =
   ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
+const entering = ":is([data-starting-style]):not([data-skip-motion])";
 const closing = ":is([data-ending-style]):not([data-skip-motion])";
 const instant = ":is([data-skip-motion])";
+const skippedOpenOrClose =
+  ":is([data-starting-style], [data-ending-style])[data-skip-motion]";
 const gliding =
   ":is([data-moving]):not([data-ending-style], [data-skip-motion])";
 // Tooltip also skips on ui-sdk's `data-instant`, which stays set while closing, and a close still fades.
@@ -99,9 +154,22 @@ const popupMotion = stylex.create({
       default: stepBackUnderStack,
       [offstage]: `scale(${motion.dialogScale})`,
     },
-    transitionDuration: { default: durations.dialog, [instant]: 0 },
+    transitionDuration: { default: durations.dialog, [skippedOpenOrClose]: 0 },
     transitionProperty: scaleProperty,
     transitionTimingFunction: easings.out,
+  },
+  sidePanel: {
+    opacity: { default: 1, [entering]: 0 },
+    transform: {
+      default: "none",
+      [entering]: {
+        default: `translateX(${space.sm})`,
+        [media.reducedMotion]: "none",
+      },
+    },
+    transitionDuration: { default: durations.dialog, [instant]: 0 },
+    transitionProperty: "opacity, transform",
+    transitionTimingFunction: easings.layout,
   },
   backdrop: {
     opacity: { default: 1, [offstage]: 0 },
@@ -122,4 +190,4 @@ const popupMotion = stylex.create({
   },
 });
 
-export { popupMotion, skipsMotion, useSkipMotion };
+export { createSkipMotion, popupMotion, skipsMotion, useSkipMotion };
