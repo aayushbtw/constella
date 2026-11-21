@@ -23,7 +23,7 @@ import type {
   ChartIndicatorVariant,
 } from "@/components/tanstack/chart-legend";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -119,8 +119,10 @@ function ChartTooltip({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="chart-tooltip"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.tooltip], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.tooltip], sx)
+      )}
     />
   );
 }
@@ -129,8 +131,7 @@ function ChartTooltipTitle({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="chart-tooltip-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
+      {...withStyles(props, stylex.props(styles.title, sx))}
     />
   );
 }
@@ -147,8 +148,7 @@ function ChartTooltipRow({
     <div
       data-active={active ? "" : undefined}
       data-slot="chart-tooltip-row"
-      {...props}
-      {...stylex.props(styles.row, sx)}
+      {...withStyles(props, stylex.props(styles.row, sx))}
     />
   );
 }
@@ -157,8 +157,7 @@ function ChartTooltipLabel({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="chart-tooltip-label"
-      {...props}
-      {...stylex.props(styles.label, sx)}
+      {...withStyles(props, stylex.props(styles.label, sx))}
     />
   );
 }
@@ -167,8 +166,7 @@ function ChartTooltipValue({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="chart-tooltip-value"
-      {...props}
-      {...stylex.props(styles.value, sx)}
+      {...withStyles(props, stylex.props(styles.value, sx))}
     />
   );
 }

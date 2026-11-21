@@ -9,6 +9,7 @@ import {
 } from "@/components/primitives/toggle-group";
 import type { ToggleGroupProps } from "@/components/primitives/toggle-group";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -178,8 +179,10 @@ function ChartIndicator({
       data-icon="inline-start"
       data-slot="chart-indicator"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.indicator(color), styles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.indicator(color), styles[variant], sx)
+      )}
     />
   );
 }
