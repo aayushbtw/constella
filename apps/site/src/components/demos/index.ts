@@ -47,6 +47,7 @@ import {
   BreadcrumbEllipsisDemo,
 } from "~/components/demos/breadcrumb";
 import {
+  ButtonCloseDemo,
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -513,6 +514,7 @@ const demos = {
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
+  "button-close": ButtonCloseDemo,
   "button-link": ButtonLinkDemo,
   "button-corners": ButtonCornersDemo,
   "button-sizes": ButtonSizesDemo,
