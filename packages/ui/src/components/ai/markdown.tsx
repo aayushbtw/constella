@@ -8,7 +8,7 @@ import type {
   MarkdownComponents,
   MarkdownProps as MarkdownPrimitiveProps,
 } from "@tanstack/markdown/react";
-import { useRef } from "react";
+import { createContext, use, useId, useRef } from "react";
 
 import {
   CodeBlock as CodeBlockRoot,
@@ -117,6 +117,71 @@ function alignOf(style: Props<"td">["style"]) {
     : undefined;
 }
 
+// GFM footnote ids are fixed per document, so each root prefixes its own to keep two answers on a page apart.
+const IdPrefix = createContext("");
+
+function useFootnoteId(id: string | undefined) {
+  const prefix = use(IdPrefix);
+  return id === undefined ? undefined : `${prefix}${id}`;
+}
+
+function MarkdownLink({
+  children,
+  className: _className,
+  ...props
+}: Props<"a"> & {
+  "data-footnote-backref"?: string;
+  "data-footnote-ref"?: string;
+}) {
+  const footnote =
+    props["data-footnote-ref"] !== undefined ||
+    props["data-footnote-backref"] !== undefined;
+  const id = useFootnoteId(props.id);
+  const href = useFootnoteId(props.href?.slice(1));
+  const describedBy = useFootnoteId(props["aria-describedby"]);
+  const inPage = props.href?.startsWith("#") === true;
+  return (
+    <Link
+      {...props}
+      {...(footnote && {
+        "aria-describedby": describedBy,
+        href: `#${href}`,
+        id,
+      })}
+      rel={inPage ? undefined : "noopener noreferrer"}
+      target={inPage ? undefined : "_blank"}
+    >
+      {children}
+    </Link>
+  );
+}
+
+// GFM's Footnotes heading arrives as `sr-only`.
+function SecondHeading({ children, className, id, ...props }: Props<"h2">) {
+  const footnotes = className === "sr-only";
+  const footnoteId = useFootnoteId(id);
+  return (
+    <h4
+      {...props}
+      id={footnotes ? footnoteId : id}
+      {...stylex.props(
+        styles.heading,
+        typeStyles.textLg,
+        footnotes && visuallyHidden.base
+      )}
+    >
+      {children}
+    </h4>
+  );
+}
+
+// Only a footnote's item carries an id.
+function ListItem({ id, ...props }: Props<"li">) {
+  return (
+    <li {...props} id={useFootnoteId(id)} {...stylex.props(styles.item)} />
+  );
+}
+
 // Only a fenced block's `code` carries a `language-*` class. CodeBlockContent renders that `code`, so the highlighted markup goes in a span.
 function MarkdownCode({ className, ...props }: Props<"code">) {
   if (className?.startsWith("language-") ?? false) {
@@ -162,18 +227,7 @@ function LastHeading({ children, ...props }: Props<"h6">) {
 
 // An answer sits under the page's own headings, so its outline starts two levels down.
 const components = {
-  a: ({ children, className: _className, ...props }: Props<"a">) => {
-    const inPage = props.href?.startsWith("#") === true;
-    return (
-      <Link
-        {...props}
-        rel={inPage ? undefined : "noopener noreferrer"}
-        target={inPage ? undefined : "_blank"}
-      >
-        {children}
-      </Link>
-    );
-  },
+  a: MarkdownLink,
   blockquote: (props: Props<"blockquote">) => (
     <blockquote {...props} {...stylex.props(styles.block, styles.quote)} />
   ),
@@ -183,19 +237,7 @@ const components = {
       {children}
     </h3>
   ),
-  // GFM's Footnotes heading arrives as `sr-only`.
-  h2: ({ children, className, ...props }: Props<"h2">) => (
-    <h4
-      {...props}
-      {...stylex.props(
-        styles.heading,
-        typeStyles.textLg,
-        className === "sr-only" && visuallyHidden.base
-      )}
-    >
-      {children}
-    </h4>
-  ),
+  h2: SecondHeading,
   h3: ({ children, ...props }: Props<"h3">) => (
     <h5 {...props} {...stylex.props(styles.heading, typeStyles.textLg)}>
       {children}
@@ -205,7 +247,7 @@ const components = {
   h5: LastHeading,
   h6: LastHeading,
   hr: (props: Props<"hr">) => <hr {...props} {...stylex.props(styles.rule)} />,
-  li: (props: Props<"li">) => <li {...props} {...stylex.props(styles.item)} />,
+  li: ListItem,
   ol: (props: Props<"ol">) => (
     <ol {...props} {...stylex.props(styles.block, styles.list)} />
   ),
@@ -251,18 +293,21 @@ function Markdown({
   sx,
   ...props
 }: MarkdownProps) {
+  const prefix = useId();
   return (
     <div
       data-slot="markdown"
       {...stylex.props([typeStyles.textProse, styles.root], sx)}
     >
-      <MarkdownPrimitive
-        components={{ ...components, ...own }}
-        extensions={
-          streaming ? [...streamingExtensions, ...extensions] : extensions
-        }
-        {...props}
-      />
+      <IdPrefix value={prefix}>
+        <MarkdownPrimitive
+          components={{ ...components, ...own }}
+          extensions={
+            streaming ? [...streamingExtensions, ...extensions] : extensions
+          }
+          {...props}
+        />
+      </IdPrefix>
     </div>
   );
 }
