@@ -144,9 +144,9 @@ function CommandDemo() {
   );
 }
 
-const palette = createDialogController();
-
 function CommandDialogDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [palette] = useState(() => createDialogController());
   const hint = useShortcutHint("mod+j");
   return (
     <DemoRow>
