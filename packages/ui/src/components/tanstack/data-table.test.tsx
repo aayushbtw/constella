@@ -1242,6 +1242,42 @@ test("a Shift-click on a checkbox in an untouched table selects only its row", (
   expect(selectedEmails()).toEqual(["dee@acme.com"]);
 });
 
+test("a Shift-click that unchecks a checkbox unchecks the range to it, and the next Shift-click selects only its row", () => {
+  render(<Basic />);
+  fireEvent.click(checkboxIn("ken@acme.com"));
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+});
+
+test("a Shift-click that unchecks a checkbox once the anchor row is filtered out unchecks only its row", () => {
+  render(<Filters />);
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  fireEvent.click(checkboxIn("dee@acme.com"));
+  fireEvent.click(checkboxIn("ken@acme.com"));
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "e@acme" },
+  });
+  expect(emails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "" },
+  });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+});
+
 test("Space on a row selects it, and Space on its checkbox is the checkbox's alone", () => {
   render(<Basic />);
   rowWith("abe@acme.com").focus();
