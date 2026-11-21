@@ -308,12 +308,10 @@ Constella's AI and TanStack components are tested against the bridge. Each compo
 
 | Component | Gap |
 | --- | --- |
-| [Questionnaire](/docs/components/questionnaire#agent) | The agent can't see or check the choices. It sees the freeform answer and the buttons that move between questions. |
 | [Trace](/docs/components/trace#agent) | A step with no trigger is listed with no name. |
 | [Markdown](/docs/components/markdown#agent) | Two code blocks in the same language share a copy button name, so a press by that name fails. |
 | [Message](/docs/components/message#agent) | Copy, Retry and Good answer repeat on every reply in a chat. |
 | [Data Table](/docs/components/data-table#agent) | A press on a column header by its title fails, since ui-sdk reads the header row's text as row text for every header. |
 | [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.13's `insert` puts the raw text in place of the query. |
-| [Questionnaire](/docs/components/questionnaire#agent), [Message Scroller](/docs/components/message-scroller#agent) | They don't pass ui-sdk's change `details` on, since they're built on `@shadcn/react`. |
 | Scroll Area, as in [Data Table](/docs/components/data-table#agent), [Markdown](/docs/components/markdown#agent) and [Suggestions](/docs/components/suggestions#agent) | Some scroll areas are listed with no name and no actions. |
 | [Citation](/docs/components/citation#agent) | `setOpen` on a card shared by several pills opens it empty, since no pill picked its sources. |
