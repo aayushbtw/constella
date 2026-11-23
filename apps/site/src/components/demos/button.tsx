@@ -2,13 +2,18 @@ import {
   Add01Icon,
   ArrowRight02Icon,
   ArrowUpRight01Icon,
+  MinusSignIcon,
   Search01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { HugeiconsIconProps } from "@hugeicons/react";
 import { Fragment, useEffect, useState } from "react";
 
-import { Button, buttonVariants } from "@/components/primitives/button";
+import {
+  Button,
+  buttonVariants,
+  CloseButton,
+} from "@/components/primitives/button";
 import type { ButtonSize, ButtonVariant } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
@@ -198,6 +203,17 @@ function GenerateButton() {
   );
 }
 
+function ButtonCloseDemo() {
+  return (
+    <DemoRow>
+      <CloseButton />
+      <CloseButton aria-label="Minimize">
+        <Glyph icon={MinusSignIcon} />
+      </CloseButton>
+    </DemoRow>
+  );
+}
+
 function ButtonLinkDemo() {
   return (
     <DemoRow>
@@ -214,6 +230,7 @@ function ButtonLinkDemo() {
 
 export {
   ButtonBusyDemo,
+  ButtonCloseDemo,
   ButtonDisabledDemo,
   ButtonDemo,
   ButtonIconDemo,

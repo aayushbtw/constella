@@ -6,13 +6,7 @@ import { Separator } from "@/components/primitives/separator";
 import { Text } from "@/components/typography/text";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles } from "@/lib/constella/styles";
-import {
-  colors,
-  fontWeights,
-  radii,
-  space,
-  strokes,
-} from "@/lib/constella/tokens.stylex";
+import { colors, radii, space, strokes } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
 const box = {
@@ -59,25 +53,14 @@ const styles = stylex.create({
   },
   sheet: { ...box, height: 240, maxWidth: "100%", width: 384 },
   grid: {
-    borderCollapse: "collapse",
-    color: colors.textPrimary,
-    fontVariantNumeric: "tabular-nums",
-  },
-  cell: {
-    borderBlockEndColor: colors.borderSubtle,
-    borderBlockEndStyle: "solid",
-    borderBlockEndWidth: strokes.border,
-    paddingBlockEnd: space.xs,
-    paddingBlockStart: space.xs,
-    paddingInlineEnd: space.sm,
-    paddingInlineStart: space.sm,
-    textAlign: "end",
-    whiteSpace: "nowrap",
-  },
-  head: {
-    color: colors.textSecondary,
-    fontWeight: fontWeights.medium,
-    textAlign: "start",
+    display: "grid",
+    gap: space.md,
+    gridTemplateColumns: "repeat(6, max-content)",
+    paddingBlockEnd: space.md,
+    paddingBlockStart: space.md,
+    paddingInlineEnd: space.md,
+    paddingInlineStart: space.md,
+    width: "max-content",
   },
   tile: {
     backgroundColor: colors.fill,
@@ -126,61 +109,15 @@ function ScrollAreaHorizontalDemo() {
   );
 }
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-const regions = [
-  "North America",
-  "South America",
-  "Europe",
-  "Africa",
-  "Middle East",
-  "South Asia",
-  "East Asia",
-  "Oceania",
-  "Caribbean",
-  "Central Asia",
-];
-
 function ScrollAreaBothDemo() {
   return (
     <DemoRow>
       <ScrollArea sx={styles.sheet}>
-        <table {...stylex.props([typeStyles.textSm, styles.grid])}>
-          <thead>
-            <tr>
-              <th {...stylex.props(styles.cell, styles.head)}>Region</th>
-              {months.map((month) => (
-                <th key={month} {...stylex.props(styles.cell, styles.head)}>
-                  {month}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {regions.map((region, row) => (
-              <tr key={region}>
-                <td {...stylex.props(styles.cell, styles.head)}>{region}</td>
-                {months.map((month, column) => (
-                  <td key={month} {...stylex.props(styles.cell)}>
-                    {((row + 3) * (column + 7) * 37) % 900}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div {...stylex.props(styles.grid)}>
+          {Array.from({ length: 24 }, (_, i) => (
+            <div key={i} {...stylex.props(styles.tile)} />
+          ))}
+        </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </DemoRow>

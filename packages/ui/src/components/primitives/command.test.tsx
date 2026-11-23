@@ -21,6 +21,7 @@ import {
   CommandGroupLabel,
   CommandInput,
   CommandItem,
+  CommandItemText,
   CommandList,
   CommandSeparator,
   CommandShortcut,
@@ -62,12 +63,13 @@ function Palette({ onRun }: { onRun?: (value: string) => void }) {
                 <CommandItem
                   disabled={item.disabled}
                   key={item.value}
+                  label={item.label}
                   onSelect={() => {
                     onRun?.(item.value);
                   }}
                   value={item.value}
                 >
-                  {item.label}
+                  <CommandItemText />
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -108,6 +110,16 @@ test("typing keeps the commands that contain it and hides groups left empty", as
   await waitFor(() => {
     expect(highlighted()).toBe("Button");
   });
+});
+
+test("each result marks the search inside its label, and keeps its name", () => {
+  render(<Palette />);
+  type("ton g");
+
+  const option = screen.getByRole("option", { name: "Button Group" });
+  expect(
+    [...option.querySelectorAll("mark")].map((mark) => mark.textContent)
+  ).toEqual(["ton G"]);
 });
 
 test("server HTML shows a group that holds items", () => {
@@ -152,12 +164,12 @@ test("a disabled command doesn't run", () => {
   expect(onRun).not.toHaveBeenCalled();
 });
 
-test("the input sits in an input group's slot, in a group without the input group's ring", () => {
+test("the input sits in an input group's slot, so the group draws its ring", () => {
   render(<Palette />);
 
   const slot = input().parentElement;
   expect(slot?.dataset.slot).toBe("input-group-input");
-  expect(slot?.parentElement?.dataset.slot).toBe("command-input-group");
+  expect(slot?.parentElement?.dataset.slot).toBe("input-group");
   expect(input().matches("[data-slot='input-group-input'] > input")).toBe(true);
 });
 

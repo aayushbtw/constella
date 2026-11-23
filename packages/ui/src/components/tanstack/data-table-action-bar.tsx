@@ -1,8 +1,7 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { announce } from "@ui-sdk/core";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -26,6 +25,27 @@ interface ActionBarTable {
   getSelectedRowIds: () => string[];
   resetRowSelection: (defaultState?: boolean) => void;
 }
+
+interface FocusOrigin {
+  element: HTMLElement | null;
+  row: number | null;
+  table: HTMLElement | null;
+}
+
+const noOrigin: FocusOrigin = { element: null, row: null, table: null };
+
+const rowInPlaceOf = ({ row, table }: FocusOrigin) => {
+  const rows = [
+    ...(table?.querySelectorAll<HTMLElement>("tr[data-index]") ?? []),
+  ];
+  return (
+    (row === null
+      ? undefined
+      : rows.findLast((candidate) => Number(candidate.dataset.index) <= row)) ??
+    table?.querySelector<HTMLElement>("tr[tabindex='0']") ??
+    table
+  );
+};
 
 const closed = ":is([data-closed])";
 // A key in the table, or in the bar itself, moved it: the keyboard never animates.
@@ -105,27 +125,49 @@ function DataTableActionBar({
   table: ActionBarTable;
 }) {
   const count = table.getSelectedRowIds().length;
+  const open = count > 0;
   // The last count stays on screen while the bar leaves.
   const [held, setHeld] = useState(count);
   if (count > 0 && count !== held) {
     setHeld(count);
   }
-  const announced = useRef(count);
-  useEffect(() => {
-    if (count === announced.current) {
+  const bar = useRef<HTMLDivElement>(null);
+  const origin = useRef<FocusOrigin>(noOrigin);
+  // Closing inerts the bar, which would drop a focused Clear or action to the page.
+  useLayoutEffect(() => {
+    if (open || bar.current?.contains(document.activeElement) !== true) {
       return;
     }
-    announced.current = count;
-    if (count > 0) {
-      announce(`${count} selected`);
+    const { element } = origin.current;
+    if (element?.isConnected === true) {
+      element.focus();
     }
-  }, [count]);
+    if (document.activeElement !== element) {
+      rowInPlaceOf(origin.current)?.focus();
+    }
+  }, [open]);
   return (
     <div
       aria-label={label}
-      data-closed={count === 0 ? "" : undefined}
+      data-closed={open ? undefined : ""}
       data-slot="data-table-action-bar"
-      inert={count === 0}
+      inert={!open}
+      onFocus={({ currentTarget, relatedTarget }) => {
+        if (!currentTarget.contains(relatedTarget)) {
+          const row =
+            relatedTarget?.closest<HTMLElement>("tr[data-index]")?.dataset
+              .index;
+          origin.current = {
+            element:
+              relatedTarget instanceof HTMLElement ? relatedTarget : null,
+            row: row === undefined ? null : Number(row),
+            table:
+              relatedTarget?.closest<HTMLElement>("[data-slot='data-table']") ??
+              null,
+          };
+        }
+      }}
+      ref={bar}
       role="toolbar"
       {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
     >

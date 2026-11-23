@@ -156,9 +156,7 @@
         [data-slot="input-group-control"]
       ):focus-visible
     ),
-    [data-slot="questionnaire-choice"]:has(
-      > [data-slot="questionnaire-choice-input"]:focus-visible
-    )
+    [data-slot="slider-thumb"]:has(:focus-visible)
   ) {
     outline: 1px solid var(--focus-ring);
     outline-offset: 0;
@@ -182,8 +180,7 @@
         [data-slot="input-group"] > [data-slot="textarea"],
         [data-slot="input-group-control"]
       ):focus-visible
-    ),
-    :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
+    )
   ) {
     outline-color: var(--red-11);
   }
@@ -199,7 +196,7 @@
     [role="alertdialog"],
     [role="menu"],
     [role="listbox"],
-    [data-slot="questionnaire-item"]
+    [data-slot="questionnaire"] [data-slot="field-set"][data-active]
   ):focus-visible {
     outline: none;
   }
@@ -277,7 +274,7 @@
   /* StyleX can't style a child it didn't render, so a row's icon keeps its size beside a
      long label. */
   :where(
-      [data-slot="sidebar-menu-button"],
+      [data-sidebar-menu-button],
       [data-slot="menu-item"],
       [data-slot="menu-trigger"][role="menuitem"],
       [data-slot="menu-checkbox-item"],
@@ -401,4 +398,14 @@
    `background-clip: text`, which blanks it. Unlayered, since Torph's own rule is. */
 [data-slot="shimmer"] [torph-item]:not(br) {
   will-change: auto;
+}
+
+/* Torph's unlayered root rule would beat a Swap Text's `sx`. Its values live in the component. */
+[data-slot="swap-text"][torph-root] {
+  display: revert-layer;
+  position: revert-layer;
+  text-align: revert-layer;
+  vertical-align: revert-layer;
+  white-space: revert-layer;
+  will-change: revert-layer;
 }

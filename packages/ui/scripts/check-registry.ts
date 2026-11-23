@@ -1,17 +1,64 @@
-// Fails when an item's imports don't match the dependencies it declares, or a
-// file in src belongs to no item, so `shadcn add` never installs a broken item.
-
-import { readFile, readdir } from "node:fs/promises";
+import { glob, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 import { registrySchema } from "shadcn/schema";
+import { parse } from "yaml";
+import { z } from "zod";
+
+import { resolvePin, workspaceSchema } from "./pins.ts";
 
 const root = path.join(import.meta.dirname, "..");
+const repo = path.join(root, "../..");
 // shadcn expects the app to provide React.
 const provided = new Set(["react", "react-dom"]);
 
 const registry = registrySchema.parse(
   JSON.parse(await readFile(path.join(root, "registry.json"), "utf-8"))
+);
+
+const workspace = workspaceSchema.parse(
+  parse(await readFile(path.join(repo, "pnpm-workspace.yaml"), "utf-8"))
+);
+
+const manifestSchema = z.object({
+  dependencies: z.record(z.string(), z.string()).default({}),
+  devDependencies: z.record(z.string(), z.string()).default({}),
+  peerDependencies: z.record(z.string(), z.string()).default({}),
+  peerDependenciesMeta: z
+    .record(z.string(), z.object({ optional: z.boolean().optional() }))
+    .default({}),
+});
+
+const readManifest = async (dir: string) =>
+  manifestSchema.parse(
+    JSON.parse(await readFile(path.join(dir, "package.json"), "utf-8"))
+  );
+
+const errors: string[] = [];
+
+const { dependencies } = await readManifest(root);
+const pins = new Map(
+  Object.entries(dependencies).map(([name, range]) => {
+    const pin = resolvePin(workspace, name, range);
+    if ("error" in pin) {
+      errors.push(pin.error);
+    }
+    return [name, pin] as const;
+  })
+);
+
+const requiredPeers = new Map(
+  await Promise.all(
+    [...pins.keys()].map(async (name) => {
+      const { peerDependencies, peerDependenciesMeta } = await readManifest(
+        path.join(root, "node_modules", name)
+      );
+      const peers = Object.keys(peerDependencies).filter(
+        (peer) => peerDependenciesMeta[peer]?.optional !== true
+      );
+      return [name, peers] as const;
+    })
+  )
 );
 
 const owners = new Map<string, string[]>();
@@ -21,7 +68,23 @@ for (const { name, files = [] } of registry.items) {
   }
 }
 
-const errors: string[] = [];
+for await (const file of glob(
+  ["package.json", ...workspace.packages.map((dir) => `${dir}/package.json`)],
+  { cwd: repo }
+)) {
+  const manifest = await readManifest(path.join(repo, path.dirname(file)));
+  for (const [name, range] of [
+    ...Object.entries(manifest.dependencies),
+    ...Object.entries(manifest.devDependencies),
+  ]) {
+    if (
+      workspace.catalog[name] !== undefined &&
+      !range.startsWith("catalog:")
+    ) {
+      errors.push(`${file} pins ${name}@${range}; use catalog:`);
+    }
+  }
+}
 
 const sources = await readdir(path.join(root, "src"), { recursive: true });
 const shipped = (entry: string) =>
@@ -56,7 +119,7 @@ function compare(
   const unused = [...declared].filter((name) => !used.has(name));
   if (missing.length) {
     errors.push(
-      `${item} imports ${missing.join(", ")} but doesn't list it in ${kind}`
+      `${item} needs ${missing.join(", ")} but doesn't list it in ${kind}`
     );
   }
   if (unused.length) {
@@ -104,12 +167,32 @@ for (const item of registry.items) {
     }
   }
 
-  compare(
-    item.name,
-    "dependencies",
-    new Set(item.dependencies?.map((dep) => dep.replace(/(?<=.)@.*$/u, ""))),
-    new Set([...packages].filter((name) => !provided.has(name)))
+  const needed = new Set(
+    [...packages]
+      .flatMap((name) => [name, ...(requiredPeers.get(name) ?? [])])
+      .filter((name) => !provided.has(name))
   );
+
+  const declared = new Set<string>();
+  for (const dep of item.dependencies ?? []) {
+    const at = dep.indexOf("@", 1);
+    const name = at === -1 ? dep : dep.slice(0, at);
+    const range = at === -1 ? undefined : dep.slice(at + 1);
+    const pin = pins.get(name);
+    declared.add(name);
+    if (pin === undefined) {
+      errors.push(`${item.name} lists ${name}, which package.json doesn't`);
+    } else if (
+      !("error" in pin) &&
+      (range === undefined ? /^\d/u.test(pin.range) : range !== pin.range)
+    ) {
+      errors.push(
+        `${item.name} lists ${dep}, but ${pin.source} has ${name}@${pin.range}`
+      );
+    }
+  }
+
+  compare(item.name, "dependencies", declared, needed);
   compare(
     item.name,
     "registryDependencies",

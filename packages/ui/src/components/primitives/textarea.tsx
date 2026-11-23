@@ -1,10 +1,9 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import { Textarea as TextareaPrimitive } from "@ui-sdk/react/textarea";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -108,8 +107,10 @@ function Textarea({ size = "default", sx, ...props }: TextareaProps) {
     <TextareaPrimitive
       autoResize
       data-size={size}
-      {...props}
-      {...stylex.props(styles.textarea, sizeStyles[size], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.textarea, sizeStyles[size], sx)
+      )}
     />
   );
 }

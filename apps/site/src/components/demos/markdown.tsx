@@ -17,7 +17,7 @@ const styles = stylex.create({
 
 const answer = `## Monthly active users
 
-Active users grew **12%** in March, led by the new \`/teams\` page.
+Active users[^1] grew **12%** in March, led by the new \`/teams\` page.
 
 | Month    |  Users | Change |
 | :------- | -----: | -----: |
@@ -36,6 +36,8 @@ const users = await acme.metrics.activeUsers({
 \`\`\`
 
 > Figures leave out test accounts on \`acme.com\`.
+
+[^1]: Accounts that signed in at least once that month.
 `;
 
 function Answer({ streaming, text }: { streaming?: boolean; text: string }) {
@@ -70,13 +72,15 @@ function MarkdownStreamingDemo() {
   const streaming = shown < answer.length;
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setShown((value) => Math.min(value + chunk, answer.length));
-    }, chunkEvery);
+    const timer = streaming
+      ? setInterval(() => {
+          setShown((value) => Math.min(value + chunk, answer.length));
+        }, chunkEvery)
+      : undefined;
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [streaming]);
 
   return (
     <DemoRow

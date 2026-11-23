@@ -11,6 +11,7 @@ import type { ComponentProps } from "react";
 
 import { useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { durations, easings, media } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -77,8 +78,7 @@ function Collapsible({
           handleOpenChange(next, details);
         }}
         open={open}
-        {...props}
-        {...stylex.props(sx)}
+        {...withStyles(props, stylex.props(sx))}
       />
     </Instant>
   );
@@ -92,8 +92,7 @@ function CollapsibleTrigger({
   return (
     <CollapsibleTriggerPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      {...props}
-      {...stylex.props(sx)}
+      {...withStyles(props, stylex.props(sx))}
     />
   );
 }
@@ -105,8 +104,7 @@ function CollapsibleContent({
   return (
     <CollapsiblePanelPrimitive
       data-collapsible-instant={use(Instant) || undefined}
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }

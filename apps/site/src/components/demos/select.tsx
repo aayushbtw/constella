@@ -1,4 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
+import type { ListData } from "@ui-sdk/react/select";
 import { useState } from "react";
 
 import {
@@ -11,9 +12,13 @@ import {
 import {
   Select,
   SelectContent,
+  SelectEmpty,
   SelectGroup,
   SelectGroupLabel,
+  SelectInput,
   SelectItem,
+  SelectItemText,
+  SelectList,
   SelectSeparator,
   selectSizes,
   SelectTrigger,
@@ -111,6 +116,11 @@ const timezones = [
 ];
 
 const timezoneItems = timezones.flatMap((group) => group.items);
+
+const timezoneGroups = timezones.map((group) => ({
+  ...group,
+  type: "group" as const,
+}));
 
 const sizeLabels = {
   default: "Default",
@@ -226,6 +236,49 @@ function SelectScrollableDemo() {
   );
 }
 
+function SearchOptions({ entries }: { entries: ListData<unknown> }) {
+  return entries.map((entry) => {
+    const item =
+      // oxlint-disable-next-line anti-slop/no-runtime-typeof -- a plain string is an item in ui-sdk's ListData
+      typeof entry === "string" ? { label: entry, value: entry } : entry;
+    if ("type" in item) {
+      return item.type === "group" ? (
+        <SelectGroup key={item.label}>
+          <SelectGroupLabel>{item.label}</SelectGroupLabel>
+          <SearchOptions entries={item.items} />
+        </SelectGroup>
+      ) : null;
+    }
+    return (
+      <SelectItem key={item.label} label={item.label} value={item.value}>
+        <SelectItemText />
+      </SelectItem>
+    );
+  });
+}
+
+function SelectSearchDemo() {
+  return (
+    <DemoRow>
+      <Select items={timezoneGroups} placeholder="Select a timezone">
+        <SelectTrigger aria-label="Timezone" sx={styles.wide}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectInput
+            aria-label="Search timezones"
+            placeholder="Search timezones"
+          />
+          <SelectEmpty>No timezones found.</SelectEmpty>
+          <SelectList>
+            {({ items }) => <SearchOptions entries={items} />}
+          </SelectList>
+        </SelectContent>
+      </Select>
+    </DemoRow>
+  );
+}
+
 function SelectDisabledDemo() {
   const items = fruits.map((item) =>
     item.value === "grapes" ? { ...item, disabled: true } : item
@@ -298,5 +351,6 @@ export {
   SelectGroupsDemo,
   SelectInvalidDemo,
   SelectScrollableDemo,
+  SelectSearchDemo,
   SelectSizesDemo,
 };

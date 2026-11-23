@@ -2,8 +2,10 @@ import { Activity01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import type { AgentAction } from "@ui-sdk/react/agent";
+import type { DialogController } from "@ui-sdk/react/dialog";
+import { createHistory } from "@ui-sdk/react/history";
 import type { HistoryEntry } from "@ui-sdk/react/history";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/primitives/alert";
 import {
@@ -33,7 +35,6 @@ import {
   ItemTitle,
 } from "@/components/primitives/item";
 import {
-  createSidePanelController,
   SidePanel,
   SidePanelBody,
   SidePanelContent,
@@ -43,11 +44,8 @@ import {
   SidePanelTrigger,
 } from "@/components/primitives/side-panel";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
-import { confirm, mountConfirm } from "~/lib/agent";
-import { history } from "~/lib/agent-history";
+import { agent, confirmController, mountConfirm } from "~/lib/agent";
 import { layers, layout } from "~/lib/tokens.stylex";
-
-const activity = createSidePanelController();
 
 const styles = stylex.create({
   place: {
@@ -73,30 +71,26 @@ const question = (step: AgentAction) =>
     ? asked(step)
     : `${sentence(step.confirm)} ${asked(step)}`;
 
-const onHistory = (listener: () => void) => history.subscribe(listener);
+interface Log {
+  entries: readonly HistoryEntry[];
+  position: number;
+}
 
-const entries = () => history.entries();
-
-const noEntries: readonly HistoryEntry[] = [];
-
-const serverEntries = () => noEntries;
-
-const appliedAgentChanges = () =>
-  history
-    .entries()
-    .slice(0, history.position())
+const appliedAgentChanges = ({ entries, position }: Log) =>
+  entries
+    .slice(0, position)
     .filter((entry) => entry.source === "agent" && entry.reverted !== true)
     .length;
 
-const labelOf = (ref: string) =>
-  history.entries().find((entry) => entry.ref === ref)?.label ?? ref;
+const labelOf = (entries: readonly HistoryEntry[], ref: string) =>
+  entries.find((entry) => entry.ref === ref)?.label ?? ref;
 
 function AgentConfirm() {
   useEffect(() => mountConfirm(), []);
 
   return (
     <div data-agent-hidden>
-      <AlertDialog controller={confirm.controller}>
+      <AlertDialog controller={confirmController}>
         <AlertDialogContent<AgentAction> size="sm">
           {(state) => {
             const step = state.payload;
@@ -122,20 +116,33 @@ function AgentConfirm() {
 }
 
 function AgentFeed() {
+  const historyRef = useRef<ReturnType<typeof createHistory>>(null);
   const [missed, setMissed] = useState<string[]>([]);
-  const recorded = useSyncExternalStore(onHistory, entries, serverEntries);
-  const applied = useSyncExternalStore(onHistory, appliedAgentChanges, () => 0);
-  const rows = recorded
+  const [log, setLog] = useState<Log>({ entries: [], position: 0 });
+  const applied = appliedAgentChanges(log);
+  const rows = log.entries
     .filter((entry) => entry.source === "agent")
     .toReversed();
 
   useEffect(() => {
-    history.clear();
+    const history = createHistory(agent, {
+      within: () => document.querySelector("main"),
+    });
+    historyRef.current = history;
+    const stop = history.subscribe(() => {
+      setLog({ entries: history.entries(), position: history.position() });
+    });
+    return () => {
+      stop();
+      history.destroy();
+    };
   }, []);
 
   const undo = async () => {
-    const left = await history.undoSource("agent");
-    setMissed(left.map(({ key, ref }) => `${labelOf(ref)} (${key})`));
+    const left = (await historyRef.current?.undoSource("agent")) ?? [];
+    setMissed(
+      left.map(({ key, ref }) => `${labelOf(log.entries, ref)} (${key})`)
+    );
   };
 
   return (
@@ -193,11 +200,11 @@ function AgentFeed() {
   );
 }
 
-function AgentActivityButton() {
+function AgentActivityButton({ controller }: { controller: DialogController }) {
   return (
     <SidePanelTrigger
       aria-label="Assistant activity"
-      controller={activity}
+      controller={controller}
       data-agent-hidden
       render={<Button size="icon" variant="ghost" />}
     >
@@ -210,12 +217,18 @@ function AgentActivityButton() {
   );
 }
 
-function AgentLoop({ path }: { path: string }) {
+function AgentLoop({
+  controller,
+  path,
+}: {
+  controller: DialogController;
+  path: string;
+}) {
   return (
     <div data-agent-hidden>
       <AgentConfirm />
       <div {...stylex.props(styles.place)}>
-        <SidePanel controller={activity}>
+        <SidePanel controller={controller}>
           <SidePanelContent keepMounted>
             <SidePanelHeader>
               <SidePanelTitle>Assistant activity</SidePanelTitle>

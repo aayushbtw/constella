@@ -10,8 +10,10 @@ import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
 import { Textarea } from "@/components/primitives/textarea";
 import type { TextareaProps } from "@/components/primitives/textarea";
+import { Toggle } from "@/components/primitives/toggle";
+import type { ToggleProps } from "@/components/primitives/toggle";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -39,10 +41,12 @@ const inputGroupAddonAligns = [
 ] as const;
 const inputGroupButtonSizes = ["xs", "sm", "icon-xs", "icon-sm"] as const;
 const inputGroupSizes = ["sm", "default", "lg"] as const;
+const inputGroupToggleSizes = ["sm", "icon-xs", "icon-sm"] as const;
 
 type InputGroupAddonAlign = (typeof inputGroupAddonAligns)[number];
 type InputGroupButtonSize = (typeof inputGroupButtonSizes)[number];
 type InputGroupSize = (typeof inputGroupSizes)[number];
+type InputGroupToggleSize = (typeof inputGroupToggleSizes)[number];
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
@@ -60,6 +64,10 @@ type InputGroupAddonProps = Styled<ComponentProps<"div">> & {
 
 type InputGroupButtonProps = Omit<ButtonProps, "size"> & {
   size?: InputGroupButtonSize;
+};
+
+type InputGroupToggleProps = Omit<ToggleProps, "size" | "variant"> & {
+  size?: InputGroupToggleSize;
 };
 
 // Native `size` counts characters; width comes from layout here.
@@ -370,10 +378,12 @@ const styles = stylex.create({
   textarea: {
     resize: "none",
   },
-  button: {
-    boxShadow: "none",
+  action: {
     // In a header or footer the actions gather at the end, after any text.
     marginInlineStart: { default: null, [leadingBlockButton]: "auto" },
+  },
+  button: {
+    boxShadow: "none",
   },
   // Concentric with the group's corner at the even inset.
   buttonXs: {
@@ -412,8 +422,10 @@ function InputGroup({ size = "default", sx, ...props }: InputGroupProps) {
       data-slot="input-group"
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
-      {...props}
-      {...stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.group, joinStyles.md, joinStyles.edges, sx)
+      )}
     />
   );
 }
@@ -444,12 +456,14 @@ function InputGroupAddon({
           ?.querySelector<HTMLElement>(control)
           ?.focus();
       }}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.addon],
-        alignStyles[align],
-        separated && separatedStyles[align],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.addon],
+          alignStyles[align],
+          separated && separatedStyles[align],
+          sx
+        )
       )}
     />
   );
@@ -470,7 +484,22 @@ function InputGroupButton({
       type={type}
       variant={variant}
       {...props}
-      sx={[styles.button, buttonSizeStyles[size], sx]}
+      sx={[styles.action, styles.button, buttonSizeStyles[size], sx]}
+    />
+  );
+}
+
+function InputGroupToggle({
+  size = "icon-xs",
+  sx,
+  ...props
+}: InputGroupToggleProps) {
+  return (
+    <Toggle
+      data-input-group-button=""
+      size={size}
+      {...props}
+      sx={[styles.action, buttonSizeStyles[size], sx]}
     />
   );
 }
@@ -480,8 +509,7 @@ function InputGroupText({ render, sx, ...props }: Styled<PartProps<"span">>) {
     "span",
     mergeProps(
       { "data-slot": "input-group-text" },
-      props,
-      stylex.props([typeStyles.textSm, styles.text], sx)
+      withStyles(props, stylex.props([typeStyles.textSm, styles.text], sx))
     ),
     render
   );
@@ -498,8 +526,10 @@ function InputGroupInput({ sx, type, ...props }: InputGroupInputProps) {
     <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <InputPrimitive
         type={type}
-        {...props}
-        {...stylex.props(input.input, type === "file" && styles.file, sx)}
+        {...withStyles(
+          props,
+          stylex.props(input.input, type === "file" && styles.file, sx)
+        )}
       />
     </span>
   );
@@ -520,6 +550,8 @@ export {
   inputGroupSizes,
   InputGroupText,
   InputGroupTextarea,
+  InputGroupToggle,
+  inputGroupToggleSizes,
 };
 export type {
   InputGroupAddonAlign,
@@ -529,4 +561,6 @@ export type {
   InputGroupInputProps,
   InputGroupProps,
   InputGroupSize,
+  InputGroupToggleProps,
+  InputGroupToggleSize,
 };

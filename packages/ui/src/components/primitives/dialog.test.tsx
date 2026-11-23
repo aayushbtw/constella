@@ -87,10 +87,29 @@ test("the close button keeps its slot as the dialog's direct child, so the heade
 
   const close = screen.getByRole("button", { name: "Close" });
   expect(close.dataset.slot).toBe("dialog-close-button");
+  expect(close.querySelector("svg")).not.toBeNull();
   expect(close.parentElement).toBe(dialog);
   expect(dialog.matches(":has(> [data-slot='dialog-close-button'])")).toBe(
     true
   );
+});
+
+test("the close button's children replace its icon and keep its name", async () => {
+  render(
+    <Dialog defaultOpen>
+      <DialogContent>
+        <DialogTitle>Profile</DialogTitle>
+        <DialogCloseButton>
+          <svg aria-hidden data-testid="custom" />
+        </DialogCloseButton>
+      </DialogContent>
+    </Dialog>
+  );
+  await screen.findByRole("dialog", { name: "Profile" });
+
+  const close = screen.getByRole("button", { name: "Close" });
+  expect(close.querySelectorAll("svg")).toHaveLength(1);
+  expect(close.contains(screen.getByTestId("custom"))).toBe(true);
 });
 
 test.each(["Close", "Cancel"])(

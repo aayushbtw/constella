@@ -10,22 +10,20 @@ import {
   PopoverTrigger as PopoverTriggerPrimitive,
 } from "@ui-sdk/react/popover";
 import type { PopoverProps } from "@ui-sdk/react/popover";
-import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import {
+  popupReset,
+  popupSurface,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
   fontWeights,
-  media,
-  motion,
   offsets,
-  radii,
-  shadows,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -38,19 +36,8 @@ type PopoverContentProps = Styled<
   ComponentProps<typeof PopoverContentPrimitive>
 >;
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-
 const styles = stylex.create({
-  // Select's surface and motion (below), so every popup opens the same way.
   surface: {
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     display: "flex",
     flexDirection: "column",
     gap: space.popup,
@@ -58,21 +45,6 @@ const styles = stylex.create({
     paddingBlock: space.popup,
     paddingInline: space.popup,
     width: sizes.popover,
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   header: {
     display: "flex",
@@ -93,27 +65,29 @@ const styles = stylex.create({
   },
 });
 
-const SkipMotion = createContext(false);
+/** `usePopoverSkipMotion` tells a part that draws its own popup whether the popover's last open or close skips its motion. */
+const [PopoverSkipMotion, usePopoverSkipMotion] = createSkipMotion();
 
-function Popover({ onOpenChange, ...props }: PopoverProps) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function Popover({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: PopoverProps) {
   return (
-    <SkipMotion value={skip}>
-      <PopoverPrimitive onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <PopoverSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <PopoverPrimitive {...handlers} {...props} />}
+    </PopoverSkipMotion>
   );
-}
-
-/** Whether the popover's last open or close skips its motion, for a part that draws its own popup. */
-function usePopoverSkipMotion() {
-  return use(SkipMotion);
 }
 
 function PopoverTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof PopoverTriggerPrimitive>>) {
-  return <PopoverTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <PopoverTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function PopoverContent({
@@ -121,16 +95,22 @@ function PopoverContent({
   sx,
   ...props
 }: PopoverContentProps) {
-  const skip = usePopoverSkipMotion();
   return (
     <PopoverContentPrimitive
-      data-skip-motion={skip || undefined}
+      data-skip-motion={usePopoverSkipMotion() || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, popupReset.base, styles.surface],
-        styles.motion,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [
+            typeStyles.textSm,
+            popupReset.base,
+            popupSurface.base,
+            styles.surface,
+          ],
+          popupMotion.popover,
+          sx
+        )
       )}
     />
   );
@@ -140,8 +120,7 @@ function PopoverHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="popover-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -152,8 +131,10 @@ function PopoverTitle({
 }: Styled<ComponentProps<typeof PopoverTitlePrimitive>>) {
   return (
     <PopoverTitlePrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.title], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.title], sx)
+      )}
     />
   );
 }
@@ -164,8 +145,10 @@ function PopoverDescription({
 }: Styled<ComponentProps<typeof PopoverDescriptionPrimitive>>) {
   return (
     <PopoverDescriptionPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -174,14 +157,13 @@ function PopoverClose({
   sx,
   ...props
 }: Styled<ComponentProps<typeof PopoverClosePrimitive>>) {
-  return <PopoverClosePrimitive {...props} {...stylex.props(sx)} />;
+  return <PopoverClosePrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
-/** The popup's reset, surface and motion, for a part that draws its own popup. */
+/** The popup's reset and surface, for a part that draws its own popup. */
 const popoverStyles = {
-  motion: styles.motion,
   popup: popupReset.base,
-  surface: [typeStyles.textSm, styles.surface],
+  surface: [typeStyles.textSm, popupSurface.base, styles.surface],
 };
 
 export {

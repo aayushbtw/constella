@@ -1,9 +1,8 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -85,8 +84,7 @@ function Spinner({ sx, ...props }: SpinnerProps) {
     <output
       aria-label="Loading"
       data-slot="spinner"
-      {...props}
-      {...stylex.props(styles.spinner, sx)}
+      {...withStyles(props, stylex.props(styles.spinner, sx))}
     />
   );
 }

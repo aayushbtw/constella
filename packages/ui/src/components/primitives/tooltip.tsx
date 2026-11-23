@@ -10,16 +10,13 @@ import type { TooltipProps } from "@ui-sdk/react/tooltip";
 import { createContext, use, useMemo } from "react";
 import type { ComponentProps } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import { popupReset, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
-  easings,
   fontWeights,
-  media,
-  motion,
   offsets,
   radii,
   sizes,
@@ -29,11 +26,6 @@ import {
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
-
-// ui-sdk holds `data-starting-style` a frame on an instant open, and `data-instant` while closing, which still fades.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-instant][data-open], [data-skip-motion])";
-const instant = ":is([data-instant][data-open], [data-skip-motion])";
 
 const styles = stylex.create({
   content: {
@@ -48,24 +40,12 @@ const styles = stylex.create({
     fontWeight: fontWeights.medium,
     gap: space.xs,
     maxWidth: `min(${sizes.tooltip}, var(--available-width))`,
-    opacity: { default: 1, [offstage]: 0 },
     paddingBlock: space.xxs,
     paddingInlineEnd: {
       default: space.xs,
       ":has(> [data-slot^='kbd']:last-child)": space.xxs,
     },
     paddingInlineStart: space.xs,
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.hover,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
 });
 
@@ -93,7 +73,7 @@ function TooltipTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof TooltipTriggerPrimitive>>) {
-  return <TooltipTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <TooltipTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function TooltipContent({
@@ -106,10 +86,13 @@ function TooltipContent({
     <TooltipContentPrimitive
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, popupReset.base, styles.content],
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, popupReset.base, styles.content],
+          popupMotion.tooltip,
+          sx
+        )
       )}
     />
   );

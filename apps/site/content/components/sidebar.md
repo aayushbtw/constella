@@ -66,6 +66,8 @@ import {
 
 Put each row's text in a `SidebarMenuLabel`. A label too long for the row fades at its edge, and the row's `tooltip` shows it whole. As the sidebar narrows to its icons, the label fades out with the width.
 
+Wrap a `SidebarMenu` of pages in a `<nav aria-label="…">`, since the sidebar renders no landmark of its own.
+
 ## Composition
 
 ```
@@ -98,7 +100,7 @@ SidebarProvider
 
 ## Sidebar Header
 
-`SidebarHeader` is a row the page header's height (56px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. Its `kbd` follows the label in its tooltip. Show the keys with `useShortcutHint("mod+b")` from `@ui-sdk/react/shortcuts`: Ctrl+B in the server HTML, ⌘B on Apple devices after the page loads. The trigger sets `aria-keyshortcuts` itself. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
+`SidebarHeader` is a row the page header's height (56px), so the two line up. Put a brand or title first and `SidebarHeaderActions` last. `SidebarTrigger` collapses the sidebar, and in the mobile sheet closes it. It's named "Toggle sidebar" in both states and reports the state with `aria-expanded`. Below 768px it also has `aria-haspopup="dialog"`, since it opens the sheet. Its `kbd` follows the label in its tooltip. Show the keys with `useShortcutHint("mod+b")` from `@ui-sdk/react/shortcuts`: Ctrl+B in the server HTML, ⌘B on Apple devices after the page loads. The trigger sets `aria-keyshortcuts` itself. Its icon is `SidebarTriggerIcon`, which picks the glyph for where it is; pass your own children to replace it. Wrap your logo in `SidebarTriggerMark` to show it in the icon rail until the trigger is pointed at or focused. Leave the trigger out of the sidebar when the page header has one, as with `offcanvas`.
 
 Wrap anything that only fits the open sidebar in `SidebarExpandedOnly`. It stays while the width moves, so the edge passes over it, and is removed once the sidebar has narrowed to its icons. In the content it fades with the labels.
 
@@ -124,9 +126,9 @@ function Header() {
 
 ## Sidebar Menu Button
 
-Use `isActive` for the current page, which also sets `aria-current="page"`, and `tooltip` to name the row in the icon rail, or when its label is cut off. Pass `withEnd` when the row has a `SidebarMenuBadge`, so its label leaves room for it.
+Use `isActive` for the current page, which also sets `aria-current="page"`, and `tooltip` to name the row in the icon rail, or when its label is cut off. The `tooltip` is also the row's accessible name, so a screen reader reads the label once, not again as a description. Pass `withEnd` when the row has a `SidebarMenuBadge`, so its label leaves room for it.
 
-Put a shortcut after the label in a `SidebarMenuKbd`. It shows while the row is pointed at or focused. In the rail, put it in the `tooltip` instead.
+Put a shortcut after the label in a `SidebarMenuKbd`. It shows while the row is pointed at or focused. In the rail, put it in the `tooltip` instead. Give that `Kbd` `aria-hidden`, so the row's name stays its label, and name the keys with `aria-keyshortcuts` on the row.
 
 | Size      | Height |
 | --------- | ------ |
@@ -135,19 +137,22 @@ Put a shortcut after the label in a `SidebarMenuKbd`. It shows while the row is 
 | `lg`      | 40px   |
 
 ```tsx
+const hint = useShortcutHint("mod+o");
+
 <SidebarMenuButton
+  aria-keyshortcuts={hint.ariaKeyshortcuts}
   tooltip={
     <>
-      New chat<Kbd>⌘O</Kbd>
+      New chat<Kbd aria-hidden>{hint.text}</Kbd>
     </>
   }
 >
   <HugeiconsIcon icon={PencilEdit02Icon} />
   <SidebarMenuLabel>New chat</SidebarMenuLabel>
   <SidebarMenuKbd>
-    <Kbd>⌘O</Kbd>
+    <Kbd>{hint.text}</Kbd>
   </SidebarMenuKbd>
-</SidebarMenuButton>
+</SidebarMenuButton>;
 ```
 
 ## Sidebar Footer
@@ -160,10 +165,13 @@ For an account menu, render a `size="lg"` `SidebarMenuButton` as a `DropdownMenu
     <SidebarMenuItem>
       <DropdownMenu>
         <DropdownMenuTrigger
-          render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+          render={<SidebarMenuButton size="lg" tooltip="shadcn Pro" />}
         >
           <Avatar>…</Avatar>
-          <SidebarMenuLabel>shadcn</SidebarMenuLabel>
+          <SidebarMenuLabel>
+            <span>shadcn</span>
+            <span>Pro</span>
+          </SidebarMenuLabel>
           <HugeiconsIcon icon={UnfoldMoreIcon} />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top">…</DropdownMenuContent>
@@ -195,6 +203,29 @@ Put a `SidebarMenuAction` after a row's button for an action of its own, like a 
     <DropdownMenuContent side="right">…</DropdownMenuContent>
   </DropdownMenu>
 </SidebarMenuItem>
+```
+
+## Sidebar Menu Sub
+
+Put sub rows in a `SidebarMenuSub` after the row's button, like Docs in the first demo. To open and close them, render the row through a [Collapsible](/docs/components/collapsible): the item as its root, the button as its trigger, and the sub in its `CollapsibleContent`. The button then reports its state with `aria-expanded`. Rotate a chevron in it while the button has `data-open`.
+
+```tsx
+<Collapsible defaultOpen render={<SidebarMenuItem />}>
+  <CollapsibleTrigger render={<SidebarMenuButton tooltip="Docs" />}>
+    <HugeiconsIcon icon={BookOpen01Icon} />
+    <SidebarMenuLabel>Docs</SidebarMenuLabel>
+    <HugeiconsIcon icon={ArrowRight01Icon} />
+  </CollapsibleTrigger>
+  <CollapsibleContent>
+    <SidebarMenuSub>
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton render={<a href="/docs/introduction" />}>
+          Introduction
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+    </SidebarMenuSub>
+  </CollapsibleContent>
+</Collapsible>
 ```
 
 ## Sections
@@ -280,7 +311,7 @@ Use the `collapsible` prop on `Sidebar` to choose how it closes. Collapsed to ic
 | --- | --- |
 | `SidebarProvider` | `open`, `defaultOpen`, `onOpenChange`; `mod+b` toggles it (⌘B on Apple, Ctrl+B elsewhere), paused under a modal |
 | `Sidebar` | `side`: `"left"` or `"right"`; `collapsible`: `"offcanvas"`, `"icon"` or `"none"` |
-| `SidebarTrigger` | `kbd`; `aria-keyshortcuts` for `mod+b`; children default to `SidebarTriggerIcon` |
+| `SidebarTrigger` | `kbd`; named "Toggle sidebar", with `aria-expanded` and `aria-keyshortcuts` for `mod+b`; children default to `SidebarTriggerIcon` |
 | `SidebarTriggerMark` | children: the mark shown in the rail |
 | `SidebarMenuButton` | `isActive`, `tooltip`, `withEnd`; `variant`: `"default"` or `"outline"`; `size`: `"sm"`, `"default"` or `"lg"`; `render` |
 | `SidebarMenuAction` | `showOnHover` |

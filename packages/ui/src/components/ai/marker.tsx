@@ -4,7 +4,7 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -85,12 +85,14 @@ function Marker({ render, sx, variant = "default", ...props }: MarkerProps) {
     "div",
     mergeProps(
       { "data-slot": "marker", "data-variant": variant },
-      props,
-      stylex.props(
-        [typeStyles.textSm, styles.marker],
-        variant === "border" && styles.ruled,
-        variant === "separator" && styles.separator,
-        sx
+      withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.marker],
+          variant === "border" && styles.ruled,
+          variant === "separator" && styles.separator,
+          sx
+        )
       )
     ),
     render
@@ -102,8 +104,7 @@ function MarkerIcon({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="marker-icon"
-      {...props}
-      {...stylex.props(styles.icon, sx)}
+      {...withStyles(props, stylex.props(styles.icon, sx))}
     />
   );
 }
@@ -112,8 +113,7 @@ function MarkerContent({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="marker-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }

@@ -13,6 +13,7 @@ import { durations } from "@/lib/constella/tokens.stylex";
 import { Button } from "./button";
 import { ButtonGroup } from "./button-group";
 import { Dialog, DialogContent, DialogTitle } from "./dialog";
+import { Kbd } from "./kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Sheet, SheetContent, SheetTitle } from "./sheet";
 import {
@@ -278,20 +279,23 @@ function Nav() {
 test("sidebar rows and the trigger keep their own slots under a tooltip, and each reads its name once", async () => {
   render(<Nav />);
 
-  const home = screen.getByRole("button", { name: "Home" });
+  const home = await screen.findByRole("button", { name: "Home" });
   expect(home.dataset.slot).toBe("sidebar-menu-button");
-  expect(home.getAttribute("aria-labelledby")).toBeNull();
   expect(home.getAttribute("aria-describedby")).toBe("home-hint");
+  const homeTip = screen
+    .getAllByRole("tooltip", { hidden: true })
+    .find((tip) => tip.textContent === "Home");
+  expect(homeTip?.id).toBeTruthy();
+  expect(home.getAttribute("aria-labelledby")).toBe(homeTip?.id);
 
   const docs = screen.getByRole("link", { name: "Docs" });
   expect(docs.dataset.slot).toBe("sidebar-menu-button");
   expect(docs.hasAttribute("type")).toBe(false);
-  expect(docs.getAttribute("aria-labelledby")).toBeNull();
   expect(docs.getAttribute("aria-describedby")).toBeNull();
 
   const trigger = await screen.findByRole("button", {
     description: "",
-    name: "Collapse sidebar",
+    name: "Toggle sidebar",
   });
   expect(trigger.dataset.slot).toBe("sidebar-trigger");
   expect(trigger.getAttribute("aria-describedby")).toBeNull();
@@ -306,10 +310,44 @@ test("a sidebar trigger with a shortcut is described by its tooltip", async () =
 
   expect(
     await screen.findByRole("button", {
-      description: "Collapse sidebar⌘B",
-      name: "Collapse sidebar",
+      description: "Toggle sidebar⌘B",
+      name: "Toggle sidebar",
     })
   ).toBeTruthy();
+});
+
+test("a row whose tooltip carries a hidden shortcut is named by its label alone", async () => {
+  render(
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip={
+                  <>
+                    New chat<Kbd aria-hidden>⌘O</Kbd>
+                  </>
+                }
+              >
+                New chat
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+
+  const row = await screen.findByRole("button", { name: "New chat" });
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  expect(row.getAttribute("aria-labelledby")).toBeTruthy();
+
+  const labels = agent
+    .snapshot()
+    .filter((entry) => entry.offPage !== true && entry.component !== "more")
+    .map((entry) => entry.label);
+  expect(labels).toContain("New chat");
 });
 
 test("an agent finds every control and tooltip by name", async () => {
@@ -331,7 +369,7 @@ test("an agent finds every control and tooltip by name", async () => {
     ).toBeTruthy();
   }
   const labels = entries.map((entry) => entry.label);
-  for (const label of ["Save changes", "Home", "Docs", "Collapse sidebar"]) {
+  for (const label of ["Save changes", "Home", "Docs", "Toggle sidebar"]) {
     expect(labels, `${label} is missing from the snapshot`).toContain(label);
   }
 });

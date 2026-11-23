@@ -1,10 +1,9 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import { Separator as SeparatorPrimitive } from "@ui-sdk/react/separator";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, strokes } from "@/lib/constella/tokens.stylex";
 
 type SeparatorProps = Omit<
@@ -37,8 +36,10 @@ function Separator({
   return (
     <SeparatorPrimitive
       orientation={orientation}
-      {...props}
-      {...stylex.props(styles.separator, styles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.separator, styles[orientation], sx)
+      )}
     />
   );
 }

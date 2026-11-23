@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import {
   Progress as ProgressPrimitive,
@@ -11,7 +9,7 @@ import {
 import type { ComponentProps, ReactNode } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { trackStyles, typeStyles } from "@/lib/constella/styles";
+import { trackStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   durations,
   easings,
@@ -55,7 +53,9 @@ const styles = stylex.create({
 /** Renders the track and indicator after its children, so a label and value sit above. */
 function Progress({ children, sx, ...props }: ProgressProps) {
   return (
-    <ProgressPrimitive {...props} {...stylex.props(trackStyles.root, sx)}>
+    <ProgressPrimitive
+      {...withStyles(props, stylex.props(trackStyles.root, sx))}
+    >
       {children}
       <ProgressTrack>
         <ProgressIndicator />
@@ -70,8 +70,7 @@ function ProgressTrack({
 }: Styled<ComponentProps<typeof ProgressTrackPrimitive>>) {
   return (
     <ProgressTrackPrimitive
-      {...props}
-      {...stylex.props(trackStyles.track, sx)}
+      {...withStyles(props, stylex.props(trackStyles.track, sx))}
     />
   );
 }
@@ -82,8 +81,10 @@ function ProgressIndicator({
 }: Styled<ComponentProps<typeof ProgressIndicatorPrimitive>>) {
   return (
     <ProgressIndicatorPrimitive
-      {...props}
-      {...stylex.props(trackStyles.indicator, styles.indeterminate, sx)}
+      {...withStyles(
+        props,
+        stylex.props(trackStyles.indicator, styles.indeterminate, sx)
+      )}
     />
   );
 }
@@ -94,8 +95,10 @@ function ProgressLabel({
 }: Styled<ComponentProps<typeof ProgressLabelPrimitive>>) {
   return (
     <ProgressLabelPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, trackStyles.label], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, trackStyles.label], sx)
+      )}
     />
   );
 }
@@ -106,10 +109,10 @@ function ProgressValue({
 }: Styled<ComponentProps<typeof ProgressValuePrimitive>>) {
   return (
     <ProgressValuePrimitive
-      // ui-sdk 0.1.0-beta.13 relies on the progressbar role hiding its children, which Chromium doesn't; drop once ui-sdk hides it.
-      aria-hidden
-      {...props}
-      {...stylex.props([typeStyles.textSm, trackStyles.value], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, trackStyles.value], sx)
+      )}
     />
   );
 }

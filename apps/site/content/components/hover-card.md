@@ -52,7 +52,7 @@ Use `createHoverCardController` for one card that several triggers share, like m
 <!-- ::demo name="hover-card-triggers" -->
 
 ```tsx
-const mentions = createHoverCardController<Profile>();
+const [mentions] = useState(() => createHoverCardController<Profile>());
 
 <HoverCardTrigger controller={mentions} href={profile.href} payload={profile}>
   {profile.handle}
@@ -86,4 +86,4 @@ Use the `side` prop on `HoverCardContent` to place the card. It flips to the oth
 | `HoverCardTrigger` | `controller`, and `payload` typed by the controller |
 | `createHoverCardController` | A controller shared by `HoverCard` and its triggers |
 
-`HoverCardTrigger` and `HoverCardContent` take `sx`, applied last. For the rest, see [UI SDK Hover Card](https://ui-sdk.dev/docs/react/components/hover-card).
+`HoverCardTrigger` and `HoverCardContent` take `sx`. When another part renders the trigger, like a `Badge`, put `sx` on that part, the part that draws. For the rest, see [UI SDK Hover Card](https://ui-sdk.dev/docs/react/components/hover-card).

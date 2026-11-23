@@ -12,7 +12,7 @@ import type { ButtonProps } from "@/components/primitives/button";
 import { relayWheel } from "@/lib/constella/relay-wheel";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -341,8 +341,10 @@ function Attachment({
         data-size={size}
         data-slot="attachment"
         data-state={state}
-        {...props}
-        {...stylex.props([typeStyles.textSm, styles.attachment], sx)}
+        {...withStyles(
+          props,
+          stylex.props([typeStyles.textSm, styles.attachment], sx)
+        )}
       />
     </State>
   );
@@ -357,8 +359,10 @@ function AttachmentMedia({
     <div
       data-slot="attachment-media"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.media, mediaStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.media, mediaStyles[variant], sx)
+      )}
     />
   );
 }
@@ -367,8 +371,7 @@ function AttachmentContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="attachment-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -384,8 +387,7 @@ function AttachmentTitle({
   return (
     <span
       data-slot="attachment-title"
-      {...props}
-      {...stylex.props(styles.title, sx)}
+      {...withStyles(props, stylex.props(styles.title, sx))}
     >
       {working ? <Shimmer>{children}</Shimmer> : children}
     </span>
@@ -399,8 +401,10 @@ function AttachmentDescription({
   return (
     <span
       data-slot="attachment-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -409,8 +413,7 @@ function AttachmentActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="attachment-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }
@@ -438,8 +441,7 @@ function AttachmentTrigger({
 }: Styled<ComponentProps<typeof ButtonPrimitive>>) {
   return (
     <ButtonPrimitive
-      {...props}
-      {...stylex.props(styles.trigger, sx)}
+      {...withStyles(props, stylex.props(styles.trigger, sx))}
       // ui-sdk writes `button` over a passed slot; the card's `pressable` hover needs a `-trigger` one.
       render={(rendered, state) =>
         renderElement(
@@ -459,9 +461,8 @@ function AttachmentGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       {...mergeProps(
         { "data-slot": "attachment-group", ref: relayWheel },
-        props
+        withStyles(props, stylex.props(styles.group, scrollFade.x, sx))
       )}
-      {...stylex.props(styles.group, scrollFade.x, sx)}
     />
   );
 }

@@ -6,6 +6,8 @@ import {
   within,
 } from "@testing-library/react";
 import type { AgentStep } from "@ui-sdk/react/agent";
+import { createDialogController } from "@ui-sdk/react/dialog";
+import { useState } from "react";
 import { expect, test } from "vite-plus/test";
 
 import { Label } from "@/components/primitives/label";
@@ -37,7 +39,7 @@ Object.assign(document, {
   },
 });
 
-const { agent } = await import("~/lib/agent");
+const { agent, confirmController } = await import("~/lib/agent");
 const { AgentActivityButton, AgentLoop } = await import("./agent-loop");
 
 const turnOn = {
@@ -65,12 +67,22 @@ function Settings() {
   );
 }
 
-function Page() {
+function Page({ path = "/" }: { path?: string }) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [activity] = useState(() => createDialogController());
   return (
     <>
-      <Settings />
-      <AgentActivityButton />
-      <AgentLoop path="/" />
+      <header>
+        <Label>
+          <Switch />
+          Compact header
+        </Label>
+      </header>
+      <main>
+        <Settings />
+      </main>
+      <AgentActivityButton controller={activity} />
+      <AgentLoop controller={activity} path={path} />
     </>
   );
 }
@@ -165,7 +177,16 @@ test("with no confirm dialog on the page, a browser agent's confirm step is refu
 test("the agent can't see the confirm dialog, so it can't press Allow for the person", async () => {
   render(<Page />);
 
-  const asking = agent.act(turnOn);
+  void confirmController.open({
+    payload: {
+      action: "setChecked",
+      args: [true],
+      component: "switch",
+      confirm: "Cuts every connection",
+      label: "Airplane mode",
+      ref: "Airplane mode",
+    },
+  });
   await askedDialog();
   const seen = JSON.stringify(agent.snapshot());
   for (const word of [
@@ -178,11 +199,12 @@ test("the agent can't see the confirm dialog, so it can't press Allow for the pe
     expect(seen).not.toContain(word);
   }
 
-  const selfAllow = agent.act({ steps: [{ action: "press", ref: "Allow" }] });
+  await expect(
+    agent.act({ steps: [{ action: "press", ref: "Allow" }] })
+  ).resolves.toMatchObject({ ok: false });
+  expect(screen.getByRole("alertdialog")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
-
-  await expect(asking).resolves.toMatchObject({ ok: false });
-  await expect(selfAllow).resolves.toMatchObject({ ok: false });
+  await expectNoDialog();
   expect(checked("Airplane mode")).toBe("false");
 });
 
@@ -207,6 +229,9 @@ test("two confirm steps asked at once each wait for their own answer", async () 
   expect(dialog.textContent).toContain("Airplane mode");
   fireEvent.click(screen.getByRole("button", { name: "Allow" }));
   const result = await first;
+  expect(await Promise.race([second, Promise.resolve("pending")])).toBe(
+    "pending"
+  );
   expect(result.ok, result.error?.message).toBe(true);
   expect(checked("Airplane mode")).toBe("true");
   expect(checked("Do not disturb")).toBe("false");
@@ -250,8 +275,10 @@ function RegionPicker() {
 test("an agent setting a marked Select by an item's label asks the person once, with the item's value", async () => {
   render(
     <>
-      <RegionPicker />
-      <AgentLoop path="/" />
+      <main>
+        <RegionPicker />
+      </main>
+      <AgentLoop controller={createDialogController()} path="/" />
     </>
   );
 
@@ -343,6 +370,41 @@ test("the panel lists changes the assistant made while it was shut", async () =>
 
   const panel = await openPanel();
   expect(await panel.findByText("Weekly digest")).toBeTruthy();
+});
+
+test("a change outside the page's main isn't listed in the panel", async () => {
+  render(<Page />);
+
+  const result = await agent.act({
+    steps: [
+      { action: "setChecked", args: [true], ref: "Compact header" },
+      { action: "setChecked", args: [true], ref: "Weekly digest" },
+    ],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+
+  const panel = await openPanel();
+  expect(await panel.findByText("Weekly digest")).toBeTruthy();
+  expect(panel.queryByText("Compact header")).toBeNull();
+  expect(
+    await panel.findByRole("button", { name: "Undo assistant changes (1)" })
+  ).toBeTruthy();
+});
+
+test("a new page starts the panel empty", async () => {
+  const { rerender } = render(<Page path="/" />);
+
+  const result = await agent.act({
+    steps: [{ action: "setChecked", args: [true], ref: "Weekly digest" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  rerender(<Page path="/other" />);
+
+  const panel = await openPanel();
+  expect(await panel.findByText("No assistant changes")).toBeTruthy();
+  expect(
+    await panel.findByRole("button", { name: "Undo assistant changes (0)" })
+  ).toBeTruthy();
 });
 
 test("the activity button opens and closes the panel, and focus comes back to it", async () => {

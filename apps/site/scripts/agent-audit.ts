@@ -1,9 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
+import type { AgentComponent } from "@ui-sdk/react/agent";
 import type { Page } from "playwright";
 import { z } from "zod";
 
+import { ambiguousIn } from "./agent-names.ts";
+import type { Named } from "./agent-names.ts";
 import {
   builtAssetsDir,
   gatedSlugs,
@@ -18,14 +21,18 @@ type PagePath = string;
 type Unnamed = Record<Kind, number>;
 interface Scan {
   ambiguous: string[];
+  native: string[];
   unnamed: Unnamed;
+  unopened: string[];
   unseen: number;
 }
 
-const countsOf = ({ ambiguous, unnamed, unseen }: Scan) =>
+const countsOf = ({ ambiguous, native, unnamed, unopened, unseen }: Scan) =>
   Object.fromEntries([
     ...Object.entries(unnamed),
     ...(ambiguous.length > 0 ? [["ambiguous", ambiguous.length] as const] : []),
+    ...(native.length > 0 ? [["native", native.length] as const] : []),
+    ...(unopened.length > 0 ? [["unopened", unopened.length] as const] : []),
     ...(unseen > 0 ? [["unseen", unseen] as const] : []),
   ]);
 
@@ -69,65 +76,77 @@ async function listPages() {
   return [home, ...pages].toSorted();
 }
 
-interface Named {
-  actions: string[];
-  component: string;
-  label: string;
-  row?: string;
-}
-
-// Mirrors how the agent finds a component by name: the same folded label, or its
-// words inside another's label and row. Two it finds that take the same action
-// can't be told apart by that action, so the name isn't an address. A button and a
-// popup of one name are a trigger and what it opens, which the agent tells apart.
-const fold = (text: string) =>
-  text
-    .replaceAll(/[ßẞ]/gu, "ss")
-    .normalize("NFKD")
-    .replaceAll(/\p{M}/gu, "")
-    .toLowerCase();
-const wordsOf = (text: string) =>
-  ` ${fold(text)} `.replaceAll(/[^\p{L}\p{N}]+/gu, " ");
-const addressOf = ({ label, row }: Named) =>
-  [label, row].filter(Boolean).join(" ");
-const finds = (entry: Named, other: Named) =>
-  fold(other.label) === fold(addressOf(entry)) ||
-  wordsOf(addressOf(other)).includes(wordsOf(addressOf(entry)));
-const triggerAndPopup = (entry: Named, other: Named) =>
-  (entry.component === "button") !== (other.component === "button") &&
-  fold(entry.label) === fold(other.label);
-const sameAction = (entry: Named, other: Named) =>
-  !triggerAndPopup(entry, other) &&
-  entry.actions.some((action) => other.actions.includes(action));
-
-function ambiguousIn(named: Named[]) {
-  const same = Object.values(
-    Object.groupBy(named, (entry) => fold(addressOf(entry)))
-  ).flatMap((group = []) =>
-    group.some((entry) =>
-      group.some((other) => other !== entry && sameAction(entry, other))
-    )
-      ? [`"${addressOf(group[0])}"×${group.length}`]
-      : []
-  );
-  const inside = named.flatMap((entry) =>
-    named
-      .filter(
-        (other) =>
-          fold(addressOf(other)) !== fold(addressOf(entry)) &&
-          finds(entry, other) &&
-          sameAction(entry, other)
-      )
-      .map((other) => `"${addressOf(entry)}" in "${addressOf(other)}"`)
-  );
-  return [...same, ...new Set(inside)];
-}
-
 const hiddenMark = "data-agent-audit-hidden";
+
+const toNamed = (entries: AgentComponent[]): Named[] =>
+  entries.flatMap(({ actions, component, label, offPage, row }) =>
+    component === "more" || offPage === true || (label?.trim() ?? "") === ""
+      ? []
+      : [{ actions, component, label: label?.trim() ?? "", row }]
+  );
+
+async function nativeUnseenIn(page: Page, index: number): Promise<string[]> {
+  return await page.evaluate((at) => {
+    const demo = document.querySelectorAll("[data-slot='demo']")[at];
+    if (demo === undefined || globalThis.agentBridge === undefined) {
+      return [];
+    }
+    const { agent } = globalThis.agentBridge;
+    const controls = [
+      ...demo.querySelectorAll<HTMLElement>(
+        "a[href], button, input:not([type='hidden']), select, textarea"
+      ),
+    ].filter(
+      (control) =>
+        control.closest(
+          "[aria-hidden='true'], [data-agent-hidden], [inert]"
+        ) === null && control.checkVisibility()
+    );
+    const bridgeSeesItAlone = (control: HTMLElement) => {
+      const hidden: Element[] = [];
+      for (
+        let el: Element = control;
+        el !== demo && el.parentElement;
+        el = el.parentElement
+      ) {
+        for (const sibling of el.parentElement.children) {
+          if (sibling !== el && !sibling.hasAttribute("aria-hidden")) {
+            sibling.setAttribute("aria-hidden", "true");
+            hidden.push(sibling);
+          }
+        }
+      }
+      const seen = agent
+        .snapshot()
+        .some((entry) => entry.component !== "more" && entry.offPage !== true);
+      for (const el of hidden) {
+        el.removeAttribute("aria-hidden");
+      }
+      return seen;
+    };
+    return controls
+      .filter((control) => !bridgeSeesItAlone(control))
+      .map((control) => {
+        const name = (
+          control.getAttribute("aria-label") ??
+          control.textContent ??
+          ""
+        )
+          .trim()
+          .slice(0, 40);
+        return `${control.localName}${name === "" ? "" : ` "${name}"`}`;
+      });
+  }, index);
+}
+
+interface DemoScan {
+  named: Named[];
+  native: string[];
+}
 
 // A docs page repeats a component across demos on purpose, so names are compared
 // within one demo: the others and the page around it are hidden from the agent.
-async function namedInDemo(page: Page, index: number): Promise<Named[]> {
+async function scanDemo(page: Page, index: number): Promise<DemoScan> {
   await page.evaluate(
     ({ at, mark }) => {
       const demo = document.querySelectorAll("[data-slot='demo']")[at];
@@ -142,35 +161,114 @@ async function namedInDemo(page: Page, index: number): Promise<Named[]> {
     },
     { at: index, mark: hiddenMark }
   );
-  const named = await page.evaluate(() =>
-    (globalThis.agentBridge?.agent.snapshot() ?? []).flatMap(
-      ({ actions, component, label, offPage, row }) =>
-        component === "more" || offPage === true || (label?.trim() ?? "") === ""
-          ? []
-          : [{ actions, component, label: label?.trim() ?? "", row }]
-    )
+  const named = toNamed(
+    await page.evaluate(() => globalThis.agentBridge?.agent.snapshot() ?? [])
   );
+  const native = await nativeUnseenIn(page, index);
   await page.evaluate((mark) => {
     for (const el of document.querySelectorAll(`[${mark}]`)) {
       el.removeAttribute("aria-hidden");
       el.removeAttribute(mark);
     }
   }, hiddenMark);
-  return named;
+  return { named, native };
 }
 
-async function ambiguousInDemos(
+async function scanDemos(
   page: Page,
   [name, ...rest]: string[],
   index = 0
-): Promise<string[]> {
+): Promise<Pick<Scan, "ambiguous" | "native">> {
   if (name === undefined) {
+    return { ambiguous: [], native: [] };
+  }
+  const demo = await scanDemo(page, index);
+  const others = await scanDemos(page, rest, index + 1);
+  return {
+    ambiguous: [
+      ...ambiguousIn(demo.named).map((clash) => `${name}: ${clash}`),
+      ...others.ambiguous,
+    ],
+    native: [
+      ...demo.native.map((control) => `${name}: ${control}`),
+      ...others.native,
+    ],
+  };
+}
+
+const popupRenderMs = 100;
+
+const liveEntries = async (page: Page) =>
+  await page.evaluate(() =>
+    (globalThis.agentBridge?.agent.snapshot() ?? []).filter(
+      (entry) => entry.component !== "more" && entry.offPage !== true
+    )
+  );
+type LiveEntry = Awaited<ReturnType<typeof liveEntries>>[number];
+
+const setOpen = async (page: Page, ref: string, open: boolean) =>
+  await page.evaluate(
+    async (step) => {
+      const result = await globalThis.agentBridge?.agent.act({
+        steps: [{ action: "setOpen", args: [step.open], ref: step.ref }],
+      });
+      return result?.ok === true;
+    },
+    { open, ref }
+  );
+
+async function openEach(
+  page: Page,
+  [popup, ...rest]: LiveEntry[],
+  known: Set<string>
+): Promise<{ entries: LiveEntry[]; label: string; opened: boolean }[]> {
+  if (popup === undefined) {
     return [];
   }
-  const clashes = ambiguousIn(await namedInDemo(page, index)).map(
-    (clash) => `${name}: ${clash}`
+  const label = popup.label ?? popup.component;
+  if (!(await setOpen(page, popup.ref, true))) {
+    return [
+      { entries: [], label, opened: false },
+      ...(await openEach(page, rest, known)),
+    ];
+  }
+  await page.waitForTimeout(popupRenderMs);
+  const after = await liveEntries(page);
+  const entries = after.filter((entry) => !known.has(entry.ref));
+  for (const entry of entries) {
+    known.add(entry.ref);
+  }
+  await setOpen(page, popup.ref, false);
+  return [
+    { entries, label, opened: true },
+    ...(await openEach(page, rest, known)),
+  ];
+}
+
+async function scanPopups(page: Page) {
+  const before = await liveEntries(page);
+  const popups = await openEach(
+    page,
+    before.filter(
+      (entry) => entry.open === false && entry.actions.includes("setOpen")
+    ),
+    new Set(before.map((entry) => entry.ref))
   );
-  return [...clashes, ...(await ambiguousInDemos(page, rest, index + 1))];
+  const inside = popups.flatMap(({ entries }) => entries);
+  return {
+    ambiguous: popups.flatMap(({ entries, label }) =>
+      ambiguousIn(toNamed(entries)).map((clash) => `popup "${label}": ${clash}`)
+    ),
+    unnamed: Object.fromEntries(
+      Object.entries(
+        Object.groupBy(
+          inside.filter((entry) => (entry.label?.trim() ?? "") === ""),
+          (entry) => `${entry.component} in popup`
+        )
+      ).map(([kind, group]) => [kind, group?.length ?? 0])
+    ),
+    unopened: popups.filter(({ opened }) => !opened).map(({ label }) => label),
+  };
 }
 
 async function scan(page: Page, url: string): Promise<Scan> {
@@ -180,7 +278,7 @@ async function scan(page: Page, url: string): Promise<Scan> {
       demo instanceof HTMLElement ? (demo.dataset.demo ?? "demo") : "demo"
     )
   );
-  const ambiguous = await ambiguousInDemos(page, demos);
+  const { ambiguous, native } = await scanDemos(page, demos);
   const counted = await page.evaluate(async () => {
     if (globalThis.agentBridge === undefined) {
       throw new Error("agent bridge left the page");
@@ -221,7 +319,14 @@ async function scan(page: Page, url: string): Promise<Scan> {
       unseen: listed(entries).length + more - all.length,
     };
   });
-  return { ambiguous, ...counted };
+  const popups = await scanPopups(page);
+  return {
+    ambiguous: [...ambiguous, ...popups.ambiguous],
+    native,
+    unnamed: { ...counted.unnamed, ...popups.unnamed },
+    unopened: popups.unopened,
+    unseen: counted.unseen,
+  };
 }
 
 function judge(
@@ -277,6 +382,7 @@ const { origin } = server;
 
 const browser = await launch();
 const results = new Map<PagePath, Scan>();
+const crashed = new Map<PagePath, string>();
 const queue = pages.filter((pagePath) => pagePath !== home);
 
 async function drain(page: Page): Promise<void> {
@@ -284,7 +390,15 @@ async function drain(page: Page): Promise<void> {
   if (pagePath === undefined) {
     return;
   }
-  results.set(pagePath, await scan(page, `${origin}${pagePath}`));
+  try {
+    results.set(pagePath, await scan(page, `${origin}${pagePath}`));
+  } catch (error) {
+    crashed.set(
+      pagePath,
+      (error instanceof Error ? error.message : String(error)).split("\n")[0] ??
+        ""
+    );
+  }
   await drain(page);
 }
 
@@ -318,6 +432,10 @@ if (bridgeMissing) {
 }
 
 function verdictsFor(pagePath: PagePath): Verdict[] {
+  const failure = crashed.get(pagePath);
+  if (failure !== undefined) {
+    return [{ kind: "fail", text: `scan failed: ${failure}` }];
+  }
   if (gated.has(pagePath)) {
     return judge(results.get(pagePath), baseline[pagePath]);
   }
@@ -343,6 +461,8 @@ const rows = [...new Set([...pages, ...Object.keys(baseline)])]
       status(verdicts),
     ];
     const ambiguous = scanned?.ambiguous ?? [];
+    const native = scanned?.native ?? [];
+    const unopened = scanned?.unopened ?? [];
     return [
       {
         ambiguous: ambiguous.length > 0,
@@ -350,7 +470,10 @@ const rows = [...new Set([...pages, ...Object.keys(baseline)])]
         lines: [
           line.join("  "),
           ...ambiguous.map((pair) => `    ambiguous: ${pair}`),
+          ...native.map((control) => `    native: ${control}`),
+          ...unopened.map((popup) => `    unopened: ${popup}`),
         ],
+        native: native.length > 0,
         unnamed: Object.keys(scanned?.unnamed ?? {}).length > 0,
       },
     ];
@@ -359,8 +482,9 @@ const rows = [...new Set([...pages, ...Object.keys(baseline)])]
 const failures = rows.filter((row) => row.failing).length;
 const withUnnamed = rows.filter((row) => row.unnamed).length;
 const withAmbiguous = rows.filter((row) => row.ambiguous).length;
+const withNative = rows.filter((row) => row.native).length;
 console.log(rows.flatMap((row) => row.lines).join("\n"));
 console.log(
-  `\n${pages.length} pages scanned, ${withUnnamed} with unnamed entries, ${withAmbiguous} with ambiguous names, ${failures} gated failures.`
+  `\n${pages.length} pages scanned, ${withUnnamed} with unnamed entries, ${withAmbiguous} with ambiguous names, ${withNative} with native controls the bridge can't see, ${crashed.size} failed to scan, ${failures} failing.`
 );
 process.exitCode = failures > 0 ? 1 : 0;

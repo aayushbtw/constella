@@ -1,5 +1,6 @@
 import { ClientOnly, useRouterState } from "@tanstack/react-router";
-import { lazy, Suspense } from "react";
+import { createDialogController } from "@ui-sdk/react/dialog";
+import { lazy, Suspense, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/primitives/toast";
@@ -28,6 +29,8 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
 
   return function AgentChrome({ children }: { children: ReactNode }) {
     const path = useRouterState({ select: (s) => s.location.pathname });
+    // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+    const [activity] = useState(() => createDialogController());
 
     return (
       <>
@@ -35,7 +38,7 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
           actions={
             <ClientOnly>
               <Suspense>
-                <ActivityButton />
+                <ActivityButton controller={activity} />
               </Suspense>
             </ClientOnly>
           }
@@ -44,7 +47,7 @@ function agentChrome(loadLoop: NonNullable<typeof agentFlag>["loadLoop"]) {
         <Toaster />
         <ClientOnly>
           <Suspense>
-            <AgentLoop path={path} />
+            <AgentLoop controller={activity} path={path} />
           </Suspense>
         </ClientOnly>
       </>

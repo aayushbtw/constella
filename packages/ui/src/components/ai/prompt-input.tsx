@@ -3,6 +3,9 @@
 import { ArrowUp02Icon, StopIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { createInputHistory } from "@ui-sdk/core";
+import { createInputController } from "@ui-sdk/react/textarea";
+import type { InputController } from "@ui-sdk/react/textarea";
 import {
   TriggerMenu,
   TriggerMenuContent,
@@ -14,8 +17,16 @@ import {
   TriggerMenuStatus,
 } from "@ui-sdk/react/trigger-menu";
 import type { TriggerMenuProps } from "@ui-sdk/react/trigger-menu";
-import { createContext, use, useMemo, useState } from "react";
-import type { ComponentProps } from "react";
+import {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ComponentProps, FocusEvent } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -33,7 +44,13 @@ import type {
 import { SwapIcon, SwapIconItem } from "@/components/primitives/swap-icon";
 import type { TextareaProps } from "@/components/primitives/textarea";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import {
+  popupReset,
+  popupSurface,
+  typeStyles,
+  visuallyHidden,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   fontSizes,
@@ -165,13 +182,7 @@ const styles = stylex.create({
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
   },
-  // ui-sdk's trigger menu leaves the browser's `[popover]` border.
   commandContent: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
-    boxShadow: shadows.lg,
     maxHeight: "var(--available-height)",
     paddingBlockStart: {
       default: space.xxs,
@@ -192,38 +203,91 @@ interface Anchor {
 
 const AnchorContext = createContext<Anchor | null>(null);
 
-/** A form around an input group: submit it with Enter or the submit button. */
+interface PromptInputContextValue {
+  allowSend: (sendable: boolean) => void;
+  field: InputController;
+  recall: ReturnType<typeof createInputHistory<string>>;
+}
+
+const PromptInputContext = createContext<PromptInputContextValue | null>(null);
+
+/** A form around an input group: submit it with Enter or the submit button. While that button can't send, a submit does nothing; each prompt that goes through joins the textarea's history. */
 function PromptInput({
   children,
+  onSubmit,
   sx,
   ...props
 }: Styled<ComponentProps<"form">>) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [field] = useState(createInputController);
+  const [prompts, setPrompts] = useState<readonly string[]>([]);
+  const canSend = useRef(true);
+  const allowSend = useCallback((sendable: boolean) => {
+    canSend.current = sendable;
+  }, []);
+  const context = useMemo(
+    () => ({
+      allowSend,
+      field,
+      recall: createInputHistory({
+        entries: () => prompts,
+        read: () => field.getValue(),
+        write: (value, event) =>
+          field.setValue(value, { event, reason: "input-change" }),
+      }),
+    }),
+    [allowSend, field, prompts]
+  );
   return (
     <form
       data-slot="prompt-input"
-      {...props}
-      {...stylex.props(styles.form, sx)}
+      {...withStyles(props, stylex.props(styles.form, sx))}
+      onSubmit={(event) => {
+        if (!canSend.current) {
+          event.preventDefault();
+          return;
+        }
+        const prompt = field.getValue();
+        if (prompt.trim() !== "") {
+          context.recall.reset();
+          setPrompts((sent) =>
+            prompt === sent.at(-1) ? sent : [...sent, prompt]
+          );
+        }
+        onSubmit?.(event);
+      }}
     >
-      <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
-        {children}
-      </InputGroup>
+      <PromptInputContext value={context}>
+        <InputGroup ref={use(AnchorContext)?.setAnchor} sx={styles.group}>
+          {children}
+        </InputGroup>
+      </PromptInputContext>
     </form>
   );
 }
 
-/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. */
+type PromptInputTextareaProps = Omit<TextareaProps, "controller">;
+
+/** Submits its form on Enter; Shift+Enter adds a line, and Enter while an IME is composing doesn't submit. ArrowUp on the first line brings back earlier prompts, and ArrowDown returns to the draft. */
 function PromptInputTextarea({
+  onKeyDown,
   placeholder = "Ask anything…",
   sx,
   ...props
-}: TextareaProps) {
+}: PromptInputTextareaProps) {
+  const context = use(PromptInputContext);
   return (
     <InputGroupTextarea
+      controller={context?.field}
       data-prompt-input-textarea=""
       placeholder={placeholder}
       rows={1}
       submitShortcut="enter"
       {...props}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        context?.recall.keydown(event.nativeEvent);
+      }}
       sx={[styles.textarea, sx]}
     />
   );
@@ -263,8 +327,7 @@ function PromptInputTools({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-tools"
-      {...props}
-      {...stylex.props(styles.tools, sx)}
+      {...withStyles(props, stylex.props(styles.tools, sx))}
     />
   );
 }
@@ -274,8 +337,7 @@ function PromptInputWell({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-well"
-      {...props}
-      {...stylex.props(styles.well, sx)}
+      {...withStyles(props, stylex.props(styles.well, sx))}
     />
   );
 }
@@ -303,60 +365,130 @@ function PromptInputBar({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="prompt-input-bar"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.bar], sx)}
+      {...withStyles(props, stylex.props([typeStyles.textSm, styles.bar], sx))}
     />
   );
 }
 
-/** Sends the prompt; while an answer streams it turns into Stop, which calls `onStop`. */
+type SubmitIcon = "send" | "stop";
+
+function SubmitIcons({
+  from,
+  value,
+}: {
+  from?: SubmitIcon;
+  value: SubmitIcon;
+}) {
+  return (
+    <SwapIcon aria-hidden from={from} value={value}>
+      <SwapIconItem value="send">
+        <HugeiconsIcon
+          icon={ArrowUp02Icon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      </SwapIconItem>
+      <SwapIconItem value="stop">
+        <HugeiconsIcon
+          icon={StopIcon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      </SwapIconItem>
+    </SwapIcon>
+  );
+}
+
+/** Sends the prompt. While an answer streams, a Stop button named by `stopLabel` takes its place and calls `onStop`. Enter sends only while Send is shown, enabled and not busy. */
 function PromptInputSubmit({
   disabled,
-  onClick,
+  onBlur,
+  onFocus,
   onStop,
+  size = "icon-sm",
   state = "ready",
+  stopLabel = "Stop",
+  sx,
+  variant = "primary",
   ...props
-}: Omit<InputGroupButtonProps, "children" | "type"> & {
+}: Omit<InputGroupButtonProps, "children" | "ref" | "type"> & {
   onStop?: () => void;
   state?: PromptInputState;
+  stopLabel?: string;
 }) {
-  const streaming = state === "streaming";
-  return (
+  const shown: SubmitIcon = state === "streaming" ? "stop" : "send";
+  const allowSend = use(PromptInputContext)?.allowSend;
+  const sendable =
+    shown === "send" && state !== "submitted" && disabled !== true;
+  useEffect(() => {
+    allowSend?.(sendable);
+    return () => allowSend?.(true);
+  }, [allowSend, sendable]);
+  const [held, setHeld] = useState(shown);
+  const [from, setFrom] = useState<SubmitIcon>();
+  const [swapsInstantly, setSwapsInstantly] = useState(false);
+  if (shown !== held) {
+    setHeld(shown);
+    setFrom(swapsInstantly ? undefined : held);
+  }
+  const trackFocus = {
+    onBlur: (event: FocusEvent<HTMLButtonElement>) => {
+      onBlur?.(event);
+      setSwapsInstantly(false);
+    },
+    onFocus: (event: FocusEvent<HTMLButtonElement>) => {
+      onFocus?.(event);
+      setSwapsInstantly(event.currentTarget.matches(":focus-visible"));
+    },
+  };
+  const focusFollows = useRef(false);
+  // A ref's cleanup runs before React removes the element, while it can still hold focus.
+  const followFocus = useCallback((element: HTMLButtonElement | null) => {
+    if (element !== null && focusFollows.current) {
+      focusFollows.current = false;
+      element.focus();
+      if (document.activeElement !== element) {
+        element.form
+          ?.querySelector<HTMLElement>("[data-prompt-input-textarea]")
+          ?.focus();
+      }
+    }
+    return () => {
+      focusFollows.current = document.activeElement === element;
+    };
+  }, []);
+  return shown === "stop" ? (
+    <InputGroupButton
+      aria-label={stopLabel}
+      data-slot="prompt-input-stop"
+      data-state={state}
+      key="stop"
+      onClick={onStop}
+      ref={followFocus}
+      size={size}
+      sx={sx}
+      variant={variant}
+      {...trackFocus}
+    >
+      <SubmitIcons from={from} value="stop" />
+    </InputGroupButton>
+  ) : (
     <InputGroupButton
       aria-busy={state === "submitted" || undefined}
-      aria-label={streaming ? "Stop" : "Send"}
+      aria-label="Send"
       data-slot="prompt-input-submit"
       data-state={state}
-      disabled={streaming ? false : disabled}
-      size="icon-sm"
-      type={streaming ? "button" : "submit"}
-      variant="primary"
+      disabled={disabled}
+      key="send"
+      size={size}
+      type="submit"
+      variant={variant}
       {...props}
-      onClick={(event, details) => {
-        const result = onClick?.(event, details);
-        if (streaming) {
-          event.preventDefault();
-          onStop?.();
-        }
-        return streaming ? undefined : result;
-      }}
+      {...trackFocus}
+      ref={followFocus}
+      sx={sx}
     >
-      <SwapIcon aria-hidden value={streaming ? "stop" : "send"}>
-        <SwapIconItem value="send">
-          <HugeiconsIcon
-            icon={ArrowUp02Icon}
-            size={sizes.icon}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-        <SwapIconItem value="stop">
-          <HugeiconsIcon
-            icon={StopIcon}
-            size={sizes.icon}
-            strokeWidth={Number(strokes.icon)}
-          />
-        </SwapIconItem>
-      </SwapIcon>
+      <SubmitIcons from={from} value="send" />
     </InputGroupButton>
   );
 }
@@ -380,20 +512,8 @@ function PromptInputCommand<T = string>({
   );
 }
 
-type PromptInputCommandTextareaProps = Omit<
-  TextareaProps,
-  "onValueChange" | "value"
-> &
-  (
-    | { onValueChange?: TextareaProps["onValueChange"]; value?: undefined }
-    | {
-        onValueChange: NonNullable<TextareaProps["onValueChange"]>;
-        value: string;
-      }
-  );
-
-/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. Control it with `value` and `onValueChange`. */
-function PromptInputCommandTextarea(props: PromptInputCommandTextareaProps) {
+/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. */
+function PromptInputCommandTextarea(props: PromptInputTextareaProps) {
   return <TriggerMenuInput render={<PromptInputTextarea {...props} />} />;
 }
 
@@ -411,12 +531,16 @@ function PromptInputCommandContent({
       anchor={use(AnchorContext)?.anchor}
       side={side}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        popupReset.base,
-        commandStyles.surface,
-        styles.commandContent,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          popupReset.base,
+          popupReset.borderless,
+          popupSurface.base,
+          commandStyles.surface,
+          styles.commandContent,
+          sx
+        )
       )}
     />
   );
@@ -427,7 +551,9 @@ function PromptInputCommandList({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuList>>) {
   return (
-    <TriggerMenuList {...props} {...stylex.props(commandStyles.list, sx)} />
+    <TriggerMenuList
+      {...withStyles(props, stylex.props(commandStyles.list, sx))}
+    />
   );
 }
 
@@ -437,7 +563,9 @@ function PromptInputCommandItem<T = string>({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuItem<T>>>) {
   return (
-    <TriggerMenuItem<T> {...props} {...stylex.props(commandStyles.item, sx)} />
+    <TriggerMenuItem<T>
+      {...withStyles(props, stylex.props(commandStyles.item, sx))}
+    />
   );
 }
 
@@ -447,7 +575,9 @@ function PromptInputCommandItemIcon({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuItemIcon>>) {
   return (
-    <TriggerMenuItemIcon {...props} {...stylex.props(styles.commandIcon, sx)} />
+    <TriggerMenuItemIcon
+      {...withStyles(props, stylex.props(styles.commandIcon, sx))}
+    />
   );
 }
 
@@ -457,7 +587,9 @@ function PromptInputCommandEmpty({
   ...props
 }: Styled<ComponentProps<typeof TriggerMenuEmpty>>) {
   return (
-    <TriggerMenuEmpty {...props} {...stylex.props(commandStyles.empty, sx)} />
+    <TriggerMenuEmpty
+      {...withStyles(props, stylex.props(commandStyles.empty, sx))}
+    />
   );
 }
 

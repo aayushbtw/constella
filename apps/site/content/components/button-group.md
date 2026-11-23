@@ -168,13 +168,15 @@ Pair an action with an icon button, split by a separator.
 
 ## Text
 
-Use `ButtonGroupText` for a fixed prefix or suffix. Pass `render` to make it a label.
+Use `ButtonGroupText` for a fixed prefix or suffix. Pass ui-sdk's unstyled `Label` (`LabelPrimitive` below, from `@ui-sdk/react/label`) as `render` to make it a label; `ButtonGroupText` draws it.
 
 <!-- ::demo name="button-group-text" -->
 
 ```tsx
 <ButtonGroup>
-  <ButtonGroupText render={<label htmlFor="url" />}>https://</ButtonGroupText>
+  <ButtonGroupText render={<LabelPrimitive htmlFor="url" />}>
+    https://
+  </ButtonGroupText>
   <InputGroup>
     <InputGroupInput id="url" />
     <InputGroupAddon align="inline-end">
@@ -202,7 +204,7 @@ Put an `Input` in the group to join it to a button.
 
 ## Input Group
 
-Put an `InputGroup` in the group for an input with its own addons.
+Put an `InputGroup` in the group for an input with its own addons. Use `InputGroupToggle` for a button that stays pressed.
 
 <!-- ::demo name="button-group-input-group" -->
 
@@ -215,16 +217,16 @@ Put an `InputGroup` in the group for an input with its own addons.
   </ButtonGroup>
   <ButtonGroup>
     <InputGroup>
-      <InputGroupInput aria-label="Message" placeholder="Send a message..." />
+      <InputGroupInput
+        aria-label="Message"
+        disabled={voice}
+        placeholder="Send a message..."
+      />
       <InputGroupAddon align="inline-end">
         <Tooltip type="label">
           <TooltipTrigger
             render={
-              <InputGroupButton
-                aria-pressed={voice}
-                onClick={() => setVoice(!voice)}
-                size="icon-xs"
-              />
+              <InputGroupToggle onPressedChange={setVoice} pressed={voice} />
             }
           >
             <AudioLinesIcon />

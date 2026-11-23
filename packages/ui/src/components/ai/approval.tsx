@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/primitives/card";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, lineHeights, space } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
@@ -97,8 +98,7 @@ function ApprovalMedia({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="approval-media"
-      {...props}
-      {...stylex.props(styles.media, sx)}
+      {...withStyles(props, stylex.props(styles.media, sx))}
     />
   );
 }
@@ -112,8 +112,7 @@ function ApprovalFields({ sx, ...props }: Styled<ComponentProps<"dl">>) {
   return (
     <dl
       data-slot="approval-fields"
-      {...props}
-      {...stylex.props(styles.fields, sx)}
+      {...withStyles(props, stylex.props(styles.fields, sx))}
     />
   );
 }
@@ -122,8 +121,7 @@ function ApprovalField({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="approval-field"
-      {...props}
-      {...stylex.props(styles.field, sx)}
+      {...withStyles(props, stylex.props(styles.field, sx))}
     />
   );
 }
@@ -132,8 +130,7 @@ function ApprovalFieldLabel({ sx, ...props }: Styled<ComponentProps<"dt">>) {
   return (
     <dt
       data-slot="approval-field-label"
-      {...props}
-      {...stylex.props(styles.label, sx)}
+      {...withStyles(props, stylex.props(styles.label, sx))}
     />
   );
 }
@@ -142,8 +139,7 @@ function ApprovalFieldValue({ sx, ...props }: Styled<ComponentProps<"dd">>) {
   return (
     <dd
       data-slot="approval-field-value"
-      {...props}
-      {...stylex.props(styles.value, sx)}
+      {...withStyles(props, stylex.props(styles.value, sx))}
     />
   );
 }

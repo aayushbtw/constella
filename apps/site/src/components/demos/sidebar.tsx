@@ -1,5 +1,6 @@
 import {
   ArrowLeft01Icon,
+  ArrowRight01Icon,
   BookOpen01Icon,
   BotIcon,
   BubbleChatIcon,
@@ -30,6 +31,11 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/primitives/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,7 +81,10 @@ import type {
 import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
+  durations,
+  easings,
   fontWeights,
+  media,
   radii,
   sizes,
   space,
@@ -83,6 +92,11 @@ import {
 } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 import { Logo } from "~/components/logo";
+
+const iconOnly = ":is([data-slot='sidebar'][data-collapsible='icon'] *)";
+const fromKeyboard = ":is([data-instant] *)";
+const subOpen = ":is([data-open] > *)";
+const rtl = ":is([dir='rtl'] *)";
 
 const styles = stylex.create({
   stage: { width: "100%" },
@@ -148,6 +162,36 @@ const styles = stylex.create({
   },
   plan: { color: colors.textSecondary },
   chevron: { color: colors.textSecondary, flexShrink: 0 },
+  disclosure: {
+    color: colors.textMuted,
+    display: "flex",
+    flexShrink: 0,
+    transform: {
+      default: "none",
+      [subOpen]: "rotate(90deg)",
+      [rtl]: "scaleX(-1)",
+      [`${subOpen}${rtl}`]: "scaleX(-1) rotate(90deg)",
+    },
+    transitionDuration: {
+      default: durations.move,
+      ":is([data-collapsible-instant] > *)": "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "transform",
+    transitionTimingFunction: easings.out,
+  },
+  disclosureGlyph: {
+    opacity: { default: 1, [iconOnly]: 0 },
+    transitionDuration: {
+      default: durations.sidebar,
+      [iconOnly]: durations.sidebarExit,
+      [fromKeyboard]: "0s",
+      [`${iconOnly}${fromKeyboard}`]: "0s",
+      [media.reducedMotion]: "0s",
+    },
+    transitionProperty: "opacity",
+    transitionTimingFunction: easings.inOut,
+  },
   account: {
     alignItems: "center",
     display: "flex",
@@ -341,7 +385,7 @@ function User({ side }: { side: SidebarSide }) {
         <SidebarMenuItem>
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<SidebarMenuButton size="lg" tooltip="shadcn" />}
+              render={<SidebarMenuButton size="lg" tooltip="shadcn Pro" />}
             >
               <UserAvatar />
               <SidebarMenuLabel>
@@ -440,6 +484,7 @@ function AppSidebar({
 }) {
   const { changeSection } = useSidebar();
   const [inSettings, setInSettings] = useState(false);
+  const newChat = useShortcutHint("mod+o");
   if (inSettings) {
     return (
       <Sidebar collapsible={collapsible} side={side}>
@@ -481,17 +526,18 @@ function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
+              aria-keyshortcuts={newChat.ariaKeyshortcuts}
               tooltip={
                 <>
                   New chat
-                  <Kbd>⌘O</Kbd>
+                  <Kbd aria-hidden>{newChat.text}</Kbd>
                 </>
               }
             >
               <Glyph icon={PencilEdit02Icon} />
               <SidebarMenuLabel>New chat</SidebarMenuLabel>
               <SidebarMenuKbd>
-                <Kbd>⌘O</Kbd>
+                <Kbd>{newChat.text}</Kbd>
               </SidebarMenuKbd>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -511,26 +557,32 @@ function AppSidebar({
               />
             </SidebarMenuItem>
           ))}
-          <SidebarMenuItem>
-            <Row
-              current={current}
-              icon={BookOpen01Icon}
-              label="Docs"
-              onSelect={onSelect}
-            />
-            <SidebarMenuSub>
-              {docs.map((doc) => (
-                <SidebarMenuSubItem key={doc}>
-                  <SidebarMenuSubButton
-                    // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link
-                    render={<a href="#sidebar" />}
-                  >
-                    {doc}
-                  </SidebarMenuSubButton>
-                </SidebarMenuSubItem>
-              ))}
-            </SidebarMenuSub>
-          </SidebarMenuItem>
+          <Collapsible defaultOpen render={<SidebarMenuItem />}>
+            <CollapsibleTrigger render={<SidebarMenuButton tooltip="Docs" />}>
+              <Glyph icon={BookOpen01Icon} />
+              <SidebarMenuLabel>Docs</SidebarMenuLabel>
+              <span {...stylex.props(styles.disclosure)}>
+                <Glyph
+                  icon={ArrowRight01Icon}
+                  {...stylex.props(styles.disclosureGlyph)}
+                />
+              </span>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                {docs.map((doc) => (
+                  <SidebarMenuSubItem key={doc}>
+                    <SidebarMenuSubButton
+                      // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- the row renders its children into the link
+                      render={<a href="#sidebar" />}
+                    >
+                      {doc}
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                ))}
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </Collapsible>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => {

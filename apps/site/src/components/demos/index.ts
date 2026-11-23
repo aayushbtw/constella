@@ -47,6 +47,7 @@ import {
   BreadcrumbEllipsisDemo,
 } from "~/components/demos/breadcrumb";
 import {
+  ButtonCloseDemo,
   ButtonDemo,
   ButtonIconDemo,
   ButtonIconOnlyDemo,
@@ -274,6 +275,11 @@ import {
 } from "~/components/demos/model-picker";
 import { MotionEasingDemo } from "~/components/demos/motion";
 import {
+  PaginationDemo,
+  PaginationIconOnlyDemo,
+  PaginationSimpleDemo,
+} from "~/components/demos/pagination";
+import {
   PopoverAlignDemo,
   PopoverDemo,
   PopoverFormDemo,
@@ -331,6 +337,7 @@ import {
   SelectGroupsDemo,
   SelectInvalidDemo,
   SelectScrollableDemo,
+  SelectSearchDemo,
   SelectSizesDemo,
 } from "~/components/demos/select";
 import {
@@ -507,6 +514,7 @@ const demos = {
   button: ButtonDemo,
   "button-icon": ButtonIconDemo,
   "button-icon-only": ButtonIconOnlyDemo,
+  "button-close": ButtonCloseDemo,
   "button-link": ButtonLinkDemo,
   "button-corners": ButtonCornersDemo,
   "button-sizes": ButtonSizesDemo,
@@ -694,6 +702,9 @@ const demos = {
   "calendar-range": CalendarRangeDemo,
   "date-range-picker": DateRangePickerDemo,
   "date-range-picker-presets": DateRangePickerPresetsDemo,
+  pagination: PaginationDemo,
+  "pagination-icon-only": PaginationIconOnlyDemo,
+  "pagination-simple": PaginationSimpleDemo,
   popover: PopoverDemo,
   "popover-align": PopoverAlignDemo,
   "popover-form": PopoverFormDemo,
@@ -739,6 +750,7 @@ const demos = {
   "select-groups": SelectGroupsDemo,
   "select-invalid": SelectInvalidDemo,
   "select-scrollable": SelectScrollableDemo,
+  "select-search": SelectSearchDemo,
   "select-sizes": SelectSizesDemo,
   "separator-list": SeparatorListDemo,
   "separator-menu": SeparatorMenuDemo,

@@ -95,5 +95,11 @@ export default defineConfig({
     ],
     options: { typeAware: true, typeCheck: true },
   },
-  test: { projects: ["packages/ui", "apps/site/vitest.config.ts"] },
+  test: {
+    projects: [
+      "packages/ui",
+      "packages/ui/vitest.css.config.ts",
+      "apps/site/vitest.config.ts",
+    ],
+  },
 });

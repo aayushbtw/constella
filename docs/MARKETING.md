@@ -45,7 +45,7 @@ The one place counts live; drafts below leave them as `<n>`. Recount before you 
 
 | Number | Value | How to count | Counted |
 | --- | --- | --- | --- |
-| Components | 66 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-10-23 |
+| Components | 73 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-11-23 |
 | Lint rules of our own | 8 | `ls packages/lint/src/rules` | 2026-10-19 |
 | `constella/*` disables | 0 | `rg 'oxlint-disable.*constella/'` | 2026-10-19 |
 | First commit | 2026-10-05 | `git log --reverse --format=%ad --date=short \| head -1` | 2026-10-19 |
@@ -70,9 +70,9 @@ Say these plainly if asked; don't imply otherwise.
 - **CI reports after the push.** Commits land on `main` directly; there's no branch protection holding a red one back.
 - **No performance numbers of our own.** Linear's 20 to 35% CPU cut is theirs; StyleX gives us the same build-time CSS, but we haven't measured.
 - **The agent audit runs by hand.** CI runs check, test and build (`.github/workflows/ci.yml`). `vpr agent-audit` doesn't run there.
-- **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Questionnaire's choices and Trace's steps with no trigger.
+- **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Trace's steps with no trigger and Prompt Input's slash-command `insert`.
 - **ui-sdk is beta.** Its agent key is experimental, and so are `createHistory` and `stageChanges`.
-- **The production site refuses marked steps.** It ships the bridge (`apps/site/src/router.tsx`) without the confirm dialog or the activity panel, so a step on a `data-agent-confirm` control is refused, not asked. The dialog and panel load in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
+- **The production site ships the agent bridge, not the activity panel yet.** The bridge loads in `apps/site/src/router.tsx` (confirm steps fail closed with no dialog mounted); the experimental history, activity panel and staged-edits page load only in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
 
 ## Messaging options
 

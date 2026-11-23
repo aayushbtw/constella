@@ -71,7 +71,7 @@ Set `streaming` on `Markdown` while the answer arrives, so unclosed code fences,
 <Markdown streaming={status === "streaming"}>{text}</Markdown>
 ```
 
-`PromptInputSubmit` takes the chat's `status` as `state`, and an `onStop`, so the same button submits and stops.
+`PromptInputSubmit` takes the chat's `status` as `state`, and an `onStop`. While streaming, a separate Stop button named by `stopLabel` takes Send's place.
 
 ---
 
@@ -136,7 +136,7 @@ Reasoning, tool calls and steps are `TraceLine`s in a `Trace`, one line each. Do
 
 Attachments go in a `PromptInputHeader` above the text; a submit can send files with no text. Context around the composer (a project, connected apps) goes in a `PromptInputWell` with `PromptInputBar`s.
 
-Slash commands are a `PromptInputCommand` around the `PromptInput`, with `PromptInputCommandTextarea` in place of the textarea and a `PromptInputCommandList` of `PromptInputCommandItem`s in a `PromptInputCommandContent`. `triggers` on `PromptInputCommand` sets what opens it, like a `/` at the start of the draft. A pick runs the item's `onSelect`, then inserts the trigger's `insert` result into the draft. Control the draft with `value` and `onValueChange`, not `onChange`, which loses the typed `/`. Don't build it from a `Popover` around the textarea. ui-sdk's Trigger Menu owns the keys and the highlight.
+Slash commands are a `PromptInputCommand` around the `PromptInput`, with `PromptInputCommandTextarea` in place of the textarea and a `PromptInputCommandList` of `PromptInputCommandItem`s in a `PromptInputCommandContent`. `triggers` on `PromptInputCommand` sets what opens it, like a `/` at the start of the draft. A pick runs the item's `onSelect`, then inserts the trigger's `insert` result into the draft. Control the draft with `value` and `onValueChange` to receive ui-sdk's change `details`. Don't build it from a `Popover` around the textarea. ui-sdk's Trigger Menu owns the keys and the highlight.
 
 ---
 

@@ -21,10 +21,11 @@ description: A searchable list of commands, inline or as a palette.
           {group.items.map((entry) => (
             <CommandItem
               key={entry.value}
+              label={entry.label}
               onSelect={() => run(entry)}
               value={entry.value}
             >
-              {entry.label}
+              <CommandItemText />
             </CommandItem>
           ))}
         </CommandGroup>
@@ -46,6 +47,7 @@ import {
   CommandEmpty,
   CommandInput,
   CommandItem,
+  CommandItemText,
   CommandList,
 } from "@/components/primitives/command";
 ```
@@ -79,12 +81,23 @@ Command
 │   ├── CommandGroup
 │   │   ├── CommandGroupLabel
 │   │   └── CommandItem
+│   │       ├── CommandItemText
 │   │       └── CommandShortcut
 │   └── CommandSeparator
 └── CommandFooter
 ```
 
 Put a `CommandSeparator` between groups. A group and its separator hide while the search leaves the group empty. Add `disabled` to a `CommandItem` to show it but skip it. `Command`'s `onAction` gets the `value` of any item that runs, after the item's `onSelect`.
+
+## Command Item Text
+
+Put a `CommandItemText` in a `CommandItem` to show its `label` with the search marked in it. Without a `label`, it shows the item's `value`.
+
+```tsx
+<CommandItem label="New file" onSelect={createFile} value="new-file">
+  <CommandItemText />
+</CommandItem>
+```
 
 ## Filter
 
@@ -138,7 +151,7 @@ Use `CommandDialog` for a palette over the page. It sits near the top of the win
 <!-- ::demo name="command-dialog" -->
 
 ```tsx
-const palette = createDialogController();
+const [palette] = useState(() => createDialogController());
 const hint = useShortcutHint("mod+j");
 
 <DialogTrigger
@@ -167,6 +180,7 @@ const hint = useShortcutHint("mod+j");
 | --- | --- |
 | `Command` | ui-sdk Command, with `filter="contains"` by default |
 | `CommandInput` | ui-sdk's input in an `lg` Input Group with a search icon; `sx` styles the group |
+| `CommandItemText` | Shows the item's `label`, or its `value`, with the search marked; takes no children |
 | `CommandShortcut` | Shows the item's `shortcut`, or its own, for the platform (⌘P on Apple, Ctrl+P elsewhere), or its children, at the item's end; only the item's `shortcut` runs it |
 | `CommandDialog` | A dialog for the palette; `title` and `description` for screen readers; no motion for a keyboard change or a pick |
 | `CommandFooter` | A tinted bar under the list, for key hints |

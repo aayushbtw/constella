@@ -92,4 +92,4 @@ Use the `side` prop on `Sheet` to choose the edge it slides from. It leaves the 
 | `SheetContent` | Renders the backdrop and sheet; `showCloseButton` |
 | `SheetBody` | Scrolls content too long for the sheet, which doesn't scroll itself. A drag on it selects text instead of moving the sheet |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Drawer](https://ui-sdk.dev/docs/react/components/drawer).
+Every part takes `sx`. When a trigger or close renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Drawer](https://ui-sdk.dev/docs/react/components/drawer).

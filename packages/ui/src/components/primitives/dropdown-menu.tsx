@@ -28,20 +28,23 @@ import type {
 import { createContext, use } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
-import { useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { popupReset, typeStyles } from "@/lib/constella/styles";
+import {
+  popupReset,
+  popupSurface,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fontWeights,
   media,
-  motion,
   offsets,
   opacities,
   radii,
-  shadows,
   sizes,
   space,
   strokes,
@@ -72,11 +75,6 @@ type DropdownMenuContentProps<Payload = unknown> = Styled<
   ComponentProps<typeof MenuContent<Payload>>
 > & { size?: DropdownMenuSize };
 
-// `[data-skip-motion]` is never offstage, so an instant open paints no blank frame while ui-sdk holds `data-starting-style`.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
 const highlighted = ":is([data-highlighted], [data-open])";
 const destructive = ":is([data-destructive])";
 const off = ":is([data-disabled])";
@@ -88,49 +86,19 @@ const insetStart = (padding: string) =>
   `calc(${padding} + ${sizes.icon} + ${space.row})`;
 
 const styles = stylex.create({
-  // Select's surface and motion, so every popup opens the same way.
   popup: {
-    backgroundColor: colors.raised,
-    // ui-sdk's runtime layer resets the browser's `[popover]` box for popover and dialog content, not a menu's.
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     maxHeight: "var(--available-height)",
     maxWidth: "var(--available-width)",
     // Wide enough for a label beside its value.
     minWidth: `max(var(--anchor-width), ${sizes.menuLg})`,
-    opacity: { default: 1, [offstage]: 0 },
     overflowY: "auto",
     paddingBlockEnd: space.xxs,
     paddingBlockStart: space.xxs,
     paddingInlineEnd: space.xxs,
     paddingInlineStart: space.xxs,
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   popupSm: {
     minWidth: `max(var(--anchor-width), ${sizes.menu})`,
-  },
-  submenu: {
-    transform: "none",
-    transitionDuration: { default: durations.popoverExit, [instant]: "0s" },
-    transitionProperty: "opacity",
   },
   // Select's item, so a menu and a select read as one family.
   item: {
@@ -301,19 +269,25 @@ const sizeStyles = {
   >
 >;
 
-const SkipMotion = createContext(false);
+const [MenuSkipMotion, useMenuSkipMotion] = createSkipMotion();
 const Size = createContext<DropdownMenuSize>("default");
 
 function useSizeStyles() {
   return sizeStyles[use(Size)];
 }
 
-function DropdownMenu({ onOpenChange, ...props }: MenuProps) {
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function DropdownMenu({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: MenuProps) {
   return (
-    <SkipMotion value={skip}>
-      <Menu onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <MenuSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <Menu {...handlers} {...props} />}
+    </MenuSkipMotion>
   );
 }
 
@@ -321,7 +295,7 @@ function DropdownMenuTrigger<Payload = unknown>({
   sx,
   ...props
 }: DropdownMenuTriggerProps<Payload>) {
-  return <MenuTrigger {...props} {...stylex.props(sx)} />;
+  return <MenuTrigger {...withStyles(props, stylex.props(sx))} />;
 }
 
 function Popup<Payload>({
@@ -330,7 +304,7 @@ function Popup<Payload>({
   sx,
   ...props
 }: DropdownMenuContentProps<Payload> & { nested?: boolean }) {
-  const skip = use(SkipMotion);
+  const skip = useMenuSkipMotion();
   // A submenu takes its parent's size unless it sets its own.
   const size = ownSize ?? use(Size);
   const Part = nested ? MenuSubContent : MenuContent;
@@ -339,12 +313,20 @@ function Popup<Payload>({
       <Part<Payload>
         data-size={size}
         data-skip-motion={skip || undefined}
-        {...props}
-        {...stylex.props(
-          [popupReset.base, styles.popup],
-          sizeStyles[size].popup,
-          nested && styles.submenu,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(
+            [
+              popupReset.base,
+              popupReset.borderless,
+              popupSurface.base,
+              styles.popup,
+            ],
+            sizeStyles[size].popup,
+            popupMotion.popover,
+            nested && popupMotion.submenu,
+            sx
+          )
         )}
       />
     </Size>
@@ -371,64 +353,76 @@ function DropdownMenuGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuGroup>>) {
-  return <MenuGroup {...props} {...stylex.props(sx)} />;
+  return <MenuGroup {...withStyles(props, stylex.props(sx))} />;
 }
 
 function DropdownMenuLabel({
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuGroupLabel>> & Inset) {
   return (
     <MenuGroupLabel
-      data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.label],
-        useSizeStyles().label,
-        sx
+      data-inset={isInset || undefined}
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.label],
+          useSizeStyles().label,
+          sx
+        )
       )}
     />
   );
 }
 
 function DropdownMenuItem({
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuItem>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuItem
-      data-inset={isInset}
-      {...props}
-      {...stylex.props([size.text, styles.item], size.item, sx)}
+      data-inset={isInset || undefined}
+      {...withStyles(
+        props,
+        stylex.props([size.text, styles.item], size.item, sx)
+      )}
     />
   );
 }
 
-function DropdownMenuSub({ onOpenChange, ...props }: MenuSubProps) {
-  const inherited = use(SkipMotion);
-  const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
+function DropdownMenuSub({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: MenuSubProps) {
   return (
-    <SkipMotion value={inherited || skip}>
-      <MenuSub onOpenChange={handleOpenChange} {...props} />
-    </SkipMotion>
+    <MenuSkipMotion
+      inherit
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <MenuSub {...handlers} {...props} />}
+    </MenuSkipMotion>
   );
 }
 
 function DropdownMenuSubTrigger({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuSubTrigger>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuSubTrigger
-      data-inset={isInset}
-      {...props}
-      {...stylex.props([size.text, styles.item], size.item, sx)}
+      data-inset={isInset || undefined}
+      {...withStyles(
+        props,
+        stylex.props([size.text, styles.item], size.item, sx)
+      )}
     >
       {children}
       <MenuItemIcon mirror {...stylex.props(styles.chevron)}>
@@ -459,21 +453,23 @@ function Indicator() {
 
 function DropdownMenuCheckboxItem({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuCheckboxItem>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuCheckboxItem
-      data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [size.text, styles.item],
-        size.item,
-        styles.checkable,
-        size.checkable,
-        sx
+      data-inset={isInset || undefined}
+      {...withStyles(
+        props,
+        stylex.props(
+          [size.text, styles.item],
+          size.item,
+          styles.checkable,
+          size.checkable,
+          sx
+        )
       )}
     >
       {children}
@@ -486,26 +482,28 @@ function DropdownMenuRadioGroup<T extends string = string>({
   sx,
   ...props
 }: Styled<ComponentProps<typeof MenuRadioGroup<T>>>) {
-  return <MenuRadioGroup<T> {...props} {...stylex.props(sx)} />;
+  return <MenuRadioGroup<T> {...withStyles(props, stylex.props(sx))} />;
 }
 
 function DropdownMenuRadioItem({
   children,
-  inset: isInset,
+  inset: isInset = false,
   sx,
   ...props
 }: Styled<WithChildren<ComponentProps<typeof MenuRadioItem>>> & Inset) {
   const size = useSizeStyles();
   return (
     <MenuRadioItem
-      data-inset={isInset}
-      {...props}
-      {...stylex.props(
-        [size.text, styles.item],
-        size.item,
-        styles.checkable,
-        size.checkable,
-        sx
+      data-inset={isInset || undefined}
+      {...withStyles(
+        props,
+        stylex.props(
+          [size.text, styles.item],
+          size.item,
+          styles.checkable,
+          size.checkable,
+          sx
+        )
       )}
     >
       {children}
@@ -520,8 +518,10 @@ function DropdownMenuSeparator({
 }: Styled<ComponentProps<typeof MenuSeparator>>) {
   return (
     <MenuSeparator
-      {...props}
-      {...stylex.props(styles.separator, useSizeStyles().separator, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.separator, useSizeStyles().separator, sx)
+      )}
     />
   );
 }

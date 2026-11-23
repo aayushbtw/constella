@@ -67,6 +67,19 @@ function tick(item: HTMLElement) {
   return item.querySelector<HTMLElement>("[data-slot='menu-item-indicator']");
 }
 
+// A skipped close finishes in the same task under jsdom, so the attribute is gone before a waitFor looks.
+function watchSkipMotion(element: HTMLElement) {
+  let added = false;
+  const observer = new MutationObserver((records) => {
+    added ||= records.some((record) => record.oldValue === null);
+  });
+  observer.observe(element, {
+    attributeFilter: ["data-skip-motion"],
+    attributeOldValue: true,
+  });
+  return () => added;
+}
+
 test("the trigger opens a sized menu", async () => {
   render(<Account />);
   const menu = await open();
@@ -80,13 +93,14 @@ test("a pointer pick runs onSelect and closes the menu without motion", async ()
   const menu = await open();
   expect(Object.hasOwn(menu.dataset, "skipMotion")).toBe(false);
 
+  const skipped = watchSkipMotion(menu);
   fireEvent.click(screen.getByRole("menuitem", { name: "Billing" }));
 
   expect(onBilling).toHaveBeenCalledOnce();
   await waitFor(() => {
     expect(Object.hasOwn(menu.dataset, "closed")).toBe(true);
   });
-  expect(Object.hasOwn(menu.dataset, "skipMotion")).toBe(true);
+  expect(skipped()).toBe(true);
 });
 
 test("checkbox and radio items toggle, keep the menu open and keep their tick mounted", async () => {
@@ -207,6 +221,22 @@ test("a destructive item carries data-destructive", async () => {
   const item = await screen.findByRole("menuitem", { name: "Delete" });
   expect(Object.hasOwn(item.dataset, "destructive")).toBe(true);
   expect(Object.hasOwn(item.dataset, "color")).toBe(false);
+});
+
+test("only an inset item carries data-inset", async () => {
+  render(
+    <DropdownMenu defaultOpen>
+      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem inset>Inset</DropdownMenuItem>
+        <DropdownMenuItem inset={false}>Flush</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+  const insetItem = await screen.findByRole("menuitem", { name: "Inset" });
+  const flush = screen.getByRole("menuitem", { name: "Flush" });
+  expect(Object.hasOwn(insetItem.dataset, "inset")).toBe(true);
+  expect(Object.hasOwn(flush.dataset, "inset")).toBe(false);
 });
 
 test("an agent finds the menu by its trigger, names every control, and presses an item", async () => {

@@ -20,6 +20,7 @@ import {
   ComboboxInput as ComboboxInputPrimitive,
   ComboboxItemIndicator as ComboboxItemIndicatorPrimitive,
   ComboboxItem as ComboboxItemPrimitive,
+  ComboboxItemText as ComboboxItemTextPrimitive,
   ComboboxLabel as ComboboxLabelPrimitive,
   ComboboxList as ComboboxListPrimitive,
   Combobox as ComboboxPrimitive,
@@ -37,27 +38,24 @@ import {
   InputGroupButton,
   inputGroupInputStyles,
 } from "@/components/primitives/input-group";
-import { useSkipMotion } from "@/lib/constella/motion";
+import { createSkipMotion, popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
   popupReset,
+  popupSurface,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
-  durations,
-  easings,
   fontSizes,
   fontWeights,
   inputVars,
   lineHeights,
-  media,
-  motion,
   offsets,
   opacities,
   radii,
-  shadows,
   sizes,
   space,
   strokes,
@@ -106,12 +104,6 @@ type ComboboxChipProps<T = string> = Omit<
   showRemove?: boolean;
 };
 
-// An instant open paints its first frame onstage, since ui-sdk holds `data-starting-style` for one.
-const offstage =
-  ":is([data-starting-style], [data-ending-style]):not([data-skip-motion])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-
 // Read from the chips box, which carries the size as `data-size`.
 const inBox = (size: ComboboxSize) =>
   `:where([data-slot='input-group'][data-size='${size}'] *)`;
@@ -155,18 +147,8 @@ const sideInset = {
 const unscaled = (length: string) => `calc(${length} / ${inputVars.scale})`;
 
 const styles = stylex.create({
-  // ui-sdk's combobox leaves the browser's `[popover]` border, padding and margin.
+  // ui-sdk's combobox leaves the browser's `[popover]` padding and margin.
   content: {
-    backgroundColor: colors.raised,
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     display: "flex",
     flexDirection: "column",
     marginBlock: 0,
@@ -179,21 +161,6 @@ const styles = stylex.create({
     paddingInlineEnd: 0,
     paddingInlineStart: 0,
     width: "var(--anchor-width)",
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
   },
   list: {
     minHeight: 0,
@@ -242,6 +209,14 @@ const styles = stylex.create({
     minHeight: sizes.controlLg,
     paddingInlineEnd: `calc(${sizes.icon} + ${space.md})`,
     paddingInlineStart: space.md,
+  },
+  itemText: {
+    color: { default: null, ":is([data-matched])": colors.textSecondary },
+  },
+  match: {
+    backgroundColor: "transparent",
+    color: colors.textPrimary,
+    fontWeight: fontWeights.medium,
   },
   indicator: {
     alignItems: "center",
@@ -405,25 +380,26 @@ interface Anchor {
   setAnchor: (element: HTMLDivElement | null) => void;
 }
 
-const SkipMotion = createContext(false);
+const [ComboboxSkipMotion, useComboboxSkipMotion] = createSkipMotion();
 const Size = createContext<ComboboxSize>("default");
 const AnchorContext = createContext<Anchor | null>(null);
 
 function Combobox<T = string, Multiple extends boolean | undefined = false>(
   props: ComboboxProps<T, Multiple>
 ) {
-  const [skip, handleOpenChange] = useSkipMotion(props.onOpenChange);
   const [anchor, setAnchor] = useState<HTMLDivElement | null>(null);
   const anchorContext = useMemo(() => ({ anchor, setAnchor }), [anchor]);
   return (
-    <SkipMotion value={skip}>
-      <AnchorContext value={anchorContext}>
-        <ComboboxPrimitive<T, Multiple>
-          {...props}
-          onOpenChange={handleOpenChange}
-        />
-      </AnchorContext>
-    </SkipMotion>
+    <ComboboxSkipMotion
+      onOpenChange={props.onOpenChange}
+      onOpenChangeComplete={props.onOpenChangeComplete}
+    >
+      {(handlers) => (
+        <AnchorContext value={anchorContext}>
+          <ComboboxPrimitive<T, Multiple> {...props} {...handlers} />
+        </AnchorContext>
+      )}
+    </ComboboxSkipMotion>
   );
 }
 
@@ -431,7 +407,7 @@ function ComboboxLabel({
   sx,
   ...props
 }: Styled<ComponentProps<typeof ComboboxLabelPrimitive>>) {
-  return <ComboboxLabelPrimitive {...props} {...stylex.props(sx)} />;
+  return <ComboboxLabelPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function ComboboxTrigger({
@@ -443,7 +419,7 @@ function ComboboxTrigger({
   children?: ReactNode;
 }) {
   return (
-    <ComboboxTriggerPrimitive {...props} {...stylex.props(sx)}>
+    <ComboboxTriggerPrimitive {...withStyles(props, stylex.props(sx))}>
       {children}
       <Glyph icon={ArrowDown01Icon} />
     </ComboboxTriggerPrimitive>
@@ -481,7 +457,9 @@ function ComboboxInput({
   return (
     <InputGroup ref={use(AnchorContext)?.setAnchor} size={size} sx={sx}>
       <span data-slot="input-group-input" {...stylex.props(input.slot)}>
-        <ComboboxInputPrimitive {...props} {...stylex.props(input.input)} />
+        <ComboboxInputPrimitive
+          {...withStyles(props, stylex.props(input.input))}
+        />
       </span>
       <InputGroupAddon align="inline-end">
         {showTrigger !== false && (
@@ -515,7 +493,6 @@ function ComboboxContent({
   sx,
   ...props
 }: ComboboxContentProps) {
-  const skip = use(SkipMotion);
   const groupBox = use(AnchorContext)?.anchor;
   return (
     <Size value={size}>
@@ -524,11 +501,20 @@ function ComboboxContent({
         alignOffset={alignOffset}
         anchor={anchor ?? groupBox}
         data-size={size}
-        data-skip-motion={skip || undefined}
+        data-skip-motion={useComboboxSkipMotion() || undefined}
         side={side}
         sideOffset={sideOffset}
-        {...props}
-        {...stylex.props(popupReset.base, styles.content, styles.motion, sx)}
+        {...withStyles(
+          props,
+          stylex.props(
+            popupReset.base,
+            popupReset.borderless,
+            popupSurface.base,
+            styles.content,
+            popupMotion.popover,
+            sx
+          )
+        )}
       />
     </Size>
   );
@@ -539,7 +525,9 @@ function ComboboxList({
   ...props
 }: Styled<ComponentProps<typeof ComboboxListPrimitive>>) {
   return (
-    <ComboboxListPrimitive {...props} {...stylex.props(styles.list, sx)} />
+    <ComboboxListPrimitive
+      {...withStyles(props, stylex.props(styles.list, sx))}
+    />
   );
 }
 
@@ -554,8 +542,10 @@ function ComboboxItem<T = string>({
   const sized = contentSizeStyles[size];
   return (
     <ComboboxItemPrimitive<T>
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     >
       {children}
       <ComboboxItemIndicatorPrimitive
@@ -567,6 +557,33 @@ function ComboboxItem<T = string>({
   );
 }
 
+/** Its item's label, with the typed text in it marked. The label is the item's `label`, or its `value`. */
+function ComboboxItemText({
+  sx,
+  ...props
+}: Omit<Styled<ComponentProps<typeof ComboboxItemTextPrimitive>>, "children">) {
+  return (
+    <ComboboxItemTextPrimitive
+      {...withStyles(props, stylex.props(styles.itemText, sx))}
+    >
+      {({ segments }) => {
+        let start = 0;
+        return segments.map((segment) => {
+          const key = start;
+          start += segment.text.length;
+          return segment.match ? (
+            <mark key={key} {...stylex.props(styles.match)}>
+              {segment.text}
+            </mark>
+          ) : (
+            segment.text
+          );
+        });
+      }}
+    </ComboboxItemTextPrimitive>
+  );
+}
+
 /** A row that offers the typed text as a new item. Shown while no item's label matches it exactly. */
 function ComboboxCreate({
   sx,
@@ -575,8 +592,10 @@ function ComboboxCreate({
   const sized = contentSizeStyles[use(Size)];
   return (
     <ComboboxCreatePrimitive
-      {...props}
-      {...stylex.props([sized.text, styles.item], sized.item, sx)}
+      {...withStyles(
+        props,
+        stylex.props([sized.text, styles.item], sized.item, sx)
+      )}
     />
   );
 }
@@ -585,7 +604,7 @@ function ComboboxGroup({
   sx,
   ...props
 }: Styled<ComponentProps<typeof ComboboxGroupPrimitive>>) {
-  return <ComboboxGroupPrimitive {...props} {...stylex.props(sx)} />;
+  return <ComboboxGroupPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function ComboboxGroupLabel({
@@ -594,11 +613,13 @@ function ComboboxGroupLabel({
 }: Styled<ComponentProps<typeof ComboboxGroupLabelPrimitive>>) {
   return (
     <ComboboxGroupLabelPrimitive
-      {...props}
-      {...stylex.props(
-        [typeStyles.captionLg, styles.groupLabel],
-        contentSizeStyles[use(Size)].groupLabel,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.captionLg, styles.groupLabel],
+          contentSizeStyles[use(Size)].groupLabel,
+          sx
+        )
       )}
     />
   );
@@ -610,8 +631,10 @@ function ComboboxEmpty({
 }: Styled<ComponentProps<typeof ComboboxEmptyPrimitive>>) {
   return (
     <ComboboxEmptyPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textMd, styles.empty], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textMd, styles.empty], sx)
+      )}
     />
   );
 }
@@ -622,11 +645,13 @@ function ComboboxSeparator({
 }: Styled<ComponentProps<typeof ComboboxSeparatorPrimitive>>) {
   return (
     <ComboboxSeparatorPrimitive
-      {...props}
-      {...stylex.props(
-        styles.separator,
-        contentSizeStyles[use(Size)].separator,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.separator,
+          contentSizeStyles[use(Size)].separator,
+          sx
+        )
       )}
     />
   );
@@ -640,7 +665,9 @@ function ComboboxChips({ size = "default", sx, ...props }: ComboboxChipsProps) {
       size={size}
       sx={[styles.chipsBox, sx]}
     >
-      <ComboboxChipsPrimitive {...props} {...stylex.props(styles.chips)} />
+      <ComboboxChipsPrimitive
+        {...withStyles(props, stylex.props(styles.chips))}
+      />
     </InputGroup>
   );
 }
@@ -653,7 +680,9 @@ function ComboboxChip<T = string>({
   ...props
 }: ComboboxChipProps<T>) {
   return (
-    <ComboboxChipPrimitive<T> {...props} {...stylex.props(styles.chip, sx)}>
+    <ComboboxChipPrimitive<T>
+      {...withStyles(props, stylex.props(styles.chip, sx))}
+    >
       {({ label }) => (
         <>
           {children ?? label}
@@ -683,8 +712,7 @@ function ComboboxChipsInput({ sx, ...props }: InputPrimitiveProps) {
   return (
     <span data-slot="input-group-input" {...stylex.props(input.slot)}>
       <ComboboxInputPrimitive
-        {...props}
-        {...stylex.props(input.input, styles.chipsInput, sx)}
+        {...withStyles(props, stylex.props(input.input, styles.chipsInput, sx))}
       />
     </span>
   );
@@ -703,6 +731,7 @@ export {
   ComboboxGroupLabel,
   ComboboxInput,
   ComboboxItem,
+  ComboboxItemText,
   ComboboxLabel,
   ComboboxList,
   ComboboxSeparator,

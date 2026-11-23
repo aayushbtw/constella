@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { checkPattern } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import type { ReactNode } from "react";
 import { renderToString } from "react-dom/server";
@@ -308,4 +309,9 @@ test("the thumb and slider carry their slots, and data-dragging while pressed", 
     fireEvent.pointerUp(control, pointer);
   });
   expect(Object.hasOwn(thumb.dataset, "dragging")).toBe(false);
+});
+
+test("a slider follows the WAI-ARIA slider pattern", async () => {
+  render(<Volume />);
+  await checkPattern(screen.getByRole("slider", { name: "Volume" }), "slider");
 });

@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import {
   SliderControl as SliderControlPrimitive,
@@ -12,7 +10,7 @@ import {
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -130,7 +128,9 @@ function Slider<Value extends number | number[]>({
   sx,
   ...props
 }: Styled<ComponentProps<typeof SliderPrimitive<Value>>>) {
-  return <SliderPrimitive {...props} {...stylex.props(styles.slider, sx)} />;
+  return (
+    <SliderPrimitive {...withStyles(props, stylex.props(styles.slider, sx))} />
+  );
 }
 
 function SliderValue({
@@ -139,8 +139,10 @@ function SliderValue({
 }: Styled<ComponentProps<typeof SliderValuePrimitive>>) {
   return (
     <SliderValuePrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.value], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.value], sx)
+      )}
     />
   );
 }
@@ -152,7 +154,9 @@ function SliderControl({
   ...props
 }: Styled<ComponentProps<typeof SliderControlPrimitive>>) {
   return (
-    <SliderControlPrimitive {...props} {...stylex.props(styles.control, sx)}>
+    <SliderControlPrimitive
+      {...withStyles(props, stylex.props(styles.control, sx))}
+    >
       {children ?? (
         <SliderTrack>
           <SliderIndicator />
@@ -168,7 +172,9 @@ function SliderTrack({
   ...props
 }: Styled<ComponentProps<typeof SliderTrackPrimitive>>) {
   return (
-    <SliderTrackPrimitive {...props} {...stylex.props(styles.track, sx)} />
+    <SliderTrackPrimitive
+      {...withStyles(props, stylex.props(styles.track, sx))}
+    />
   );
 }
 
@@ -178,8 +184,7 @@ function SliderIndicator({
 }: Styled<ComponentProps<typeof SliderIndicatorPrimitive>>) {
   return (
     <SliderIndicatorPrimitive
-      {...props}
-      {...stylex.props(styles.indicator, sx)}
+      {...withStyles(props, stylex.props(styles.indicator, sx))}
     />
   );
 }
@@ -189,7 +194,9 @@ function SliderThumb({
   ...props
 }: Styled<ComponentProps<typeof SliderThumbPrimitive>>) {
   return (
-    <SliderThumbPrimitive {...props} {...stylex.props(styles.thumb, sx)} />
+    <SliderThumbPrimitive
+      {...withStyles(props, stylex.props(styles.thumb, sx))}
+    />
   );
 }
 

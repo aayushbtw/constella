@@ -1,5 +1,3 @@
-"use client";
-
 import { MinusSignIcon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
@@ -11,6 +9,7 @@ import {
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -156,8 +155,10 @@ function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
   return (
     <CheckboxPrimitive
       data-size={size}
-      {...props}
-      {...stylex.props(styles.checkbox, sizeStyles[size], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.checkbox, sizeStyles[size], sx)
+      )}
     >
       <CheckboxIndicator {...stylex.props(styles.indicator)}>
         <HugeiconsIcon
@@ -188,8 +189,7 @@ function CheckboxGroup<Value extends string = string>({
 > & { sx?: Sx }) {
   return (
     <CheckboxGroupPrimitive<Value>
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }

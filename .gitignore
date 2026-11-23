@@ -4,6 +4,7 @@ node_modules
 dist
 .tanstack
 .cloudflare
+.agent-build
 worker-configuration.d.ts
 
 .env

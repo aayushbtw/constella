@@ -1,5 +1,3 @@
-"use client";
-
 import * as stylex from "@stylexjs/stylex";
 import {
   Switch as SwitchPrimitive,
@@ -8,6 +6,7 @@ import {
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -153,8 +152,7 @@ function Switch({ size = "default", sx, ...props }: SwitchProps) {
   return (
     <SwitchPrimitive
       data-size={size}
-      {...props}
-      {...stylex.props(styles.switch, root, sx)}
+      {...withStyles(props, stylex.props(styles.switch, root, sx))}
     >
       <SwitchThumbPrimitive {...stylex.props(styles.thumb, thumb)} />
     </SwitchPrimitive>

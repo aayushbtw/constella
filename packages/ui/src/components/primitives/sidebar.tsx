@@ -44,7 +44,7 @@ import {
 } from "@/components/primitives/tooltip";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -205,12 +205,12 @@ const triggerHovered = ":is([data-slot='sidebar-trigger']:hover *)";
 const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 
 // The whole row answers the pointer, so reaching for its action keeps it lit, and so
-// does an open menu from it.
-const item = "[data-slot='sidebar-menu-item']";
-// Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
+// does an open menu from it. Own attributes, not `data-slot`, since a ui-sdk trigger
+// rendering the row, its button or its action writes its slot over theirs.
+const item = "[data-sidebar-menu-item]";
 const action = "[data-sidebar-menu-action]";
 // Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content']):hover)`;
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content'], [data-slot='collapsible-panel']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
 // A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
@@ -943,8 +943,7 @@ function SidebarProvider({
         <div
           data-instant={instant || undefined}
           data-slot="sidebar-wrapper"
-          {...props}
-          {...stylex.props(styles.wrapper, sx)}
+          {...withStyles(props, stylex.props(styles.wrapper, sx))}
         />
       </KeyboardToggleContext>
     </SidebarContext>
@@ -1000,8 +999,7 @@ function Sidebar({
       <div
         data-section-change={sectionChange}
         data-slot="sidebar"
-        {...props}
-        {...stylex.props(styles.static, sx)}
+        {...withStyles(props, stylex.props(styles.static, sx))}
       >
         <TriggerNameContext value={triggerName}>{children}</TriggerNameContext>
       </div>
@@ -1041,12 +1039,14 @@ function Sidebar({
       data-side={side}
       data-slot="sidebar"
       ref={desktop}
-      {...props}
-      {...stylex.props(
-        styles.sidebar,
-        side === "right" && styles.sidebarRight,
-        isCollapsed && collapsible === "offcanvas" && styles.offcanvas,
-        isCollapsed && collapsible === "icon" && styles.icon
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.sidebar,
+          side === "right" && styles.sidebarRight,
+          isCollapsed && collapsible === "offcanvas" && styles.offcanvas,
+          isCollapsed && collapsible === "icon" && styles.icon
+        )
       )}
     >
       <div
@@ -1082,7 +1082,8 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
+  const { isMobile, open, openMobile, setOpenMobile, toggleSidebar } =
+    useSidebar();
   const inSheet = use(InSheetContext);
   const name = use(TriggerNameContext);
   const triggerSx = [name !== null && styles.triggerName(name), sx];
@@ -1110,18 +1111,16 @@ function SidebarTrigger({
     );
   }
 
-  let label = open ? "Collapse sidebar" : "Expand sidebar";
-  if (isMobile) {
-    label = "Open sidebar";
-  }
+  const label = ariaLabel ?? "Toggle sidebar";
   return (
     <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
-            aria-expanded={isMobile ? undefined : open}
+            aria-expanded={isMobile ? openMobile : open}
+            aria-haspopup={isMobile ? "dialog" : undefined}
             aria-keyshortcuts={hint.ariaKeyshortcuts}
-            aria-label={ariaLabel ?? label}
+            aria-label={label}
             data-slot="sidebar-trigger"
             onClick={(event, details) => {
               const result = onClick?.(event, details);
@@ -1143,7 +1142,7 @@ function SidebarTrigger({
         }
       />
       <TooltipContent side={rail ? tooltipSide : "bottom"}>
-        {ariaLabel ?? label}
+        {label}
         {kbd}
       </TooltipContent>
     </Tooltip>
@@ -1227,12 +1226,11 @@ function SidebarRail({
   const { toggleSidebar } = useSidebar();
   return (
     <SidebarButton
-      aria-label="Toggle Sidebar"
+      aria-label="Sidebar rail"
       onClick={toggleSidebar}
       tabIndex={-1}
-      title="Toggle Sidebar"
-      {...props}
-      {...stylex.props(styles.rail, sx)}
+      title="Toggle sidebar"
+      {...withStyles(props, stylex.props(styles.rail, sx))}
       data-slot={slot}
     />
   );
@@ -1242,8 +1240,7 @@ function SidebarInset({ sx, ...props }: Styled<ComponentProps<"main">>) {
   return (
     <main
       data-slot="sidebar-inset"
-      {...props}
-      {...stylex.props(styles.main, sx)}
+      {...withStyles(props, stylex.props(styles.main, sx))}
     />
   );
 }
@@ -1277,8 +1274,10 @@ function SidebarHeader({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-header"
-      {...props}
-      {...stylex.props(styles.header, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.header, swap && styles.swap, sx)
+      )}
     />
   );
 }
@@ -1287,8 +1286,7 @@ function SidebarHeaderActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-header-actions"
-      {...props}
-      {...stylex.props(styles.headerActions, sx)}
+      {...withStyles(props, stylex.props(styles.headerActions, sx))}
     />
   );
 }
@@ -1297,8 +1295,10 @@ function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-footer"
-      {...props}
-      {...stylex.props(styles.footer, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.footer, swap && styles.swap, sx)
+      )}
     />
   );
 }
@@ -1311,8 +1311,10 @@ function SidebarContent({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-content"
-      {...props}
-      {...stylex.props(scrollFade.y, styles.content, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(scrollFade.y, styles.content, swap && styles.swap, sx)
+      )}
     />
   );
 }
@@ -1321,8 +1323,7 @@ function SidebarGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
@@ -1337,8 +1338,10 @@ function SidebarGroupLabel({ render, sx, ...props }: Styled<PartProps<"div">>) {
         "data-truncated": truncated ? "" : undefined,
         ref,
       },
-      props,
-      stylex.props([typeStyles.textSm, styles.groupLabel], sx)
+      withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.groupLabel], sx)
+      )
     ),
     render
   );
@@ -1352,8 +1355,7 @@ function SidebarGroupAction({
   return (
     <SidebarButton
       {...mergeProps(
-        props,
-        stylex.props(styles.action, styles.groupAction, sx)
+        withStyles(props, stylex.props(styles.action, styles.groupAction, sx))
       )}
       data-slot={slot}
     />
@@ -1364,8 +1366,10 @@ function SidebarGroupContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-group-content"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.groupContent], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.groupContent], sx)
+      )}
     />
   );
 }
@@ -1374,8 +1378,7 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
   return (
     <ul
       data-slot="sidebar-menu"
-      {...props}
-      {...stylex.props(styles.menu, sx)}
+      {...withStyles(props, stylex.props(styles.menu, sx))}
     />
   );
 }
@@ -1383,9 +1386,9 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
 function SidebarMenuItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
+      data-sidebar-menu-item=""
       data-slot="sidebar-menu-item"
-      {...props}
-      {...stylex.props(styles.menuItem, sx)}
+      {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
   );
 }
@@ -1424,16 +1427,19 @@ function SidebarMenuButton({
     {
       "aria-current": isActive ? "page" : undefined,
       "data-active": isActive ? "" : undefined,
+      "data-sidebar-menu-button": "",
       "data-size": size,
       "data-variant": variant,
     },
-    props,
-    stylex.props(
-      [typeStyles.textMd, styles.button],
-      variant === "outline" && styles.buttonOutline,
-      buttonSizeStyles[size],
-      withEnd && styles.buttonWithEnd,
-      sx
+    withStyles(
+      props,
+      stylex.props(
+        [typeStyles.textMd, styles.button],
+        variant === "outline" && styles.buttonOutline,
+        buttonSizeStyles[size],
+        withEnd && styles.buttonWithEnd,
+        sx
+      )
     )
   );
 
@@ -1447,15 +1453,10 @@ function SidebarMenuButton({
 
   return (
     <LabelContext value={setTruncated}>
-      <Tooltip disabled={!(rail || truncated)}>
+      <Tooltip disabled={!(rail || truncated)} type="label">
         <TooltipTrigger
-          // The row's label stays in the accessibility tree, even in the rail, so the tooltip only repeats it; the row sets `type` itself.
-          render={({
-            "aria-describedby": _describedBy,
-            "aria-labelledby": _labelledBy,
-            type: _type,
-            ...trigger
-          }) => (
+          // A link row must not get `type`, and a button row gets it from SidebarButton.
+          render={({ type: _type, ...trigger }) => (
             <SidebarButton
               {...mergeProps(trigger, own)}
               data-slot={slot}
@@ -1480,8 +1481,7 @@ function SidebarMenuLabel({ sx, ...props }: Styled<ComponentProps<"span">>) {
       data-slot="sidebar-menu-label"
       data-truncated={truncated || undefined}
       ref={ref}
-      {...props}
-      {...stylex.props(styles.label, sx)}
+      {...withStyles(props, stylex.props(styles.label, sx))}
     />
   );
 }
@@ -1492,8 +1492,7 @@ function SidebarMenuKbd({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="sidebar-menu-kbd"
-      {...props}
-      {...stylex.props(styles.kbd, sx)}
+      {...withStyles(props, stylex.props(styles.kbd, sx))}
     />
   );
 }
@@ -1511,12 +1510,14 @@ function SidebarMenuAction({
           "data-show-on-hover": showOnHover ? "" : undefined,
           "data-sidebar-menu-action": "",
         },
-        props,
-        stylex.props(
-          styles.action,
-          styles.menuAction,
-          showOnHover && styles.onHover,
-          sx
+        withStyles(
+          props,
+          stylex.props(
+            styles.action,
+            styles.menuAction,
+            showOnHover && styles.onHover,
+            sx
+          )
         )
       )}
       data-slot={slot}
@@ -1528,8 +1529,10 @@ function SidebarMenuBadge({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-menu-badge"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.badge], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.badge], sx)
+      )}
     />
   );
 }
@@ -1543,8 +1546,7 @@ function SidebarMenuSkeleton({
   return (
     <div
       data-slot="sidebar-menu-skeleton"
-      {...props}
-      {...stylex.props(styles.skeleton, sx)}
+      {...withStyles(props, stylex.props(styles.skeleton, sx))}
     >
       {showIcon && <Skeleton sx={styles.skeletonIcon} />}
       <Skeleton sx={styles.skeletonText} />
@@ -1557,8 +1559,7 @@ function SidebarMenuSub({ sx, ...props }: Styled<ComponentProps<"ul">>) {
     <ul
       data-slot="sidebar-menu-sub"
       inert={use(RailContext).collapsing}
-      {...props}
-      {...stylex.props(styles.sub, sx)}
+      {...withStyles(props, stylex.props(styles.sub, sx))}
     />
   );
 }
@@ -1567,8 +1568,7 @@ function SidebarMenuSubItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
       data-slot="sidebar-menu-sub-item"
-      {...props}
-      {...stylex.props(styles.menuItem, sx)}
+      {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
   );
 }
@@ -1588,8 +1588,10 @@ function SidebarMenuSubButton({
           "aria-current": isActive ? "page" : undefined,
           "data-active": isActive ? "" : undefined,
         },
-        props,
-        stylex.props([typeStyles.textMd, styles.subButton], sx)
+        withStyles(
+          props,
+          stylex.props([typeStyles.textMd, styles.subButton], sx)
+        )
       )}
       data-slot={slot}
     />

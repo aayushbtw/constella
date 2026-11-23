@@ -12,6 +12,7 @@ import type {
   ToggleVariant,
 } from "@/components/primitives/toggle";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { joins, space } from "@/lib/constella/tokens.stylex";
 
 const toggleGroupSpacings = [0, 1, 2] as const;
@@ -81,8 +82,10 @@ function ToggleGroup<Value extends string = string>({
         data-size={size}
         data-spacing={spacing}
         data-variant={variant}
-        {...props}
-        {...stylex.props(styles.group, spacingStyles[spacing], sx)}
+        {...withStyles(
+          props,
+          stylex.props(styles.group, spacingStyles[spacing], sx)
+        )}
       />
     </ToggleGroupContext>
   );

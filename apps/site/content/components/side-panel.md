@@ -6,7 +6,7 @@ description: A panel floating beside the page for details, a form or anything el
 <!-- ::demo name="side-panel" -->
 
 ```tsx
-const panel = createSidePanelController<ActivityEvent>();
+const [panel] = useState(() => createSidePanelController<ActivityEvent>());
 
 <div {...stylex.props(styles.row)}>
   <div>
@@ -125,4 +125,4 @@ Use `Panel` for a panel that's always on the page, such as a project's files bes
 | `PanelTitle` | The panel's heading, an `h2` |
 | `PanelBody` | Scrolls on its own |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/react/components/dialog).
+Every part takes `sx`. When an `Item` renders the trigger, put `sx` on the `Item`, the part that draws. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/react/components/dialog).

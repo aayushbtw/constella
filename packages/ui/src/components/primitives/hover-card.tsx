@@ -22,18 +22,12 @@ import type { ComponentProps } from "react";
 import { flushSync } from "react-dom";
 
 import { popoverStyles } from "@/components/primitives/popover";
-import { useSkipMotion } from "@/lib/constella/motion";
+import { popupMotion, useSkipMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { popupSurface, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
-  colors,
   durations,
-  easings,
-  media,
-  motion,
   offsets,
-  radii,
-  shadows,
   sizes,
   space,
 } from "@/lib/constella/tokens.stylex";
@@ -56,44 +50,12 @@ type HoverCardContentProps<Payload = unknown> = Styled<
   ComponentProps<typeof HoverCardContentPrimitive<Payload>>
 >;
 
-const offstage = ":is([data-starting-style], [data-ending-style])";
-const closing = ":is([data-ending-style]):not([data-skip-motion])";
-const instant = ":is([data-skip-motion])";
-const gliding =
-  ":is([data-moving]):not([data-ending-style], [data-skip-motion])";
-
 const styles = stylex.create({
   surface: {
-    backgroundColor: colors.raised,
-    borderStartStartRadius: radii.lg,
-    borderStartEndRadius: radii.lg,
-    borderEndStartRadius: radii.lg,
-    borderEndEndRadius: radii.lg,
-    boxShadow: shadows.lg,
     maxWidth: "var(--available-width)",
     paddingBlock: space.popup,
     paddingInline: space.popup,
     width: sizes.popover,
-  },
-  motion: {
-    opacity: { default: 1, [offstage]: 0 },
-    transform: { default: "none", [offstage]: `scale(${motion.popoverScale})` },
-    transformOrigin: "var(--transform-origin)",
-    transitionDuration: {
-      default: durations.popover,
-      [closing]: durations.popoverExit,
-      [instant]: "0s",
-      [gliding]: `${durations.popover}, ${durations.popover}, ${durations.move}, ${durations.move}`,
-    },
-    transitionProperty: {
-      default: "opacity, transform",
-      [media.reducedMotion]: "opacity",
-      [gliding]: {
-        default: "opacity, transform, top, left",
-        [media.reducedMotion]: "opacity",
-      },
-    },
-    transitionTimingFunction: easings.out,
   },
 });
 
@@ -112,17 +74,13 @@ function HoverCard({
 }: HoverCardProps) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [moving, setMoving] = useState(false);
-  const [open, setOpen] = useState(props.defaultOpen ?? false);
-  const [warm, setWarm] = useState(false);
-  const isOpen = useRef(props.open ?? open);
+  const isOpen = useRef(props.open ?? props.defaultOpen ?? false);
   const settle = useRef(0);
-  const cool = useRef(0);
   const state = useMemo(() => ({ moving, skip }), [moving, skip]);
 
   useEffect(
     () => () => {
       clearTimeout(settle.current);
-      clearTimeout(cool.current);
     },
     []
   );
@@ -131,23 +89,13 @@ function HoverCard({
     <Motion value={state}>
       <HoverCardPrimitive
         closeDelay={closeDelay}
-        // Drop `warm` and the 0 once ui-sdk's focus path takes over an open card at once, as hover does.
-        delay={(props.open ?? open) || warm ? 0 : delay}
+        delay={delay}
         onOpenChange={(nextOpen, details) => {
           handleOpenChange(nextOpen, details);
           if (details.canceled) {
             return;
           }
           isOpen.current = nextOpen;
-          setOpen(nextOpen);
-          const focusLeft = !nextOpen && details.reason === "focus-out";
-          setWarm(focusLeft);
-          clearTimeout(cool.current);
-          if (focusLeft) {
-            cool.current = window.setTimeout(() => {
-              setWarm(false);
-            }, closeDelay);
-          }
           if (!nextOpen) {
             clearTimeout(settle.current);
             setMoving(false);
@@ -181,7 +129,7 @@ function HoverCardTrigger<Payload = unknown>({
   sx,
   ...props
 }: HoverCardTriggerProps<Payload>) {
-  return <HoverCardTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return <HoverCardTriggerPrimitive {...withStyles(props, stylex.props(sx))} />;
 }
 
 function HoverCardContent<Payload = unknown>({
@@ -195,11 +143,19 @@ function HoverCardContent<Payload = unknown>({
       data-moving={moving || undefined}
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, popoverStyles.popup, styles.surface],
-        styles.motion,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [
+            typeStyles.textSm,
+            popoverStyles.popup,
+            popupSurface.base,
+            styles.surface,
+          ],
+          popupMotion.popover,
+          popupMotion.glide,
+          sx
+        )
       )}
     />
   );

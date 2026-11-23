@@ -74,8 +74,8 @@ StyleX needs a compiler step, and each framework wires it differently. Read the 
 
 | Framework | Compiler | Entry |
 | --- | --- | --- |
-| Next.js 16.0.3+ (Turbopack) | `@stylexjs/babel-plugin` + `@stylexjs/postcss-plugin` | Start `globals.css` with `@import "../lib/constella/base.css";`, end it with `@stylex;` |
-| TanStack Start (Vite) | `@stylexjs/unplugin/vite`, first in `plugins` | Start `src/styles.css` with `@import "./lib/constella/base.css";`; set `cssInjectionTarget`; load `virtual:stylex.css` in dev |
+| Next.js 16.0.3+ (Turbopack) | `@stylexjs/babel-plugin` + `@stylexjs/postcss-plugin` | Start `globals.css` with `@layer ui-sdk;` then `@import "../lib/constella/base.css";`, end it with `@stylex;` |
+| TanStack Start (Vite) | `@stylexjs/unplugin/vite`, first in `plugins` | Start `src/styles.css` with `@layer ui-sdk;` then `@import "./lib/constella/base.css";`; set `cssInjectionTarget`; load `virtual:stylex.css` in dev |
 
 - **Keep the `@/*` alias in step.** StyleX and TypeScript resolve imports separately, so `tsconfig.json`'s `paths` and StyleX's `aliases` must both name `@/*`.
 - **Import `base.css` from the stylesheet the root links**, not from a module. A module's CSS applies after the first layout in dev, and its preflight's margins shift the page.

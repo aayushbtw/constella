@@ -134,7 +134,7 @@ Use `createDropdownMenuController` for one menu that several triggers share, lik
 <!-- ::demo name="dropdown-menu-controller" -->
 
 ```tsx
-const rowMenu = createDropdownMenuController<Doc>();
+const [rowMenu] = useState(() => createDropdownMenuController<Doc>());
 
 <DropdownMenuTrigger controller={rowMenu} payload={doc} render={<Button size="icon" variant="ghost" />}>
   <HugeiconsIcon icon={MoreHorizontalIcon} />
@@ -162,7 +162,7 @@ Use the `size` prop on `DropdownMenuContent` to size its rows. A submenu takes i
 | --------- | ---- | ---- | ---------- | --------- |
 | `sm`      | 28px | 13px | 6px        | 144px     |
 | `default` | 32px | 14px | 12px       | 200px     |
-| `lg`      | 36px | 15px | 16px       | 200px     |
+| `lg`      | 36px | 16px | 16px       | 200px     |
 
 ```tsx
 <DropdownMenuContent size="lg">
@@ -216,4 +216,4 @@ Render an [Avatar](/docs/components/avatar) inside the trigger for an account me
 | `DropdownMenu`, `DropdownMenuTrigger` | `controller`; `payload` on the trigger |
 | `createDropdownMenuController` | A controller shared by `DropdownMenu` and its triggers |
 
-Every part takes `sx`, applied last. For the rest, see [UI SDK Menu](https://ui-sdk.dev/docs/react/components/menu).
+Every part takes `sx`. When the trigger renders a `Button`, put `sx` on the `Button`, the part that draws. For the rest, see [UI SDK Menu](https://ui-sdk.dev/docs/react/components/menu).

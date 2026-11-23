@@ -11,20 +11,18 @@ import {
   AlertDialogTrigger as AlertDialogTriggerPrimitive,
 } from "@ui-sdk/react/alert-dialog";
 import type { AlertDialogProps } from "@ui-sdk/react/alert-dialog";
-import { createContext, use } from "react";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
-import { dialogStyles } from "@/components/primitives/dialog";
-import type { Sx } from "@/lib/constella/styles";
 import {
-  colors,
-  opacities,
-  radii,
-  sizes,
-  space,
-} from "@/lib/constella/tokens.stylex";
+  DialogSkipMotion,
+  dialogStyles,
+  useDialogSkipMotion,
+} from "@/components/primitives/dialog";
+import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
+import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
 
@@ -47,7 +45,6 @@ type AlertDialogButtonProps = Omit<
   Pick<ButtonProps, "color" | "size" | "sx" | "variant">;
 
 const inSmall = ":is([data-slot='alert-dialog-content'][data-size='sm'] *)";
-const refused = ":is([aria-disabled='true']):not([data-pending])";
 
 const styles = stylex.create({
   // A small confirm centers its text over two equal buttons.
@@ -73,10 +70,6 @@ const styles = stylex.create({
     marginBlockEnd: space.xs,
     width: sizes.media,
   },
-  refused: {
-    cursor: { default: null, [refused]: "not-allowed" },
-    opacity: { default: null, [refused]: opacities.disabled },
-  },
 });
 
 const sizeStyles = {
@@ -84,41 +77,50 @@ const sizeStyles = {
   sm: dialogStyles.sm,
 } satisfies Record<AlertDialogSize, stylex.StyleXStyles | null>;
 
-// ui-sdk refuses the other Close parts while one's action runs, but marks only the running one; drop once it marks the refused ones.
-const Pending = createContext(false);
-
-function AlertDialog(props: AlertDialogProps) {
-  return <AlertDialogPrimitive {...props} />;
+function AlertDialog({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: AlertDialogProps) {
+  return (
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <AlertDialogPrimitive {...handlers} {...props} />}
+    </DialogSkipMotion>
+  );
 }
 
 function AlertDialogTrigger({
   sx,
   ...props
 }: Styled<ComponentProps<typeof AlertDialogTriggerPrimitive>>) {
-  return <AlertDialogTriggerPrimitive {...props} {...stylex.props(sx)} />;
+  return (
+    <AlertDialogTriggerPrimitive {...withStyles(props, stylex.props(sx))} />
+  );
 }
 
 function AlertDialogContent<Payload = unknown>({
-  children,
   size = "default",
   sx,
   ...props
 }: AlertDialogContentProps<Payload>) {
+  const skip = useDialogSkipMotion();
   return (
     <>
-      <AlertDialogBackdropPrimitive {...stylex.props(dialogStyles.backdrop)} />
+      <AlertDialogBackdropPrimitive
+        data-skip-motion={skip || undefined}
+        {...stylex.props(dialogStyles.backdrop)}
+      />
       <AlertDialogContentPrimitive<Payload>
         data-size={size}
-        {...props}
-        {...stylex.props(dialogStyles.popup, sizeStyles[size], sx)}
-      >
-        {(state) => (
-          <Pending value={state.pending}>
-            {/* oxlint-disable-next-line anti-slop/no-runtime-typeof -- ui-sdk documents `children` as a node or a function of the state */}
-            {typeof children === "function" ? children(state) : children}
-          </Pending>
+        data-skip-motion={skip || undefined}
+        {...withStyles(
+          props,
+          stylex.props(dialogStyles.popup, sizeStyles[size], sx)
         )}
-      </AlertDialogContentPrimitive>
+      />
     </>
   );
 }
@@ -127,8 +129,10 @@ function AlertDialogHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-header"
-      {...props}
-      {...stylex.props(dialogStyles.header, styles.header, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.header, styles.header, sx)
+      )}
     />
   );
 }
@@ -137,8 +141,7 @@ function AlertDialogMedia({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-media"
-      {...props}
-      {...stylex.props(styles.media, sx)}
+      {...withStyles(props, stylex.props(styles.media, sx))}
     />
   );
 }
@@ -147,8 +150,10 @@ function AlertDialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-footer"
-      {...props}
-      {...stylex.props(dialogStyles.footer, styles.footer, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.footer, styles.footer, sx)
+      )}
     />
   );
 }
@@ -159,8 +164,7 @@ function AlertDialogTitle({
 }: Styled<ComponentProps<typeof AlertDialogTitlePrimitive>>) {
   return (
     <AlertDialogTitlePrimitive
-      {...props}
-      {...stylex.props(dialogStyles.title, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
     />
   );
 }
@@ -171,8 +175,7 @@ function AlertDialogDescription({
 }: Styled<ComponentProps<typeof AlertDialogDescriptionPrimitive>>) {
   return (
     <AlertDialogDescriptionPrimitive
-      {...props}
-      {...stylex.props(dialogStyles.description, sx)}
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
     />
   );
 }
@@ -184,18 +187,9 @@ function AlertDialogCancel({
   variant = "outline",
   ...props
 }: AlertDialogButtonProps) {
-  const pending = use(Pending);
   return (
     <AlertDialogClosePrimitive
-      aria-disabled={pending || undefined}
-      render={
-        <Button
-          color={color}
-          size={size}
-          sx={[styles.refused, sx]}
-          variant={variant}
-        />
-      }
+      render={<Button color={color} size={size} sx={sx} variant={variant} />}
       {...props}
     />
   );
@@ -209,18 +203,9 @@ function AlertDialogAction({
   variant = "primary",
   ...props
 }: AlertDialogButtonProps) {
-  const pending = use(Pending);
   return (
     <AlertDialogClosePrimitive
-      aria-disabled={pending || undefined}
-      render={
-        <Button
-          color={color}
-          size={size}
-          sx={[styles.refused, sx]}
-          variant={variant}
-        />
-      }
+      render={<Button color={color} size={size} sx={sx} variant={variant} />}
       value={value}
       {...props}
     />

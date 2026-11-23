@@ -33,15 +33,19 @@ import {
   usePopoverSkipMotion,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
+import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
-import { visuallyHidden } from "@/lib/constella/styles";
+import {
+  popupSurface,
+  visuallyHidden,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
   fontWeights,
   lineHeights,
   offsets,
-  shadows,
   sizes,
   space,
   strokes,
@@ -69,7 +73,6 @@ const styles = stylex.create({
     flexDirection: "row-reverse",
   },
   command: {
-    boxShadow: shadows.lg,
     maxWidth: "100%",
     width: sizes.modelPicker,
   },
@@ -232,13 +235,15 @@ function ModelPickerContent({
       data-details-side={detailsSide}
       data-skip-motion={picked || skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        popoverStyles.popup,
-        popoverStyles.motion,
-        styles.content,
-        detailsSide === "inline-start" && styles.detailsStart,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          popoverStyles.popup,
+          popupMotion.popover,
+          styles.content,
+          detailsSide === "inline-start" && styles.detailsStart,
+          sx
+        )
       )}
     />
   );
@@ -264,7 +269,7 @@ function ModelPickerCommand({ onValueChange, sx, ...props }: CommandProps) {
           setShown(true);
         }
       }}
-      sx={[styles.command, sx]}
+      sx={[popupSurface.base, styles.command, sx]}
     />
   );
 }
@@ -292,7 +297,7 @@ function ModelPickerItem({
       aria-describedby={shown ? detailsId : undefined}
       onSelect={(event) => {
         const result = onSelect?.(event);
-        // Lands before close(); see useSkipMotion in motion.ts.
+        // Lands before close(); see useSkipMotion in motion.tsx.
         flushSync(() => {
           setPicked(true);
         });
@@ -334,8 +339,10 @@ function ModelPickerLogo({
     <span
       aria-hidden
       data-slot="model-picker-logo"
-      {...props}
-      {...stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)
+      )}
     />
   );
 }
@@ -349,9 +356,11 @@ function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="model-picker-details"
-      {...props}
+      {...withStyles(
+        props,
+        stylex.props(popoverStyles.surface, styles.details, sx)
+      )}
       id={detailsId}
-      {...stylex.props(popoverStyles.surface, styles.details, sx)}
     />
   );
 }
@@ -361,8 +370,7 @@ function ModelPickerTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
     "div",
     mergeProps(
       { "data-slot": "model-picker-title" },
-      props,
-      stylex.props(styles.title, sx)
+      withStyles(props, stylex.props(styles.title, sx))
     ),
     render
   );
@@ -372,8 +380,7 @@ function ModelPickerDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   return (
     <p
       data-slot="model-picker-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }

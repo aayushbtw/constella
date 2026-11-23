@@ -3,7 +3,7 @@
 import { Calendar03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { formatDateRange } from "@ui-sdk/core/date";
+import { formatDateRange } from "@ui-sdk/react/date";
 import {
   DatePickerContent as DatePickerContentPrimitive,
   DatePickerPreset as DatePickerPresetPrimitive,
@@ -16,12 +16,18 @@ import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/primitives/button";
 import { CalendarMonths } from "@/components/primitives/calendar";
 import { popoverStyles } from "@/components/primitives/popover";
-import { skipsMotion, useSkipMotion } from "@/lib/constella/motion";
+import {
+  popupMotion,
+  skipsMotion,
+  useSkipMotion,
+} from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import {
   controlIconSize,
+  popupReset,
   stateStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
@@ -76,12 +82,7 @@ const styles = stylex.create({
   root: {
     width: "fit-content",
   },
-  // ui-sdk's date picker leaves the browser's `[popover]` border.
   content: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     flexDirection: "row",
     gap: 0,
     paddingBlockEnd: 0,
@@ -181,10 +182,9 @@ function DateRangePicker({
         onValueChange?.(Array.isArray(value) ? value : null, details);
       }}
       showOutsideDays={showOutsideDays}
-      {...props}
+      {...withStyles(props, stylex.props(styles.root, sx))}
       mode="range"
       months={2}
-      {...stylex.props(styles.root, sx)}
     >
       {(state) => (
         <PickerProvider
@@ -245,11 +245,18 @@ function DateRangePickerContent({
       align={align}
       data-skip-motion={skip || undefined}
       sideOffset={sideOffset}
-      {...props}
-      {...stylex.props(
-        [popoverStyles.popup, popoverStyles.surface, styles.content],
-        popoverStyles.motion,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [
+            popoverStyles.popup,
+            popupReset.borderless,
+            popoverStyles.surface,
+            styles.content,
+          ],
+          popupMotion.popover,
+          sx
+        )
       )}
     />
   );
@@ -262,8 +269,7 @@ function DateRangePickerPresets({
   return (
     <div
       data-slot="date-range-picker-presets"
-      {...props}
-      {...stylex.props(styles.presets, sx)}
+      {...withStyles(props, stylex.props(styles.presets, sx))}
     />
   );
 }
@@ -277,11 +283,9 @@ function DateRangePickerPreset({
   return (
     <DatePickerPresetPrimitive
       value={value}
-      {...props}
-      {...stylex.props(
-        [typeStyles.textMd, styles.preset],
-        stateStyles.ghost,
-        sx
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textMd, styles.preset], stateStyles.ghost, sx)
       )}
     >
       {(state) => (

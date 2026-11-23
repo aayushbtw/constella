@@ -1,3 +1,5 @@
+import { setTimeout as wait } from "node:timers/promises";
+
 import {
   columnFilteringFeature,
   columnVisibilityFeature,
@@ -18,12 +20,13 @@ import {
   useTable,
 } from "@tanstack/react-table";
 import type { RowSelectionState } from "@tanstack/react-table";
-import { render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { settle } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
 import type { ObservedChange } from "@ui-sdk/react/observe";
 import { createContext, use, useMemo, useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
-import { beforeEach, expect, test, vi } from "vite-plus/test";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { beforeEach, expect, onTestFinished, test, vi } from "vite-plus/test";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -202,14 +205,37 @@ test("an agent sorts by a column, and selects one row or all of them", async () 
   }
 });
 
-// ui-sdk treats the header row as a row, so its text puts "Email" on every header control.
-test("a column header's title is ambiguous as a ref, so an agent presses it by its ref", async () => {
+function sortOf(name: string) {
+  return screen
+    .getByRole("columnheader", { name: new RegExp(name, "u") })
+    .getAttribute("aria-sort");
+}
+
+test("a sorted column's header says which way it sorts", () => {
+  render(<Basic />);
+
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual([null, null]);
+
+  fireEvent.click(screen.getByRole("button", { name: "Email" }));
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual(["ascending", null]);
+
+  fireEvent.click(screen.getByRole("button", { name: "Email" }));
+  expect(sortOf("Email")).toBe("descending");
+
+  fireEvent.click(screen.getByRole("button", { name: "Amount" }));
+  expect([sortOf("Email"), sortOf("Amount")]).toEqual([null, "descending"]);
+  expect(
+    screen.getAllByRole("columnheader")[0]?.hasAttribute("aria-sort")
+  ).toBe(false);
+});
+
+test("an agent presses a sortable column header by its title", async () => {
   render(<Basic />);
   const result = await agent.act({
     steps: [{ action: "press", ref: "Email" }],
   });
-  expect(result.ok).toBe(false);
-  expect(result.error?.message).toContain('"Email" names 3 components');
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(sortOf("Email")).toBe("ascending");
 });
 
 const filterFeatures = tableFeatures({
@@ -428,7 +454,7 @@ const pagedColumns = paged.columns([
   paged.accessor("amount", { header: "Amount" }),
 ]);
 
-function Pages() {
+function Pages({ label }: { label?: string }) {
   const table = useTable({
     columns: pagedColumns,
     data: ledger,
@@ -438,37 +464,178 @@ function Pages() {
   return (
     <>
       <DataTable empty="No payments." label="Payments" table={table} />
-      <DataTablePagination pageSizes={[10, 20, 50]} table={table} />
+      <DataTablePagination
+        label={label}
+        pageSizes={[10, 20, 50]}
+        table={table}
+      />
     </>
   );
 }
 
+const searchFeatures = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  globalFilteringFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  rowPaginationFeature,
+});
+
+const searched = createColumnHelper<typeof searchFeatures, Payment>();
+
+const searchColumns = searched.columns([
+  searched.accessor("email", { header: "Email" }),
+  searched.accessor("amount", { enableGlobalFilter: false, header: "Amount" }),
+]);
+
+function SearchPages() {
+  const [search, setSearch] = useState("");
+  const table = useTable({
+    columns: searchColumns,
+    data: ledger,
+    features: searchFeatures,
+    getRowId,
+    globalFilterFn: "includesString",
+    state: { globalFilter: search },
+  });
+  return (
+    <>
+      <InputGroup>
+        <InputGroupInput
+          aria-label="Search payments"
+          onChange={(event) => {
+            setSearch(event.target.value);
+          }}
+          value={search}
+        />
+      </InputGroup>
+      <DataTable empty="No payments match." label="Payments" table={table} />
+      <DataTablePagination table={table} />
+    </>
+  );
+}
+
+function announcements() {
+  const said: string[] = [];
+  const observer = new MutationObserver((records) => {
+    const regions = new Set<Element>();
+    for (const { target } of records) {
+      const element = target instanceof Element ? target : target.parentElement;
+      const region = element?.closest("[data-ui-sdk-announcer]");
+      if (region) {
+        regions.add(region);
+      }
+    }
+    for (const region of regions) {
+      if (region.textContent) {
+        said.push(region.textContent);
+      }
+    }
+  });
+  observer.observe(document.body, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  onTestFinished(() => {
+    observer.disconnect();
+  });
+  return said;
+}
+
+test("the pagination is a navigation named by its label", () => {
+  const { unmount } = render(<Pages />);
+  expect(screen.getByRole("navigation", { name: "Pagination" })).toBeTruthy();
+  unmount();
+
+  render(<Pages label="Payment pages" />);
+  const nav = screen.getByRole("navigation", { name: "Payment pages" });
+  expect(
+    within(nav)
+      .getAllByRole("button")
+      .map((button) => button.getAttribute("aria-label"))
+  ).toEqual(["First page", "Previous page", "Next page", "Last page"]);
+});
+
+test("pressing Next onto the last page keeps focus on Next, which says it's disabled", () => {
+  render(<Pages />);
+  const next = screen.getByRole("button", { name: "Next page" });
+  next.focus();
+
+  fireEvent.click(next);
+  fireEvent.click(next);
+
+  expect(shown("21–25 of 25")).toBeTruthy();
+  expect(document.activeElement).toBe(
+    screen.getByRole("button", { name: "Next page" })
+  );
+  expect(
+    screen
+      .getByRole("button", { name: "Next page" })
+      .getAttribute("aria-disabled")
+  ).toBe("true");
+});
+
+// A polite announcement waits for a pause, longer than settle waits.
+async function quiet() {
+  await act(async () => {
+    await wait(500);
+  });
+}
+
+test("each page a person moves to is announced once", async () => {
+  render(<Pages />);
+  const said = announcements();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+  await quiet();
+
+  expect(said).toEqual(["11–20 of 25"]);
+});
+
+test("a filter that changes the row count announces nothing", async () => {
+  render(<SearchPages />);
+  expect(shown("1–10 of 25")).toBeTruthy();
+  const said = announcements();
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "user1" },
+  });
+  expect(shown("1–10 of 11")).toBeTruthy();
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
 test("an agent pages through the rows and changes how many show", async () => {
   render(<Pages />);
-  const entries = expectNamed([
-    "Rows per page",
-    "First page",
-    "Previous page",
-    "Next page",
-    "Last page",
-  ]);
-  for (const label of ["First page", "Previous page"]) {
-    expect(entries.find((entry) => entry.label === label)).toMatchObject({
-      actions: [],
-      disabled: true,
-    });
-  }
+  const entries = expectNamed(["Rows per page", "Pagination"]);
+  expect(
+    entries.find((entry) => entry.component === "pagination")
+  ).toMatchObject({
+    actions: ["setPage", "next", "previous", "first", "last"],
+    label: "Pagination",
+    page: 1,
+  });
 
-  await run({ action: "press", ref: "Next page" });
+  await run({ action: "previous", ref: "Pagination" });
+  expect(shown("1–10 of 25")).toBeTruthy();
+
+  await run({ action: "next", ref: "Pagination" });
   expect(shown("11–20 of 25")).toBeTruthy();
   await heard("11–20 of 25");
 
   await run({ action: "setValue", args: ["20"], ref: "Rows per page" });
   expect(shown("1–20 of 25")).toBeTruthy();
+  await heard("1–20 of 25");
 
-  await run({ action: "press", ref: "Last page" });
+  await run({ action: "last", ref: "Pagination" });
   expect(shown("21–25 of 25")).toBeTruthy();
   await heard("21–25 of 25");
+
+  await run({ action: "next", ref: "Pagination" });
+  expect(shown("21–25 of 25")).toBeTruthy();
 });
 
 function Bar() {
@@ -543,6 +710,235 @@ test("an agent can't reach the action bar while no row is selected", async () =>
   }
 });
 
+const noneSelected: RowSelectionState = {};
+
+function clearButton() {
+  return screen.getByRole("button", { name: "Clear selection" });
+}
+
+test("pressing Clear from the keyboard puts focus back on the control it came from", () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  clearButton().focus();
+
+  fireEvent.click(clearButton());
+
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(document.activeElement).toBe(checkboxIn("abe@acme.com"));
+});
+
+test("a Delete that removes the row focus came from puts focus on the row now in its place", () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(emails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+  expect(focusedEmail()).toBe("dee@acme.com");
+});
+
+test("a Delete of the last rows from the bar puts focus on the row before them", () => {
+  render(<Bar />);
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  press("ArrowDown", { shiftKey: true });
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(emails()).toEqual(["ken@acme.com"]);
+  expect(focusedEmail()).toBe("ken@acme.com");
+});
+
+test("a Delete of every row from the bar puts focus on the table", () => {
+  render(<Bar />);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Select all" }));
+  rowWith("abe@acme.com").focus();
+  const remove = screen.getByRole("button", { name: "Delete" });
+  remove.focus();
+
+  fireEvent.click(remove);
+
+  expect(shown("No payments.")).toBeTruthy();
+  expect(document.activeElement).toBe(
+    screen.getByRole("grid", { name: "Payments" })
+  );
+});
+
+function Rows({ data }: { data: Payment[] }) {
+  const table = useTable({ columns, data, features, getRowId });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+async function deleteRows(rerender: (ui: ReactNode) => void, ...ids: string[]) {
+  rerender(<Rows data={payments.filter((row) => !ids.includes(row.id))} />);
+  await act(settle);
+}
+
+test("deleting the focused row puts focus on the row now in its place", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("abe@acme.com").focus();
+
+  await deleteRows(rerender, "p2");
+
+  expect(focusedEmail()).toBe("dee@acme.com");
+});
+
+test("deleting the focused last row puts focus on the row before it", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("dee@acme.com").focus();
+
+  await deleteRows(rerender, "p3");
+
+  expect(focusedEmail()).toBe("abe@acme.com");
+});
+
+test("deleting every row puts focus on the table, not the page", async () => {
+  const { rerender } = render(<Rows data={payments} />);
+  rowWith("ken@acme.com").focus();
+
+  await deleteRows(rerender, "p1", "p2", "p3");
+
+  expect(document.activeElement).toBe(
+    screen.getByRole("grid", { name: "Payments" })
+  );
+});
+
+test("an agent's Clear leaves the person's focus where it is", async () => {
+  render(<Bar />);
+  checkboxIn("abe@acme.com").focus();
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  clearButton().focus();
+  rowWith("ken@acme.com").focus();
+
+  await run({ action: "press", ref: "Clear selection" });
+
+  expect(checkboxIn("abe@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(document.activeElement).toBe(rowWith("ken@acme.com"));
+});
+
+test("each row a person selects is announced once, with the new count", async () => {
+  render(<Bar />);
+  const said = announcements();
+
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  await quiet();
+  rowWith("dee@acme.com").focus();
+  press(" ");
+  await quiet();
+
+  expect(said).toEqual(["1 selected", "2 selected"]);
+});
+
+test("a drag across the checkboxes is announced once, when it ends", async () => {
+  render(<Bar />);
+  const said = announcements();
+  const mouse = { button: 0, pointerType: "mouse" };
+
+  fireEvent.pointerDown(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("abe@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("dee@acme.com"), mouse);
+  await quiet();
+  expect(said).toEqual([]);
+  fireEvent.pointerUp(window, mouse);
+  await quiet();
+
+  expect(said).toEqual(["3 selected"]);
+});
+
+test("clearing the selection announces nothing", async () => {
+  render(<Bar />);
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  await quiet();
+  const said = announcements();
+
+  fireEvent.click(clearButton());
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
+function SetElsewhere({ rowSelection }: { rowSelection: RowSelectionState }) {
+  const table = useTable({
+    columns,
+    data: payments,
+    features,
+    getRowId,
+    state: { rowSelection },
+  });
+  return (
+    <>
+      <DataTable empty="No payments." label="Payments" table={table} />
+      <DataTableActionBar label="Payment actions" table={table} />
+    </>
+  );
+}
+
+test("a selection the app sets, not the person, announces nothing", async () => {
+  const { rerender } = render(<SetElsewhere rowSelection={noneSelected} />);
+  const said = announcements();
+
+  rerender(<SetElsewhere rowSelection={{ p1: true, p2: true }} />);
+  expect(shown("2 selected")).toBeTruthy();
+  await quiet();
+
+  expect(said).toEqual([]);
+});
+
+const pagedSelectFeatures = tableFeatures({
+  paginatedRowModel: createPaginatedRowModel(),
+  rowPaginationFeature,
+  rowSelectionFeature,
+});
+
+const pagedSelect = createColumnHelper<typeof pagedSelectFeatures, Payment>();
+
+const pagedSelectColumns = pagedSelect.columns([
+  pagedSelect.display({
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
+    header: ({ table }) => <DataTableSelectAll table={table} />,
+    id: "select",
+  }),
+  pagedSelect.accessor("email", { header: "Email" }),
+]);
+
+function PagedSelection() {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const table = useTable({
+    columns: pagedSelectColumns,
+    data: ledger,
+    features: pagedSelectFeatures,
+    getRowId,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
+  });
+  return (
+    <>
+      <DataTable empty="No payments." label="Payments" table={table} />
+      <DataTableActionBar label="Payment actions" table={table} />
+    </>
+  );
+}
+
+test("Select all on one page of a controlled table announces every row it selected, as the bar counts them", async () => {
+  render(<PagedSelection />);
+  expect(screen.getAllByRole("row")).toHaveLength(11);
+  const said = announcements();
+
+  fireEvent.click(screen.getByRole("checkbox", { name: "Select all" }));
+  await quiet();
+
+  expect(shown("25 selected")).toBeTruthy();
+  expect(said).toEqual(["25 selected"]);
+});
+
 const OpenPayment = createContext<(id: string) => void>(() => {});
 
 function PaymentLink({ payment }: { payment: Payment }) {
@@ -595,12 +991,14 @@ function RowClick() {
 
 function Selection({
   apply,
+  initial = noneSelected,
   selections,
 }: {
   apply: boolean;
+  initial?: RowSelectionState;
   selections: RowSelectionState[];
 }) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowSelection, setRowSelection] = useState(initial);
   const table = useTable({
     columns,
     data: payments,
@@ -632,7 +1030,38 @@ test("an agent's row check reaches onRowSelectionChange, and the bridge reports 
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("true");
   expect(
     changes.map(({ key, source, value }) => ({ key, source, value }))
-  ).toEqual([{ key: "checked", source: "agent", value: true }]);
+  ).toEqual([
+    { key: "selected", source: "agent", value: ["p3"] },
+    { key: "checked", source: "agent", value: true },
+  ]);
+});
+
+// jsdom's untrusted keydown reports `programmatic`; a browser reports `keyboard`.
+test("Space on a focused row reports one selected change, as a press", () => {
+  const changes: ObservedChange[] = [];
+  const stop = agent.subscribe((change) => {
+    changes.push(change);
+  });
+  render(<Selection apply selections={[]} />);
+
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  stop();
+  expect(
+    changes.map(({ key, reason, source, value }) => ({
+      key,
+      reason,
+      source,
+      value,
+    }))
+  ).toEqual([
+    {
+      key: "selected",
+      reason: "item-press",
+      source: "programmatic",
+      value: ["p2"],
+    },
+  ]);
 });
 
 test("a controlled table that ignores the agent's row check leaves the row unchecked", async () => {
@@ -642,6 +1071,47 @@ test("a controlled table that ignores the agent's row check leaves the row unche
   await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
   expect(selections).toEqual([{ p3: true }]);
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("false");
+  expect(rowWith("dee@acme.com").getAttribute("aria-selected")).toBe("false");
+});
+
+test("a row the controlled selection maps to false stays unselected when another row is selected", () => {
+  const selections: RowSelectionState[] = [];
+  // A v8 table's saved state could map a row to `false`, which v9's type rules out.
+  const restored: RowSelectionState = {};
+  Reflect.set(restored, "p1", false);
+  render(<Selection apply initial={restored} selections={selections} />);
+
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  expect(selections.at(-1)?.p1).not.toBe(true);
+  expect(selections.at(-1)?.p2).toBe(true);
+  expect(rowWith("ken@acme.com").getAttribute("aria-selected")).toBe("false");
+  expect(rowWith("ken@acme.com").dataset.state).toBeUndefined();
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+});
+
+function MultiRule() {
+  const table = useTable({
+    columns,
+    data: payments,
+    enableMultiRowSelection: (row) => row.id !== "p2",
+    features,
+    getRowId,
+  });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+test("a row enableMultiRowSelection rules out replaces the selection, and a range skips it", () => {
+  render(<MultiRule />);
+  rowWith("ken@acme.com").focus();
+  press(" ");
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
 });
 
 test("an agent opens a row through its named link, as a row click would", async () => {
@@ -652,4 +1122,318 @@ test("an agent opens a row through its named link, as a row click would", async 
   expect(screen.getByRole("status", { name: "Open payment" }).textContent).toBe(
     "p2"
   );
+});
+
+test("a selectable table is a multiselectable grid whose rows say whether they're selected", async () => {
+  render(<Basic />);
+  const grid = screen.getByRole("grid", { name: "Payments" });
+  expect(grid.getAttribute("aria-multiselectable")).toBe("true");
+
+  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  const selected = Object.fromEntries(
+    within(grid)
+      .getAllByRole("row")
+      .slice(1)
+      .map((row) => [emailIn(row), row.getAttribute("aria-selected")])
+  );
+  expect(selected).toEqual({
+    "abe@acme.com": "false",
+    "dee@acme.com": "true",
+    "ken@acme.com": "false",
+  });
+});
+
+const longLedger: Payment[] = Array.from({ length: 500 }, (_, index) => ({
+  amount: index + 1,
+  email: `user${index + 1}@acme.com`,
+  id: `p${index + 1}`,
+  status: "success",
+}));
+
+function LongLedger() {
+  const table = useTable({ columns, data: longLedger, features, getRowId });
+  return <DataTable empty="No payments." label="Payments" table={table} />;
+}
+
+function emailIn(row: HTMLElement) {
+  return within(row).getByText(/@acme\.com$/u).textContent;
+}
+
+function rowWith(email: string) {
+  const row = screen.getByText(email).closest("tr");
+  if (row === null) {
+    throw new Error(`${email} isn't in a row`);
+  }
+  return row;
+}
+
+function focusedEmail() {
+  const focused = document.activeElement;
+  return focused instanceof HTMLTableRowElement
+    ? emailIn(focused)
+    : focused?.nodeName;
+}
+
+function press(key: string, { shiftKey = false } = {}) {
+  if (document.activeElement !== null) {
+    fireEvent.keyDown(document.activeElement, { key, shiftKey });
+  }
+}
+
+// jsdom lays nothing out, so rows measure 0 tall and the virtualizer renders an arbitrary slice of them.
+function layOutRows(height: number) {
+  const measured = vi
+    .spyOn(HTMLElement.prototype, "offsetHeight", "get")
+    .mockImplementation(function rowHeight(this: HTMLElement) {
+      return this.matches("tbody > tr") ? height : 0;
+    });
+  onTestFinished(() => {
+    measured.mockRestore();
+  });
+}
+
+function scrollWindowTo(top: number) {
+  for (const key of ["scrollY", "pageYOffset"]) {
+    Object.defineProperty(window, key, { configurable: true, value: top });
+  }
+  act(() => {
+    window.dispatchEvent(new Event("scroll"));
+  });
+}
+
+test("End focuses the last row though it isn't rendered yet, and ArrowUp steps back from it", async () => {
+  layOutRows(41);
+  render(<LongLedger />);
+  expect(screen.queryByText("user500@acme.com")).toBeNull();
+
+  rowWith("user1@acme.com").focus();
+  press("End");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user500@acme.com");
+    },
+    { timeout: 1000 }
+  );
+
+  press("ArrowUp");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user499@acme.com");
+    },
+    { timeout: 1000 }
+  );
+});
+
+test("the focused row stays focused when the page scrolls it out of view", async () => {
+  layOutRows(41);
+  onTestFinished(() => {
+    scrollWindowTo(0);
+  });
+  render(<LongLedger />);
+  rowWith("user1@acme.com").focus();
+
+  scrollWindowTo(41 * 200);
+  expect(screen.queryByText("user201@acme.com")).not.toBeNull();
+  expect(screen.queryByText("user2@acme.com")).toBeNull();
+  expect(focusedEmail()).toBe("user1@acme.com");
+
+  press("ArrowDown");
+  await vi.waitFor(
+    () => {
+      expect(focusedEmail()).toBe("user2@acme.com");
+    },
+    { timeout: 1000 }
+  );
+});
+
+test("the table is one agent entry, named by its label, with no actions of its own", () => {
+  render(<Basic />);
+  expect(
+    onPage()
+      .filter((entry) => entry.component === "data-table")
+      .map(({ actions, component, label }) => ({ actions, component, label }))
+  ).toEqual([{ actions: [], component: "data-table", label: "Payments" }]);
+});
+
+function selectedEmails() {
+  return screen
+    .getAllByRole("row")
+    .filter((row) => row.getAttribute("aria-selected") === "true")
+    .map(emailIn);
+}
+
+test("Shift with the arrows extends the selection, and back over it shrinks it", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+
+  press("ArrowDown", { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  press("ArrowDown", { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+  press("ArrowUp", { shiftKey: true });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  expect(focusedEmail()).toBe("abe@acme.com");
+});
+
+test("a Shift-click on a checkbox ranges from the row the arrows left off on", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+  press("ArrowDown");
+  expect(focusedEmail()).toBe("abe@acme.com");
+
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+  expect(checkboxIn("ken@acme.com").getAttribute("aria-checked")).toBe("false");
+});
+
+const shiftPress = { button: 0, pointerType: "mouse", shiftKey: true };
+
+// jsdom's click moves no focus, so these send what a browser does: pointerdown, then focus to a row pressed, then click.
+test("a Shift-click on a row ranges from the row Tab reached", () => {
+  render(<RowClick />);
+  rowWith("ken@acme.com").focus();
+
+  const target = within(rowWith("dee@acme.com")).getByText("837");
+  fireEvent.pointerDown(target, shiftPress);
+  rowWith("dee@acme.com").focus();
+  fireEvent.click(target, { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+});
+
+test("a Shift-click on a checkbox ranges from the row Tab reached", () => {
+  render(<Basic />);
+  rowWith("ken@acme.com").focus();
+
+  fireEvent.pointerDown(checkboxIn("dee@acme.com"), shiftPress);
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+});
+
+test("a Shift-click on a checkbox in an untouched table selects only its row", () => {
+  render(<Basic />);
+
+  fireEvent.pointerDown(checkboxIn("dee@acme.com"), shiftPress);
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+});
+
+test("a Shift-click that unchecks a checkbox unchecks the range to it, and the next Shift-click selects only its row", () => {
+  render(<Basic />);
+  fireEvent.click(checkboxIn("ken@acme.com"));
+  fireEvent.click(checkboxIn("dee@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+});
+
+test("a Shift-click that unchecks a checkbox once the anchor row is filtered out unchecks only its row", () => {
+  render(<Filters />);
+  fireEvent.click(checkboxIn("abe@acme.com"));
+  fireEvent.click(checkboxIn("dee@acme.com"));
+  fireEvent.click(checkboxIn("ken@acme.com"));
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "e@acme" },
+  });
+  expect(emails()).toEqual(["abe@acme.com", "dee@acme.com"]);
+
+  fireEvent.click(checkboxIn("abe@acme.com"), { shiftKey: true });
+  expect(selectedEmails()).toEqual(["dee@acme.com"]);
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search payments" }), {
+    target: { value: "" },
+  });
+  expect(selectedEmails()).toEqual(["ken@acme.com", "dee@acme.com"]);
+});
+
+test("Space on a row selects it, and Space on its checkbox is the checkbox's alone", () => {
+  render(<Basic />);
+  rowWith("abe@acme.com").focus();
+  press(" ");
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+
+  fireEvent.keyDown(checkboxIn("dee@acme.com"), { key: " " });
+  expect(selectedEmails()).toEqual(["abe@acme.com"]);
+});
+
+test("the rows not rendered keep their height, around the focused row kept far from view", () => {
+  layOutRows(41);
+  onTestFinished(() => {
+    scrollWindowTo(0);
+  });
+  const { container } = render(<LongLedger />);
+  rowWith("user1@acme.com").focus();
+  scrollWindowTo(41 * 200);
+
+  const rendered = [...container.querySelectorAll("tbody > tr")];
+  const spacers = rendered.filter((row) => row.hasAttribute("aria-hidden"));
+  expect(spacers.length).toBeGreaterThan(1);
+  const spaced = spacers
+    .map((row) =>
+      Number(
+        /(?<height>[\d.]+)px/u.exec(row.getAttribute("style") ?? "")?.groups
+          ?.height
+      )
+    )
+    .reduce((sum, height) => sum + height, 0);
+  expect(spaced + (rendered.length - spacers.length) * 41).toBe(500 * 41);
+});
+
+test("Cmd-click selects a row instead of opening it, and Shift-click ranges from there", () => {
+  render(<RowClick />);
+  fireEvent.click(within(rowWith("ken@acme.com")).getAllByRole("cell")[2], {
+    metaKey: true,
+  });
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+  fireEvent.click(within(rowWith("dee@acme.com")).getAllByRole("cell")[2], {
+    shiftKey: true,
+  });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
+  expect(screen.getByRole("status", { name: "Open payment" }).textContent).toBe(
+    ""
+  );
+});
+
+test("a drag across the checkboxes selects the rows, back over them restores them, and a Shift-click ranges from where it ended", async () => {
+  render(<RowClick />);
+  const mouse = { button: 0, pointerType: "mouse" };
+  fireEvent.pointerDown(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerOver(checkboxIn("abe@acme.com"), mouse);
+  expect(selectedEmails()).toEqual(["ken@acme.com", "abe@acme.com"]);
+  fireEvent.pointerOver(checkboxIn("ken@acme.com"), mouse);
+  fireEvent.pointerUp(window, mouse);
+  expect(selectedEmails()).toEqual(["ken@acme.com"]);
+  await act(settle);
+
+  fireEvent.click(within(rowWith("dee@acme.com")).getAllByRole("cell")[2], {
+    shiftKey: true,
+  });
+  expect(selectedEmails()).toEqual([
+    "ken@acme.com",
+    "abe@acme.com",
+    "dee@acme.com",
+  ]);
 });

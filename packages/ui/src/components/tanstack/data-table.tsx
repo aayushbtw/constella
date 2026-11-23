@@ -14,7 +14,9 @@ import type {
   RowData,
   TableFeatures,
 } from "@tanstack/react-table";
-import { useRef } from "react";
+import { announce } from "@ui-sdk/core";
+import { createParts, usePart, usePrimitive } from "@ui-sdk/react/primitive";
+import { Fragment, useMemo, useRef, useSyncExternalStore } from "react";
 import type { MouseEvent, ReactNode, RefObject } from "react";
 
 import { Button } from "@/components/primitives/button";
@@ -30,11 +32,15 @@ import {
 } from "@/components/primitives/table";
 import type { TableSize } from "@/components/primitives/table";
 import {
+  DataTableContext,
+  dataTable,
+} from "@/components/tanstack/data-table-rows";
+import {
+  hasSelection,
   isSelectable,
   isSelecting,
   useDragSelect,
 } from "@/components/tanstack/data-table-selection";
-import { useDataTableKeys } from "@/components/tanstack/use-data-table-keys";
 import { useDataTableVirtualizer } from "@/components/tanstack/use-data-table-virtualizer";
 import type { Sx } from "@/lib/constella/styles";
 import {
@@ -110,6 +116,17 @@ const isSized = <TColumn extends { id: string }>(
   column: TColumn
 ): column is TColumn & SizedColumn => "getSize" in column;
 
+const isSortable = <TColumn extends { id: string }>(
+  column: TColumn
+): column is TColumn & SortableColumn => "getIsSorted" in column;
+
+const ariaSorts = { asc: "ascending", desc: "descending" } as const;
+
+const ariaSortOf = (column: { id: string }) => {
+  const sorted = isSortable(column) && column.getIsSorted();
+  return sorted === false ? undefined : ariaSorts[sorted];
+};
+
 // The column visibility feature's table; without it every column shows.
 const hasVisibility = <TTable extends { getAllLeafColumns: () => unknown[] }>(
   table: TTable
@@ -174,7 +191,13 @@ const styles = stylex.create({
   },
 });
 
+const { Row: DataTableRow } = createParts(dataTable, { row: "tr" });
+
 const noColumns = {};
+
+const noSelection: Readonly<Record<string, boolean>> = {};
+
+const noFocus = () => null;
 
 const loadingRows = Array.from({ length: 5 }, (_, index) => index);
 
@@ -183,6 +206,68 @@ const widthOf = (column: { id: string }) =>
   isSized(column) && column.columnDef.size !== undefined
     ? styles.width(column.getSize())
     : null;
+
+function useRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected,
+>(
+  table: ReactTable<TFeatures, TData, TSelected>,
+  onRowClick: ((row: Row<TFeatures, TData>) => void) | undefined
+) {
+  const { rows } = table.getRowModel();
+  const ids = useMemo(() => rows.map((row) => row.id), [rows]);
+  const indexOf = useMemo(
+    () => new Map(rows.map((row, index) => [row.id, index])),
+    [rows]
+  );
+  const rowOf = (id: string) => rows[indexOf.get(id) ?? -1];
+  const selectable = isSelectable(table) ? table : undefined;
+  const rowSelection = selectable?.atoms.rowSelection?.get() ?? noSelection;
+  const handle = usePrimitive(dataTable, {
+    ids,
+    multiple: (id) => {
+      const row = rowOf(id);
+      return hasSelection(row) && row.getCanMultiSelect();
+    },
+    onRowOpen:
+      onRowClick &&
+      ((id) => {
+        const row = rowOf(id);
+        if (row !== undefined) {
+          onRowClick(row);
+        }
+      }),
+    onSelectedChange: (selected) => {
+      selectable?.setRowSelection(
+        Object.fromEntries(selected.map((id) => [id, true] as const))
+      );
+      if (selected.length > 0) {
+        announce(`${selected.length} selected`);
+      }
+    },
+    selectable:
+      selectable &&
+      ((id) => {
+        const row = rowOf(id);
+        return hasSelection(row) && row.getCanSelect();
+      }),
+    selected: Object.keys(rowSelection).filter((id) => rowSelection[id]),
+  });
+  // A key that moves to an unrendered row waits one task for it, so this re-renders on the move.
+  const focused = useSyncExternalStore(
+    handle.instance.subscribe,
+    () => handle.instance.get().focused,
+    noFocus
+  );
+  return {
+    handle,
+    indexOf,
+    keep: focused === null ? undefined : indexOf.get(focused),
+    rows,
+    selectable,
+  };
+}
 
 /** Renders a TanStack Table you built with `useTable`, virtualizing its rows against the window or `scrollRef`. */
 function DataTable<
@@ -204,25 +289,32 @@ function DataTable<
   table,
 }: DataTableProps<TFeatures, TData, TSelected>) {
   const body = useRef<HTMLTableSectionElement>(null);
-  const { rows } = table.getRowModel();
-  const { handlePointerDown, handlePointerOver } = useDragSelect(rows);
-  const { items, padAfter, padBefore, virtualizer } = useDataTableVirtualizer({
-    body,
-    rowHeight,
+  const { handle, indexOf, keep, rows, selectable } = useRows(
+    table,
+    onRowClick
+  );
+  const { handlePointerDown, handlePointerOver } = useDragSelect({
+    onDragEnd: handle.api.selection.setAnchor,
     rows,
-    scrollRef,
+    table: selectable,
   });
-  const { handleKeyDown, rowProps } = useDataTableKeys({
-    activeRowId,
-    body,
-    enabled: onRowClick !== undefined || isSelectable(table),
-    items,
-    onRowClick,
-    rows,
-    scrollToIndex: (index) => {
+  const { items, padAfter, spaceBefore, virtualizer } = useDataTableVirtualizer(
+    {
+      body,
+      keep,
+      rowHeight,
+      rows,
+      scrollRef,
+    }
+  );
+  // Bubbles from the row after its own keydown has moved the focus.
+  const scrollToFocusedRow = () => {
+    const moved = handle.instance.get().focused;
+    const index = moved === null ? undefined : indexOf.get(moved);
+    if (index !== undefined && index !== keep) {
       virtualizer.scrollToIndex(index);
-    },
-  });
+    }
+  };
 
   const columns = hasVisibility(table)
     ? table.getVisibleLeafColumns()
@@ -230,22 +322,16 @@ function DataTable<
   const pending = query?.isPending === true;
   // The old page stays on screen while the next loads (`placeholderData: keepPreviousData`).
   const stale = query?.isFetching === true && query.isPlaceholderData;
+  const catchesDeletedRowFocus = rows.length === 0 && handle.api.interactive();
 
-  return (
-    <Table
-      aria-busy={pending || stale}
-      aria-label={label}
-      aria-rowcount={rows.length + 1}
-      data-selecting={isSelecting(table) ? "" : undefined}
-      data-slot="data-table"
-      size={size}
-      sx={[styles.fixed, sx]}
-    >
+  const content = (
+    <>
       <TableHeader>
         {table.getHeaderGroups().map((group) => (
           <TableRow key={group.id}>
             {group.headers.map((header) => (
               <TableHead
+                aria-sort={ariaSortOf(header.column)}
                 key={header.id}
                 sx={[
                   styles.cell,
@@ -263,7 +349,6 @@ function DataTable<
         ))}
       </TableHeader>
       <TableBody
-        onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
         onPointerOver={handlePointerOver}
         ref={body}
@@ -287,39 +372,41 @@ function DataTable<
               ))}
             </TableRow>
           ))}
-        {padBefore > 0 && (
-          <tr aria-hidden {...stylex.props(styles.pad(padBefore))} />
-        )}
-        {items.map((item) => {
+        {items.map((item, at) => {
           const row = rows[item.index];
+          const gap = spaceBefore[at] ?? 0;
           if (row === undefined) {
             return null;
           }
           return (
-            <TableRow
-              aria-rowindex={item.index + 2}
-              data-index={item.index}
-              key={row.id}
-              ref={virtualizer.measureElement}
-              {...rowProps(item.index, row)}
-              sx={onRowClick && styles.clickable}
-            >
-              {("getVisibleCells" in row
-                ? row.getVisibleCells()
-                : row.getAllCells()
-              ).map((cell) => (
-                <TableCell
-                  key={cell.id}
-                  sx={[
-                    styles.cell,
-                    alignsEnd(cell.column) && styles.end,
-                    columnSx[cell.column.id],
-                  ]}
-                >
-                  <table.FlexRender cell={cell} />
-                </TableCell>
-              ))}
-            </TableRow>
+            <Fragment key={row.id}>
+              {gap > 0 && <tr aria-hidden {...stylex.props(styles.pad(gap))} />}
+              <DataTableRow
+                aria-current={row.id === activeRowId ? "true" : undefined}
+                aria-rowindex={item.index + 2}
+                data-index={item.index}
+                index={item.index}
+                ref={virtualizer.measureElement}
+                render={<TableRow sx={onRowClick && styles.clickable} />}
+                value={row.id}
+              >
+                {("getVisibleCells" in row
+                  ? row.getVisibleCells()
+                  : row.getAllCells()
+                ).map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    sx={[
+                      styles.cell,
+                      alignsEnd(cell.column) && styles.end,
+                      columnSx[cell.column.id],
+                    ]}
+                  >
+                    <table.FlexRender cell={cell} />
+                  </TableCell>
+                ))}
+              </DataTableRow>
+            </Fragment>
           );
         })}
         {padAfter > 0 && (
@@ -333,8 +420,32 @@ function DataTable<
           </TableRow>
         )}
       </TableBody>
-    </Table>
+    </>
   );
+
+  const grid = usePart(
+    handle,
+    "root",
+    {},
+    {
+      "aria-busy": pending || stale,
+      "aria-label": label,
+      "aria-rowcount": rows.length + 1,
+      children: content,
+      onKeyDown: scrollToFocusedRow,
+      tabIndex: catchesDeletedRowFocus ? -1 : undefined,
+      render: (
+        <Table
+          data-selecting={isSelecting(table) ? "" : undefined}
+          size={size}
+          sx={[styles.fixed, sx]}
+        />
+      ),
+    },
+    "table"
+  );
+
+  return <DataTableContext value={handle.api}>{grid}</DataTableContext>;
 }
 
 const sortIcons = {

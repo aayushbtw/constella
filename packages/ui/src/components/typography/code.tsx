@@ -3,6 +3,7 @@ import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
 import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, fonts, radii, space } from "@/lib/constella/tokens.stylex";
 
 type CodeProps = Omit<PartProps<"code">, "className" | "style"> & {
@@ -29,7 +30,10 @@ const styles = stylex.create({
 function Code({ render, sx, ...props }: CodeProps) {
   return renderElement(
     "code",
-    mergeProps({ "data-slot": "code" }, props, stylex.props(styles.base, sx)),
+    mergeProps(
+      { "data-slot": "code" },
+      withStyles(props, stylex.props(styles.base, sx))
+    ),
     render
   );
 }

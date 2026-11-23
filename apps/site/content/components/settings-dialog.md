@@ -6,15 +6,20 @@ description: A dialog laid out as a nav beside a page, for settings with several
 <!-- ::demo name="settings-dialog" -->
 
 ```tsx
-<SettingsDialog onOpenChange={setOpen} open={open}>
-  <SettingsDialogNav label="Settings" title="Acme">
-    <SidebarMenuItem>
-      <SidebarMenuButton isActive>
-        <SidebarMenuLabel>General</SidebarMenuLabel>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  </SettingsDialogNav>
-  <SettingsDialogPage title="General">…</SettingsDialogPage>
+<SettingsDialog>
+  <SettingsDialogTrigger render={<Button variant="outline" />}>
+    Settings
+  </SettingsDialogTrigger>
+  <SettingsDialogContent>
+    <SettingsDialogNav label="Settings" title="Acme">
+      <SidebarMenuItem>
+        <SidebarMenuButton isActive>
+          <SidebarMenuLabel>General</SidebarMenuLabel>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SettingsDialogNav>
+    <SettingsDialogPage title="General">…</SettingsDialogPage>
+  </SettingsDialogContent>
 </SettingsDialog>
 ```
 
@@ -27,8 +32,10 @@ description: A dialog laid out as a nav beside a page, for settings with several
 ```tsx
 import {
   SettingsDialog,
+  SettingsDialogContent,
   SettingsDialogNav,
   SettingsDialogPage,
+  SettingsDialogTrigger,
 } from "@/components/primitives/settings-dialog";
 import {
   SidebarMenuButton,
@@ -38,39 +45,45 @@ import {
 ```
 
 ```tsx
-const [open, setOpen] = useState(false);
 const [page, setPage] = useState("general");
 
-<SettingsDialog onOpenChange={setOpen} open={open}>
-  <SettingsDialogNav label="Settings">
-    <SidebarMenuItem>
-      <SidebarMenuButton
-        isActive={page === "general"}
-        onClick={() => setPage("general")}
-      >
-        <SidebarMenuLabel>General</SidebarMenuLabel>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  </SettingsDialogNav>
-  <SettingsDialogPage
-    description="How Acme shows up for everyone in it."
-    title="General"
-  >
-    …
-  </SettingsDialogPage>
+<SettingsDialog>
+  <SettingsDialogTrigger render={<Button variant="outline" />}>
+    Settings
+  </SettingsDialogTrigger>
+  <SettingsDialogContent>
+    <SettingsDialogNav label="Settings">
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          isActive={page === "general"}
+          onClick={() => setPage("general")}
+        >
+          <SidebarMenuLabel>General</SidebarMenuLabel>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SettingsDialogNav>
+    <SettingsDialogPage
+      description="How Acme shows up for everyone in it."
+      title="General"
+    >
+      …
+    </SettingsDialogPage>
+  </SettingsDialogContent>
 </SettingsDialog>;
 ```
 
-`SettingsDialog` takes [Dialog](/docs/components/dialog)'s root props and draws its own close button. Open it with `open` and `onOpenChange`, or keep the page in the URL so a reload keeps it.
+`SettingsDialog`, `SettingsDialogTrigger` and `SettingsDialogContent` work like [Dialog](/docs/components/dialog)'s root, trigger and content. `SettingsDialogContent` draws its own close button. Open it from code with `open` and `onOpenChange` instead of a trigger, or keep the page in the URL so a reload keeps it.
 
 ## Composition
 
 ```
 SettingsDialog
-├── SettingsDialogNav
-│   └── SidebarMenuItem
-│       └── SidebarMenuButton
-└── SettingsDialogPage
+├── SettingsDialogTrigger
+└── SettingsDialogContent
+    ├── SettingsDialogNav
+    │   └── SidebarMenuItem
+    │       └── SidebarMenuButton
+    └── SettingsDialogPage
 ```
 
 ## Settings Dialog Nav
@@ -131,8 +144,10 @@ Build each setting from [Field](/docs/components/field): a choice card with a `S
 
 | Part | Adds |
 | --- | --- |
-| `SettingsDialog` | Renders `Dialog` and a `DialogContent` with the nav beside the page, stacked on narrow screens, and a `DialogCloseButton`; `sx` goes to the popup |
+| `SettingsDialog` | `Dialog`, unchanged |
+| `SettingsDialogTrigger` | `DialogTrigger`, unchanged |
+| `SettingsDialogContent` | Renders `DialogContent` with the nav beside the page, stacked on narrow screens, and a `DialogCloseButton`; takes no `size`; `sx` goes to the popup |
 | `SettingsDialogNav` | `label` (required) names the nav; `title` labels its group; `sx` goes to the `Sidebar` |
 | `SettingsDialogPage` | `title` (required) and `description` render as `DialogTitle` and `DialogDescription`; `leading` sits before the title and `action` at the end of its line |
 
-Every part takes `sx`, applied last. For the rest, see [Dialog](/docs/components/dialog) and [Sidebar](/docs/components/sidebar).
+Every part but `SettingsDialog` takes `sx`, applied last. For the rest, see [Dialog](/docs/components/dialog) and [Sidebar](/docs/components/sidebar).

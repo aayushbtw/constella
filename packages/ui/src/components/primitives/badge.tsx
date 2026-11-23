@@ -4,7 +4,7 @@ import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   badgeVars,
   colors,
@@ -277,8 +277,7 @@ function Badge({
         "data-slot": "badge",
         "data-variant": variant,
       },
-      props,
-      stylex.props(badgeStyles({ size, color, variant }), sx)
+      withStyles(props, stylex.props(badgeStyles({ size, color, variant }), sx))
     ),
     render
   );
@@ -295,8 +294,7 @@ function BadgeDot({
       aria-hidden
       data-icon="inline-start"
       data-slot="badge-dot"
-      {...props}
-      {...stylex.props(styles.dot, sx)}
+      {...withStyles(props, stylex.props(styles.dot, sx))}
     />
   );
 }

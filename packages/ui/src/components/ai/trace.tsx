@@ -3,6 +3,7 @@
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { announce, prepareAnnouncements } from "@ui-sdk/core";
 import {
   createContext,
   use,
@@ -21,7 +22,7 @@ import {
 } from "@/components/primitives/collapsible";
 import { SwapText } from "@/components/primitives/swap-text";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -65,7 +66,7 @@ const InTrigger = createContext<"run" | "step" | undefined>(undefined);
 
 // True once the Trace has mounted: only a step that arrives after it gets an entrance, so a
 // run read back from history, or rendered on the server, lands without one.
-const Live = createContext<{ readonly current: boolean }>({ current: false });
+const Live = createContext(false);
 
 const step = "[data-slot='trace-step']";
 const triggerOpen = ":is([data-slot='collapsible-trigger'][data-open] *)";
@@ -385,7 +386,7 @@ function useArrival<T extends HTMLElement>(carried = false) {
   const live = use(Live);
   const ref = useRef<T>(null);
   // Read once, at mount: whether the Trace was already on screen when this arrived.
-  const [arrived, setArrived] = useState(() => carried || !live.current);
+  const [arrived, setArrived] = useState(() => carried || !live);
   useEffect(() => {
     const animations = ref.current?.getAnimations() ?? [];
     const settle = async () => {
@@ -397,6 +398,43 @@ function useArrival<T extends HTMLElement>(carried = false) {
     void settle();
   }, []);
   return [!arrived, ref] as const;
+}
+
+// A Swap Text keeps its letters, outgoing ones too, under aria-hidden beside a copy of the whole text.
+function spoken(node: Node): string {
+  if (node instanceof Element) {
+    return node.getAttribute("aria-hidden") === "true"
+      ? ""
+      : Array.from(node.childNodes, spoken).join("");
+  }
+  return node.textContent ?? "";
+}
+
+function useAnnounceStateChange(
+  stepRef: { readonly current: HTMLElement | null },
+  state: TraceState | undefined
+) {
+  const previous = useRef(state);
+  useEffect(() => {
+    if (previous.current === state) {
+      return;
+    }
+    previous.current = state;
+    if (state !== undefined && state !== "error") {
+      return;
+    }
+    const line =
+      stepRef.current?.querySelector("[data-slot='trace-line']") ?? null;
+    if (line === null) {
+      return;
+    }
+    const label = spoken(line).replaceAll(/\s+/gu, " ").trim();
+    if (state === "error") {
+      announce(label, { priority: "assertive" });
+    } else {
+      announce(`${label}, done`);
+    }
+  }, [state, stepRef]);
 }
 
 /** A link or trigger's styles, for one that wraps a `TraceLine`. */
@@ -419,13 +457,18 @@ function Chevron() {
 
 /** The steps an agent takes, on one rail. */
 function Trace({ sx, ...props }: Styled<ComponentProps<"div">>) {
-  const live = useRef(false);
+  const [live, setLive] = useState(false);
   useEffect(() => {
-    live.current = true;
+    // oxlint-disable-next-line react/set-state-in-effect -- the second render is the point; only steps mounted after it enter
+    setLive(true);
+    prepareAnnouncements(document);
   }, []);
   return (
     <Live value={live}>
-      <div data-slot="trace" {...props} {...stylex.props(styles.trace, sx)} />
+      <div
+        data-slot="trace"
+        {...withStyles(props, stylex.props(styles.trace, sx))}
+      />
     </Live>
   );
 }
@@ -448,6 +491,7 @@ function TraceStep({
 } & Pick<CollapsibleProps, "defaultOpen" | "onOpenChange" | "open">) {
   const [growing, stepRef] = useArrival<HTMLDivElement>();
   const [arriving, innerRef] = useArrival<HTMLDivElement>();
+  useAnnounceStateChange(stepRef, state);
   const context = useMemo(
     () => ({ arriving: growing || arriving, state }),
     [arriving, growing, state]
@@ -488,11 +532,13 @@ function TraceLine({ sx, ...props }: Styled<ComponentProps<"span">>) {
   return (
     <span
       data-slot="trace-line"
-      {...props}
-      {...stylex.props(
-        [typeStyles.textSm, styles.line],
-        state === "pending" && styles.pending,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.line],
+          state === "pending" && styles.pending,
+          sx
+        )
       )}
     />
   );
@@ -551,8 +597,7 @@ function TraceIcon({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="trace-icon"
-      {...props}
-      {...stylex.props(styles.icon, sx)}
+      {...withStyles(props, stylex.props(styles.icon, sx))}
     />
   );
 }
@@ -577,8 +622,7 @@ function TraceSubject({ sx, ...props }: Styled<ComponentProps<"span">>) {
       {" "}
       <span
         data-slot="trace-subject"
-        {...props}
-        {...stylex.props(styles.subject, sx)}
+        {...withStyles(props, stylex.props(styles.subject, sx))}
       />
     </>
   );
@@ -593,12 +637,14 @@ function TraceDescription({ sx, ...props }: Styled<ComponentProps<"span">>) {
       {" "}
       <span
         data-slot="trace-description"
-        {...props}
-        {...stylex.props(
-          styles.description,
-          inRun && styles.descriptionInRun,
-          state === "error" && styles.descriptionError,
-          sx
+        {...withStyles(
+          props,
+          stylex.props(
+            styles.description,
+            inRun && styles.descriptionInRun,
+            state === "error" && styles.descriptionError,
+            sx
+          )
         )}
       />
     </>
@@ -750,8 +796,10 @@ function TraceSubsteps({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="trace-substeps"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.substeps], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.substeps], sx)
+      )}
     />
   );
 }

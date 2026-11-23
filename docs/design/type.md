@@ -2,13 +2,14 @@
 
 ## Scale
 
-After Interfere's: headings rank 1 (largest) to 6, text steps around `textBase`, captions under `textSm`. Every step matches Interfere's, and so do titles: a dialog's is `textBase`, a drawer's `textLg`, both medium. Each step is a `fontSizes` and `lineHeights` pair of the same name, set together (`constella/type-scale` enforces it); weight is separate. Every size is a multiple of `typeUnit` and every line height of `leadingUnit`, both `0.25rem` (4px at a 16px root) in `tokens.stylex.ts`, so text follows the reader's browser font size; 15, 13 and 11 add 1px.
+After Interfere's: headings rank 1 (largest) to 6, text steps around `textBase`, captions under `textSm`. Every step matches Interfere's except reading copy, a pixel over at 16 so a chat reads like ChatGPT's, and so do titles: a dialog's is `textBase`, a drawer's `textLg`, both medium. Each step is a `fontSizes` and `lineHeights` pair of the same name, set together (`constella/type-scale` enforces it); weight is separate. Every size is a multiple of `typeUnit` and every line height of `leadingUnit`, both `0.25rem` (4px at a 16px root) in `tokens.stylex.ts`, so text follows the reader's browser font size; 13 and 11 add 1px.
 
 | Step | Size / line height (px at a 16px root) | For |
 | --- | --- | --- |
 | `heading1`–`heading6` | 56/56, 44/56, 36/44, 28/36, 24/32, 20/24, `letterSpacings.heading` | Page and section titles in the app; a Markdown h1 takes `heading6` |
 | `textLg` | 18/24 | A side panel's title; Markdown h2–h4 and a docs page's h2, in semibold |
-| `textBase` | 15/24 | Reading copy: the docs, an app's pages, a chat's answers, messages and composer; a dialog, card or field set's title, in medium; a docs page's h3, in semibold |
+| `textBase` | 16/24 | Reading copy: the docs, an app's pages, a chat's messages and composer; a dialog, card or field set's title, in medium; a docs page's h3, in semibold |
+| `textProse` | 16/28 | Running prose read at length: a chat's answer (Markdown) |
 | `textMd` | 14/20 | Rows read at a glance, a step over the controls around them: a sidebar's, a default item's, a table's, a default menu's, select's and command's |
 | `textSm` | 13/20 | Every control and the text inside components: labels, descriptions, rows, `sm` menus |
 | `captionLg` | 12/16 | Keycaps, `xs` controls, badges, menu labels and shortcuts |

@@ -8,6 +8,8 @@ import {
   AvatarImage as AvatarImagePrimitive,
   Avatar as AvatarPrimitive,
 } from "@ui-sdk/react/avatar";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { renderElement } from "@ui-sdk/react/primitive";
 import { createContext, use, useMemo } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
@@ -20,7 +22,7 @@ import {
 } from "@/components/primitives/hover-card";
 import type { HoverCardController } from "@/components/primitives/hover-card";
 import type { Sx } from "@/lib/constella/styles";
-import { stateStyles, typeStyles } from "@/lib/constella/styles";
+import { stateStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -208,27 +210,38 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
 }
 
 type CitationSourceProps = Omit<
-  ComponentProps<"a">,
-  "children" | "className" | "href" | "rel" | "style" | "target"
+  ComponentProps<typeof ButtonPrimitive>,
+  "children" | "className" | "render" | "style"
 > & { source: Source; sx?: Sx };
 
-/** One source's row, linked to its page: the card lists them, and so can a panel. */
+/** One source's row, linked to its page: the card lists them, and so does the answer. */
 function CitationSource({ source, sx, ...props }: CitationSourceProps) {
   const current =
     props["aria-current"] === true || props["aria-current"] === "true";
   return (
-    <a
-      data-slot="citation-source"
-      {...props}
-      href={source.url}
-      rel="noreferrer"
-      target="_blank"
-      {...stylex.props(
-        styles.source,
-        stateStyles.ghost,
-        current && styles.current,
-        sx
+    <ButtonPrimitive
+      aria-label={[source.name, source.title, source.date]
+        .filter(Boolean)
+        .join(", ")}
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.source,
+          stateStyles.ghost,
+          current && styles.current,
+          sx
+        )
       )}
+      // A ui-sdk Button, not a bare link, so an agent's snapshot lists each source.
+      render={(rendered) =>
+        renderElement("a", {
+          ...rendered,
+          "data-slot": "citation-source",
+          href: source.url,
+          rel: "noreferrer",
+          target: "_blank",
+        })
+      }
     >
       <span {...stylex.props(styles.publication)}>
         <Logo source={source} sx={styles.logoCard} />
@@ -249,7 +262,7 @@ function CitationSource({ source, sx, ...props }: CitationSourceProps) {
       {source.date === undefined ? null : (
         <span {...stylex.props(styles.date)}>{source.date}</span>
       )}
-    </a>
+    </ButtonPrimitive>
   );
 }
 

@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -37,8 +38,7 @@ function Skeleton({ sx, ...props }: Styled<ComponentProps<"div">>) {
     <div
       aria-hidden
       data-slot="skeleton"
-      {...props}
-      {...stylex.props(styles.skeleton, sx)}
+      {...withStyles(props, stylex.props(styles.skeleton, sx))}
     />
   );
 }

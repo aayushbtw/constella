@@ -1,11 +1,22 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { setPlatform } from "@ui-sdk/core/testing";
 import { createAgent } from "@ui-sdk/react/agent";
-import { withSource } from "@ui-sdk/react/observe";
 import { useState } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vite-plus/test";
 
+import { pressKeys } from "../../../test/keys";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./collapsible";
 import { Dialog, DialogContent, DialogTitle } from "./dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -117,7 +128,7 @@ function row(name: string) {
 
 test("an agent finds every sidebar control by name", async () => {
   renderApp();
-  await screen.findByRole("button", { name: "Collapse sidebar" });
+  await screen.findByRole("button", { expanded: true, name: "Toggle sidebar" });
 
   const components = entries();
   for (const entry of components) {
@@ -132,8 +143,8 @@ test("an agent finds every sidebar control by name", async () => {
     "Inbox",
     "Add project",
     "Mark all read",
-    "Toggle Sidebar",
-    "Collapse sidebar",
+    "Sidebar rail",
+    "Toggle sidebar",
   ]) {
     expect(labels, `${label} is missing from the snapshot`).toContain(label);
   }
@@ -176,12 +187,15 @@ test("an agent presses rows to switch pages, presses the actions, and collapses 
   const sidebar = document.querySelector<HTMLElement>("[data-slot='sidebar']");
   expect(sidebar?.dataset.collapsible).toBeUndefined();
   const collapsed = await agent.act({
-    steps: [{ action: "press", ref: "Toggle Sidebar" }],
+    steps: [{ action: "press", ref: "Sidebar rail" }],
   });
   expect(collapsed.ok, collapsed.error?.message).toBe(true);
   expect(sidebar?.dataset.collapsible).toBe("icon");
   expect(
-    await screen.findByRole("button", { name: "Expand sidebar" })
+    await screen.findByRole("button", {
+      expanded: false,
+      name: "Toggle sidebar",
+    })
   ).toBeTruthy();
 });
 
@@ -192,20 +206,22 @@ test("a keyboard press on the trigger toggles at once, an agent's press animates
   );
   const sidebar = document.querySelector<HTMLElement>("[data-slot='sidebar']");
 
-  const collapse = await screen.findByRole("button", {
-    name: "Collapse sidebar",
+  const trigger = await screen.findByRole("button", {
+    expanded: true,
+    name: "Toggle sidebar",
   });
-  withSource("keyboard", () => {
-    fireEvent.click(collapse);
-  });
+  trigger.focus();
+  await pressKeys("Enter");
   expect(sidebar?.dataset.collapsible).toBe("icon");
+  expect(trigger.getAttribute("aria-expanded")).toBe("false");
   expect(Object.hasOwn(wrapper?.dataset ?? {}, "instant")).toBe(true);
 
   const expanded = await agent.act({
-    steps: [{ action: "press", ref: "Expand sidebar" }],
+    steps: [{ action: "press", ref: "Toggle sidebar" }],
   });
   expect(expanded.ok, expanded.error?.message).toBe(true);
   expect(sidebar?.dataset.collapsible).toBeUndefined();
+  expect(trigger.getAttribute("aria-expanded")).toBe("true");
   expect(Object.hasOwn(wrapper?.dataset ?? {}, "instant")).toBe(false);
 });
 
@@ -248,13 +264,19 @@ test("a provider given only onOpenChange still toggles, and reports each change"
   const sidebar = document.querySelector<HTMLElement>("[data-slot='sidebar']");
 
   fireEvent.click(
-    await screen.findByRole("button", { name: "Collapse sidebar" })
+    await screen.findByRole("button", {
+      expanded: true,
+      name: "Toggle sidebar",
+    })
   );
   expect(sidebar?.dataset.collapsible).toBe("icon");
   expect(onOpenChange).toHaveBeenLastCalledWith(false);
 
   fireEvent.click(
-    await screen.findByRole("button", { name: "Expand sidebar" })
+    await screen.findByRole("button", {
+      expanded: false,
+      name: "Toggle sidebar",
+    })
   );
   expect(sidebar?.dataset.collapsible).toBeUndefined();
   expect(onOpenChange).toHaveBeenLastCalledWith(true);
@@ -273,14 +295,134 @@ test("a controlled provider stays where its open prop puts it", async () => {
     </SidebarProvider>
   );
 
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Collapse sidebar" })
-  );
+  const trigger = await screen.findByRole("button", {
+    expanded: true,
+    name: "Toggle sidebar",
+  });
+  fireEvent.click(trigger);
   expect(onOpenChange).toHaveBeenCalledWith(false);
+  expect(trigger.getAttribute("aria-expanded")).toBe("true");
   expect(
     document.querySelector<HTMLElement>("[data-slot='sidebar']")?.dataset
       .collapsible
   ).toBeUndefined();
+});
+
+test("with the rail mounted, an agent's Toggle sidebar names only the trigger", async () => {
+  renderApp();
+  const trigger = await screen.findByRole("button", {
+    expanded: true,
+    name: "Toggle sidebar",
+  });
+
+  const matches = entries().filter(
+    (entry) => entry.label?.toLowerCase() === "toggle sidebar"
+  );
+  expect(matches).toHaveLength(1);
+  expect(matches[0]?.component).toBe("button");
+
+  const pressed = await agent.act({
+    steps: [{ action: "press", ref: "Toggle sidebar" }],
+  });
+  expect(pressed.ok, pressed.error?.message).toBe(true);
+  expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  expect(
+    document.querySelector<HTMLElement>("[data-slot='sidebar']")?.dataset
+      .collapsible
+  ).toBe("icon");
+});
+
+test("on a narrow screen the trigger keeps its name and opens the sheet as a dialog", async () => {
+  vi.stubGlobal("matchMedia", (query: string) => ({
+    addEventListener: () => {},
+    matches: false,
+    media: query,
+    removeEventListener: () => {},
+  }));
+  renderApp();
+
+  const trigger = await screen.findByRole("button", {
+    expanded: false,
+    name: "Toggle sidebar",
+  });
+  expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
+
+  fireEvent.click(trigger);
+  expect(await screen.findByRole("dialog", { name: "Sidebar" })).toBeTruthy();
+  expect(trigger.getAttribute("aria-expanded")).toBe("true");
+});
+
+test("a row that opens a collapsible sub-menu is expanded, and an agent closes it", async () => {
+  render(
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarContent>
+          <SidebarMenu>
+            <Collapsible defaultOpen render={<SidebarMenuItem />}>
+              <CollapsibleTrigger render={<SidebarMenuButton tooltip="Docs" />}>
+                Docs
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton>Installation</SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton>Theming</SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+
+  const docs = await screen.findByRole("button", {
+    expanded: true,
+    name: "Docs",
+  });
+  expect(screen.getByRole("button", { name: "Installation" })).toBeTruthy();
+  expect(Object.hasOwn(docs.dataset, "sidebarMenuButton")).toBe(true);
+  expect(
+    Object.hasOwn(docs.closest("li")?.dataset ?? {}, "sidebarMenuItem")
+  ).toBe(true);
+
+  const closed = await agent.act({ steps: [{ action: "press", ref: "Docs" }] });
+  expect(closed.ok, closed.error?.message).toBe(true);
+  expect(docs.getAttribute("aria-expanded")).toBe("false");
+  expect(screen.queryByRole("button", { name: "Installation" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Theming" })).toBeNull();
+});
+
+test("a row a menu trigger renders keeps its row attribute", async () => {
+  render(
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={<SidebarMenuButton tooltip="Account" />}
+                >
+                  Account
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+
+  const account = await screen.findByRole("button", { name: "Account" });
+  expect(account.getAttribute("aria-haspopup")).toBe("menu");
+  expect(Object.hasOwn(account.dataset, "sidebarMenuButton")).toBe(true);
 });
 
 test("an agent finds and presses a sub row link, which stays a link", async () => {

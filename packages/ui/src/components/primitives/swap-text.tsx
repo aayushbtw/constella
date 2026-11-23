@@ -7,6 +7,18 @@ import { useTextMorph } from "torph/react";
 import type { Sx } from "@/lib/constella/styles";
 import { durations, easings } from "@/lib/constella/tokens.stylex";
 
+// Torph's root rule, copied so `sx` can override it. `base.css` reverts Torph's own copy.
+const styles = stylex.create({
+  root: {
+    display: "inline-block",
+    position: "relative",
+    textAlign: "inherit",
+    verticalAlign: "top",
+    whiteSpace: "nowrap",
+    willChange: "width, height",
+  },
+});
+
 const morphFor = Number(durations.crossfade.slice(0, -"ms".length));
 
 function Lines({ text }: { text: string }) {
@@ -42,7 +54,7 @@ function SwapText({ children, sx }: { children: string; sx?: Sx }) {
     update(children);
   }, [children, update]);
   return (
-    <span data-slot="swap-text" ref={ref} {...stylex.props(sx)}>
+    <span data-slot="swap-text" ref={ref} {...stylex.props(styles.root, sx)}>
       <FirstLines text={children} />
     </span>
   );

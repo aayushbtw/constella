@@ -23,6 +23,7 @@ import {
   controlIconSize,
   typeStyles,
   visuallyHidden,
+  withStyles,
 } from "@/lib/constella/styles";
 import {
   colors,
@@ -168,8 +169,7 @@ function Calendar({
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- ui-sdk renders a div; a fieldset would bring its own border and padding
       role="group"
       showOutsideDays={showOutsideDays}
-      {...props}
-      {...stylex.props(styles.root, sx)}
+      {...withStyles(props, stylex.props(styles.root, sx))}
     >
       {children ?? <CalendarMonths months={months} />}
     </CalendarPrimitive>
@@ -186,8 +186,7 @@ function CalendarMonths({
   return (
     <div
       data-slot="calendar-months"
-      {...props}
-      {...stylex.props(styles.months, sx)}
+      {...withStyles(props, stylex.props(styles.months, sx))}
     >
       <CalendarPrevious />
       <CalendarHeading sx={visuallyHidden.base} />
@@ -205,8 +204,10 @@ function CalendarHeading({
 }: Styled<ComponentProps<typeof CalendarHeadingPrimitive>>) {
   return (
     <CalendarHeadingPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.heading], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.heading], sx)
+      )}
     />
   );
 }
@@ -226,12 +227,14 @@ function Arrow({ icon }: { icon: typeof ArrowLeft01Icon }) {
 function CalendarPrevious({ children, sx, ...props }: StepProps) {
   return (
     <CalendarPreviousPrimitive
-      {...props}
-      {...stylex.props(
-        buttonStyles({ size: "icon-sm", variant: "ghost" }),
-        styles.step,
-        styles.previous,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          buttonStyles({ size: "icon-sm", variant: "ghost" }),
+          styles.step,
+          styles.previous,
+          sx
+        )
       )}
     >
       {children ?? <Arrow icon={ArrowLeft01Icon} />}
@@ -242,12 +245,14 @@ function CalendarPrevious({ children, sx, ...props }: StepProps) {
 function CalendarNext({ children, sx, ...props }: StepProps) {
   return (
     <CalendarNextPrimitive
-      {...props}
-      {...stylex.props(
-        buttonStyles({ size: "icon-sm", variant: "ghost" }),
-        styles.step,
-        styles.next,
-        sx
+      {...withStyles(
+        props,
+        stylex.props(
+          buttonStyles({ size: "icon-sm", variant: "ghost" }),
+          styles.step,
+          styles.next,
+          sx
+        )
       )}
     >
       {children ?? <Arrow icon={ArrowRight01Icon} />}
@@ -264,7 +269,9 @@ function CalendarGrid({
   children?: ReactNode;
 }) {
   return (
-    <CalendarGridPrimitive {...props} {...stylex.props(styles.grid, sx)}>
+    <CalendarGridPrimitive
+      {...withStyles(props, stylex.props(styles.grid, sx))}
+    >
       {(state) => (
         <>
           <caption
@@ -296,7 +303,7 @@ function CalendarWeekdays({
   ...props
 }: Styled<ComponentProps<typeof CalendarWeekdaysPrimitive>>) {
   return (
-    <CalendarWeekdaysPrimitive {...props} {...stylex.props(sx)}>
+    <CalendarWeekdaysPrimitive {...withStyles(props, stylex.props(sx))}>
       {children}
     </CalendarWeekdaysPrimitive>
   );
@@ -308,8 +315,10 @@ function CalendarWeekday({
 }: Styled<ComponentProps<typeof CalendarWeekdayPrimitive>>) {
   return (
     <CalendarWeekdayPrimitive
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.weekday], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.weekday], sx)
+      )}
     />
   );
 }
@@ -324,7 +333,7 @@ function CalendarWeeks({
   ...props
 }: Styled<ComponentProps<typeof CalendarWeeksPrimitive>>) {
   return (
-    <CalendarWeeksPrimitive {...props} {...stylex.props(sx)}>
+    <CalendarWeeksPrimitive {...withStyles(props, stylex.props(sx))}>
       {children}
     </CalendarWeeksPrimitive>
   );
@@ -336,8 +345,7 @@ function CalendarDay({
 }: Styled<ComponentProps<typeof CalendarDayPrimitive>>) {
   return (
     <CalendarDayPrimitive
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.day], sx)}
+      {...withStyles(props, stylex.props([typeStyles.textSm, styles.day], sx))}
     />
   );
 }

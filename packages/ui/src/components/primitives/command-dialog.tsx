@@ -1,16 +1,18 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps, ReactNode } from "react";
+import { Dialog as DialogPrimitive } from "@ui-sdk/react/dialog";
+import type { DialogProps } from "@ui-sdk/react/dialog";
+import type { ReactNode } from "react";
 
 import {
-  Dialog,
   DialogBackdrop,
   DialogDescription,
   DialogPopup,
+  DialogSkipMotion,
   DialogTitle,
 } from "@/components/primitives/dialog";
-import { skipsMotion, useSkipMotion } from "@/lib/constella/motion";
+import { skipsMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
 import { visuallyHidden } from "@/lib/constella/styles";
 import { radii, space } from "@/lib/constella/tokens.stylex";
@@ -32,7 +34,7 @@ const styles = stylex.create({
   },
 });
 
-type CommandDialogProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
+type CommandDialogProps = Omit<DialogProps, "children"> & {
   children: ReactNode;
   description?: string;
   sx?: Sx;
@@ -49,29 +51,30 @@ function CommandDialog({
   children,
   description = "Search for a command to run...",
   onOpenChange,
+  onOpenChangeComplete,
   sx,
   title = "Command Palette",
   ...props
 }: CommandDialogProps) {
-  const [skip, handleOpenChange] = useSkipMotion(
-    onOpenChange,
-    skipsDialogMotion
-  );
   return (
-    <Dialog onOpenChange={handleOpenChange} {...props}>
-      <DialogBackdrop data-skip-motion={skip || undefined} />
-      <DialogPopup
-        data-skip-motion={skip || undefined}
-        size="lg"
-        sx={[styles.dialog, sx]}
-      >
-        <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
-        <DialogDescription sx={visuallyHidden.base}>
-          {description}
-        </DialogDescription>
-        {children}
-      </DialogPopup>
-    </Dialog>
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+      skips={skipsDialogMotion}
+    >
+      {(handlers) => (
+        <DialogPrimitive {...handlers} {...props}>
+          <DialogBackdrop />
+          <DialogPopup size="lg" sx={[styles.dialog, sx]}>
+            <DialogTitle sx={visuallyHidden.base}>{title}</DialogTitle>
+            <DialogDescription sx={visuallyHidden.base}>
+              {description}
+            </DialogDescription>
+            {children}
+          </DialogPopup>
+        </DialogPrimitive>
+      )}
+    </DialogSkipMotion>
   );
 }
 

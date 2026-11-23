@@ -1,12 +1,19 @@
 "use client";
 
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { renderElement } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, stateStyles, typeStyles } from "@/lib/constella/styles";
+import {
+  joinStyles,
+  stateStyles,
+  typeStyles,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -311,8 +318,10 @@ function Button({
       data-size={size}
       data-color={color}
       data-variant={variant}
-      {...props}
-      {...stylex.props(buttonStyles({ corners, size, color, variant }), sx)}
+      {...withStyles(
+        props,
+        stylex.props(buttonStyles({ corners, size, color, variant }), sx)
+      )}
       // ui-sdk writes `button` over a passed slot; a part built on Button keeps its own.
       render={
         slot === undefined
@@ -329,8 +338,31 @@ function Button({
   );
 }
 
+type CloseButtonProps = Omit<ButtonProps, "size" | "variant">;
+
+/** The ghost X that shuts a surface; each surface renders its own Close through it. */
+function CloseButton({
+  "aria-label": label = "Close",
+  children,
+  ...props
+}: CloseButtonProps) {
+  return (
+    <Button aria-label={label} size="icon-sm" variant="ghost" {...props}>
+      {children ?? (
+        <HugeiconsIcon
+          aria-hidden
+          icon={Cancel01Icon}
+          size={sizes.icon}
+          strokeWidth={Number(strokes.icon)}
+        />
+      )}
+    </Button>
+  );
+}
+
 export {
   Button,
+  CloseButton,
   buttonCorners,
   buttonSizes,
   buttonColors,
@@ -344,4 +376,5 @@ export type {
   ButtonColor,
   ButtonStyleOptions,
   ButtonVariant,
+  CloseButtonProps,
 };
