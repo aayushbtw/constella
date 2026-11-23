@@ -72,7 +72,7 @@ Say these plainly if asked; don't imply otherwise.
 - **The agent audit runs by hand.** CI runs check, test and build (`.github/workflows/ci.yml`). `vpr agent-audit` doesn't run there.
 - **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Trace's steps with no trigger and Prompt Input's slash-command `insert`.
 - **ui-sdk is beta.** Its agent key is experimental, and so are `createHistory` and `stageChanges`.
-- **The production site ships no agent bridge yet.** It loads in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
+- **The production site ships the agent bridge, not the activity panel yet.** The bridge loads in `apps/site/src/router.tsx` (confirm steps fail closed with no dialog mounted); the experimental history, activity panel and staged-edits page load only in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
 
 ## Messaging options
 
