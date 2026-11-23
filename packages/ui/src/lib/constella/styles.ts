@@ -91,6 +91,13 @@ const popupReset = stylex.create({
     userSelect: "text",
     whiteSpace: "normal",
   },
+  // ui-sdk's menu, select, combobox, date picker and trigger menu keep the browser's `[popover]` border.
+  borderless: {
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
+  },
 });
 
 const popupSurface = stylex.create({

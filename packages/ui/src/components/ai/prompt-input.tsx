@@ -182,12 +182,7 @@ const styles = stylex.create({
     paddingInlineEnd: barInset,
     paddingInlineStart: barInset,
   },
-  // ui-sdk's trigger menu leaves the browser's `[popover]` border.
   commandContent: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     maxHeight: "var(--available-height)",
     paddingBlockStart: {
       default: space.xxs,
@@ -552,6 +547,7 @@ function PromptInputCommandContent({
         props,
         stylex.props(
           popupReset.base,
+          popupReset.borderless,
           popupSurface.base,
           commandStyles.surface,
           styles.commandContent,

@@ -157,12 +157,8 @@ const styles = stylex.create({
     display: "flex",
     flexShrink: 0,
   },
-  // ui-sdk's select leaves the browser's `[popover]` border and margin.
+  // ui-sdk's select leaves the browser's `[popover]` margin.
   content: {
-    borderBlockEndWidth: 0,
-    borderBlockStartWidth: 0,
-    borderInlineEndWidth: 0,
-    borderInlineStartWidth: 0,
     color: colors.textPrimary,
     display: { default: null, [searchable]: "flex" },
     flexDirection: "column",
@@ -446,6 +442,7 @@ function SelectContent({
           props,
           stylex.props(
             popupReset.base,
+            popupReset.borderless,
             popupSurface.base,
             styles.content,
             popupMotion.popover,
