@@ -5,7 +5,13 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { expect, test } from "vite-plus/test";
+import { expect, test, vi } from "vite-plus/test";
+
+// Each agent step waits two frames, and jsdom's are 60Hz wall-clock timers that stretch under load.
+vi.stubGlobal("requestAnimationFrame", (frame: FrameRequestCallback) =>
+  setTimeout(frame, 0, performance.now())
+);
+vi.stubGlobal("cancelAnimationFrame", clearTimeout);
 
 Object.assign(document, {
   modelContext: {
@@ -43,6 +49,12 @@ async function expectNoDialog() {
   });
 }
 
+async function refuse() {
+  const dialog = await askedDialog();
+  fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+  await expectNoDialog();
+}
+
 async function expectNoCard() {
   await waitFor(() => {
     expect(screen.queryByRole("group", { name: /suggested/u })).toBeNull();
@@ -73,6 +85,11 @@ test("Suggest puts every change on the controls and lists each one's before and 
   expect(region()).toContain("North America");
   expect(digest()).toBe("true");
   expect(button("Suggest changes").hasAttribute("disabled")).toBe(true);
+  await waitFor(() => {
+    expect(document.activeElement).toBe(
+      suggestion.getByRole("button", { name: "Discard" })
+    );
+  });
 });
 
 test("Discard puts every control back and removes the card", async () => {
@@ -168,4 +185,24 @@ test("a confirm-marked control asks on staging, asks again on Discard, and a ref
   expect(digest()).toBe("true");
   expect(projectName()).toBe("Atlas");
   expect(region()).toContain("Europe");
+});
+
+test("when the person refuses every change, nothing is staged and focus goes back to Suggest", async () => {
+  render(<AgentStaged />);
+  for (const field of document.querySelectorAll<HTMLElement>(
+    '[data-slot="field"]'
+  )) {
+    field.dataset.agentConfirm = "Changes a setting";
+  }
+
+  fireEvent.click(button("Suggest changes"));
+  await refuse();
+  await refuse();
+  await refuse();
+
+  await screen.findByText("None of the suggested changes could be applied.");
+  await waitFor(() => {
+    expect(document.activeElement).toBe(button("Suggest changes"));
+  });
+  expect(projectName()).toBe("Atlas");
 });
