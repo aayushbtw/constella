@@ -229,14 +229,13 @@ test("a sorted column's header says which way it sorts", () => {
   ).toBe(false);
 });
 
-// ui-sdk treats the header row as a row, so its text puts "Email" on every header control.
-test("a column header's title is ambiguous as a ref, so an agent presses it by its ref", async () => {
+test("an agent presses a sortable column header by its title", async () => {
   render(<Basic />);
   const result = await agent.act({
     steps: [{ action: "press", ref: "Email" }],
   });
-  expect(result.ok).toBe(false);
-  expect(result.error?.message).toContain('"Email" names 3 components');
+  expect(result.ok, result.error?.message).toBe(true);
+  expect(sortOf("Email")).toBe("ascending");
 });
 
 const filterFeatures = tableFeatures({

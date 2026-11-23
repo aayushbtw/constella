@@ -44,7 +44,7 @@ Each links to a file with Incorrect/Correct pairs.
 - **A link that looks like a button is `<Button render={<a href="…" />}>`.** It keeps its link role. Not a Button that navigates in `onClick`.
 - **Dialog, Sheet and AlertDialog always need a Title.** Hide it with `sx={visuallyHidden.base}`.
 - **`Select` takes `items`; `Command` picks with `onSelect`.** Map `CommandItem`s as children, each with a string `value`. Enter doesn't fire `onClick`.
-- **Button has no `isLoading`.** Compose `Spinner` + `data-icon` + `aria-busy` + `disabled`.
+- **Button has no `isLoading`.** Return a Promise from `onClick` (with `pendingAnnouncement` and a `state.pending` function child + `<Spinner aria-hidden data-icon="inline-start" />`), or set `aria-busy` for a button that stays pressable.
 - **Full Card composition**, `TabsTrigger` inside `TabsList`, `Avatar` always with `AvatarFallback`.
 - **Don't wrap a component to restyle it.** Pass `sx`, or use the variant.
 

@@ -81,6 +81,7 @@ Status: `todo`, `doing`, `pr`, `merged`, `blocked`, and `done` for a task that n
 | `useRender`/`mergeProps` to `renderElement`/`mergeProps` from `@ui-sdk/react/primitive` | merged | [#16](https://github.com/aayushbtw/constella/pull/16) | 21 files; textarea stays with its row |
 | Vitest, jsdom stubs and `__UI_SDK_STRICT__` per the skill's `testing.md` | merged | [#18](https://github.com/aayushbtw/constella/pull/18) |  |
 | Upgrade `@ui-sdk/core` and `@ui-sdk/react` from 0.1.0-beta.1 to 0.1.0-beta.13, skill re-vendored at the tag | merged | [#54](https://github.com/aayushbtw/constella/pull/54) | Ran between phase 3 waves 1 and 2. Tooltip content caps at `--available-width` |
+| Upgrade `@ui-sdk/core` and `@ui-sdk/react` from 0.1.0-beta.13 to 0.1.0-beta.16, skill re-vendored at the tag | done |  | Drops workarounds for #964 (Hover Card), #965 (Command SSR), #968 (Progress/Meter `aria-hidden`), #970 (Alert Dialog pending Close), #971 (Prompt Input `onChange`), #975 (Data Table header row), #978 (skill toast region) |
 
 ### Phases 1 to 5
 
@@ -224,15 +225,15 @@ These don't gate landing. The fixes above found them.
 
 | Gap | Notes |
 | --- | --- |
-| Markdown footnote ids repeat | GFM footnote ids repeat across Markdown blocks on one page, so a footnote link jumps into the first block. Every chat message with `[^1]` hits it. Pre-existing |
+| Markdown footnote ids repeat | Fixed in [#159](https://github.com/aayushbtw/constella/pull/159): each Markdown root prefixes footnote ids with `useId` |
 | Sidebar collapse and nav | Scoped out of [#142](https://github.com/aayushbtw/constella/pull/142) on the advisor's call. The sidebar's own collapse needs a sidebar primitive, because the rail must stay visible. Constella has no NavigationMenu, and the ui-sdk docs sidebar is a plain nav |
-| Sidebar names | The trigger inside the mobile sheet is still named "Close sidebar". The demo account row is now named "shadcn", from its tooltip text, not "shadcn Pro" ([#142](https://github.com/aayushbtw/constella/pull/142)) |
+| Sidebar names | The trigger inside the mobile sheet is still named "Close sidebar". The demo account row is named "shadcn Pro" since [#164](https://github.com/aayushbtw/constella/pull/164) |
 | Prompt Input's `/` menu in dev | The `/` command menu doesn't open on the dev server. Production builds work. Pre-existing |
-| Popup border resets | Select, Combobox, Dropdown Menu and Date Range Picker each reset the browser's `[popover]` border on their own. The resets differ in margin and padding, so they stayed out of `popupSurface` ([#157](https://github.com/aayushbtw/constella/pull/157)) |
-| Agent audit's trigger-and-popup test can't fail | The "a trigger and its popup share a name" case in `agent-names.test.tsx` sees one snapshot entry, so the `triggerAndPopup` branch never runs. The branch predates [#145](https://github.com/aayushbtw/constella/pull/145) |
-| `agent-staged.test.tsx` times out | It times out now and then under full-suite load |
-| `check-registry` and named catalogs | A `catalog:<name>` pin crashes with a stack trace. The error names `package.json` when the version comes from the catalog ([#146](https://github.com/aayushbtw/constella/pull/146)) |
-| Button docs | The Close Button section from [#143](https://github.com/aayushbtw/constella/pull/143) has no demo. `shadcn add button` now installs `@hugeicons/*` |
+| Popup border resets | Fixed in [#168](https://github.com/aayushbtw/constella/pull/168): shared as `popupReset.borderless` |
+| Agent audit's trigger-and-popup test can't fail | Fixed in [#165](https://github.com/aayushbtw/constella/pull/165) |
+| `agent-staged.test.tsx` times out | Fixed in [#162](https://github.com/aayushbtw/constella/pull/162) |
+| `check-registry` and named catalogs | Fixed in [#165](https://github.com/aayushbtw/constella/pull/165) |
+| Button docs | Close Button demo added in [#167](https://github.com/aayushbtw/constella/pull/167). `shadcn add button` installs `@hugeicons/*` for `CloseButton` |
 
 ## ui-sdk UX audit (2026-11-21)
 

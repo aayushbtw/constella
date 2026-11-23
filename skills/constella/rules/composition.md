@@ -210,7 +210,7 @@ Use the full composition. Don't put everything in `CardContent`.
 
 ## Button states
 
-Button has no `isLoading` or `isPending`. Compose it.
+Button has no `isLoading` or `isPending`. Return a Promise from `onClick` for pending work, or set `aria-busy` yourself when the button should stay pressable.
 
 **Incorrect:**
 
@@ -221,13 +221,17 @@ Button has no `isLoading` or `isPending`. Compose it.
 **Correct:**
 
 ```tsx
-<Button aria-busy disabled>
-  <Spinner data-icon="inline-start" />
-  Saving
+<Button onClick={save} pendingAnnouncement="Saving">
+  {(state) => (
+    <>
+      {state.pending && <Spinner aria-hidden data-icon="inline-start" />}
+      Save
+    </>
+  )}
 </Button>
 ```
 
-- `aria-busy` + `disabled`: loading, can't be pressed twice.
+- Async `onClick`: sets `aria-busy` and `data-pending`, ignores presses until the Promise settles, keeps focus, and announces `pendingAnnouncement`. Pass `aria-hidden` to `Spinner` so "Loading" isn't joined onto the button's name.
 - `aria-busy` alone: still pressable, for a button that acts on running work (Generate becomes Stop generating).
 - `disabled` alone: unavailable. Don't add your own disabled look.
 - `variant="primary"` once per view; `danger` for actions that delete.
@@ -236,12 +240,14 @@ Button has no `isLoading` or `isPending`. Compose it.
 
 ## Tooltip on a disabled control
 
-A disabled button takes no pointer events. Put the trigger on a wrapper.
+A natively disabled button can't take focus, so its tooltip never shows. Add `focusableWhenDisabled` so the button stays in the Tab order, reads as dimmed, ignores presses, and shows its tooltip on hover and focus.
 
 ```tsx
 <Tooltip>
-  <TooltipTrigger render={<span />}>
-    <Button disabled>Export</Button>
+  <TooltipTrigger
+    render={<Button disabled focusableWhenDisabled variant="outline" />}
+  >
+    Export
   </TooltipTrigger>
   <TooltipContent>Nothing to export yet</TooltipContent>
 </Tooltip>

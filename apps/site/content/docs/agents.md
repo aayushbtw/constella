@@ -210,7 +210,7 @@ agent: { actions: ["setValue", "clear"], secret: true },
 
 History can't put back a secret value, since it records `[redacted]`. Seeking or undoing leaves a secret field as it is and lists it among the changes it couldn't put back.
 
-**Don't put `data-agent-hidden` on the Toaster.** The mark hides every toast from the agent, so the agent can't read the toast its action raised or press the toast's **Undo**. An empty Toaster needs no mark, because ui-sdk leaves a toast region out of `snapshot` until it holds a toast. ui-sdk's agent-ready checklist still says to mark it, and that advice is filed as [vercel-labs/ui#978](https://github.com/vercel-labs/ui/issues/978).
+**Don't put `data-agent-hidden` on the Toaster.** The mark hides every toast from the agent, so the agent can't read the toast its action raised or press the toast's **Undo**. An empty Toaster needs no mark, because ui-sdk leaves a toast region out of `snapshot` until it holds a toast.
 
 ## WebMCP
 
@@ -310,8 +310,7 @@ Constella's AI and TanStack components are tested against the bridge. Each compo
 | --- | --- |
 | [Trace](/docs/components/trace#agent) | A step with no trigger is listed with no name. |
 | [Markdown](/docs/components/markdown#agent) | Two code blocks in the same language share a copy button name, so a press by that name fails. |
-| [Message](/docs/components/message#agent) | Copy, Retry and Good answer repeat on every reply in a chat. |
-| [Data Table](/docs/components/data-table#agent) | A press on a column header by its title fails, since ui-sdk reads the header row's text as row text for every header. |
-| [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.13's `insert` puts the raw text in place of the query. |
+| [Message](/docs/components/message#agent) | Actions on a standalone Message (outside a Message Scroller) or on two replies opening with the same words share a name, so press them by ref. |
+| [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.16's `insert` puts the raw text in place of the query. |
 | Scroll Area, as in [Data Table](/docs/components/data-table#agent), [Markdown](/docs/components/markdown#agent) and [Suggestions](/docs/components/suggestions#agent) | Some scroll areas are listed with no name and no actions. |
 | [Citation](/docs/components/citation#agent) | `setOpen` on a card shared by several pills opens it empty, since no pill picked its sources. |

@@ -512,20 +512,8 @@ function PromptInputCommand<T = string>({
   );
 }
 
-type PromptInputCommandTextareaProps = Omit<
-  PromptInputTextareaProps,
-  "onValueChange" | "value"
-> &
-  (
-    | { onValueChange?: TextareaProps["onValueChange"]; value?: undefined }
-    | {
-        onValueChange: NonNullable<TextareaProps["onValueChange"]>;
-        value: string;
-      }
-  );
-
-/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. Control it with `value` and `onValueChange`. */
-function PromptInputCommandTextarea(props: PromptInputCommandTextareaProps) {
+/** The prompt input's textarea as the command's field: while the list is open, arrows move, Enter and Tab pick, Esc closes. */
+function PromptInputCommandTextarea(props: PromptInputTextareaProps) {
   return <TriggerMenuInput render={<PromptInputTextarea {...props} />} />;
 }
 

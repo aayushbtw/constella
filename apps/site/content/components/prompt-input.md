@@ -173,7 +173,7 @@ What `agent.snapshot()` lists for the preview example:
 | Attach  | button    | `press`             |
 | Send    | button    | None while disabled |
 
-Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send. While the answer streams, Send leaves the snapshot and the agent finds Stop by its name. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.13's `insert` puts the raw text in place of the query and skips the command's own `insert`.
+Name the textarea with `aria-label`, like the example's "Message". The agent sets it with `setValue`, then presses Send. While the answer streams, Send leaves the snapshot and the agent finds Stop by its name. In the example, Send is disabled until the message has text. **The agent can't insert a slash command yet.** ui-sdk beta.16's `insert` puts the raw text in place of the query and skips the command's own `insert`.
 
 ## API Reference
 
@@ -182,7 +182,7 @@ Name the textarea with `aria-label`, like the example's "Message". The agent set
 | `PromptInput` | Skips a submit while its `PromptInputSubmit` can't send, and records each prompt that goes through for its textarea's history |
 | `PromptInputTextarea` | Submits on Enter. ArrowUp and ArrowDown step through earlier prompts. Takes every Textarea prop but `controller`, which the history writes through |
 | `PromptInputCommand` | ui-sdk's [Trigger Menu](https://ui-sdk.dev/docs/react/components/trigger-menu) root. Takes `triggers`, and holds a visually hidden status that tells screen readers how many commands match |
-| `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither. Control it with `value` and `onValueChange`, not `onChange`: a draft synced in `onChange` loses the typed `/`, so `value` requires `onValueChange` |
+| `PromptInputCommandTextarea` | `PromptInputTextarea` as the trigger menu's field. While the list is open, the arrows move the highlight, Enter and Tab pick, and Esc closes the list and keeps the text. Only plain Enter picks. Enter sends, and so do Ctrl+Enter on a Mac and Meta+Enter elsewhere; other modified Enters do neither |
 | `PromptInputCommandContent` | The popup on the composer, as wide as it, above it or below it when there's no room. Takes `side` (default `"top"`), `align` (default `"start"`) and `sideOffset` |
 | `PromptInputCommandList` | Trigger Menu's list, drawn as a Command list |
 | `PromptInputCommandItem` | A Command row. A pick runs its `onSelect`, then inserts what the trigger's `insert` returns, or `/`, its `label` and a space |

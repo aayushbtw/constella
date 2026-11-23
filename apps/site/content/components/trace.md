@@ -360,7 +360,7 @@ What `agent.snapshot()` lists for the preview example:
 | Label                         | Component   | Actions            |
 | ----------------------------- | ----------- | ------------------ |
 | No name                       | collapsible | `setOpen`, `press` |
-| Worked for 14s                | collapsible | `setOpen`, `press` |
+| Worked for 14 s               | collapsible | `setOpen`, `press` |
 | Sources for this run          | hover-card  | `setOpen`, `press` |
 | Run again                     | button      | `press`            |
 | Read Swedish orders           | collapsible | `setOpen`, `press` |
@@ -369,7 +369,7 @@ What `agent.snapshot()` lists for the preview example:
 | No name                       | collapsible | `setOpen`, `press` |
 | No name                       | collapsible | `setOpen`, `press` |
 
-The run and each step are named by their words on screen, like "Worked for 14s" and "Read Swedish orders". **A step with no trigger is listed with no name**, four of them in the preview. Act on one by the `ref` from the snapshot. Sources for this run is the example's [Citation](/docs/components/citation) card, and Run again is its replay button.
+The run and each step are named by their words on screen, like "Worked for 14 s" and "Read Swedish orders". **A step with no trigger is listed with no name**, four of them in the preview. Act on one by the `ref` from the snapshot. Sources for this run is the example's [Citation](/docs/components/citation) card, and Run again is its replay button.
 
 ## API Reference
 

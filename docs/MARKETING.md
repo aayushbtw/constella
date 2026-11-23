@@ -32,7 +32,7 @@ It's for React apps on the shadcn CLI that want a finished look their agents can
 | Dark mode is not a branch | Polar (`light-dark()`) | Tokens valued by Radix steps; the `.dark` class flips them; no component reads the theme | Architecture |
 | Themes set tokens, never code paths | Linear | `theme.stylex.ts`; builder on the Theming page | Architecture |
 | One escape hatch, each rule explained | Linear (CSS Modules) | `base.css` only; every rule says why StyleX can't reach it | Convention |
-| CI checks every push | Polar (rules in CI, not docs) | `.github/workflows/ci.yml` runs check and build on each push to `main` and each PR | CI |
+| CI checks every push | Polar (rules in CI, not docs) | `.github/workflows/ci.yml` runs check, test and build on each push to `main` and each PR | CI |
 | No rule of ours is switched off in code | Polar (audit `oxlint-disable`) | `rg 'oxlint-disable.*constella/'` returns nothing; the only override is `vite.config.ts`'s, for the `sx` type-test fixtures | Lint |
 | Agents read docs, not guesses | Polar (docs alone drift) | `llms.txt`, `/index.md` on every page, `Accept: text/markdown`, `skills/constella`, `<name>-demo` items for shadcn's MCP; the Agent section on each AI and TanStack page (`apps/site/src/lib/lint/rules/agent-section.ts`, `vpr agent-docs`) | Site |
 | An agent in your app drives the AI and TanStack parts by name | ui-sdk | An agent test beside each part in `packages/ui/src/components/ai` and `packages/ui/src/components/tanstack` (`<name>.test.tsx`; Chart's is `chart-legend.test.tsx`); `apps/site/scripts/agent-audit-baseline.json` | Tests |
@@ -45,7 +45,7 @@ The one place counts live; drafts below leave them as `<n>`. Recount before you 
 
 | Number | Value | How to count | Counted |
 | --- | --- | --- | --- |
-| Components | 66 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-10-23 |
+| Components | 73 | `rg -c '"type": "registry:ui"' packages/ui/registry.json` | 2026-11-23 |
 | Lint rules of our own | 8 | `ls packages/lint/src/rules` | 2026-10-19 |
 | `constella/*` disables | 0 | `rg 'oxlint-disable.*constella/'` | 2026-10-19 |
 | First commit | 2026-10-05 | `git log --reverse --format=%ad --date=short \| head -1` | 2026-10-19 |
@@ -69,8 +69,8 @@ Say these plainly if asked; don't imply otherwise.
 - **App code can still use a raw `<div>` with `className`.** Only Constella's parts are closed.
 - **CI reports after the push.** Commits land on `main` directly; there's no branch protection holding a red one back.
 - **No performance numbers of our own.** Linear's 20 to 35% CPU cut is theirs; StyleX gives us the same build-time CSS, but we haven't measured.
-- **The agent tests run by hand.** CI runs check and build (`.github/workflows/ci.yml`). `vpr test` and `vpr agent-audit` don't run there.
-- **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Questionnaire's choices and Trace's steps with no trigger.
+- **The agent audit runs by hand.** CI runs check, test and build (`.github/workflows/ci.yml`). `vpr agent-audit` doesn't run there.
+- **Agents can't reach every control yet.** The Agents page lists the Known Gaps, like Trace's steps with no trigger and Prompt Input's slash-command `insert`.
 - **ui-sdk is beta.** Its agent key is experimental, and so are `createHistory` and `stageChanges`.
 - **The production site ships no agent bridge yet.** It loads in dev or with `VITE_AGENT_BRIDGE=1` (`apps/site/src/lib/agent-flag.ts`).
 

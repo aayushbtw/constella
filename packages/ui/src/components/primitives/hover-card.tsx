@@ -74,17 +74,13 @@ function HoverCard({
 }: HoverCardProps) {
   const [skip, handleOpenChange] = useSkipMotion(onOpenChange);
   const [moving, setMoving] = useState(false);
-  const [open, setOpen] = useState(props.defaultOpen ?? false);
-  const [warm, setWarm] = useState(false);
-  const isOpen = useRef(props.open ?? open);
+  const isOpen = useRef(props.open ?? props.defaultOpen ?? false);
   const settle = useRef(0);
-  const cool = useRef(0);
   const state = useMemo(() => ({ moving, skip }), [moving, skip]);
 
   useEffect(
     () => () => {
       clearTimeout(settle.current);
-      clearTimeout(cool.current);
     },
     []
   );
@@ -93,23 +89,13 @@ function HoverCard({
     <Motion value={state}>
       <HoverCardPrimitive
         closeDelay={closeDelay}
-        // Drop `warm` and the 0 once ui-sdk's focus path takes over an open card at once, as hover does.
-        delay={(props.open ?? open) || warm ? 0 : delay}
+        delay={delay}
         onOpenChange={(nextOpen, details) => {
           handleOpenChange(nextOpen, details);
           if (details.canceled) {
             return;
           }
           isOpen.current = nextOpen;
-          setOpen(nextOpen);
-          const focusLeft = !nextOpen && details.reason === "focus-out";
-          setWarm(focusLeft);
-          clearTimeout(cool.current);
-          if (focusLeft) {
-            cool.current = window.setTimeout(() => {
-              setWarm(false);
-            }, closeDelay);
-          }
           if (!nextOpen) {
             clearTimeout(settle.current);
             setMoving(false);

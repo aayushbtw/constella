@@ -247,7 +247,7 @@ What `agent.snapshot()` lists for the preview example:
 | No name                          | scroll-area | None         |
 | Payments                         | data-table  | None         |
 
-"Select ken99@acme.com and 5 more" stands for six row checkboxes, each named by `DataTableSelectRow`'s `label`. Email and Amount are the column headers that sort. **Press a header by its `ref` from the snapshot, not by its title.** ui-sdk reads the header row's text as row text for every header, so "Email" names more than one control and the step fails. The scroll area around the table is listed with no name and no actions, and the table itself by its `label`, with no actions.
+"Select ken99@acme.com and 5 more" stands for six row checkboxes, each named by `DataTableSelectRow`'s `label`. Email and Amount are the column headers that sort, and an agent can press either by its title. The scroll area around the table is listed with no name and no actions, and the table itself by its `label`, with no actions.
 
 While no row is selected, the action bar is inert, so the agent can't press its buttons. In the examples, the action bar's Delete and each row menu's Delete carry `data-agent-confirm`.
 
