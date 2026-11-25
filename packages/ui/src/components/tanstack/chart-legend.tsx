@@ -7,7 +7,9 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/primitives/toggle-group";
+import type { ToggleGroupProps } from "@/components/primitives/toggle-group";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -106,7 +108,7 @@ const chartColor = (config: ChartConfig) => {
   };
 };
 
-const hidden = ":is([data-slot='chart-legend-item']:not([data-pressed]) > *)";
+const hidden = ":is([data-chart-legend-item]:not([data-pressed]) > *)";
 
 const styles = stylex.create({
   // Hollow in a hidden legend entry, so its state isn't color alone.
@@ -177,20 +179,18 @@ function ChartIndicator({
       data-icon="inline-start"
       data-slot="chart-indicator"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.indicator(color), styles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.indicator(color), styles[variant], sx)
+      )}
     />
   );
 }
 
 /** The series a chart shows, each a toggle; `value` lists the shown ones. */
-function ChartLegend({
-  sx,
-  ...props
-}: Omit<ComponentProps<typeof ToggleGroup>, "multiple">) {
+function ChartLegend({ sx, ...props }: Omit<ToggleGroupProps, "multiple">) {
   return (
     <ToggleGroup
-      data-slot="chart-legend"
       multiple
       size="sm"
       spacing={1}
@@ -206,7 +206,7 @@ function ChartLegendItem({
 }: ComponentProps<typeof ToggleGroupItem>) {
   return (
     <ToggleGroupItem
-      data-slot="chart-legend-item"
+      data-chart-legend-item=""
       {...props}
       sx={[styles.legendItem, sx]}
     />

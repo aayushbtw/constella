@@ -18,13 +18,17 @@ import {
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
-// A group's own parts, not the focus guards Base UI drops beside an open popup's trigger.
-const notFirst = ":not(:nth-child(1 of [data-slot]))";
-const notLast = ":not(:nth-last-child(1 of [data-slot]))";
+// A group's own parts: not ui-sdk popup content, which renders in place beside its trigger,
+// `popover` while shown and `hidden` while closed, nor ui-sdk's hidden form field beside a
+// select's trigger.
+const notFirst =
+  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])))";
+const notLast =
+  ":not(:nth-last-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])))";
 
 // The neighbor before draws the shared edge, or the separator does.
 const joined =
-  ":not(:nth-child(1 of [data-slot]), [data-slot='button-group-separator'] + *)";
+  ":not(:nth-child(1 of [data-slot]:not([popover], [hidden], [data-slot='select-form-input'])), [data-slot='separator'] + *)";
 
 // Whole on their own; in a ButtonGroup, the corners that meet a neighbor take its join.
 const corners = (radius: Values<typeof radii>) => ({
@@ -70,6 +74,41 @@ const joinStyles = stylex.create({
   md: corners(radii.md),
   sm: corners(radii.sm),
   xs: corners(radii.xs),
+});
+
+const popupReset = stylex.create({
+  // A ui-sdk popup renders in place, so it drops what it would inherit from there: a group's
+  // joins, an addon's text, a table cell's wrapping.
+  base: {
+    [joins.block]: "1",
+    [joins.either]: "1",
+    [joins.inline]: "1",
+    color: colors.textPrimary,
+    cursor: "auto",
+    fontVariantNumeric: "normal",
+    fontWeight: fontWeights.regular,
+    textAlign: "start",
+    userSelect: "text",
+    whiteSpace: "normal",
+  },
+  // ui-sdk's menu, select, combobox, date picker and trigger menu keep the browser's `[popover]` border.
+  borderless: {
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
+  },
+});
+
+const popupSurface = stylex.create({
+  base: {
+    backgroundColor: colors.raised,
+    borderStartStartRadius: radii.lg,
+    borderStartEndRadius: radii.lg,
+    borderEndStartRadius: radii.lg,
+    borderEndEndRadius: radii.lg,
+    boxShadow: shadows.lg,
+  },
 });
 
 const visuallyHidden = stylex.create({
@@ -142,22 +181,35 @@ const typeStyles = stylex.create({
   },
 });
 
+// ui-sdk sets `data-open` on a collapsible's trigger too, and gives a hover card or combobox
+// trigger no `aria-haspopup`. StyleX compiles an imported selector key to a descendant
+// selector, so button.tsx and prompt-input.tsx repeat this one.
+const popupOpen =
+  ":where([aria-haspopup], [data-slot='hover-card-trigger'], [data-slot='combobox-trigger'])[data-open]";
+
+// button.tsx's `hoverIdle` and `activeIdle`; keep in step.
+const hoverIdle = ":hover:not(:disabled, [data-disabled], [data-pending])";
+const activeIdle = ":active:not(:disabled, [data-disabled], [data-pending])";
+
 // The open state repeats inside the media block, which StyleX ranks above a bare condition.
 const interactive = <R, A>(rest: R, active: A) => ({
   default: rest,
-  ":is([data-popup-open])": active,
+  [popupOpen]: active,
   [media.hover]: {
     default: rest,
-    ":is([data-popup-open])": active,
-    ":hover:not(:disabled)": active,
+    [popupOpen]: active,
+    [hoverIdle]: active,
   },
-  ":active:not(:disabled)": active,
+  [activeIdle]: active,
 });
 
+const off = ":disabled, [data-disabled]";
 const pressed = ":is([data-pressed])";
-const hoverUnpressed = ":hover:not(:disabled, [data-pressed])";
-const activeUnpressed = ":active:not(:disabled, [data-pressed])";
-const hoverPressed = ":is([data-pressed]):hover:not(:disabled, :active)";
+const hoverUnpressed = `:hover:not(${off}, [data-pressed])`;
+const activeUnpressed = `:active:not(${off}, [data-pressed])`;
+const hoverPressed = `:is([data-pressed]):hover:not(${off}, :active)`;
+const hoverLifted = `:hover:not(${off}, :active)`;
+const activeLifted = `:active:not(${off})`;
 
 // Selected is `fill`; hover stays a step under, and hovering a selected part stacks
 // `fillSubtle` on its fill as an inset shadow, so the two never read alike.
@@ -201,11 +253,11 @@ const stateStyles = stylex.create({
       default: `${unlit}, ${shadows.default}`,
       [media.hover]: {
         default: `${unlit}, ${shadows.default}`,
-        ":hover:not(:disabled, :active)": `${unlit}, ${shadows.defaultHover}`,
+        [hoverLifted]: `${unlit}, ${shadows.defaultHover}`,
         [hoverPressed]: `${lit}, ${shadows.defaultHover}`,
-        ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+        [activeLifted]: `${unlit}, ${shadows.defaultPressed}`,
       },
-      ":active:not(:disabled)": `${unlit}, ${shadows.defaultPressed}`,
+      [activeLifted]: `${unlit}, ${shadows.defaultPressed}`,
     },
   },
 });
@@ -414,9 +466,46 @@ type Sx = stylex.StyleXStyles<
     TokenStyles
 >;
 
+type StyleProps = ReturnType<typeof stylex.props>;
+
+// Declared here, not by @types/node, so a copied file typechecks in a Vite app.
+declare const process: { env: { NODE_ENV?: string } };
+
+const reported = new Set<string>();
+
+/** A part's own styles on its props. Class names join across `render`, so one part in a chain draws. A className from an outer part beside one of its own throws in development, and in production logs once and loses to its own. Inline styles merge, its own last. */
+const withStyles = <P extends object>(
+  props: P & StyleProps & { "data-slot"?: string },
+  own: StyleProps
+): P & StyleProps => {
+  if ((props.className ?? "") !== "" && (own.className ?? "") !== "") {
+    const slot =
+      props["data-slot"] === undefined
+        ? ""
+        : ` [data-slot="${props["data-slot"]}"]`;
+    const message = `Two parts style one element${slot}. Put \`sx\` on the part that draws and leave the others unstyled.`;
+    if (process.env.NODE_ENV !== "production") {
+      throw new Error(message);
+    }
+    if (!reported.has(message)) {
+      reported.add(message);
+      console.error(message);
+    }
+  }
+  return {
+    ...props,
+    ...own,
+    className: own.className ?? props.className,
+    style:
+      own.style === undefined ? props.style : { ...props.style, ...own.style },
+  };
+};
+
 export {
   controlIconSize,
   joinStyles,
+  popupReset,
+  popupSurface,
   stateStyles,
   textColors,
   textColorStyles,
@@ -425,5 +514,6 @@ export {
   trackStyles,
   typeStyles,
   visuallyHidden,
+  withStyles,
 };
 export type { Sx, TextColor, TextWeight };

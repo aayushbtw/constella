@@ -150,11 +150,13 @@
   :where(
     :focus-visible,
     [data-slot="input-group"]:has(
-      [data-slot="input-group-control"]:focus-visible
+      :is(
+        [data-slot="input-group-input"] > input,
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):focus-visible
     ),
-    [data-slot="questionnaire-choice"]:has(
-      > [data-slot="questionnaire-choice-input"]:focus-visible
-    )
+    [data-slot="slider-thumb"]:has(:focus-visible)
   ) {
     outline: 1px solid var(--focus-ring);
     outline-offset: 0;
@@ -164,15 +166,21 @@
     [aria-invalid="true"],
     [data-invalid],
     [data-slot="input-group"]:has(
-      [data-slot="input-group-control"]:is(
-        [aria-invalid="true"],
-        [data-invalid]
-      )
+      :is(
+        [data-slot="input-group-input"] > input,
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):is([aria-invalid="true"], [data-invalid])
     )
   ):where(
     :focus-visible,
-    :has([data-slot="input-group-control"]:focus-visible),
-    :has(> [data-slot="questionnaire-choice-input"]:focus-visible)
+    :has(
+      :is(
+        [data-slot="input-group-input"] > input,
+        [data-slot="input-group"] > [data-slot="textarea"],
+        [data-slot="input-group-control"]
+      ):focus-visible
+    )
   ) {
     outline-color: var(--red-11);
   }
@@ -188,7 +196,7 @@
     [role="alertdialog"],
     [role="menu"],
     [role="listbox"],
-    [data-slot="questionnaire-item"]
+    [data-slot="questionnaire"] [data-slot="field-set"][data-active]
   ):focus-visible {
     outline: none;
   }
@@ -203,22 +211,23 @@
     outline: none;
   }
 
-  /* A scroller that overflows takes Tab. Its scroll fade would mask its own ring, so the
-     scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
-  :where(
-    [data-slot="scroll-area-viewport"],
-    [data-slot="code-block-content"] pre
-  ):focus-visible {
+  /* A scroller that overflows and holds nothing focusable takes Tab. Its scroll fade would mask its
+     own ring, so the scroll area around it draws the ring; a code block clips its edges, so there it draws inside. */
+  :where([data-slot="scroll-area-viewport"]):focus-visible {
     outline: none;
   }
   :where(
-    :has(> [data-slot="scroll-area-viewport"]:focus-visible),
-    [data-slot="code-block-content"]:has(pre:focus-visible)
+    [data-slot="scroll-area"]:has(
+      > [data-slot="scroll-area-viewport"]:focus-visible
+    ),
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
   ) {
     outline: 1px solid var(--focus-ring);
     outline-offset: 0;
   }
-  :where([data-slot="code-block-content"]:has(pre:focus-visible)) {
+  :where(
+    [data-slot="code-block"] > [data-slot="scroll-area"]:has(pre:focus-visible)
+  ) {
     outline-offset: -1px;
   }
 
@@ -228,7 +237,7 @@
   }
 
   /* StyleX can't style a child it didn't render, so an outline badge's icon takes its color here. */
-  :where([data-slot="badge"][data-variant="outline"]) {
+  :where([data-badge][data-variant="outline"]) {
     &[data-color="success"] > [data-icon] {
       color: var(--success-text);
     }
@@ -265,15 +274,26 @@
   /* StyleX can't style a child it didn't render, so a row's icon keeps its size beside a
      long label. */
   :where(
-      [data-slot="sidebar-menu-button"],
-      [data-slot="dropdown-menu-item"],
-      [data-slot="dropdown-menu-sub-trigger"],
-      [data-slot="dropdown-menu-checkbox-item"],
-      [data-slot="dropdown-menu-radio-item"],
+      [data-sidebar-menu-button],
+      [data-slot="menu-item"],
+      [data-slot="menu-trigger"][role="menuitem"],
+      [data-slot="menu-checkbox-item"],
+      [data-slot="menu-radio-item"],
       [data-slot="command-item"]
     )
     > :where(svg) {
     flex-shrink: 0;
+  }
+
+  /* StyleX can't style a child it didn't render, so the shortcut ui-sdk renders in a menu
+     item sits at its end, muted, at caption size. */
+  :where([data-slot="menu-shortcut"]) {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-size: var(--caption-lg-size);
+    line-height: var(--caption-lg-leading);
+    margin-inline-start: auto;
+    white-space: nowrap;
   }
 
   /* A view transition's snapshots hang off the root, out of StyleX's reach, so a sidebar's
@@ -334,26 +354,6 @@
     }
   }
 
-  /* Base UI renders the hover card viewport's content wrappers, so their crossfade between
-     triggers lives here: the old content fades out on top while the new fades in
-     (`durations.popover` on `easings.out`). */
-  :where([data-slot="hover-card-viewport"])
-    > :where([data-current], [data-previous]) {
-    transition: opacity var(--duration-popover) var(--ease-out);
-  }
-  :where([data-slot="hover-card-viewport"]) > :where([data-previous]) {
-    inset: 0 auto auto 0;
-    position: absolute;
-    width: 100%;
-  }
-  :where([data-slot="hover-card-viewport"])
-    > :where(
-      [data-current][data-starting-style],
-      [data-previous][data-ending-style]
-    ) {
-    opacity: 0;
-  }
-
   /* StyleX can't style a child it didn't render, so an item's or attachment's image fills its media box here. */
   :where(
       [data-slot="item-media"][data-variant="image"],
@@ -383,7 +383,13 @@
   }
 
   /* An input group rings its whole box, so the borderless control inside draws none. */
-  :where([data-slot="input-group-control"]:focus-visible) {
+  :where(
+    :is(
+      [data-slot="input-group-input"] > input,
+      [data-slot="input-group"] > [data-slot="textarea"],
+      [data-slot="input-group-control"]
+    ):focus-visible
+  ) {
     outline: none;
   }
 }
@@ -392,4 +398,14 @@
    `background-clip: text`, which blanks it. Unlayered, since Torph's own rule is. */
 [data-slot="shimmer"] [torph-item]:not(br) {
   will-change: auto;
+}
+
+/* Torph's unlayered root rule would beat a Swap Text's `sx`. Its values live in the component. */
+[data-slot="swap-text"][torph-root] {
+  display: revert-layer;
+  position: revert-layer;
+  text-align: revert-layer;
+  vertical-align: revert-layer;
+  white-space: revert-layer;
+  will-change: revert-layer;
 }

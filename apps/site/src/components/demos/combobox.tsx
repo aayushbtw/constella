@@ -1,23 +1,22 @@
 import * as stylex from "@stylexjs/stylex";
-import { useRef, useState } from "react";
+import { Fragment, useState } from "react";
 
 import {
   Combobox,
   ComboboxChip,
   ComboboxChips,
   ComboboxChipsInput,
-  ComboboxCollection,
   ComboboxContent,
+  ComboboxCreate,
   ComboboxEmpty,
   ComboboxGroup,
+  ComboboxGroupLabel,
   ComboboxInput,
   ComboboxItem,
-  ComboboxLabel,
+  ComboboxItemText,
   ComboboxList,
   ComboboxSeparator,
   comboboxSizes,
-  ComboboxValue,
-  useComboboxAnchor,
 } from "@/components/primitives/combobox";
 import type { ComboboxSize } from "@/components/primitives/combobox";
 import {
@@ -40,8 +39,8 @@ const styles = stylex.create({
 const fruits = ["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"];
 
 const produce = [
-  { items: ["Apple", "Banana", "Blueberry"], value: "Fruits" },
-  { items: ["Broccoli", "Carrot", "Spinach"], value: "Vegetables" },
+  { items: ["Apple", "Banana", "Blueberry"], label: "Fruits" },
+  { items: ["Broccoli", "Carrot", "Spinach"], label: "Vegetables" },
 ];
 
 const tags = ["design", "engineering", "marketing", "research", "support"];
@@ -57,33 +56,27 @@ function FruitList() {
     <>
       <ComboboxEmpty>No fruits found.</ComboboxEmpty>
       <ComboboxList>
-        {(item: string) => (
-          <ComboboxItem key={item} value={item}>
-            {item}
+        {fruits.map((fruit) => (
+          <ComboboxItem key={fruit} value={fruit}>
+            <ComboboxItemText />
           </ComboboxItem>
-        )}
+        ))}
       </ComboboxList>
     </>
   );
 }
 
 function FruitChips({ label, size }: { label: string; size?: ComboboxSize }) {
-  const anchor = useComboboxAnchor();
+  const [value, setValue] = useState(["Apple", "Banana"]);
   return (
-    <Combobox defaultValue={["Apple", "Banana"]} items={fruits} multiple>
-      <ComboboxChips ref={anchor} size={size} sx={styles.field}>
-        <ComboboxValue>
-          {(values: string[]) => (
-            <>
-              {values.map((value) => (
-                <ComboboxChip key={value}>{value}</ComboboxChip>
-              ))}
-              <ComboboxChipsInput aria-label={label} />
-            </>
-          )}
-        </ComboboxValue>
+    <Combobox multiple onValueChange={setValue} value={value}>
+      <ComboboxChips aria-label={label} size={size} sx={styles.field}>
+        {value.map((fruit) => (
+          <ComboboxChip key={fruit} value={fruit} />
+        ))}
+        <ComboboxChipsInput aria-label={label} />
       </ComboboxChips>
-      <ComboboxContent anchor={anchor} size={size}>
+      <ComboboxContent size={size}>
         <FruitList />
       </ComboboxContent>
     </Combobox>
@@ -93,11 +86,12 @@ function FruitChips({ label, size }: { label: string; size?: ComboboxSize }) {
 function ComboboxDemo() {
   return (
     <DemoRow>
-      <Combobox items={fruits}>
+      <Combobox>
         <ComboboxInput
           aria-label="Fruit"
           placeholder="Select a fruit"
           sx={styles.field}
+          triggerLabel="Show fruits"
         />
         <ComboboxContent>
           <FruitList />
@@ -116,80 +110,62 @@ function ComboboxMultipleDemo() {
 }
 
 function ComboboxCreatableDemo() {
-  const anchor = useComboboxAnchor();
+  const [known, setKnown] = useState(tags);
   const [value, setValue] = useState(["design"]);
   const [query, setQuery] = useState("");
-  const highlight = useRef<string | undefined>(undefined);
 
-  const typed = query.trim();
-  const known = [...new Set([...tags, ...value])];
-  const match = known.find((tag) => tag.toLowerCase() === typed.toLowerCase());
-  const items = typed !== "" && match === undefined ? [...known, typed] : known;
+  function add(text: string) {
+    const typed = text.trim();
+    if (typed === "") {
+      return;
+    }
+    const tag =
+      known.find((name) => name.toLowerCase() === typed.toLowerCase()) ?? typed;
+    setKnown((current) =>
+      current.includes(tag) ? current : [...current, tag]
+    );
+    setValue((current) =>
+      current.includes(tag) ? current : [...current, tag]
+    );
+    setQuery("");
+  }
 
   return (
     <DemoRow>
       <Combobox
         autoHighlight
-        inputValue={query}
-        items={items}
         multiple
-        onInputValueChange={setQuery}
-        onItemHighlighted={(item, { reason }) => {
-          highlight.current = item === undefined ? undefined : reason;
-        }}
-        onOpenChange={(open) => {
-          if (!open) {
-            highlight.current = undefined;
-          }
-        }}
-        onValueChange={(next) => {
-          setValue(next);
-          setQuery("");
-        }}
+        onQueryChange={setQuery}
+        onValueChange={setValue}
+        query={query}
         value={value}
       >
-        <ComboboxChips ref={anchor} sx={styles.field}>
-          <ComboboxValue>
-            {(values: string[]) => (
-              <>
-                {values.map((tag) => (
-                  <ComboboxChip key={tag}>{tag}</ComboboxChip>
-                ))}
-                <ComboboxChipsInput
-                  aria-label="Tags"
-                  onKeyDown={(event) => {
-                    // Opening the list highlights a picked chip ("none"); Enter there would remove it.
-                    const picks =
-                      event.key === "Enter" &&
-                      highlight.current !== undefined &&
-                      (typed !== "" || highlight.current !== "none");
-                    if (picks || (event.key !== "Enter" && event.key !== ",")) {
-                      return;
-                    }
-                    event.preventDefault();
-                    event.preventBaseUIHandler();
-                    if (typed === "") {
-                      return;
-                    }
-                    const tag = match ?? typed;
-                    setValue((current) =>
-                      current.includes(tag) ? current : [...current, tag]
-                    );
-                    setQuery("");
-                  }}
-                  placeholder={values.length > 0 ? "" : "Add a tag"}
-                />
-              </>
-            )}
-          </ComboboxValue>
+        <ComboboxChips aria-label="Tags" sx={styles.field}>
+          {value.map((tag) => (
+            <ComboboxChip key={tag} value={tag} />
+          ))}
+          <ComboboxChipsInput
+            aria-label="Tags"
+            onKeyDown={(event) => {
+              if (event.key !== "," || event.nativeEvent.isComposing) {
+                return;
+              }
+              event.preventDefault();
+              add(query);
+            }}
+            placeholder={value.length > 0 ? "" : "Add a tag"}
+          />
         </ComboboxChips>
-        <ComboboxContent anchor={anchor}>
+        <ComboboxContent>
           <ComboboxList>
-            {(tag: string) => (
+            {known.map((tag) => (
               <ComboboxItem key={tag} value={tag}>
-                {known.includes(tag) ? tag : `Create "${tag}"`}
+                <ComboboxItemText />
               </ComboboxItem>
-            )}
+            ))}
+            <ComboboxCreate onCreate={add}>
+              {(state) => `Create “${state.query}”`}
+            </ComboboxCreate>
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
@@ -200,8 +176,14 @@ function ComboboxCreatableDemo() {
 function ComboboxClearDemo() {
   return (
     <DemoRow>
-      <Combobox defaultValue="Banana" items={fruits}>
-        <ComboboxInput aria-label="Fruit" showClear sx={styles.field} />
+      <Combobox defaultValue="Banana">
+        <ComboboxInput
+          aria-label="Fruit"
+          clearLabel="Clear fruit"
+          showClear
+          sx={styles.field}
+          triggerLabel="Show fruits"
+        />
         <ComboboxContent>
           <FruitList />
         </ComboboxContent>
@@ -213,28 +195,29 @@ function ComboboxClearDemo() {
 function ComboboxGroupsDemo() {
   return (
     <DemoRow>
-      <Combobox items={produce}>
+      <Combobox>
         <ComboboxInput
           aria-label="Produce"
           placeholder="Select produce"
           sx={styles.field}
+          triggerLabel="Show produce"
         />
         <ComboboxContent>
           <ComboboxEmpty>No produce found.</ComboboxEmpty>
           <ComboboxList>
-            {(group: (typeof produce)[number], index: number) => (
-              <ComboboxGroup items={group.items} key={group.value}>
+            {produce.map((group, index) => (
+              <Fragment key={group.label}>
                 {index > 0 && <ComboboxSeparator />}
-                <ComboboxLabel>{group.value}</ComboboxLabel>
-                <ComboboxCollection>
-                  {(item: string) => (
+                <ComboboxGroup>
+                  <ComboboxGroupLabel>{group.label}</ComboboxGroupLabel>
+                  {group.items.map((item) => (
                     <ComboboxItem key={item} value={item}>
-                      {item}
+                      <ComboboxItemText />
                     </ComboboxItem>
-                  )}
-                </ComboboxCollection>
-              </ComboboxGroup>
-            )}
+                  ))}
+                </ComboboxGroup>
+              </Fragment>
+            ))}
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
@@ -255,8 +238,12 @@ function ComboboxSizeDemo() {
 function ComboboxDisabledDemo() {
   return (
     <DemoRow>
-      <Combobox defaultValue="Banana" disabled items={fruits}>
-        <ComboboxInput aria-label="Fruit" sx={styles.field} />
+      <Combobox defaultValue="Banana" disabled>
+        <ComboboxInput
+          aria-label="Fruit"
+          sx={styles.field}
+          triggerLabel="Show fruits"
+        />
         <ComboboxContent>
           <FruitList />
         </ComboboxContent>
@@ -270,8 +257,11 @@ function ComboboxInvalidDemo() {
     <DemoRow sx={styles.field}>
       <Field invalid>
         <FieldLabel>Fruit</FieldLabel>
-        <Combobox items={fruits}>
-          <ComboboxInput placeholder="Select a fruit" />
+        <Combobox>
+          <ComboboxInput
+            placeholder="Select a fruit"
+            triggerLabel="Show fruits"
+          />
           <ComboboxContent>
             <FruitList />
           </ComboboxContent>

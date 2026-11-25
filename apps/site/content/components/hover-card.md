@@ -1,6 +1,6 @@
 ---
 title: Hover Card
-description: Previews what's behind a link while the pointer rests on it.
+description: Previews what's behind a link while the pointer rests on it or keyboard focus stays on it.
 ---
 
 <!-- ::demo name="hover-card" -->
@@ -28,7 +28,7 @@ import {
 } from "@/components/primitives/hover-card";
 ```
 
-The trigger is a link, so keyboard and touch users reach the same page without the preview. Keep what matters out of the card alone.
+The card opens after a delay when the pointer rests on the trigger or keyboard focus reaches it. A tap follows the link and never opens the card, so keep what matters on the page the link goes to.
 
 ```tsx
 <HoverCard>
@@ -45,25 +45,25 @@ HoverCard
 └── HoverCardContent
 ```
 
-## Handle
+## Controller
 
-Use `createHoverCardHandle` for one card that several triggers share, like mentions in a sentence. Pass it to `HoverCard` and each trigger as `handle`, with the trigger's data as `payload`. Moving from one trigger to the next, the card glides over and cross-fades to the new content, growing to its height.
+Use `createHoverCardController` for one card that several triggers share, like mentions in a sentence. Pass it to `HoverCard` and to each trigger as `controller`, with the trigger's data as `payload`. `HoverCardContent` takes a function of `{ payload }` as its children. Moving from one trigger to the next, the card glides over and shows the new content at once.
 
 <!-- ::demo name="hover-card-triggers" -->
 
 ```tsx
-const mentions = createHoverCardHandle<Profile>();
+const [mentions] = useState(() => createHoverCardController<Profile>());
 
-<HoverCardTrigger handle={mentions} payload={profile}>
+<HoverCardTrigger controller={mentions} href={profile.href} payload={profile}>
   {profile.handle}
 </HoverCardTrigger>
 
-<HoverCard handle={mentions}>
-  {({ payload }) => (
-    <HoverCardContent>
-      <ProfileCard profile={payload} />
-    </HoverCardContent>
-  )}
+<HoverCard controller={mentions}>
+  <HoverCardContent<Profile>>
+    {({ payload }) =>
+      payload === undefined ? null : <ProfileCard profile={payload} />
+    }
+  </HoverCardContent>
 </HoverCard>
 ```
 
@@ -81,8 +81,9 @@ Use the `side` prop on `HoverCardContent` to place the card. It flips to the oth
 
 | Part | Adds |
 | --- | --- |
-| `HoverCardContent` | Renders the portal, positioner, popup and viewport; takes `side`, `align` and their offsets |
-| `HoverCardTrigger` | `delay` (600ms) and `closeDelay` (300ms) default to `durations.hoverCardDelay` and `hoverCardCloseDelay`; `handle`, `payload` |
-| `createHoverCardHandle` | A handle shared by `HoverCard` and its triggers |
+| `HoverCard` | `delay` (300ms) and `closeDelay` (300ms) default to `durations.hoverCardDelay` and `hoverCardCloseDelay`; `controller` |
+| `HoverCardContent` | Renders in place, beside its trigger, in the browser's top layer; takes `side`, `align`, `sideOffset` (`offsets.popover`) and `alignOffset`; children may be a function of `{ payload }` |
+| `HoverCardTrigger` | `controller`, and `payload` typed by the controller |
+| `createHoverCardController` | A controller shared by `HoverCard` and its triggers |
 
-`HoverCardContent` takes `sx`, applied last. Base UI calls this Preview Card. For the rest, see [Base UI Preview Card](https://base-ui.com/react/components/preview-card).
+`HoverCardTrigger` and `HoverCardContent` take `sx`. When another part renders the trigger, like a `Badge`, put `sx` on that part, the part that draws. For the rest, see [UI SDK Hover Card](https://ui-sdk.dev/docs/react/components/hover-card).

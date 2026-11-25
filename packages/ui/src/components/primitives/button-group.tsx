@@ -1,14 +1,12 @@
-"use client";
-
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
 import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { joinStyles, typeStyles } from "@/lib/constella/styles";
+import { joinStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -29,7 +27,7 @@ type ButtonGroupProps = Styled<ComponentProps<"div">> & {
   orientation?: ButtonGroupOrientation;
 };
 
-type ButtonGroupTextProps = Styled<useRender.ComponentProps<"div">>;
+type ButtonGroupTextProps = Styled<PartProps<"div">>;
 
 // Groups inside a group sit apart, so nothing joins at this level.
 const nested = ":has(> [data-slot='button-group'])";
@@ -94,28 +92,31 @@ function ButtonGroup({
       data-slot="button-group"
       // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset brings its own border and padding into a flex row
       role="group"
-      {...props}
-      {...stylex.props(styles.group, orientationStyles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.group, orientationStyles[orientation], sx)
+      )}
     />
   );
 }
 
 function ButtonGroupText({ render, sx, ...props }: ButtonGroupTextProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
-      props,
-      stylex.props(
-        [typeStyles.textSm, styles.text],
-        joinStyles.sm,
-        joinStyles.edges,
-        sx
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "button-group-text" },
+      withStyles(
+        props,
+        stylex.props(
+          [typeStyles.textSm, styles.text],
+          joinStyles.sm,
+          joinStyles.edges,
+          sx
+        )
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot="button-group-text"`.
-    state: { slot: "button-group-text" },
-  });
+    render
+  );
 }
 
 function ButtonGroupSeparator({
@@ -125,7 +126,6 @@ function ButtonGroupSeparator({
 }: SeparatorProps) {
   return (
     <Separator
-      data-slot="button-group-separator"
       orientation={orientation}
       {...props}
       sx={[

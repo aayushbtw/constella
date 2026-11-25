@@ -26,7 +26,7 @@ function SuggestionsDemo() {
             <Suggestion
               key={suggestion}
               onClick={(text) => {
-                toast.add({ title: text });
+                toast({ title: text });
               }}
               suggestion={suggestion}
             />

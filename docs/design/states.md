@@ -10,7 +10,7 @@ Every control shows disabled the same way: one shared fade (`opacities.disabled`
 
 ## Hover
 
-Hover styles sit behind `media.hover` so touch doesn't stick, and repeat ungated on `:active`, so a tap highlights on touch the way a hover does on a pointer. Only what acts answers hover: a badge or item rendered as a link or button, not a static one. A trigger keeps its hover look while its popup is open (`[data-popup-open]`).
+Hover styles sit behind `media.hover` so touch doesn't stick, and repeat ungated on `:active`, so a tap highlights on touch the way a hover does on a pointer. Only what acts answers hover: a badge or item rendered as a link or button, not a static one. A trigger keeps its hover look while its popup is open (`[aria-haspopup][data-open]`, and a hover card or combobox trigger by its slot).
 
 ## Selected
 

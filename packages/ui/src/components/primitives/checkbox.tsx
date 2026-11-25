@@ -1,11 +1,15 @@
-"use client";
-
-import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { MinusSignIcon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Checkbox as CheckboxPrimitive,
+  CheckboxGroup as CheckboxGroupPrimitive,
+  CheckboxIndicator,
+} from "@ui-sdk/react/checkbox";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -17,6 +21,7 @@ import {
   radii,
   shadows,
   sizes,
+  space,
   strokes,
 } from "@/lib/constella/tokens.stylex";
 
@@ -25,8 +30,8 @@ const checkboxSizes = ["sm", "default", "lg"] as const;
 type CheckboxSize = (typeof checkboxSizes)[number];
 
 type CheckboxProps = Omit<
-  CheckboxPrimitive.Root.Props,
-  "className" | "style"
+  ComponentProps<typeof CheckboxPrimitive>,
+  "children" | "className" | "style"
 > & {
   size?: CheckboxSize;
   sx?: Sx;
@@ -50,6 +55,11 @@ const box = (size: string) => ({
 });
 
 const styles = stylex.create({
+  group: {
+    display: "grid",
+    gap: space.sm,
+    width: "100%",
+  },
   checkbox: {
     alignItems: "center",
     // The checked edge is opaque, so the fill runs under it; clipped, it leaves a seam.
@@ -143,16 +153,14 @@ const tickSizes = {
 
 function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
   return (
-    <CheckboxPrimitive.Root
+    <CheckboxPrimitive
       data-size={size}
-      data-slot="checkbox"
-      {...props}
-      {...stylex.props(styles.checkbox, sizeStyles[size], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.checkbox, sizeStyles[size], sx)
+      )}
     >
-      <CheckboxPrimitive.Indicator
-        data-slot="checkbox-indicator"
-        {...stylex.props(styles.indicator)}
-      >
+      <CheckboxIndicator {...stylex.props(styles.indicator)}>
         <HugeiconsIcon
           aria-hidden
           icon={Tick02Icon}
@@ -167,10 +175,24 @@ function Checkbox({ size = "default", sx, ...props }: CheckboxProps) {
           strokeWidth={Number(strokes.icon)}
           {...stylex.props(styles.minus)}
         />
-      </CheckboxPrimitive.Indicator>
-    </CheckboxPrimitive.Root>
+      </CheckboxIndicator>
+    </CheckboxPrimitive>
   );
 }
 
-export { Checkbox, checkboxSizes };
+function CheckboxGroup<Value extends string = string>({
+  sx,
+  ...props
+}: Omit<
+  ComponentProps<typeof CheckboxGroupPrimitive<Value>>,
+  "className" | "style"
+> & { sx?: Sx }) {
+  return (
+    <CheckboxGroupPrimitive<Value>
+      {...withStyles(props, stylex.props(styles.group, sx))}
+    />
+  );
+}
+
+export { Checkbox, CheckboxGroup, checkboxSizes };
 export type { CheckboxProps, CheckboxSize };

@@ -6,7 +6,6 @@ import { Kbd } from "@/components/primitives/kbd";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
 import { sizes, strokes } from "@/lib/constella/tokens.stylex";
@@ -30,16 +29,14 @@ function TooltipDemo() {
 function TooltipSideDemo() {
   return (
     <DemoRow>
-      <TooltipProvider>
-        {sides.map((side) => (
-          <Tooltip key={side}>
-            <TooltipTrigger render={<Button variant="outline" />}>
-              {side}
-            </TooltipTrigger>
-            <TooltipContent side={side}>Add to library</TooltipContent>
-          </Tooltip>
-        ))}
-      </TooltipProvider>
+      {sides.map((side) => (
+        <Tooltip key={side}>
+          <TooltipTrigger render={<Button variant="outline" />}>
+            {side}
+          </TooltipTrigger>
+          <TooltipContent side={side}>Add to library</TooltipContent>
+        </Tooltip>
+      ))}
     </DemoRow>
   );
 }
@@ -71,10 +68,10 @@ function TooltipDisabledDemo() {
   return (
     <DemoRow>
       <Tooltip>
-        <TooltipTrigger render={<span />}>
-          <Button disabled variant="outline">
-            Disabled
-          </Button>
+        <TooltipTrigger
+          render={<Button disabled focusableWhenDisabled variant="outline" />}
+        >
+          Disabled
         </TooltipTrigger>
         <TooltipContent>This feature is currently unavailable</TooltipContent>
       </Tooltip>

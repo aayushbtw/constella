@@ -86,6 +86,8 @@ Use the `render` prop to pass a router's link.
 <BreadcrumbLink render={<Link to="/settings" />}>Settings</BreadcrumbLink>
 ```
 
+Put `sx` on `BreadcrumbLink`, the part that draws, not on the router's link.
+
 ## API Reference
 
 | Part                  | Adds                             |
@@ -94,4 +96,4 @@ Use the `render` prop to pass a router's link.
 | `BreadcrumbPage`      | `aria-current="page"`            |
 | `BreadcrumbSeparator` | `children`, to replace the arrow |
 
-Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

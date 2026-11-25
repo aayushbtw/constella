@@ -1,12 +1,11 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import { Separator } from "@/components/primitives/separator";
-import type { SeparatorProps } from "@/components/primitives/separator";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -34,17 +33,16 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type ItemProps = Styled<useRender.ComponentProps<"div">> & {
+type ItemProps = Styled<PartProps<"div">> & {
   size?: ItemSize;
   variant?: ItemVariant;
 };
 
 // An item only answers when it's rendered as a link, a button or a label for its control.
 const pressable = ":is(a, button, label)";
-const inSize = (size: ItemSize) =>
-  `:is([data-slot='item'][data-size='${size}'] *)`;
+const inSize = (size: ItemSize) => `:is([data-item][data-size='${size}'] *)`;
 const withDescription =
-  ":is([data-slot='item']:has([data-slot='item-description']) > *)";
+  ":is([data-item]:has([data-slot='item-description']) > *)";
 
 const styles = stylex.create({
   item: {
@@ -225,7 +223,7 @@ const styles = stylex.create({
       default: space.md,
       ":has([data-size='sm'])": space.popup,
       ":has([data-size='xs'])": space.xs,
-      ":has(> [data-slot='item-separator'])": 0,
+      ":has(> [data-slot='separator'])": 0,
     },
     listStyleType: "none",
     paddingInlineEnd: 0,
@@ -248,29 +246,18 @@ const mediaStyles = {
 } satisfies Record<ItemMediaVariant, stylex.StyleXStyles | null>;
 
 /** Render it as a `ul`, with each Item as an `li`, when its items are a list. */
-function ItemGroup({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.group, sx)),
-    render,
-    state: { slot: "item-group" },
-  });
-}
-
-function ItemSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="item-separator"
-      orientation="horizontal"
-      {...props}
-      sx={sx}
-    />
+function ItemGroup({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-group" },
+      withStyles(props, stylex.props(styles.group, sx))
+    ),
+    render
   );
 }
+
+const ItemSeparator = Separator;
 
 function Item({
   render,
@@ -279,24 +266,30 @@ function Item({
   variant = "default",
   ...props
 }: ItemProps) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
-      props,
-      stylex.props(
-        [
-          size === "default" ? typeStyles.textMd : typeStyles.textSm,
-          styles.item,
-        ],
-        variantStyles[variant],
-        size === "xs" && styles.xs,
-        sx
+  return renderElement(
+    "div",
+    mergeProps(
+      {
+        "data-item": "",
+        "data-size": size,
+        "data-slot": "item",
+        "data-variant": variant,
+      },
+      withStyles(
+        props,
+        stylex.props(
+          [
+            size === "default" ? typeStyles.textMd : typeStyles.textSm,
+            styles.item,
+          ],
+          variantStyles[variant],
+          size === "xs" && styles.xs,
+          sx
+        )
       )
     ),
-    render,
-    // Base UI writes state as data attributes: `data-slot`, `data-size`, `data-variant`.
-    state: { size, slot: "item", variant },
-  });
+    render
+  );
 }
 
 function ItemMedia({
@@ -308,8 +301,10 @@ function ItemMedia({
     <div
       data-slot="item-media"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.media, mediaStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.media, mediaStyles[variant], sx)
+      )}
     />
   );
 }
@@ -318,31 +313,27 @@ function ItemContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
 
-function ItemTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "item-title" },
-  });
+function ItemTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "item-title" },
+      withStyles(props, stylex.props(styles.title, sx))
+    ),
+    render
+  );
 }
 
 function ItemDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   return (
     <p
       data-slot="item-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }
@@ -351,8 +342,7 @@ function ItemActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }
@@ -361,8 +351,7 @@ function ItemHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-header"
-      {...props}
-      {...stylex.props(styles.edge, sx)}
+      {...withStyles(props, stylex.props(styles.edge, sx))}
     />
   );
 }
@@ -371,8 +360,7 @@ function ItemFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="item-footer"
-      {...props}
-      {...stylex.props(styles.edge, sx)}
+      {...withStyles(props, stylex.props(styles.edge, sx))}
     />
   );
 }

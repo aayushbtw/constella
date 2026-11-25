@@ -21,7 +21,9 @@ const columns = column.columns([
     id: "select",
     meta: { skeleton: "checkbox" },
     header: ({ table }) => <DataTableSelectAll table={table} />,
-    cell: ({ row }) => <DataTableSelectRow row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+    ),
     enableSorting: false,
   }),
   column.accessor("email", {
@@ -79,20 +81,24 @@ header: ({ column }) => (
 
 ## Data Table Select All
 
-Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox.
+Use `DataTableSelectAll` in a `select` column's header and `DataTableSelectRow` in its cells. Register `rowSelectionFeature`. A selected row takes the `fill` of a selected table row. `meta: { skeleton: "checkbox" }` makes the column load as a checkbox. Each selection a person makes is announced to screen readers as "N selected". A `DataTableSelectRow` outside a `DataTable` announces nothing.
 
 ```tsx
 column.display({
   id: "select",
   meta: { skeleton: "checkbox" },
   header: ({ table }) => <DataTableSelectAll table={table} />,
-  cell: ({ row }) => <DataTableSelectRow row={row} />,
+  cell: ({ row }) => (
+    <DataTableSelectRow label={`Select ${row.original.email}`} row={row} />
+  ),
 });
 ```
 
 ## Data Table Action Bar
 
 Use `DataTableActionBar` for actions on the selected rows. It floats at the bottom of the window while any row is selected, with the count, your actions and a Clear button, and leaves when none is. Register `rowSelectionFeature`. Put [Buttons](/docs/components/button) or a [Dropdown Menu](/docs/components/dropdown-menu) trigger in it, with `corners="rounded"` so they nest in its corner, and leave room under the table for it.
+
+When Clear or one of your actions empties the selection while focus is in the bar, focus goes back to where it came into the bar from. If that control is gone, like a deleted row's checkbox, focus goes to the row now in its place, or the row before it, or the table once it's empty.
 
 <!-- ::demo name="data-table-action-bar" -->
 
@@ -101,7 +107,13 @@ Use `DataTableActionBar` for actions on the selected rows. It floats at the bott
   <Button corners="rounded" size="sm" variant="ghost">
     Copy emails
   </Button>
-  <Button color="danger" corners="rounded" size="sm" variant="ghost">
+  <Button
+    color="danger"
+    corners="rounded"
+    data-agent-confirm={`Deletes ${selected} selected payments`}
+    size="sm"
+    variant="ghost"
+  >
     Delete
   </Button>
 </DataTableActionBar>
@@ -141,7 +153,9 @@ const table = useTable({
 
 `onRowClick` gets a click anywhere on a row except its controls, so a checkbox or menu in the row keeps its own click. Open the row from there, here in a [Side Panel](/docs/components/side-panel), and pass its id as `activeRowId` to mark it. Enter on a focused row opens it the same way.
 
-With Cmd, Ctrl or Shift, a click on a row selects it instead, Shift through to the last one. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
+An agent can't click a row or press Enter on it, so put a control in the row that opens it the same way, named with a verb, like the example's `Open <email>` link. Named by the bare email, it would also match the row's checkbox.
+
+With Cmd or Ctrl, a click on a row selects it instead. With Shift, a click on a row or its checkbox selects every row from the last one you picked or reached with the arrow keys. A Shift-click that unchecks a checkbox unchecks that range instead. Dragging from a row's checkbox across others gives them all its new state; dragging back puts them back.
 
 <!-- ::demo name="data-table-row-click" -->
 
@@ -158,15 +172,15 @@ With Cmd, Ctrl or Shift, a click on a row selects it instead, Shift through to t
 
 ## Keyboard
 
-When rows can be selected or clicked, one row takes Tab and the arrow keys move between them.
+When rows can be selected or clicked, the table is a grid. One row takes Tab, and the arrow keys move between them. Tab returns to the row focused last, even after it scrolls out of view. When the focused row leaves the data, focus moves to the row now in its place, or the row before it, or the table once it's empty.
 
-| Key       | Does                                           |
-| --------- | ---------------------------------------------- |
-| ↑ ↓       | The previous or next row                       |
-| Home, End | The first or last row                          |
-| X, Space  | Selects the row, or clears it                  |
-| Shift ↑ ↓ | Extends the selection; back over it shrinks it |
-| Enter     | Opens the row through `onRowClick`             |
+| Key                  | Does                                           |
+| -------------------- | ---------------------------------------------- |
+| ↑ ↓                  | The previous or next row                       |
+| Home, End            | The first or last row                          |
+| X, Space             | Selects the row, or clears it                  |
+| Shift ↑ ↓, Home, End | Extends the selection; back over it shrinks it |
+| Enter                | Opens the row through `onRowClick`             |
 
 ## Query
 
@@ -220,6 +234,23 @@ const table = useTable({
 <DataTablePagination table={table} />;
 ```
 
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label                            | Component   | Actions      |
+| -------------------------------- | ----------- | ------------ |
+| Select all                       | checkbox    | `setChecked` |
+| Email                            | button      | `press`      |
+| Amount                           | button      | `press`      |
+| Select ken99@acme.com and 5 more | checkbox    | `setChecked` |
+| No name                          | scroll-area | None         |
+| Payments                         | data-table  | None         |
+
+"Select ken99@acme.com and 5 more" stands for six row checkboxes, each named by `DataTableSelectRow`'s `label`. Email and Amount are the column headers that sort, and an agent can press either by its title. The scroll area around the table is listed with no name and no actions, and the table itself by its `label`, with no actions.
+
+While no row is selected, the action bar is inert, so the agent can't press its buttons. In the examples, the action bar's Delete and each row menu's Delete carry `data-agent-confirm`.
+
 ## API Reference
 
 | Part | Adds |
@@ -227,7 +258,7 @@ const table = useTable({
 | `DataTable` | `table`, `label`, `empty`; `onRowClick`; `activeRowId`, the open row; `query`, a `useQuery` result; `error`, shown when it fails; `columnSx`, each column's width by id; `rowHeight`, a guess for the virtualizer; `scrollRef`, the element it scrolls in when not the window; `size` |
 | `DataTableActionBar` | `table`, `label`; `children`, the actions, between the count and Clear |
 | `DataTableColumnHeader` | `column`, `title`; the sort icon leads in a column with `meta: { align: "end" }` |
-| `DataTablePagination` | `table`; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
+| `DataTablePagination` | `table`; `label`, the name of the navigation that holds first, previous, next and last, "Pagination" by default; `pageSizes`, the rows per page to offer, 10, 20, 50 and 100 by default |
 | `DataTableSelectAll` | `table` |
 | `DataTableViewOptions` | `table`; `labels`, each column's name by id |
-| `DataTableSelectRow` | `row`; `numbered`, the row's number until it's pointed at or any row is selected |
+| `DataTableSelectRow` | `row`, `label`, its name, such as "Select ken@acme.com"; `numbered`, the row's number until it's pointed at or any row is selected |

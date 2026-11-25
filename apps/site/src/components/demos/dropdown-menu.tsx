@@ -15,21 +15,16 @@ import { useState } from "react";
 
 import { Button } from "@/components/primitives/button";
 import {
-  createDropdownMenuHandle,
+  createDropdownMenuController,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuEmpty,
-  DropdownMenuFilterProvider,
   DropdownMenuGroup,
-  DropdownMenuInput,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuList,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -80,18 +75,9 @@ function DropdownMenuDemo() {
         <DropdownMenuContent sx={styles.wide}>
           <DropdownMenuGroup>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Billing
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+shift+p">Profile</DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+b">Billing</DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+s">Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -105,10 +91,7 @@ function DropdownMenuDemo() {
                 <DropdownMenuItem>More...</DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
-            <DropdownMenuItem>
-              New Team
-              <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            <DropdownMenuItem shortcut="mod+t">New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -117,10 +100,7 @@ function DropdownMenuDemo() {
             <DropdownMenuItem disabled>API</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem shortcut="mod+shift+q">Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
@@ -152,10 +132,7 @@ function DropdownMenuSubmenuDemo() {
               <DropdownMenuItem>Advanced...</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuItem>
-            New Team
-            <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem shortcut="mod+t">New Team</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
@@ -205,6 +182,7 @@ function DropdownMenuCheckboxesDemo() {
             <DropdownMenuCheckboxItem
               checked={statusBar}
               onCheckedChange={setStatusBar}
+              value="status-bar"
             >
               Status Bar
             </DropdownMenuCheckboxItem>
@@ -212,12 +190,14 @@ function DropdownMenuCheckboxesDemo() {
               checked={activityBar}
               disabled
               onCheckedChange={setActivityBar}
+              value="activity-bar"
             >
               Activity Bar
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               checked={panel}
               onCheckedChange={setPanel}
+              value="panel"
             >
               Panel
             </DropdownMenuCheckboxItem>
@@ -289,44 +269,6 @@ function DropdownMenuSizesDemo() {
   );
 }
 
-function DropdownMenuFilterDemo() {
-  return (
-    <DemoRow>
-      <DropdownMenuFilterProvider>
-        <DropdownMenu>
-          <Trigger />
-          <DropdownMenuContent sx={styles.wide}>
-            <DropdownMenuInput
-              aria-label="Filter actions"
-              placeholder="Filter..."
-            />
-            <DropdownMenuEmpty>No actions found.</DropdownMenuEmpty>
-            <DropdownMenuList>
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>File</DropdownMenuLabel>
-                <DropdownMenuItem>New file</DropdownMenuItem>
-                <DropdownMenuItem>Open file</DropdownMenuItem>
-                <DropdownMenuItem>Save</DropdownMenuItem>
-                <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                <DropdownMenuItem>Rename</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Share</DropdownMenuLabel>
-                <DropdownMenuItem>Copy link</DropdownMenuItem>
-                <DropdownMenuItem>Invite people</DropdownMenuItem>
-                <DropdownMenuItem>Publish to web</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuGroup>
-                <DropdownMenuItem color="danger">Delete</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuList>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </DropdownMenuFilterProvider>
-    </DemoRow>
-  );
-}
-
 function DropdownMenuDangerDemo() {
   return (
     <DemoRow>
@@ -342,7 +284,7 @@ function DropdownMenuDangerDemo() {
             Share
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem color="danger">
+          <DropdownMenuItem destructive data-agent-confirm="Deletes this file">
             <Glyph icon={Delete02Icon} />
             Delete
           </DropdownMenuItem>
@@ -363,9 +305,9 @@ const docs: Doc[] = [
   { edited: "Edited last week", name: "Hiring plan" },
 ];
 
-const rowMenu = createDropdownMenuHandle<Doc>();
-
-function DropdownMenuHandleDemo() {
+function DropdownMenuControllerDemo() {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [rowMenu] = useState(() => createDropdownMenuController<Doc>());
   return (
     <DemoRow>
       <ItemGroup render={<ul />} sx={styles.list}>
@@ -377,7 +319,7 @@ function DropdownMenuHandleDemo() {
             </ItemContent>
             <ItemActions>
               <DropdownMenuTrigger
-                handle={rowMenu}
+                controller={rowMenu}
                 payload={doc}
                 render={
                   <Button
@@ -393,27 +335,34 @@ function DropdownMenuHandleDemo() {
           </Item>
         ))}
       </ItemGroup>
-      <DropdownMenu handle={rowMenu}>
-        {({ payload }) => (
-          <DropdownMenuContent align="end">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Glyph icon={PencilEdit01Icon} />
-                Rename
+      <DropdownMenu controller={rowMenu}>
+        <DropdownMenuContent<Doc> align="end">
+          {({ payload }) => (
+            <>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{payload?.name}</DropdownMenuLabel>
+                <DropdownMenuItem>
+                  <Glyph icon={PencilEdit01Icon} />
+                  Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Glyph icon={Share08Icon} />
+                  Share
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                destructive
+                data-agent-confirm={
+                  payload ? `Deletes ${payload.name}` : "Deletes this document"
+                }
+              >
+                <Glyph icon={Delete02Icon} />
+                Delete
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Glyph icon={Share08Icon} />
-                Share
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem color="danger">
-              <Glyph icon={Delete02Icon} />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        )}
+            </>
+          )}
+        </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>
   );
@@ -421,10 +370,9 @@ function DropdownMenuHandleDemo() {
 
 export {
   DropdownMenuCheckboxesDemo,
+  DropdownMenuControllerDemo,
   DropdownMenuDangerDemo,
   DropdownMenuDemo,
-  DropdownMenuFilterDemo,
-  DropdownMenuHandleDemo,
   DropdownMenuIconsDemo,
   DropdownMenuRadioGroupDemo,
   DropdownMenuSizesDemo,

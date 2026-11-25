@@ -6,7 +6,13 @@ description: A set of toggles where one or several can be on.
 <!-- ::demo name="toggle-group" -->
 
 ```tsx
-<ToggleGroup defaultValue={["bold"]} multiple size="icon" variant="outline">
+<ToggleGroup
+  aria-label="Text formatting"
+  defaultValue={["bold"]}
+  multiple
+  size="icon"
+  variant="outline"
+>
   <ToggleGroupItem aria-label="Toggle bold" value="bold">
     <HugeiconsIcon icon={TextBoldIcon} />
   </ToggleGroupItem>
@@ -36,7 +42,7 @@ import {
 </ToggleGroup>
 ```
 
-Without `multiple`, one item is on at a time.
+Without `multiple`, one item is on at a time. Name the group with `aria-label`, like "Text formatting", so screen readers and agents can tell groups apart.
 
 ## Composition
 
@@ -52,8 +58,10 @@ Without `multiple`, one item is on at a time, like an alignment. With it, any ca
 <!-- ::demo name="toggle-group-multiple" -->
 
 ```tsx
-<ToggleGroup defaultValue={["left"]}>…</ToggleGroup>
-<ToggleGroup defaultValue={["bold", "italic"]} multiple>…</ToggleGroup>
+<ToggleGroup aria-label="Alignment" defaultValue={["left"]}>…</ToggleGroup>
+<ToggleGroup aria-label="Text formatting" defaultValue={["bold", "italic"]} multiple>
+  …
+</ToggleGroup>
 ```
 
 ## Spacing
@@ -69,7 +77,12 @@ Use the `spacing` prop to set the gap. At `0` the items join into one row, as in
 | `2`     | 8px    |
 
 ```tsx
-<ToggleGroup defaultValue={["all"]} spacing={0} variant="outline">
+<ToggleGroup
+  aria-label="Filter"
+  defaultValue={["all"]}
+  spacing={0}
+  variant="outline"
+>
   <ToggleGroupItem value="all">All</ToggleGroupItem>
   <ToggleGroupItem value="unread">Unread</ToggleGroupItem>
 </ToggleGroup>
@@ -95,7 +108,12 @@ Use `orientation="vertical"` to stack the items. Arrow keys follow the axis.
 <!-- ::demo name="toggle-group-vertical" -->
 
 ```tsx
-<ToggleGroup orientation="vertical" spacing={0} variant="outline">
+<ToggleGroup
+  aria-label="Filter"
+  orientation="vertical"
+  spacing={0}
+  variant="outline"
+>
   …
 </ToggleGroup>
 ```
@@ -112,7 +130,7 @@ Use the `size` prop on `ToggleGroup`; every item takes it.
 
 ## Disabled
 
-Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for all of them.
+Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for all of them. A disabled item ignores presses, but the arrow keys still reach it.
 
 <!-- ::demo name="toggle-group-disabled" -->
 
@@ -128,4 +146,4 @@ Add `disabled` to a `ToggleGroupItem` to turn one off, or to `ToggleGroup` for a
 | --- | --- |
 | `ToggleGroup` | `variant` and `size`, passed to every item; `spacing`: `0`, `1` or `2` |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Toggle Group](https://base-ui.com/react/components/toggle-group).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Toggle Group](https://ui-sdk.dev/docs/react/components/toggle#group).

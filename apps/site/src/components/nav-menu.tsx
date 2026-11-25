@@ -7,6 +7,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useLoaderData, useRouterState } from "@tanstack/react-router";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
@@ -15,10 +16,8 @@ import {
   Dialog,
   DialogClose,
   DialogPopup,
-  DialogPortal,
   DialogTitle,
   DialogTrigger,
-  DialogViewport,
 } from "@/components/primitives/dialog";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
@@ -41,12 +40,6 @@ const styles = stylex.create({
   trigger: {
     display: { default: "flex", [siteMedia.sidebar]: "none" },
   },
-  viewport: {
-    paddingBlockEnd: 0,
-    paddingBlockStart: 0,
-    paddingInlineEnd: 0,
-    paddingInlineStart: 0,
-  },
   // Covers the page, so the menu reads as the header opened up.
   popup: {
     backgroundColor: colors.background,
@@ -57,7 +50,12 @@ const styles = stylex.create({
     boxShadow: "none",
     gap: 0,
     height: "100%",
+    marginBlockEnd: 0,
+    marginBlockStart: 0,
+    marginInlineEnd: 0,
+    marginInlineStart: 0,
     maxHeight: "none",
+    maxWidth: "none",
     overflowY: "hidden",
     paddingBlockEnd: 0,
     paddingBlockStart: 0,
@@ -165,7 +163,6 @@ function NavMenu() {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [swapping, setSwapping] = useState(false);
-  const popupRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const backRef = useRef<HTMLButtonElement>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -234,90 +231,82 @@ function NavMenu() {
       >
         {icon(Menu01Icon)}
       </DialogTrigger>
-      <DialogPortal>
-        <DialogViewport sx={styles.viewport}>
-          <DialogPopup initialFocus={popupRef} ref={popupRef} sx={styles.popup}>
-            <DialogTitle sx={visuallyHidden.base}>Navigation</DialogTitle>
-            <div {...stylex.props(styles.bar)}>
-              {group ? (
-                <Button
-                  aria-label="Back"
-                  onClick={back}
-                  ref={backRef}
-                  size="icon"
-                  sx={[styles.back, swapping && styles.swap]}
-                  variant="ghost"
-                >
-                  {icon(ArrowLeft01Icon, true)}
-                </Button>
-              ) : (
-                <Link
-                  onClick={close}
-                  to="/"
-                  {...stylex.props(
-                    [typeStyles.textSm, styles.brand],
-                    swapping && styles.swap
-                  )}
-                >
-                  <Logo />
-                  {config.name}
-                </Link>
-              )}
-              <DialogClose
-                aria-label="Close navigation"
-                render={<Button size="icon" variant="ghost" />}
-              >
-                {icon(Cancel01Icon)}
-              </DialogClose>
-            </div>
-            <nav
-              aria-label={group?.label ?? "Main"}
-              ref={navRef}
+      <DialogPopup initialFocus="content" sx={styles.popup}>
+        <DialogTitle sx={visuallyHidden.base}>Navigation</DialogTitle>
+        <div {...stylex.props(styles.bar)}>
+          {group ? (
+            <Button
+              aria-label="Back"
+              onClick={back}
+              ref={backRef}
+              size="icon"
+              sx={[styles.back, swapping && styles.swap]}
+              variant="ghost"
+            >
+              {icon(ArrowLeft01Icon, true)}
+            </Button>
+          ) : (
+            <Link
+              onClick={close}
+              to="/"
               {...stylex.props(
-                scrollFade.y,
-                styles.nav,
+                [typeStyles.textSm, styles.brand],
                 swapping && styles.swap
               )}
             >
-              <ul {...stylex.props(styles.list)}>
-                {group
-                  ? group.items.map(({ slug, title }) => (
-                      <li key={slug}>
-                        <Link
-                          onClick={close}
-                          params={{ slug }}
-                          to={group.to}
-                          {...stylex.props([typeStyles.heading4, styles.row])}
-                        >
-                          {title}
-                        </Link>
-                      </li>
-                    ))
-                  : groups.map(({ items, label, to }) => (
-                      <li key={label}>
-                        <button
-                          data-group={label}
-                          onClick={() => {
-                            enter(label);
-                          }}
-                          type="button"
-                          {...stylex.props(
-                            [typeStyles.heading4, styles.row],
-                            items.some(
-                              ({ slug }) => pathOf(to, slug) === pathname
-                            ) && styles.current
-                          )}
-                        >
-                          {label}
-                          {icon(ArrowRight01Icon, true)}
-                        </button>
-                      </li>
-                    ))}
-              </ul>
-            </nav>
-          </DialogPopup>
-        </DialogViewport>
-      </DialogPortal>
+              <Logo />
+              {config.name}
+            </Link>
+          )}
+          <DialogClose
+            aria-label="Close navigation"
+            render={<Button size="icon" variant="ghost" />}
+          >
+            {icon(Cancel01Icon)}
+          </DialogClose>
+        </div>
+        <nav
+          aria-label={group?.label ?? "Main"}
+          ref={navRef}
+          {...stylex.props(scrollFade.y, styles.nav, swapping && styles.swap)}
+        >
+          <ul {...stylex.props(styles.list)}>
+            {group
+              ? group.items.map(({ slug, title }) => (
+                  <li key={slug}>
+                    <Link
+                      onClick={close}
+                      params={{ slug }}
+                      to={group.to}
+                      {...stylex.props([typeStyles.heading4, styles.row])}
+                    >
+                      {title}
+                    </Link>
+                  </li>
+                ))
+              : groups.map(({ items, label, to }) => (
+                  <li key={label}>
+                    <ButtonPrimitive
+                      data-group={label}
+                      onClick={() => {
+                        enter(label);
+                      }}
+                      type="button"
+                      {...stylex.props(
+                        [typeStyles.heading4, styles.row],
+                        items.some(
+                          ({ slug }) => pathOf(to, slug) === pathname
+                        ) && styles.current
+                      )}
+                    >
+                      {label}
+                      {icon(ArrowRight01Icon, true)}
+                    </ButtonPrimitive>
+                  </li>
+                ))}
+          </ul>
+        </nav>
+      </DialogPopup>
     </Dialog>
   );
 }

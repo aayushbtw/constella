@@ -30,7 +30,7 @@ import {
 } from "@/lib/constella/tokens.stylex";
 import { DemoRow } from "~/components/demos/frame";
 
-const panelOpen = ":is([data-panel-open] *)";
+const panelOpen = ":is([data-slot='collapsible-trigger'][data-open] *)";
 const rtl = ":is([dir='rtl'] *)";
 
 const styles = stylex.create({

@@ -1,12 +1,12 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -25,6 +25,27 @@ interface ActionBarTable {
   getSelectedRowIds: () => string[];
   resetRowSelection: (defaultState?: boolean) => void;
 }
+
+interface FocusOrigin {
+  element: HTMLElement | null;
+  row: number | null;
+  table: HTMLElement | null;
+}
+
+const noOrigin: FocusOrigin = { element: null, row: null, table: null };
+
+const rowInPlaceOf = ({ row, table }: FocusOrigin) => {
+  const rows = [
+    ...(table?.querySelectorAll<HTMLElement>("tr[data-index]") ?? []),
+  ];
+  return (
+    (row === null
+      ? undefined
+      : rows.findLast((candidate) => Number(candidate.dataset.index) <= row)) ??
+    table?.querySelector<HTMLElement>("tr[tabindex='0']") ??
+    table
+  );
+};
 
 const closed = ":is([data-closed])";
 // A key in the table, or in the bar itself, moved it: the keyboard never animates.
@@ -77,7 +98,7 @@ const styles = stylex.create({
     },
     transitionProperty: "opacity, transform, visibility",
     transitionTimingFunction: easings.out,
-    // Hidden once it has faded, so a bar that has left is out of the tab order.
+    // Hidden once it has faded, which drops the bar from an agent's snapshot; `inert` alone lists its buttons as disabled.
     visibility: { default: "visible", [closed]: "hidden" },
   },
   count: {
@@ -104,41 +125,68 @@ function DataTableActionBar({
   table: ActionBarTable;
 }) {
   const count = table.getSelectedRowIds().length;
+  const open = count > 0;
   // The last count stays on screen while the bar leaves.
   const [held, setHeld] = useState(count);
   if (count > 0 && count !== held) {
     setHeld(count);
   }
+  const bar = useRef<HTMLDivElement>(null);
+  const origin = useRef<FocusOrigin>(noOrigin);
+  // Closing inerts the bar, which would drop a focused Clear or action to the page.
+  useLayoutEffect(() => {
+    if (open || bar.current?.contains(document.activeElement) !== true) {
+      return;
+    }
+    const { element } = origin.current;
+    if (element?.isConnected === true) {
+      element.focus();
+    }
+    if (document.activeElement !== element) {
+      rowInPlaceOf(origin.current)?.focus();
+    }
+  }, [open]);
   return (
-    <>
-      <div
-        aria-label={label}
-        data-closed={count === 0 ? "" : undefined}
-        data-slot="data-table-action-bar"
-        role="toolbar"
-        {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
+    <div
+      aria-label={label}
+      data-closed={open ? undefined : ""}
+      data-slot="data-table-action-bar"
+      inert={!open}
+      onFocus={({ currentTarget, relatedTarget }) => {
+        if (!currentTarget.contains(relatedTarget)) {
+          const row =
+            relatedTarget?.closest<HTMLElement>("tr[data-index]")?.dataset
+              .index;
+          origin.current = {
+            element:
+              relatedTarget instanceof HTMLElement ? relatedTarget : null,
+            row: row === undefined ? null : Number(row),
+            table:
+              relatedTarget?.closest<HTMLElement>("[data-slot='data-table']") ??
+              null,
+          };
+        }
+      }}
+      ref={bar}
+      role="toolbar"
+      {...stylex.props([typeStyles.textSm, styles.bar], styles.motion, sx)}
+    >
+      <span {...stylex.props(styles.count)}>
+        {count > 0 ? count : held} selected
+      </span>
+      {children}
+      <Button
+        aria-label="Clear selection"
+        corners="rounded"
+        onClick={() => {
+          table.resetRowSelection(true);
+        }}
+        size="sm"
+        variant="ghost"
       >
-        <span {...stylex.props(styles.count)}>
-          {count > 0 ? count : held} selected
-        </span>
-        {children}
-        <Button
-          aria-label="Clear selection"
-          corners="rounded"
-          onClick={() => {
-            table.resetRowSelection(true);
-          }}
-          size="sm"
-          variant="ghost"
-        >
-          Clear
-        </Button>
-      </div>
-      {/* Outside the bar, which is hidden while empty: a hidden region isn't announced. */}
-      <output aria-live="polite" {...stylex.props(visuallyHidden.base)}>
-        {count > 0 && `${count} selected`}
-      </output>
-    </>
+        Clear
+      </Button>
+    </div>
   );
 }
 

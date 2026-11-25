@@ -1,10 +1,10 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -17,7 +17,7 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const inTooltip = ":where([data-slot='tooltip-popup'] *)";
+const inTooltip = ":where([data-slot='tooltip-content'] *)";
 
 const inButton = (size: string) =>
   `:where([data-slot='button'][data-size='${size}'] > *)`;
@@ -89,25 +89,23 @@ const styles = stylex.create({
   },
 });
 
-function Kbd({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"kbd">>) {
-  return useRender({
-    defaultTagName: "kbd",
-    props: mergeProps<"kbd">(
-      props,
-      stylex.props([typeStyles.captionLg, styles.kbd], sx)
+function Kbd({ render, sx, ...props }: Styled<PartProps<"kbd">>) {
+  return renderElement(
+    "kbd",
+    mergeProps(
+      { "data-slot": "kbd" },
+      withStyles(props, stylex.props([typeStyles.captionLg, styles.kbd], sx))
     ),
-    render,
-    state: { slot: "kbd" },
-  });
+    render
+  );
 }
 
 function KbdGroup({ sx, ...props }: Styled<ComponentProps<"kbd">>) {
   return (
-    <kbd data-slot="kbd-group" {...props} {...stylex.props(styles.group, sx)} />
+    <kbd
+      data-slot="kbd-group"
+      {...withStyles(props, stylex.props(styles.group, sx))}
+    />
   );
 }
 

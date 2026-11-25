@@ -187,7 +187,13 @@ const column = createColumnHelper<typeof features, Payment>();
 
 const columns = column.columns([
   column.display({
-    cell: ({ row }) => <DataTableSelectRow numbered row={row} />,
+    cell: ({ row }) => (
+      <DataTableSelectRow
+        label={`Select ${row.original.email}`}
+        numbered
+        row={row}
+      />
+    ),
     enableSorting: false,
     header: ({ table }) => <DataTableSelectAll table={table} />,
     id: "select",

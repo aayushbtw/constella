@@ -101,18 +101,34 @@ Give `DialogContent` a `maxHeight` and put the content in `DialogBody`. The body
 
 ## Controlled
 
-Use `open` and `onOpenChange` to open the dialog without a trigger, or to close it after an action finishes.
+Use `open` and `onOpenChange` to open the dialog without a trigger. A `DialogClose` still closes it, through `onOpenChange`, and its `value` arrives there as `details.returnValue`.
 
 <!-- ::demo name="dialog-controlled" -->
 
 ```tsx
 const [open, setOpen] = useState(false);
 
-<Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent>…</DialogContent>
+<Dialog
+  open={open}
+  onOpenChange={(next, details) => {
+    setOpen(next);
+    if (!next && details.returnValue === "delete") {
+      toast({ title: "Project deleted" });
+    }
+  }}
+>
+  <DialogContent>
+    …
+    <DialogFooter>
+      <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+      <DialogClose render={<Button color="danger" />} value="delete">
+        Delete forever
+      </DialogClose>
+    </DialogFooter>
+  </DialogContent>
 </Dialog>;
 ```
 
 ## API Reference
 
-`DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [Base UI's Dialog](https://base-ui.com/react/components/dialog).
+`DialogContent` is a `DialogBackdrop` and a `DialogPopup`, which render in place, in the browser's top layer; use the two parts for a dialog without a backdrop. Both are generic over the payload a trigger or `createDialogController` passes, so `DialogContent<Row>` gives a function child a typed `state.payload`. `DialogCloseButton` is the close button in the corner; put it in `DialogContent`. `DialogBody` scrolls once the popup hits its `maxHeight`. Every part takes `sx`. For the rest, see [UI SDK Dialog](https://ui-sdk.dev/docs/react/components/dialog).

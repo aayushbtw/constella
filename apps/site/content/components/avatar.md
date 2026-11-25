@@ -78,13 +78,13 @@ Use `corners="rounded"` for a logo or an app icon. Avatar groups take the defaul
 
 ## Fallback
 
-`AvatarFallback` shows while the image loads, and stays when it fails.
+`AvatarFallback` shows while the image loads, and stays when it fails. With no image, pass `aria-label` with the person's name: the initials then read as a picture of them.
 
 <!-- ::demo name="avatar-fallback" -->
 
 ```tsx
 <Avatar>
-  <AvatarFallback>AY</AvatarFallback>
+  <AvatarFallback aria-label="aayushbtw">AY</AvatarFallback>
 </Avatar>
 ```
 
@@ -200,11 +200,11 @@ Render an avatar inside a [Dropdown Menu](/docs/components/dropdown-menu) trigge
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
+    <DropdownMenuItem destructive>Log out</DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 ```
 
 ## API Reference
 
-`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `presence`. Every part takes `sx`, applied last. For the rest, see [Base UI Avatar](https://base-ui.com/react/components/avatar).
+`Avatar` takes `size` (`"sm"`, `"default"` or `"lg"`) and `corners` (`"pill"` or `"rounded"`). `AvatarBadge` takes `presence`. Every part takes `sx`, applied last. For the rest, see [UI SDK Avatar](https://ui-sdk.dev/docs/react/components/avatar).

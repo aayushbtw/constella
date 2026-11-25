@@ -114,7 +114,11 @@ function ItemVariantDemo() {
               </ItemDescription>
             </ItemContent>
             <ItemActions>
-              <Button size="sm" variant="outline">
+              <Button
+                aria-label={`Open ${variantLabels[variant]}`}
+                size="sm"
+                variant="outline"
+              >
                 Open
               </Button>
             </ItemActions>
@@ -200,7 +204,11 @@ function ItemTileDemo() {
                 <ItemDescription>{provider.description}</ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Button size="sm" variant="outline">
+                <Button
+                  aria-label={`Connect ${provider.name}`}
+                  size="sm"
+                  variant="outline"
+                >
                   Connect
                 </Button>
               </ItemActions>
@@ -239,7 +247,7 @@ function ItemAvatarDemo() {
       <div {...stylex.props(styles.column)}>
         <Item variant="outline">
           <ItemMedia>
-            <Avatar size="lg">
+            <Avatar aria-hidden size="lg">
               <AvatarImage alt="" src={people[0]?.src} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -269,7 +277,7 @@ function ItemGroupDemo() {
               {index > 0 && <ItemSeparator />}
               <Item>
                 <ItemMedia>
-                  <Avatar>
+                  <Avatar aria-hidden>
                     <AvatarImage alt="" src={person.src} />
                     <AvatarFallback>{person.initials}</AvatarFallback>
                   </Avatar>
@@ -279,7 +287,11 @@ function ItemGroupDemo() {
                   <ItemDescription>{person.email}</ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button size="sm" variant="ghost">
+                  <Button
+                    aria-label={`Message ${person.name}`}
+                    size="sm"
+                    variant="ghost"
+                  >
                     Message
                   </Button>
                 </ItemActions>
@@ -300,7 +312,7 @@ function ItemGroupListDemo() {
           {people.map((person) => (
             <Item key={person.name} render={<li />} size="sm">
               <ItemMedia>
-                <Avatar size="sm">
+                <Avatar aria-hidden size="sm">
                   <AvatarImage alt="" src={person.src} />
                   <AvatarFallback>{person.initials}</AvatarFallback>
                 </Avatar>
@@ -373,7 +385,11 @@ function ItemHeaderDemo() {
               <Text color="muted" render={<span />} size="sm">
                 {release.when}
               </Text>
-              <Button size="sm" variant="ghost">
+              <Button
+                aria-label={`Read notes for ${release.version}`}
+                size="sm"
+                variant="ghost"
+              >
                 Read notes
               </Button>
             </ItemFooter>

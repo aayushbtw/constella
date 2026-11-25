@@ -114,7 +114,7 @@ function AvatarFallbackDemo() {
   return (
     <DemoRow>
       <Avatar>
-        <AvatarFallback>{me.fallback}</AvatarFallback>
+        <AvatarFallback aria-label={me.handle}>{me.fallback}</AvatarFallback>
       </Avatar>
     </DemoRow>
   );
@@ -227,7 +227,7 @@ function AvatarDropdownDemo() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem color="danger">Log out</DropdownMenuItem>
+          <DropdownMenuItem destructive>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </DemoRow>

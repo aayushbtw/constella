@@ -1,10 +1,10 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   fontWeights,
@@ -92,7 +92,10 @@ const mediaStyles = {
 
 function Empty({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div data-slot="empty" {...props} {...stylex.props(styles.empty, sx)} />
+    <div
+      data-slot="empty"
+      {...withStyles(props, stylex.props(styles.empty, sx))}
+    />
   );
 }
 
@@ -100,8 +103,7 @@ function EmptyHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="empty-header"
-      {...props}
-      {...stylex.props(styles.header, sx)}
+      {...withStyles(props, stylex.props(styles.header, sx))}
     />
   );
 }
@@ -115,34 +117,33 @@ function EmptyMedia({
     <div
       data-slot="empty-media"
       data-variant={variant}
-      {...props}
-      {...stylex.props(styles.media, mediaStyles[variant], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.media, mediaStyles[variant], sx)
+      )}
     />
   );
 }
 
-function EmptyTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
-      props,
-      stylex.props([typeStyles.textSm, styles.title], sx)
+function EmptyTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "empty-title" },
+      withStyles(props, stylex.props([typeStyles.textSm, styles.title], sx))
     ),
-    render,
-    state: { slot: "empty-title" },
-  });
+    render
+  );
 }
 
 function EmptyDescription({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="empty-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
@@ -151,8 +152,10 @@ function EmptyContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="empty-content"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.content], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.content], sx)
+      )}
     />
   );
 }

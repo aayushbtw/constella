@@ -1,13 +1,27 @@
 "use client";
 
-import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
 import * as stylex from "@stylexjs/stylex";
+import {
+  AlertDialogBackdrop as AlertDialogBackdropPrimitive,
+  AlertDialogClose as AlertDialogClosePrimitive,
+  AlertDialogContent as AlertDialogContentPrimitive,
+  AlertDialogDescription as AlertDialogDescriptionPrimitive,
+  AlertDialog as AlertDialogPrimitive,
+  AlertDialogTitle as AlertDialogTitlePrimitive,
+  AlertDialogTrigger as AlertDialogTriggerPrimitive,
+} from "@ui-sdk/react/alert-dialog";
+import type { AlertDialogProps } from "@ui-sdk/react/alert-dialog";
 import type { ComponentProps } from "react";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
-import { dialogStyles } from "@/components/primitives/dialog";
+import {
+  DialogSkipMotion,
+  dialogStyles,
+  useDialogSkipMotion,
+} from "@/components/primitives/dialog";
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, radii, sizes, space } from "@/lib/constella/tokens.stylex";
 
 const alertDialogSizes = ["sm", "default"] as const;
@@ -18,9 +32,17 @@ type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type AlertDialogContentProps = Styled<AlertDialogPrimitive.Popup.Props> & {
+type AlertDialogContentProps<Payload = unknown> = Styled<
+  ComponentProps<typeof AlertDialogContentPrimitive<Payload>>
+> & {
   size?: AlertDialogSize;
 };
+
+type AlertDialogButtonProps = Omit<
+  ComponentProps<typeof AlertDialogClosePrimitive>,
+  "className" | "render" | "style"
+> &
+  Pick<ButtonProps, "color" | "size" | "sx" | "variant">;
 
 const inSmall = ":is([data-slot='alert-dialog-content'][data-size='sm'] *)";
 
@@ -50,74 +72,56 @@ const styles = stylex.create({
   },
 });
 
-function AlertDialog(props: AlertDialogPrimitive.Root.Props) {
-  return <AlertDialogPrimitive.Root {...props} />;
+const sizeStyles = {
+  default: null,
+  sm: dialogStyles.sm,
+} satisfies Record<AlertDialogSize, stylex.StyleXStyles | null>;
+
+function AlertDialog({
+  onOpenChange,
+  onOpenChangeComplete,
+  ...props
+}: AlertDialogProps) {
+  return (
+    <DialogSkipMotion
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
+      {(handlers) => <AlertDialogPrimitive {...handlers} {...props} />}
+    </DialogSkipMotion>
+  );
 }
 
 function AlertDialogTrigger({
   sx,
   ...props
-}: Styled<AlertDialogPrimitive.Trigger.Props>) {
+}: Styled<ComponentProps<typeof AlertDialogTriggerPrimitive>>) {
   return (
-    <AlertDialogPrimitive.Trigger
-      data-slot="alert-dialog-trigger"
-      {...props}
-      {...stylex.props(sx)}
-    />
+    <AlertDialogTriggerPrimitive {...withStyles(props, stylex.props(sx))} />
   );
 }
 
-function AlertDialogPortal({
-  sx,
-  ...props
-}: Styled<AlertDialogPrimitive.Portal.Props>) {
-  return (
-    <AlertDialogPrimitive.Portal
-      data-slot="alert-dialog-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-function AlertDialogBackdrop({
-  sx,
-  ...props
-}: Styled<AlertDialogPrimitive.Backdrop.Props>) {
-  return (
-    <AlertDialogPrimitive.Backdrop
-      data-slot="alert-dialog-backdrop"
-      {...props}
-      {...stylex.props(dialogStyles.backdrop, sx)}
-    />
-  );
-}
-
-/** Renders the portal, backdrop, viewport and popup: a dialog's surface. */
-function AlertDialogContent({
+function AlertDialogContent<Payload = unknown>({
   size = "default",
   sx,
   ...props
-}: AlertDialogContentProps) {
+}: AlertDialogContentProps<Payload>) {
+  const skip = useDialogSkipMotion();
   return (
-    <AlertDialogPortal>
-      <AlertDialogBackdrop />
-      <AlertDialogPrimitive.Viewport
-        data-slot="alert-dialog-viewport"
-        {...stylex.props(dialogStyles.viewport)}
-      >
-        <AlertDialogPrimitive.Popup
-          data-size={size}
-          data-slot="alert-dialog-content"
-          {...props}
-          {...stylex.props(
-            dialogStyles.popup,
-            size === "sm" && dialogStyles.sm,
-            sx
-          )}
-        />
-      </AlertDialogPrimitive.Viewport>
-    </AlertDialogPortal>
+    <>
+      <AlertDialogBackdropPrimitive
+        data-skip-motion={skip || undefined}
+        {...stylex.props(dialogStyles.backdrop)}
+      />
+      <AlertDialogContentPrimitive<Payload>
+        data-size={size}
+        data-skip-motion={skip || undefined}
+        {...withStyles(
+          props,
+          stylex.props(dialogStyles.popup, sizeStyles[size], sx)
+        )}
+      />
+    </>
   );
 }
 
@@ -125,8 +129,10 @@ function AlertDialogHeader({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-header"
-      {...props}
-      {...stylex.props(dialogStyles.header, styles.header, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.header, styles.header, sx)
+      )}
     />
   );
 }
@@ -135,8 +141,7 @@ function AlertDialogMedia({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-media"
-      {...props}
-      {...stylex.props(styles.media, sx)}
+      {...withStyles(props, stylex.props(styles.media, sx))}
     />
   );
 }
@@ -145,8 +150,10 @@ function AlertDialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="alert-dialog-footer"
-      {...props}
-      {...stylex.props(dialogStyles.footer, styles.footer, sx)}
+      {...withStyles(
+        props,
+        stylex.props(dialogStyles.footer, styles.footer, sx)
+      )}
     />
   );
 }
@@ -154,12 +161,10 @@ function AlertDialogFooter({ sx, ...props }: Styled<ComponentProps<"div">>) {
 function AlertDialogTitle({
   sx,
   ...props
-}: Styled<AlertDialogPrimitive.Title.Props>) {
+}: Styled<ComponentProps<typeof AlertDialogTitlePrimitive>>) {
   return (
-    <AlertDialogPrimitive.Title
-      data-slot="alert-dialog-title"
-      {...props}
-      {...stylex.props(dialogStyles.title, sx)}
+    <AlertDialogTitlePrimitive
+      {...withStyles(props, stylex.props(dialogStyles.title, sx))}
     />
   );
 }
@@ -167,34 +172,41 @@ function AlertDialogTitle({
 function AlertDialogDescription({
   sx,
   ...props
-}: Styled<AlertDialogPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof AlertDialogDescriptionPrimitive>>) {
   return (
-    <AlertDialogPrimitive.Description
-      data-slot="alert-dialog-description"
-      {...props}
-      {...stylex.props(dialogStyles.description, sx)}
+    <AlertDialogDescriptionPrimitive
+      {...withStyles(props, stylex.props(dialogStyles.description, sx))}
     />
   );
 }
 
-/** The confirming button. It doesn't close the dialog: close it once the action is done. */
-function AlertDialogAction({ variant = "primary", ...props }: ButtonProps) {
-  return (
-    <Button data-slot="alert-dialog-action" variant={variant} {...props} />
-  );
-}
-
 function AlertDialogCancel({
-  size = "default",
+  color,
+  size,
   sx,
   variant = "outline",
   ...props
-}: Omit<AlertDialogPrimitive.Close.Props, "className" | "render" | "style"> &
-  Pick<ButtonProps, "size" | "sx" | "variant">) {
+}: AlertDialogButtonProps) {
   return (
-    <AlertDialogPrimitive.Close
-      data-slot="alert-dialog-cancel"
-      render={<Button size={size} sx={sx} variant={variant} />}
+    <AlertDialogClosePrimitive
+      render={<Button color={color} size={size} sx={sx} variant={variant} />}
+      {...props}
+    />
+  );
+}
+
+function AlertDialogAction({
+  color,
+  size,
+  sx,
+  value = "confirm",
+  variant = "primary",
+  ...props
+}: AlertDialogButtonProps) {
+  return (
+    <AlertDialogClosePrimitive
+      render={<Button color={color} size={size} sx={sx} variant={variant} />}
+      value={value}
       {...props}
     />
   );
@@ -203,16 +215,18 @@ function AlertDialogCancel({
 export {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogBackdrop,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogMedia,
-  AlertDialogPortal,
   alertDialogSizes,
   AlertDialogTitle,
   AlertDialogTrigger,
 };
-export type { AlertDialogContentProps, AlertDialogSize };
+export type {
+  AlertDialogButtonProps,
+  AlertDialogContentProps,
+  AlertDialogSize,
+};

@@ -1,11 +1,15 @@
 "use client";
 
-import { mergeProps } from "@base-ui/react/merge-props";
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { useRender } from "@base-ui/react/use-render";
 import { Tick02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  createPopoverController,
+  PopoverContent as PopoverContentPrimitive,
+} from "@ui-sdk/react/popover";
+import type { PopoverController, PopoverProps } from "@ui-sdk/react/popover";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 import {
   createContext,
   use,
@@ -15,7 +19,8 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ComponentProps, RefObject } from "react";
+import type { ComponentProps, ReactNode } from "react";
+import { flushSync } from "react-dom";
 
 import { Button } from "@/components/primitives/button";
 import type { ButtonProps } from "@/components/primitives/button";
@@ -25,16 +30,22 @@ import {
   Popover,
   popoverStyles,
   PopoverTrigger,
+  usePopoverSkipMotion,
 } from "@/components/primitives/popover";
 import type { PopoverContentProps } from "@/components/primitives/popover";
+import { popupMotion } from "@/lib/constella/motion";
 import type { Sx } from "@/lib/constella/styles";
+import {
+  popupSurface,
+  visuallyHidden,
+  withStyles,
+} from "@/lib/constella/styles";
 import {
   colors,
   durations,
   fontWeights,
   lineHeights,
   offsets,
-  shadows,
   sizes,
   space,
   strokes,
@@ -61,11 +72,7 @@ const styles = stylex.create({
   detailsStart: {
     flexDirection: "row-reverse",
   },
-  instant: {
-    transitionDuration: "0s",
-  },
   command: {
-    boxShadow: shadows.lg,
     maxWidth: "100%",
     width: sizes.modelPicker,
   },
@@ -103,8 +110,8 @@ const styles = stylex.create({
 });
 
 interface Picker {
-  actions: RefObject<PopoverPrimitive.Root.Actions | null>;
   cancelShow: () => void;
+  controller: PopoverController;
   detailsId: string;
   picked: boolean;
   setPicked: (picked: boolean) => void;
@@ -124,12 +131,13 @@ function usePicker() {
 }
 
 function ModelPicker({
-  actionsRef,
+  controller: givenController,
   onOpenChangeComplete,
   ...props
-}: PopoverPrimitive.Root.Props) {
-  const ownActions = useRef<PopoverPrimitive.Root.Actions | null>(null);
-  const actions = actionsRef ?? ownActions;
+}: PopoverProps) {
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [ownController] = useState(() => createPopoverController());
+  const controller = givenController ?? ownController;
   const [picked, setPicked] = useState(false);
   const [shown, setShown] = useState(false);
   const timer = useRef(0);
@@ -142,10 +150,10 @@ function ModelPicker({
   );
   const picker = useMemo(
     () => ({
-      actions,
       cancelShow: () => {
         clearTimeout(timer.current);
       },
+      controller,
       detailsId,
       picked,
       setPicked,
@@ -161,12 +169,12 @@ function ModelPicker({
       },
       shown,
     }),
-    [actions, detailsId, picked, shown]
+    [controller, detailsId, picked, shown]
   );
   return (
     <PickerContext value={picker}>
       <Popover
-        actionsRef={actions}
+        controller={controller}
         // Reset once closed, since a controlled `open` never calls `onOpenChange`.
         onOpenChangeComplete={(open) => {
           if (!open) {
@@ -184,16 +192,20 @@ function ModelPicker({
 /** A ghost button by default, ending in the picker's chevron. */
 function ModelPickerTrigger({
   children,
+  label = "Model",
   size = "sm",
   variant = "ghost",
   ...props
-}: ButtonProps) {
+}: Omit<ButtonProps, "children"> & {
+  children?: ReactNode;
+  /** Read before the model's name by screen readers and agents, so two pickers on a page have names of their own. */
+  label?: string;
+}) {
   return (
     <PopoverTrigger
-      data-slot="model-picker-trigger"
       render={<Button size={size} variant={variant} {...props} />}
     >
-      {children}
+      <span {...stylex.props(visuallyHidden.base)}>{label}:</span> {children}
       <HugeiconsIcon
         aria-hidden
         icon={UnfoldMoreIcon}
@@ -204,12 +216,10 @@ function ModelPickerTrigger({
   );
 }
 
-/** Renders the portal, the positioner and a popup that is no surface, so the command and details card beside it are. */
+/** A popover content that is no surface, so the command and details card beside it are. */
 function ModelPickerContent({
   align = "start",
-  alignOffset = 0,
   detailsSide = "inline-end",
-  side = "bottom",
   sideOffset = Number(offsets.popover),
   sx,
   ...props
@@ -218,57 +228,48 @@ function ModelPickerContent({
   detailsSide?: (typeof modelPickerDetailsSides)[number];
 }) {
   const { picked } = usePicker();
+  const skip = usePopoverSkipMotion();
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        {...stylex.props(popoverStyles.positioner)}
-      >
-        <PopoverPrimitive.Popup
-          data-details-side={detailsSide}
-          data-slot="model-picker-content"
-          {...props}
-          {...stylex.props(
-            popoverStyles.motion,
-            styles.content,
-            detailsSide === "inline-start" && styles.detailsStart,
-            picked && styles.instant,
-            sx
-          )}
-        />
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverContentPrimitive
+      align={align}
+      data-details-side={detailsSide}
+      data-skip-motion={picked || skip || undefined}
+      sideOffset={sideOffset}
+      {...withStyles(
+        props,
+        stylex.props(
+          popoverStyles.popup,
+          popupMotion.popover,
+          styles.content,
+          detailsSide === "inline-start" && styles.detailsStart,
+          sx
+        )
+      )}
+    />
   );
 }
 
 /**
- * A `Command` at `sizes.modelPicker` that keeps its highlight when the pointer leaves for the details card.
- * The card shows once a row is reached by arrow key, or rested on with the pointer.
+ * A `Command` at `sizes.modelPicker`. The details card shows once a row is reached by arrow key,
+ * or rested on with the pointer.
  */
-function ModelPickerCommand({
-  keepHighlight = true,
-  onItemHighlighted,
-  sx,
-  ...props
-}: CommandProps) {
+function ModelPickerCommand({ onValueChange, sx, ...props }: CommandProps) {
   const { setShown } = usePicker();
   return (
     <Command
-      data-slot="model-picker-command"
-      keepHighlight={keepHighlight}
-      onItemHighlighted={(value, details) => {
-        if (value === undefined) {
+      {...props}
+      onValueChange={(value, details) => {
+        onValueChange?.(value, details);
+        if (details.canceled) {
+          return;
+        }
+        if (value === null) {
           setShown(false);
-        } else if (details.reason === "keyboard") {
+        } else if (details.reason === "list-navigation") {
           setShown(true);
         }
-        onItemHighlighted?.(value, details);
       }}
-      {...props}
-      sx={[styles.command, sx]}
+      sx={[popupSurface.base, styles.command, sx]}
     />
   );
 }
@@ -279,22 +280,29 @@ function ModelPickerCommand({
  */
 function ModelPickerItem({
   children,
-  onClick,
+  onSelect,
   onPointerEnter,
   onPointerLeave,
   selected = false,
   ...props
-}: ComponentProps<typeof CommandItem> & { selected?: boolean }) {
-  const { actions, cancelShow, detailsId, setPicked, showAfterRest, shown } =
+}: Omit<ComponentProps<typeof CommandItem>, "children"> & {
+  children?: ReactNode;
+  selected?: boolean;
+}) {
+  const { cancelShow, controller, detailsId, setPicked, showAfterRest, shown } =
     usePicker();
   return (
     <CommandItem
       aria-checked={selected}
       aria-describedby={shown ? detailsId : undefined}
-      onClick={(event) => {
-        onClick?.(event);
-        setPicked(true);
-        actions.current?.close();
+      onSelect={(event) => {
+        const result = onSelect?.(event);
+        // Lands before close(); see useSkipMotion in motion.tsx.
+        flushSync(() => {
+          setPicked(true);
+        });
+        controller.close();
+        return result;
       }}
       onPointerEnter={(event) => {
         onPointerEnter?.(event);
@@ -331,8 +339,10 @@ function ModelPickerLogo({
     <span
       aria-hidden
       data-slot="model-picker-logo"
-      {...props}
-      {...stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.logo, styles.mask(`url("${src}")`), sx)
+      )}
     />
   );
 }
@@ -346,32 +356,31 @@ function ModelPickerDetails({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="model-picker-details"
-      {...props}
+      {...withStyles(
+        props,
+        stylex.props(popoverStyles.surface, styles.details, sx)
+      )}
       id={detailsId}
-      {...stylex.props(popoverStyles.surface, styles.details, sx)}
     />
   );
 }
 
-function ModelPickerTitle({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(props, stylex.props(styles.title, sx)),
-    render,
-    state: { slot: "model-picker-title" },
-  });
+function ModelPickerTitle({ render, sx, ...props }: Styled<PartProps<"div">>) {
+  return renderElement(
+    "div",
+    mergeProps(
+      { "data-slot": "model-picker-title" },
+      withStyles(props, stylex.props(styles.title, sx))
+    ),
+    render
+  );
 }
 
 function ModelPickerDescription({ sx, ...props }: Styled<ComponentProps<"p">>) {
   return (
     <p
       data-slot="model-picker-description"
-      {...props}
-      {...stylex.props(styles.description, sx)}
+      {...withStyles(props, stylex.props(styles.description, sx))}
     />
   );
 }

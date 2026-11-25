@@ -31,7 +31,15 @@ import { Marker, MarkerContent, MarkerIcon } from "@/components/ai/marker";
 </Marker>
 ```
 
-Place it between messages in a [Message Scroller](/docs/components/message-scroller).
+In a [Message Scroller](/docs/components/message-scroller), put it in its own `MessageScrollerItem` between turns. The thread is a list, so it holds only items.
+
+```tsx
+<MessageScrollerItem messageId="model-switch">
+  <Marker>
+    <MarkerContent>Switched to a faster model for this chat.</MarkerContent>
+  </Marker>
+</MessageScrollerItem>
+```
 
 ## Composition
 
@@ -95,6 +103,10 @@ Render it as an `output` while work runs, so a screen reader announces each chan
 </Marker>
 ```
 
+## Agent
+
+Its examples add no entry to `agent.snapshot()`.
+
 ## API Reference
 
 ### Marker
@@ -102,6 +114,6 @@ Render it as an `output` while work runs, so a screen reader announces each chan
 | Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `"default"`, `"border"`, `"separator"` | `"default"` |
-| `render` | Base UI [`render`](https://base-ui.com/react/handbook/composition) |  |
+| `render` | `ReactElement \| function`; see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element) |  |
 
 `MarkerIcon` is hidden from screen readers. Every part takes `sx`, applied last; `Marker` renders a `div`, the others a `span`.

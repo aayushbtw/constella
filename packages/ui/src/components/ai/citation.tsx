@@ -1,21 +1,28 @@
 "use client";
 
-import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { Globe02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import {
+  AvatarFallback as AvatarFallbackPrimitive,
+  AvatarImage as AvatarImagePrimitive,
+  Avatar as AvatarPrimitive,
+} from "@ui-sdk/react/avatar";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { renderElement } from "@ui-sdk/react/primitive";
 import { createContext, use, useMemo } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Badge } from "@/components/primitives/badge";
 import {
-  createHoverCardHandle,
+  createHoverCardController,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/primitives/hover-card";
+import type { HoverCardController } from "@/components/primitives/hover-card";
 import type { Sx } from "@/lib/constella/styles";
-import { stateStyles, typeStyles } from "@/lib/constella/styles";
+import { stateStyles, typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -173,13 +180,13 @@ const fallbackDelay = Number.parseFloat(durations.fallbackDelay);
 // A bare favicon, not an Avatar: no tile or edge around it.
 function Logo({ source, sx }: { source: Source; sx: Sx }) {
   return (
-    <AvatarPrimitive.Root
+    <AvatarPrimitive
       aria-hidden
       data-icon="inline-start"
       {...stylex.props(styles.logo, sx)}
     >
       {source.icon === undefined ? null : (
-        <AvatarPrimitive.Image
+        <AvatarImagePrimitive
           alt=""
           referrerPolicy="no-referrer"
           src={source.icon}
@@ -187,7 +194,7 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
         />
       )}
       {/* Held back while a logo loads, so the pill doesn't flash the globe before it. */}
-      <AvatarPrimitive.Fallback
+      <AvatarFallbackPrimitive
         delay={source.icon === undefined ? undefined : fallbackDelay}
         {...stylex.props(styles.logoFallback)}
       >
@@ -197,33 +204,44 @@ function Logo({ source, sx }: { source: Source; sx: Sx }) {
           size="100%"
           strokeWidth={Number(strokes.icon)}
         />
-      </AvatarPrimitive.Fallback>
-    </AvatarPrimitive.Root>
+      </AvatarFallbackPrimitive>
+    </AvatarPrimitive>
   );
 }
 
 type CitationSourceProps = Omit<
-  ComponentProps<"a">,
-  "children" | "className" | "href" | "rel" | "style" | "target"
+  ComponentProps<typeof ButtonPrimitive>,
+  "children" | "className" | "render" | "style"
 > & { source: Source; sx?: Sx };
 
-/** One source's row, linked to its page: the card lists them, and so can a panel. */
+/** One source's row, linked to its page: the card lists them, and so does the answer. */
 function CitationSource({ source, sx, ...props }: CitationSourceProps) {
   const current =
     props["aria-current"] === true || props["aria-current"] === "true";
   return (
-    <a
-      data-slot="citation-source"
-      {...props}
-      href={source.url}
-      rel="noreferrer"
-      target="_blank"
-      {...stylex.props(
-        styles.source,
-        stateStyles.ghost,
-        current && styles.current,
-        sx
+    <ButtonPrimitive
+      aria-label={[source.name, source.title, source.date]
+        .filter(Boolean)
+        .join(", ")}
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.source,
+          stateStyles.ghost,
+          current && styles.current,
+          sx
+        )
       )}
+      // A ui-sdk Button, not a bare link, so an agent's snapshot lists each source.
+      render={(rendered) =>
+        renderElement("a", {
+          ...rendered,
+          "data-slot": "citation-source",
+          href: source.url,
+          rel: "noreferrer",
+          target: "_blank",
+        })
+      }
     >
       <span {...stylex.props(styles.publication)}>
         <Logo source={source} sx={styles.logoCard} />
@@ -244,32 +262,44 @@ function CitationSource({ source, sx, ...props }: CitationSourceProps) {
       {source.date === undefined ? null : (
         <span {...stylex.props(styles.date)}>{source.date}</span>
       )}
-    </a>
+    </ButtonPrimitive>
   );
 }
 
-const CitationsContext = createContext<ReturnType<
-  typeof createHoverCardHandle<Sources>
-> | null>(null);
+const CitationsContext = createContext<HoverCardController<Sources> | null>(
+  null
+);
 
 /** Holds the one card every `Citation` inside opens, so it moves to each citation as you hover it. */
-function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
-  const handle = useMemo(() => createHoverCardHandle<Sources>(), []);
+function Citations({
+  "aria-label": label = "Sources",
+  children,
+  sx,
+}: {
+  "aria-label"?: string;
+  children: ReactNode;
+  sx?: Sx;
+}) {
+  const controller = useMemo(() => createHoverCardController<Sources>(), []);
   return (
-    <CitationsContext value={handle}>
+    <CitationsContext value={controller}>
       {children}
-      <HoverCard handle={handle}>
-        {({ payload }) => (
-          <HoverCardContent sx={[styles.card, sx]}>
-            {payload === undefined ? null : (
+      <HoverCard controller={controller}>
+        <HoverCardContent<Sources>
+          aria-label={label}
+          keepMounted
+          sx={[styles.card, sx]}
+        >
+          {({ payload }) =>
+            payload === undefined ? null : (
               <div {...stylex.props(styles.list)}>
                 {payload.map((source) => (
                   <CitationSource key={source.url} source={source} />
                 ))}
               </div>
-            )}
-          </HoverCardContent>
-        )}
+            )
+          }
+        </HoverCardContent>
       </HoverCard>
     </CitationsContext>
   );
@@ -278,7 +308,7 @@ function Citations({ children, sx }: { children: ReactNode; sx?: Sx }) {
 type CitationProps = Omit<
   ComponentProps<typeof HoverCardTrigger<Sources>>,
   | "children"
-  | "handle"
+  | "controller"
   | "href"
   | "payload"
   | "rel"
@@ -289,8 +319,8 @@ type CitationProps = Omit<
 
 /** A Badge linking to the first source, counting the rest; it opens the `Citations` card. */
 function Citation({ sources, sx, ...props }: CitationProps) {
-  const handle = use(CitationsContext);
-  if (handle === null) {
+  const controller = use(CitationsContext);
+  if (controller === null) {
     throw new Error("Citation must be inside Citations.");
   }
   const [first] = sources;
@@ -299,7 +329,7 @@ function Citation({ sources, sx, ...props }: CitationProps) {
       render={
         <HoverCardTrigger
           {...props}
-          handle={handle}
+          controller={controller}
           href={first.url}
           payload={sources}
           rel="noreferrer"

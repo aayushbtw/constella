@@ -1,6 +1,5 @@
 "use client";
 
-import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import {
   Alert02Icon,
   AlertCircleIcon,
@@ -11,19 +10,32 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { IconSvgElement } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
-import { useLayoutEffect, useRef, useState } from "react";
+import { renderElement } from "@ui-sdk/react/primitive";
+import {
+  ToastAction as ToastActionPrimitive,
+  ToastClose as ToastClosePrimitive,
+  ToastDescription as ToastDescriptionPrimitive,
+  Toast as ToastPrimitive,
+  ToastRegion as ToastRegionPrimitive,
+  ToastTitle as ToastTitlePrimitive,
+} from "@ui-sdk/react/toast";
+import type {
+  ToastData,
+  ToastRegionProps,
+  ToastType as ToastTypePrimitive,
+} from "@ui-sdk/react/toast";
+import { useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Button } from "@/components/primitives/button";
 import { Spinner } from "@/components/primitives/spinner";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
   easings,
   fontWeights,
-  layers,
   lineHeights,
   media,
   motion,
@@ -33,22 +45,20 @@ import {
   sizes,
   space,
   strokes,
+  toastVars,
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-const toast = ToastPrimitive.createToastManager();
-
-// Base UI measures the stack and swipe; these turn its variables into motion.
+const edge = `calc(${space.md} + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)))`;
 const gap = space.sm;
 const peek = space.sm;
-const height = "var(--toast-frontmost-height, var(--toast-height))";
 const scale = `max(0, 1 - var(--toast-index) * ${motion.stackScale})`;
-const offsetY = `calc(var(--toast-offset-y) * -1 - var(--toast-index) * ${gap} + var(--toast-swipe-movement-y))`;
-const swipeX = "var(--toast-swipe-movement-x)";
-const swipeY = "var(--toast-swipe-movement-y)";
+const swipeX = "var(--toast-swipe-x, 0px)";
+const swipeY = "var(--toast-swipe-y, 0px)";
+const offsetY = `calc(var(--toast-offset) * -1 - var(--toast-index) * ${gap} + ${swipeY})`;
 
 const textIn = stylex.keyframes({
   from: { filter: `blur(${motion.crossfadeTextBlur})`, opacity: 0 },
@@ -57,15 +67,12 @@ const textOut = stylex.keyframes({
   to: { filter: `blur(${motion.crossfadeTextBlur})`, opacity: 0 },
 });
 
-const layoutAnimation = {
-  // The Web Animations API takes bare milliseconds; the token carries `ms`.
-  duration: Number(durations.layout.slice(0, -"ms".length)),
-  easing: easings.layout,
-};
-
-// `error`, not `danger`: Base UI's `toast.promise` sets it.
 const statuses = ["error", "info", "success", "warning"] as const;
-const toastTypes = [...statuses, "loading"] as const;
+const toastTypes = [
+  "default",
+  ...statuses,
+  "loading",
+] as const satisfies readonly ToastTypePrimitive[];
 
 type ToastType = (typeof toastTypes)[number];
 
@@ -76,22 +83,22 @@ const icons = {
   warning: Alert02Icon,
 } satisfies Record<(typeof statuses)[number], IconSvgElement>;
 
-function isToastType(type: string | undefined): type is ToastType {
-  return toastTypes.some((name) => name === type);
-}
-
 const styles = stylex.create({
-  viewport: {
-    bottom: space.md,
-    insetInlineEnd: space.md,
-    position: "fixed",
+  // ui-sdk's runtime layer puts the region in the top layer, fixed, and resets the popover box.
+  // These replace its insets, so they keep the keyboard and the safe areas it adds.
+  region: {
+    bottom: `calc(${space.md} + var(--keyboard-inset, 0px) + env(safe-area-inset-bottom, 0px))`,
+    insetInlineEnd: edge,
     width: {
-      default: `calc(100vw - 2 * ${space.md})`,
+      default: `calc(100vw - 2 * ${edge})`,
       [media.sm]: sizes.toast,
     },
-    zIndex: layers.toast,
   },
   toast: {
+    [toastVars.contentOpacity]: {
+      default: "1",
+      ":not([data-front], [data-expanded])": "0",
+    },
     borderStartStartRadius: radii.md,
     borderStartEndRadius: radii.md,
     borderEndStartRadius: radii.md,
@@ -99,44 +106,47 @@ const styles = stylex.create({
     color: colors.textPrimary,
     cursor: "default",
     height: {
-      default: height,
-      ":is([data-expanded])": "var(--toast-height)",
+      default: "var(--toast-height)",
+      ":not([data-front], [data-expanded])": "var(--toast-front-height)",
     },
     insetBlockEnd: 0,
     insetInlineEnd: 0,
     opacity: {
       default: 1,
-      ":is([data-limited], [data-starting-style], [data-ending-style])": 0,
+      ":is([data-starting-style], [data-ending-style])": 0,
     },
     position: "absolute",
     transform: {
-      default: `translateX(${swipeX}) translateY(calc(${swipeY} - var(--toast-index) * ${peek} - (1 - ${scale}) * ${height})) scale(${scale})`,
+      default: `translateX(${swipeX}) translateY(calc(${swipeY} - var(--toast-index) * ${peek} - (1 - ${scale}) * var(--toast-front-height))) scale(${scale})`,
       ":is([data-expanded])": `translateX(${swipeX}) translateY(${offsetY})`,
-      // Two attributes, so these outrank the expanded position above.
-      ":is([data-starting-style]):not([data-swipe-direction])":
+      ":is([data-front]):is([data-starting-style], [data-ending-style]):not([data-swipe-direction])":
         "translateY(100%)",
-      ":is([data-ending-style]):not([data-swipe-direction])":
-        "translateY(100%)",
+      // ui-sdk keeps the swipe variables while the toast leaves, so it carries on from the release.
       ":is([data-ending-style][data-swipe-direction='down'])": `translateY(calc(${swipeY} + 150%))`,
       ":is([data-ending-style][data-swipe-direction='right'])": `translateX(calc(${swipeX} + 150%)) translateY(${offsetY})`,
+      ":is([data-ending-style][data-swipe-direction='left'])": `translateX(calc(${swipeX} - 150%)) translateY(${offsetY})`,
     },
     transformOrigin: "bottom center",
     transitionDuration: {
-      default: durations.move,
+      default: `${durations.move}, ${durations.layout}, ${durations.move}`,
       ":is([data-ending-style])": durations.popoverExit,
     },
     transitionProperty: {
       default: "opacity, height, transform",
+      // ui-sdk mounts a toast before it sets the stack variables, so one entering behind the
+      // front would travel in from the front's place.
+      ":is([data-starting-style])": "none",
       // The toast follows the finger with no lag.
       ":is([data-swiping])": "opacity, height",
       [media.reducedMotion]: "opacity",
     },
-    transitionTimingFunction: easings.out,
+    transitionTimingFunction: {
+      default: `${easings.out}, ${easings.layout}, ${easings.out}`,
+      ":is([data-ending-style])": easings.out,
+    },
     userSelect: "none",
     width: "100%",
     zIndex: "calc(1000 - var(--toast-index))",
-    // The surface is its own layer, so a content change can grow it without
-    // resizing the toast, which Base UI is measuring.
     "::before": {
       backgroundColor: colors.raised,
       borderStartStartRadius: radii.md,
@@ -166,10 +176,9 @@ const styles = stylex.create({
     alignItems: "flex-start",
     display: "flex",
     gap: space.sm,
-    opacity: {
-      default: 1,
-      ":is([data-behind]):not([data-expanded])": 0,
-    },
+    maxHeight: "100%",
+    opacity: toastVars.contentOpacity,
+    overflow: "clip",
     paddingBlock: space.sm,
     paddingInlineEnd: space.sm,
     paddingInlineStart: {
@@ -318,49 +327,49 @@ const styles = stylex.create({
   },
 });
 
-function ToastProvider(props: ToastPrimitive.Provider.Props) {
-  return <ToastPrimitive.Provider {...props} />;
-}
-
-function ToastPortal({ sx, ...props }: Styled<ToastPrimitive.Portal.Props>) {
-  return (
-    <ToastPrimitive.Portal
-      data-slot="toast-portal"
-      {...props}
-      {...stylex.props(sx)}
-    />
-  );
-}
-
-function ToastViewport({
+function ToastRegion({
   sx,
   ...props
-}: Styled<ToastPrimitive.Viewport.Props>) {
+}: Styled<Omit<ToastRegionProps, "align" | "side">>) {
   return (
-    <ToastPrimitive.Viewport
-      data-slot="toast-viewport"
-      {...props}
-      {...stylex.props(styles.viewport, sx)}
+    <ToastRegionPrimitive
+      {...withStyles(props, stylex.props(styles.region, sx))}
     />
   );
 }
 
-function Toast({ sx, ...props }: Styled<ToastPrimitive.Root.Props>) {
+function Toast({
+  render,
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof ToastPrimitive>>) {
   return (
-    <ToastPrimitive.Root
-      data-slot="toast"
-      {...props}
-      {...stylex.props(styles.toast, sx)}
+    <ToastPrimitive
+      {...withStyles(props, stylex.props(styles.toast, sx))}
+      // ui-sdk leaves the toasts hidden behind a collapsed stack focusable.
+      render={(rendered, state) =>
+        renderElement(
+          "li",
+          {
+            ...rendered,
+            inert:
+              state.leaving ||
+              (!state.expanded && state.index > 0) ||
+              undefined,
+          },
+          render,
+          state
+        )
+      }
     />
   );
 }
 
-function ToastContent({ sx, ...props }: Styled<ToastPrimitive.Content.Props>) {
+function ToastContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <ToastPrimitive.Content
+    <div
       data-slot="toast-content"
-      {...props}
-      {...stylex.props(styles.content, sx)}
+      {...withStyles(props, stylex.props(styles.content, sx))}
     />
   );
 }
@@ -383,8 +392,7 @@ function ToastIcon({
       aria-hidden
       data-slot="toast-icon"
       data-type={type}
-      {...props}
-      {...stylex.props(styles.icon, sx)}
+      {...withStyles(props, stylex.props(styles.icon, sx))}
     >
       <span {...stylex.props(styles.layer, type === "loading" && styles.shown)}>
         <Spinner />
@@ -411,16 +419,23 @@ function ToastIcon({
 
 function ToastBody({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
-    <div data-slot="toast-body" {...props} {...stylex.props(styles.body, sx)} />
+    <div
+      data-slot="toast-body"
+      {...withStyles(props, stylex.props(styles.body, sx))}
+    />
   );
 }
 
-function ToastTitle({ sx, ...props }: Styled<ToastPrimitive.Title.Props>) {
+function ToastTitle({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof ToastTitlePrimitive>>) {
   return (
-    <ToastPrimitive.Title
-      data-slot="toast-title"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.title], sx)}
+    <ToastTitlePrimitive
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.title], sx)
+      )}
     />
   );
 }
@@ -428,26 +443,34 @@ function ToastTitle({ sx, ...props }: Styled<ToastPrimitive.Title.Props>) {
 function ToastDescription({
   sx,
   ...props
-}: Styled<ToastPrimitive.Description.Props>) {
+}: Styled<ComponentProps<typeof ToastDescriptionPrimitive>>) {
   return (
-    <ToastPrimitive.Description
-      data-slot="toast-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
+    <ToastDescriptionPrimitive
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.description], sx)
+      )}
     />
   );
 }
 
-// The styles ride on the Button: it applies its own last, over anything Base UI merges in.
 function ToastAction({
   sx,
   ...props
-}: Omit<Styled<ToastPrimitive.Action.Props>, "render">) {
+}: Omit<Styled<ComponentProps<typeof ToastActionPrimitive>>, "render">) {
   return (
-    <ToastPrimitive.Action
-      data-slot="toast-action"
-      render={<Button size="xs" sx={[styles.action, sx]} variant="primary" />}
+    <ToastActionPrimitive
       {...props}
+      render={(rendered) => (
+        <Button
+          {...rendered}
+          // oxlint-disable-next-line jsx-a11y/anchor-is-valid, jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- ui-sdk's props carry the href, and the button renders the label into the link
+          render={"href" in rendered ? <a /> : undefined}
+          size="xs"
+          sx={[styles.action, sx]}
+          variant="primary"
+        />
+      )}
     />
   );
 }
@@ -456,13 +479,11 @@ function ToastClose({
   children,
   sx,
   ...props
-}: Styled<ToastPrimitive.Close.Props>) {
+}: Styled<ComponentProps<typeof ToastClosePrimitive>>) {
   return (
-    <ToastPrimitive.Close
+    <ToastClosePrimitive
       aria-label="Close"
-      data-slot="toast-close"
-      {...props}
-      {...stylex.props(styles.close, sx)}
+      {...withStyles(props, stylex.props(styles.close, sx))}
     >
       {children ?? (
         <HugeiconsIcon
@@ -472,7 +493,7 @@ function ToastClose({
           strokeWidth={Number(strokes.icon)}
         />
       )}
-    </ToastPrimitive.Close>
+    </ToastClosePrimitive>
   );
 }
 
@@ -482,77 +503,28 @@ interface Snapshot {
   title: ReactNode;
 }
 
-function snapshot(item: ToastPrimitive.Root.ToastObject): Snapshot {
+function snapshot(data: ToastData<ReactNode>): Snapshot {
   return {
-    description: item.description,
-    key: item.updateKey ?? 0,
-    title: item.title,
+    description: data.description,
+    key: data.version,
+    title: data.title,
   };
 }
 
-// Base UI re-measures the toast whenever its content resizes, reading any
-// height animation mid-flight. So the toast takes its new height at once, and
-// only the surface and content, which it never measures, travel from the old one.
-function useHeightMorph(natural: number | undefined) {
-  const root = useRef<HTMLDivElement>(null);
-  const content = useRef<HTMLDivElement>(null);
-  const measured = useRef(natural);
-
-  useLayoutEffect(() => {
-    const from = measured.current;
-    measured.current = natural;
-
-    if (
-      !root.current ||
-      !content.current ||
-      from === undefined ||
-      natural === undefined ||
-      from === natural ||
-      // Collapsed toasts behind take the front one's height; only one showing its own animates.
-      root.current.offsetHeight !== natural ||
-      matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
-
-    // Bottom-anchored, so the old top edge sits `grown` px lower.
-    const grown = natural - from;
-
-    root.current.animate([{ top: `${grown}px` }, { top: "0px" }], {
-      ...layoutAnimation,
-      pseudoElement: "::before",
-    });
-    content.current.animate(
-      [
-        {
-          clipPath: `inset(0 0 ${Math.max(grown, 0)}px 0)`,
-          transform: `translateY(${grown}px)`,
-        },
-        { clipPath: "inset(0 0 0 0)", transform: "none" },
-      ],
-      layoutAnimation
-    );
-  }, [natural]);
-
-  return [root, content] as const;
-}
-
-function ToastItem({ item }: { item: ToastPrimitive.Root.ToastObject }) {
-  const [rootRef, contentRef] = useHeightMorph(item.height);
-
+function ToastItem({ data }: { data: ToastData<ReactNode> }) {
   // The old text stays on screen, fading out, under the new text fading in.
-  const [seen, setSeen] = useState(() => snapshot(item));
+  const [seen, setSeen] = useState(() => snapshot(data));
   const [previous, setPrevious] = useState<Snapshot | null>(null);
 
-  if ((item.updateKey ?? 0) !== seen.key) {
+  if (data.version !== seen.key) {
     setPrevious(seen);
-    setSeen(snapshot(item));
+    setSeen(snapshot(data));
   }
 
   return (
-    <Toast ref={rootRef} toast={item}>
-      <ToastContent ref={contentRef}>
-        {isToastType(item.type) && <ToastIcon type={item.type} />}
+    <Toast>
+      <ToastContent>
+        {data.type !== "default" && <ToastIcon type={data.type} />}
         <div {...stylex.props(styles.main)}>
           <ToastBody>
             {previous && (
@@ -584,37 +556,18 @@ function ToastItem({ item }: { item: ToastPrimitive.Root.ToastObject }) {
           </ToastBody>
           <ToastAction />
         </div>
-        <ToastClose />
+        {/* ui-sdk's Close press ignores `dismissible`, so a toast that can't be dismissed shows none. */}
+        {data.dismissible !== false && <ToastClose />}
       </ToastContent>
     </Toast>
   );
 }
 
-function ToastList() {
-  const { toasts } = ToastPrimitive.useToastManager();
-
-  return toasts.map((item) => <ToastItem item={item} key={item.id} />);
-}
-
-function Toaster({
-  children,
-  sx,
-  toastManager = toast,
-  ...props
-}: ToastPrimitive.Provider.Props & { sx?: Sx }) {
+function Toaster(props: Omit<ComponentProps<typeof ToastRegion>, "children">) {
   return (
-    <ToastProvider toastManager={toastManager} {...props}>
-      {children}
-      <ToastPortal>
-        <ToastViewport sx={sx}>
-          <ToastList />
-        </ToastViewport>
-      </ToastPortal>
-    </ToastProvider>
+    <ToastRegion {...props}>{(data) => <ToastItem data={data} />}</ToastRegion>
   );
 }
-
-const { useToastManager } = ToastPrimitive;
 
 export {
   Toast,
@@ -625,12 +578,9 @@ export {
   ToastDescription,
   Toaster,
   ToastIcon,
-  ToastPortal,
-  ToastProvider,
+  ToastRegion,
   ToastTitle,
-  ToastViewport,
-  toast,
   toastTypes,
-  useToastManager,
 };
+export { toast } from "@ui-sdk/react/toast";
 export type { ToastType };

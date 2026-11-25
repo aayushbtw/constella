@@ -63,7 +63,7 @@ const vega = stylex.createTheme(theme, {
 <html {...stylex.props(vega)} lang="en">
 ```
 
-**Apply a theme to `<html>`, not a subtree.** Popups render in a portal at the end of `<body>`, so they only see a theme set on the root.
+**Apply a theme to `<html>`, not a subtree.** Toasts render where `<Toaster />` sits, near the root, so a theme set on a subtree doesn't reach them.
 
 ## Variables
 

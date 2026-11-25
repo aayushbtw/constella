@@ -99,6 +99,10 @@ export const inputVars = stylex.defineVars({
   scale: "1",
 });
 
+export const toastVars = stylex.defineVars({
+  contentOpacity: "1",
+});
+
 export const codeBlockVars = stylex.defineVars({
   padBlock: "0px",
   padInline: "0px",
@@ -137,6 +141,8 @@ export const fonts = stylex.defineConsts({
 // reader's browser font size; apart, so leading can change without the sizes.
 const typeUnit = "0.25rem";
 const leadingUnit = "0.25rem";
+const captionLgSize = `calc(${typeUnit} * 3)`;
+const captionLgLeading = `calc(${leadingUnit} * 4)`;
 
 // The type scale, after Interfere's: headings rank 1 (largest) to 6, text steps around
 // `textBase`. Each size has a line height of the same name; set them together. 13 and 11
@@ -158,7 +164,7 @@ export const fontSizes = stylex.defineConsts({
   // Controls and the text inside components.
   textSm: `calc(${typeUnit} * 3 + 1px)`,
   // Badges, shortcuts, group labels.
-  captionLg: `calc(${typeUnit} * 3)`,
+  captionLg: captionLgSize,
   captionBase: `calc(${typeUnit} * 2.5 + 1px)`,
   captionSm: `calc(${typeUnit} * 2.5)`,
   captionXs: `calc(${typeUnit} * 2)`,
@@ -178,11 +184,16 @@ export const lineHeights = stylex.defineConsts({
   textProse: `calc(${leadingUnit} * 7)`,
   textMd: `calc(${leadingUnit} * 5)`,
   textSm: `calc(${leadingUnit} * 5)`,
-  captionLg: `calc(${leadingUnit} * 4)`,
+  captionLg: captionLgLeading,
   captionBase: `calc(${leadingUnit} * 4)`,
   captionSm: `calc(${leadingUnit} * 4)`,
   captionXs: `calc(${leadingUnit} * 3)`,
   touch: `calc(${leadingUnit} * 6)`,
+});
+
+export const baseCssTypeVars = stylex.defineVars({
+  "--caption-lg-leading": captionLgLeading,
+  "--caption-lg-size": captionLgSize,
 });
 
 // Large type tightens a little, so a heading doesn't read as spaced out.
@@ -296,7 +307,7 @@ export const strokes = stylex.defineConsts({
   track: spaceUnit,
 });
 
-// Popup distances from their trigger, read in JS by Base UI, so bare numbers.
+// Popup distances from their trigger, read in JS as ui-sdk's `sideOffset`, so bare numbers.
 export const offsets = stylex.defineConsts({
   popover: "4",
   tooltip: "8",
@@ -305,11 +316,6 @@ export const offsets = stylex.defineConsts({
 export const layers = stylex.defineConsts({
   // Floats over the page, under a dialog's backdrop.
   bar: "30",
-  dialog: "40",
-  // Above a dialog, so a select or menu opened from one sits on top of it.
-  popover: "45",
-  toast: "50",
-  tooltip: "60",
   // A 2px line along the window's top edge that covers nothing, so it sits above everything.
   loadingBar: "70",
 } as const);
@@ -381,7 +387,6 @@ export const durations = stylex.defineConsts({
   fallbackDelay: "600ms",
   // How long a load runs before the loading bar shows; read in JS.
   loadingDelay: "150ms",
-  // Half Base UI's 600ms, for a tooltip and a hover card alike.
   tooltipDelay: "300ms",
   hoverCardDelay: "300ms",
   hoverCardCloseDelay: "300ms",
@@ -410,6 +415,7 @@ export const motion = stylex.defineConsts({
   crossfadeBlur: "4px",
   crossfadeScale: "0.25",
   crossfadeTextBlur: "2px",
+  sheetResponse: "0.19",
 });
 
 export const blurs = stylex.defineConsts({

@@ -1,48 +1,197 @@
 "use client";
 
-import { Tick02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionnaire";
 import * as stylex from "@stylexjs/stylex";
-import type { ComponentProps } from "react";
+import { createCheckboxGroupController } from "@ui-sdk/react/checkbox";
+import type { CheckboxGroupController } from "@ui-sdk/react/checkbox";
+import { createInputController } from "@ui-sdk/react/input";
+import type { InputController } from "@ui-sdk/react/input";
+import { Progress as ProgressPrimitive } from "@ui-sdk/react/progress";
+import { createRadioGroupController } from "@ui-sdk/react/radio";
+import type { RadioGroupController } from "@ui-sdk/react/radio";
+import {
+  ariaKeyshortcuts,
+  shortcuts as shortcutScopes,
+  useShortcut,
+} from "@ui-sdk/react/shortcuts";
+import {
+  createContext,
+  use,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type {
+  ComponentProps,
+  FocusEvent,
+  ReactNode,
+  RefObject,
+  SubmitEvent,
+  SyntheticEvent,
+} from "react";
 
-import { buttonStyles } from "@/components/primitives/button";
+import { Button } from "@/components/primitives/button";
 import type { ButtonStyleOptions } from "@/components/primitives/button";
+import { Checkbox, CheckboxGroup } from "@/components/primitives/checkbox";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@/components/primitives/field";
 import { Input } from "@/components/primitives/input";
 import { Kbd } from "@/components/primitives/kbd";
-import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { ProgressValue } from "@/components/primitives/progress";
 import {
-  colors,
-  durations,
-  easings,
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/primitives/radio-group";
+import type { Sx } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
+import {
   fontWeights,
   lineHeights,
-  media,
-  motion,
-  opacities,
-  radii,
-  shadows,
   sizes,
   space,
-  strokes,
 } from "@/lib/constella/tokens.stylex";
 
 type Styled<T> = Omit<T, "className" | "style"> & {
   sx?: Sx;
 };
 
-type NavigationProps<T> = Styled<T> &
-  Pick<ButtonStyleOptions, "size" | "variant">;
+type QuestionnaireShortcutMode = "letters" | "numbers";
 
-// The primitive hides inactive items and unused buttons with `hidden`, which any `display` overrides.
-const hidden = ":is([hidden])";
-const checked = ":is([data-checked] *)";
-const radio = ":is([data-type='radio'] *)";
-const invalid = ":is([data-invalid])";
-const disabled = ":is([data-disabled])";
-const firstLineInset = `calc((${lineHeights.textSm} - ${sizes.icon}) / 2)`;
-const noDescription = ":not(:has(~ [data-slot='questionnaire-description']))";
+type QuestionnaireItemStatus = "unanswered" | "answered" | "skipped";
+
+interface QuestionnaireChoiceDefinition {
+  disabled?: boolean;
+  value: string;
+}
+
+interface QuestionnaireItemDefinition {
+  choices?: readonly QuestionnaireChoiceDefinition[];
+  disabled?: boolean;
+  name: string;
+  required?: boolean;
+}
+
+const shortcutKeys = {
+  letters: Array.from({ length: 26 }, (_, index) =>
+    String.fromCodePoint(97 + index)
+  ),
+  numbers: Array.from({ length: 9 }, (_, index) => String(index + 1)),
+} satisfies Record<QuestionnaireShortcutMode, string[]>;
+
+interface ItemHandle {
+  clear: () => void;
+  focus: () => void;
+  valid: () => boolean;
+}
+
+const none: ReadonlySet<string> = new Set();
+
+const activeItem = "[data-slot='field-set'][data-active]";
+
+interface QuestionnaireContextValue {
+  attempted: ReadonlySet<string>;
+  current: QuestionnaireItemDefinition | undefined;
+  definitions: ReadonlyMap<string, QuestionnaireItemDefinition>;
+  form: RefObject<HTMLFormElement | null>;
+  goPrevious: () => void;
+  handles: Map<string, ItemHandle>;
+  index: number;
+  scope: string;
+  shortcuts: QuestionnaireShortcutMode | undefined;
+  skip: () => void;
+  skipped: ReadonlySet<string>;
+  total: number;
+}
+
+const QuestionnaireContext = createContext<QuestionnaireContextValue | null>(
+  null
+);
+
+function useQuestionnaire(part: string) {
+  const context = use(QuestionnaireContext);
+  if (context === null) {
+    throw new Error(`${part} must be used inside Questionnaire.`);
+  }
+  return context;
+}
+
+type SingleChange = Parameters<
+  NonNullable<ComponentProps<typeof RadioGroup>["onValueChange"]>
+>;
+type MultipleChange = Parameters<
+  NonNullable<ComponentProps<typeof CheckboxGroup>["onValueChange"]>
+>;
+type TextChange = Parameters<
+  NonNullable<ComponentProps<typeof Input>["onValueChange"]>
+>;
+
+interface ItemControllers {
+  many: CheckboxGroupController;
+  one: RadioGroupController;
+  text: InputController;
+}
+
+// A controller warns when its control isn't rendered, so each write first checks there's an answer to clear.
+function clearChoices({ many, one }: ItemControllers) {
+  if ((one.getValue() ?? null) !== null) {
+    one.setValue(null);
+  }
+  if ((many.getValue()?.length ?? 0) > 0) {
+    many.setValue([]);
+  }
+}
+
+function clearText({ text }: ItemControllers) {
+  if ((text.getValue() ?? "") !== "") {
+    text.clear();
+  }
+}
+
+function statusOf(
+  answered: boolean,
+  skipped: boolean
+): QuestionnaireItemStatus {
+  if (answered) {
+    return "answered";
+  }
+  return skipped ? "skipped" : "unanswered";
+}
+
+interface QuestionnaireItemContextValue {
+  active: boolean;
+  chooseMany: (...change: MultipleChange) => void;
+  chooseOne: (...change: SingleChange) => void;
+  controllers: ItemControllers;
+  defaults: readonly string[];
+  definition: QuestionnaireItemDefinition;
+  ids: { error: string; title: string };
+  invalid: boolean;
+  multiple: boolean;
+  name: string;
+  setTyped: (typed: boolean) => void;
+}
+
+const QuestionnaireItemContext =
+  createContext<QuestionnaireItemContextValue | null>(null);
+
+function useQuestionnaireItem(part: string) {
+  const context = use(QuestionnaireItemContext);
+  if (context === null) {
+    throw new Error(`${part} must be used inside QuestionnaireItem.`);
+  }
+  return context;
+}
+
+const noDescription = ":not(:has(~ [data-slot='field-description']))";
 
 const styles = stylex.create({
   root: {
@@ -57,232 +206,26 @@ const styles = stylex.create({
     width: "100%",
   },
   progress: {
-    color: colors.textSecondary,
-    fontVariantNumeric: "tabular-nums",
+    alignItems: "center",
+    display: "flex",
+    flexWrap: "wrap",
     fontWeight: fontWeights.medium,
+    gap: space.sm,
     minHeight: lineHeights.textSm,
   },
+  step: { marginInlineStart: 0 },
   item: {
-    borderBlockStartWidth: 0,
-    borderBlockEndWidth: 0,
-    borderInlineStartWidth: 0,
-    borderInlineEndWidth: 0,
-    display: { default: "flex", [hidden]: "none" },
-    flexDirection: "column",
+    display: { default: "flex", ":is([hidden])": "none" },
     gap: space.md,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
-    marginInlineEnd: 0,
-    marginInlineStart: 0,
-    minWidth: 0,
-    paddingBlockStart: 0,
-    paddingBlockEnd: 0,
-    paddingInlineStart: 0,
-    paddingInlineEnd: 0,
   },
   // A legend sits outside the fieldset's flex gap, so it spaces itself.
   title: {
-    color: colors.textPrimary,
-    fontWeight: fontWeights.medium,
     marginBlockEnd: { default: space.xxs, [noDescription]: space.md },
-    paddingBlockStart: 0,
-    paddingBlockEnd: 0,
-    paddingInlineStart: 0,
-    paddingInlineEnd: 0,
     textWrap: "pretty",
-  },
-  description: {
-    color: colors.textSecondary,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
-    marginInlineEnd: 0,
-    marginInlineStart: 0,
-    textWrap: "pretty",
-  },
-  choices: {
-    display: "grid",
-    gap: space.xs,
-    minWidth: 0,
-  },
-  choice: {
-    alignItems: "flex-start",
-    backgroundColor: {
-      default: "transparent",
-      ":is([data-checked])": colors.fillSubtle,
-      [media.hover]: {
-        default: "transparent",
-        ":hover:not([data-disabled])": colors.fillSubtle,
-        ":is([data-checked])": colors.fillSubtle,
-      },
-      ":active:not([data-disabled])": colors.fillSubtle,
-    },
-    borderBlockStartColor: {
-      default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
-      [invalid]: colors.dangerBorder,
-    },
-    borderBlockEndColor: {
-      default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
-      [invalid]: colors.dangerBorder,
-    },
-    borderInlineStartColor: {
-      default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
-      [invalid]: colors.dangerBorder,
-    },
-    borderInlineEndColor: {
-      default: colors.border,
-      ":is([data-checked]):not([data-invalid])": colors.infoSolid,
-      [invalid]: colors.dangerBorder,
-    },
-    borderStartStartRadius: radii.md,
-    borderStartEndRadius: radii.md,
-    borderEndStartRadius: radii.md,
-    borderEndEndRadius: radii.md,
-    borderBlockStartStyle: "solid",
-    borderBlockEndStyle: "solid",
-    borderInlineStartStyle: "solid",
-    borderInlineEndStyle: "solid",
-    borderBlockStartWidth: strokes.border,
-    borderBlockEndWidth: strokes.border,
-    borderInlineStartWidth: strokes.border,
-    borderInlineEndWidth: strokes.border,
-    color: colors.textPrimary,
-    cursor: { default: "pointer", [disabled]: "not-allowed" },
-    display: "flex",
-    gap: space.sm,
-    minWidth: 0,
-    opacity: { default: 1, [disabled]: opacities.disabled },
-    paddingBlockStart: space.sm,
-    paddingBlockEnd: space.sm,
-    paddingInlineStart: space.sm,
-    paddingInlineEnd: space.sm,
-    position: "relative",
-    textAlign: "start",
-    transitionDuration: durations.hover,
-    transitionProperty: "background-color, border-color",
-    transitionTimingFunction: "ease",
-    userSelect: "none",
-  },
-  choiceInput: {
-    cursor: "inherit",
-    height: "100%",
-    insetBlockStart: 0,
-    insetInlineStart: 0,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
-    marginInlineEnd: 0,
-    marginInlineStart: 0,
-    opacity: 0,
-    position: "absolute",
-    width: "100%",
-    zIndex: 1,
-  },
-  // Checkbox's box, or Radio's circle; the primitive needs a native input, so neither component fits.
-  indicator: {
-    alignItems: "center",
-    backgroundClip: { default: "padding-box", [checked]: "border-box" },
-    backgroundColor: {
-      default: colors.fillSubtle,
-      [checked]: colors.infoSolid,
-    },
-    borderBlockStartColor: {
-      default: colors.border,
-      [checked]: colors.infoSolid,
-    },
-    borderBlockEndColor: {
-      default: colors.border,
-      [checked]: colors.infoSolid,
-    },
-    borderInlineStartColor: {
-      default: colors.border,
-      [checked]: colors.infoSolid,
-    },
-    borderInlineEndColor: {
-      default: colors.border,
-      [checked]: colors.infoSolid,
-    },
-    borderStartStartRadius: { default: radii.xs, [radio]: radii.full },
-    borderStartEndRadius: { default: radii.xs, [radio]: radii.full },
-    borderEndStartRadius: { default: radii.xs, [radio]: radii.full },
-    borderEndEndRadius: { default: radii.xs, [radio]: radii.full },
-    borderBlockStartStyle: "solid",
-    borderBlockEndStyle: "solid",
-    borderInlineStartStyle: "solid",
-    borderInlineEndStyle: "solid",
-    borderBlockStartWidth: strokes.border,
-    borderBlockEndWidth: strokes.border,
-    borderInlineStartWidth: strokes.border,
-    borderInlineEndWidth: strokes.border,
-    boxShadow: shadows.default,
-    color: colors.infoOnSolid,
-    display: "flex",
-    flexShrink: 0,
-    height: sizes.icon,
-    justifyContent: "center",
-    marginBlockEnd: firstLineInset,
-    marginBlockStart: firstLineInset,
-    transitionDuration: durations.hover,
-    transitionProperty: "background-color, border-color",
-    transitionTimingFunction: "ease",
-    width: sizes.icon,
-  },
-  // The tick draws in from its start; unchecking is the system answering, so it's quick.
-  tick: {
-    clipPath: { default: "inset(0 100% 0 0)", [checked]: "inset(0)" },
-    display: { default: "block", [radio]: "none" },
-    opacity: { default: 0, [checked]: 1 },
-    transitionDuration: { default: durations.hover, [checked]: durations.move },
-    transitionProperty: {
-      default: "clip-path, opacity",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: easings.out,
-  },
-  dot: {
-    backgroundColor: colors.infoOnSolid,
-    borderStartStartRadius: radii.full,
-    borderStartEndRadius: radii.full,
-    borderEndStartRadius: radii.full,
-    borderEndEndRadius: radii.full,
-    display: { default: "none", [radio]: "block" },
-    height: `calc(${sizes.icon} / 2)`,
-    opacity: { default: 0, [checked]: 1 },
-    transform: { default: `scale(${motion.dotScale})`, [checked]: "scale(1)" },
-    transitionDuration: durations.popover,
-    transitionProperty: {
-      default: "transform, opacity",
-      [media.reducedMotion]: "opacity",
-    },
-    transitionTimingFunction: `${easings.overshoot}, ${easings.out}`,
-    width: `calc(${sizes.icon} / 2)`,
-  },
-  choiceLabel: {
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: 1,
-    fontWeight: fontWeights.medium,
-    gap: space.xxxs,
-    minWidth: 0,
-    overflowWrap: "anywhere",
-  },
-  choiceDescription: {
-    color: colors.textSecondary,
-    fontWeight: fontWeights.regular,
   },
   shortcut: {
-    display: { default: "inline-flex", [hidden]: "none" },
     flexShrink: 0,
     marginInlineStart: "auto",
-  },
-  error: {
-    color: colors.dangerText,
-    marginBlockEnd: 0,
-    marginBlockStart: 0,
-    marginInlineEnd: 0,
-    marginInlineStart: 0,
-    overflowWrap: "anywhere",
   },
   actions: {
     alignItems: "center",
@@ -293,166 +236,603 @@ const styles = stylex.create({
     minHeight: sizes.controlMd,
     width: "100%",
   },
-  navigation: {
-    display: { default: "inline-flex", [hidden]: "none" },
-    gridRowStart: 1,
-  },
-  previous: { gridColumnStart: 1, justifySelf: "start" },
-  skip: { gridColumnStart: 2, justifySelf: "end" },
-  forward: { gridColumnStart: 3, justifySelf: "end" },
+  previous: { gridColumnStart: "1", gridRowStart: "1", justifySelf: "start" },
+  skip: { gridColumnStart: "2", gridRowStart: "1", justifySelf: "end" },
+  forward: { gridColumnStart: "3", gridRowStart: "1", justifySelf: "end" },
 });
 
+type QuestionnaireProps = Styled<
+  Omit<ComponentProps<"form">, "defaultValue" | "noValidate">
+> & {
+  defaultItem?: string;
+  item?: string;
+  items: readonly QuestionnaireItemDefinition[];
+  onItemChange?: (item: string) => void;
+  shortcuts?: QuestionnaireShortcutMode;
+};
+
 function Questionnaire({
+  children,
+  defaultItem,
+  item,
+  items,
+  onBlur,
+  onFocus,
+  onItemChange,
+  onReset,
+  onSubmit,
+  shortcuts,
   sx,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Root>>) {
+}: QuestionnaireProps) {
+  const [ownItem, setOwnItem] = useState(defaultItem);
+  const [skipped, setSkipped] = useState(none);
+  const [attempted, setAttempted] = useState(none);
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set; items register their handles in it
+  const [handles] = useState(() => new Map<string, ItemHandle>());
+  const scope = `questionnaire-${useId()}`;
+  const form = useRef<HTMLFormElement>(null);
+  const focusRequest = useRef<{ control: boolean; name: string } | null>(null);
+  const enabled = useMemo(
+    () => items.filter((definition) => definition.disabled !== true),
+    [items]
+  );
+  const definitions = useMemo(
+    () => new Map(items.map((definition) => [definition.name, definition])),
+    [items]
+  );
+  const active = item ?? ownItem;
+  const index = Math.max(
+    0,
+    enabled.findIndex((definition) => definition.name === active)
+  );
+  const current = enabled.at(index);
+  const total = enabled.length;
+  const shown = useRef(current?.name);
+
+  useLayoutEffect(() => {
+    const request = focusRequest.current;
+    const moved = shown.current !== current?.name;
+    shown.current = current?.name;
+    const element = form.current?.querySelector<HTMLElement>(activeItem);
+    if (current === undefined || element === null || element === undefined) {
+      return;
+    }
+    if (request?.name === current.name) {
+      focusRequest.current = null;
+      if (request.control) {
+        handles.get(current.name)?.focus();
+      }
+      if (!element.contains(document.activeElement)) {
+        element.focus();
+      }
+      return;
+    }
+    const focused = document.activeElement;
+    if (
+      moved &&
+      (focused === document.body || form.current?.contains(focused) === true)
+    ) {
+      element.focus();
+    }
+  });
+
+  useEffect(
+    () => () => {
+      shortcutScopes.setScope(scope, false);
+    },
+    [scope]
+  );
+
+  useShortcut(
+    "mod+enter",
+    () => {
+      form.current?.requestSubmit();
+    },
+    { layer: form, scope }
+  );
+
+  const steps = useMemo(() => {
+    const after = enabled.at(index + 1);
+
+    function go(name: string, control = false) {
+      focusRequest.current = { control, name };
+      if (name === current?.name) {
+        return;
+      }
+      if (item === undefined) {
+        setOwnItem(name);
+      }
+      onItemChange?.(name);
+    }
+
+    function attempt(name: string) {
+      setAttempted((names) => new Set(names).add(name));
+      go(name, true);
+    }
+
+    function valid(name: string) {
+      return handles.get(name)?.valid() ?? true;
+    }
+
+    return {
+      after,
+      attempt,
+      go,
+      goPrevious: () => {
+        const before = enabled.at(index - 1);
+        if (index > 0 && before !== undefined) {
+          go(before.name);
+        }
+      },
+      restart: () => {
+        const start =
+          enabled.find((definition) => definition.name === defaultItem) ??
+          enabled.at(0);
+        if (start !== undefined) {
+          go(start.name);
+        }
+      },
+      skip: () => {
+        if (current === undefined || current.required === true) {
+          return;
+        }
+        handles.get(current.name)?.clear();
+        setSkipped((names) => new Set(names).add(current.name));
+        if (after === undefined) {
+          queueMicrotask(() => form.current?.requestSubmit());
+        } else {
+          go(after.name);
+        }
+      },
+      valid,
+    };
+  }, [current, defaultItem, enabled, handles, index, item, onItemChange]);
+
+  const context = useMemo(
+    () => ({
+      attempted,
+      current,
+      definitions,
+      form,
+      goPrevious: steps.goPrevious,
+      handles,
+      index,
+      scope,
+      shortcuts,
+      skip: steps.skip,
+      skipped,
+      total,
+    }),
+    [
+      attempted,
+      current,
+      definitions,
+      handles,
+      index,
+      scope,
+      shortcuts,
+      skipped,
+      steps,
+      total,
+    ]
+  );
+
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    const { after, attempt, go, valid } = steps;
+    if (current !== undefined && after !== undefined) {
+      event.preventDefault();
+      if (valid(current.name)) {
+        go(after.name);
+      } else {
+        attempt(current.name);
+      }
+      return;
+    }
+    const invalid = enabled.find((definition) => !valid(definition.name));
+    if (invalid !== undefined) {
+      event.preventDefault();
+      attempt(invalid.name);
+      return;
+    }
+    onSubmit?.(event);
+  }
+
+  function handleReset(event: SyntheticEvent<HTMLFormElement>) {
+    onReset?.(event);
+    if (!event.defaultPrevented) {
+      setSkipped(none);
+      setAttempted(none);
+      steps.restart();
+    }
+  }
+
+  function handleFocus(event: FocusEvent<HTMLFormElement>) {
+    onFocus?.(event);
+    shortcutScopes.setScope(scope, true);
+  }
+
+  function handleBlur(event: FocusEvent<HTMLFormElement>) {
+    onBlur?.(event);
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      shortcutScopes.setScope(scope, false);
+    }
+  }
+
   return (
-    <QuestionnairePrimitive.Root
-      data-slot="questionnaire"
-      {...props}
-      {...stylex.props(styles.root, sx)}
-    />
+    <QuestionnaireContext value={context}>
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- focus and blur only scope the shortcuts to this form */}
+      <form
+        data-shortcuts={shortcuts}
+        data-slot="questionnaire"
+        noValidate
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        onReset={handleReset}
+        onSubmit={handleSubmit}
+        ref={form}
+        {...withStyles(props, stylex.props(styles.root, sx))}
+      >
+        {children}
+      </form>
+    </QuestionnaireContext>
   );
 }
 
 function QuestionnaireProgress({
+  children,
   sx,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Progress>>) {
+}: Styled<ComponentProps<typeof ProgressPrimitive>>) {
+  const { index, total } = useQuestionnaire("QuestionnaireProgress");
+  const step = (current: number | null) =>
+    `Question ${current ?? index + 1} of ${total}`;
   return (
-    <QuestionnairePrimitive.Progress
-      data-slot="questionnaire-progress"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.progress], sx)}
-    />
+    <ProgressPrimitive
+      aria-label="Questionnaire progress"
+      format={step}
+      getValueLabel={step}
+      max={total}
+      value={index + 1}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.progress], sx)
+      )}
+    >
+      {children ?? <ProgressValue sx={styles.step} />}
+    </ProgressPrimitive>
   );
 }
 
-function QuestionnaireItem({
-  sx,
-  ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Item>>) {
+type ItemValueProps =
+  | {
+      defaultValue?: string;
+      multiple?: false;
+      onValueChange?: (...change: SingleChange) => void;
+    }
+  | {
+      defaultValue?: readonly string[];
+      multiple: true;
+      onValueChange?: (...change: MultipleChange) => void;
+    };
+
+type QuestionnaireItemProps = Omit<
+  ComponentProps<typeof FieldSet>,
+  "defaultValue" | "disabled" | "name"
+> & {
+  invalid?: boolean;
+  name: string;
+  onStatusChange?: (status: QuestionnaireItemStatus) => void;
+} & ItemValueProps;
+
+function QuestionnaireItem(props: QuestionnaireItemProps) {
+  const {
+    children,
+    defaultValue,
+    invalid = false,
+    multiple = false,
+    name,
+    onStatusChange,
+    onValueChange: _onValueChange,
+    sx,
+    ...rest
+  } = props;
+  const onMany = props.multiple === true ? props.onValueChange : undefined;
+  const onOne = props.multiple === true ? undefined : props.onValueChange;
+  const defaults = useMemo(() => [defaultValue ?? []].flat(), [defaultValue]);
+  const { attempted, current, definitions, handles, skipped } =
+    useQuestionnaire("QuestionnaireItem");
+  const id = useId();
+  // oxlint-disable-next-line react/hook-use-state -- created once and never set, as ui-sdk's controller docs do
+  const [controllers] = useState<ItemControllers>(() => ({
+    many: createCheckboxGroupController(),
+    one: createRadioGroupController(),
+    text: createInputController(),
+  }));
+  const [picked, setPicked] = useState(() => defaults.length > 0);
+  const [typed, setTyped] = useState(false);
+  const definition = useMemo(
+    () => definitions.get(name) ?? { name },
+    [definitions, name]
+  );
+  const status = statusOf(picked || typed, skipped.has(name));
+  const valid = status === "skipped" || (status === "answered" && !invalid);
+  const shownInvalid = !valid && (invalid || attempted.has(name));
+  const active = current?.name === name;
+  const reported = useRef(status);
+
+  useLayoutEffect(() => {
+    handles.set(name, {
+      clear: () => {
+        clearChoices(controllers);
+        clearText(controllers);
+      },
+      focus: () => {
+        const group = multiple ? controllers.many : controllers.one;
+        if (group.getValue() === undefined) {
+          controllers.text.focus();
+        } else {
+          group.focus();
+        }
+      },
+      valid: () => valid,
+    });
+    return () => {
+      handles.delete(name);
+    };
+  });
+
+  useLayoutEffect(() => {
+    if (reported.current !== status) {
+      reported.current = status;
+      onStatusChange?.(status);
+    }
+  }, [onStatusChange, status]);
+
+  const context = useMemo(
+    () => ({
+      active,
+      chooseMany: (...[values, details]: MultipleChange) => {
+        if (details.reason !== "reset") {
+          onMany?.(values, details);
+          if (details.canceled) {
+            return;
+          }
+        }
+        setPicked(values.length > 0);
+      },
+      chooseOne: (...[value, details]: SingleChange) => {
+        if (details.reason !== "reset") {
+          onOne?.(value, details);
+          if (details.canceled) {
+            return;
+          }
+          if (value !== null) {
+            clearText(controllers);
+          }
+        }
+        setPicked(value !== null);
+      },
+      controllers,
+      defaults,
+      definition,
+      ids: { error: `${id}-error`, title: `${id}-title` },
+      invalid: shownInvalid,
+      multiple,
+      name,
+      setTyped,
+    }),
+    [
+      active,
+      controllers,
+      defaults,
+      definition,
+      id,
+      multiple,
+      name,
+      onMany,
+      onOne,
+      shownInvalid,
+    ]
+  );
+  const { ids } = context;
+
   return (
-    <QuestionnairePrimitive.Item
-      data-slot="questionnaire-item"
-      {...props}
-      {...stylex.props(styles.item, sx)}
-    />
+    <QuestionnaireItemContext value={context}>
+      <FieldSet
+        data-active={active ? "" : undefined}
+        data-status={status}
+        disabled={definition.disabled}
+        hidden={!active}
+        inert={!active}
+        // The set owns aria-describedby for its description, so the error joins it here.
+        render={(set: ComponentProps<"fieldset">) => (
+          <fieldset
+            {...set}
+            aria-describedby={
+              shownInvalid
+                ? [set["aria-describedby"], ids.error].join(" ").trim()
+                : set["aria-describedby"]
+            }
+          />
+        )}
+        sx={[styles.item, sx]}
+        tabIndex={-1}
+        {...rest}
+      >
+        {children}
+      </FieldSet>
+    </QuestionnaireItemContext>
   );
 }
 
 function QuestionnaireTitle({
   sx,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Title>>) {
-  return (
-    <QuestionnairePrimitive.Title
-      data-slot="questionnaire-title"
-      {...props}
-      {...stylex.props([typeStyles.textBase, styles.title], sx)}
-    />
-  );
+}: Omit<ComponentProps<typeof FieldLegend>, "id" | "variant">) {
+  const { ids } = useQuestionnaireItem("QuestionnaireTitle");
+  return <FieldLegend id={ids.title} sx={[styles.title, sx]} {...props} />;
 }
 
-function QuestionnaireDescription({
-  sx,
-  ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Description>>) {
-  return (
-    <QuestionnairePrimitive.Description
-      data-slot="questionnaire-description"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.description], sx)}
-    />
-  );
+function QuestionnaireDescription(
+  props: ComponentProps<typeof FieldDescription>
+) {
+  return <FieldDescription {...props} />;
 }
 
-function QuestionnaireChoices({
-  sx,
-  ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Choices>>) {
+type QuestionnaireChoicesProps = Styled<
+  Omit<
+    ComponentProps<"div">,
+    "children" | "defaultChecked" | "defaultValue" | "onChange" | "onSelect"
+  >
+> & { children?: ReactNode };
+
+function QuestionnaireChoices(props: QuestionnaireChoicesProps) {
+  const { chooseMany, chooseOne, controllers, defaults, ids, multiple, name } =
+    useQuestionnaireItem("QuestionnaireChoices");
+  if (multiple) {
+    return (
+      <CheckboxGroup
+        aria-labelledby={ids.title}
+        controller={controllers.many}
+        defaultValue={[...defaults]}
+        name={name}
+        onValueChange={chooseMany}
+        {...props}
+      />
+    );
+  }
   return (
-    <QuestionnairePrimitive.Choices
-      data-slot="questionnaire-choices"
+    <RadioGroup
+      aria-labelledby={ids.title}
+      controller={controllers.one}
+      defaultValue={defaults.at(0) ?? null}
+      name={name}
+      onValueChange={chooseOne}
       {...props}
-      {...stylex.props(styles.choices, sx)}
     />
   );
 }
 
 function QuestionnaireChoice({
   children,
-  sx,
+  value,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Choice>>) {
+}: Omit<ComponentProps<typeof FieldLabel>, "children"> & {
+  children?: ReactNode;
+  value: string;
+}) {
+  const { form, scope, shortcuts } = useQuestionnaire("QuestionnaireChoice");
+  const { active, definition, invalid, multiple } = useQuestionnaireItem(
+    "QuestionnaireChoice"
+  );
+  const control = useRef<HTMLButtonElement>(null);
+  const keyed =
+    definition.choices?.filter((choice) => choice.disabled !== true) ?? [];
+  const shortcut =
+    shortcuts === undefined
+      ? undefined
+      : shortcutKeys[shortcuts].at(
+          keyed.findIndex((choice) => choice.value === value)
+        );
+  const disabled = definition.choices?.some(
+    (choice) => choice.value === value && choice.disabled === true
+  );
+  const activeShortcut = active ? shortcut : null;
+  useShortcut(
+    activeShortcut,
+    () => {
+      control.current?.focus();
+      control.current?.click();
+    },
+    { layer: form, scope }
+  );
+  const keys = shortcut === undefined ? undefined : ariaKeyshortcuts(shortcut);
+  const Control = multiple ? Checkbox : RadioGroupItem;
   return (
-    <QuestionnairePrimitive.Choice
-      data-slot="questionnaire-choice"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.choice], sx)}
-    >
-      <QuestionnairePrimitive.ChoiceInput
-        data-slot="questionnaire-choice-input"
-        {...stylex.props(styles.choiceInput)}
-      />
-      <span
-        aria-hidden
-        data-slot="questionnaire-choice-indicator"
-        {...stylex.props(styles.indicator)}
-      >
-        <HugeiconsIcon
-          aria-hidden
-          icon={Tick02Icon}
-          size={sizes.iconSm}
-          strokeWidth={Number(strokes.icon)}
-          {...stylex.props(styles.tick)}
-        />
-        <span {...stylex.props(styles.dot)} />
-      </span>
-      <QuestionnairePrimitive.ChoiceLabel
-        data-slot="questionnaire-choice-label"
-        {...stylex.props(styles.choiceLabel)}
-      >
-        {children}
-      </QuestionnairePrimitive.ChoiceLabel>
-      <QuestionnairePrimitive.ChoiceShortcut
-        data-slot="questionnaire-choice-shortcut"
-        render={<Kbd sx={styles.shortcut} />}
-      />
-    </QuestionnairePrimitive.Choice>
+    <Field disabled={disabled} invalid={invalid}>
+      <FieldLabel {...props}>
+        <Control aria-keyshortcuts={keys} ref={control} value={value} />
+        <FieldContent>{children}</FieldContent>
+        {keys === undefined ? null : (
+          <Kbd aria-hidden sx={styles.shortcut}>
+            {keys}
+          </Kbd>
+        )}
+      </FieldLabel>
+    </Field>
   );
 }
 
-function QuestionnaireChoiceDescription({
-  sx,
-  ...props
-}: Styled<ComponentProps<"span">>) {
-  return (
-    <span
-      data-slot="questionnaire-choice-description"
-      {...props}
-      {...stylex.props(styles.choiceDescription, sx)}
-    />
-  );
+// Hidden from the label's text, so the choice is named by its label alone; its field still describes the control with it.
+function QuestionnaireChoiceDescription(
+  props: ComponentProps<typeof FieldDescription>
+) {
+  return <FieldDescription aria-hidden {...props} />;
 }
 
 function QuestionnaireInput({
-  sx,
+  defaultValue = "",
+  onValueChange,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Input>>) {
-  return <QuestionnairePrimitive.Input {...props} render={<Input sx={sx} />} />;
+}: Omit<
+  ComponentProps<typeof Input>,
+  "controller" | "defaultValue" | "name" | "value"
+> & {
+  defaultValue?: string;
+}) {
+  const { controllers, invalid, multiple, name, setTyped } =
+    useQuestionnaireItem("QuestionnaireInput");
+  const [text, setText] = useState(defaultValue);
+  const filled = text.trim() !== "";
+
+  useLayoutEffect(() => {
+    setTyped(filled);
+    return () => {
+      setTyped(false);
+    };
+  }, [filled, setTyped]);
+
+  return (
+    <Input
+      aria-invalid={invalid || undefined}
+      controller={controllers.text}
+      defaultValue={defaultValue}
+      name={filled ? name : undefined}
+      onValueChange={(...change: TextChange) => {
+        const [next, details] = change;
+        if (details.reason !== "reset") {
+          onValueChange?.(...change);
+          if (details.canceled) {
+            return;
+          }
+          if (!multiple && next.trim() !== "") {
+            clearChoices(controllers);
+          }
+        }
+        setText(next);
+      }}
+      {...props}
+    />
+  );
 }
 
 function QuestionnaireError({
-  sx,
+  children,
   ...props
-}: Styled<ComponentProps<typeof QuestionnairePrimitive.Error>>) {
+}: Omit<ComponentProps<typeof FieldError>, "errors" | "id" | "match">) {
+  const { definition, ids, invalid } =
+    useQuestionnaireItem("QuestionnaireError");
+  if (!invalid) {
+    return null;
+  }
   return (
-    <QuestionnairePrimitive.Error
-      data-slot="questionnaire-error"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.error], sx)}
-    />
+    <FieldError id={ids.error} match role="alert" {...props}>
+      {children ??
+        (definition.required === true
+          ? "Choose an answer to continue."
+          : "Choose an answer or skip this question.")}
+    </FieldError>
   );
 }
 
@@ -460,109 +840,120 @@ function QuestionnaireActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="questionnaire-actions"
-      {...props}
-      {...stylex.props(styles.actions, sx)}
+      {...withStyles(props, stylex.props(styles.actions, sx))}
     />
   );
 }
 
+type NavigationProps = Omit<
+  ComponentProps<typeof Button>,
+  "data-slot" | "render" | "type"
+> &
+  Pick<ButtonStyleOptions, "size" | "variant">;
+
 function QuestionnairePrevious({
   children = "Previous",
-  size = "default",
+  onClick,
   sx,
   variant = "outline",
   ...props
-}: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Previous>>) {
+}: NavigationProps) {
+  const { goPrevious, index } = useQuestionnaire("QuestionnairePrevious");
+  if (index === 0) {
+    return null;
+  }
   return (
-    <QuestionnairePrimitive.Previous
-      data-size={size}
+    <Button
       data-slot="questionnaire-previous"
-      data-variant={variant}
+      onClick={(event, details) => {
+        onClick?.(event, details);
+        if (!event.defaultPrevented) {
+          goPrevious();
+        }
+      }}
+      sx={[styles.previous, sx]}
+      type="button"
+      variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.previous,
-        sx
-      )}
     >
       {children}
-    </QuestionnairePrimitive.Previous>
+    </Button>
   );
 }
 
 function QuestionnaireSkip({
   children = "Skip",
-  size = "default",
+  onClick,
   sx,
   variant = "outline",
   ...props
-}: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Skip>>) {
+}: NavigationProps) {
+  const { current, skip } = useQuestionnaire("QuestionnaireSkip");
+  if (current === undefined || current.required === true) {
+    return null;
+  }
   return (
-    <QuestionnairePrimitive.Skip
-      data-size={size}
+    <Button
       data-slot="questionnaire-skip"
-      data-variant={variant}
+      onClick={(event, details) => {
+        onClick?.(event, details);
+        if (!event.defaultPrevented) {
+          skip();
+        }
+      }}
+      sx={[styles.skip, sx]}
+      type="button"
+      variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.skip,
-        sx
-      )}
     >
       {children}
-    </QuestionnairePrimitive.Skip>
+    </Button>
   );
 }
 
 function QuestionnaireNext({
   children = "Next",
-  size = "default",
   sx,
   variant = "primary",
   ...props
-}: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Next>>) {
+}: NavigationProps) {
+  const { index, total } = useQuestionnaire("QuestionnaireNext");
+  if (index >= total - 1) {
+    return null;
+  }
   return (
-    <QuestionnairePrimitive.Next
-      data-size={size}
+    <Button
       data-slot="questionnaire-next"
-      data-variant={variant}
+      sx={[styles.forward, sx]}
+      type="submit"
+      variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.forward,
-        sx
-      )}
     >
       {children}
-    </QuestionnairePrimitive.Next>
+    </Button>
   );
 }
 
 function QuestionnaireSubmit({
   children = "Submit",
-  size = "default",
   sx,
   variant = "primary",
   ...props
-}: NavigationProps<ComponentProps<typeof QuestionnairePrimitive.Submit>>) {
+}: NavigationProps) {
+  const { index, total } = useQuestionnaire("QuestionnaireSubmit");
+  if (total === 0 || index !== total - 1) {
+    return null;
+  }
   return (
-    <QuestionnairePrimitive.Submit
-      data-size={size}
+    <Button
       data-slot="questionnaire-submit"
-      data-variant={variant}
+      sx={[styles.forward, sx]}
+      type="submit"
+      variant={variant}
       {...props}
-      {...stylex.props(
-        buttonStyles({ size, variant }),
-        styles.navigation,
-        styles.forward,
-        sx
-      )}
     >
       {children}
-    </QuestionnairePrimitive.Submit>
+    </Button>
   );
 }
 
@@ -588,4 +979,4 @@ export type {
   QuestionnaireItemDefinition,
   QuestionnaireItemStatus,
   QuestionnaireShortcutMode,
-} from "@shadcn/react/questionnaire";
+};

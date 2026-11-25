@@ -7,32 +7,35 @@ section: AI
 <!-- ::demo name="model-picker" -->
 
 ```tsx
-<ModelPicker>
+<ModelPicker
+  onOpenChange={(open) => {
+    if (open) setHighlightedValue(models[0].value);
+  }}
+>
   <ModelPickerTrigger>
     <ModelPickerLogo src={picked.logo} />
     {picked.label}
   </ModelPickerTrigger>
-  <ModelPickerContent>
+  <ModelPickerContent align="end" detailsSide="inline-start">
     <ModelPickerCommand
-      items={models}
-      onItemHighlighted={(item) =>
-        setHighlighted(models.find((model) => model === item))
-      }
+      onValueChange={setHighlightedValue}
+      value={highlightedValue}
     >
-      <CommandInput placeholder="Search models..." />
+      <CommandInput aria-label="Search models" placeholder="Search models..." />
       <CommandEmpty>No models found.</CommandEmpty>
       <CommandList>
-        {(model) => (
+        {models.map((model) => (
           <ModelPickerItem
             key={model.value}
-            onClick={() => setValue(model.value)}
+            label={model.label}
+            onSelect={() => setValue(model.value)}
             selected={model.value === value}
-            value={model}
+            value={model.value}
           >
             <ModelPickerLogo src={model.logo} />
-            {model.label}
+            <CommandItemText />
           </ModelPickerItem>
-        )}
+        ))}
       </CommandList>
     </ModelPickerCommand>
     {highlighted && (
@@ -62,10 +65,14 @@ import {
   ModelPickerItem,
   ModelPickerTrigger,
 } from "@/components/ai/model-picker";
-import { CommandInput, CommandList } from "@/components/primitives/command";
+import {
+  CommandInput,
+  CommandItemText,
+  CommandList,
+} from "@/components/primitives/command";
 ```
 
-The list is a [Command](/docs/components/command). Pass the models as `items`, and group them as Command shows. Picking a model calls the item's `onClick` and closes the picker.
+The list is a [Command](/docs/components/command). Render a `ModelPickerItem` for each model, with its name in `label` and a `CommandItemText` to show it with the search marked, and group them as Command shows. Picking a model, by click or Enter, calls the item's `onSelect` and closes the picker.
 
 ## Composition
 
@@ -79,7 +86,8 @@ ModelPicker
     │   ├── CommandEmpty
     │   └── CommandList
     │       └── ModelPickerItem
-    │           └── ModelPickerLogo
+    │           ├── ModelPickerLogo
+    │           └── CommandItemText
     └── ModelPickerDetails
         ├── ModelPickerTitle
         └── ModelPickerDescription
@@ -87,31 +95,43 @@ ModelPicker
 
 ## Details
 
-`ModelPickerDetails` shows the highlighted model once a row is reached by arrow key or rested on for 300ms, then follows the highlight. Keep the highlighted model in state from the command's `onItemHighlighted`. The card wraps under the list when the window is too narrow for both.
+`ModelPickerDetails` shows the highlighted model once a row is reached by arrow key or rested on for 300ms, then follows the highlight. Control the highlight with the command's `value` and `onValueChange`, which take the highlighted item's `value`, and start it at the first model on each open. ui-sdk doesn't report its first highlight through `onValueChange`, so without that the card has no model until the highlight moves. The card wraps under the list when the window is too narrow for both.
 
 ### Side
 
-The card opens at the list's `inline-end` by default. A picker at the end of a row, like the composer above, takes `align="end"` and `detailsSide="inline-start"`, so the card opens into the page. Opening upward, the card lines up with the list's bottom, nearest the trigger.
+The card opens at the list's `inline-end` by default, as below. A picker at the end of a row, like the composer above, takes `align="end"` and `detailsSide="inline-start"`, so the card opens into the page. Opening upward, the card lines up with the list's bottom, nearest the trigger.
 
 <!-- ::demo name="model-picker-side" -->
 
 ```tsx
-<ModelPickerContent align="end" detailsSide="inline-start">
-  …
-</ModelPickerContent>
+<ModelPicker>
+  <ModelPickerTrigger label="Fallback">…</ModelPickerTrigger>
+  <ModelPickerContent detailsSide="inline-end">…</ModelPickerContent>
+</ModelPicker>
 ```
+
+## Agent
+
+What `agent.snapshot()` lists for the preview example:
+
+| Label        | Component | Actions            |
+| ------------ | --------- | ------------------ |
+| Model: GPT-5 | button    | `press`            |
+| Model: GPT-5 | popover   | `setOpen`, `press` |
+
+The button is the trigger, named `<label>: <model>`. The popover with the same name is the picker. Open it with `setOpen`, then call `run` with a model's name on the list's search, "Search models" in the example. On a page with two pickers, give each its own `label`, like "Fallback", so each opens by its own name.
 
 ## API Reference
 
 | Part | Adds |
 | --- | --- |
 | `ModelPicker` | A [Popover](/docs/components/popover) root |
-| `ModelPickerTrigger` | A ghost `sm` [Button](/docs/components/button) ending in a chevron; takes the button's props |
+| `ModelPickerTrigger` | A ghost `sm` [Button](/docs/components/button) ending in a chevron; takes the button's props; `label`, `"Model"` by default, is read before the model's name by screen readers and agents |
 | `ModelPickerContent` | The popover's popup without a surface, so the list and the details are two cards; opens `align="start"`; `detailsSide` is `inline-end` or `inline-start` |
-| `ModelPickerCommand` | A `Command` 240px wide, as its own surface, with `keepHighlight` on |
+| `ModelPickerCommand` | A `Command` 240px wide, as its own surface |
 | `ModelPickerItem` | A `CommandItem` that closes the picker at once on pick; `selected` adds a tick and `aria-checked` |
 | `ModelPickerLogo` | A one-color logo from `src`, painted in the text color |
 | `ModelPickerDetails` | The highlighted model's card, hidden until reached |
 | `ModelPickerTitle`, `ModelPickerDescription` | The card's name row and muted text; the title takes `render` |
 
-Every part takes `sx`, applied last. For `render`, see [Base UI useRender](https://base-ui.com/react/utils/use-render).
+Every part takes `sx`, applied last. For `render`, see [ui-sdk's `render`](https://ui-sdk.dev/docs/react/parts-and-composition#choose-the-element).

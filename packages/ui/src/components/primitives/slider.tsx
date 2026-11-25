@@ -1,11 +1,16 @@
-"use client";
-
-import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as stylex from "@stylexjs/stylex";
+import {
+  SliderControl as SliderControlPrimitive,
+  SliderIndicator as SliderIndicatorPrimitive,
+  Slider as SliderPrimitive,
+  SliderThumb as SliderThumbPrimitive,
+  SliderTrack as SliderTrackPrimitive,
+  SliderValue as SliderValuePrimitive,
+} from "@ui-sdk/react/slider";
+import type { ComponentProps } from "react";
 
-import { labelStyles } from "@/components/primitives/label";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -49,8 +54,8 @@ const styles = stylex.create({
     flexDirection: { default: "row", [vertical]: "column" },
     gridColumn: "1 / -1",
     height: { default: sizes.controlXxs, [vertical]: "100%" },
-    // Centered thumbs need no measuring, so they render before hydration; Base UI maps the
-    // pointer inside this padding, so the thumb stays within the bar and still tracks the pointer.
+    // ui-sdk maps the pointer onto the track, so a thumb centered on either end
+    // overhangs into this padding, stays within the bar and still tracks the pointer.
     paddingBlock: { default: 0, [vertical]: halfThumb },
     paddingInline: { default: halfThumb, [vertical]: 0 },
     touchAction: "none",
@@ -76,7 +81,7 @@ const styles = stylex.create({
       position: "absolute",
     },
   },
-  // Base UI sizes the indicator along the track; the bar reaches back under the start thumb.
+  // ui-sdk sizes the indicator along the track; the bar reaches back under the start thumb.
   indicator: {
     height: { default: "100%", [vertical]: null },
     width: { default: null, [vertical]: "100%" },
@@ -102,7 +107,7 @@ const styles = stylex.create({
     borderEndEndRadius: radii.full,
     boxShadow: shadows.defaultRing,
     height: sizes.thumb,
-    // Base UI positions the thumb with `translate`, so `transform` is free for the press.
+    // ui-sdk places the thumb with insets and `translate`, so `transform` is free for the press.
     transform: { default: null, ":is([data-dragging])": presses.icon },
     transitionDuration: durations.press,
     transitionProperty: "transform",
@@ -119,35 +124,25 @@ const styles = stylex.create({
   },
 });
 
-function Slider<Value extends number | readonly number[]>({
+function Slider<Value extends number | number[]>({
   sx,
   ...props
-}: Styled<SliderPrimitive.Root.Props<Value>>) {
+}: Styled<ComponentProps<typeof SliderPrimitive<Value>>>) {
   return (
-    <SliderPrimitive.Root
-      data-slot="slider"
-      {...props}
-      {...stylex.props(styles.slider, sx)}
-    />
+    <SliderPrimitive {...withStyles(props, stylex.props(styles.slider, sx))} />
   );
 }
 
-function SliderLabel({ sx, ...props }: Styled<SliderPrimitive.Label.Props>) {
+function SliderValue({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SliderValuePrimitive>>) {
   return (
-    <SliderPrimitive.Label
-      data-slot="slider-label"
-      {...props}
-      {...stylex.props(labelStyles(), sx)}
-    />
-  );
-}
-
-function SliderValue({ sx, ...props }: Styled<SliderPrimitive.Value.Props>) {
-  return (
-    <SliderPrimitive.Value
-      data-slot="slider-value"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.value], sx)}
+    <SliderValuePrimitive
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.value], sx)
+      )}
     />
   );
 }
@@ -157,12 +152,10 @@ function SliderControl({
   children,
   sx,
   ...props
-}: Styled<SliderPrimitive.Control.Props>) {
+}: Styled<ComponentProps<typeof SliderControlPrimitive>>) {
   return (
-    <SliderPrimitive.Control
-      data-slot="slider-control"
-      {...props}
-      {...stylex.props(styles.control, sx)}
+    <SliderControlPrimitive
+      {...withStyles(props, stylex.props(styles.control, sx))}
     >
       {children ?? (
         <SliderTrack>
@@ -170,16 +163,17 @@ function SliderControl({
           <SliderThumb />
         </SliderTrack>
       )}
-    </SliderPrimitive.Control>
+    </SliderControlPrimitive>
   );
 }
 
-function SliderTrack({ sx, ...props }: Styled<SliderPrimitive.Track.Props>) {
+function SliderTrack({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SliderTrackPrimitive>>) {
   return (
-    <SliderPrimitive.Track
-      data-slot="slider-track"
-      {...props}
-      {...stylex.props(styles.track, sx)}
+    <SliderTrackPrimitive
+      {...withStyles(props, stylex.props(styles.track, sx))}
     />
   );
 }
@@ -187,22 +181,21 @@ function SliderTrack({ sx, ...props }: Styled<SliderPrimitive.Track.Props>) {
 function SliderIndicator({
   sx,
   ...props
-}: Styled<SliderPrimitive.Indicator.Props>) {
+}: Styled<ComponentProps<typeof SliderIndicatorPrimitive>>) {
   return (
-    <SliderPrimitive.Indicator
-      data-slot="slider-indicator"
-      {...props}
-      {...stylex.props(styles.indicator, sx)}
+    <SliderIndicatorPrimitive
+      {...withStyles(props, stylex.props(styles.indicator, sx))}
     />
   );
 }
 
-function SliderThumb({ sx, ...props }: Styled<SliderPrimitive.Thumb.Props>) {
+function SliderThumb({
+  sx,
+  ...props
+}: Styled<ComponentProps<typeof SliderThumbPrimitive>>) {
   return (
-    <SliderPrimitive.Thumb
-      data-slot="slider-thumb"
-      {...props}
-      {...stylex.props(styles.thumb, sx)}
+    <SliderThumbPrimitive
+      {...withStyles(props, stylex.props(styles.thumb, sx))}
     />
   );
 }
@@ -211,7 +204,6 @@ export {
   Slider,
   SliderControl,
   SliderIndicator,
-  SliderLabel,
   SliderThumb,
   SliderTrack,
   SliderValue,

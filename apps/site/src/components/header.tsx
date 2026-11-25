@@ -2,6 +2,7 @@ import { ContrastIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
 import { Link, useRouterState } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 import { Button, buttonStyles } from "@/components/primitives/button";
 import { typeStyles } from "@/lib/constella/styles";
@@ -103,9 +104,23 @@ function currentSection(pathname: string) {
   )?.to;
 }
 
-function Header() {
+function Header({ actions }: { actions?: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const current = currentSection(pathname);
+  const themeToggle = (
+    <Button
+      aria-label="Toggle theme"
+      onClick={toggleTheme}
+      size="icon"
+      variant="ghost"
+    >
+      <HugeiconsIcon
+        icon={ContrastIcon}
+        size={sizes.icon}
+        strokeWidth={Number(strokes.icon)}
+      />
+    </Button>
+  );
 
   return (
     <header {...stylex.props(styles.header)}>
@@ -139,18 +154,14 @@ function Header() {
         </div>
         <div {...stylex.props(styles.end)}>
           <Search />
-          <Button
-            aria-label="Toggle theme"
-            onClick={toggleTheme}
-            size="icon"
-            variant="ghost"
-          >
-            <HugeiconsIcon
-              icon={ContrastIcon}
-              size={sizes.icon}
-              strokeWidth={Number(strokes.icon)}
-            />
-          </Button>
+          {actions === undefined ? (
+            themeToggle
+          ) : (
+            <>
+              {actions}
+              {themeToggle}
+            </>
+          )}
           <NavMenu />
         </div>
       </div>

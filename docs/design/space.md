@@ -11,7 +11,7 @@ Every px value in these docs is at the default 16px root. Interfere puts spacing
 | `strokes.track` | rem | A bar sized beside its thumb, not a line. |
 | `strokes.border`, `indicator`, `spinner` | px | A hairline stays one crisp device pixel; at 1.25px it blurs. |
 | `strokes.icon` | unitless | In the icon's own units, so it already scales with the icon. |
-| `shadows`, `blurs`, `motion` distances, `offsets` | px | Effects and the gap to a trigger don't need to grow; Base UI takes offsets in px. |
+| `shadows`, `blurs`, `motion` distances, `offsets` | px | Effects and the gap to a trigger don't need to grow; ui-sdk takes `sideOffset` in px. |
 
 ## Spacing
 

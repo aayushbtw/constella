@@ -1,7 +1,5 @@
 "use client";
 
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import {
   Cancel01Icon,
   Menu01Icon,
@@ -9,6 +7,10 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as stylex from "@stylexjs/stylex";
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
+import { useShortcut, useShortcutHint } from "@ui-sdk/react/shortcuts";
 import {
   createContext,
   use,
@@ -38,12 +40,11 @@ import { Skeleton } from "@/components/primitives/skeleton";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/primitives/tooltip";
 import { scrollFade } from "@/lib/constella/scroll-fade";
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles, visuallyHidden } from "@/lib/constella/styles";
+import { typeStyles, visuallyHidden, withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -204,18 +205,18 @@ const triggerHovered = ":is([data-slot='sidebar-trigger']:hover *)";
 const triggerFocused = ":is([data-slot='sidebar-trigger']:focus-visible *)";
 
 // The whole row answers the pointer, so reaching for its action keeps it lit, and so
-// does an open menu from it.
-const item = "[data-slot='sidebar-menu-item']";
-// Its own attribute, not `data-slot`: a menu trigger rendering the action writes its slot over it.
+// does an open menu from it. Own attributes, not `data-slot`, since a ui-sdk trigger
+// rendering the row, its button or its action writes its slot over theirs.
+const item = "[data-sidebar-menu-item]";
 const action = "[data-sidebar-menu-action]";
-// Its own children only, so a sub-row doesn't light its parent.
-const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub']):hover)`;
+// Its own children only, so a sub-row or the row's tooltip or menu, rendered in place, doesn't light it.
+const ownHover = `${item}:has(> :not([data-slot='sidebar-menu-sub'], [data-slot='tooltip-content'], [data-slot='menu-content'], [data-slot='collapsible-panel']):hover)`;
 const ownFocus = `${item}:has(> :focus-visible)`;
 const rowHovered = `:is(${ownHover} > *)`;
-// The action's menu only: the row's own tooltip writes the same attribute.
-const actionOpen = `${item}:has(> ${action}[data-popup-open])`;
-// Or the row's own popup, as a menu's trigger: its tooltip also writes `data-popup-open`,
-// and a collapsible's trigger is expanded without one.
+// A collapsible's trigger carries `data-open` too, without `aria-haspopup`.
+const menuOpen = ":where([aria-haspopup])[data-open]";
+const actionOpen = `${item}:has(> ${action}${menuOpen})`;
+// Or the row's own popup, as a menu's trigger; a collapsible's trigger is expanded without one.
 const rowOpen = `:is(${actionOpen} > *, [aria-haspopup][aria-expanded='true'])`;
 const idle = ":not([data-active])";
 const rowFill = {
@@ -464,11 +465,11 @@ const styles = stylex.create({
     // Stays lit while its menu is open, as a button's trigger does.
     backgroundColor: {
       default: "transparent",
-      ":is([data-popup-open])": colors.fillSubtle,
+      [menuOpen]: colors.fillSubtle,
       [media.hover]: {
         default: "transparent",
         ":hover": colors.fillSubtle,
-        ":is([data-popup-open])": colors.fillSubtle,
+        [menuOpen]: colors.fillSubtle,
       },
     },
     borderBlockEndWidth: 0,
@@ -665,7 +666,7 @@ const styles = stylex.create({
       [media.hover]: {
         default: 0,
         [`:is(${ownHover} *, ${ownFocus} *)`]: 1,
-        ":is([data-popup-open])": 1,
+        [menuOpen]: 1,
       },
     },
   },
@@ -748,22 +749,36 @@ const styles = stylex.create({
       [`:active${pressable}`]: colors.fillSubtle,
       [highlighted]: colors.fill,
     },
+    borderBlockEndWidth: 0,
+    borderBlockStartWidth: 0,
+    borderInlineEndWidth: 0,
+    borderInlineStartWidth: 0,
     borderStartStartRadius: radii.sm,
     borderStartEndRadius: radii.sm,
     borderEndStartRadius: radii.sm,
     borderEndEndRadius: radii.sm,
     color: colors.textPrimary,
+    cursor: "pointer",
     display: "flex",
+    fontWeight: fontWeights.regular,
     gap: space.xs,
     height: sizes.controlSm,
+    opacity: {
+      default: 1,
+      ":is(:disabled, [aria-disabled='true'])": opacities.disabled,
+    },
     overflow: "hidden",
+    paddingBlockEnd: 0,
+    paddingBlockStart: 0,
     paddingInlineEnd: space.xs,
     paddingInlineStart: space.xs,
+    textAlign: "start",
     textDecorationLine: "none",
     transitionDuration: durations.hover,
     transitionProperty: "background-color",
     transitionTimingFunction: "ease",
     whiteSpace: "nowrap",
+    width: "100%",
   },
   // The rail's mark and the icon share one cell, and cross-fade as the trigger is pointed at.
   markStack: {
@@ -850,11 +865,8 @@ function SidebarProvider({
   const setOpen = useCallback(
     (next: boolean) => {
       setInstant(false);
-      if (onOpenChange) {
-        onOpenChange(next);
-      } else {
-        setOwnOpen(next);
-      }
+      setOwnOpen(next);
+      onOpenChange?.(next);
     },
     [onOpenChange]
   );
@@ -900,18 +912,7 @@ function SidebarProvider({
     []
   );
 
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "b" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        toggleFromKeyboard();
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [toggleFromKeyboard]);
+  useShortcut("mod+b", toggleFromKeyboard, { description: "Toggle sidebar" });
 
   const context = useMemo<SidebarContextValue>(
     () => ({
@@ -938,17 +939,13 @@ function SidebarProvider({
 
   return (
     <SidebarContext value={context}>
-      {/* One group, so once a row's tooltip is open, the next opens at once. */}
-      <TooltipProvider>
-        <KeyboardToggleContext value={toggleFromKeyboard}>
-          <div
-            data-instant={instant || undefined}
-            data-slot="sidebar-wrapper"
-            {...props}
-            {...stylex.props(styles.wrapper, sx)}
-          />
-        </KeyboardToggleContext>
-      </TooltipProvider>
+      <KeyboardToggleContext value={toggleFromKeyboard}>
+        <div
+          data-instant={instant || undefined}
+          data-slot="sidebar-wrapper"
+          {...withStyles(props, stylex.props(styles.wrapper, sx))}
+        />
+      </KeyboardToggleContext>
     </SidebarContext>
   );
 }
@@ -994,7 +991,6 @@ function Sidebar({
     () => ({ collapsing, rail, tooltipSide }),
     [collapsing, rail, tooltipSide]
   );
-  // On the sidebar itself, not the provider, so it reaches into the mobile sheet's portal.
   const sectionChange = sectionChanging ? "" : undefined;
   const triggerName = `sidebar-trigger${useId()}`;
 
@@ -1003,8 +999,7 @@ function Sidebar({
       <div
         data-section-change={sectionChange}
         data-slot="sidebar"
-        {...props}
-        {...stylex.props(styles.static, sx)}
+        {...withStyles(props, stylex.props(styles.static, sx))}
       >
         <TriggerNameContext value={triggerName}>{children}</TriggerNameContext>
       </div>
@@ -1013,13 +1008,10 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet onOpenChange={setOpenMobile} open={openMobile}>
+      <Sheet onOpenChange={setOpenMobile} open={openMobile} side={side}>
         <SheetContent
-          data-mobile
           data-section-change={sectionChange}
-          data-slot="sidebar"
           showCloseButton={false}
-          side={side}
           sx={[styles.sheet, sx]}
         >
           <SheetTitle sx={visuallyHidden.base}>Sidebar</SheetTitle>
@@ -1047,12 +1039,14 @@ function Sidebar({
       data-side={side}
       data-slot="sidebar"
       ref={desktop}
-      {...props}
-      {...stylex.props(
-        styles.sidebar,
-        side === "right" && styles.sidebarRight,
-        isCollapsed && collapsible === "offcanvas" && styles.offcanvas,
-        isCollapsed && collapsible === "icon" && styles.icon
+      {...withStyles(
+        props,
+        stylex.props(
+          styles.sidebar,
+          side === "right" && styles.sidebarRight,
+          isCollapsed && collapsible === "offcanvas" && styles.offcanvas,
+          isCollapsed && collapsible === "icon" && styles.icon
+        )
       )}
     >
       <div
@@ -1088,21 +1082,24 @@ function SidebarTrigger({
   variant = "ghost",
   ...props
 }: ButtonProps & { kbd?: ReactNode }) {
-  const { isMobile, open, setOpenMobile, toggleSidebar } = useSidebar();
+  const { isMobile, open, openMobile, setOpenMobile, toggleSidebar } =
+    useSidebar();
   const inSheet = use(InSheetContext);
   const name = use(TriggerNameContext);
   const triggerSx = [name !== null && styles.triggerName(name), sx];
   const toggleFromKeyboard = use(KeyboardToggleContext);
   const { rail, tooltipSide } = use(RailContext);
+  const hint = useShortcutHint("mod+b");
 
   if (inSheet) {
     return (
       <Button
         aria-label={ariaLabel ?? "Close sidebar"}
         data-slot="sidebar-trigger"
-        onClick={(event) => {
-          onClick?.(event);
+        onClick={(event, details) => {
+          const result = onClick?.(event, details);
           setOpenMobile(false);
+          return result;
         }}
         size={size}
         sx={triggerSx}
@@ -1114,26 +1111,26 @@ function SidebarTrigger({
     );
   }
 
-  let label = open ? "Collapse sidebar" : "Expand sidebar";
-  if (isMobile) {
-    label = "Open sidebar";
-  }
+  const label = ariaLabel ?? "Toggle sidebar";
   return (
-    <Tooltip>
+    <Tooltip type={kbd === undefined ? "label" : "description"}>
       <TooltipTrigger
         render={
           <Button
-            aria-expanded={isMobile ? undefined : open}
-            aria-label={ariaLabel ?? label}
+            aria-expanded={isMobile ? openMobile : open}
+            aria-haspopup={isMobile ? "dialog" : undefined}
+            aria-keyshortcuts={hint.ariaKeyshortcuts}
+            aria-label={label}
             data-slot="sidebar-trigger"
-            onClick={(event) => {
-              onClick?.(event);
+            onClick={(event, details) => {
+              const result = onClick?.(event, details);
               // Enter or Space: a keyboard toggle, so it skips the animation.
-              if (event.detail === 0 && toggleFromKeyboard) {
+              if (details.source === "keyboard" && toggleFromKeyboard) {
                 toggleFromKeyboard();
               } else {
                 toggleSidebar();
               }
+              return result;
             }}
             size={size}
             sx={triggerSx}
@@ -1145,7 +1142,7 @@ function SidebarTrigger({
         }
       />
       <TooltipContent side={rail ? tooltipSide : "bottom"}>
-        {ariaLabel ?? label}
+        {label}
         {kbd}
       </TooltipContent>
     </Tooltip>
@@ -1195,19 +1192,46 @@ function Glyph({ icon }: { icon: typeof SidebarLeftIcon }) {
   );
 }
 
+type SidebarButtonProps = ComponentProps<typeof ButtonPrimitive> & {
+  "data-slot"?: string;
+};
+
+function SidebarButton({
+  "data-slot": slot,
+  render,
+  ...props
+}: SidebarButtonProps & { "data-slot": string }) {
+  return (
+    <ButtonPrimitive
+      {...props}
+      // ui-sdk writes `button` over a passed slot; the sidebar's selectors key on its own.
+      render={(rendered, state) =>
+        renderElement(
+          "button",
+          { ...rendered, "data-slot": slot },
+          render,
+          state
+        )
+      }
+    />
+  );
+}
+
 /** A strip on the sidebar's edge that toggles it, for the pointer only. */
-function SidebarRail({ sx, ...props }: Styled<ComponentProps<"button">>) {
+function SidebarRail({
+  "data-slot": slot = "sidebar-rail",
+  sx,
+  ...props
+}: Styled<SidebarButtonProps>) {
   const { toggleSidebar } = useSidebar();
   return (
-    <button
-      aria-label="Toggle Sidebar"
-      data-slot="sidebar-rail"
+    <SidebarButton
+      aria-label="Sidebar rail"
       onClick={toggleSidebar}
       tabIndex={-1}
-      title="Toggle Sidebar"
-      type="button"
-      {...props}
-      {...stylex.props(styles.rail, sx)}
+      title="Toggle sidebar"
+      {...withStyles(props, stylex.props(styles.rail, sx))}
+      data-slot={slot}
     />
   );
 }
@@ -1216,8 +1240,7 @@ function SidebarInset({ sx, ...props }: Styled<ComponentProps<"main">>) {
   return (
     <main
       data-slot="sidebar-inset"
-      {...props}
-      {...stylex.props(styles.main, sx)}
+      {...withStyles(props, stylex.props(styles.main, sx))}
     />
   );
 }
@@ -1251,8 +1274,10 @@ function SidebarHeader({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-header"
-      {...props}
-      {...stylex.props(styles.header, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.header, swap && styles.swap, sx)
+      )}
     />
   );
 }
@@ -1261,8 +1286,7 @@ function SidebarHeaderActions({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-header-actions"
-      {...props}
-      {...stylex.props(styles.headerActions, sx)}
+      {...withStyles(props, stylex.props(styles.headerActions, sx))}
     />
   );
 }
@@ -1271,28 +1295,26 @@ function SidebarFooter({ swap = false, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-footer"
-      {...props}
-      {...stylex.props(styles.footer, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.footer, swap && styles.swap, sx)
+      )}
     />
   );
 }
 
 function SidebarSeparator({ sx, ...props }: SeparatorProps) {
-  return (
-    <Separator
-      data-slot="sidebar-separator"
-      {...props}
-      sx={[styles.separator, sx]}
-    />
-  );
+  return <Separator {...props} sx={[styles.separator, sx]} />;
 }
 
 function SidebarContent({ swap = true, sx, ...props }: SwapProps) {
   return (
     <div
       data-slot="sidebar-content"
-      {...props}
-      {...stylex.props(scrollFade.y, styles.content, swap && styles.swap, sx)}
+      {...withStyles(
+        props,
+        stylex.props(scrollFade.y, styles.content, swap && styles.swap, sx)
+      )}
     />
   );
 }
@@ -1301,54 +1323,53 @@ function SidebarGroup({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-group"
-      {...props}
-      {...stylex.props(styles.group, sx)}
+      {...withStyles(props, stylex.props(styles.group, sx))}
     />
   );
 }
 
-function SidebarGroupLabel({
-  render,
-  sx,
-  ...props
-}: Styled<useRender.ComponentProps<"div">>) {
+function SidebarGroupLabel({ render, sx, ...props }: Styled<PartProps<"div">>) {
   const { ref, truncated } = useTruncated(true);
-  return useRender({
-    defaultTagName: "div",
-    props: mergeProps<"div">(
-      props,
-      stylex.props([typeStyles.textSm, styles.groupLabel], sx)
+  return renderElement(
+    "div",
+    mergeProps(
+      {
+        "data-slot": "sidebar-group-label",
+        "data-truncated": truncated ? "" : undefined,
+        ref,
+      },
+      withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.groupLabel], sx)
+      )
     ),
-    ref,
-    render,
-    // Written as `data-truncated` while its text runs past its box.
-    state: { slot: "sidebar-group-label", truncated },
-  });
+    render
+  );
 }
 
 function SidebarGroupAction({
-  render,
+  "data-slot": slot = "sidebar-group-action",
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"button">>) {
-  return useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      render ? {} : { type: "button" },
-      props,
-      stylex.props(styles.action, styles.groupAction, sx)
-    ),
-    render,
-    state: { slot: "sidebar-group-action" },
-  });
+}: Styled<SidebarButtonProps>) {
+  return (
+    <SidebarButton
+      {...mergeProps(
+        withStyles(props, stylex.props(styles.action, styles.groupAction, sx))
+      )}
+      data-slot={slot}
+    />
+  );
 }
 
 function SidebarGroupContent({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-group-content"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.groupContent], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.groupContent], sx)
+      )}
     />
   );
 }
@@ -1357,8 +1378,7 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
   return (
     <ul
       data-slot="sidebar-menu"
-      {...props}
-      {...stylex.props(styles.menu, sx)}
+      {...withStyles(props, stylex.props(styles.menu, sx))}
     />
   );
 }
@@ -1366,9 +1386,9 @@ function SidebarMenu({ sx, ...props }: Styled<ComponentProps<"ul">>) {
 function SidebarMenuItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
+      data-sidebar-menu-item=""
       data-slot="sidebar-menu-item"
-      {...props}
-      {...stylex.props(styles.menuItem, sx)}
+      {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
   );
 }
@@ -1384,6 +1404,7 @@ const buttonSizeStyles = {
  * rail, and whenever its `SidebarMenuLabel` is cut off.
  */
 function SidebarMenuButton({
+  "data-slot": slot = "sidebar-menu-button",
   isActive = false,
   render,
   size = "default",
@@ -1392,7 +1413,7 @@ function SidebarMenuButton({
   variant = "default",
   withEnd = false,
   ...props
-}: Styled<useRender.ComponentProps<"button">> & {
+}: Styled<SidebarButtonProps> & {
   isActive?: boolean;
   size?: SidebarMenuButtonSize;
   tooltip?: ReactNode;
@@ -1402,9 +1423,15 @@ function SidebarMenuButton({
 }) {
   const { rail, tooltipSide } = use(RailContext);
   const [truncated, setTruncated] = useState(false);
-  const button = useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
+  const own = mergeProps(
+    {
+      "aria-current": isActive ? "page" : undefined,
+      "data-active": isActive ? "" : undefined,
+      "data-sidebar-menu-button": "",
+      "data-size": size,
+      "data-variant": variant,
+    },
+    withStyles(
       props,
       stylex.props(
         [typeStyles.textMd, styles.button],
@@ -1413,20 +1440,30 @@ function SidebarMenuButton({
         withEnd && styles.buttonWithEnd,
         sx
       )
-    ),
-    render: tooltip === undefined ? render : <TooltipTrigger render={render} />,
-    // Base UI writes each state key as a `data-*` attribute.
-    state: { active: isActive, size, slot: "sidebar-menu-button", variant },
-  });
+    )
+  );
 
   if (tooltip === undefined) {
-    return <LabelContext value={null}>{button}</LabelContext>;
+    return (
+      <LabelContext value={null}>
+        <SidebarButton {...own} data-slot={slot} render={render} />
+      </LabelContext>
+    );
   }
 
   return (
     <LabelContext value={setTruncated}>
-      <Tooltip disabled={!(rail || truncated)}>
-        {button}
+      <Tooltip disabled={!(rail || truncated)} type="label">
+        <TooltipTrigger
+          // A link row must not get `type`, and a button row gets it from SidebarButton.
+          render={({ type: _type, ...trigger }) => (
+            <SidebarButton
+              {...mergeProps(trigger, own)}
+              data-slot={slot}
+              render={render}
+            />
+          )}
+        />
         <TooltipContent align="center" side={tooltipSide}>
           {tooltip}
         </TooltipContent>
@@ -1444,8 +1481,7 @@ function SidebarMenuLabel({ sx, ...props }: Styled<ComponentProps<"span">>) {
       data-slot="sidebar-menu-label"
       data-truncated={truncated || undefined}
       ref={ref}
-      {...props}
-      {...stylex.props(styles.label, sx)}
+      {...withStyles(props, stylex.props(styles.label, sx))}
     />
   );
 }
@@ -1456,46 +1492,47 @@ function SidebarMenuKbd({ sx, ...props }: Styled<ComponentProps<"span">>) {
     <span
       aria-hidden
       data-slot="sidebar-menu-kbd"
-      {...props}
-      {...stylex.props(styles.kbd, sx)}
+      {...withStyles(props, stylex.props(styles.kbd, sx))}
     />
   );
 }
 
 function SidebarMenuAction({
-  render,
+  "data-slot": slot = "sidebar-menu-action",
   showOnHover = false,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"button">> & { showOnHover?: boolean }) {
-  const marker: Record<`data-${string}`, string | undefined> = {
-    "data-show-on-hover": showOnHover ? "" : undefined,
-    "data-sidebar-menu-action": "",
-  };
-  return useRender({
-    defaultTagName: "button",
-    props: mergeProps<"button">(
-      marker,
-      render ? {} : { type: "button" },
-      props,
-      stylex.props(
-        styles.action,
-        styles.menuAction,
-        showOnHover && styles.onHover,
-        sx
-      )
-    ),
-    render,
-    state: { slot: "sidebar-menu-action" },
-  });
+}: Styled<SidebarButtonProps> & { showOnHover?: boolean }) {
+  return (
+    <SidebarButton
+      {...mergeProps(
+        {
+          "data-show-on-hover": showOnHover ? "" : undefined,
+          "data-sidebar-menu-action": "",
+        },
+        withStyles(
+          props,
+          stylex.props(
+            styles.action,
+            styles.menuAction,
+            showOnHover && styles.onHover,
+            sx
+          )
+        )
+      )}
+      data-slot={slot}
+    />
+  );
 }
 
 function SidebarMenuBadge({ sx, ...props }: Styled<ComponentProps<"div">>) {
   return (
     <div
       data-slot="sidebar-menu-badge"
-      {...props}
-      {...stylex.props([typeStyles.captionLg, styles.badge], sx)}
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.captionLg, styles.badge], sx)
+      )}
     />
   );
 }
@@ -1509,8 +1546,7 @@ function SidebarMenuSkeleton({
   return (
     <div
       data-slot="sidebar-menu-skeleton"
-      {...props}
-      {...stylex.props(styles.skeleton, sx)}
+      {...withStyles(props, stylex.props(styles.skeleton, sx))}
     >
       {showIcon && <Skeleton sx={styles.skeletonIcon} />}
       <Skeleton sx={styles.skeletonText} />
@@ -1523,8 +1559,7 @@ function SidebarMenuSub({ sx, ...props }: Styled<ComponentProps<"ul">>) {
     <ul
       data-slot="sidebar-menu-sub"
       inert={use(RailContext).collapsing}
-      {...props}
-      {...stylex.props(styles.sub, sx)}
+      {...withStyles(props, stylex.props(styles.sub, sx))}
     />
   );
 }
@@ -1533,29 +1568,34 @@ function SidebarMenuSubItem({ sx, ...props }: Styled<ComponentProps<"li">>) {
   return (
     <li
       data-slot="sidebar-menu-sub-item"
-      {...props}
-      {...stylex.props(styles.menuItem, sx)}
+      {...withStyles(props, stylex.props(styles.menuItem, sx))}
     />
   );
 }
 
 function SidebarMenuSubButton({
+  "data-slot": slot = "sidebar-menu-sub-button",
   isActive = false,
-  render,
   sx,
   ...props
-}: Styled<useRender.ComponentProps<"a">> & {
+}: Styled<SidebarButtonProps> & {
   isActive?: boolean;
 }) {
-  return useRender({
-    defaultTagName: "a",
-    props: mergeProps<"a">(
-      props,
-      stylex.props([typeStyles.textMd, styles.subButton], sx)
-    ),
-    render,
-    state: { active: isActive, slot: "sidebar-menu-sub-button" },
-  });
+  return (
+    <SidebarButton
+      {...mergeProps(
+        {
+          "aria-current": isActive ? "page" : undefined,
+          "data-active": isActive ? "" : undefined,
+        },
+        withStyles(
+          props,
+          stylex.props([typeStyles.textMd, styles.subButton], sx)
+        )
+      )}
+      data-slot={slot}
+    />
+  );
 }
 
 export {

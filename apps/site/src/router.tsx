@@ -14,6 +14,7 @@ export function getRouter() {
 
   if (typeof document !== "undefined") {
     markNavigations(router);
+    void import("~/lib/agent");
   }
 
   return router;

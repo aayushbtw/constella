@@ -11,7 +11,6 @@ import { Fragment, useEffect } from "react";
 import { Button } from "@/components/primitives/button";
 import {
   Command,
-  CommandCollection,
   CommandEmpty,
   CommandGroup,
   CommandGroupLabel,
@@ -28,15 +27,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/primitives/dropdown-menu";
 import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectGroupLabel,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
@@ -60,7 +58,7 @@ const styles = stylex.create({
 
 interface Option {
   label: string;
-  value: string | null;
+  value: string;
 }
 
 const options = {
@@ -87,22 +85,22 @@ function optionsFor(data: Dataset): Option[] {
 
 function SelectBreak({ data, open }: { data: Dataset; open: boolean }) {
   const items = optionsFor(data);
-  const all = [{ label: "Select an option", value: null }, ...items];
   return (
     <div {...stylex.props(styles.row)}>
       <Select
         defaultOpen={open}
         defaultValue={items[0]?.value ?? null}
-        items={all}
+        items={items}
+        placeholder="Select an option"
       >
         <SelectTrigger aria-label="Option" sx={styles.trigger}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>
+            <SelectGroupLabel>
               {data === "worst" ? text.jobTitle : "Fruits"}
-            </SelectLabel>
+            </SelectGroupLabel>
             {items.map((item) => (
               <SelectItem key={item.label} value={item.value}>
                 {item.label}
@@ -111,7 +109,11 @@ function SelectBreak({ data, open }: { data: Dataset; open: boolean }) {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select defaultValue={items[0]?.value ?? null} items={all}>
+      <Select
+        defaultValue={items[0]?.value ?? null}
+        items={items}
+        placeholder="Select an option"
+      >
         <SelectTrigger aria-label="Option" size="sm">
           <SelectValue />
         </SelectTrigger>
@@ -142,11 +144,11 @@ interface Group {
 function groupsFor(data: Dataset): Group[] {
   const entries = {
     demo: [
-      { icon: UserIcon, label: "Profile", shortcut: "⌘P", value: "profile" },
+      { icon: UserIcon, label: "Profile", shortcut: "mod+p", value: "profile" },
       {
         icon: CreditCardIcon,
         label: "Billing",
-        shortcut: "⌘B",
+        shortcut: "mod+b",
         value: "billing",
       },
       { icon: SmileIcon, label: "Search Emoji", value: "emoji" },
@@ -158,16 +160,26 @@ function groupsFor(data: Dataset): Group[] {
       value: person.email,
     })),
     one: [
-      { icon: UserIcon, label: "Profile", shortcut: "⌘P", value: "profile" },
+      { icon: UserIcon, label: "Profile", shortcut: "mod+p", value: "profile" },
     ],
     worst: [
-      { icon: UserIcon, label: text.file, shortcut: "⌃⌥⇧⌘P", value: "file" },
-      { icon: CreditCardIcon, label: text.url, shortcut: "⌘B", value: "url" },
+      {
+        icon: UserIcon,
+        label: text.file,
+        shortcut: "ctrl+alt+shift+mod+p",
+        value: "file",
+      },
+      {
+        icon: CreditCardIcon,
+        label: text.url,
+        shortcut: "mod+b",
+        value: "url",
+      },
       { icon: SmileIcon, label: text.german, value: "german" },
       {
         icon: UserIcon,
         label: "Jo",
-        shortcut: "Ctrl+Alt+Shift+Delete",
+        shortcut: "ctrl+alt+shift+delete",
         value: "jo",
       },
     ],
@@ -184,34 +196,35 @@ function groupsFor(data: Dataset): Group[] {
 
 function CommandBreak({ data }: { data: Dataset }) {
   return (
-    <Command items={groupsFor(data)} sx={styles.command}>
-      <CommandInput placeholder="Type a command or search..." />
+    <Command sx={styles.command}>
+      <CommandInput
+        aria-label="Search commands"
+        placeholder="Type a command or search..."
+      />
       <CommandEmpty>No results found.</CommandEmpty>
       <CommandList>
-        {(group: Group, index: number) => (
+        {groupsFor(data).map((group, index) => (
           <Fragment key={group.value}>
             {index > 0 && <CommandSeparator />}
-            <CommandGroup items={group.items}>
+            <CommandGroup>
               <CommandGroupLabel>{group.value}</CommandGroupLabel>
-              <CommandCollection>
-                {(entry: Entry) => (
-                  <CommandItem key={entry.value} value={entry}>
-                    <HugeiconsIcon
-                      aria-hidden
-                      icon={entry.icon}
-                      size={sizes.icon}
-                      strokeWidth={Number(strokes.icon)}
-                    />
-                    {entry.label}
-                    {entry.shortcut !== undefined && (
-                      <CommandShortcut>{entry.shortcut}</CommandShortcut>
-                    )}
-                  </CommandItem>
-                )}
-              </CommandCollection>
+              {group.items.map((entry) => (
+                <CommandItem key={entry.value} value={entry.value}>
+                  <HugeiconsIcon
+                    aria-hidden
+                    icon={entry.icon}
+                    size={sizes.icon}
+                    strokeWidth={Number(strokes.icon)}
+                  />
+                  {entry.label}
+                  {entry.shortcut !== undefined && (
+                    <CommandShortcut shortcut={entry.shortcut} />
+                  )}
+                </CommandItem>
+              ))}
             </CommandGroup>
           </Fragment>
-        )}
+        ))}
       </CommandList>
     </Command>
   );
@@ -229,7 +242,7 @@ function DropdownMenuBreak({ data, open }: { data: Dataset; open: boolean }) {
           <DropdownMenuGroup key={group.value}>
             <DropdownMenuLabel>{group.value}</DropdownMenuLabel>
             {group.items.map((entry) => (
-              <DropdownMenuItem key={entry.value}>
+              <DropdownMenuItem key={entry.value} shortcut={entry.shortcut}>
                 <HugeiconsIcon
                   aria-hidden
                   icon={entry.icon}
@@ -237,15 +250,12 @@ function DropdownMenuBreak({ data, open }: { data: Dataset; open: boolean }) {
                   strokeWidth={Number(strokes.icon)}
                 />
                 {entry.label}
-                {entry.shortcut !== undefined && (
-                  <DropdownMenuShortcut>{entry.shortcut}</DropdownMenuShortcut>
-                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>
         ))}
         {groups.length > 0 && <DropdownMenuSeparator />}
-        <DropdownMenuItem color="danger">
+        <DropdownMenuItem destructive>
           {data === "worst" ? `Remove ${text.file}` : "Log out"}
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -263,18 +273,17 @@ const toasts = {
 };
 
 function showToasts(data: Dataset) {
-  toast.close();
+  toast.dismiss();
   if (data === "empty") {
     return;
   }
   const rows = data === "worst" ? toasts.worst : toasts.demo;
   for (const row of rows) {
-    toast.add({
-      actionProps: { children: data === "worst" ? text.french : "Undo" },
+    toast.warning({
+      action: { label: data === "worst" ? text.french : "Undo" },
       description: row.description,
-      timeout: 0,
+      duration: Infinity,
       title: row.title,
-      type: "warning",
     });
   }
 }

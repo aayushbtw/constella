@@ -29,6 +29,7 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
+  InputGroupToggle,
 } from "@/components/primitives/input-group";
 ```
 
@@ -47,7 +48,7 @@ import {
 InputGroup
 ├── InputGroupInput or InputGroupTextarea
 ├── InputGroupAddon
-├── InputGroupButton
+├── InputGroupButton or InputGroupToggle
 └── InputGroupText
 ```
 
@@ -283,6 +284,30 @@ Render a button as a [Popover](/docs/components/popover) trigger to explain the 
 </InputGroupAddon>
 ```
 
+## Toggle
+
+Use `InputGroupToggle` for a button that stays pressed inside the input. It's a [Toggle](/docs/components/toggle) that defaults to `size="icon-xs"` and fills while pressed.
+
+```tsx
+const [favorite, setFavorite] = useState(false);
+
+<InputGroup>
+  <InputGroupInput aria-label="Website" />
+  <InputGroupAddon align="inline-end">
+    <InputGroupToggle
+      aria-label="Favorite"
+      onPressedChange={setFavorite}
+      pressed={favorite}
+    >
+      <HugeiconsIcon
+        fill={favorite ? "currentColor" : "none"}
+        icon={StarIcon}
+      />
+    </InputGroupToggle>
+  </InputGroupAddon>
+</InputGroup>;
+```
+
 ## Textarea
 
 Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header and a footer. Add `separated` to a block addon to draw an edge between it and the textarea.
@@ -314,30 +339,6 @@ Use `InputGroupTextarea` with `block-start` and `block-end` addons for a header 
     </InputGroupButton>
   </InputGroupAddon>
 </InputGroup>
-```
-
-## Custom Input
-
-Add `data-slot="input-group-control"` to your own input, so the group draws its focus ring, invalid edge and disabled fade. Spread `inputGroupTextareaStyles()` on it for the control's look. Here, a textarea from `react-textarea-autosize`:
-
-<!-- ::demo name="input-group-custom" -->
-
-```tsx
-import TextareaAutosize from "react-textarea-autosize";
-
-<InputGroup>
-  <TextareaAutosize
-    aria-label="Message"
-    data-slot="input-group-control"
-    placeholder="Autoresize textarea..."
-    {...stylex.props(inputGroupTextareaStyles())}
-  />
-  <InputGroupAddon align="block-end">
-    <InputGroupButton size="sm" variant="primary">
-      Submit
-    </InputGroupButton>
-  </InputGroupAddon>
-</InputGroup>;
 ```
 
 ## Dropdown Menu
@@ -401,10 +402,12 @@ Put a [Spinner](/docs/components/spinner) in an addon while something loads.
 
 ## API Reference
 
-`InputGroup` is a `<div role="group">` that takes `size`: `"sm"` (12px text), `"default"` or `"lg"` (13px). It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own.
+`InputGroup` is a `<div role="group">` that takes `size`: `"sm"` (12px text), `"default"` or `"lg"` (13px). It draws the box, focus ring, invalid edge and disabled fade for the control inside, so `InputGroupInput` and `InputGroupTextarea` drop their own. A control of your own gets the ring, invalid edge and disabled fade with `data-slot="input-group-control"`; its look is yours to style.
 
 `InputGroupAddon` takes `align`: `"inline-start"` (default), `"inline-end"`, `"block-start"` or `"block-end"`. Use the inline ones with an input and the block ones with a textarea. In a block addon, buttons sit at the end, after any text; `separated` draws an edge between it and the control. Clicking an addon focuses the control, unless the click lands on a button.
 
 `InputGroupButton` takes `size`: `"xs"` (default), `"sm"`, `"icon-xs"` or `"icon-sm"`, and every other [Button](/docs/components/button) prop; `variant` defaults to `"ghost"`.
 
-`InputGroupInput` renders Base UI's input in a slot. On a touch screen the input renders at 16px and scales down into the slot to the group's text size, so iOS doesn't zoom on focus. It takes every [Base UI Input](https://base-ui.com/react/components/input) prop, and its `sx` goes to the `<input>`; set text size on `InputGroup` instead, since a size there keeps the scaling. `InputGroupTextarea` takes every [Textarea](/docs/components/textarea) prop. `InputGroupText` takes `render`. Every part takes `sx`, applied last.
+`InputGroupToggle` takes `size`: `"icon-xs"` (default), `"sm"` or `"icon-sm"`, and every other [Toggle](/docs/components/toggle) prop except `variant`.
+
+`InputGroupInput` renders UI SDK's input in a slot. On a touch screen the input renders at 16px and scales down into the slot to the group's text size, so iOS doesn't zoom on focus. It takes every [UI SDK Input](https://ui-sdk.dev/docs/react/components/input) prop, and its `sx` goes to the `<input>`; set text size on `InputGroup` instead, since a size there keeps the scaling. `InputGroupTextarea` takes every [Textarea](/docs/components/textarea) prop. `InputGroupText` takes `render`. Every part takes `sx`, applied last.

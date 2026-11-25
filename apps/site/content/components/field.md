@@ -10,9 +10,9 @@ description: Lays out a control with its label, description and error.
   <FieldGroup>
     <FieldSet>
       <FieldLegend>Payment Method</FieldLegend>
-      <FieldSetDescription>
+      <FieldDescription>
         All transactions are secure and encrypted
-      </FieldSetDescription>
+      </FieldDescription>
       <FieldGroup>
         <Field>
           <FieldLabel>Name on Card</FieldLabel>
@@ -20,7 +20,11 @@ description: Lays out a control with its label, description and error.
         </Field>
         <Field>
           <FieldLabel>Card Number</FieldLabel>
-          <Input placeholder="1234 5678 9012 3456" required />
+          <Input
+            autoComplete="cc-number"
+            placeholder="1234 5678 9012 3456"
+            required
+          />
           <FieldDescription>Enter your 16-digit card number</FieldDescription>
         </Field>
       </FieldGroup>
@@ -37,9 +41,7 @@ description: Lays out a control with its label, description and error.
       <Button type="submit" variant="primary">
         Submit
       </Button>
-      <Button type="button" variant="outline">
-        Cancel
-      </Button>
+      <Button variant="outline">Cancel</Button>
     </Field>
   </FieldGroup>
 </form>
@@ -62,7 +64,6 @@ import {
   FieldLegend,
   FieldSeparator,
   FieldSet,
-  FieldSetDescription,
   FieldTitle,
 } from "@/components/primitives/field";
 ```
@@ -82,7 +83,7 @@ The label, description and error link to the control inside the `Field` on their
 ```
 FieldSet
 ├── FieldLegend
-├── FieldSetDescription
+├── FieldDescription
 └── FieldGroup
     ├── Field
     │   ├── FieldLabel
@@ -113,16 +114,16 @@ Use `orientation="horizontal"` to put the control beside its label, as for a che
 
 ## Fieldset
 
-Group related fields in a `FieldSet` with a `FieldLegend`. Use `variant="label"` for a legend the size of a label, and `FieldSetDescription` for its helper text.
+Group related fields in a `FieldSet` with a `FieldLegend`. Use `variant="label"` for a legend the size of a label, and `FieldDescription` for its helper text.
 
 <!-- ::demo name="field-set" -->
 
 ```tsx
 <FieldSet>
   <FieldLegend variant="label">Show these items on the desktop</FieldLegend>
-  <FieldSetDescription>
+  <FieldDescription>
     Select the items you want to show on the desktop.
-  </FieldSetDescription>
+  </FieldDescription>
   <FieldGroup>
     <Field orientation="horizontal">
       <Checkbox defaultChecked />
@@ -206,7 +207,7 @@ Put the cards in a `FieldGroup` directly inside a `flush` [Card](/docs/component
 
 ## Error
 
-Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when Base UI's validation fails. With a form library, pass its errors to `errors` instead: each message shows once, several as a list, and nothing renders when there are none.
+Use the `invalid` prop to mark the field, and `FieldError` for the message. `match` shows it always; leave it out to show it only when the browser's validation fails. With a form library, pass its errors to `errors` instead: each message shows once, several as a list, and nothing renders when there are none.
 
 ```tsx
 <FieldError errors={field.state.meta.errors} />
@@ -270,7 +271,7 @@ Use the `disabled` prop on `Field` to disable its control and dim its label.
 ```tsx
 <Field>
   <FieldLabel>Department</FieldLabel>
-  <Select items={departments}>
+  <Select items={departments} placeholder="Choose department">
     <SelectTrigger>
       <SelectValue />
     </SelectTrigger>
@@ -284,22 +285,25 @@ Use the `disabled` prop on `Field` to disable its control and dim its label.
 
 ## Slider
 
-Use `FieldTitle` for a control that isn't labelled by a `<label>`.
+A range's `FieldLabel` and `FieldDescription` name and describe the slider as a group. Give each thumb its own `aria-label`.
 
 <!-- ::demo name="field-slider" -->
 
 ```tsx
 <Field>
-  <FieldTitle>Price Range</FieldTitle>
+  <FieldLabel>Price Range</FieldLabel>
   <FieldDescription>
     Set your budget range (${range[0]} - {range[1]}).
   </FieldDescription>
-  <Slider
-    aria-label="Price Range"
-    max={1000}
-    onValueChange={setRange}
-    value={range}
-  />
+  <Slider max={1000} onValueChange={setRange} step={10} value={range}>
+    <SliderControl>
+      <SliderTrack>
+        <SliderIndicator />
+        <SliderThumb aria-label="Minimum price" index={0} />
+        <SliderThumb aria-label="Maximum price" index={1} />
+      </SliderTrack>
+    </SliderControl>
+  </Slider>
 </Field>
 ```
 
@@ -308,15 +312,22 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 <!-- ::demo name="field-radio" -->
 
 ```tsx
-<FieldSet>
-  <FieldLegend variant="label">Subscription Plan</FieldLegend>
-  <RadioGroup defaultValue="monthly">
-    <Field orientation="horizontal">
-      <RadioGroupItem value="monthly" />
-      <FieldLabel>Monthly ($9.99/month)</FieldLabel>
-    </Field>
-  </RadioGroup>
-</FieldSet>
+function SubscriptionPlan() {
+  const legend = useId();
+  return (
+    <FieldSet>
+      <FieldLegend id={legend} variant="label">
+        Subscription Plan
+      </FieldLegend>
+      <RadioGroup aria-labelledby={legend} defaultValue="monthly">
+        <Field orientation="horizontal">
+          <RadioGroupItem value="monthly" />
+          <FieldLabel>Monthly ($9.99/month)</FieldLabel>
+        </Field>
+      </RadioGroup>
+    </FieldSet>
+  );
+}
 ```
 
 ## Switch
@@ -332,4 +343,4 @@ Use `FieldTitle` for a control that isn't labelled by a `<label>`.
 
 ## API Reference
 
-`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`) and `FieldError` adds `errors` (an array of `{ message }`, in place of `match`). `FieldTitle` takes `render`. `FieldGroup`, `FieldContent` and `FieldSetDescription` are plain elements. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [Base UI Field](https://base-ui.com/react/components/field) and [Fieldset](https://base-ui.com/react/components/fieldset).
+`Field` adds `orientation` (`"vertical"`, the default, or `"horizontal"`) `FieldLegend` adds `variant` (`"legend"`, the default, or `"label"`) and `FieldError` adds `errors` (an array of `{ message }`, in place of `match`). `FieldTitle` takes `render`. `FieldContent` is a plain element. A `FieldDescription` right inside a `FieldSet` describes the set. `FieldSeparator` draws a line, broken by its children when it has any. Every part takes `sx`, applied last. For the rest, see [UI SDK Field](https://ui-sdk.dev/docs/react/components/field).

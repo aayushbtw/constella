@@ -48,6 +48,9 @@ import {
   PromptInputBarButton,
   PromptInputCommand,
   PromptInputCommandContent,
+  PromptInputCommandItem,
+  PromptInputCommandItemIcon,
+  PromptInputCommandList,
   PromptInputCommandTextarea,
   PromptInputFooter,
   PromptInputHeader,
@@ -56,13 +59,11 @@ import {
   PromptInputTools,
   PromptInputWell,
 } from "@/components/ai/prompt-input";
-import type { PromptInputState } from "@/components/ai/prompt-input";
+import type {
+  PromptInputCommandProps,
+  PromptInputState,
+} from "@/components/ai/prompt-input";
 import { Button } from "@/components/primitives/button";
-import {
-  CommandEmpty,
-  CommandItem,
-  CommandList,
-} from "@/components/primitives/command";
 import { CopyButton } from "@/components/primitives/copy-button";
 import { InputGroupButton } from "@/components/primitives/input-group";
 import {
@@ -137,8 +138,12 @@ function Glyph(props: Omit<HugeiconsIconProps, "strokeWidth">) {
   );
 }
 
-const reply =
-  "Constella is a component library on Base UI and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.";
+const replies = [
+  "Constella is a component library on ui-sdk and StyleX. Every value comes from a token, so a theme is one file, and the motion stays quiet: a press that gives, a popover that settles.",
+  "Themes are one file of tokens: color, type, space and motion. Swap the file and every component follows, with no props to thread through.",
+  "Under the hood, ui-sdk handles focus, keyboard and ARIA, and StyleX compiles the styles to atomic CSS at build time.",
+];
+const [reply] = replies;
 
 const threadId = "chat-demo";
 
@@ -159,7 +164,10 @@ const adapter = fakeText({ tokensPerSecond: 24 });
 
 const connection = stream((messages, _data, signal) => {
   // The fake errors once its queue is empty, so every send gets a fresh answer.
-  adapter.setResponses([{ text: reply }]);
+  const answered = messages.filter(
+    (message) => message.role === "assistant"
+  ).length;
+  adapter.setResponses([{ text: replies[answered % replies.length] }]);
   const abortController = new AbortController();
   signal?.addEventListener("abort", () => {
     abortController.abort();
@@ -217,18 +225,13 @@ function Composer({
     <PromptInput
       onSubmit={(event) => {
         event.preventDefault();
-        if (text.trim() === "" || status !== "ready") {
-          return;
-        }
         onSubmit?.(text);
         setText("");
       }}
     >
       <PromptInputTextarea
         aria-label="Message"
-        onChange={(event) => {
-          setText(event.target.value);
-        }}
+        onValueChange={setText}
         value={text}
       />
       <PromptInputFooter>
@@ -355,9 +358,7 @@ function PromptInputHeaderDemo() {
           )}
           <PromptInputTextarea
             aria-label="Message"
-            onChange={(event) => {
-              setText(event.target.value);
-            }}
+            onValueChange={setText}
             placeholder="Ask about these files…"
             value={text}
           />
@@ -431,29 +432,16 @@ const commands: SlashCommand[] = [
   { icon: TranslateIcon, label: "Translate", value: "translate" },
 ];
 
+const commandTriggers: PromptInputCommandProps["triggers"] = [
+  { boundary: "start", char: "/", insert: (item) => `/${item.value} ` },
+];
+
 function PromptInputCommandDemo() {
   const [text, setText] = useState("");
-  const [dismissed, setDismissed] = useState(false);
-  // Open while the draft is a `/` and one word.
-  const query = /^\/(?<query>\S*)$/u.exec(text)?.groups?.query;
   return (
     <DemoRow sx={styles.stage}>
       <div {...stylex.props(styles.column)}>
-        <PromptInputCommand
-          items={commands}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDismissed(true);
-            }
-          }}
-          onValueChange={(value) => {
-            setText(value);
-            setDismissed(false);
-          }}
-          open={query !== undefined && !dismissed}
-          query={query ?? ""}
-          value={text}
-        >
+        <PromptInputCommand triggers={commandTriggers}>
           <PromptInput
             onSubmit={(event) => {
               event.preventDefault();
@@ -462,7 +450,9 @@ function PromptInputCommandDemo() {
           >
             <PromptInputCommandTextarea
               aria-label="Message"
+              onValueChange={setText}
               placeholder="Ask anything, or type / for commands…"
+              value={text}
             />
             <PromptInputFooter>
               <PromptInputTools>
@@ -474,21 +464,19 @@ function PromptInputCommandDemo() {
             </PromptInputFooter>
           </PromptInput>
           <PromptInputCommandContent>
-            <CommandEmpty>No commands found.</CommandEmpty>
-            <CommandList>
-              {(command: SlashCommand) => (
-                <CommandItem
+            <PromptInputCommandList>
+              {commands.map((command) => (
+                <PromptInputCommandItem
                   key={command.value}
-                  onClick={() => {
-                    setText(`/${command.value} `);
-                  }}
-                  value={command}
+                  value={command.value}
                 >
-                  <Glyph icon={command.icon} />
+                  <PromptInputCommandItemIcon>
+                    <Glyph icon={command.icon} />
+                  </PromptInputCommandItemIcon>
                   {command.label}
-                </CommandItem>
-              )}
-            </CommandList>
+                </PromptInputCommandItem>
+              ))}
+            </PromptInputCommandList>
           </PromptInputCommandContent>
         </PromptInputCommand>
       </div>

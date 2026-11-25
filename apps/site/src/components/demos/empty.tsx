@@ -114,7 +114,7 @@ function EmptyAvatarDemo() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia>
-            <Avatar size="lg">
+            <Avatar aria-hidden size="lg">
               <AvatarImage alt="" src="/avatars/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
@@ -184,9 +184,7 @@ function EmptyContentDemo() {
           </InputGroupAddon>
           <InputGroupInput
             aria-label="Search files"
-            onChange={(event) => {
-              setQuery(event.target.value);
-            }}
+            onValueChange={setQuery}
             placeholder="Search files"
             value={query}
           />

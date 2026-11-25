@@ -14,11 +14,11 @@ import {
   ModelPickerTrigger,
 } from "@/components/ai/model-picker";
 import {
-  CommandCollection,
   CommandEmpty,
   CommandGroup,
   CommandGroupLabel,
   CommandInput,
+  CommandItemText,
   CommandList,
   CommandSeparator,
 } from "@/components/primitives/command";
@@ -179,12 +179,13 @@ const groups: Group[] = [
 ];
 
 const models = groups.flatMap((group) => group.items);
+const [first] = models;
 
 function Rating({ label, value }: { label: string; value: number }) {
   return (
     <Meter
       sx={styles.rating}
-      getAriaValueText={() => `${value} of 5`}
+      format={(rating) => `${rating} of 5`}
       max={5}
       value={value}
     >
@@ -196,52 +197,63 @@ function Rating({ label, value }: { label: string; value: number }) {
 function Picker({
   align,
   detailsSide,
+  label,
 }: {
   align?: "start" | "end";
   detailsSide?: (typeof modelPickerDetailsSides)[number];
+  label?: string;
 }) {
   const [value, setValue] = useState("gpt-5");
-  const [highlighted, setHighlighted] = useState<Model>();
+  const [highlightedValue, setHighlightedValue] = useState<string | null>(
+    first.value
+  );
   const picked = models.find((model) => model.value === value);
+  const highlighted = models.find((model) => model.value === highlightedValue);
   return (
-    <ModelPicker>
-      <ModelPickerTrigger>
+    <ModelPicker
+      onOpenChange={(open) => {
+        if (open) {
+          setHighlightedValue(first.value);
+        }
+      }}
+    >
+      <ModelPickerTrigger label={label}>
         {picked && <ModelPickerLogo src={picked.logo} />}
         {picked?.label}
       </ModelPickerTrigger>
       <ModelPickerContent align={align} detailsSide={detailsSide}>
         <ModelPickerCommand
-          items={groups}
-          onItemHighlighted={(item) => {
-            setHighlighted(models.find((model) => model === item));
-          }}
+          onValueChange={setHighlightedValue}
+          value={highlightedValue}
         >
-          <CommandInput placeholder="Search models..." />
+          <CommandInput
+            aria-label="Search models"
+            placeholder="Search models..."
+          />
           <CommandEmpty>No models found.</CommandEmpty>
           <CommandList>
-            {(group: Group, index: number) => (
+            {groups.map((group, index) => (
               <Fragment key={group.value}>
                 {index > 0 && <CommandSeparator />}
-                <CommandGroup items={group.items}>
+                <CommandGroup>
                   <CommandGroupLabel>{group.value}</CommandGroupLabel>
-                  <CommandCollection>
-                    {(model: Model) => (
-                      <ModelPickerItem
-                        key={model.value}
-                        onClick={() => {
-                          setValue(model.value);
-                        }}
-                        selected={model.value === value}
-                        value={model}
-                      >
-                        <ModelPickerLogo src={model.logo} />
-                        {model.label}
-                      </ModelPickerItem>
-                    )}
-                  </CommandCollection>
+                  {group.items.map((model) => (
+                    <ModelPickerItem
+                      key={model.value}
+                      label={model.label}
+                      onSelect={() => {
+                        setValue(model.value);
+                      }}
+                      selected={model.value === value}
+                      value={model.value}
+                    >
+                      <ModelPickerLogo src={model.logo} />
+                      <CommandItemText />
+                    </ModelPickerItem>
+                  ))}
                 </CommandGroup>
               </Fragment>
-            )}
+            ))}
           </CommandList>
         </ModelPickerCommand>
         {highlighted && (
@@ -288,7 +300,7 @@ function ModelPickerDemo() {
 function ModelPickerSideDemo() {
   return (
     <DemoRow>
-      <Picker />
+      <Picker label="Fallback" />
     </DemoRow>
   );
 }

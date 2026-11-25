@@ -1,22 +1,20 @@
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import * as stylex from "@stylexjs/stylex";
+import { mergeProps, renderElement } from "@ui-sdk/react/primitive";
+import type { PartProps } from "@ui-sdk/react/primitive";
 
 import type { Sx, TextColor, TextWeight } from "@/lib/constella/styles";
 import {
   textColorStyles,
   textWeightStyles,
   typeStyles,
+  withStyles,
 } from "@/lib/constella/styles";
 
 const headingSizes = [1, 2, 3, 4, 5, 6] as const;
 
 type HeadingSize = (typeof headingSizes)[number];
 
-type HeadingProps = Omit<
-  useRender.ComponentProps<"h2">,
-  "className" | "style"
-> & {
+type HeadingProps = Omit<PartProps<"h2">, "className" | "style"> & {
   color?: TextColor;
   /** The heading's rank in the outline: its tag, and its size unless `size` says otherwise. */
   level?: HeadingSize;
@@ -50,21 +48,28 @@ function Heading({
   weight = "semibold",
   ...props
 }: HeadingProps) {
-  return useRender({
-    defaultTagName: `h${level}`,
-    props: mergeProps<"h2">(
-      props,
-      stylex.props(
-        styles.base,
-        sizeStyles[size],
-        textWeightStyles[weight],
-        textColorStyles[color],
-        sx
+  return renderElement(
+    `h${level}`,
+    mergeProps(
+      {
+        "data-color": color,
+        "data-size": size,
+        "data-slot": "heading",
+        "data-weight": weight,
+      },
+      withStyles(
+        props,
+        stylex.props(
+          styles.base,
+          sizeStyles[size],
+          textWeightStyles[weight],
+          textColorStyles[color],
+          sx
+        )
       )
     ),
-    render,
-    state: { color, size, slot: "heading", weight },
-  });
+    render
+  );
 }
 
 export { Heading, headingSizes };

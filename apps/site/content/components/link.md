@@ -37,7 +37,7 @@ import { Link as RouterLink } from "@tanstack/react-router";
 <Link render={<RouterLink to="/billing" />}>Choose a plan</Link>;
 ```
 
-For a link that looks like a button, use `buttonStyles` from [Button](/docs/components/button).
+For a link that looks like a button, pass it to [Button](/docs/components/button) as `render`.
 
 ## API Reference
 

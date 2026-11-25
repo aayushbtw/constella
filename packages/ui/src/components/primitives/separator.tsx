@@ -1,12 +1,15 @@
-"use client";
-
-import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
 import * as stylex from "@stylexjs/stylex";
+import { Separator as SeparatorPrimitive } from "@ui-sdk/react/separator";
+import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import { colors, strokes } from "@/lib/constella/tokens.stylex";
 
-type SeparatorProps = Omit<SeparatorPrimitive.Props, "className" | "style"> & {
+type SeparatorProps = Omit<
+  ComponentProps<typeof SeparatorPrimitive>,
+  "className" | "style"
+> & {
   sx?: Sx;
 };
 
@@ -32,10 +35,11 @@ function Separator({
 }: SeparatorProps) {
   return (
     <SeparatorPrimitive
-      data-slot="separator"
       orientation={orientation}
-      {...props}
-      {...stylex.props(styles.separator, styles[orientation], sx)}
+      {...withStyles(
+        props,
+        stylex.props(styles.separator, styles[orientation], sx)
+      )}
     />
   );
 }

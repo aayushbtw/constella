@@ -51,17 +51,17 @@ Interface motion stays at or under 300ms. A spinner, a pulse, a shimmer and the 
 
 ## Entrances
 
-Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via Base UI's `--transform-origin`. A dialog belongs to no trigger, so it scales from its own center (`motion.dialogScale`).
+Never from `scale(0)` or full transparency in place. Start close to the final state (a few px of translate, a slight scale) with opacity, so the element arrives rather than appears. Popovers scale from their trigger via ui-sdk's `--transform-origin`. A dialog belongs to no trigger, so it scales from its own center (`motion.dialogScale`).
 
 ## Crossfades
 
-When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
+When one state replaces another in place, both stay on screen and cross-fade, so there's never an empty frame. An icon arrives from `motion.crossfadeScale` and `motion.crossfadeBlur`, on transitions so a quick change back reverses. Prompt Input's Send and Stop are the exception: two buttons, so each keeps a stable accessible name, and a quick change back restarts the new icon instead of reversing. Text morphs instead ([Torph](https://torph.lochie.me), on `crossfade`): letters the old and new share slide into place, the rest fade, the width eases so what follows glides, and a number rolls by place value. A status change only fades color, on `ease` + `hover`.
 
 `SwapIcon` and `SwapText` are these two as parts. The sidebar trigger's mark and a trace step trigger's marker are the crossfades that aren't a state change: each reveals its toggle while the trigger is pointed at, so it runs on CSS hover at `hover` speed, scaling from `motion.popoverScale` under `motion.crossfadeTextBlur`, rather than through `SwapIcon`.
 
 ## Layout animation
 
-When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (Base UI does, for stacks) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a shared hover card's height, a toast's height (Base UI's stack measures it) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
+When content changes, the layout takes its new size at once and only the surface and content travel from the old size, with transforms and clipping, on `layout`. Anything measuring the layout (ui-sdk does, for a toast stack and a collapsible) then always reads the truth; animating `height` itself feeds the animation back into the measurement. The exceptions, a collapsible's height, a trace step's and its content's height, a toast's height (ui-sdk's stack measures the content freely) and the sidebar's width, are in [components](components.md). Indicators (a progress fill, a tab's line) animate their width freely: nothing measures them.
 
 ## Reduced motion
 

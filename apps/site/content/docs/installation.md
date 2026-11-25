@@ -19,7 +19,7 @@ Add a `dark` class to `<html>`. next-themes and shadcn's theme setup already do 
 
 ## RTL
 
-Set `dir="rtl"` on `<html>` and wrap the app in Base UI's [`DirectionProvider`](https://base-ui.com/react/utils/direction-provider). Add `data-rtl-flip` to an icon that points along the line, like an arrow or a chevron, so it turns with the text.
+Set `dir="rtl"` on `<html>`. Components read it, also when it changes after load, so there's no provider to add. Add `data-rtl-flip` to an icon that points along the line, like an arrow or a chevron, so it turns with the text.
 
 ```tsx
 <Button aria-label="Next" size="icon">

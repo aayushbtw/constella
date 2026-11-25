@@ -1,10 +1,15 @@
 "use client";
 
-import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import * as stylex from "@stylexjs/stylex";
+import {
+  Progress as ProgressPrimitive,
+  ProgressIndicator as ProgressIndicatorPrimitive,
+} from "@ui-sdk/react/progress";
+import type { ComponentProps } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
+import { withStyles } from "@/lib/constella/styles";
 import {
   colors,
   durations,
@@ -16,8 +21,15 @@ import {
 } from "@/lib/constella/tokens.stylex";
 
 type LoadingBarProps = Omit<
-  ProgressPrimitive.Root.Props,
-  "className" | "style" | "value"
+  ComponentProps<typeof ProgressPrimitive>,
+  | "className"
+  | "style"
+  | "value"
+  | "children"
+  | "min"
+  | "max"
+  | "format"
+  | "locale"
 > & {
   loading: boolean;
   sx?: Sx;
@@ -135,19 +147,16 @@ function LoadingBar({ loading, sx, ...props }: LoadingBarProps) {
     return null;
   }
   return (
-    <ProgressPrimitive.Root
-      data-slot="loading-bar"
+    <ProgressPrimitive
       data-state={phase}
-      {...props}
+      {...withStyles(props, stylex.props(styles.root, sx))}
       value={null}
-      {...stylex.props(styles.root, sx)}
     >
-      <ProgressPrimitive.Indicator
-        data-slot="loading-bar-indicator"
+      <ProgressIndicatorPrimitive
         ref={indicator}
         {...stylex.props(styles.indicator)}
       />
-    </ProgressPrimitive.Root>
+    </ProgressPrimitive>
   );
 }
 

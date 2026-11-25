@@ -1,0 +1,217 @@
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
+import { createAgent } from "@ui-sdk/react/agent";
+import { afterEach, expect, test } from "vite-plus/test";
+
+import { toast, Toaster } from "./toast";
+
+const agent = createAgent();
+
+afterEach(() => {
+  act(() => {
+    toast.dismiss();
+  });
+});
+
+function show(...args: Parameters<typeof toast>) {
+  let id = "";
+  act(() => {
+    id = toast(...args);
+  });
+  return id;
+}
+
+function icons() {
+  return [
+    ...document.querySelectorAll<HTMLElement>("[data-slot='toast-icon']"),
+  ].map((icon) => icon.dataset.type);
+}
+
+test("a toast shows its title, description and action in the named Notifications region", () => {
+  render(<Toaster />);
+  show("Event created", {
+    action: { label: "Undo" },
+    description: "Friday at 10:00 AM",
+  });
+
+  const region = screen.getByRole("region", { name: "Notifications" });
+  expect(within(region).getByText("Event created")).toBeTruthy();
+  expect(within(region).getByText("Friday at 10:00 AM")).toBeTruthy();
+  expect(within(region).getByRole("button", { name: "Undo" })).toBeTruthy();
+});
+
+test.each(["success", "info", "warning", "error", "loading"] as const)(
+  "a %s toast shows our icon for its type",
+  (type) => {
+    render(<Toaster />);
+    act(() => {
+      toast[type]("Status");
+    });
+
+    expect(icons()).toEqual([type]);
+  }
+);
+
+test("a default toast shows no icon", () => {
+  render(<Toaster />);
+  show("Plain");
+
+  expect(screen.getByText("Plain")).toBeTruthy();
+  expect(icons()).toEqual([]);
+});
+
+test("an update shows the new title over a hidden copy of the old one", () => {
+  render(<Toaster />);
+  const id = show("Uploading 0%");
+
+  act(() => {
+    toast.update(id, { title: "Uploading 40%" });
+  });
+
+  const title = screen.getByText("Uploading 40%");
+  expect(title.closest("[aria-hidden]")).toBeNull();
+  expect(
+    screen.getByText("Uploading 0%").closest("[aria-hidden='true']")
+  ).not.toBeNull();
+});
+
+test("a settled promise toast shows the result and its icon over the loading text", async () => {
+  render(<Toaster />);
+  act(() => {
+    toast.promise(Promise.resolve(), {
+      loading: "Saving changes",
+      success: "Changes saved",
+    });
+  });
+  expect(icons()).toEqual(["loading"]);
+
+  expect(await screen.findByText("Changes saved")).toBeTruthy();
+  expect(
+    screen.getByText("Saving changes").closest("[aria-hidden='true']")
+  ).not.toBeNull();
+  expect(icons()).toEqual(["success"]);
+});
+
+test("Close dismisses the toast", async () => {
+  render(<Toaster />);
+  show("Link copied");
+
+  fireEvent.click(screen.getByRole("button", { name: "Close" }));
+
+  await waitFor(() => {
+    expect(screen.queryByText("Link copied")).toBeNull();
+  });
+});
+
+test("a toast that can't be dismissed shows no Close", () => {
+  render(<Toaster />);
+  show("Session expires soon", { dismissible: false });
+
+  expect(screen.getByText("Session expires soon")).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "Close" })).toBeNull();
+});
+
+test("a link action renders a link, and a button action carries no href", () => {
+  render(<Toaster />);
+  show("Invoice sent", { action: { href: "/invoices/42", label: "View" } });
+  show("Message sent", { action: { label: "Undo" } });
+
+  expect(screen.getByRole("link", { name: "View" }).getAttribute("href")).toBe(
+    "/invoices/42"
+  );
+  expect(
+    screen.getByRole("button", { name: "Undo" }).hasAttribute("href")
+  ).toBe(false);
+});
+
+test("an agent finds a showing toast by its title and names its action", () => {
+  render(<Toaster />);
+  show("Event created", { action: { label: "Undo" } });
+
+  const entries = agent
+    .snapshot()
+    .filter((entry) => entry.offPage !== true && entry.component !== "more");
+  for (const entry of entries.filter((item) => item.actions.length > 0)) {
+    expect(
+      entry.label,
+      `${entry.component} ${entry.ref} has no name`
+    ).toBeTruthy();
+  }
+  expect(entries).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ component: "toast", label: "Event created" }),
+      expect.objectContaining({ component: "button", label: "Undo" }),
+    ])
+  );
+});
+
+test("an agent can press a toast's Close", async () => {
+  render(<Toaster />);
+  show("Link copied");
+
+  const result = await agent.act({
+    steps: [{ action: "press", args: ["Close"], ref: "Link copied" }],
+  });
+  expect(result.ok, result.error?.message).toBe(true);
+  await waitFor(() => {
+    expect(screen.queryByText("Link copied")).toBeNull();
+  });
+});
+
+function stack() {
+  render(<Toaster />);
+  for (const title of ["First", "Second", "Third"]) {
+    show(title, { action: { label: "Undo" } });
+  }
+}
+
+function reachableTitles() {
+  return [...document.querySelectorAll<HTMLElement>("[data-slot='toast']")]
+    .filter((item) => item.closest("[inert]") === null)
+    .map((item) => within(item).getByText(/First|Second|Third/u).textContent)
+    .toSorted();
+}
+
+function pressableRows() {
+  return agent
+    .snapshot()
+    .filter((entry) => entry.component === "button" && entry.disabled !== true)
+    .map((entry) => String(entry.row))
+    .toSorted((a, b) => a.localeCompare(b));
+}
+
+test("a collapsed stack keeps the toasts behind the front one out of reach", () => {
+  stack();
+
+  expect(reachableTitles()).toEqual(["Third"]);
+  expect(pressableRows()).toEqual(["Third"]);
+});
+
+test("an expanded stack makes every toast reachable", async () => {
+  stack();
+
+  act(() => {
+    screen.getAllByRole("button", { name: "Close" })[0].focus();
+  });
+
+  await waitFor(() => {
+    expect(reachableTitles()).toEqual(["First", "Second", "Third"]);
+  });
+  expect(pressableRows()).toEqual(["First", "Second", "Third"]);
+});
+
+test("an empty region shows no entry to an agent", () => {
+  render(<Toaster />);
+
+  expect(
+    agent
+      .snapshot()
+      .filter((entry) => entry.offPage !== true && entry.component !== "more")
+  ).toEqual([]);
+});

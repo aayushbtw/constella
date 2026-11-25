@@ -50,13 +50,13 @@ ScrollArea
 </ScrollArea>
 ```
 
-For content wider and taller than the area, like a sheet, keep the vertical one and add a `ScrollBar` with `orientation="horizontal"`. The corner between them stays clear.
+For content wider and taller than the area, like a grid, keep the vertical one and add a `ScrollBar` with `orientation="horizontal"`. The corner between them stays clear.
 
 <!-- ::demo name="scroll-area-both" -->
 
 ```tsx
 <ScrollArea sx={styles.sheet}>
-  <table>…</table>
+  <div {...stylex.props(styles.grid)}>{tiles}</div>
   <ScrollBar orientation="horizontal" />
 </ScrollArea>
 ```
@@ -86,4 +86,4 @@ Pass `scrollbar="none"` to drop the scrollbar when the fade already shows there'
 | `ScrollArea` | Renders the viewport, a `ScrollBar` on the `scrollbar` axis (`vertical`, `horizontal` or `none`; vertical by default), and the corner; `viewportRef` and `viewportSx` reach the element that scrolls, for a virtualizer, a data table's `scrollRef` or a [Scroll Fade](/docs/components/scroll-fade) |
 | `ScrollBar` | Shows while the area is hovered or scrolling |
 
-Every part takes `sx`, applied last. For the rest, see [Base UI Scroll Area](https://base-ui.com/react/components/scroll-area).
+Every part takes `sx`, applied last. For the rest, see [UI SDK Scroll Area](https://ui-sdk.dev/docs/react/components/scroll-area).

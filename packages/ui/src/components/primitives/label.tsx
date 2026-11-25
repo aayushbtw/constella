@@ -1,11 +1,15 @@
 import * as stylex from "@stylexjs/stylex";
+import { Label as LabelPrimitive } from "@ui-sdk/react/label";
 import type { ComponentProps } from "react";
 
 import type { Sx } from "@/lib/constella/styles";
-import { typeStyles } from "@/lib/constella/styles";
+import { typeStyles, withStyles } from "@/lib/constella/styles";
 import { colors, fontWeights, space } from "@/lib/constella/tokens.stylex";
 
-type LabelProps = Omit<ComponentProps<"label">, "className" | "style"> & {
+type LabelProps = Omit<
+  ComponentProps<typeof LabelPrimitive>,
+  "className" | "style"
+> & {
   sx?: Sx;
 };
 
@@ -15,7 +19,7 @@ const styles = stylex.create({
     // The control fades itself, so the label steps down instead of stacking a second fade.
     color: {
       default: colors.textPrimary,
-      ":is([data-disabled], :has([data-disabled], :disabled))":
+      ":is([data-disabled], [data-disabled] > *, :has([data-disabled], :disabled))":
         colors.textMuted,
     },
     display: "flex",
@@ -26,18 +30,18 @@ const styles = stylex.create({
   },
 });
 
-/** For a field's own label part (`SliderLabel`), so every field labels alike. */
+/** For a field's own label parts (`FieldLabel`, `FieldTitle`), so every field labels alike. */
 function labelStyles() {
   return [typeStyles.textSm, styles.label];
 }
 
 function Label({ sx, ...props }: LabelProps) {
   return (
-    // oxlint-disable-next-line jsx-a11y/label-has-associated-control -- the caller passes `htmlFor` or wraps the control
-    <label
-      data-slot="label"
-      {...props}
-      {...stylex.props([typeStyles.textSm, styles.label], sx)}
+    <LabelPrimitive
+      {...withStyles(
+        props,
+        stylex.props([typeStyles.textSm, styles.label], sx)
+      )}
     />
   );
 }

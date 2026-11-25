@@ -1,7 +1,4 @@
-import type { ComponentNode } from "@tanstack/markdown";
-import { commentComponentsExtension } from "@tanstack/markdown/extensions/comment-components";
 import { collectMarkdownHeadings } from "@tanstack/markdown/extensions/headings";
-import { parseMarkdown } from "@tanstack/markdown/parser";
 import { defineCollection, defineConfig, directory } from "tomekit";
 import type { LoadContext } from "tomekit";
 import { z } from "zod";
@@ -12,14 +9,7 @@ import {
   checkGuidePage,
 } from "./src/lib/lint/index.ts";
 import { agentMarkdown, llmsUrl } from "./src/lib/markdown.ts";
-
-// Without a `tagName`, every comment component renders as the same element and
-// the components map can't tell `demo` from `install`.
-function transformComponent(node: ComponentNode): ComponentNode {
-  return { ...node, properties: node.attributes, tagName: `md-${node.name}` };
-}
-
-const extensions = [commentComponentsExtension({ transformComponent })];
+import { parsePage } from "./src/lib/parse-page.ts";
 
 function pages(path: string, check?: typeof checkComponentPage) {
   return defineCollection({
@@ -41,7 +31,7 @@ function pages(path: string, check?: typeof checkComponentPage) {
         return skip("draft");
       }
 
-      const document = parseMarkdown(body, { extensions, headingIds: true });
+      const document = parsePage(body);
 
       return {
         body: document,
