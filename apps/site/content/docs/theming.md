@@ -1,34 +1,34 @@
 ---
 title: Theming
-description: Pick a theme, then bring your accent, corners, density and depth. A theme is one StyleX file you own.
+description: Configure colors, radius, density, and surface depth in theme.stylex.ts, or switch themes at runtime with StyleX.
 order: 2
 ---
 
-A theme is `theme.stylex.ts`: one file of variables you own. Components read only tokens, and tokens read these variables, so every component follows the theme in light and dark.
+A Constella theme is defined in `theme.stylex.ts`, a local StyleX variable file in your project. Components reference semantic tokens that resolve to these variables, so changes to `theme.stylex.ts` update every component in both light and dark modes.
 
 ## Theme builder
 
-Pick a theme, then change its accent, radius, sizing and depth if you like, and copy the file. The page wears the theme while you build it.
+Select a preset theme below, adjust the accent color, border radius, sizing, and depth, and copy the generated `theme.stylex.ts` file. Changes apply live to this page.
 
 <!-- ::demo name="theme-builder" -->
 
-Accents are [Radix Colors](https://www.radix-ui.com/colors) scales by name, so they're tuned for light and dark already, and the file imports them from `@radix-ui/colors`, which comes with Constella. Ink is the monochrome accent: the solid fill is the gray ink, as in Polaris. Amber, yellow, lime, mint and sky take dark text on their solid fill.
+Accent options use named [Radix Colors](https://www.radix-ui.com/colors) scales imported from `@radix-ui/colors`, which is installed with Constella. Each scale includes light and dark steps. Ink is the monochrome accent used in Polaris, where the solid fill uses the neutral ink step. Amber, yellow, lime, mint, and sky pair dark text with their solid fill.
 
 ## Themes
 
-Themes are named after stars, each hinting at its color. A theme sets colors only: its grays and a default accent. Radius, sizing and depth are yours to pick on top.
+Built-in presets configure only color variables (the neutral gray scale and the default accent scale). Radius, sizing, and depth are configured independently.
 
-| Theme     | Grays | Accent | Note                                    |
-| --------- | ----- | ------ | --------------------------------------- |
-| `polaris` | Gray  | Ink    | The default; ships as `theme.stylex.ts` |
-| `vega`    | Slate | Indigo | A blue-white star                       |
-| `antares` | Sand  | Orange | A red supergiant, kept clear of danger  |
+| Theme     | Grays | Accent | Note                                          |
+| --------- | ----- | ------ | --------------------------------------------- |
+| `polaris` | Gray  | Ink    | Default preset installed as `theme.stylex.ts` |
+| `vega`    | Slate | Indigo | Cool neutral palette with an indigo accent    |
+| `antares` | Sand  | Orange | Warm neutral palette with an orange accent    |
 
-Polaris is the `theme.stylex.ts` Constella installs.
+Constella installs the `polaris` preset as your default `theme.stylex.ts`.
 
 ## Usage
 
-Constella installs `lib/constella/theme.stylex.ts` with Polaris in it. To theme your app, replace it with the builder's file, or edit it by hand: it's yours, and nothing else in the system needs changing.
+Constella installs `lib/constella/theme.stylex.ts` with the Polaris variables. Replace that file with output from the theme builder or edit its variables directly. No other files need to be modified.
 
 ```ts
 // lib/constella/theme.stylex.ts
@@ -40,16 +40,16 @@ import * as stylex from "@stylexjs/stylex";
 
 export const theme = stylex.defineVars({
   "--accent-9": "var(--indigo-9)",
-  // …
+  // ...
   "--radius": "12px",
 });
 ```
 
-Dark mode is still the `.dark` class on `<html>`: Radix's dark scales switch on it, so every theme works in both.
+Dark mode is controlled by adding the `.dark` class to `<html>`. Radix dark scales activate under `.dark`, so every theme supports both light and dark modes.
 
-### More than one theme
+### Multiple themes
 
-To let people switch themes at runtime, keep your default in `theme.stylex.ts` and make each other one a `createTheme` of it, applied to `<html>`. It only lists what differs.
+To support runtime theme switching, keep your default theme in `theme.stylex.ts` and define each alternate theme with `stylex.createTheme`. Only list the variables that differ from the default, then apply the theme to `<html>`.
 
 ```tsx
 import * as stylex from "@stylexjs/stylex";
@@ -57,58 +57,58 @@ import { theme } from "@/lib/constella/theme.stylex";
 
 const vega = stylex.createTheme(theme, {
   "--accent-9": "var(--indigo-9)",
-  // …
+  // ...
 });
 
 <html {...stylex.props(vega)} lang="en">
 ```
 
-**Apply a theme to `<html>`, not a subtree.** Toasts render where `<Toaster />` sits, near the root, so a theme set on a subtree doesn't reach them.
+**Apply themes to `<html>`, not to a subtree.** Toasts render where `<Toaster />` is mounted near the document root, so a theme applied to a nested subtree will not reach them.
 
 ## Variables
 
-Everything in `theme.stylex.ts`. Variables keep their literal names, so `base.css` can read them.
+This section lists all CSS variables defined in `theme.stylex.ts`. Variables use literal names so `base.css` can reference them directly.
 
 ### Scales
 
-`--neutral-1` … `--neutral-12` and `--neutral-a1` … `--neutral-a12`, the same for `--accent`, and `--accent-contrast` for text on accent step 9. Each step points at a Radix scale by name; import that scale's four files at the top.
+Scale variables include `--neutral-1` through `--neutral-12`, `--neutral-a1` through `--neutral-a12`, `--accent-1` through `--accent-12`, `--accent-a1` through `--accent-a12`, and `--accent-contrast` for text on accent step 9. Each variable maps to a named Radix scale step. Import the four CSS files for any Radix scale you reference at the top of `theme.stylex.ts`.
 
 ### Roles
 
-What components ask for. Each is a scale step, so changing one changes only that role, in light and dark.
+Role variables map semantic component roles to scale steps. Updating a role variable changes only that role in both light and dark modes.
 
-| Variable | Default | For |
+| Variable | Default | Usage |
 | --- | --- | --- |
-| `--background` | `--neutral-1` | The page |
-| `--sidebar` | `--neutral-2` | The sidebar, a step off the page |
-| `--text-primary` | `--neutral-12` | Content |
-| `--text-secondary` | `--neutral-11` | Supporting copy |
-| `--text-muted` | Halfway from `--neutral-10` to `-11` | Metadata, placeholders, counts |
-| `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected (a row, the current nav item), pressed |
-| `--fill-opaque` | `--neutral-3` | A fill nothing shows through: avatars, tracks, user messages |
-| `--border-subtle`, `--border`, `--border-strong` | `--neutral-4`, `-6`, `-9` | Dividers and the composer's ring, control borders, an empty checkbox's edge |
-| `--accent-solid` | `--neutral-12` | Primary buttons, slider fill |
-| `--accent-on-solid` | `--neutral-1` | Text and icons on the accent |
-| `--inverted-solid`, `--inverted-on-solid` | `--neutral-12`, `--neutral-1` | Tooltips |
-| `--focus-ring` | `--neutral-8` | The focus outline |
-| `--selection` | `--neutral-a5` | Selected text |
-| `--overlay` | `--black-a5` | Behind a dialog |
+| `--background` | `--neutral-1` | Page background |
+| `--sidebar` | `--neutral-2` | Sidebar surface, one step off the page background |
+| `--text-primary` | `--neutral-12` | Primary content text |
+| `--text-secondary` | `--neutral-11` | Supporting text |
+| `--text-muted` | Halfway from `--neutral-10` to `-11` | Metadata, placeholders, and counts |
+| `--fill-subtle`, `--fill`, `--fill-strong` | `--neutral-a2`, `-a3`, `-a4` | Hover, selected row or nav item, and pressed states |
+| `--fill-opaque` | `--neutral-3` | Opaque fills for avatars, tracks, and user messages |
+| `--border-subtle`, `--border`, `--border-strong` | `--neutral-4`, `-6`, `-9` | Dividers and composer rings, control borders, and empty checkbox edges |
+| `--accent-solid` | `--neutral-12` | Primary buttons and slider fills |
+| `--accent-on-solid` | `--neutral-1` | Text and icons on solid accent fills |
+| `--inverted-solid`, `--inverted-on-solid` | `--neutral-12`, `--neutral-1` | Inverted surfaces such as tooltips |
+| `--focus-ring` | `--neutral-8` | Focus outline |
+| `--selection` | `--neutral-a5` | Selected text highlight |
+| `--overlay` | `--black-a5` | Backdrop behind dialogs |
 
-Muted text and raised surfaces differ between light and dark, so `base.css` sets them from the scales.
+`base.css` computes muted text and raised surface values from the scale variables because their formulas differ between light and dark modes.
 
 ### Shape and density
 
-| Variable | Default | For |
+| Variable | Default | Usage |
 | --- | --- | --- |
-| `--radius` | 8px | Controls; menus and cards derive theirs from it |
-| `--size-control-xxs` … `-lg` | 20 … 36px | Control heights |
-| `--space-xs` … `--space-xl` | 8 … 48px | Spacing; `xxxs` and `xxs` stay fixed |
+| `--radius` | 8px | Base control radius from which menus and cards derive their radii |
+| `--size-control-xxs` through `-lg` | 20px through 36px | Control heights |
+| `--space-xs` through `--space-xl` | 8px through 48px | Layout spacing (`xxxs` and `xxs` remain fixed) |
 
-The other corners step from `--radius` by `min(--radius, 4px)`, so each nests concentrically in the next and all reach 0 together:
+Other corner tokens step from `--radius` by `min(--radius, 4px)` so nested corners remain concentric and all corners reach `0` together:
 
 | Corner | Value            | At 8px |
 | ------ | ---------------- | ------ |
-| `xs`   | radius − step    | 4px    |
+| `xs`   | radius - step    | 4px    |
 | `sm`   | radius           | 8px    |
 | `md`   | radius + step    | 12px   |
 | `lg`   | radius + 2 steps | 16px   |
@@ -116,16 +116,16 @@ The other corners step from `--radius` by `min(--radius, 4px)`, so each nests co
 
 ### Depth
 
-The drops under controls and in-page surfaces. Floating surfaces (popovers, menus, select lists, dialogs, sheets, toasts, tooltips, a data table's action bar) keep their shadows at either depth.
+Depth variables control drop shadows under controls and in-page surfaces. Floating surfaces (popovers, menus, select lists, dialogs, sheets, toasts, tooltips, and data table action bars) keep their shadows in both `raised` and `flat` modes.
 
-| Variable | Raised | Under |
+| Variable | Raised | Applied to |
 | --- | --- | --- |
-| `--shadow-default` | A soft drop | Fields, checkboxes, radios, select triggers, outline toggles, a switch's thumb |
-| `--shadow-default-hover`, `--shadow-default-pressed` | A step up, a step down | A select trigger and an outline toggle, hovered and held |
-| `--shadow-default-ring` | A gray drop | A slider's thumb, under its ring |
-| `--shadow-default-ring-subtle` | A near and a far drop | The composer, under its ring |
+| `--shadow-default` | Soft drop shadow | Fields, checkboxes, radios, select triggers, outline toggles, and switch thumbs |
+| `--shadow-default-hover`, `--shadow-default-pressed` | Step up, step down | Hovered and pressed select triggers and outline toggles |
+| `--shadow-default-ring` | Gray drop shadow | Slider thumbs under their ring |
+| `--shadow-default-ring-subtle` | Near and far drop shadows | Composer under its ring |
 
-`raised` is Polaris's. `flat` sets each to `0 0 transparent`, so an edge is a border, a ring or a fill and nothing in the page lifts:
+Polaris uses `raised` by default. To switch to `flat`, set each shadow variable to `0 0 transparent` so in-page controls rely on borders, rings, and fills:
 
 ```ts
 "--shadow-default": "0 0 transparent",
@@ -135,8 +135,8 @@ The drops under controls and in-page surfaces. Floating surfaces (popovers, menu
 "--shadow-default-ring-subtle": "0 0 transparent",
 ```
 
-Not `none`: parts list these with other shadows, where `none` is invalid. The rings that draw an edge, the invalid halo and the focus ring stay at either depth.
+Do not use `none`, because components combine these variables with other shadow layers where `none` is invalid CSS. Edge rings, invalid halos, and focus rings remain active in both depth modes.
 
 ## Status colors
 
-Danger, success, warning and info stay red, green, amber and blue in every theme, so they mean the same thing in any product. **Avoid an accent close to a status hue.** A red primary button reads as destructive.
+Danger, success, warning, and info always map to red, green, amber, and blue across all themes so status meanings stay consistent. **Avoid choosing an accent color close to a status hue.** A red primary button can be mistaken for a destructive action.

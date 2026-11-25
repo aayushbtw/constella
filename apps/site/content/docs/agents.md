@@ -1,12 +1,12 @@
 ---
 title: Agents
-description: Give your coding agent the skill, the registry and the docs as Markdown, and let an agent inside your app drive its UI through ui-sdk's agent bridge, with a person confirming what matters.
+description: Configure coding agents with the Constella skill, MCP server, and Markdown docs, and connect in-app agents through ui-sdk's agent bridge.
 order: 3
 ---
 
 ## Skill
 
-Install the Constella skill. It tells the agent how to install for your framework, where usage lives, and the rules it would otherwise guess at, like `sx` over `className`.
+Install the Constella skill to give coding agents framework setup instructions, component documentation paths, and Constella conventions such as using `sx` instead of `className`:
 
 ```bash
 npx skills add aayushbtw/constella
@@ -14,7 +14,7 @@ npx skills add aayushbtw/constella
 
 ## MCP
 
-shadcn's MCP server reads the registries in your `components.json`, so once `@constella` is there (see [Installation](/docs/installation)) the agent can search components, read their source and add them. Set it up for your client:
+The shadcn MCP server reads registries configured in your `components.json`. After adding `@constella` (see [Installation](/docs/installation)), coding agents can search components, read their source, and install them. Initialize the MCP server for your client:
 
 ```bash
 npx shadcn@latest mcp init --client claude
@@ -28,38 +28,38 @@ npx shadcn@latest mcp init --client claude
 | Codex       | `--client codex`    |
 | OpenCode    | `--client opencode` |
 
-Each component has a `<name>-demo` item with its usage snippets, one per docs section, so asking for "button-demo" returns how Button is used. **Don't add a `-demo` item.** Its files are snippets, not modules, and won't compile.
+Each component publishes a `<name>-demo` registry item containing one usage snippet per docs section. Requesting `button-demo` returns usage examples for Button. **Do not install `-demo` items into your project.** They contain standalone snippets rather than compilable modules.
 
 ## Markdown
 
-Every page is Markdown at its URL plus `/index.md`, like `/docs/components/button/index.md`, or at its URL when requested with `Accept: text/markdown`. Under each page's description, Copy as Markdown copies it and View as Markdown opens it.
+Every documentation page is served as Markdown at `<url>/index.md`, such as `/docs/components/button/index.md`, or at the page URL when requested with an `Accept: text/markdown` header. Each page also provides **Copy as Markdown** and **View as Markdown** actions below its description.
 
-| File             | Holds                       |
-| ---------------- | --------------------------- |
-| `/llms.txt`      | Every page, linked by title |
-| `/llms-full.txt` | Every page in one file      |
+| File             | Contents                            |
+| ---------------- | ----------------------------------- |
+| `/llms.txt`      | Index of all pages with titles      |
+| `/llms-full.txt` | All documentation pages in one file |
 
 ## AGENTS.md
 
-Without the skill, add this to your `AGENTS.md` or `CLAUDE.md`:
+If you do not install the skill, add the following block to your `AGENTS.md` or `CLAUDE.md`:
 
 ```md
 ## Constella
 
-UI components are Constella: ui-sdk styled with StyleX, not Tailwind, from the `@constella` shadcn registry. Before using one, read its page at https://constella.aayush.cv/docs/components/<name>/index.md (every page: https://constella.aayush.cv/llms.txt).
+UI components come from the `@constella` shadcn registry, built on ui-sdk and styled with StyleX rather than Tailwind. Before using a component, read its page at https://constella.aayush.cv/docs/components/<name>/index.md (all pages are listed at https://constella.aayush.cv/llms.txt).
 
-- Style with `sx` (from `stylex.create`), never `className`, `style` or Tailwind classes.
-- In a `render` chain, one part draws, so put `sx` on that part only: the `Button` in `<PopoverTrigger render={<Button />}>`, the `Item` in `<Item render={<SidePanelTrigger />}>`.
-- Use tokens from `@/lib/constella/tokens.stylex`, not raw values.
-- Compose the parts each page lists; never run `shadcn init`.
-- Theme in `theme.stylex.ts`; dark mode is a `dark` class on `<html>`.
+- Style components with `sx` from `stylex.create`, never `className`, `style`, or Tailwind classes.
+- In a `render` chain, place `sx` only on the part that renders the element, such as `Button` in `<PopoverTrigger render={<Button />}>` or `Item` in `<Item render={<SidePanelTrigger />}>`.
+- Use tokens from `@/lib/constella/tokens.stylex` instead of raw values.
+- Compose the parts listed on each component page and never run `shadcn init`.
+- Edit `theme.stylex.ts` for theming and toggle the `dark` class on `<html>` for dark mode.
 ```
 
-## Agent Bridge
+## Agent bridge
 
-ui-sdk's agent bridge lets an agent inside your app read the page's ui-sdk components with `agent.snapshot()` and call their actions with `agent.act()`. Constella's components are ui-sdk components, so they join the bridge with no setup.
+The ui-sdk agent bridge lets an in-app agent inspect mounted ui-sdk components with `agent.snapshot()` and invoke their actions with `agent.act()`. Because Constella components are built on ui-sdk, they register with the bridge automatically.
 
-Create the bridge once, in the browser, with `createAgent`:
+Create the bridge once in the browser with `createAgent`:
 
 ```ts
 import { createAgent } from "@ui-sdk/react/agent";
@@ -67,13 +67,13 @@ import { createAgent } from "@ui-sdk/react/agent";
 const agent = createAgent();
 ```
 
-It finds the components already on the page and adds new ones as they mount. It has no `destroy`, so the docs site keeps its bridge on `globalThis` and a hot reload reuses it. For the rest of the API, see [ui-sdk's Get Started](https://ui-sdk.dev/docs/agents/connect-an-agent) and [Reference](https://ui-sdk.dev/docs/agents/connect-an-agent/reference).
+The bridge discovers components already mounted on the page and registers new ones as they mount. Because `createAgent` has no `destroy` method, store the instance on `globalThis` in development so hot reloads reuse it. For the full API, see [ui-sdk's Get Started](https://ui-sdk.dev/docs/agents/connect-an-agent) and [Reference](https://ui-sdk.dev/docs/agents/connect-an-agent/reference).
 
 ## Allow
 
-Pass `allow` to `createAgent` to decide each step before it runs. A step on a control with an [agent mark](#agent-marks) carries the mark's sentence as `step.confirm`, so let other steps run and ask the person about those.
+Pass an `allow` callback to `createAgent` to approve or reject each action before it runs. When a control has an [agent mark](#agent-marks), the action includes the mark text in `step.confirm`. Allow unmarked steps to run and prompt the user for marked steps.
 
-This bridge asks through a controller from `createAlertDialogController`, which opens a Constella [Alert Dialog](/docs/components/alert-dialog). The bridge doesn't use `createConfirm`, since its `confirm()` can't take the step's `signal`. Put it in a module like `lib/agent.ts`:
+The example below uses `createAlertDialogController` to open a Constella [Alert Dialog](/docs/components/alert-dialog) for confirmation. It does not use `createConfirm` because `confirm()` cannot forward the step's `AbortSignal`. Place this setup in a module such as `lib/agent.ts`:
 
 ```ts
 import { createAgent } from "@ui-sdk/react/agent";
@@ -106,16 +106,16 @@ const agent = createAgent({
 export { agent, confirmController, mountConfirm };
 ```
 
-| When | The step |
+| Condition | Behavior |
 | --- | --- |
-| It has no `step.confirm` | Runs without asking. |
-| No confirm dialog is mounted | Is refused, so nothing runs without a person. |
-| The person presses **Cancel** | Is refused. |
-| The person presses **Allow** | Runs. |
-| Its `signal` aborts | Closes the dialog and doesn't run. |
-| Another confirm step is still asking | Waits for its own answer, since the bridge runs one `act` call at a time. |
+| `step.confirm` is `undefined` | The step runs without prompting. |
+| No confirmation dialog is mounted | The step is refused so marked actions cannot run without a user. |
+| The user clicks **Cancel** | The step is refused. |
+| The user clicks **Allow** | The step runs. |
+| The step's `signal` aborts | The dialog closes and the step does not run. |
+| Another confirmation is already open | The step waits for its turn because the bridge runs one `act` call at a time. |
 
-Render the dialog once on the page:
+Mount the confirmation dialog once near the root of your app:
 
 ```tsx
 import type { AgentAction } from "@ui-sdk/react/agent";
@@ -174,47 +174,47 @@ function AgentConfirm() {
 }
 ```
 
-**Keep the dialog inside `data-agent-hidden`.** There the agent can't see the dialog, so it can't press **Allow** for the person. For the `allow` options, see [ui-sdk's Permissions](https://ui-sdk.dev/docs/agents/connect-an-agent/permissions).
+**Wrap the dialog in `data-agent-hidden`.** Hiding the dialog from the bridge prevents the agent from clicking **Allow** itself. For all `allow` options, see [ui-sdk's Permissions](https://ui-sdk.dev/docs/agents/connect-an-agent/permissions).
 
-## Agent Marks
+## Agent marks
 
-Mark what the agent must not do or see.
+Use data attributes to restrict which controls an agent can inspect or trigger without confirmation.
 
-| Attribute | Put it on | What the agent gets |
+| Attribute | Placement | Effect on the agent |
 | --- | --- | --- |
-| `data-agent-confirm` | Anything an agent must not do alone, like delete, pay or send, with a sentence that says what it does | A step that waits for your [`allow`](#allow) callback. Without `allow`, the step fails with "Needs a person". |
-| `data-agent-secret` | A field the agent may fill but never read | The field, with its value shown as `[redacted]`. Password, card and one-time-code fields are secret already. |
-| `data-agent-hidden` | A region the agent shouldn't see | Nothing. Components inside are left out of `snapshot` and `query`. |
+| `data-agent-confirm` | Any control that requires user confirmation, such as delete, pay, or send, with a sentence describing the effect | The step waits for your [`allow`](#allow) callback. Without an `allow` callback, the step fails with "Needs a person". |
+| `data-agent-secret` | Any field the agent may fill but must not read | The field remains actionable, and its value is reported as `[redacted]`. Password, card, and one-time-code fields are redacted by default. |
+| `data-agent-hidden` | Any region the agent should not inspect | Components inside the region are excluded from `snapshot` and `query`. |
 
-Put `data-agent-confirm` on the button that confirms, like `AlertDialogAction` or a menu item. **Don't put it on the trigger or the content.** Opening the dialog is harmless, and a mark on the content gates Cancel too. Give the button text that the trigger's text doesn't hold, like "Delete forever" under a "Delete chat" trigger. A press looks among the buttons already on the page first, so "Delete" would match the trigger. Write the sentence for the person who is asked, from app state.
+Place `data-agent-confirm` on the confirming control, such as `AlertDialogAction` or a menu item. **Do not place it on the dialog trigger or dialog content.** Opening a dialog has no side effects, and placing the attribute on the dialog content also blocks **Cancel**. Give the confirmation button a label that is not a substring of the trigger label, such as "Delete forever" for a "Delete chat" trigger. Button lookups match existing buttons on the page first, so a label like "Delete" would match the trigger instead. Write the confirmation text from app state so the user sees the exact target.
 
 ```tsx
 <AlertDialogFooter>
   <AlertDialogCancel>Cancel</AlertDialogCancel>
   <AlertDialogAction
     color="danger"
-    data-agent-confirm={`Deletes “${chat.title}” and its files`}
+    data-agent-confirm={`Deletes "${chat.title}" and its files`}
   >
     Delete forever
   </AlertDialogAction>
 </AlertDialogFooter>
 ```
 
-[Approval](/docs/components/approval)'s `ApprovalConfirm` carries the mark by default. The destructive actions in the [Alert Dialog](/docs/components/alert-dialog), [Dropdown Menu](/docs/components/dropdown-menu) and [Data Table](/docs/components/data-table) examples show it.
+[Approval](/docs/components/approval) includes `data-agent-confirm` on `ApprovalConfirm` by default. For other controls, your app must add the attribute. See the destructive action examples in [Alert Dialog](/docs/components/alert-dialog), [Dropdown Menu](/docs/components/dropdown-menu), and [Data Table](/docs/components/data-table).
 
-For a component you build with `definePrimitive`, set `secret: true` in its `agent` key to redact its value wherever it renders. That's how ui-sdk's OTP Input is secret by default. See [ui-sdk's Your Components](https://ui-sdk.dev/docs/agents/connect-an-agent/your-components).
+For custom components built with `definePrimitive`, set `secret: true` in the `agent` configuration to redact the value wherever the component renders. This is how ui-sdk's OTP Input redacts its value by default. See [ui-sdk's Your Components](https://ui-sdk.dev/docs/agents/connect-an-agent/your-components).
 
 ```ts
 agent: { actions: ["setValue", "clear"], secret: true },
 ```
 
-History can't put back a secret value, since it records `[redacted]`. Seeking or undoing leaves a secret field as it is and lists it among the changes it couldn't put back.
+History cannot restore secret values because it stores `[redacted]`. Seeking or undoing leaves secret fields unchanged and reports them in the list of unrestored changes.
 
-**Don't put `data-agent-hidden` on the Toaster.** The mark hides every toast from the agent, so the agent can't read the toast its action raised or press the toast's **Undo**. An empty Toaster needs no mark, because ui-sdk leaves a toast region out of `snapshot` until it holds a toast.
+**Do not place `data-agent-hidden` on `Toaster`.** Hiding the toaster prevents the agent from reading notifications triggered by its actions or clicking a toast's **Undo** button. An empty `Toaster` does not need the attribute because ui-sdk omits toast regions from `snapshot` until a toast is active.
 
 ## WebMCP
 
-Call `registerTools` to give the browser's own agent the bridge's tools through WebMCP. Its `allow` is required and runs after the bridge's `allow`:
+Call `registerTools` to expose the bridge's tools to the browser's built-in agent through WebMCP. The `allow` option is required and runs after the bridge's `allow` callback:
 
 ```ts
 import { registerTools } from "@ui-sdk/react/agent";
@@ -222,27 +222,27 @@ import { registerTools } from "@ui-sdk/react/agent";
 registerTools(agent, { allow: () => true });
 ```
 
-| Your bridge's `allow` | Pass to `registerTools` | Why |
+| Bridge `allow` behavior | Option for `registerTools` | Reason |
 | --- | --- | --- |
-| Asks the person when `step.confirm` is set, like the one in [Allow](#allow) | `allow: () => true` | The person already answered. A check on `step.confirm` here would refuse a step they allowed. |
-| Doesn't ask the person | `allow: (step) => step.confirm === undefined` | Marked steps are refused, and every other step runs. |
+| Prompts the user when `step.confirm` is set, as in [Allow](#allow) | `allow: () => true` | The user has already confirmed the step. Checking `step.confirm` again would reject an approved step. |
+| Does not prompt the user | `allow: (step) => step.confirm === undefined` | Marked steps are rejected and all unmarked steps run. |
 
-**Return `true` only when the bridge's `allow` already asked.** An `allow` that returns `true` without reading `step.confirm` answers for the person. In a browser without `document.modelContext`, `registerTools` does nothing. See [ui-sdk's WebMCP](https://ui-sdk.dev/docs/agents/connect-an-agent/webmcp).
+**Return `true` only when the bridge's `allow` callback already prompts the user.** Returning `true` without checking `step.confirm` bypasses confirmation. In browsers without `document.modelContext`, `registerTools` is a no-op. See [ui-sdk's WebMCP](https://ui-sdk.dev/docs/agents/connect-an-agent/webmcp).
 
-## Staged Edits and Undo
+## Staged edits and undo
 
-Use `createHistory` and `stageChanges` from `@ui-sdk/react/history` to undo an agent's changes, or to put them on the page until the person keeps or discards them. Both are experimental in ui-sdk beta.
+Use `createHistory` and `stageChanges` from `@ui-sdk/react/history` to undo agent changes or preview them on the page until the user keeps or discards them. Both APIs are experimental in the ui-sdk beta.
 
-| Call | What it does | Pair it with |
+| API | Behavior | Common pairing |
 | --- | --- | --- |
-| `createHistory(agent, { within })` | Records changes from people, agents and your app inside the `within` element. Without `within`, it records the whole page. | One history for the region its undo covers, created on mount and destroyed on unmount. |
-| `history.entries()`, `history.position()`, `history.subscribe(listener)` | `entries()` lists the changes, oldest first, each with its `label`, `previous`, `value`, `source` and `reason`. `position()` is how many entries are applied, from `0` to `entries().length`. `subscribe` calls the listener when either changes. | A list of the assistant's changes, the entries whose `source` is `"agent"`. |
-| `history.seek(n)` | Puts the page back as it was after `n` entries, or forward again. A new change after seeking back drops the entries after that point. It resolves with the changes it couldn't put back. | A timeline or rewind slider over the entries. |
-| `history.undoSource("agent")` | Puts back only the agent's changes. It resolves with the changes it couldn't put back. | A button that undoes the assistant's changes and names what it couldn't put back. |
-| `stageChanges(agent, changes)` | Writes each `{ ref, key?, value }` onto the real controls. `applied` lists each change as `{ ref, key, before, value }`. | An [Approval](/docs/components/approval) card that lists each `before → value`. |
-| `staged.revert()` | Puts each `before` value back. It resolves with the changes it couldn't put back. | **Discard**, an `ApprovalCancel`. |
+| `createHistory(agent, { within })` | Records changes from users, agents, and app code inside the `within` element. Without `within`, it records the entire page. | One history instance per undoable region, created on mount and destroyed on unmount. |
+| `history.entries()`, `history.position()`, `history.subscribe(listener)` | `entries()` returns recorded changes oldest first, each with `label`, `previous`, `value`, `source`, and `reason`. `position()` returns the count of applied entries from `0` to `entries().length`. `subscribe` notifies the listener when either value changes. | A list of assistant changes filtered by `source === "agent"`. |
+| `history.seek(n)` | Restores the page state to entry `n`. Making a new change after seeking backward discards entries after that point. Resolves with any changes that could not be restored. | A timeline or rewind slider over history entries. |
+| `history.undoSource("agent")` | Reverts only changes made by the agent. Resolves with any changes that could not be restored. | A button that undoes assistant changes and reports any fields that could not be reverted. |
+| `stageChanges(agent, changes)` | Applies each `{ ref, key?, value }` directly to the mounted controls. `applied` lists each change as `{ ref, key, before, value }`. | An [Approval](/docs/components/approval) card displaying each `before` and `value` pair. |
+| `staged.revert()` | Restores each recorded `before` value. Resolves with any changes that could not be restored. | A **Discard** button rendered with `ApprovalCancel`. |
 
-Create the history in an effect, with `within` pointing at the region its undo covers. Call `destroy()` on unmount, so a region that leaves the page stops recording:
+Create the history inside an effect with `within` pointing to the container element. Call `destroy()` in the cleanup function so unmounted regions stop recording:
 
 ```tsx
 import { createHistory } from "@ui-sdk/react/history";
@@ -276,7 +276,7 @@ function AgentChanges({ children }: { children: ReactNode }) {
 }
 ```
 
-**Keep changes** leaves the staged values on the page. Mark it with `data-agent-confirm`, so the agent can't keep its own changes:
+Clicking **Keep changes** leaves the staged values in place. Add `data-agent-confirm` to the confirmation button so the agent cannot approve its own staged changes:
 
 ```tsx
 <ApprovalFooter>
@@ -293,24 +293,24 @@ function AgentChanges({ children }: { children: ReactNode }) {
 </ApprovalFooter>
 ```
 
-Staging and reverting both go through `allow`, so a marked control asks the person when it's staged and again on **Discard**. See [ui-sdk's History and Undo](https://ui-sdk.dev/docs/agents/connect-an-agent/history-and-undo).
+Both staging and reverting pass through `allow`. A marked control prompts the user when staged and again when discarded. See [ui-sdk's History and Undo](https://ui-sdk.dev/docs/agents/connect-an-agent/history-and-undo).
 
-## What Constella's Parts Guarantee
+## What Constella guarantees
 
-Constella's AI and TanStack components are tested against the bridge. Each component's page lists what the agent sees in its Agent section.
+Constella's AI and TanStack components are tested against the ui-sdk agent bridge. Each component page lists what the agent sees in its Agent section.
 
-- Every control has a name, except the [Known Gaps](#known-gaps).
-- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, call `details.cancel()` too: skipping the state update alone keeps the value, but ui-sdk warns in dev. Either way, the agent's call fails with an error that says the value didn't take. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
-- `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` work on the primitives, such as Button, `AlertDialogAction`, `DropdownMenuItem`, Field and Input.
-- Data Table's action bar is inert while no row is selected, so the agent can't press its buttons.
+- Every control has an accessible name, except those listed in [Known gaps](#known-gaps).
+- Agent-initiated updates invoke change callbacks such as `onValueChange` with `details.source === "agent"`. Calling `details.cancel()` rejects the update in both uncontrolled and controlled fields. In a controlled field, skipping the state update without calling `details.cancel()` preserves the value but triggers a ui-sdk development warning. When canceled, the agent action fails with an error stating that the value was not applied. `Suggestions` `onClick` and `Data Table` `onRowSelectionChange` also receive agent-initiated changes.
+- `data-agent-confirm`, `data-agent-secret`, and `data-agent-hidden` work on primitives including `Button`, `AlertDialogAction`, `DropdownMenuItem`, `Field`, and `Input`.
+- The `Data Table` action bar is inert when no row is selected, preventing agents from triggering its buttons.
 
-### Known Gaps
+### Known gaps
 
 | Component | Gap |
 | --- | --- |
-| [Trace](/docs/components/trace#agent) | A step with no trigger is listed with no name. |
-| [Markdown](/docs/components/markdown#agent) | Two code blocks in the same language share a copy button name, so a press by that name fails. |
-| [Message](/docs/components/message#agent) | Actions on a standalone Message (outside a Message Scroller) or on two replies opening with the same words share a name, so press them by ref. |
-| [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.17's `insert` puts the raw text in place of the query. |
-| Scroll Area, as in [Data Table](/docs/components/data-table#agent), [Markdown](/docs/components/markdown#agent) and [Suggestions](/docs/components/suggestions#agent) | Some scroll areas are listed with no name and no actions. |
-| [Citation](/docs/components/citation#agent) | `setOpen` on a card shared by several pills opens it empty, since no pill picked its sources. |
+| [Trace](/docs/components/trace#agent) | A step without a trigger is listed with no name. |
+| [Markdown](/docs/components/markdown#agent) | Two code blocks in the same language share a copy button name, so clicking by name fails. |
+| [Message](/docs/components/message#agent) | Actions on a standalone Message (outside a Message Scroller) or on two replies starting with the same words share a name and must be clicked by ref. |
+| [Prompt Input](/docs/components/prompt-input#agent) | Agents cannot insert a slash command. In ui-sdk beta.17, `insert` replaces the query with raw text. |
+| Scroll Area in [Data Table](/docs/components/data-table#agent), [Markdown](/docs/components/markdown#agent), and [Suggestions](/docs/components/suggestions#agent) | Some scroll areas are listed with no name and no actions. |
+| [Citation](/docs/components/citation#agent) | Calling `setOpen` on a card shared by multiple pills opens it empty because no pill selected its sources. |

@@ -1,12 +1,12 @@
 ---
 title: Design system
-description: The colors, type, space and motion every component is built from.
+description: Color, typography, layout, and motion tokens used across Constella components.
 order: 1
 ---
 
 ## Color
 
-Every color is a step on a [Radix Colors](https://www.radix-ui.com/colors) scale. Components ask for a role, never a step, so every role flips with the theme. A role is a family and a slot: `accentSolid`, `accentOnSolid`, `dangerSubtle`.
+Every color token maps to a step on a [Radix Colors](https://www.radix-ui.com/colors) scale. Components reference semantic role tokens rather than raw scale steps, so colors update automatically when the theme or color mode changes. Each role token combines a family name and a slot name, such as `accentSolid`, `accentOnSolid`, and `dangerSubtle`.
 
 ### Surfaces
 
@@ -22,7 +22,7 @@ Every color is a step on a [Radix Colors](https://www.radix-ui.com/colors) scale
 
 ### Fill
 
-Translucent, so they read the same on any surface; `fillOpaque` hides what's under it.
+Fill tokens are translucent so they maintain consistent contrast over any surface. Use `fillOpaque` when an element must hide what is behind it.
 
 <!-- ::demo name="color-fill" -->
 
@@ -38,19 +38,19 @@ Translucent, so they read the same on any surface; `fillOpaque` hides what's und
 
 <!-- ::demo name="color-status" -->
 
-**Keep body text neutral on a status tint.** The `Text` color marks the icon or label that carries the meaning.
+**Keep body text neutral on a status tint.** Use the matching status `Text` token only for the icon or label that conveys the status.
 
 ## Typography
 
-Components set size and weight and inherit the font family, which `base.css` sets on the page from the theme. The theme names [Inter](https://rsms.me/inter/) for text and [Geist Mono](https://vercel.com/font) for code and figures, in `--font-sans` and `--font-mono`; load them, or put yours first. Each size is a step with its own line height of the same name (`fontSizes.textSm`, `lineHeights.textSm`), set together; [Text](/docs/components/text), [Heading](/docs/components/heading) and [Caption](/docs/components/caption) set them for you.
+Components set font size and font weight while inheriting the font family that `base.css` applies from the theme. The default theme configures `--font-sans` with [Inter](https://rsms.me/inter/) and `--font-mono` with [Geist Mono](https://vercel.com/font). Load those fonts in your app or prepend your own font families to those variables. Every font size token has a paired line height token with the same name, such as `fontSizes.textSm` and `lineHeights.textSm`. [Text](/docs/components/text), [Heading](/docs/components/heading), and [Caption](/docs/components/caption) apply both tokens together.
 
-### Font Families
+### Font families
 
 <!-- ::demo name="font-families" -->
 
 ### Sizes
 
-Headings rank 1 (largest) to 6; text steps around `base`, the reading size. Controls use `sm`.
+Heading sizes range from 1 (largest) to 6 (smallest). Body text sizes step around `base`, which is the default reading size. Form controls and buttons use `sm`.
 
 <!-- ::demo name="font-sizes" -->
 
@@ -58,13 +58,13 @@ Headings rank 1 (largest) to 6; text steps around `base`, the reading size. Cont
 
 <!-- ::demo name="font-weights" -->
 
-Anything that changes in place (counts, timers, prices, table columns) sets `fontVariantNumeric: "tabular-nums"`, so digits don't shift.
+Numeric values that update in place, such as counts, timers, prices, and table columns, use `fontVariantNumeric: "tabular-nums"` so digits stay aligned.
 
 ## Layout
 
 ### Space
 
-A 4px grid, with 2px for hairline gaps.
+Spacing follows a 4px grid, with a 2px step for hairline gaps.
 
 | Token  | Value |
 | ------ | ----- |
@@ -78,23 +78,23 @@ A 4px grid, with 2px for hairline gaps.
 
 ### Radius
 
-`sm` for controls, `md` for surfaces, `full` for pills. Nested corners are concentric: `md` around `sm` at `space.xxs`.
+Use `sm` for controls, `md` for surfaces, and `full` for pills. Nested corners stay concentric when an outer `md` radius wraps an inner `sm` radius with `space.xxs` padding.
 
 <!-- ::demo name="layout-radii" -->
 
 ### Size
 
-Controls take a fixed height, so a button and an input in one row line up.
+Controls use fixed heights so adjacent buttons and inputs align on the same row.
 
 <!-- ::demo name="layout-sizes" -->
 
-| Token        | Value | For                                |
+| Token        | Value | Usage                              |
 | ------------ | ----- | ---------------------------------- |
 | `controlXxs` | 20px  | Inline controls                    |
 | `icon`       | 16px  | Icons beside `sm` text             |
 | `iconSm`     | 14px  | Icons beside `xs` text             |
 | `iconXs`     | 12px  | Icons beside `xxs` text            |
-| `hitArea`    | 40px  | The smallest target a pointer gets |
+| `hitArea`    | 40px  | Minimum interactive pointer target |
 
 ### Shadow
 
@@ -102,43 +102,43 @@ Controls take a fixed height, so a button and an input in one row line up.
 
 ## Motion
 
-Under `media.reducedMotion`, fades stay and movement goes: things that travel land at once.
+Under `media.reducedMotion`, opacity fades remain enabled and positional transitions are disabled. Elements that normally move appear in their final position immediately.
 
 ### Easing
 
-Each curve over `durations.move`. Slow it down to see the shape.
+The preview below runs each easing curve over `durations.move`. Use the speed control to inspect the curve shape.
 
 <!-- ::demo name="motion-easing" -->
 
-| Token       | For                                               |
-| ----------- | ------------------------------------------------- |
-| `out`       | Entrances and presses                             |
-| `inOut`     | Things traveling across the screen                |
-| `overshoot` | A small mark landing: a switch thumb, a radio dot |
-| `layout`    | A surface growing or shrinking to fit             |
-| `crossfade` | One state replacing another in place              |
+| Token       | Usage                                                 |
+| ----------- | ----------------------------------------------------- |
+| `out`       | Entrances and press feedback                          |
+| `inOut`     | Elements traveling across the viewport                |
+| `overshoot` | Small indicators such as switch thumbs and radio dots |
+| `layout`    | Surfaces growing or shrinking to fit content          |
+| `crossfade` | One state replacing another in place                  |
 
-Color changes on hover use the CSS keyword `ease`. Nothing uses `ease-in`.
+Hover color transitions use the CSS `ease` keyword. Components do not use `ease-in`.
 
 ### Duration
 
-Interface motion stays under 300ms. A spinner is the exception.
+Interface transitions stay at or under 300ms. Spinners are the only exception.
 
-| Token       | Value | For                                     |
-| ----------- | ----- | --------------------------------------- |
-| `hover`     | 150ms | Color changes on hover                  |
-| `press`     | 160ms | Scale on `:active`                      |
-| `popover`   | 180ms | Small surfaces that open from a trigger |
-| `move`      | 250ms | Indicators and thumbs that travel       |
-| `layout`    | 300ms | A surface growing or shrinking to fit   |
-| `crossfade` | 300ms | Cross-fades between states              |
-| `spin`      | 1s    | One turn of a spinner                   |
+| Token       | Value | Usage                                 |
+| ----------- | ----- | ------------------------------------- |
+| `hover`     | 150ms | Hover color transitions               |
+| `press`     | 160ms | Scale transitions on `:active`        |
+| `popover`   | 180ms | Small surfaces opening from a trigger |
+| `move`      | 250ms | Traveling indicators and thumbs       |
+| `layout`    | 300ms | Surfaces growing or shrinking to fit  |
+| `crossfade` | 300ms | Crossfades between states             |
+| `spin`      | 1s    | Full rotation of a spinner            |
 
 ### Press
 
-Pressables scale down on `:active`, on `easings.out` over `durations.press`. The smaller the target, the bigger the give.
+Interactive controls scale down on `:active` using `easings.out` over `durations.press`. Smaller targets use a larger scale reduction.
 
-| Token  | Value         | For             |
+| Token  | Value         | Usage           |
 | ------ | ------------- | --------------- |
 | `icon` | `scale(0.95)` | Icon buttons    |
 | `link` | `scale(0.97)` | Buttons         |
