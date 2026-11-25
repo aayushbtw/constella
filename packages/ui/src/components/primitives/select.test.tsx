@@ -316,7 +316,8 @@ test("an agent's pick reaches onValueChange as the agent's, and a cancel keeps t
   const result = await agent.act({
     steps: [{ action: "setValue", args: ["Cherry"], ref: "Fruit" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(seen).toEqual([["cherry", "agent"]]);
   expect(trigger().textContent).toContain("Banana");
 });
@@ -335,7 +336,8 @@ test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps th
   const result = await agent.act({
     steps: [{ action: "setOpen", args: [true], ref: "Fruit" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(seen).toEqual([[true, "agent"]]);
   expect(trigger().getAttribute("aria-expanded")).toBe("false");
   expect(screen.queryByRole("listbox")).toBeNull();

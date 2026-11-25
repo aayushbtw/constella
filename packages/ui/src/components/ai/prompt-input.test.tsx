@@ -987,8 +987,8 @@ test("a controlled textarea whose onValueChange cancels the agent's setValue kee
   const result = await agent.act({
     steps: [{ action: "setValue", args: ["Summarize Q3"], ref: "Message" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
-  expect(result.steps.map((step) => step.result)).toEqual([false]);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(changes).toEqual([{ source: "agent", value: "Summarize Q3" }]);
   expect(box().value).toBe("Hello");
 });

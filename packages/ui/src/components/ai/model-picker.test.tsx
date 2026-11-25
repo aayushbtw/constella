@@ -297,7 +297,8 @@ test("an agent's highlight reaches onValueChange as the agent's, and its cancel 
   const result = await agent.act({
     steps: [{ action: "setValue", args: ["gpt-5"], ref: "Search models" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(seen).toContainEqual(["gpt-5", "agent"]);
   expect(highlighted()).toEqual(["Claude Opus"]);
 });

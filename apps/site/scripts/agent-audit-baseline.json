@@ -93,6 +93,10 @@
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    },
+    "unopened": {
+      "count": 1,
+      "why": "The command menu's setOpen doesn't take before the textarea has had focus (vercel-labs/ui#972). Since ui-sdk 0.1.0-beta.17 the bridge reports that as a failed step"
     }
   },
   "/docs/components/questionnaire": {
@@ -121,6 +125,10 @@
     "scroll-area": {
       "count": 1,
       "why": "scroll-area.test.tsx pins unnamed scroll areas"
+    },
+    "unopened": {
+      "count": 2,
+      "why": "Two demo steps with no trigger take `open` from the run and no onOpenChange, so an agent's setOpen doesn't take. Since ui-sdk 0.1.0-beta.17 the bridge reports that as a failed step"
     }
   }
 }

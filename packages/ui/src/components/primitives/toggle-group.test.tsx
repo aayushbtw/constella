@@ -187,7 +187,8 @@ test("an agent's press reaches onValueChange as the agent's, and a cancel keeps 
   const result = await agent.act({
     steps: [{ action: "setPressed", args: [true], ref: "Italic" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(seen).toEqual([[["italic"], "agent"]]);
   expect(button("Bold").getAttribute("aria-pressed")).toBe("true");
   expect(button("Italic").getAttribute("aria-pressed")).toBe("false");

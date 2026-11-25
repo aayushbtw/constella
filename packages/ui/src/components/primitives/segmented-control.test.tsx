@@ -18,6 +18,8 @@ const indicator = () =>
   screen
     .getByRole("radiogroup")
     .querySelector<HTMLElement>("[data-slot='segmented-control-indicator']");
+const indicatorLeft = () =>
+  indicator()?.style.getPropertyValue("--segmented-control-indicator-left");
 
 function Ranges(props: Omit<SegmentedControlProps, "children">) {
   return (
@@ -123,6 +125,23 @@ test("right to left, ArrowLeft moves forward", () => {
   });
   fireEvent.keyDown(radio("Day"), { key: "ArrowLeft" });
   expect(isChecked("Week")).toBe(true);
+});
+
+test("the pill follows the pick when the page's direction flips after load", async () => {
+  render(<Ranges defaultValue="week" />);
+  Object.defineProperty(radio("Week"), "offsetLeft", {
+    get: () => (document.documentElement.dir === "rtl" ? 120 : 40),
+  });
+  await act(async () => {
+    await Promise.resolve();
+  });
+  expect(indicatorLeft()).toBe("40px");
+
+  await act(async () => {
+    document.documentElement.dir = "rtl";
+    await Promise.resolve();
+  });
+  expect(indicatorLeft()).toBe("120px");
 });
 
 test("an agent finds the control by name and picks an item", async () => {

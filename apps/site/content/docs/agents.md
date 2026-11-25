@@ -300,7 +300,7 @@ Staging and reverting both go through `allow`, so a marked control asks the pers
 Constella's AI and TanStack components are tested against the bridge. Each component's page lists what the agent sees in its Agent section.
 
 - Every control has a name, except the [Known Gaps](#known-gaps).
-- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, skipping the state update keeps it, and with `cancel()` the agent's step comes back with `result: false`. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
+- An agent's change reaches your change callback, like `onValueChange`, with `details.source === "agent"`. In an uncontrolled field, `details.cancel()` keeps the current value. In a controlled field, call `details.cancel()` too: skipping the state update alone keeps the value, but ui-sdk warns in dev. Either way, the agent's call fails with an error that says the value didn't take. Suggestions' `onClick` and Data Table's `onRowSelectionChange` get the agent's changes too.
 - `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` work on the primitives, such as Button, `AlertDialogAction`, `DropdownMenuItem`, Field and Input.
 - Data Table's action bar is inert while no row is selected, so the agent can't press its buttons.
 
@@ -311,6 +311,6 @@ Constella's AI and TanStack components are tested against the bridge. Each compo
 | [Trace](/docs/components/trace#agent) | A step with no trigger is listed with no name. |
 | [Markdown](/docs/components/markdown#agent) | Two code blocks in the same language share a copy button name, so a press by that name fails. |
 | [Message](/docs/components/message#agent) | Actions on a standalone Message (outside a Message Scroller) or on two replies opening with the same words share a name, so press them by ref. |
-| [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.16's `insert` puts the raw text in place of the query. |
+| [Prompt Input](/docs/components/prompt-input#agent) | The agent can't insert a slash command. ui-sdk beta.17's `insert` puts the raw text in place of the query. |
 | Scroll Area, as in [Data Table](/docs/components/data-table#agent), [Markdown](/docs/components/markdown#agent) and [Suggestions](/docs/components/suggestions#agent) | Some scroll areas are listed with no name and no actions. |
 | [Citation](/docs/components/citation#agent) | `setOpen` on a card shared by several pills opens it empty, since no pill picked its sources. |

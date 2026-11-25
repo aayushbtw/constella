@@ -281,7 +281,8 @@ test("an agent's open reaches onOpenChange as the agent's, and a cancel keeps th
   const result = await agent.act({
     steps: [{ action: "setOpen", args: [true], ref: "@acme" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(seen).toEqual([[true, "agent"]]);
   expect(
     Object.hasOwn(screen.getByRole("link", { name: "@acme" }).dataset, "open")

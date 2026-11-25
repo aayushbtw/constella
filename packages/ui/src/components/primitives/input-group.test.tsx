@@ -188,8 +188,8 @@ test("a controlled input whose onValueChange cancels the agent's setValue keeps 
   const result = await agent.act({
     steps: [{ action: "setValue", args: ["constella.dev"], ref: "Website" }],
   });
-  expect(result.ok, result.error?.message).toBe(true);
-  expect(result.steps.map((step) => step.result)).toEqual([false]);
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(changes).toEqual([{ source: "agent", value: "constella.dev" }]);
   expect(website().value).toBe("old.dev");
 });

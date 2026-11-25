@@ -1064,14 +1064,29 @@ test("Space on a focused row reports one selected change, as a press", () => {
   ]);
 });
 
-test("a controlled table that ignores the agent's row check leaves the row unchecked", async () => {
+test("a controlled table that ignores the agent's row check leaves the row unchecked, and ui-sdk warns in dev", async () => {
+  globalThis.__UI_SDK_STRICT__ = false;
+  onTestFinished(() => {
+    globalThis.__UI_SDK_STRICT__ = true;
+  });
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
   const selections: RowSelectionState[] = [];
   render(<Selection apply={false} selections={selections} />);
 
-  await run({ action: "setChecked", args: [true], ref: "dee@acme.com" });
+  const result = await agent.act({
+    steps: [{ action: "setChecked", args: [true], ref: "dee@acme.com" }],
+  });
+  expect(result.ok).toBe(false);
+  expect(result.error?.message).toContain("didn't take");
   expect(selections).toEqual([{ p3: true }]);
   expect(checkboxIn("dee@acme.com").getAttribute("aria-checked")).toBe("false");
   expect(rowWith("dee@acme.com").getAttribute("aria-selected")).toBe("false");
+  await vi.waitFor(
+    () => {
+      expect(warn.mock.calls.flat().join("\n")).toContain("`selected` stayed");
+    },
+    { timeout: 2000 }
+  );
 });
 
 test("a row the controlled selection maps to false stays unselected when another row is selected", () => {

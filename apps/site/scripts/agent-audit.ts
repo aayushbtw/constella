@@ -288,7 +288,7 @@ async function scan(page: Page, url: string): Promise<Scan> {
     const listed = (list: Entry[]) =>
       list.filter((entry) => entry.component !== "more");
     const left = (list: Entry[]) =>
-      Number(list.find((entry) => entry.component === "more")?.more ?? 0);
+      list.find((entry) => entry.component === "more")?.more ?? 0;
     const unnamedIn = (list: Entry[]) =>
       listed(list).filter((entry) => (entry.label?.trim() ?? "") === "");
     const tally = (list: Entry[]) =>
