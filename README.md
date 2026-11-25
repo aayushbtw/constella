@@ -1,22 +1,49 @@
 # Constella
 
-**Components, crafted with care.**
+Constella is a React component registry for the shadcn CLI. It uses [ui-sdk](https://ui-sdk.dev) for behavior and [StyleX](https://stylexjs.com) for styling. Components omit `className` and `style` props and accept StyleX overrides through an `sx` prop instead.
 
-Components your LLM can't easily get wrong. shadcn-style parts on [ui-sdk](https://ui-sdk.dev) and [StyleX](https://stylexjs.com), with no `className` or `style`, so an off-brand choice is hard to even write.
+[Docs](https://constella.aayush.cv) · [Installation](https://constella.aayush.cv/docs/installation) · [Components](https://constella.aayush.cv/docs/components) · [Agents](https://constella.aayush.cv/docs/agents)
 
-[Docs](https://constella.aayush.cv) · [Installation](https://constella.aayush.cv/docs/installation) · [Components](https://constella.aayush.cv/docs/components) · [For agents](https://constella.aayush.cv/docs/agents)
+## Quick start
 
-## Why
+Add the `@constella` registry to `components.json`:
 
-An LLM writes `p-5`, `bg-zinc-100` and `text-[#3b82f6]` fluently. It passes lint, renders fine and sits slightly off your system. A rule in `CLAUDE.md` makes that less likely, not impossible.
+```json
+{
+  "registries": {
+    "@constella": "https://constella.aayush.cv/r/{name}.json"
+  }
+}
+```
 
-So Constella moves the rules out of prose and into types:
+Do not run `shadcn init`, because it configures Tailwind CSS. Add a component with the shadcn CLI:
 
-- **No `className` or `style`.** A part can't be restyled from outside.
-- **`sx` takes tokens.** Color, space, radius, shadow, type size, layer and motion come from named roles, never raw values.
-- **Variants are closed lists,** not free strings.
+```bash
+npx shadcn@latest add @constella/button
+```
 
-Two teams got there first. Polar: "make it hard to express an off-brand decision in code in the first place" ([Orbit](https://polar.sh/blog/orbit-llm-safe-design-system)). Linear: "the endless configurability became a liability" ([Styling Linear for the future](https://linear.app/now/styling-linear-for-the-future-stylex)). Constella grew out of studying both.
+The CLI also installs StyleX and writes `lib/constella` on the first run. Follow a framework guide to configure the StyleX compiler and base stylesheet:
+
+- [Next.js installation guide](https://constella.aayush.cv/docs/installation/next)
+- [TanStack Start installation guide](https://constella.aayush.cv/docs/installation/tanstack-start)
+
+## Styling and constraints
+
+Constella enforces styling constraints in TypeScript types.
+
+- Components omit `className` and `style` from their prop types. Callers cannot pass arbitrary CSS classes or inline styles from outside.
+- Components accept a StyleX object through the `sx` prop. Each component passes `sx` last to `stylex.props`, so caller styles override internal defaults. The `Sx` type restricts color, space, radius, shadow, font size, layer, and motion properties to named tokens from `tokens.stylex.ts`.
+- Variant and size props use closed `as const` union types instead of open strings.
+
+This approach follows the reasoning in [Styling Linear for the future](https://linear.app/now/styling-linear-for-the-future-stylex) and Polar's [Orbit](https://polar.sh/blog/orbit-llm-safe-design-system) post.
+
+## Documentation
+
+- [Installation](https://constella.aayush.cv/docs/installation) covers framework setup, fonts, dark mode, and RTL support.
+- [Design system](https://constella.aayush.cv/docs/design-system) documents color roles, typography, spacing, radii, shadows, and motion tokens.
+- [Theming](https://constella.aayush.cv/docs/theming) explains how to edit `theme.stylex.ts` and switch themes at runtime.
+- [Agents](https://constella.aayush.cv/docs/agents) covers the agent skill, shadcn MCP setup, Markdown routes, and the ui-sdk agent bridge.
+- [llms.txt](https://constella.aayush.cv/llms.txt) lists every documentation page as Markdown.
 
 ## Credits
 
